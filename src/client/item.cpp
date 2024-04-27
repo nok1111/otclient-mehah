@@ -40,7 +40,7 @@ ItemPtr Item::create(int id)
 {
     const auto& item = std::make_shared<Item>();
     item->setId(id);
-
+    item->setItemRarity(NONE);
     return item;
 }
 
@@ -282,7 +282,7 @@ ItemPtr Item::createFromOtb(int id)
 {
     const auto& item = std::make_shared<Item>();
     item->setOtbId(id);
-
+    item->setItemRarity(NONE);
     return item;
 }
 

@@ -716,6 +716,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<Item>("setActionId", &Item::setActionId);
     g_lua.bindClassMemberFunction<Item>("getTeleportDestination", &Item::getTeleportDestination);
     g_lua.bindClassMemberFunction<Item>("setTeleportDestination", &Item::setTeleportDestination);
+    g_lua.bindClassMemberFunction<Item>("getItemRarity", &Item::getItemRarity);
 #endif
 
     g_lua.registerClass<Effect, Thing>();
@@ -825,6 +826,9 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<LocalPlayer>("getResourceBalance", &LocalPlayer::getResourceBalance);
     g_lua.bindClassMemberFunction<LocalPlayer>("setResourceBalance", &LocalPlayer::setResourceBalance);
     g_lua.bindClassMemberFunction<LocalPlayer>("getTotalMoney", &LocalPlayer::getTotalMoney);
+
+    //added
+    g_lua.bindClassMemberFunction<LocalPlayer>("getAttackSpeed", &LocalPlayer::getAttackSpeed);
 
     g_lua.registerClass<Tile, AttachableObject>();
     g_lua.bindClassMemberFunction<Tile>("clean", &Tile::clean);

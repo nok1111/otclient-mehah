@@ -745,6 +745,13 @@ void ProtocolGame::sendChangeOutfit(const Outfit& outfit)
     const auto& msg = std::make_shared<OutputMessage>();
     msg->addU8(Proto::ClientChangeOutfit);
 
+
+    if (g_game.getFeature(Otc::GamePlayerCosmetics)) {
+        msg->addU16(outfit.getWings());
+        msg->addU16(outfit.getAura());
+        msg->addString(outfit.getShader());
+    }
+
     if (g_game.getClientVersion() >= 1281) {
         msg->addU8(0x00); // normal outfit window
     }

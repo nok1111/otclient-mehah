@@ -47,6 +47,12 @@ public:
     Creature();
     ~Creature();
 
+#ifdef PROGRESSBAR
+    uint8_t getProgressbarPercent() { return m_progressbarPercent; }
+    void setProgressbar(uint32_t duration, bool ltr);
+    void updateProgressbar(uint32_t duration, bool ltr);
+#endif
+
     static bool hasSpeedFormula();
 
     void onCreate();
@@ -69,6 +75,13 @@ public:
     void setLight(const Light& light) { m_light = light; }
     void setSpeed(uint16_t speed);
     void setBaseSpeed(uint16_t baseSpeed);
+
+    //added
+    void setAttackSpeed(double attackSpeed);
+    void setPoints(double points);
+    double getAttackSpeed() { return m_attackSpeed; }
+    double getPoints() { return m_skillPoints; }
+    //added
     void setSkull(uint8_t skull);
     void setShield(uint8_t shield);
     void setEmblem(uint8_t emblem);
@@ -154,6 +167,13 @@ public:
     bool isCreature() override { return true; }
     bool isCovered() { return m_isCovered; }
 
+
+    //added
+    bool isParalyzed() const { return m_speed < 10; }
+    bool isSummon() override;
+
+    //added
+
     void setCovered(bool covered);
 
     bool isDisabledWalkAnimation() { return m_disableWalkAnimation > 0; }
@@ -219,12 +239,26 @@ private:
     Outfit m_outfit;
     Light m_light;
 
+    //added
+    std::list<UIWidgetPtr> m_topWidgets;
+    std::list<UIWidgetPtr> m_bottomWidgets;
+    //added
+
     uint8_t m_type;
     uint8_t m_healthPercent{ 101 };
     uint8_t m_skull{ Otc::SkullNone };
     uint8_t m_icon{ Otc::NpcIconNone };
     uint8_t m_shield{ Otc::ShieldNone };
     uint8_t m_emblem{ Otc::EmblemNone };
+
+
+    //added
+#ifdef PROGRESSBAR
+    uint8_t m_progressbarPercent{ 0 };
+    ScheduledEventPtr m_progressbarUpdateEvent{ nullptr };
+    Timer m_progressbarTimer;
+#endif
+    //added
 
     // walk related
     uint8_t m_walkAnimationPhase{ 0 };
@@ -236,6 +270,9 @@ private:
     uint16_t m_speed{ 0 };
     uint16_t m_baseSpeed{ 0 };
     uint16_t m_walkingAnimationSpeed{ 0 };
+
+    double m_attackSpeed{ 0 };
+    double m_skillPoints{ 0 };
 
     uint32_t m_id{ 0 };
     uint32_t m_masterId{ 0 };

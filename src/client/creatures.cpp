@@ -330,6 +330,9 @@ void CreatureManager::internalLoadCreatureBuffer(const pugi::xml_node attrib, co
         out.setFeet(attrib.attribute("feet").as_int());
         out.setAddons(attrib.attribute("addons").as_int());
         out.setMount(attrib.attribute("mount").as_int());
+        out.setWings(attrib.attribute("wings").as_int());
+        out.setAura(attrib.attribute("aura").as_int());
+        out.setShader(attrib.attribute("shader").as_string());
     }
 
     m->setOutfit(out);

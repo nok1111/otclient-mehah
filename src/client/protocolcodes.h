@@ -71,16 +71,26 @@ namespace Proto
 
         // NOTE: add any custom opcodes in this range
         // 51 - 99
+
+
+        //ascension
+
+        GameServerAttchedEffect = 90, //changed to 90+
+        GameServerDetachEffect = 91, //changed to 90+
+        GameServerCreatureShader = 92, //changed to 90+
+        GameServerMapShader = 93, //changed to 90+
+        GameServerUpdateFame = 52,
+#ifdef PROGRESSBAR
+        ServerRunProgressbar = 59,
+#endif
+        //ascension end
         GameServerChangeMapAwareRange = 51,
-        GameServerAttchedEffect = 52,
-        GameServerDetachEffect = 53,
-        GameServerCreatureShader = 54,
-        GameServerMapShader = 55,
+        //GameServerAttchedEffect = 52,
         GameServerCreatureTyping = 56,
         GameServerFloorDescription = 75,
 
         // original tibia ONLY
-        GameServerImbuementDurations = 93,
+        //GameServerImbuementDurations = 93,
         GameServerPassiveCooldown = 94,
         GameServerBosstiaryData = 97,
         GameServerBosstiarySlots = 98,
@@ -114,6 +124,7 @@ namespace Proto
         GameServerMissleEffect = 133, // Anthem on 13.x
         GameServerItemClasses = 134,
         GameServerTrappers = 135,
+
         GameServerCreatureHealth = 140,
         GameServerCreatureLight = 141,
         GameServerCreatureOutfit = 142,
@@ -333,6 +344,7 @@ namespace Proto
         CreatureTypeNpc,
         CreatureTypeSummonOwn,
         CreatureTypeSummonOther,
+        CreatureTypeSummonPet,
         CreatureTypeHidden,
         CreatureTypeUnknown = 0xFF
     };

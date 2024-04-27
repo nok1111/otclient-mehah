@@ -21,7 +21,7 @@
  */
 
 #pragma once
-
+#define PROGRESSBAR
 #include <cstdint>
 
 namespace Otc
@@ -258,7 +258,13 @@ namespace Otc
         NpcIconChat,
         NpcIconTrade,
         NpcIconQuest,
-        NpcIconTradeQuest
+        NpcIconTradeQuest,
+        NpcIconCosmetic,
+        NpcIconBlood,
+        NpcIconCelestial,
+        NpcIconTheInmortals,
+        NpcIconShadow,
+        NpcIconBrawlers,
     };
 
     enum PlayerStates : uint32_t
@@ -525,6 +531,9 @@ namespace Otc
         GameAnthem = 95,
         GameVipGroups = 96,
         GameBosstiary = 97,
+
+        GameMagicEffectU32 = 98,
+        GamePlayerCosmetics = 99,
 
         //  others
         GameLoadSprInsteadProtobuf = 100,

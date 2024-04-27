@@ -340,6 +340,17 @@ void LocalPlayer::setLevel(uint16_t level, uint8_t levelPercent)
     callLuaField("onLevelChange", level, levelPercent, oldLevel, oldLevelPercent);
 }
 
+
+void LocalPlayer::setAttackSpeed(double attackSpeed)
+{
+    if (m_attackSpeed != attackSpeed) {
+        double oldAttackSpeed = m_attackSpeed;
+        m_attackSpeed = attackSpeed;
+
+        callLuaField("onAttackSpeedChange", attackSpeed, oldAttackSpeed);
+    }
+}
+
 void LocalPlayer::setMana(uint32_t mana, uint32_t maxMana)
 {
     if (m_mana == mana && m_maxMana == maxMana)

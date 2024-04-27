@@ -69,6 +69,15 @@ enum ItemAttr : uint8_t
     ATTR_LAST
 };
 
+enum ItemRarity : uint8_t
+{
+    NONE = 0,
+    COMMON = 1,
+    RARE = 2,
+    EPIC = 3,
+    LEGENDARY = 4,
+};
+
 // @bindclass
 #pragma pack(push,1) // disable memory alignment
 class Item : public Thing
@@ -94,6 +103,11 @@ public:
     bool isValid() { return getThingType() != nullptr; }
 
     void setAsync(bool enable) { m_async = enable; }
+
+    //added
+    void setItemRarity(ItemRarity aRarity) { m_rarity = aRarity; }
+    ItemRarity getItemRarity() { return m_rarity; }
+    //addedd
 
     ItemPtr clone();
     ItemPtr asItem() { return static_self_cast<Item>(); }
@@ -155,6 +169,7 @@ private:
     uint16_t m_countOrSubType{ 0 };
 
     Color m_color{ Color::white };
+    ItemRarity m_rarity;
 
     uint8_t m_phase{ 0 };
     ticks_t m_lastPhase{ 0 };

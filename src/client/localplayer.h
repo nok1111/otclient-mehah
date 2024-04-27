@@ -54,6 +54,12 @@ public:
     void setInventoryItem(Otc::InventorySlot inventory, const ItemPtr& item);
     void setVocation(uint8_t vocation);
     void setPremium(bool premium);
+
+    //added
+    void setAttackSpeed(double attackSpeed);
+    double getAttackSpeed() { return m_attackSpeed; }
+
+
     void setRegenerationTime(uint16_t regenerationTime);
     void setOfflineTrainingTime(uint16_t offlineTrainingTime);
     void setSpells(const std::vector<uint16_t>& spells);
@@ -181,4 +187,5 @@ private:
     uint16_t m_stamina{ 0 };
     uint16_t m_regenerationTime{ 0 };
     uint16_t m_offlineTrainingTime{ 0 };
+    double m_attackSpeed{ 0 };
 };

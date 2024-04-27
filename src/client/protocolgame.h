@@ -132,6 +132,10 @@ public:
     void sendCloseImbuingWindow();
     void sendStashWithdraw(uint16_t itemId, uint32_t count, uint8_t stackpos);
 
+#ifdef PROGRESSBAR
+    void parseProgressbar(const InputMessagePtr& msg);
+#endif
+
     // otclient only
     void sendChangeMapAwareRange(int xrange, int yrange);
 
