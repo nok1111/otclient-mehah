@@ -1,0 +1,9 @@
+Module
+  name: game_forging
+  description: forging system, craft your recipe
+  author: Nekiro
+  website: https://github.com/nekiro
+  sandboxed: true
+  scripts: [ forging ]
+  @onLoad: init()
+  @onUnload: terminate()

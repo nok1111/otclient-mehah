@@ -1,188 +1,244 @@
-MiniPanel < Panel
-  text-offset: 0 3
-  text-align: top
-  image-source: /images/ui/minipanel
-  image-border: 2
-  image-border-top: 19
-  padding-left: 7
-  padding-bottom: 7
-  padding-top: 24
-  padding-right: 7
-
-SelectionButton < Panel
-  image-source: /images/ui/button
-  image-color: #dfdfdf
-  image-clip: 0 0 22 23
-  image-border: 3
-  border: 1 alpha
+LootMonsterBox_classic < Panel
+  padding: 7
+  padding-top: 4
   focusable: true
+  image-source: /images/ui/miniwindow
+  image-border: 23
   phantom: false
+  border-width: 1
+  border-color: alpha
+  text-align: top
+  text-offset: 0 2
+  @onClick: modules.game_tasks.selectMonster(self)
 
-  $hover:
-    border: 1 white
+  $hover !disabled:
+    border-color: #ffffff
 
-  $focus:
-    border: 1 white
-    image-color: #ffffff
+  Creature
+    id: creature
+    phantom: true
+    size: 48 48
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 20
 
   Panel
-    id: progress
-    image-source: /images/ui/panel_flat
-    image-color: #00ff00
-    margin-left: 1
-    margin-top: 1
-    anchors.top: parent.top
+    id: info
+    anchors.top: prev.bottom
+    anchors.bottom: parent.bottom
     anchors.left: parent.left
-    size: 159 158
+    anchors.right: parent.right
+    image-source: /images/ui/textedit
+    image-border: 2
+    margin-top: 8
+    margin-bottom: 3
 
-  UICreature
+ListMonsterBox < Panel
+  padding: 7
+  padding-top: 4
+  image-source: /images/ui/miniwindow
+  image-border: 23
+  text-align: top
+  text-offset: 0 2
+
+  Creature
     id: creature
-    anchors.centerIn: parent
-    size: 90 90
-    margin-bottom: 17
     phantom: true
-    anchors.verticalCenter: prev.verticalCenter
-
-  Label
-    id: name
-    anchors.bottom: creature.top
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: -7
-    text-align: top
-    text-wrap: true
-    text-border: 5 black
-
-  Label
-    id: kills
-    anchors.top: creature.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    text-align: center
-    margin-top: 5
-    text-wrap: true
-
-  Label
-    id: reward
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    text-align: center
-    margin-top: 2
-    text-wrap: true
-
-  Label
-    id: rewardTaskPoints
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    text-align: center
-    margin-top: 3
-    text-wrap: true
+    size: 48 48
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 20
 
 MainWindow
-  size: 549 509
-  id: tasksWindow
+  id: lootStatsMain
   !text: tr('Tasks')
+  size: 550 515
+  @onEscape: modules.game_tasks.toggle()
 
-  @onEnter: modules.game_tasks.toggleWindow()
-  @onEscape: modules.game_tasks.toggleWindow()
-
-  MiniPanel
-    id: listSearch
+  ComboBox
+    id: level
+    anchors.left: parent.left
     anchors.top: parent.top
+    width: 140
+    menu-scroll: true
+    menu-height: 125
+
+  TabButton
+    id: monstersTab
+    !text: tr('Available Tasks')
+    on: true
+    anchors.left: prev.right
+    anchors.top: parent.top
+    margin-left: 10
+    width: 200
+    @onClick: modules.game_tasks.showAvailable()
+
+  TabButton
+    id: allLootTab
+    !text: tr('Completed Tasks')
+    anchors.left: prev.right
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-left: 10
+    @onClick: modules.game_tasks.showCompleted()
+
+  Panel
+    id: panelCreatureView
     anchors.left: parent.left
     anchors.right: parent.right
-    margin-left: 5
-    height: 50
-    text: Filter
+    anchors.top: prev.bottom
+    anchors.bottom: closeButton.top
+    margin-top: 10
+    visible: false
 
-    TextEdit
-      id: search
-      anchors.fill: parent
-      placeholder: Search by name
+    Panel
+      id: creatureView
+      anchors.top: parent.top
+      anchors.left: parent.left
+      padding: 7
+      padding-top: 4
+      focusable: true
+      image-source: /images/ui/miniwindow
+      image-border: 23
+      phantom: false
+      border-width: 1
+      border-color: alpha
+      text-align: top
+      text-offset: 0 2
+      size: 100 120
+
+      Creature
+        id: creature
+        phantom: true
+        size: 48 48
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 20
+
+      Panel
+        id: info
+        anchors.top: prev.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        image-source: /images/ui/textedit
+        image-border: 2
+        margin-top: 8
+        margin-bottom: 3
+
+    FlatPanel
+      id: rewards
+      anchors.top: parent.top
+      anchors.right: parent.right
+      anchors.left: prev.right
+      anchors.bottom: prev.bottom
+      margin-left: 5
+      padding: 2
+
+      Label
+        anchors.fill: parent
+
+    ScrollablePanel
+      id: monstersPanel
+      image-source: /images/ui/panel_flat
+      image-border: 1
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      vertical-scrollbar: monstersPanelScrollBar
+      padding: 3
+      padding-right: 13
+      margin-top: 10
+      margin-bottom: 10
+      layout:
+        type: grid
+        cell-size: 119 80
+        flow: true
+        cell-spacing: 5
+
+    VerticalScrollBar
+      id: monstersPanelScrollBar
+      anchors.top: monstersPanel.top
+      anchors.bottom: monstersPanel.bottom
+      anchors.right: monstersPanel.right
+      step: 24
+      pixels-scroll: true
 
   ScrollablePanel
-    id: selectionList
-    anchors.top: listSearch.bottom
-    anchors.left: listSearch.left
-    anchors.right: parent.right
-    anchors.bottom: separator.top
-    margin-top: 5
-    margin-bottom: 5
+    id: itemsPanel
     image-source: /images/ui/panel_flat
     image-border: 1
-    padding: 4
-    padding-right: 16
-    vertical-scrollbar: selectionScroll
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.top
+    anchors.bottom: closeButton.top
+    vertical-scrollbar: itemsPanelListScrollBar
+    padding: 3
+    padding-right: 14
+    margin-bottom: 10
     layout:
       type: grid
-      cell-size: 160 160
-      cell-spacing: 2
+      cell-size: 119 120
       flow: true
+      auto-spacing: true
 
   VerticalScrollBar
-    id: selectionScroll
-    anchors.top: prev.top
-    anchors.right: prev.right
-    anchors.bottom: prev.bottom
-    step: 80
-    pixel-scroll: true
+    id: itemsPanelListScrollBar
+    anchors.top: itemsPanel.top
+    anchors.bottom: itemsPanel.bottom
+    anchors.right: itemsPanel.right
+    step: 24
+    pixels-scroll: true
 
-  HorizontalSeparator
-    id: separator
-    anchors.bottom: parent.bottom
-    anchors.left: parent.left
+  Button
+    id: closeButton
+    !text: tr('Close')
+    width: 64
     anchors.right: parent.right
-    margin-bottom: 30
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_tasks.toggle()
 
   Label
-    id: info
-    anchors.top: separator.top
+    id: searchLabel
+    text: Search
     anchors.left: parent.left
-    width: 140
-    height: 45
-    text-align: center
-    text-wrap: true
+    anchors.bottom: parent.bottom
+    margin-bottom: 3
+
+  TextEdit
+    id: searchInput
+    anchors.left: prev.right
+    anchors.bottom: parent.bottom
+    margin-left: 5
+    width: 100
+    @onKeyPress: modules.game_tasks.onSearch()
+
+  CheckBox
+    id: recommended
+    anchors.left: prev.right
+    anchors.bottom: parent.bottom
+    tooltip: Show recommended tasks for your level
+    text: Recommended
+    width: 110
+    margin-bottom: 5
+    margin-left: 5
+    text-offset: 18 -1
+    @onClick: modules.game_tasks.recommended()
 
   Button
-    id: toggleButton
+    id: acceptButton
+    !text: tr('Accept')
+    width: 64
+    anchors.left: parent.left
     anchors.bottom: parent.bottom
-    anchors.right: parent.right
-    text: Close
-    width: 65
-    @onClick: modules.game_tasks.toggleWindow()
+    @onClick: modules.game_tasks.accept()
+    visible: false
 
-  Button
-    id: finishButton
+  Panel
+    anchors.horizontalCenter: parent.horizontalCenter
     anchors.bottom: parent.bottom
-    anchors.right: toggleButton.left
-    text: Finish
-    width: 55
-    margin-right: 5
-    @onClick: modules.game_tasks.finish()
-
-  Button
-    id: startButton
-    anchors.bottom: parent.bottom
-    anchors.right: toggleButton.left
-    text: Start
-    width: 55
-    margin-right: 5
-    @onClick: modules.game_tasks.start()
-
-  Button
-    id: abortButton
-    anchors.bottom: parent.bottom
-    anchors.right: toggleButton.left
-    text: Abort
-    width: 55
-    margin-right: 5
-    @onClick: modules.game_tasks.abort()
-
-  ResizeBorder
-    anchors.right: parent.right
-    anchors.top: parent.top
-    anchors.bottom: parent.bottom
-    enabled: true
-    minimum: 190
+    margin-bottom: 5
+    height: 15
+    width: 150
+    

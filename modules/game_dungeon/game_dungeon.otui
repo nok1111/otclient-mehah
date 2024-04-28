@@ -1,0 +1,267 @@
+DungeonItem < UIWidget
+  size: 36 50
+
+  Item
+    id: dungeonItem
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+
+  Label
+    id: dungeonItemCnt
+    font: verdana-10px
+    text-align: center
+    color: #00ff00
+    size: 36 12
+    anchors.top: prev.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 2
+
+
+DungeonRequirements < UIWidget
+  size: 180 70
+  background: #00000099
+
+  Label
+    size: 140 20
+    font: terminus-14px-bold
+    color: #00ffff
+    !text: tr('REQUIRED ITEMS')
+    text-align: center
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+
+  Panel
+    size: 180 50
+    id: dungeonReqItemsPanel
+    anchors.centerIn: parent
+    margin-top: 10
+    layout:
+      type: horizontalBox
+    border-width: 1
+    border-color: #202327
+    background: #000000cc
+
+DungeonRewards < UIWidget
+  size: 300 50
+  background: #00000099
+
+  UIWidget
+    size: 40 40
+    image-source: /images/game/dungeon/coin
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-left: 5
+    margin-top: 5
+
+  Label
+    id: coins
+    width: 40
+    font: terminus-14px-bold
+    color: #dfdfdf
+    !text: tr('1000')
+    anchors.top: parent.top
+    anchors.left: prev.right
+    margin-left: 5
+    margin-top: 15
+
+  UIWidget
+    size: 40 40
+    image-source: /images/game/dungeon/exp
+    anchors.top: parent.top
+    anchors.left: prev.right
+    margin-left: 15
+    margin-top: 5
+
+  Label
+    id: exp
+    width: 40
+    font: terminus-14px-bold
+    color: #dfdfdf
+    !text: tr('1000')
+    anchors.top: parent.top
+    anchors.left: prev.right
+    margin-left: 5
+    margin-top: 15
+
+  UIWidget
+    size: 40 40
+    image-source: /images/game/dungeon/crown
+    anchors.top: parent.top
+    anchors.left: prev.right
+    margin-left: 15
+    margin-top: 5
+
+  Label
+    id: fame
+    width: 40
+    font: terminus-14px-bold
+    color: #dfdfdf
+    !text: tr('1000')
+    anchors.top: parent.top
+    anchors.left: prev.right
+    margin-left: 5
+    margin-top: 15
+
+DungeonButton < Button
+  size: 116 34
+  text-offset: 0 0
+  image-source: /images/taskList/button
+  image-color: #dfdfdf
+  image-clip: 0 0 116 34
+  image-border: 3
+  padding: 5 10 5 10
+
+  $hover !disabled:
+    image-clip: 0 34 116 34
+
+  $pressed:
+    image-clip: 0 68 116 34
+    text-offset: 1 1
+
+MainWindow
+  id: dungeonWindow
+  image-source: /images/game/dungeon/dungeon1
+  width: 600
+  height: 400
+  draggable: true
+  @onEscape: hide()
+
+  Label
+    font: terminus-14px-bold
+    color: #33ff33
+    !text: tr('DUNGEON')
+    text-align: center
+    width: 600
+    height: 20
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 20
+    margin-left: -16
+
+  Label
+    id: missionName
+    font: terminus-14px-bold
+    color: #ffffff
+    !text: tr('MISSION NAME')
+    width: 200
+    height: 20
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 40
+
+  Label
+    font: terminus-14px-bold
+    color: #00ffff
+    !text: tr('OBJECTIVES:')
+    width: 200
+    height: 20
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 5
+
+  Label
+    id: objectivesDesc
+    font: terminus-14px-bold
+    color: #ffffff
+    !text: tr('Ipsum dolor sit amet, conseculer adipiscing elit. Anneean commando ligula eget dolor.')
+    text-wrap: true
+    text-auto-resize: true
+    width: 300
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 5
+
+  Label
+    font: terminus-14px-bold
+    color: #00ffff
+    !text: tr('REWARDS:')
+    width: 200
+    height: 20
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 5
+
+  DungeonRewards
+    id: rewards
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 5
+
+  Label
+    font: terminus-14px-bold
+    color: #00ffff
+    !text: tr('DIFFICULTY:')
+    width: 200
+    height: 20
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 45
+
+  Label
+    id: difficultyDesc
+    font: terminus-14px-bold
+    color: #ffffff
+    !text: tr('Normal')
+    width: 200
+    height: 20
+    anchors.top: prev.bottom
+    anchors.right: parent.right
+    margin-top: 5
+
+  Label
+    font: terminus-14px-bold
+    color: #00ffff
+    !text: tr('REC. LEVEL:')
+    width: 100
+    height: 20
+    anchors.top: prev.bottom
+    anchors.right: parent.right
+    margin-top: 5
+    margin-right: 100
+
+  Label
+    id: recommendedLevel
+    font: terminus-14px-bold
+    color: #ffffff
+    !text: tr('15')
+    width: 100
+    height: 20
+    anchors.top: prev.top
+    anchors.left: prev.right
+    margin-left: 5
+
+  Label
+    font: terminus-14px-bold
+    color: #00ffff
+    !text: tr('REC. PLAYERS:')
+    width: 100
+    height: 20
+    anchors.top: prev.bottom
+    anchors.right: parent.right
+    margin-top: 5
+    margin-right: 100
+
+  Label
+    id: recommendedPlayers
+    font: terminus-14px-bold
+    color: #ffffff
+    !text: tr('3-5')
+    width: 100
+    height: 20
+    anchors.top: prev.top
+    anchors.left: prev.right
+    margin-left: 5
+
+  DungeonRequirements
+    id: itemsReq
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 10
+
+  DungeonButton
+    id: buttonStart
+    !text: tr('Start')
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-bottom: -5
+    @onClick: startDungeon()

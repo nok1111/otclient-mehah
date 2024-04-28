@@ -1,0 +1,161 @@
+TaskButton < Button
+  size: 116 34
+  text-offset: 0 0
+  image-source: /images/taskList/button
+  image-color: #dfdfdf
+  image-clip: 0 0 116 34
+  image-border: 3
+  padding: 5 10 5 10
+
+  $hover !disabled:
+    image-clip: 0 34 116 34
+
+  $pressed:
+    image-clip: 0 68 116 34
+    text-offset: 1 1
+
+
+NpcTaskButton < Button
+  width: 256
+  height: 24
+
+NpcTaskWidget < UIWidget
+  image-source: /images/taskList/task_item
+  width: 256
+  height: 24
+
+  NpcTaskButton
+    id: taskButton
+    anchors.left: parent.left
+    anchors.top: parent.top
+    @onClick: modules.game_tasklist.onNpcTaskSelectClick(self)
+
+NpcTaskListPanel < Panel
+  width: 256
+  height: 100
+
+  ScrollablePanel
+    id: npcTaskListPanel
+    anchors.fill: parent
+    margin-right: 12
+    vertical-scrollbar: npcTaskListScrollBar
+    layout:
+      type: verticalBox
+    border-width: 1
+    border-color: #202327
+    background: #000000cc
+    padding: 1
+
+  VerticalScrollBar
+    id: npcTaskListScrollBar
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    step: 36
+    pixels-scroll: true
+
+
+NpcTaskDescription < UIWidget
+  size: 256 150
+  background: #00000066
+
+  Label
+    id: taskTitle
+    !text: tr('taskTitle:')
+    size: 256 15
+    anchors.top: parent.top
+    color: #ff3333
+
+  Label
+    id: taskDescription
+    !text: tr('taskDescription:')
+    size: 256 30
+    anchors.top: prev.bottom
+    color: #ff3333
+    text-wrap: true
+
+  Label
+    !text: tr('Rewards:')
+    size: 55 15
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+
+  Label
+    id: rewardExp
+    size: 90 15
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    color: #ff3333
+
+  Label
+    id: rewardOutfit
+    size: 90 15
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    color: #ff3333
+
+  Item
+    id: rewardItem
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 0
+    margin-left: 0
+
+  Label
+    id: rewardItemCnt
+    size: 34 34
+    anchors.top: prev.top
+    anchors.left: prev.right
+    margin-top: 10
+    margin-left: 5
+    color: #ff3333
+
+
+NpcTaskListWidget < MainWindow
+  id: npcTaskListWidget
+  !text: tr('NPC daily tasks')
+  image-source: /images/taskList/background
+  width: 300
+  height: 300
+
+  UIWidget
+    id: npcTopOverlay
+    image-source: /images/taskList/top_overlay
+    width: 300
+    height: 36
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: -44
+    margin-left: -15
+
+  NpcTaskListPanel
+    id: npcTaskList
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: -5
+    margin-left: 6
+
+  NpcTaskListPanel
+    id: npcTaskDescription
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 5
+    margin-left: 6
+
+  TaskButton
+    id: acceptButton
+    !text: 'Accept'
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    margin-left: 10
+    margin-bottom: -1
+    @onClick: modules.game_tasklist.acceptNpcTask()
+
+  TaskButton
+    id: declioneButton
+    !text: 'Close'
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-right: 10
+    margin-bottom: -1
+    @onClick: modules.game_tasklist.declineNpcTask()

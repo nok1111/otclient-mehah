@@ -1,7 +1,7 @@
 game
   sprite-size: 32
   last-supported-version: 1321
-  draw-typing: false
+  draw-typing: true
   typing-icon: /images/game/console/typing
   
   map
@@ -17,7 +17,7 @@ game
     transparent-floor-view-range: 2
 
   creature
-    draw-information-by-widget-beta: false
+    draw-information-by-widget-beta: true
     force-new-walking-formula: false
     shield-blink-ticks: 500
     volatile-square-duration: 1000

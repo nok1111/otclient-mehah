@@ -1,0 +1,233 @@
+enchantNPCOfferLabel < Label
+  anchors.left: prev.right
+  anchors.top: prev.top
+  margin-left: 5
+  text-auto-resize: true
+
+enchantNPCItemBox < UICheckBox
+  image-source: /images/ui/miniwindow
+  image-smooth: false
+  image-size: 140 100
+  border-width: 1
+  border-color: #000000
+  color: #aaaaaa
+  text-align: center
+  text-offset: 0 10
+  @onCheckChange: modules.game_enchantnpcshop.onItemBoxChecked(self)
+
+  Item
+    id: enchantitem
+    phantom: true
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    image-color: #ffffffff
+    margin-top: 5
+
+  $checked on:
+    border-color: #ffffff
+
+  $!checked:
+    border-color: #000000
+
+  $!on:
+    image-color: #ffffff88
+    color: #aaaaaa88
+
+MainWindow
+  id: enchantnpcWindow
+  !text: tr('Enchantments Shop')
+  size: 530 540
+  @onEscape: modules.game_enchantnpcshop.hide()
+
+  FlatPanel
+    height: 242
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-top: 10
+
+    VerticalScrollBar
+      id: itemsPanelListScrollBar
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      step: 24
+      pixels-scroll: true
+
+    ScrollablePanel
+      id: enchantitemsPanel
+      height: 235
+      anchors.left: parent.left
+      anchors.right: prev.left
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      vertical-scrollbar: itemsPanelListScrollBar
+      margin-left: 5
+      margin-right: 5
+      layout:
+        type: grid
+        cell-size: 140 100
+        flow: true
+        auto-spacing: true
+
+  FlatPanel
+    id: enchantsetupPanel
+    height: 222
+    width: 500
+    enabled: false
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 10
+    margin-right: 5
+    image-color: #ffffff88
+
+    Label
+      !text: tr('Name') .. ':'
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin-top: 0
+      margin-left: 5
+      width: 85
+
+    enchantNPCOfferLabel
+      id: enchantname
+
+    Label
+      !text: tr('Price') .. ':'
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin-top: 5
+      margin-left: 5
+      width: 85
+
+    enchantNPCOfferLabel
+      id: enchantprice
+
+    Label
+      !text: tr('Your Gold') .. ':'
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin-top: 5
+      margin-left: 5
+      width: 90
+
+    enchantNPCOfferLabel
+      id: enchantmoney
+
+    Label
+      id: enchantweightDesc
+      !text: tr('Weight') .. ':'
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin-top: 5
+      margin-left: 5
+      width: 85
+
+    enchantNPCOfferLabel
+      id: enchantweight
+
+    Label
+      id: enchantcapacityDesc
+      !text: tr('Your Capacity') .. ':'
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin-top: 5
+      margin-left: 5
+      width: 85
+
+    enchantNPCOfferLabel
+      id: enchantcapacity
+
+    Label
+      !text: tr('Description') .. ':'
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin-top: 5
+      margin-left: 5
+      width: 85
+
+    TextEdit
+      id: enchantdesc
+      width: 350
+      height: 70
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      text-align: left
+      margin-top: 5
+      margin-left: 5
+      text-wrap: true
+      editable: false
+      multiline: true
+      change-cursor-image: false
+      focusable: false
+      selectable: false
+
+
+    HorizontalScrollBar
+      id: enchantquantityScroll
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: prev.bottom
+      margin-top: 5
+      margin-left: 5
+      margin-right: 5
+      show-value: true
+      minimum: 1
+      maximum: 1
+      step: 1
+      @onValueChange: modules.game_enchantnpcshop.onQuantityValueChange(self:getValue())
+
+  FlatPanel
+    id: enchantbuyOptions
+    height: 60
+    anchors.top: prev.top
+    anchors.left: parent.horizontalCenter
+    anchors.right: parent.right
+    margin-left: 5
+    margin-right: 25
+    image-color: #ffffff88
+
+    Label
+      id: enchantsearchLabel
+      !text: tr('Search') .. ':'
+      anchors.left: parent.left
+      anchors.top: parent.top
+      text-auto-resize: true
+      margin-top: 7
+      margin-left: 5
+
+    TextEdit
+      id: enchantsearchText
+      anchors.left: prev.right
+      anchors.top: prev.top
+      anchors.right: parent.right
+      margin-top: -2
+      margin-left: 5
+      margin-right: 10
+      @onTextChange: modules.game_enchantnpcshop.onSearchTextChange()
+
+    CheckBox
+      id: enchantignoreCapacity
+      !text: tr('Ignore capacity')
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-left: 5
+      margin-top: 5
+      @onCheckChange: modules.game_enchantnpcshop.onIgnoreCapacityChange()
+
+  Button
+    id: enchanttradeButton
+    !text: tr('Buy')
+    width: 64
+    anchors.right: next.left
+    anchors.bottom: parent.bottom
+    margin-right: 10
+    @onClick: modules.game_enchantnpcshop.onTradeClick()
+
+  Button
+    !text: tr('Close')
+    width: 64
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_enchantnpcshop.hide()

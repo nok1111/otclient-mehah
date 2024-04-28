@@ -16,6 +16,16 @@ GameServerOpcodes = {
 
     -- otclient ONLY
     GameServerExtendedOpcode = 50,
+	
+	GameServerUpdateFame  = 52,
+	GameServerJobs       = 53,
+    GameServerOpenCrafting  = 54,
+    GameServerOpenFameShop   = 55,
+	GameServerOpentokenShop  = 58,
+	GameServerOpenEnchantShop = 71,
+	GameServerOpenReputation  = 72, --lib files opcode
+	GameServerOpenForging  = 73, --lib files opcode
+	GameServerUpdateAscended = 77,
 
     -- NOTE: add any custom opcodes in this range
     -- 51 - 99
@@ -121,6 +131,26 @@ ClientOpcodes = {
 
     -- otclient ONLY
     ClientExtendedOpcode = 50,
+	
+    -- NOTE: add any custom opcodes in this range
+     ClientSelectTask 					= 52,
+    ClientSelectReward					= 53,
+    ClientGetTaskList 					= 54,
+    ClientGetInventoryAbilities			= 55,
+    ClientDeleteTask                    = 56,
+    ClientStartDungeon 					= 60,
+
+
+    -- NOTE: add any custom opcodes in this range
+    -- 51 - 99
+
+   -- ClientOpenJobsWindow                = 54,
+    ClientCraftRecipe                   = 55,
+    ClientFameShopBuy                   = 56,
+	ClientTokenBuy                      = 57,
+	EnchantNpcShopBuy                   = 70,
+	ClientOpenReputationWindow          = 71,
+    ClientForgeRecipe                   = 72,
 
     -- NOTE: add any custom opcodes in this range
     -- 51 - 99

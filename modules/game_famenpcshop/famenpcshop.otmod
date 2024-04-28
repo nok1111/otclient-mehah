@@ -1,0 +1,9 @@
+Module
+  name: game_famenpcshop
+  description: NPC fame shop interface
+  author: nekiro
+  website: https://github.com/nekiro
+  sandboxed: true
+  scripts: [ famenpcshop ]
+  @onLoad: init()
+  @onUnload: terminate()

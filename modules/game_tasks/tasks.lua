@@ -1,274 +1,741 @@
-local window = nil
-local selectedEntry = nil
-local consoleEvent = nil
-local taskButton
+local OPCODE = 110
+
+local trackerButton = nil
+local trackerWindow = nil
+local trackerPanel = nil
+local finishedPanel = nil
+
+local tasksWindow = nil
+local itemsPanel = nil
+local creaturePanel = nil
+
+local selected = nil
+local tasks = {}
+
+local levels = {
+  {-1, -1},
+  {"[Tier 1] Garona"},
+  {"[Tier 2] Wilthorns"},
+  {"[Tier 3] Rehema"},
+  {"[Tier 4] Swantears"},
+  {"[Tier 5] Firewind"},
+  {"[Tier 5.1] Warlands"}
+}
 
 function init()
-    connect(g_game, {
-        onGameStart = onGameStart,
-        onGameEnd = destroy
-    })
+  connect(
+    g_game,
+    {
+      onGameStart = create,
+      onGameEnd = destroy
+    }
+  )
 
-    window = g_ui.displayUI('tasks')
-    window:setVisible(false)
+  ProtocolGame.registerExtendedOpcode(OPCODE, onExtendedOpcode)
 
-    g_keyboard.bindKeyDown('Ctrl+A', toggleWindow)
-    g_keyboard.bindKeyDown('Escape', hideWindowzz)
-	taskButton = modules.client_topmenu.addLeftGameButton('taskButton', tr('Tasks'), '/modules/game_tasks/images/taskIcon', toggleWindow)
-    ProtocolGame.registerExtendedJSONOpcode(215, parseOpcode)
+  if g_game.isOnline() then
+    create()
+  end
 end
 
 function terminate()
-    disconnect(g_game, {
-        onGameEnd = destroy
-    })
-    ProtocolGame.unregisterExtendedJSONOpcode(215, parseOpcode)
-    taskButton:destroy()
-    destroy()
+  disconnect(
+    g_game,
+    {
+      onGameStart = create,
+      onGameEnd = destroy
+    }
+  )
+
+  ProtocolGame.unregisterExtendedOpcode(OPCODE, onExtendedOpcode)
+
+  destroy()
 end
 
-function onGameStart()
-    if (window) then
-        window:destroy()
-        window = nil
-    end
+function create()
+  if tasksWindow then
+    return
+  end
 
-    window = g_ui.displayUI('tasks')
-    window:setVisible(false)
-    window.listSearch.search.onKeyPress = onFilterSearch
+  trackerButton = modules.client_topmenu.addRightGameToggleButton("trackerButton", tr("Tasks Tracker"), "/images/topbuttons/battle", toggleTracker)
+  trackerButton:setOn(true)
+  trackerWindow = g_ui.loadUI("tasks_tracker", modules.game_interface.getRightPanel())
+  local scrollbar = trackerWindow:getChildById("miniwindowScrollBar")
+  scrollbar:mergeStyle({["$!on"] = {}})
+  trackerPanel = trackerWindow:recursiveGetChildById("trackerPanel")
+  finishedPanel = trackerWindow:recursiveGetChildById("finishedPanel")
+  trackerWindow:setContentMinimumHeight(120)
+  trackerWindow:setup()
+
+  tasksWindow = g_ui.displayUI("tasks")
+  tasksWindow:hide()
+  tasksWindow:getChildById("monstersTab"):setOn(true)
+
+  itemsPanel = tasksWindow:recursiveGetChildById("itemsPanel")
+  creaturePanel = tasksWindow:recursiveGetChildById("panelCreatureView")
+  local protocolGame = g_game.getProtocolGame()
+  if protocolGame then
+    protocolGame:sendExtendedOpcode(OPCODE, json.encode({action = "fetch"}))
+  end
 end
 
 function destroy()
-    if (window) then
-        window:destroy()
-        window = nil
+  if tasksWindow then
+    trackerButton:destroy()
+    trackerButton = nil
+    trackerPanel = nil
+    finishedPanel = nil
+    trackerWindow:destroy()
+    trackerWindow = nil
+
+    itemsPanel = nil
+    creaturePanel = nil
+    tasksWindow:destroy()
+    tasksWindow = nil
+  end
+
+  tasks = {}
+end
+
+function onExtendedOpcode(protocol, code, buffer)
+  local json_status, data =
+    pcall(
+    function()
+      return json.decode(buffer)
     end
-end
+  )
 
-function parseOpcode(protocol, opcode, data)
-    updateTasks(data)
-end
+  if not json_status then
+    g_logger.error("[Tasks] JSON error: " .. data)
+    return false
+  end
 
-function sendOpcode(data)
-    local protocolGame = g_game.getProtocolGame()
-
-    if protocolGame then
-        protocolGame:sendExtendedJSONOpcode(215, data)
+  if data.action == "fetch" then
+    for k, v in pairs(data.data) do
+      tasks[#tasks + 1] = v
     end
-end
-
-function onItemSelect(list, focusedChild, unfocusedChild, reason)
-    if focusedChild then
-        selectedEntry = tonumber(focusedChild:getId())
-
-        if (not selectedEntry) then
-            return true
-        end
-
-        window.finishButton:hide()
-        window.startButton:hide()
-        window.abortButton:hide()
-        local children = window.selectionList:getChildren()
-
-        for _, child in ipairs(children) do
-            local id = tonumber(child:getId())
-
-            if (selectedEntry == id) then
-                local kills = child.kills:getText()
-
-                if (child.progress:getWidth() == 159) then
-                    window.finishButton:show()
-                elseif (kills:find('/')) then
-                    window.abortButton:show()
-                else
-                    window.startButton:show()
-                end
-            end
-        end
+    table.sort(
+      tasks,
+      function(a, b)
+        return a.level < b.level
+      end
+    )
+    for i = 1, #tasks do
+      addToList(tasks[i])
     end
-end
-
-function onFilterSearch()
-    addEvent(function()
-        local searchText = window.listSearch.search:getText():lower():trim()
-        local children = window.selectionList:getChildren()
-
-        if (searchText:len() >= 1) then
-            for _, child in ipairs(children) do
-                local text = child.name:getText():lower()
-
-                if (text:find(searchText)) then
-                    child:show()
-                else
-                    child:hide()
-                end
-            end
+    local levelWidget = tasksWindow:getChildById("level")
+    if levelWidget:getOptionsCount() == 0 then
+      levelWidget.onOptionChange = onLevelChange
+      for i = 1, #levels do
+        if i == 1 then
+          levelWidget:addOption("All", i)
         else
-            for _, child in ipairs(children) do
-                child:show()
-            end
+          levelWidget:addOption(levels[i][1], i)
         end
-    end)
+      end
+      levelWidget:setCurrentIndex(1)
+    end
+  elseif data.action == "update" then
+    updateTask(data.data)
+  elseif data.action == "open" then
+    show()
+  elseif data.action == "close" then
+    hide()
+  end
 end
 
-function start()
-    if (not selectedEntry) then
-        return not setTaskConsoleText("Please select monster from monster list.", "red")
-    end
-
-    sendOpcode({
-        action = 'start',
-        entry = selectedEntry
-    })
-end
-
-function finish()
-    if (not selectedEntry) then
-        return not setTaskConsoleText("Please select monster from monster list.", "red")
-    end
-
-    sendOpcode({
-        action = 'finish',
-        entry = selectedEntry
-    })
-end
-
-function abort()
-    local cancelConfirm = nil
-
-    if (cancelConfirm) then
-        cancelConfirm:destroy()
-        cancelConfirm = nil
-    end
-
-    if (not selectedEntry) then
-        return not setTaskConsoleText("Please select monster from monster list.", "red")
-    end
-
-    local yesFunc = function()
-        cancelConfirm:destroy()
-        cancelConfirm = nil
-        sendOpcode({
-            action = 'cancel',
-            entry = selectedEntry
-        })
-    end
-
-    local noFunc = function()
-        cancelConfirm:destroy()
-        cancelConfirm = nil
-    end
-
-    cancelConfirm = displayGeneralBox(tr('Tasks'), tr("Do you really want to abort this task?"), {
-        {
-            text = tr('Yes'),
-            callback = yesFunc
-        },
-        {
-            text = tr('No'),
-            callback = noFunc
-        },
-        anchor = AnchorHorizontalCenter
-    }, yesFunc, noFunc)
-end
-
-function updateTasks(data)
-    if (data['message']) then
-        return setTaskConsoleText(data['message'], data['color'])
-    end
-
-    local selectionList = window.selectionList
-    selectionList.onChildFocusChange = onItemSelect
-    selectionList:destroyChildren()
-    local playerTaskIds = {}
-
-    for _, task in ipairs(data['playerTasks']) do
-        local button = g_ui.createWidget("SelectionButton", window.selectionList)
-        button:setId(task.id)
-        table.insert(playerTaskIds, task.id)
-        button.creature:setOutfit(task.looktype)
-        button.name:setText(task.name)
-        button.kills:setText('Kills: ' .. task.done .. '/' .. task.kills)
-        button.reward:setText('Reward: ' .. task.exp .. ' exp')
-        if not (task.taskPoints == nil) then
-          button.rewardTaskPoints:setText('Task Points: ' .. task.taskPoints .. '')
-        else
-          button.rewardTaskPoints:setText('Task Points: 0')
-        end
-        local progress = 159 * task.done / task.kills
-        button.progress:setWidth(progress)
-        selectionList:focusChild(button)
-    end
-
-    for _, task in ipairs(data['allTasks']) do
-        if (not table.contains(playerTaskIds, task.id)) then
-            local button = g_ui.createWidget("SelectionButton", window.selectionList)
-            button:setId(task.id)
-            button.creature:setOutfit(task.looktype)
-            button.name:setText(task.name)
-            button.kills:setText('Kills: ' .. task.kills)
-            button.reward:setText('Reward: ' .. task.exp .. ' exp')
-            if not (task.taskPoints == nil) then
-              button.rewardTaskPoints:setText('Task Points: ' .. task.taskPoints .. '')
-            else
-              button.rewardTaskPoints:setText('Task Points: 0')
-            end
-            button.progress:setWidth(0)
-            selectionList:focusChild(button)
-        end
-    end
-
-    selectionList:focusChild(selectionList:getFirstChild())
-    onFilterSearch()
-end
-
-function toggleWindow()
-    if (not g_game.isOnline()) then
-        return
-    end
-
-    if (window:isVisible()) then
-        sendOpcode({
-            action = 'hide'
-        })
-        window:setVisible(false)
+function addToList(monster)
+  if not monster.finished then
+    local panel = g_ui.createWidget("LootMonsterBox_classic", itemsPanel)
+    panel:setId(monster.raceName)
+    panel:setText(monster.raceName)
+    local text = ""
+    if monster.completed then
+      text = text .. "Completed"
+    elseif monster.active then
+      text = text .. "Kills: " .. monster.kills .. " / " .. monster.killsRequired
     else
-        sendOpcode({
-            action = 'info'
-        })
-        window:setVisible(true)
+      text = text .. "Kills: " .. monster.killsRequired
     end
+    text = text .. "\nLevel: " .. monster.level
+    panel:getChildById("info"):setText(text)
+    if type(monster.outfit) == "table" then
+      panel:getChildById("creature"):setOutfit(
+        {
+          type = monster.outfit.id,
+          head = monster.outfit.head,
+          body = monster.outfit.body,
+          legs = monster.outfit.legs,
+          feet = monster.outfit.feet,
+          addons = monster.outfit.addons
+        }
+      )
+    else
+      panel:getChildById("creature"):setOutfit({type = monster.outfit})
+    end
+  end
 end
 
-function hideWindowzz()
-    if (not g_game.isOnline()) then
+function selectMonster(widget)
+  local task = nil
+  for i = 1, #tasks do
+    if tasks[i].raceName == widget:getId() then
+      task = tasks[i]
+      selected = tasks[i].raceName
+      break
+    end
+  end
+  tasksWindow:getChildById("monstersTab"):setOn(false)
+  tasksWindow:getChildById("allLootTab"):setOn(false)
+  tasksWindow:getChildById("acceptButton"):show()
+  tasksWindow:getChildById("itemsPanelListScrollBar"):hide()
+  tasksWindow:getChildById("recommended"):hide()
+  tasksWindow:getChildById("searchLabel"):hide()
+  local searchInput = tasksWindow:getChildById("searchInput")
+  searchInput:setText("")
+  searchInput:hide()
+  itemsPanel:hide()
+  creaturePanel:show()
+  local creatureView = creaturePanel:getChildById("creatureView")
+  creatureView:setText(task.raceName)
+  local text = ""
+  if task.completed then
+    text = text .. "Completed"
+    tasksWindow:getChildById("acceptButton"):setText("Finish")
+  elseif task.active then
+    text = text .. "Kills: " .. task.kills .. " / " .. task.killsRequired
+    tasksWindow:getChildById("acceptButton"):setText("Cancel")
+  else
+    text = text .. "Kills: " .. task.killsRequired
+    tasksWindow:getChildById("acceptButton"):setText("Accept")
+  end
+  text = text .. "\nLevel: " .. task.level
+  creatureView:getChildById("info"):setText(text)
+  if type(task.outfit) == "table" then
+    creatureView:getChildById("creature"):setOutfit(
+      {
+        type = task.outfit.id,
+        head = task.outfit.head,
+        body = task.outfit.body,
+        legs = task.outfit.legs,
+        feet = task.outfit.feet,
+        addons = task.outfit.addons
+      }
+    )
+  else
+    creatureView:getChildById("creature"):setOutfit({type = task.outfit})
+  end
+
+  local rewards = "Rewards for completing this task:"
+  for i = 1, #task.rewards do
+    local reward = task.rewards[i]
+    if reward.type == "boss" then
+      rewards = rewards .. "\nBoss Fight"
+    else
+      rewards = rewards .. "\n" .. reward.type:gsub("^%l", string.upper)
+    end
+
+    if reward.type == "item" then
+      rewards = rewards .. ": " .. reward.values[1] .. " (x" .. reward.values[2] .. ")"
+    else
+      rewards = rewards .. ": " .. reward.values
+    end
+  end
+  creaturePanel:getChildById("rewards"):getChildByIndex(1):setText(rewards)
+
+  local p = creaturePanel:getChildById("monstersPanel")
+  p:destroyChildren()
+  for i = 1, #task.monsters do
+    local panel = g_ui.createWidget("ListMonsterBox", p)
+    panel:setEnabled(false)
+    panel:setText(
+      task.monsters[i]:gsub(
+        "(%a)(%a+)",
+        function(a, b)
+          return string.upper(a) .. string.lower(b)
+        end
+      )
+    )
+    if type(task.outfits[i]) == "table" then
+      panel:getChildById("creature"):setOutfit(
+        {
+          type = task.outfits[i].id,
+          head = task.outfits[i].head,
+          body = task.outfits[i].body,
+          legs = task.outfits[i].legs,
+          feet = task.outfits[i].feet,
+          addons = task.outfits[i].addons
+        }
+      )
+    else
+      panel:getChildById("creature"):setOutfit({type = task.outfits[i]})
+    end
+  end
+end
+
+function updateTask(data)
+  local task = nil
+  for i = 1, #tasks do
+    if tasks[i].raceName == data.raceName then
+      task = tasks[i]
+      task.active = data.active
+      task.completed = data.completed
+      task.finished = data.finished
+      task.kills = data.kills
+      break
+    end
+  end
+
+  if task then
+    local tButton = trackerPanel:recursiveGetChildById(task.raceName)
+    if tButton then
+      if data.delete then
+        tButton:destroy()
         return
-    end
+      end
+      if task.killsRequired == task.kills then
+        tButton:destroy()
+        local fButton = g_ui.createWidget("TrackerButton", finishedPanel)
+        fButton:setId(task.raceName)
+        if type(task.outfit) == "table" then
+          task.outfit.type = task.outfit.id
+          fButton:getChildById("creature"):setOutfit(task.outfit)
+        else
+          fButton:getChildById("creature"):setOutfit({type = task.outfit})
+        end
+        fButton:getChildById("label"):setText(task.raceName)
+        fButton:getChildById("kills"):setText(task.kills .. "/" .. task.killsRequired)
+        fButton:getChildById("killsBar"):setBackgroundColor("green")
+        fButton:getChildById("killsBar"):setPercent(100)
+        return
+      else
+        tButton:getChildById("killsBar"):setBackgroundColor("red")
+      end
+      tButton:getChildById("kills"):setText(task.kills .. "/" .. task.killsRequired)
+      tButton:getChildById("killsBar"):setPercent(task.kills * 100 / task.killsRequired)
+    else
+      tButton = finishedPanel:recursiveGetChildById(task.raceName)
+      if tButton then
+        if data.delete then
+          tButton:destroy()
+          return
+        end
+      else
+        if data.delete then
+          return
+        end
+        if task.killsRequired == task.kills then
+          local fButton = g_ui.createWidget("TrackerButton", finishedPanel)
+          fButton:setId(task.raceName)
+          if type(task.outfit) == "table" then
+            task.outfit.type = task.outfit.id
+            fButton:getChildById("creature"):setOutfit(task.outfit)
+          else
+            fButton:getChildById("creature"):setOutfit({type = task.outfit})
+          end
+          fButton:getChildById("label"):setText(task.raceName)
+          fButton:getChildById("kills"):setText(task.kills .. "/" .. task.killsRequired)
+          fButton:getChildById("killsBar"):setBackgroundColor("green")
+          fButton:getChildById("killsBar"):setPercent(100)
+        else
+          tButton = g_ui.createWidget("TrackerButton", trackerPanel)
+          tButton:setId(task.raceName)
+          if type(task.outfit) == "table" then
+            task.outfit.type = task.outfit.id
+            tButton:getChildById("creature"):setOutfit(task.outfit)
+          else
+            tButton:getChildById("creature"):setOutfit({type = task.outfit})
+          end
+          tButton:getChildById("label"):setText(task.raceName)
+          tButton:getChildById("kills"):setText(task.kills .. "/" .. task.killsRequired)
 
-    if (window:isVisible()) then
-        sendOpcode({
-            action = 'hide'
-        })
-        window:setVisible(false)
+          tButton:getChildById("killsBar"):setBackgroundColor("red")
+          tButton:getChildById("killsBar"):setPercent(task.kills * 100 / task.killsRequired)
+        end
+      end
     end
+  end
 end
 
-function setTaskConsoleText(text, color)
-    if (not color) then
-        color = 'white'
+function showAvailable()
+  tasksWindow:getChildById("monstersTab"):setOn(true)
+  tasksWindow:getChildById("allLootTab"):setOn(false)
+  tasksWindow:getChildById("acceptButton"):hide()
+  tasksWindow:getChildById("itemsPanelListScrollBar"):show()
+  tasksWindow:getChildById("recommended"):show()
+  tasksWindow:getChildById("searchLabel"):show()
+  local searchInput = tasksWindow:getChildById("searchInput")
+  searchInput:setText("")
+  searchInput:show()
+  itemsPanel:show()
+  creaturePanel:hide()
+
+  itemsPanel:destroyChildren()
+  for i = 1, #tasks do
+    if not tasks[i].finished then
+      local panel = g_ui.createWidget("LootMonsterBox_classic", itemsPanel)
+      panel:setId(tasks[i].raceName)
+      panel:setText(tasks[i].raceName)
+      local text = ""
+      if tasks[i].completed then
+        text = text .. "Completed"
+      elseif tasks[i].active then
+        text = text .. "Kills: " .. tasks[i].kills .. " / " .. tasks[i].killsRequired
+      else
+        text = text .. "Kills: " .. tasks[i].killsRequired
+      end
+      text = text .. "\nLevel: " .. tasks[i].level
+      panel:getChildById("info"):setText(text)
+      if type(tasks[i].outfit) == "table" then
+        panel:getChildById("creature"):setOutfit(
+          {
+            type = tasks[i].outfit.id,
+            head = tasks[i].outfit.head,
+            body = tasks[i].outfit.body,
+            legs = tasks[i].outfit.legs,
+            feet = tasks[i].outfit.feet,
+            addons = tasks[i].outfit.addons
+          }
+        )
+      else
+        panel:getChildById("creature"):setOutfit({type = tasks[i].outfit})
+      end
     end
+  end
+end
 
-    window.info:setText(text)
-    window.info:setColor(color)
+function showCompleted()
+  tasksWindow:getChildById("monstersTab"):setOn(false)
+  tasksWindow:getChildById("allLootTab"):setOn(true)
+  tasksWindow:getChildById("acceptButton"):hide()
+  tasksWindow:getChildById("itemsPanelListScrollBar"):show()
+  tasksWindow:getChildById("recommended"):show()
+  tasksWindow:getChildById("searchLabel"):show()
+  local searchInput = tasksWindow:getChildById("searchInput")
+  searchInput:setText("")
+  searchInput:show()
+  itemsPanel:show()
+  creaturePanel:hide()
 
-    if consoleEvent then
-        removeEvent(consoleEvent)
-        consoleEvent = nil
+  itemsPanel:destroyChildren()
+  for i = 1, #tasks do
+    if tasks[i].finished then
+      local panel = g_ui.createWidget("LootMonsterBox_classic", itemsPanel)
+      panel:setEnabled(false)
+      panel:setId(tasks[i].raceName)
+      panel:setText(tasks[i].raceName)
+      local text = ""
+      if tasks[i].finished then
+        text = text .. "Finished"
+      elseif tasks[i].completed then
+        text = text .. "Completed"
+      elseif tasks[i].active then
+        text = text .. "Kills: " .. tasks[i].kills .. " / " .. tasks[i].killsRequired
+      else
+        text = text .. "Kills: " .. tasks[i].killsRequired
+      end
+      text = text .. "\nLevel: " .. tasks[i].level
+      panel:getChildById("info"):setText(text)
+      for j = 1, #tasks[i].outfits do
+        if type(tasks[i].outfits[j]) == "table" then
+          panel:getChildById("creature"):setOutfit(
+            {
+              type = tasks[i].outfits[j].id,
+              head = tasks[i].outfits[j].head,
+              body = tasks[i].outfits[j].body,
+              legs = tasks[i].outfits[j].legs,
+              feet = tasks[i].outfits[j].feet,
+              addons = tasks[i].outfits[j].addons
+            }
+          )
+        else
+          panel:getChildById("creature"):setOutfit({type = tasks[i].outfits[j]})
+        end
+      end
     end
+  end
+end
 
-    consoleEvent = scheduleEvent(function()
-        window.info:setText('')
-    end, 5000)
+function onSearch()
+  scheduleEvent(
+    function()
+      local searchInput = tasksWindow:getChildById("searchInput")
+      local text = searchInput:getText():lower()
+      if text:len() >= 1 then
+        local children = itemsPanel:getChildCount()
+        for i = 1, children do
+          local child = itemsPanel:getChildByIndex(i)
+          local taskId = child:getId():lower()
+          if taskId:find(text) then
+            child:show()
+          else
+            child:hide()
+          end
+        end
+      else
+        local children = itemsPanel:getChildCount()
+        for i = 1, children do
+          itemsPanel:getChildByIndex(i):show()
+        end
+      end
+    end,
+    50
+  )
+end
 
-    return true
+function recommended(force)
+  if tasksWindow:getChildById("allLootTab"):isOn() and not force then
+    return
+  end
+
+  local checked = tasksWindow:getChildById("recommended"):isChecked()
+  if not force then
+    tasksWindow:getChildById("recommended"):setChecked(not checked)
+  end
+
+  local searchInput = tasksWindow:getChildById("searchInput")
+  local searchText = searchInput:getText():lower()
+
+  itemsPanel:destroyChildren()
+
+  if not checked then
+    local player = g_game.getLocalPlayer()
+
+    if player then
+      local level = player:getLevel()
+      for i = 1, #tasks do
+        if not tasks[i].finished then
+          if tasks[i].level >= level - 10 and tasks[i].level <= level + 10 or level >= tasks[i].level then
+            local panel = g_ui.createWidget("LootMonsterBox_classic", itemsPanel)
+            panel:setId(tasks[i].raceName)
+            panel:setText(tasks[i].raceName)
+            local text = ""
+            if tasks[i].completed then
+              text = text .. "Completed"
+            elseif tasks[i].active then
+              text = text .. "Kills: " .. tasks[i].kills .. " / " .. tasks[i].killsRequired
+            else
+              text = text .. "Kills: " .. tasks[i].killsRequired
+            end
+            text = text .. "\nLevel: " .. tasks[i].level
+            panel:getChildById("info"):setText(text)
+            for j = 1, #tasks[i].outfits do
+              if type(tasks[i].outfits[j]) == "table" then
+                panel:getChildById("creature"):setOutfit(
+                  {
+                    type = tasks[i].outfits[j].id,
+                    head = tasks[i].outfits[j].head,
+                    body = tasks[i].outfits[j].body,
+                    legs = tasks[i].outfits[j].legs,
+                    feet = tasks[i].outfits[j].feet,
+                    addons = tasks[i].outfits[j].addons
+                  }
+                )
+              else
+                panel:getChildById("creature"):setOutfit({type = tasks[i].outfits[j]})
+              end
+            end
+            if searchText:len() >= 1 then
+              if tasks[i].raceName:lower():find(searchText) then
+                panel:show()
+              else
+                panel:hide()
+              end
+            end
+          end
+        end
+      end
+    end
+  else
+    if tasksWindow:getChildById("level").currentIndex ~= 1 then
+      onLevelChange(nil, nil, tasksWindow:getChildById("level").currentIndex)
+    else
+      for i = 1, #tasks do
+        if not tasks[i].finished then
+          local panel = g_ui.createWidget("LootMonsterBox_classic", itemsPanel)
+          panel:setId(tasks[i].raceName)
+          panel:setText(tasks[i].raceName)
+          local text = ""
+          if tasks[i].completed then
+            text = text .. "Completed"
+          elseif tasks[i].active then
+            text = text .. "Kills: " .. tasks[i].kills .. " / " .. tasks[i].killsRequired
+          else
+            text = text .. "Kills: " .. tasks[i].killsRequired
+          end
+          text = text .. "\nLevel: " .. tasks[i].level
+          panel:getChildById("info"):setText(text)
+          for j = 1, #tasks[i].outfits do
+            if type(tasks[i].outfits[j]) == "table" then
+              panel:getChildById("creature"):setOutfit(
+                {
+                  type = tasks[i].outfits[j].id,
+                  head = tasks[i].outfits[j].head,
+                  body = tasks[i].outfits[j].body,
+                  legs = tasks[i].outfits[j].legs,
+                  feet = tasks[i].outfits[j].feet,
+                  addons = tasks[i].outfits[j].addons
+                }
+              )
+            else
+              panel:getChildById("creature"):setOutfit({type = tasks[i].outfits[j]})
+            end
+          end
+          if searchText:len() >= 1 then
+            if tasks[i].raceName:lower():find(searchText) then
+              panel:show()
+            else
+              panel:hide()
+            end
+          end
+        end
+      end
+    end
+  end
+end
+
+function onLevelChange(widget, name, id)
+  if tasksWindow:getChildById("recommended"):isChecked() then
+    return
+  end
+  itemsPanel:destroyChildren()
+
+  local searchInput = tasksWindow:getChildById("searchInput")
+  local searchText = searchInput:getText():lower()
+  for i = 1, #tasks do
+    if not tasks[i].finished then
+      if id == 1 or tasks[i].zone_name == levels[id][1] then
+        local panel = g_ui.createWidget("LootMonsterBox_classic", itemsPanel)
+        panel:setId(tasks[i].raceName)
+        panel:setText(tasks[i].raceName)
+        local text = ""
+        if tasks[i].completed then
+          text = text .. "Completed"
+        elseif tasks[i].active then
+          text = text .. "Kills: " .. tasks[i].kills .. " / " .. tasks[i].killsRequired
+        else
+          text = text .. "Kills: " .. tasks[i].killsRequired
+        end
+        text = text .. "\nLevel: " .. tasks[i].level
+        panel:getChildById("info"):setText(text)
+        if type(tasks[i].outfit) == "table" then
+          panel:getChildById("creature"):setOutfit(
+            {
+              type = tasks[i].outfit.id,
+              head = tasks[i].outfit.head,
+              body = tasks[i].outfit.body,
+              legs = tasks[i].outfit.legs,
+              feet = tasks[i].outfit.feet,
+              addons = tasks[i].outfit.addons
+            }
+          )
+        else
+          panel:getChildById("creature"):setOutfit({type = tasks[i].outfit})
+        end
+        if searchText:len() >= 1 then
+          if tasks[i].raceName:lower():find(searchText) then
+            panel:show()
+          else
+            panel:hide()
+          end
+        end
+      end
+    end
+  end
+end
+
+function accept()
+  local protocolGame = g_game.getProtocolGame()
+  if protocolGame then
+    protocolGame:sendExtendedOpcode(OPCODE, json.encode({action = "button", data = selected}))
+  end
+  hide()
+end
+
+function onTrackerClose()
+  trackerButton:setOn(false)
+end
+
+function toggleTracker()
+  if not trackerWindow then
+    return
+  end
+
+  if trackerButton:isOn() then
+    trackerWindow:close()
+    trackerButton:setOn(false)
+  else
+    trackerWindow:open()
+    trackerButton:setOn(true)
+  end
+end
+
+function toggle()
+  if not tasksWindow then
+    return
+  end
+  if tasksWindow:isVisible() then
+    return hide()
+  end
+  show()
+end
+
+function show()
+  if not tasksWindow then
+    return
+  end
+  tasksWindow:getChildById("monstersTab"):setOn(true)
+  tasksWindow:getChildById("allLootTab"):setOn(false)
+  tasksWindow:getChildById("acceptButton"):hide()
+  tasksWindow:getChildById("itemsPanelListScrollBar"):show()
+  tasksWindow:getChildById("recommended"):show()
+  tasksWindow:getChildById("searchLabel"):show()
+  local searchInput = tasksWindow:getChildById("searchInput")
+  searchInput:setText("")
+  searchInput:show()
+  itemsPanel:show()
+  creaturePanel:hide()
+
+  itemsPanel:destroyChildren()
+  for i = 1, #tasks do
+    if not tasks[i].finished then
+      local panel = g_ui.createWidget("LootMonsterBox_classic", itemsPanel)
+      panel:setId(tasks[i].raceName)
+      panel:setText(tasks[i].raceName)
+      local text = ""
+      if tasks[i].completed then
+        text = text .. "Completed"
+      elseif tasks[i].active then
+        text = text .. "Kills: " .. tasks[i].kills .. " / " .. tasks[i].killsRequired
+      else
+        text = text .. "Kills: " .. tasks[i].killsRequired
+      end
+      text = text .. "\nLevel: " .. tasks[i].level
+      panel:getChildById("info"):setText(text)
+      if type(tasks[i].outfit) == "table" then
+        panel:getChildById("creature"):setOutfit(
+          {
+            type = tasks[i].outfit.id,
+            head = tasks[i].outfit.head,
+            body = tasks[i].outfit.body,
+            legs = tasks[i].outfit.legs,
+            feet = tasks[i].outfit.feet,
+            addons = tasks[i].outfit.addons
+          }
+        )
+      else
+        panel:getChildById("creature"):setOutfit({type = tasks[i].outfit})
+      end
+    end
+  end
+  tasksWindow:show()
+  tasksWindow:raise()
+  tasksWindow:focus()
+end
+
+function hide()
+  if not tasksWindow then
+    return
+  end
+  tasksWindow:hide()
 end

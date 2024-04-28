@@ -1,0 +1,230 @@
+tokennpcOfferLabel < Label
+  anchors.left: prev.right
+  anchors.top: prev.top
+  margin-left: 5
+  text-auto-resize: true
+
+tokennpcItemBox < UICheckBox
+  border-width: 1
+  border-color: #000000
+  color: #aaaaaa
+  text-align: center
+  text-offset: 0 30
+  @onCheckChange: modules.game_tokenshop.onItemBoxChecked(self)
+
+  Item
+    id: Tokenitem
+    phantom: true
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    image-color: #ffffffff
+    margin-top: 5
+
+  $checked on:
+    border-color: #ffffff
+
+  $!checked:
+    border-color: #000000
+
+  $!on:
+    image-color: #ffffff88
+    color: #aaaaaa88
+
+MainWindow
+  id: tokennpcWindow
+  !text: tr('Trade Store')
+  size: 550 515
+  @onEscape: modules.game_tokenshop.hide()
+
+  FlatPanel
+    height: 200
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-top: 10
+
+    VerticalScrollBar
+      id: itemsPanelListScrollBar
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      step: 24
+      pixels-scroll: true
+
+    ScrollablePanel
+      id: TokenitemsPanel
+      height: 400
+      anchors.left: parent.left
+      anchors.right: prev.left
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      vertical-scrollbar: itemsPanelListScrollBar
+      margin-left: 5
+      margin-right: 5
+      layout:
+        type: grid
+        cell-size: 120 90
+        flow: true
+        auto-spacing: true
+
+  FlatPanel
+    id: TokensetupPanel
+    height: 222
+    width: 500
+    enabled: false
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 10
+    margin-right: 5
+    image-color: #ffffff88
+
+    Label
+      !text: tr('Name') .. ':'
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin-top: 5
+      margin-left: 5
+      width: 85
+
+    tokennpcOfferLabel
+      id: Tokenname
+
+    Label
+      !text: tr('Price') .. ':'
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin-top: 5
+      margin-left: 5
+      width: 85
+
+    tokennpcOfferLabel
+      id: Tokenprice
+
+    Label
+      !text: tr('Your Token Pts') .. ':'
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin-top: 5
+      margin-left: 5
+      width: 90
+
+    tokennpcOfferLabel
+      id: Tokenmoney
+
+    Label
+      id: TokenweightDesc
+      !text: tr('Weight') .. ':'
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin-top: 5
+      margin-left: 5
+      width: 85
+
+    tokennpcOfferLabel
+      id: Tokenweight
+
+    Label
+      id: TokencapacityDesc
+      !text: tr('Your Capacity') .. ':'
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin-top: 5
+      margin-left: 5
+      width: 85
+
+    tokennpcOfferLabel
+      id: Tokencapacity
+
+    Label
+      !text: tr('Description') .. ':'
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin-top: 5
+      margin-left: 5
+      width: 85
+
+    TextEdit
+      id: Tokendesc
+      width: 350
+      height: 70
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      text-align: left
+      margin-top: 5
+      margin-left: 5
+      text-wrap: true
+      editable: false
+      multiline: true
+      change-cursor-image: false
+      focusable: false
+      selectable: false
+
+
+    HorizontalScrollBar
+      id: TokenquantityScroll
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: prev.bottom
+      margin-top: 5
+      margin-left: 5
+      margin-right: 5
+      show-value: true
+      minimum: 1
+      maximum: 1
+      step: 1
+      @onValueChange: modules.game_tokenshop.onQuantityValueChange(self:getValue())
+
+  FlatPanel
+    id: TokenbuyOptions
+    height: 60
+    anchors.top: prev.top
+    anchors.left: parent.horizontalCenter
+    anchors.right: parent.right
+    margin-left: 5
+    margin-right: 25
+    image-color: #ffffff88
+
+    Label
+      id: TokensearchLabel
+      !text: tr('Search') .. ':'
+      anchors.left: parent.left
+      anchors.top: parent.top
+      text-auto-resize: true
+      margin-top: 7
+      margin-left: 5
+
+    TextEdit
+      id: TokensearchText
+      anchors.left: prev.right
+      anchors.top: prev.top
+      anchors.right: parent.right
+      margin-top: -2
+      margin-left: 5
+      margin-right: 10
+      @onTextChange: modules.game_tokenshop.onSearchTextChange()
+
+    CheckBox
+      id: TokenignoreCapacity
+      !text: tr('Ignore capacity')
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-left: 5
+      margin-top: 5
+      @onCheckChange: modules.game_tokenshop.onIgnoreCapacityChange()
+
+  Button
+    id: TokentradeButton
+    !text: tr('Buy')
+    width: 64
+    anchors.right: next.left
+    anchors.bottom: parent.bottom
+    margin-right: 10
+    @onClick: modules.game_tokenshop.onTradeTokenClick()
+
+  Button
+    !text: tr('Close')
+    width: 64
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_tokenshop.hide()

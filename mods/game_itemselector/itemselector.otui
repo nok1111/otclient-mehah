@@ -1,7 +1,15 @@
 ItemSelectorWindow < MainWindow
   id: itemSelector
-  size: 260 120
+  size: 290 140
   !text: tr("Select item")
+
+  Label
+    anchors.top: parent.top
+    anchors.left: prev.left
+    anchors.left: prev.right
+    margin-top: 45
+    text-align: center
+    !text: tr("Ctrl + Right click an item to grab: Item ID")
 
   Item
     id: item
@@ -70,3 +78,5 @@ ItemSelectorWindow < MainWindow
     anchors.bottom: parent.bottom
     anchors.right: parent.right
     width: 60
+
+

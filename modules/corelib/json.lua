@@ -374,4 +374,27 @@ function json.decode(str)
     return res
 end
 
+
+
+function json.sendJSON(player, opcode, action, data)
+	local msg = NetworkMessage()
+	msg:addByte(50)
+	msg:addByte(opcode)
+	msg:addString(json.encode({action = action, data = data}))
+	msg:sendToPlayer(player)
+end
+
+function sendAction(opcode, action, data)
+	local protocolGame = g_game.getProtocolGame()
+	local player = g_game.getLocalPlayer()
+  if not player then return end
+	if data == nil then
+		data = {}
+	end
+	
+	if protocolGame then
+		protocolGame:sendExtendedOpcode(opcode, json.encode{action = action, data = data})
+	end  
+end
+
 return json

@@ -5,13 +5,21 @@ NpcIconChat = 1
 NpcIconTrade = 2
 NpcIconQuest = 3
 NpcIconTradeQuest = 4
+NpcIconCosmetic = 5
+NpcIconBlood = 6
+NpcIconCelestial = 7
+NpcIconShadow = 8
+NpcIconTheInmortals = 9
+NpcIconBrawlers = 10
 
 CreatureTypePlayer = 0
 CreatureTypeMonster = 1
 CreatureTypeNpc = 2
 CreatureTypeSummonOwn = 3
 CreatureTypeSummonOther = 4
-CreatureTypeHidden = 5
+CreatureTypeSummonPet = 5
+CreatureTypeHidden = 6
+
 
 -- @}
 
@@ -85,11 +93,13 @@ function getEmblemImagePath(emblemId)
 end
 
 function getTypeImagePath(creatureType)
-    local path
+     local path
     if creatureType == CreatureTypeSummonOwn then
         path = '/images/game/creaturetype/summon_own'
     elseif creatureType == CreatureTypeSummonOther then
         path = '/images/game/creaturetype/summon_other'
+	elseif creatureType == CreatureTypeSummonPet then
+        path = '/images/game/creaturetype/summon_pet'
     end
     return path
 end
@@ -104,6 +114,18 @@ function getIconImagePath(iconId)
         path = '/images/game/npcicons/icon_quest'
     elseif iconId == NpcIconTradeQuest then
         path = '/images/game/npcicons/icon_tradequest'
+    elseif iconId == NpcIconCosmetic then
+        path = '/images/game/npcicons/icon_cosmetic'
+     elseif iconId == NpcIconBlood then
+        path = '/images/game/npcicons/icon_blood'
+     elseif iconId == NpcIconCelestial then
+        path = '/images/game/npcicons/icon_celestial'
+     elseif iconId == NpcIconTheInmortals then
+        path = '/images/game/npcicons/icon_inmortals'
+     elseif iconId == NpcIconShadow then
+        path = '/images/game/npcicons/icon_shadow'
+     elseif iconId == NpcIconBrawlers then
+        path = '/images/game/npcicons/icon_brawler'
     end
     return path
 end

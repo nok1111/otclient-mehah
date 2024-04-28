@@ -1,3 +1,26 @@
+-- skill consts
+SKILL_BLACKSMITH = 1
+SKILL_ALCHEMY = 2
+SKILL_COOKING = 3
+SKILL_ENCHANTING = 4
+SKILL_MINING = 5
+SKILL_HERBALISM = 6
+SKILL_FISHING = 7
+SKILL_RUNE_SEEKER = 8
+
+-- helpers
+local skillIdToUI = {
+	[SKILL_BLACKSMITH] = "Blacksmith",
+	[SKILL_ALCHEMY] = "Alchemy",
+	[SKILL_COOKING] = "Cooking",
+	[SKILL_ENCHANTING] = "Enchanting",
+	[SKILL_MINING] = "Mining",
+	[SKILL_HERBALISM] = "Herbalism",
+	[SKILL_FISHING] = "Fishing",
+	[SKILL_RUNE_SEEKER] = "RuneSeeker",
+}
+
+
 skillsWindow = nil
 skillsButton = nil
 skillsSettings = nil
@@ -25,6 +48,10 @@ function init()
         onGameStart = online,
         onGameEnd = offline
     })
+	
+			ProtocolGame.registerOpcode(GameServerOpcodes.GameServerUpdateFame, parseUpdateFame)
+			ProtocolGame.registerOpcode(GameServerOpcodes.GameServerUpdateAscended, parseUpdateAscended)
+			ProtocolGame.registerOpcode(GameServerOpcodes.GameServerJobs, parseJobs)
 
     skillsButton = modules.client_topmenu.addRightGameToggleButton('skillsButton', tr('Skills') .. ' (Alt+S)',
                                                                    '/images/topbuttons/skills', toggle)
@@ -37,12 +64,17 @@ function init()
     if not skillSettings then
         skillSettings = {}
     end
+	
+			
 
     refresh()
     skillsWindow:setup()
     if g_game.isOnline() then
-        skillsWindow:setupOnStart()
+        skillsWindow:setupOnStart()	
     end
+	
+			-- register opcode
+
 end
 
 function terminate()
@@ -75,6 +107,10 @@ function terminate()
 
     skillsWindow = nil
     skillsButton = nil
+	
+	ProtocolGame.unregisterOpcode(GameServerOpcodes.GameServerUpdateFame, parseUpdateFame)
+	ProtocolGame.unregisterOpcode(GameServerOpcodes.GameServerUpdateAscended, parseUpdateAscended)
+	ProtocolGame.unregisterOpcode(GameServerOpcodes.GameServerJobs, parseJobs)
 end
 
 function expForLevel(level)
@@ -247,7 +283,7 @@ function refresh()
     onRegenerationChange(player, player:getRegenerationTime())
     onSpeedChange(player, player:getSpeed())
 
-    local hasAdditionalSkills = g_game.getFeature(GameAdditionalSkills)
+   local hasAdditionalSkills = g_game.getFeature(GameAdditionalSkills)
     for i = Skill.Fist, Skill.ManaLeechAmount do
         onSkillChange(player, i, player:getSkillLevel(i), player:getSkillLevelPercent(i))
         onBaseSkillChange(player, i, player:getSkillBaseLevel(i))
@@ -259,6 +295,7 @@ function refresh()
 
     update()
     updateHeight()
+	
 end
 
 function updateHeight()
@@ -510,4 +547,125 @@ end
 
 function onBaseSkillChange(localPlayer, id, baseLevel)
     setSkillBase('skillId' .. id, localPlayer:getSkillLevel(id), baseLevel)
+end
+
+--New changes
+
+function parseUpdateFame(protocol, msg)
+	local points = msg:getU32()
+	local level = msg:getU16()
+	local pointsToAdvance = msg:getU32()
+	local percentage = msg:getU16()
+	onFameChange(points, level, pointsToAdvance, percentage)
+end
+
+function parseUpdateAscended(protocol, msg)
+	local points = msg:getU32()
+	local level = msg:getU16()
+	local pointsToAdvance = msg:getU32()
+	local percentage = msg:getU16()
+	onAscendedChange(points, level, pointsToAdvance, percentage)
+end
+
+function onAscendedChange(points, level, pointsToAdvance, percentage)
+	local ascended = skillsWindow:recursiveGetChildById('ascended')
+	local ascended2 = skillsWindow:recursiveGetChildById('ascendedPointslabel')
+	local ascendedLevel = ascended:getChildById('ascendedLevel')
+	ascendedLevel:setText(tostring(level))
+	ascendedLevel:setWidth(ascendedLevel:getTextSize().width)
+	
+	ascended:setTooltip(("You need %d pts to unlock next ascended level"):format(tostring(pointsToAdvance)))
+
+	local ascendedPoints = ascended:getChildById('ascendedPoints')
+	ascendedPoints:setText(points .. " exp")
+	ascendedPoints:setWidth(ascendedPoints:getTextSize().width)
+
+
+	-- set percentage
+	local ascendedbarpercent = ascended:getChildById('percent')
+	ascendedbarpercent:setPercent(tonumber(percentage))
+	ascendedbarpercent:setTooltip("You have " .. 100 - tonumber(percentage) .. " percent to go.")
+	
+	local ascendedlabel = ascended:getChildById('label')
+	ascendedLevel:setTooltip("Unlocked at level 500.")
+end
+
+function onFameChange(points, level, pointsToAdvance, percentage)
+	local fame = skillsWindow:recursiveGetChildById('fame')
+	local fame2 = skillsWindow:recursiveGetChildById('famePointslabel')
+	local fameLevel = fame:getChildById('fameLevel')
+	fameLevel:setText(tostring(level))
+	fameLevel:setWidth(fameLevel:getTextSize().width)
+	fame:setTooltip(("You need %d pts to unlock next fame level"):format(tostring(pointsToAdvance)))
+
+	local famePoints = fame:getChildById('famePoints')
+	famePoints:setText(points .. " exp")
+	famePoints:setWidth(famePoints:getTextSize().width)
+
+	local famePtsToLvl = fame2:getChildById('famePtsToLvl')
+	famePtsToLvl:setText(tostring(pointsToAdvance))
+	famePtsToLvl:setWidth(famePtsToLvl:getTextSize().width)
+
+	-- set percentage
+	local famebarpercent = fame:getChildById('percent')
+	famebarpercent:setPercent(tonumber(percentage))
+	famebarpercent:setTooltip("You have " .. 100 - tonumber(percentage) .. " percent to go.")
+end
+
+
+-- protocol
+function parseJobs(protocol, msg)
+pwarning("parseJobs triggered")
+	local job_skill = {}
+	local skillSize = msg:getU8()
+	for i = 1, skillSize do
+		local job = {}
+		job.level = msg:getU16()
+		job.percentage = msg:getU8()
+		job_skill[i] = job
+	end
+
+	local professionId = msg:getU8()
+	local professionDescription = msg:getString()
+
+	updateMainJobs(job_skill, professionId)
+end
+
+function updateMainJobs(job_skill, profId)
+pwarning("updateMainJobs triggered")
+	for i = 1, 8 do
+	-- done? xD
+		-- finding 'id: professionIdX' inside skillsWindows
+		local skillWindow = skillsWindow:recursiveGetChildById("professionId" .. i)
+		if skillWindow then
+			if job_skill[i] then
+				skillWindow:show()
+				
+				-- finding 'id: label' inside id: 'professionIdX'
+				local label = skillWindow:getChildById("label")
+				if label then
+					label:setText(skillIdToUI[i])
+				end
+
+				-- finding 'id: value' inside id: 'professionIdX'
+				local value = skillWindow:getChildById("value")
+				if value then
+					value:setText(job_skill[i].level)
+				end
+				
+				-- finding 'id: percent' inside id: 'professionIdX'
+				local bar = skillWindow:getChildById("percent")
+				if bar then
+					bar:setPercent(job_skill[i].percentage)
+					if i > 4 or (i < 5 and profId == i) then
+						bar:setTooltip("You have " .. 100 - job_skill[i].percentage .. " percent to go.")
+					end
+				end
+			else
+				skillWindow:hide()
+			end
+		end
+	end
+
+	--show()
 end

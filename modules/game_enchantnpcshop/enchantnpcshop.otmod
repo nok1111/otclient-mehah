@@ -1,0 +1,9 @@
+Module
+  name: game_enchantnpcshop
+  description: NPC enchants shop interface
+  author: nekiro
+  website: https://github.com/nekiro
+  sandboxed: true
+  scripts: [ enchantnpcshop ]
+  @onLoad: init()
+  @onUnload: terminate()

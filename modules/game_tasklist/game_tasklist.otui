@@ -1,0 +1,316 @@
+AskWidget < MainWindow
+  size: 200 100
+  draggable: false
+  !text: tr('Delete task')
+  image-source: /images/taskList/background
+
+  Label
+    !text: tr('Are You sure about this?')
+    size: 200 34
+    text-align: center
+    anchors.top: parent.top
+    anchors.right: parent.right
+    anchors.left: parent.left
+    margin-top: -10
+    color: #ff3333
+
+  TaskButton
+    id: yesButton
+    width: 80
+    !text: tr('Yes')
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    margin-bottom: -5
+    @onClick: modules.game_tasklist.yes()
+
+  TaskButton
+    id: noButton
+    width: 80
+    !text: tr('No')
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-bottom: -5
+    @onClick: modules.game_tasklist.no()
+
+
+RewardItem < UIWidget
+  size: 218 34
+
+  Item
+    id: rewardItem
+    anchors.left: parent.left
+
+  Label
+    id: rewardItemCnt
+    size: 25 34
+    anchors.top: prev.top
+    anchors.left: prev.right
+    margin-top: 10
+    margin-left: 5
+    color: #ff3333
+
+  Label
+    id: rewardItemName
+    size: 150 34
+    anchors.top: prev.top
+    anchors.left: prev.right
+    margin-top: 0
+    margin-left: 3
+    color: #ff3333
+
+TaskRecord < UIWidget
+  image-source: /images/taskList/task_item
+  width: 256
+  height: 40
+  @onClick: modules.game_tasklist.onTaskClick(self)
+
+  Label
+    id: taskState
+    size: 30 30
+    image-size: 30 30
+    image-source: /images/taskList/0
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 5
+
+  Label
+    id: taskName
+    size: 150 30
+    anchors.left: prev.right
+    anchors.top: parent.top
+    margin-top: 5
+    text-align: center
+
+  Label
+    id: taskLevel
+    size: 85 30
+    anchors.left: prev.right
+    anchors.top: parent.top
+    margin-top: 5
+    text-align: center
+
+TaskRewardsPanel < Panel
+  size: 270 160
+
+  ScrollablePanel
+    id: rewardItemsPanel
+    anchors.fill: parent
+    vertical-scrollbar: rewardListScrollBar
+    margin-right: 12
+    layout:
+      type: verticalBox
+    border-width: 1
+    border-color: #202327
+    background: #00000066
+    padding: 1
+
+  VerticalScrollBar
+    id: rewardListScrollBar
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    step: 14
+    pixels-scroll: true
+
+TaskListPanel < Panel
+  width: 270
+  height: 200
+
+  ScrollablePanel
+    id: taskListPanel
+    anchors.fill: parent
+    margin-right: 12
+    vertical-scrollbar: taskListScrollBar
+    layout:
+      type: verticalBox
+    border-width: 1
+    border-color: #202327
+    background: #00000066
+    padding: 1
+
+  VerticalScrollBar
+    id: taskListScrollBar
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    step: 14
+    pixels-scroll: true
+
+TaskDescription < UIWidget
+  size: 270 420
+  draggable: false
+  background: #00000066
+
+  Label
+    !text: tr('Task description:')
+    size: 270 30
+    anchors.top: parent.top
+    text-wrap: true
+
+  Label
+    id: taskDescription
+    size: 270 20
+    anchors.top: parent.top
+    color: #3396ff
+    text-wrap: true
+    margin-top: 15
+
+  Label
+    id: taskObjectives
+    !text: tr('Objectives: ')
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 2
+
+  Label
+    id: monsterGoals
+    anchors.top: taskObjectives.bottom
+    size: 270 30
+    color: #3396ff
+    visible: false
+    text-wrap: true
+
+  Label
+    id: itemGoals
+    anchors.top: taskObjectives.bottom
+    size: 270 30
+    color: #3396ff
+    visible: false
+    text-wrap: true
+
+  Label
+    id: storageGoals
+    anchors.top: taskObjectives.bottom
+    size: 270 30
+    color: #3396ff
+    visible: false
+    text-wrap: true
+
+  Label
+    id: itemProgress
+    !text: tr('Progress:')
+    anchors.top: monsterGoals.bottom
+    anchors.left: parent.left
+    width: 60
+    visible: true
+    margin-top: 5
+
+  Label
+    id: itemCnt
+    anchors.top: prev.top
+    anchors.left: prev.right
+    width: 75
+    color: #61f296
+    visible: false
+
+  Label
+    !text: tr('Hints: ')
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 6
+
+  Label
+    id: taskHint
+    size: 270 30
+    anchors.top: prev.top
+    anchors.left: prev.right
+    color: #f69f32
+    text-wrap: true
+
+  Label
+    !text: tr('Zone: ')
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+
+  Label
+    id: taskZoneName
+    size: 270 30
+    anchors.top: prev.top
+    anchors.left: prev.right
+    color: #32f6e6
+    text-wrap: true
+
+  Label
+    !text: tr('Source: ')
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+
+  Label
+    id: taskSource
+    size: 270 30
+    anchors.top: prev.top
+    anchors.left: prev.right
+    color: #f69f32
+    text-wrap: true
+
+  Label
+    !text: tr('Your rewards:')
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 10
+
+  Label
+    id: rewardExp
+    size: 300 20
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-bottom: 5
+    color: #ffffff
+
+  Label
+    id: rewardOutfit
+    size: 300 20
+    anchors.top: prev.bottom
+    color: #3396ff
+
+  TaskRewardsPanel
+    anchors.top: prev.bottom
+
+MainWindow
+  id: taskListWindow
+  !text: tr('Quest Log')
+  image-source: /images/taskList/miniwindow
+  width: 300
+  height: 700
+  draggable: false
+  @onEscape: hide()
+
+  UIWidget
+    id: listTopOverlay
+    image-source: /images/taskList/top_overlay
+    width: 300
+    height: 36
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: -44
+    margin-left: -15
+
+  TaskListPanel
+    id: taskList
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 0
+    margin-left: 0
+
+  TaskDescription
+    id: taskDescriptionWnd
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 10
+    margin-left: 0
+
+  TaskButton
+    id: deleteButton
+    !text: tr('Delete')
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    margin-bottom: -5
+    @onClick: modules.game_tasklist.delete()
+
+  TaskButton
+    id: buttonCancel
+    !text: tr('Close')
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-bottom: -5
+    @onClick: hide()

@@ -1,0 +1,9 @@
+Module
+  name: game_tokenshop
+  description: NPC fame shop interface
+  author: nekiro
+  website: https://github.com/nekiro
+  sandboxed: true
+  scripts: [ tokenshop ]
+  @onLoad: init()
+  @onUnload: terminate()

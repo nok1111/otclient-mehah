@@ -13,6 +13,10 @@ function UIComboBox.create()
     return combobox
 end
 
+function UIComboBox:getOptionsCount()
+  return #self.options
+end
+
 function UIComboBox:clear()
     return self:clearOptions()
 end

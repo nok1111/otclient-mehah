@@ -62,6 +62,96 @@ MiniWindow
       SkillValueLabel
       SkillPercentPanel
         background-color: red
+    SkillButton
+      id: ascended
+      height: 50
+      UIWidget
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+
+      SkillNameLabel
+        id: label
+        anchors.left: parent.left
+        text-align: topleft
+        margin-left: 24
+        margin-top: 0
+        !text: tr('Ascended level:')
+      GameLabel
+        id: ascendedLevel
+        font: verdana-11px-monochrome
+        !text: tr('0')
+        anchors.right: parent.right
+        margin-right: 35
+        anchors.top: label.top
+        anchors.bottom: label.bottom
+      SkillPercentPanel
+        margin-top: 16
+        anchors.top: label.top
+        height: 14
+        background-color: red
+      GameLabel
+        id: ascendedPoints
+        font: verdana-11px-monochrome
+        !text: tr('0 Exp')
+        anchors.left: parent.left
+        margin-left: 5
+        anchors.top: percent.top
+        anchors.bottom: percent.bottom
+
+    HorizontalSeparator
+      margin-top: 15
+      margin-bottom: 2
+
+    SkillButton
+      id: fame
+      height: 45
+      UIWidget
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+
+      SkillNameLabel
+        id: label
+        anchors.left: parent.left
+        text-align: topleft
+        !text: tr('Fame level:')
+      GameLabel
+        id: fameLevel
+        font: verdana-11px-monochrome
+        !text: tr('0')
+        anchors.right: parent.right
+        anchors.top: label.top
+        anchors.bottom: label.bottom
+      SkillPercentPanel
+        margin-top: 16
+        anchors.top: label.top
+        height: 14
+        background-color: orange
+      GameLabel
+        id: famePoints
+        font: verdana-11px-monochrome
+        !text: tr('0 pts')
+        anchors.left: parent.left
+        margin-left: 5
+        anchors.top: percent.top
+        anchors.bottom: percent.bottom
+    GameLabel
+      id: famePointslabel
+      font: verdana-11px-monochrome
+      !text: tr('Fame Points:')
+      margin-top: 12
+      GameLabel
+        id: famePtsToLvl
+        font: verdana-11px-monochrome
+        anchors.right: parent.right
+        anchors.top: famePointslabel.top
+        anchors.bottom: famePointslabel.bottom
+        !text: tr('0')
+
+    HorizontalSeparator
+      margin-top: 6
+      margin-bottom: 2
 
     SkillButton
       id: health
@@ -121,7 +211,7 @@ MiniWindow
     SkillButton
       id: magiclevel
       SkillNameLabel
-        !text: tr('Magic Level')
+        !text: tr('Magic')
       SkillValueLabel
       SkillPercentPanel
         background-color: red
@@ -143,7 +233,7 @@ MiniWindow
     SkillButton
       id: skillId2
       SkillNameLabel
-        !text: tr('Sword Fighting')
+        !text: tr('Melee')
       SkillValueLabel
       SkillPercentPanel
 
@@ -157,14 +247,84 @@ MiniWindow
     SkillButton
       id: skillId4
       SkillNameLabel
-        !text: tr('Distance Fighting')
+        !text: tr('Distance')
       SkillValueLabel
       SkillPercentPanel
 
     SkillButton
       id: skillId5
       SkillNameLabel
-        !text: tr('Shielding')
+        !text: tr('Defence')
+      SkillValueLabel
+      SkillPercentPanel
+
+    HorizontalSeparator
+      margin-top: 4
+      margin-bottom: 2
+
+    SkillButton
+      SkillNameLabel
+        !text: tr('jobs:')
+        margin-left: 65
+        margin-top: 3
+
+
+    HorizontalSeparator
+      margin-bottom: 4
+
+    SkillButton
+      id: professionId1
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId2
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId3
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId4
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId5
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId6
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId7
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId8
+      SkillNameLabel
+        id: label
       SkillValueLabel
       SkillPercentPanel
 

@@ -175,8 +175,8 @@ controller:registerEvents(g_game, {
         end
 
         if version >= 1094 then
-            g_game.enableFeature(GameAdditionalSkills);
-            g_game.enableFeature(GameLeechAmount);
+            --g_game.enableFeature(GameAdditionalSkills);
+            --g_game.enableFeature(GameLeechAmount);
         end
 
         if version >= 1200 then

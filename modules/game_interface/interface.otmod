@@ -38,5 +38,12 @@ Module
     - game_attachedeffects
     - game_stash
     - game_creatureinformation
+    - game_famenpcshop
+    - game_enchantnpcshop
+    - game_tokenshop
+    - game_dungeon
+    - game_tasks
+    - game_tasklist
+    - game_forging
   @onLoad: init()
   @onUnload: terminate()
