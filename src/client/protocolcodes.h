@@ -75,10 +75,10 @@ namespace Proto
 
         //ascension
 
-        GameServerAttchedEffect = 90, //changed to 90+
-        GameServerDetachEffect = 91, //changed to 90+
-        GameServerCreatureShader = 92, //changed to 90+
-        GameServerMapShader = 93, //changed to 90+
+        GameServerAttchedEffect = 300, //changed to 90+
+        GameServerDetachEffect = 301, //changed to 90+
+        GameServerCreatureShader = 302, //changed to 90+
+        GameServerMapShader = 303, //changed to 90+
         GameServerUpdateFame = 52,
 #ifdef PROGRESSBAR
         ServerRunProgressbar = 59,
@@ -124,6 +124,10 @@ namespace Proto
         GameServerMissleEffect = 133, // Anthem on 13.x
         GameServerItemClasses = 134,
         GameServerTrappers = 135,
+
+        //added
+        GameServerCreatureName = 139,
+        //*
 
         GameServerCreatureHealth = 140,
         GameServerCreatureLight = 141,

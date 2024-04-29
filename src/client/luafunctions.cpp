@@ -424,6 +424,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<AttachableObject>("detachWidgetById", &AttachableObject::detachWidgetById);
     g_lua.bindClassMemberFunction<AttachableObject>("getAttachedWidgetById", &AttachableObject::getAttachedWidgetById);
 
+
     g_lua.registerClass<Thing, AttachableObject>();
     g_lua.bindClassMemberFunction<Thing>("setId", &Thing::setId);
     g_lua.bindClassMemberFunction<Thing>("setShader", &Thing::setShader);
@@ -471,6 +472,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<Thing>("setHighlight", &Thing::lua_setHighlight);
     g_lua.bindClassMemberFunction<Thing>("isHighlighted", &Thing::isHighlighted);
     g_lua.bindClassMemberFunction<Thing>("getExactSize", &Thing::getExactSize);
+    g_lua.bindClassMemberFunction<Thing>("isSummon", &Thing::isSummon);
 
 #ifdef FRAMEWORK_EDITOR
     g_lua.registerClass<House>();

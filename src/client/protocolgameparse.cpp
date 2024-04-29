@@ -200,6 +200,14 @@ void ProtocolGame::parseMessage(const InputMessagePtr& msg)
                 case Proto::GameServerTrappers:
                     parseTrappers(msg);
                     break;
+                 
+
+                   
+                case Proto::GameServerCreatureName:
+                    parseCreatureName(msg);
+                    break;
+
+
                 case Proto::GameServerCreatureHealth:
                     parseCreatureHealth(msg);
                     break;
@@ -1517,6 +1525,17 @@ void ProtocolGame::parseTrappers(const InputMessagePtr& msg)
             g_logger.traceError("could not get creature");
     }
 }
+
+
+void ProtocolGame::parseCreatureName(const InputMessagePtr& msg)
+{
+    const uint id = msg->getU32();
+    const std::string newName = msg->getString();
+
+    CreaturePtr creature = g_map.getCreatureById(id);
+    if (creature) creature->setName(newName);
+}
+
 
 void ProtocolGame::parseCreatureHealth(const InputMessagePtr& msg)
 {
