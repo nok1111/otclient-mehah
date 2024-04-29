@@ -16,34 +16,7 @@ end
 
 function ProtocolGame:onExtendedOpcode(opcode, buffer)
     local callback = extendedCallbacks[opcode]
-    if callback then
-        callback(self, opcode, buffer)
-    end
-
-    callback = extendedJSONCallbacks[opcode]
-    if callback then
-        local status = buffer:sub(1, 1) -- O - just one message, S - start, P - part, E - end
-        local data = buffer:sub(2)
-        if status ~= 'E' and status ~= 'P' then
-            extendedJSONData[opcode] = ''
-        end
-        if status ~= 'S' and status ~= 'P' and status ~= 'E' then
-            extendedJSONData[opcode] = buffer
-        else
-            extendedJSONData[opcode] = extendedJSONData[opcode] .. data
-        end
-        if status ~= 'S' and status ~= 'P' then
-            local json_status, json_data = pcall(function()
-                return json.decode(extendedJSONData[opcode])
-            end)
-            extendedJSONData[opcode] = nil
-            if not json_status then
-                error('Invalid data in extended JSON opcode (' .. json_status .. '): ' .. json_data)
-                return
-            end
-            callback(self, opcode, json_data)
-        end
-    end
+    if callback then callback(self, opcode, buffer) end
 end
 
 function ProtocolGame.registerOpcode(opcode, callback)
