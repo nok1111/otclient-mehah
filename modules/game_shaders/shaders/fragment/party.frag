@@ -10,4 +10,5 @@ void main()
   col.y += (1.0 + sin(d * 2.0)) * 0.25;
   col.z += (1.0 + sin(d * 4.0)) * 0.25;
   gl_FragColor = col;
+  if(gl_FragColor.a < 0.01) discard;
 }

@@ -18,6 +18,21 @@ local mounts = nil
 local currentColorBox = nil
 local currentClotheButtonBox = nil
 
+local cosmetic = {
+	["wings"] = {
+		["list"] = {{0,"-"}},
+		["current"] = 1,
+	},
+	["aura"] = {
+		["list"] = {{0,"-"}},
+		["current"] = 1,
+	},
+	["shader"] = {
+		["list"] = {{0,"-"}},
+		["current"] = 1,
+	}
+}
+
 local currentOutfit = 1
 local currentMount = 1
 
@@ -62,18 +77,52 @@ localPlayerEvent = EventController:new(LocalPlayer, {
             addon.widget:setChecked(isEnabled and (selectedAddons == 3 or addon.value == selectedAddons))
         end
 
-        outfit.type = selectedOutfit[1]
+         outfit.type = selectedOutfit[1]
+        outfit.mount = ""
+        outfit.wings = ""
+        outfit.aura = ""
+        outfit.shader = ""
         outfitCreature:setOutfit(outfit)
 
         if table.empty(mounts) or not mount then
             return
         end
+		if table.empty(cosmetic["wings"]["list"]) then 
+		 return
+        end
+		if table.empty(cosmetic["aura"]["list"]) then 
+		 return
+        end
+		 if table.empty(cosmetic["shader"]["list"]) then 
+		 return
+        end
+		 
+		
+
 
         local nameMountWidget = outfitWindow:getChildById('mountName')
         nameMountWidget:setText(mounts[currentMount][2])
 
         mount.type = mounts[currentMount][1]
         mountCreature:setOutfit(mount)
+		
+		
+		local nameMountWidget = outfitWindow:getChildById('wingsName')
+		local current = cosmetic["wings"]["current"]
+		nameMountWidget:setText(cosmetic["wings"]["list"][current][2])
+		outfitWindow:getChildById('wingsCreatureBox'):setOutfit({type=cosmetic["wings"]["list"][current][1]})
+        
+		local nameMountWidget = outfitWindow:getChildById('auraName')
+		local current = cosmetic["aura"]["current"]
+		nameMountWidget:setText(cosmetic["aura"]["list"][current][2])
+		outfitWindow:getChildById('auraCreatureBox'):setOutfit({type=cosmetic["aura"]["list"][current][1]})
+
+		local nameMountWidget = outfitWindow:getChildById('shaderName')
+		local current = cosmetic["shader"]["current"]
+		nameMountWidget:setText(cosmetic["shader"]["list"][current][2])
+		outfitWindow:getChildById('shaderCreatureBox'):setOutfit({type = outfit.type,shader=cosmetic["shader"]["list"][current][2]})
+			
+		
     end
 })
 
@@ -82,13 +131,39 @@ function controller:onGameEnd()
 end
 
 controller:registerEvents(g_game, {
-    onOpenOutfitWindow = function(creatureOutfit, outfitList, creatureMount, mountList, creatureFamiliar, familiarList)
+    onOpenOutfitWindow = function(creatureOutfit, outfitList, creatureMount, mountList, wingsList, auraList, shaderList, creatureFamiliar, familiarList)
+	
+	
+		cosmetic = {
+		["wings"] = {
+			["list"] = {{0,"-"}},
+			["current"] = 1,
+		},
+		["aura"] = {
+			["list"] = {{0,"-"}},
+			["current"] = 1,
+		},
+		["shader"] = {
+			["list"] = {{0,"-"}},
+			["current"] = 1,
+		}
+	}
+	
         localPlayerEvent:connect()
 
         outfitCreature = creatureOutfit
         mountCreature = creatureMount
         outfits = outfitList
         mounts = mountList
+		for i,child in pairs(wingsList) do
+		table.insert(cosmetic["wings"]["list"], child)
+		end
+		for i,child in pairs(auraList) do
+			table.insert(cosmetic["aura"]["list"], child)
+		end
+		for i,child in pairs(shaderList) do
+			table.insert(cosmetic["shader"]["list"], child)
+		end
         destroy()
 
         outfitWindow = g_ui.displayUI('outfitwindow')
@@ -181,7 +256,34 @@ controller:registerEvents(g_game, {
                     end
                 end
             end
+
+				for i = 1, #cosmetic["wings"]["list"] do
+					if cosmetic["wings"]["list"][i][1] == outfit.wings then
+						cosmetic["wings"]["current"] = i
+						break
+					end
+				end
+
+
+				for i = 1, #cosmetic["aura"]["list"] do
+					if cosmetic["aura"]["list"][i][1] == outfit.aura then
+						cosmetic["aura"]["current"] = i
+						break
+					end
+				end
+
+
+				for i = 1, #cosmetic["shader"]["list"] do
+					if cosmetic["shader"]["list"][i][2] == outfit.shader then
+						cosmetic["shader"]["current"] = i
+						break
+					end
+				end	
+
         end
+		
+		
+		
 
         localPlayerEvent:execute('onOutfitChange')
     end
@@ -219,6 +321,9 @@ function accept()
     if mount then
         outfit.mount = mount.type
     end
+	 outfit.wings = cosmetic["wings"]["list"][cosmetic["wings"]["current"]][1]
+    outfit.aura = cosmetic["aura"]["list"][cosmetic["aura"]["current"]][1]
+    outfit.shader = cosmetic["shader"]["list"][cosmetic["shader"]["current"]][2] 
     g_game.changeOutfit(outfit)
     destroy()
 end
@@ -245,6 +350,24 @@ function previousOutfitType()
     if currentOutfit <= 0 then
         currentOutfit = #outfits
     end
+
+    localPlayerEvent:execute('onOutfitChange')
+end
+
+function nextCosmeticType(cosmeticType)
+    if not cosmetic[cosmeticType]["list"] then return end
+
+    cosmetic[cosmeticType]["current"] = cosmetic[cosmeticType]["current"] + 1
+    if cosmetic[cosmeticType]["current"] > #cosmetic[cosmeticType]["list"] then cosmetic[cosmeticType]["current"] = 1 end
+	
+    localPlayerEvent:execute('onOutfitChange')
+end
+
+function previousCosmeticType(cosmeticType)
+    if not cosmetic[cosmeticType]["list"] then return end
+
+    cosmetic[cosmeticType]["current"] = cosmetic[cosmeticType]["current"] - 1
+    if cosmetic[cosmeticType]["current"] <= 0 then cosmetic[cosmeticType]["current"] = #cosmetic[cosmeticType]["list"] end
 
     localPlayerEvent:execute('onOutfitChange')
 end
@@ -333,5 +456,6 @@ function onClotheCheckChange(clotheButtonBox)
             colorId = outfit.feet
         end
         outfitWindow:recursiveGetChildById('colorBox' .. colorId):setChecked(true)
+
     end
 end
