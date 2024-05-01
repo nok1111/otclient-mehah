@@ -746,6 +746,11 @@ void ProtocolGame::sendChangeOutfit(const Outfit& outfit)
     msg->addU8(Proto::ClientChangeOutfit);
 
 
+    if (g_game.getFeature(Otc::GamePlayerCosmetics)) {
+        msg->addU16(outfit.getWings());
+        msg->addU16(outfit.getAura());
+        msg->addString(outfit.getShader());
+    }
 
     if (g_game.getClientVersion() >= 1281) {
         msg->addU8(0x00); // normal outfit window

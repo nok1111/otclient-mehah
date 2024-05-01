@@ -40,7 +40,9 @@ public:
     void setAuxId(uint16_t id) { m_auxId = id; }
     void setMount(uint16_t mount) { m_mount = mount; }
 
-    
+    void setWings(int wings) { m_wings = wings; }
+    void setAura(int aura) { m_aura = aura; }
+    void setShader(std::string shader) { m_shader = shader; }
 
     void setHead(uint8_t head);
     void setBody(uint8_t body);
@@ -57,6 +59,9 @@ public:
     uint16_t getAuxId() const { return m_auxId; }
     uint16_t getMount() const { return m_mount; }
 
+    int getWings() const { return m_wings; }
+    int getAura() const { return m_aura; }
+    std::string getShader() const { return m_shader; }
 
     uint8_t getHead() const { return m_head; }
     uint8_t getBody() const { return m_body; }
@@ -88,7 +93,10 @@ public:
             m_legs == other.m_legs &&
             m_feet == other.m_feet &&
             m_addons == other.m_addons &&
-            m_mount == other.m_mount;
+            m_mount == other.m_mount &&
+            m_wings == other.m_wings &&
+            m_aura == other.m_aura &&
+            m_shader == other.m_shader;
     }
     bool operator!=(const Outfit& other) const { return !(*this == other); }
 
@@ -97,12 +105,14 @@ private:
 
     bool m_temp{ false };
 
-    
+    std::string m_shader{ "" };
 
     uint16_t m_id{ 0 };
     uint16_t m_auxId{ 0 };
     uint16_t m_mount{ 0 };
 
+    uint16_t m_wings{ 0 };
+    uint16_t m_aura{ 0 };
 
     uint8_t m_head{ 0 };
     uint8_t m_body{ 0 };

@@ -46,7 +46,14 @@ int push_luavalue(const Outfit& outfit)
         g_lua.pushInteger(outfit.getMount());
         g_lua.setField("mount");
     }
-   
+    if (g_game.getFeature(Otc::GamePlayerCosmetics)) {
+        g_lua.pushInteger(outfit.getWings());
+        g_lua.setField("wings");
+        g_lua.pushInteger(outfit.getAura());
+        g_lua.setField("aura");
+        g_lua.pushString(outfit.getShader());
+        g_lua.setField("shader");
+    }
     return 1;
 }
 
@@ -76,7 +83,14 @@ bool luavalue_cast(int index, Outfit& outfit)
         outfit.setMount(g_lua.popInteger());
     }
 
-    
+    if (g_game.getFeature(Otc::GamePlayerCosmetics)) {
+        g_lua.getField("wings", index);
+        outfit.setWings(g_lua.popInteger());
+        g_lua.getField("aura", index);
+        outfit.setAura(g_lua.popInteger());
+        g_lua.getField("shader", index);
+        outfit.setShader(g_lua.popString());
+    }
 
     return true;
 }

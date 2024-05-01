@@ -2302,7 +2302,41 @@ void ProtocolGame::parseOpenOutfitWindow(const InputMessagePtr& msg) const
     }
 
 
-    
+    std::vector<std::tuple<int, std::string> > wingsList;
+    std::vector<std::tuple<int, std::string> > auraList;
+    std::vector<std::tuple<int, std::string> > shaderList;
+    if (g_game.getFeature(Otc::GamePlayerCosmetics)) {
+
+
+        const int wingsCount = msg->getU8();
+        for (int i = 0; i < wingsCount; ++i) {
+            int wingsId = msg->getU16(); // wings type
+            std::string wingsName = msg->getString(); // wings name
+
+            wingsList.emplace_back(wingsId, wingsName);
+        }
+
+
+        const int auraCount = msg->getU8();
+        for (int i = 0; i < auraCount; ++i) {
+            int auraId = msg->getU16(); // aura type
+            std::string auraName = msg->getString(); // aura name
+
+            auraList.emplace_back(auraId, auraName);
+        }
+
+
+        const int shaderCount = msg->getU8();
+        for (int i = 0; i < shaderCount; ++i) {
+            int shaderId = msg->getU16(); // shader type
+            std::string shaderName = msg->getString(); // shader name
+
+            shaderList.emplace_back(shaderId, shaderName);
+        }
+
+
+
+    }
 
     if (g_game.getClientVersion() >= 1281) {
         msg->getU16(); // familiars.size()
@@ -2316,7 +2350,7 @@ void ProtocolGame::parseOpenOutfitWindow(const InputMessagePtr& msg) const
         msg->getU8(); // randomize mount (bool)
     }
 
-    g_game.processOpenOutfitWindow(currentOutfit, outfitList, mountList);
+    g_game.processOpenOutfitWindow(currentOutfit, outfitList, mountList, wingsList, auraList, shaderList);
 }
 
 void ProtocolGame::parseKillTracker(const InputMessagePtr& msg)
@@ -2690,6 +2724,16 @@ Outfit ProtocolGame::getOutfit(const InputMessagePtr& msg, bool parseMount/* = t
         outfit.setMount(mount);
     }
 
+    if (g_game.getFeature(Otc::GamePlayerCosmetics)) {
+        const int wings = msg->getU16();
+        outfit.setWings(wings);
+
+        const int aura = msg->getU16();
+        outfit.setAura(aura);
+
+        const std::string shader = msg->getString();
+        outfit.setShader(shader);
+    }
 
     return outfit;
 }
