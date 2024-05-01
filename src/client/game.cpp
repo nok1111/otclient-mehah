@@ -403,8 +403,7 @@ void Game::processRemoveAutomapFlag(const Position& pos, int icon, const std::st
 }
 
 void Game::processOpenOutfitWindow(const Outfit& currentOutfit, const std::vector<std::tuple<int, std::string, int> >& outfitList,
-                                   const std::vector<std::tuple<int, std::string> >& mountList, const std::vector<std::tuple<int, std::string> >& wingsList,
-                                   const std::vector<std::tuple<int, std::string> >& auraList, const std::vector<std::tuple<int, std::string> >& shaderList)
+                                   const std::vector<std::tuple<int, std::string> >& mountList)
 {
     // create virtual creature outfit
     const auto& virtualOutfitCreature = std::make_shared<Creature>();
@@ -425,7 +424,7 @@ void Game::processOpenOutfitWindow(const Outfit& currentOutfit, const std::vecto
         virtualMountCreature->setOutfit(mountOutfit);
     }
 
-    g_lua.callGlobalField("g_game", "onOpenOutfitWindow", virtualOutfitCreature, outfitList, virtualMountCreature, mountList, wingsList, auraList, shaderList);
+    g_lua.callGlobalField("g_game", "onOpenOutfitWindow", virtualOutfitCreature, outfitList, virtualMountCreature, mountList);
 }
 
 void Game::processOpenNpcTrade(const std::vector<std::tuple<ItemPtr, std::string, int, int, int> >& items)
@@ -1545,7 +1544,7 @@ void Game::setProtocolVersion(int version)
 
     g_lua.callGlobalField("g_game", "onProtocolVersionChange", version);
     enableFeature(Otc::GameSpritesAlphaChannel);
-    enableFeature(Otc::GamePlayerCosmetics);
+    //enableFeature(Otc::GamePlayerCosmetics);
     enableFeature(Otc::GameMagicEffectU16);
 }
 

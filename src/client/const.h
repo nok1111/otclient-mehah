@@ -533,7 +533,7 @@ namespace Otc
         GameBosstiary = 97,
 
         GameMagicEffectU32 = 98,
-        GamePlayerCosmetics = 99,
+        //GamePlayerCosmetics = 99,
 
         //  others
         GameLoadSprInsteadProtobuf = 100,

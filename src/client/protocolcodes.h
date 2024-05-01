@@ -75,10 +75,13 @@ namespace Proto
 
         //ascension
 
-        GameServerAttchedEffect = 300, //changed to 90+
-        GameServerDetachEffect = 301, //changed to 90+
-        GameServerCreatureShader = 302, //changed to 90+
-        GameServerMapShader = 303, //changed to 90+
+        GameServerAttchedEffect = 300, //changed from 52 -- since its already being used (300+ its a placeholder)
+        GameServerDetachEffect = 301, //changed from 53 -- since its already being used
+        GameServerCreatureShader = 302, //changed from 54 -- since its already being used
+        GameServerMapShader = 303, //changed from 55 -- since its already being used
+
+
+
         GameServerUpdateFame = 52,
 #ifdef PROGRESSBAR
         ServerRunProgressbar = 59,

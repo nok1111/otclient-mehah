@@ -118,9 +118,7 @@ void Outfit::resetClothes()
     setLegs(0);
     setFeet(0);
     setMount(0);
-    setWings(0);
-    setAura(0);
-    setShader("");
+
 }
 
 void Outfit::setHead(uint8_t head) {
