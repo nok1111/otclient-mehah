@@ -1,0 +1,103 @@
+lootButton1 < UIButton
+  font: verdana-11px-antialised
+  text-align: left
+  size: 96 80
+  margin-right: 2
+  margin-bottom: 2
+
+  Label
+    id: dungeonLabelTitle
+    text-align: center
+    text-offset: 0 0
+    anchors.top: parent.top
+    anchors.right: parent.right
+    anchors.left: parent.left
+    margin: 3
+    height: 16
+    font: verdana-11px-rounded
+
+  Creature
+    id: outfitCreatureBox
+    anchors.top: dungeonLabelTitle.bottom
+    anchors.right: parent.right
+    anchors.left: parent.left
+    margin: 3
+    size: 88 70
+    fixed-creature-size: true
+    phantom: true
+
+  Label
+    id: skullicon
+    image-source: /images/game/skulls/skull_green
+    anchors.top: dungeonLabelTitle.bottom
+    anchors.right: parent.right
+    margin-top: 5	
+    margin-right: 5
+    size: 12 12
+
+MainWindow
+  id: rewardsPanel
+  size: 320 331
+  padding: 3
+  visible: false
+
+  Label
+    id: dungeonStartLabel
+    !text: tr('Summon Stone')
+    text-align: center
+    font: verdana-11px-antialised
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 20
+
+  Panel
+    id: dungeonPanelBig
+    anchors.top: dungeonStartLabel.bottom
+    anchors.left: parent.left
+    margin-top: 3
+    size: 311 301
+    padding: 5
+    align: center
+
+  VerticalScrollBar
+    id: dungeonListScrollbar
+    height: 232
+    margin-top: 1
+    margin-right: 1
+    anchors.top: rewardList.top
+    anchors.right: rewardList.right
+    step: 14
+    pixels-scroll: true
+
+    Label
+      id: lootlists
+      anchors.top: parent.top
+      anchors.left: parent.right
+      size: 20 20
+      margin-left: 10
+
+  ScrollablePanel
+    id: rewardList
+    anchors.top: dungeonStartLabel.bottom
+    anchors.left: parent.left
+    size: 305 234
+    padding: 3
+    padding-right: 10
+    margin-top: 30
+    margin-left: 3
+    vertical-scrollbar: dungeonListScrollbar
+    layout:
+      type: grid
+      flow: true
+      cell-size: 96 98
+
+  Button
+    id: closeButton
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottom: parent.bottom
+    margin-left: 0
+    margin-bottom: 3
+    !text: tr('Close')
+    width: 50
+    @onClick: modules.game_summonstone.closeStone()

@@ -38,6 +38,7 @@ Module
     - game_attachedeffects
     - game_stash
     - game_creatureinformation
+    - game_crafting
     - game_famenpcshop
     - game_enchantnpcshop
     - game_tokenshop
@@ -45,5 +46,7 @@ Module
     - game_tasks
     - game_tasklist
     - game_forging
+    - game_highscore
+    - game_jobs
   @onLoad: init()
   @onUnload: terminate()

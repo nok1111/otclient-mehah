@@ -70,6 +70,11 @@ OUTFIT_SHADERS = { {
     useFramebuffer = true,
     frag = 'shaders/fragment/outline.frag'
 },
+ {
+        name = 'Aura',
+        frag = 'shaders/fragment/radialblur.frag',
+        drawColor = false
+    }, 
 
 	{name = 'Jelly', frag = 'shaders/fragment/heat.frag'},
     {name = 'Distorted', frag = 'shaders/fragment/noise.frag'},
@@ -85,7 +90,7 @@ OUTFIT_SHADERS = { {
 	{name = 'Metallic', frag = 'shaders/fragment/metallic.frag'},
 	{name = 'Golden', frag = 'shaders/fragment/outline_golden.frag'},
 	{name = 'Red Glow', frag = 'shaders/fragment/red_glow.frag'},
-	{name = 'Soul', frag = 'shaders/fragment/soul.frag'},
+	{name = 'Soul',  useFramebuffer = true, frag = 'shaders/fragment/soul.frag'},
 	{name = 'Fragmented', frag = 'shaders/fragment/fragmented.frag'},
 	{name = 'Test', frag = 'shaders/fragment/test.frag'},
 

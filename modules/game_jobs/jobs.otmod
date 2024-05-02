@@ -1,0 +1,9 @@
+Module
+  name: game_jobs
+  description: Window that shows all jobs
+  author: Nekiro
+  website: https://github.com/nekiro
+  sandboxed: true
+  scripts: [ jobs ]
+  @onLoad: init()
+  @onUnload: terminate()

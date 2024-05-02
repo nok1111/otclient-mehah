@@ -1,0 +1,130 @@
+simpleButton < UIButton
+  font: terminus-10px
+  color: #dfdfdfff
+  size: 92 22
+  text-offset: 0 0
+  image-source: /images/dungeon/buttonShop
+  image-color: #343434
+  image-clip: 0 0 24 22
+  image-border: 7
+  image-border-color: #343434
+  padding: 5 10 5 10
+  opacity: 1.0
+
+  $hover !disabled:
+    image-clip: 0 22 24 22
+
+  $pressed:
+    image-clip: 0 44 24 22
+
+  $disabled:
+    color: #dfdfdf88
+    opacity: 0.8
+
+MainWindow
+  id: dungeonPanel
+  size: 330 250
+  padding: 3
+  background-color: #00000077
+  visible: false
+
+  Label
+    id: dungeonStartLabel
+    !text: tr('YOU ARE DEAD')
+    text-align: center
+    font: verdana-11px-antialised
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 20
+    border: 1 #454545
+    background-color: #191919
+
+  Panel
+    id: dungeonPanelBig
+    anchors.top: dungeonStartLabel.bottom
+    anchors.left: parent.left
+    margin-top: 3
+    size: 323 220
+    border: 1 #343434
+    background-color: #00000077
+    padding: 5
+    align: center
+
+  Label
+    id: imageDifficulty2
+    anchors.top: dungeonStartLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 3
+    size: 12 12
+
+  Label
+    id: dead
+    anchors.top: dungeonStartLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 3
+    size: 12 12
+
+  Label
+    id: descriptionText
+    !text: tr('You did not lose any exp/skills! Go back inside or leave?.')
+    font: terminus-10px
+    text-wrap: true
+    text-auto-resize:true
+    anchors.top: dead.bottom
+    anchors.left: dead.left
+    anchors.right: parent.right
+    margin: 1
+    margin-top: 0
+    margin-left: 115
+
+  Label
+    id: blankLabel
+    anchors.top: dead.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 60
+    size: 0 0
+
+  Label
+    id: killerNameLabel
+    font: verdana-11px-antialised
+    !text: tr('  - Killer')
+    anchors.top: blankLabel.bottom
+    anchors.left: parent.left
+    size: 100 14
+    background-color: #191919
+    border: 1 #343434
+    margin: 3
+    margin-top: 10
+
+  Label
+    id: killerName
+    font: terminus-10px
+    anchors.top: killerNameLabel.top
+    anchors.left: killerNameLabel.right
+    height: 37
+    size: 120 12
+    margin-left: 3
+
+  simpleButton
+    id: closeButton
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottom: parent.bottom
+    margin-left: 65
+    margin-bottom: 20
+    !text: tr('LEAVE PARTY')
+    width: 90
+    @onClick: modules.dungeon_module.leaveParty2()
+
+  simpleButton
+    id: buttonOk
+    anchors.right: closeButton.left
+    anchors.bottom: parent.bottom
+    margin-right: 50
+    margin-bottom: 20
+    !text: tr('ENTER DUNGEON')
+    width: 90
+    @onClick: modules.dungeon_module.goBackInside()

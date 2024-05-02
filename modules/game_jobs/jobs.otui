@@ -1,0 +1,270 @@
+Bar < ProgressBar
+  background-color: red
+  height: 5
+  phantom: false
+
+ProfessionLabel < Label
+  anchors.top: prev.bottom
+  anchors.left: prev.left
+  anchors.right: prev.right
+  text-align: center
+  margin-left: 5 
+  margin-top: 2
+
+JobLabel < Label
+  id: label
+  anchors.left: parent.left
+  anchors.top: prev.bottom
+  margin-top: 10
+  margin-left: 15
+
+JobLevelLabel < Label
+  margin-left: 50
+  !text: tr('0')
+  anchors.top: label.top
+  text-auto-resize: true
+
+JobBar < Bar
+  anchors.top: label.bottom
+  anchors.left: label.left
+  margin-top: 5
+  width: 100
+
+ProfButton < UIButton
+  image-size: 185 80
+  size: 100 80
+  margin-top: 5
+  enabled: true
+  image-color: #dfdfdf
+
+
+MainWindow
+  size: 540 665
+  !text: tr('Reputations & Forging')
+
+  Panel
+    id: professionPanel
+    anchors.left: parent.left
+    anchors.right: closeButton.left
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+
+    ProfButton
+      id: bloodforgingButton
+      image-source: /data/images/game/profession/BLOOD_CRAFTING
+      anchors.top: parent.top
+      anchors.left: parent.left
+      margin-left: 25
+
+    ProfessionLabel
+      !text: tr('Blood Forging')
+
+    Bar
+      id: bloodforgingBar
+      anchors.left: bloodforgingButton.left
+      anchors.right: bloodforgingButton.right
+      anchors.top: prev.bottom
+      margin-top: 2
+
+    ProfessionLabel
+      id: bloodforgingLabel
+      !text: tr('0')
+
+    HorizontalSeparator
+      anchors.top: prev.bottom
+      margin-top: 3
+      margin-bottom: 3
+      anchors.left: parent.left
+      anchors.right: closeButton.right
+      width: 500
+
+    ProfButton
+      id: celestialguardButton
+      image-source: /data/images/game/profession/CELESTIAL_GUARD
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      margin-left: 25
+
+    ProfessionLabel
+      !text: tr('Celestial Guard')
+
+    Bar
+      id: celestialguardBar
+      anchors.left: celestialguardButton.left
+      anchors.right: celestialguardButton.right
+      anchors.top: prev.bottom
+      margin-top: 2
+
+    ProfessionLabel
+      id: celestialguardLabel
+      !text: tr('0')
+
+    HorizontalSeparator
+      anchors.top: prev.bottom
+      margin-top: 3
+      margin-bottom: 3
+      anchors.left: parent.left
+      anchors.right: closeButton.right
+      width: 500
+
+    ProfButton
+      id: shadowcouncilButton
+      image-source: /data/images/game/profession/SHADOW_COUNCIL
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      margin-left: 25
+
+    ProfessionLabel
+      !text: tr('Shadow Council')
+
+    Bar
+      id: shadowcouncilBar
+      anchors.left: shadowcouncilButton.left
+      anchors.right: shadowcouncilButton.right
+      anchors.top: prev.bottom
+      margin-top: 2
+
+    ProfessionLabel
+      id: shadowcouncilLabel
+      !text: tr('0')
+
+    HorizontalSeparator
+      anchors.top: prev.bottom
+      margin-top: 3
+      margin-bottom: 3
+      anchors.left: parent.left
+      anchors.right: closeButton.right
+      width: 500
+
+    ProfButton
+      id: theimmortalsButton
+      image-source: /data/images/game/profession/THE_IMMORTALS
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      margin-left: 25
+
+    ProfessionLabel
+      !text: tr('The Immortals')
+
+    Bar
+      id: theimmortalsBar
+      anchors.left: theimmortalsButton.left
+      anchors.right: theimmortalsButton.right
+      anchors.top: prev.bottom
+      margin-top: 2
+
+    ProfessionLabel
+      id: theimmortalsLabel
+      !text: tr('0')
+
+    HorizontalSeparator
+      anchors.top: prev.bottom
+      margin-top: 3
+      margin-bottom: 3
+      anchors.left: parent.left
+      anchors.right: closeButton.right
+      width: 500
+
+    ProfButton
+      id: brawlersguildButton
+      image-source: /data/images/game/profession/BRAWLERS_GUILD
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      margin-left: 25
+
+    ProfessionLabel
+      !text: tr('Brawlers Guild')
+
+    Bar
+      id: brawlersguildBar
+      anchors.left: brawlersguildButton.left
+      anchors.right: brawlersguildButton.right
+      anchors.top: prev.bottom
+      margin-top: 2
+
+    ProfessionLabel
+      id: brawlersguildLabel
+      !text: tr('0')
+
+    TextEdit
+      id: bloodforgingDescLabel
+      !text: tr('*Description: Earned by contributing to the craft of blood-related artifacts and alchemy. Emblem: Represents a blood droplet intertwined with mystical symbols.')
+      text-wrap: true
+      size: 290 118
+      editable: false
+      multiline: true
+      text-align: center
+      change-cursor-image: false
+      focusable: false
+      anchors.top: parent.top
+      anchors.left: bloodforgingButton.right
+      margin-top: 1
+      margin-left: 100
+
+    TextEdit
+      id: celestialguardDescLabel
+      !text: tr('Profession desc')
+      text-wrap: true
+      size: 290 118
+      editable: false
+      multiline: true
+      text-align: center
+      change-cursor-image: false
+      focusable: false
+      anchors.top: prev.bottom
+      anchors.left: celestialguardButton.right
+      margin-top: 8
+      margin-left: 100
+
+    TextEdit
+      id: shadowcouncilDescLabel
+      !text: tr('Profession desc')
+      text-wrap: true
+      size: 290 118
+      editable: false
+      multiline: true
+      text-align: center
+      change-cursor-image: false
+      focusable: false
+      anchors.top: prev.bottom
+      anchors.left: shadowcouncilButton.right
+      margin-top: 8
+      margin-left: 100
+
+    TextEdit
+      id: theimmortalsDescLabel
+      !text: tr('Profession desc')
+      text-wrap: true
+      size: 290 118
+      editable: false
+      multiline: true
+      text-align: center
+      change-cursor-image: false
+      focusable: false
+      anchors.top: prev.bottom
+      anchors.left: theimmortalsButton.right
+      margin-top: 8
+      margin-left: 100
+
+    TextEdit
+      id: brawlersguildDescLabel
+      !text: tr('Profession desc')
+      text-wrap: true
+      size: 290 118
+      editable: false
+      multiline: true
+      text-align: center
+      change-cursor-image: false
+      focusable: false
+      anchors.top: prev.bottom
+      anchors.left: brawlersguildButton.right
+      margin-top: 8
+      margin-left: 100
+
+
+  Button
+    id: closeButton
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-right: 5
+    !text: tr('Close')

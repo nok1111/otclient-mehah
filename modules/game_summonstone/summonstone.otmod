@@ -1,0 +1,10 @@
+Module
+  name: game_summonstone
+  description: summon stone System
+  author: josejunior23
+  sandboxed: true
+  scripts: [summonstone]
+  autoload: true
+  autoload-priority: 1001
+  @onLoad: init()
+  @onUnload: terminate()

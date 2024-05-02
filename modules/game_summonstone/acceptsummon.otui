@@ -1,0 +1,70 @@
+MainWindow
+  id: summonPanel
+  size: 330 250
+  padding: 3
+  background-color: #00000077
+  visible: false
+
+  Label
+    id: summonStoneLabel
+    !text: tr('Summon stone')
+    text-align: center
+    font: verdana-11px-antialised
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 20
+    border: 1 #454545
+    background-color: #191919
+
+  Panel
+    id: summonStonePanelBig
+    anchors.top: summonStoneLabel.bottom
+    anchors.left: parent.left
+    margin-top: 3
+    size: 323 220
+    border: 1 #343434
+    background-color: #00000077
+    padding: 5
+    align: center
+
+  Label
+    id: dead
+    anchors.top: summonStoneLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 3
+    size: 12 12
+
+  Label
+    id: descriptionText
+    !text: tr('Your party members is traying to summon you.')
+    font: terminus-10px
+    text-wrap: true
+    text-auto-resize:true
+    anchors.top: dead.bottom
+    anchors.left: dead.left
+    anchors.right: parent.right
+    margin: 1
+    margin-top: 0
+    margin-left: 0
+
+  Button
+    id: closeButton
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottom: parent.bottom
+    margin-left: 65
+    margin-bottom: 20
+    !text: tr('Decline')
+    width: 90
+    @onClick: modules.game_summonstone.declineButton()
+
+  Button
+    id: buttonOk
+    anchors.right: closeButton.left
+    anchors.bottom: parent.bottom
+    margin-right: 50
+    margin-bottom: 20
+    !text: tr('Accept')
+    width: 90
+    @onClick: modules.game_summonstone.acceptButton()

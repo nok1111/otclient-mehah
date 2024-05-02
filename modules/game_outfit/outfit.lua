@@ -84,44 +84,41 @@ localPlayerEvent = EventController:new(LocalPlayer, {
         outfit.shader = ""
         outfitCreature:setOutfit(outfit)
 
-        if table.empty(mounts) or not mount then
-            return
-        end
-		if table.empty(cosmetic["wings"]["list"]) then 
-		 return
-        end
-		if table.empty(cosmetic["aura"]["list"]) then 
-		 return
-        end
-		 if table.empty(cosmetic["shader"]["list"]) then 
-		 return
-        end
-		 
+        if not table.empty(mounts) then 
+
+			local nameMountWidget = outfitWindow:getChildById('mountName')
+			nameMountWidget:setText(mounts[currentMount][2])
+
+			mount.type = mounts[currentMount][1]
+			mountCreature:setOutfit(mount)
+		end
 		
+	 if not table.empty(cosmetic["wings"]["list"]) then 
 
+			local nameMountWidget = outfitWindow:getChildById('wingsName')
+			local current = cosmetic["wings"]["current"]
+			nameMountWidget:setText(cosmetic["wings"]["list"][current][2])
 
-        local nameMountWidget = outfitWindow:getChildById('mountName')
-        nameMountWidget:setText(mounts[currentMount][2])
-
-        mount.type = mounts[currentMount][1]
-        mountCreature:setOutfit(mount)
+			outfitWindow:getChildById('wingsCreatureBox'):setOutfit({type=cosmetic["wings"]["list"][current][1]})
+		end
 		
-		
-		local nameMountWidget = outfitWindow:getChildById('wingsName')
-		local current = cosmetic["wings"]["current"]
-		nameMountWidget:setText(cosmetic["wings"]["list"][current][2])
-		outfitWindow:getChildById('wingsCreatureBox'):setOutfit({type=cosmetic["wings"]["list"][current][1]})
-        
-		local nameMountWidget = outfitWindow:getChildById('auraName')
-		local current = cosmetic["aura"]["current"]
-		nameMountWidget:setText(cosmetic["aura"]["list"][current][2])
-		outfitWindow:getChildById('auraCreatureBox'):setOutfit({type=cosmetic["aura"]["list"][current][1]})
+        if not table.empty(cosmetic["aura"]["list"]) then 
 
-		local nameMountWidget = outfitWindow:getChildById('shaderName')
-		local current = cosmetic["shader"]["current"]
-		nameMountWidget:setText(cosmetic["shader"]["list"][current][2])
-		outfitWindow:getChildById('shaderCreatureBox'):setOutfit({type = outfit.type,shader=cosmetic["shader"]["list"][current][2]})
-			
+			local nameMountWidget = outfitWindow:getChildById('auraName')
+			local current = cosmetic["aura"]["current"]
+			nameMountWidget:setText(cosmetic["aura"]["list"][current][2])
+
+			outfitWindow:getChildById('auraCreatureBox'):setOutfit({type=cosmetic["aura"]["list"][current][1]})
+		end
+		
+        if not table.empty(cosmetic["shader"]["list"]) then 
+
+			local nameMountWidget = outfitWindow:getChildById('shaderName')
+			local current = cosmetic["shader"]["current"]
+			nameMountWidget:setText(cosmetic["shader"]["list"][current][2])
+
+			outfitWindow:getChildById('shaderCreatureBox'):setOutfit({type = outfit.type,shader=cosmetic["shader"]["list"][current][2]})
+		end
 		
     end
 })
