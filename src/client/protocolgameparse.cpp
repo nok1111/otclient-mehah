@@ -2305,6 +2305,7 @@ void ProtocolGame::parseOpenOutfitWindow(const InputMessagePtr& msg) const
     std::vector<std::tuple<int, std::string> > wingsList;
     std::vector<std::tuple<int, std::string> > auraList;
     std::vector<std::tuple<int, std::string> > shaderList;
+
     if (g_game.getFeature(Otc::GamePlayerCosmetics)) {
 
 
