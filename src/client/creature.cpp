@@ -272,10 +272,99 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, int
 void Creature::internalDraw(Point dest, LightView* lightView, const Color& color)
 {
     bool replaceColorShader = color != Color::white;
-    if (replaceColorShader)
+
+    int cosmeticAnimationPhase = 0;
+    // xPattern => creature direction
+    int xPattern;
+    if (m_direction == Otc::NorthEast || m_direction == Otc::SouthEast)
+        xPattern = Otc::East;
+    else if (m_direction == Otc::NorthWest || m_direction == Otc::SouthWest)
+        xPattern = Otc::West;
+    else
+        xPattern = m_direction;
+
+
+
+    if (replaceColorShader) 
+       
+
         g_drawPool.setShaderProgram(g_painter->getReplaceColorShader());
+  
     else
         drawAttachedEffect(dest, lightView, false); // On Bottom
+
+    if (m_outfit.getAura() > 0) {
+
+        const auto& datType = g_things.getThingType(m_outfit.getAura(), ThingCategoryCreature).get();
+
+        int animationPhases = datType->getAnimationPhases();
+        int animateTicks = 100;
+        if (animationPhases > 1) {
+            cosmeticAnimationPhase = (g_clock.millis() % (animateTicks * animationPhases)) / animateTicks;
+        }
+
+        dest += datType->getDisplacement() * g_drawPool.getScaleFactor();
+        datType->draw(dest, 0, m_numPatternX, 0, 0, cosmeticAnimationPhase, color);
+        dest -= datType->getDisplacement() * g_drawPool.getScaleFactor();
+
+    }
+
+    //cosmetics start
+
+            // First check if the creature has both wings and a mount and is facing specific directions
+    if (m_outfit.getWings() > 0 && m_outfit.hasMount() &&
+    (xPattern == Otc::South || xPattern == Otc::East || xPattern == Otc::SouthEast || xPattern == Otc::NorthEast) &&
+         !(m_outfit.getId() == 194 || m_outfit.getId() == 1322 || m_outfit.getId() == 1321 ||
+        m_outfit.getId() == 1352 || m_outfit.getId() == 1356 || m_outfit.getId() == 1617 ||
+        m_outfit.getId() == 1643 || m_outfit.getId() == 1737 || m_outfit.getId() == 1780 ||
+        m_outfit.getId() == 1781 || m_outfit.getId() == 2043 || m_outfit.getId() == 2071)) {
+        Point boneOffset = Point(0, 0);
+        switch (m_direction) {                      //x,y
+            case Otc::South:      boneOffset = Point(-4, -18); break;
+            case Otc::East:       boneOffset = Point(-18, -6); break;
+            case Otc::NorthEast:  boneOffset = Point(-18, -8); break;
+            case Otc::SouthEast:  boneOffset = Point(-18, -8); break;
+
+        }
+
+        // Additional logic or adjustments for the combined scenario can go here
+        const auto& datType = g_things.getThingType(m_outfit.getWings(), ThingCategoryCreature).get();
+        int animationPhases = datType->getAnimationPhases();
+        int animateTicks = 100;
+        if (animationPhases > 1) {
+            cosmeticAnimationPhase = (g_clock.millis() % (animateTicks * animationPhases)) / animateTicks;
+        }
+
+        dest += (datType->getDisplacement() * g_drawPool.getScaleFactor()) + boneOffset;
+        datType->draw(dest, 0, m_numPatternX, 0, 0, cosmeticAnimationPhase, color);
+        dest -= (datType->getDisplacement() * g_drawPool.getScaleFactor()) + boneOffset;
+
+        // Else check if the creature has wings and is facing specific directions without a mount
+    } else if (m_outfit.getWings() > 0 && (xPattern == Otc::South || xPattern == Otc::East || xPattern == Otc::SouthEast || xPattern == Otc::NorthEast)) {
+        Point boneOffset = Point(0, 0);
+        switch (m_direction) {
+            case Otc::South:      boneOffset = Point(4, 0); break;
+            case Otc::East:       boneOffset = Point(0, 4); break;
+            case Otc::NorthEast:  boneOffset = Point(0, 0); break;
+            case Otc::SouthEast:  boneOffset = Point(0, 0); break;
+
+        }
+
+        const auto& datType = g_things.getThingType(m_outfit.getWings(), ThingCategoryCreature).get();
+        int animationPhases = datType->getAnimationPhases();
+        int animateTicks = 100;
+        if (animationPhases > 1) {
+            cosmeticAnimationPhase = (g_clock.millis() % (animateTicks * animationPhases)) / animateTicks;
+        }
+
+        dest += (datType->getDisplacement() * g_drawPool.getScaleFactor()) + boneOffset;
+        datType->draw(dest, 0, m_numPatternX, 0, 0, cosmeticAnimationPhase, color);
+        dest -= (datType->getDisplacement() * g_drawPool.getScaleFactor()) + boneOffset;
+    }
+
+
+   
+
 
     if (!isHided()) {
         // outfit is a real creature
@@ -290,6 +379,10 @@ void Creature::internalDraw(Point dest, LightView* lightView, const Color& color
                 dest += getDisplacement() * g_drawPool.getScaleFactor();
             }
 
+            
+
+
+
             if (!m_jumpOffset.isNull()) {
                 const auto& jumpOffset = m_jumpOffset * g_drawPool.getScaleFactor();
                 dest -= Point(std::round(jumpOffset.x), std::round(jumpOffset.y));
@@ -303,7 +396,14 @@ void Creature::internalDraw(Point dest, LightView* lightView, const Color& color
             const int animationPhase = getCurrentAnimationPhase();
             const bool useFramebuffer = !replaceColorShader && m_shader && m_shader->useFramebuffer();
 
+            //cosmetic added
+            if (g_shaders.getShader(m_outfit.getShader()))
+                g_drawPool.setShaderProgram(g_shaders.getShader(m_outfit.getShader()), m_shaderAction);
+            //cosmetics end
+
             const auto& drawCreature = [&](const Point& dest) {
+
+
                 // yPattern => creature addon
                 for (int yPattern = 0; yPattern < getNumPatternY(); ++yPattern) {
                     // continue if we dont have this addon
@@ -324,6 +424,7 @@ void Creature::internalDraw(Point dest, LightView* lightView, const Color& color
                     }
                 }
             };
+
 
             if (useFramebuffer) {
                 const int size = static_cast<int>(g_gameConfig.getSpriteSize() * std::max<int>(datType->getSize().area(), 2) * g_drawPool.getScaleFactor());
@@ -357,15 +458,71 @@ void Creature::internalDraw(Point dest, LightView* lightView, const Color& color
             if (m_outfit.isEffect())
                 animationPhase = std::min<int>(animationPhase + 1, animationPhases);
 
-            if (!replaceColorShader && m_shader)
-                g_drawPool.setShaderProgram(m_shader, true, m_shaderAction);
-            m_thingType->draw(dest - (getDisplacement() * g_drawPool.getScaleFactor()), 0, 0, 0, 0, animationPhase, color);
+            if (g_shaders.getShader(m_outfit.getShader()))
+                g_drawPool.setShaderProgram(g_shaders.getShader(m_outfit.getShader()), true, m_shaderAction);
         }
     }
 
-    if (replaceColorShader)
+   if (replaceColorShader)
         g_drawPool.resetShaderProgram();
     else {
+       
+
+        if (m_outfit.getWings() > 0 && m_outfit.hasMount() && (xPattern == Otc::North || xPattern == Otc::West || xPattern == Otc::NorthWest || xPattern == Otc::SouthWest) &&
+               !(m_outfit.getId() == 194 || m_outfit.getId() == 1322 || m_outfit.getId() == 1321 ||
+            m_outfit.getId() == 1352 || m_outfit.getId() == 1356 || m_outfit.getId() == 1617 ||
+            m_outfit.getId() == 1643 || m_outfit.getId() == 1737 || m_outfit.getId() == 1780 ||
+            m_outfit.getId() == 1781 || m_outfit.getId() == 2043 || m_outfit.getId() == 2071)) {
+            Point boneOffset = Point(0, 0);
+            if (m_direction == Otc::North) {
+                boneOffset = Point(-4, -2); // Assuming you want to apply an offset for North
+            } else if (m_direction == Otc::West) {
+                boneOffset = Point(-8, -10); // Assuming you want to apply an offset for West
+            } else if (m_direction == Otc::NorthWest) {
+                boneOffset = Point(-8, -10); // Adjusted for West
+            } else if (m_direction == Otc::SouthWest) {
+                boneOffset = Point(-8, -10); // Adjusted for West
+            }
+
+            const auto& datType = g_things.getThingType(m_outfit.getWings(), ThingCategoryCreature).get();
+
+            int animationPhases = datType->getAnimationPhases();
+            int animateTicks = 100;
+            if (animationPhases > 1) {
+                cosmeticAnimationPhase = (g_clock.millis() % (animateTicks * animationPhases)) / animateTicks;
+            }
+
+            dest += (datType->getDisplacement() * g_drawPool.getScaleFactor()) + boneOffset;
+            datType->draw(dest, 0, m_numPatternX, 0, 0, cosmeticAnimationPhase, color);
+            dest -= (datType->getDisplacement() * g_drawPool.getScaleFactor()) + boneOffset;
+        }
+
+        else if (m_outfit.getWings() > 0 && (xPattern == Otc::North || xPattern == Otc::West || xPattern == Otc::NorthWest || xPattern == Otc::SouthWest)) {
+            Point boneOffset = Point(0, 0);
+            if (m_direction == Otc::North) {
+                boneOffset = Point(0, 0); // Adjusted for North
+            } else if (m_direction == Otc::West) {
+                boneOffset = Point(4, -2); // Adjusted for West
+            } else if (m_direction == Otc::NorthWest) {
+                boneOffset = Point(4, -2); // Adjusted for West
+            } else if (m_direction == Otc::SouthWest) {
+                boneOffset = Point(4, -2); // Adjusted for West
+            }
+
+
+
+            const auto& datType = g_things.getThingType(m_outfit.getWings(), ThingCategoryCreature).get();
+
+            int animationPhases = datType->getAnimationPhases();
+            int animateTicks = 100;
+            if (animationPhases > 1) {
+                cosmeticAnimationPhase = (g_clock.millis() % (animateTicks * animationPhases)) / animateTicks;
+            }
+
+            dest += (datType->getDisplacement() * g_drawPool.getScaleFactor()) + boneOffset;
+            datType->draw(dest, 0, m_numPatternX, 0, 0, cosmeticAnimationPhase, color);
+            dest -= (datType->getDisplacement() * g_drawPool.getScaleFactor()) + boneOffset;
+        }
         drawAttachedEffect(dest, lightView, true); // On Top
         drawAttachedParticlesEffect(dest);
     }
