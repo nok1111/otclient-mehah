@@ -303,15 +303,10 @@ function destroy()
     addons = {}
 end
 
-function randomize()
-    local outfitTemplate = { outfitWindow:getChildById('detail'), outfitWindow:getChildById('secondary'),
-        outfitWindow:getChildById('primary'), outfitWindow:getChildById('head') }
-
-    for i, template in pairs(outfitTemplate) do
-        template:setChecked(true)
-        colorBoxes[math.random(1, #colorBoxes)]:setChecked(true)
-        template:setChecked(false)
-    end
+function randomizeMount()
+	currentMount = math.random(1,#mounts)
+	
+    localPlayerEvent:execute('onOutfitChange')
 end
 
 function accept()
