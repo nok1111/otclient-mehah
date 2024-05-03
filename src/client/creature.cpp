@@ -534,6 +534,7 @@ void Creature::turn(Otc::Direction direction)
     // schedules to set the new direction when walk ends
     if (m_walking) {
         m_walkTurnDirection = direction;
+        callLuaField("onTurn", direction);
         return;
     }
 
