@@ -75,18 +75,18 @@ namespace Proto
 
         //ascension
 
-        GameServerAttchedEffect = 300, //changed to 90+
-        GameServerDetachEffect = 301, //changed to 90+
-        GameServerCreatureShader = 302, //changed to 90+
-        GameServerMapShader = 303, //changed to 90+
+         // NOTE: add any custom opcodes in this range
+        // 51 - 99
+        GameServerChangeMapAwareRange = 51,
+        GameServerAttchedEffect = 90, //changed to 90+
+        GameServerDetachEffect = 91, //changed to 90+
+        GameServerCreatureShader = 92, //changed to 90+
+        GameServerMapShader = 93, //changed to 90+
         GameServerUpdateFame = 52,
+        GameServerCreatureTyping = 56,
 #ifdef PROGRESSBAR
         ServerRunProgressbar = 59,
 #endif
-        //ascension end
-        GameServerChangeMapAwareRange = 51,
-        //GameServerAttchedEffect = 52,
-        GameServerCreatureTyping = 56,
         GameServerFloorDescription = 75,
 
         // original tibia ONLY
