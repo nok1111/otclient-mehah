@@ -82,6 +82,7 @@ public:
     Position getPosition(const Point& mousePos) { return m_mapView->getPosition(mousePos); }
     TilePtr getTile(const Point& mousePos) { return m_mapView->getTopTile(getPosition(mousePos)); }
     Size getVisibleDimension() { return m_mapView->getVisibleDimension(); }
+    Rect getMapRect() { return m_mapRect; }
 
     int getMaxZoomIn() { return m_maxZoomIn; }
     int getMaxZoomOut() { return m_maxZoomOut; }
