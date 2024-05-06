@@ -32,6 +32,7 @@ Module
     - game_market
     - game_spelllist
     - game_cooldown
+    - game_buffs
     - game_modaldialog
     - game_unjustifiedpoints
     - game_shaders
