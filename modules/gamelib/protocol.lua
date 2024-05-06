@@ -145,7 +145,7 @@ ClientOpcodes = {
     -- NOTE: add any custom opcodes in this range
     -- 51 - 99
 
-   -- ClientOpenJobsWindow                = 54,
+    ClientOpenJobsWindow                = 54,
     ClientCraftRecipe                   = 55,
     ClientFameShopBuy                   = 56,
 	ClientTokenBuy                      = 57,
