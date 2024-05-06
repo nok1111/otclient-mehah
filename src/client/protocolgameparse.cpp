@@ -2736,6 +2736,7 @@ Outfit ProtocolGame::getOutfit(const InputMessagePtr& msg, bool parseMount/* = t
         outfit.setShader(shader);
     }
 
+
     return outfit;
 }
 
