@@ -1,12 +1,12 @@
 controller = Controller:new()
 controller:registerEvents(g_game, {
     onClientVersionChange = function(version)
-         g_game.enableFeature(GameKeepUnawareTiles)
+       -- g_game.enableFeature(GameKeepUnawareTiles)
          g_game.enableFeature(GameSmoothWalkElevation)
          g_game.enableFeature(GameNegativeOffset)
         g_game.enableFeature(GameFormatCreatureName)
 		--g_game.enableFeature(GameSpritesAlphaChannel)
-		g_game.enableFeature(GameEffectU16);
+	--	g_game.enableFeature(GameEffectU16);
 
         if version >= 750 then
             g_game.enableFeature(GameSoul);
