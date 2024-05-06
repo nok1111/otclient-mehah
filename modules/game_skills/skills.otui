@@ -217,18 +217,42 @@ MiniWindow
         background-color: red
 
     SkillButton
+      selectable: false
+      focusable: false
+      visible: false
       id: skillId0
       SkillNameLabel
         !text: tr('Fist Fighting')
+        selectable: false
+        focusable: false
+        visible: false
       SkillValueLabel
+        selectable: false
+        focusable: false
+        visible: false
       SkillPercentPanel
+        selectable: false
+        focusable: false
+        visible: false
 
     SkillButton
+      selectable: false
+      focusable: false
+      visible: false
       id: skillId1
       SkillNameLabel
         !text: tr('Club Fighting')
+        selectable: false
+        focusable: false
+        visible: false
       SkillValueLabel
+        selectable: false
+        focusable: false
+        visible: false
       SkillPercentPanel
+        selectable: false
+        focusable: false
+        visible: false
 
     SkillButton
       id: skillId2
@@ -238,11 +262,24 @@ MiniWindow
       SkillPercentPanel
 
     SkillButton
+      selectable: false
+      focusable: false
+      visible: false
       id: skillId3
       SkillNameLabel
         !text: tr('Axe Fighting')
+        selectable: false
+        focusable: false
+        visible: false
       SkillValueLabel
+        selectable: false
+        focusable: false
+        visible: false
       SkillPercentPanel
+        selectable: false
+        focusable: false
+        visible: false
+
 
     SkillButton
       id: skillId4
