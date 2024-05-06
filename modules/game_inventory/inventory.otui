@@ -72,24 +72,84 @@ AmmoSlot < InventoryItem
   $on:
     image-source: /images/game/slots/ammo-blessed
 
-PurseButton < Button
-  id: purseButton
-  size: 26 26
-  !tooltip: tr('Open purse')
-  icon-source: /images/game/slots/purse
-  icon-size: 24 24
-  icon-offset: 1 1
+SingleStatistic < UIWidget
+  width: 170
+  height: 15
+
+  Label
+    id: textLabel
+    !text: ('Test:')
+    width: 140
+    height: 15
+    anchors.top: parent.top
+    anchors.left: parent.left
+
+  Label
+    id: valueLabel
+    //color: #4a4a4a
+    color: #00ff00
+    !text: ('50%')
+    width: 30
+    height: 15
+    anchors.top: parent.top
+    anchors.left: prev.right
+
+InventoryStats < UIWidget
+  width: 170
+  height: 125
+
+  HorizontalSeparator
+    width: 170
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 3
+
+  SingleStatistic
+    id: ArmorInfo
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+
+  HorizontalSeparator
+    width: 170
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 3
+
+  SingleStatistic
+    id: PhysicalInfo
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+
+  SingleStatistic
+    id: EnergyInfo
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+
+  HorizontalSeparator
+    width: 170
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 3
+
+  SingleStatistic
+    id: ElementalReductionInfo
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+
+  SingleStatistic
+    id: PhysicalReductionInfo
+    anchors.top: prev.bottom
+    anchors.left: parent.left
 
 MiniWindow
   id: inventoryWindow
   !text: tr('Inventory')
   icon: /images/topbuttons/inventory
-  height: 175
-  @onOpen: modules.game_inventory.onMiniWindowOpen()
+  height: 240
   @onClose: modules.game_inventory.onMiniWindowClose()
   &save: true
 
-  MiniWindowContents
+  InventoryWindowContents
     HeadSlot
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
@@ -142,7 +202,15 @@ MiniWindow
       anchors.horizontalCenter: prev.horizontalCenter
       margin-top: 3
 
-    PurseButton
-      margin-top: 3
-      anchors.top: prev.bottom
-      anchors.horizontalCenter: prev.horizontalCenter
+  Button
+    id: extraInfoButton
+    !text: 'Expand info'
+    anchors.bottom: prev.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    @onClick: modules.game_inventory.expandInfo(self)
+
+  InventoryStats
+    id: extraInfo
+    anchors.top: prev.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    visible: false

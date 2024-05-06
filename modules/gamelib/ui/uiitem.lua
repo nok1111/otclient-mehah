@@ -1,10 +1,21 @@
 function UIItem:onDragEnter(mousePos)
   if self:isVirtual() then return false end
 
+  -- added
   local item = self:getItem()
-  if not item then return false end
-
-  self:setBorderWidth(1)
+  if not item then 
+    self:setBorderWidth(0)
+    return false
+  else
+    local newColour = getItemRarityColor(item)
+    if newColour == "none" then
+      self:setBorderWidth(0)  
+    else
+      self:setBorderWidth(1)  
+      self:setBorderColor(newColour)
+    end 
+  end 
+  -- added
   self.currentDragThing = item
   g_mouse.pushCursor('target')
   return true

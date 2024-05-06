@@ -101,6 +101,18 @@ MiniWindowContents < ScrollablePanel
   margin-right: 1
   vertical-scrollbar: miniwindowScrollBar
 
+InventoryWindowContents < ScrollablePanel
+  id: contentsPanel
+  width: 170
+  height: 190
+  anchors.top: parent.top
+  anchors.right: miniwindowScrollBar.left
+  margin-left: 2
+  margin-bottom: 5
+  margin-top: 35
+  margin-right: 2
+  vertical-scrollbar: miniwindowScrollBar
+
 BorderlessGameWindow < UIWindow
   focusable: false
   margin: 2
