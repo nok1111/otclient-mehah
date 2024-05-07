@@ -399,7 +399,7 @@ void Creature::internalDraw(Point dest, LightView* lightView, const Color& color
             const bool useFramebuffer = !replaceColorShader && m_shader && m_shader->useFramebuffer();
 
             //cosmetic added
-            if (g_shaders.getShader(m_outfit.getShader()))
+            if (!replaceColorShader && g_shaders.getShader(m_outfit.getShader()))
                 g_drawPool.setShaderProgram(g_shaders.getShader(m_outfit.getShader()), m_shaderAction);
             //cosmetics end
 
@@ -425,6 +425,8 @@ void Creature::internalDraw(Point dest, LightView* lightView, const Color& color
                         g_drawPool.resetCompositionMode();
                     }
                 }
+                if (!replaceColorShader && g_shaders.getShader(m_outfit.getShader()))
+                    g_drawPool.resetShaderProgram();
             };
 
 
