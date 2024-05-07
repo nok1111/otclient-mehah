@@ -48,8 +48,9 @@ function terminate()
   )
 
   ProtocolGame.unregisterExtendedOpcode(OPCODE, onExtendedOpcode)
-
+	
   destroy()
+
 end
 
 function create()
@@ -93,6 +94,7 @@ function destroy()
     tasksWindow:destroy()
     tasksWindow = nil
   end
+  
 
   tasks = {}
 end
@@ -738,4 +740,5 @@ function hide()
     return
   end
   tasksWindow:hide()
+  modules.game_interface.getRootPanel():focus()
 end

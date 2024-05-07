@@ -72,7 +72,7 @@ end
 function hide()
 	craftingWindow:hide()
 	craftingWindow:ungrabKeyboard()
-        modules.game_interface.getRootPanel():focus()
+    modules.game_interface.getRootPanel():focus()
 end
 
 

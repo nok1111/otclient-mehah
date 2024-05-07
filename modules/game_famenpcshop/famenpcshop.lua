@@ -76,6 +76,7 @@ end
 
 function hide()
 	famenpcWindow:hide()
+	modules.game_interface.getRootPanel():focus()
 end
 
 function onItemBoxChecked(widget)

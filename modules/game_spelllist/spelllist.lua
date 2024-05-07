@@ -334,6 +334,7 @@ function toggle()
     if spelllistButton:isOn() then
         spelllistButton:setOn(false)
         spelllistWindow:hide()
+		modules.game_interface.getRootPanel():focus()
     else
         spelllistButton:setOn(true)
         spelllistWindow:show()

@@ -76,6 +76,7 @@ end
 
 function hide()
 	enchantnpcWindow:hide()
+	modules.game_interface.getRootPanel():focus()
 end
 
 function onItemBoxChecked(widget)

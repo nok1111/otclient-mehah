@@ -127,6 +127,7 @@ end
 
 function hide()
     npcWindow:hide()
+	modules.game_interface.getRootPanel():focus()
 end
 
 function onItemBoxChecked(widget)

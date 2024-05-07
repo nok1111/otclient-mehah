@@ -18,6 +18,7 @@ function terminate()
     disconnect(g_game, {
         onModalDialog = onModalDialog,
         onGameEnd = destroyDialog
+		
     })
 end
 
@@ -25,6 +26,7 @@ function destroyDialog()
     if modalDialog then
         modalDialog:destroy()
         modalDialog = nil
+		modules.game_interface.getRootPanel():focus()
     end
 end
 
