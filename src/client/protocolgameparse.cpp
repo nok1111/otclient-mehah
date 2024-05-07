@@ -1579,20 +1579,19 @@ void ProtocolGame::parseCreatureOutfit(const InputMessagePtr& msg) const
 
 void ProtocolGame::parseCreatureSpeed(const InputMessagePtr& msg)
 {
-    const uint32_t id = msg->getU32();
+    uint id = msg->getU32();
 
-    uint16_t baseSpeed = 0;
-    if (g_game.getClientVersion() >= 1059)
-        baseSpeed = msg->getU16();
+    double baseSpeed = -1;
+    baseSpeed = msg->getDouble() / 2.0f;
 
-    const uint16_t speed = msg->getU16();
+    double speed = msg->getDouble() / 2.0f;
 
-    const auto& creature = g_map.getCreatureById(id);
-    if (!creature) return;
-
-    creature->setSpeed(speed);
-    if (baseSpeed != 0)
-        creature->setBaseSpeed(baseSpeed);
+    CreaturePtr creature = g_map.getCreatureById(id);
+    if (creature) {
+        creature->setSpeed(speed);
+        if (baseSpeed != -1)
+            creature->setBaseSpeed(baseSpeed);
+    }
 }
 
 void ProtocolGame::parseCreatureSkulls(const InputMessagePtr& msg)
