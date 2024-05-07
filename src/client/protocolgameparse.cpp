@@ -1849,7 +1849,7 @@ void ProtocolGame::parsePlayerStats(const InputMessagePtr& msg) const
 
 void ProtocolGame::parsePlayerSkills(const InputMessagePtr& msg) const
 {
-    if (g_game.getClientVersion() >= 1281) {
+   if (g_game.getClientVersion() >= 1281) {
         // magic level
         const uint16_t magicLevel = msg->getU16();
         const uint16_t baseMagicLevel = msg->getU16();
@@ -1899,12 +1899,6 @@ void ProtocolGame::parsePlayerSkills(const InputMessagePtr& msg) const
 
         const uint8_t lastSkill = g_game.getClientVersion() >= 1281 ? Otc::LastSkill : Otc::ManaLeechAmount + 1;
         for (int_fast32_t skill = Otc::CriticalChance; skill < lastSkill; ++skill) {
-            if (!g_game.getFeature(Otc::GameLeechAmount)) {
-                if (skill == Otc::LifeLeechAmount || skill == Otc::ManaLeechAmount) {
-                    continue;
-                }
-            }
-
             const uint16_t level = msg->getU16();
             const uint16_t baseLevel = msg->getU16();
             m_localPlayer->setSkill(static_cast<Otc::Skill>(skill), level, 0);
