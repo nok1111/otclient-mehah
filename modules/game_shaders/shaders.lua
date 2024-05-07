@@ -53,7 +53,7 @@ OUTFIT_SHADERS = { {
     name = 'Outfit - Default',
     frag = nil
 }, {
-    name = 'Outfit - Rainbow',
+    name = 'Outfit - Rainbow', 
     frag = 'shaders/fragment/party.frag'
 }, {
     name = 'Outfit - Ghost',
@@ -78,21 +78,21 @@ OUTFIT_SHADERS = { {
 
 	{name = 'Jelly', frag = 'shaders/fragment/heat.frag'},
     {name = 'Distorted', frag = 'shaders/fragment/noise.frag'},
-	{name = 'Rainbow', frag = 'shaders/fragment/party.frag'},
-	{name = 'Bloom', frag = 'shaders/fragment/bloom.frag'},
-	{name = 'Radial Blur', frag = 'shaders/fragment/radialblur.frag'},
-	{name = 'Old Tv', frag = 'shaders/fragment/oldtv.frag'},
-	{name = 'Zomg', frag = 'shaders/fragment/zomg.frag'},
-	{name = 'Rainbowgpt', frag = 'shaders/fragment/rainbowgpt.frag'},
-	{name = 'Lava', frag = 'shaders/fragment/flames.frag'},
-	{name = 'Galaxy', frag = 'shaders/fragment/galaxy.frag'},
+	{name = 'Rainbow', useFramebuffer = true, frag = 'shaders/fragment/party.frag'},
+	{name = 'Bloom', useFramebuffer = true, frag = 'shaders/fragment/bloom.frag'},
+	{name = 'Radial Blur', useFramebuffer = true, frag = 'shaders/fragment/radialblur.frag'},
+	{name = 'Old Tv', useFramebuffer = true, frag = 'shaders/fragment/oldtv.frag'},
+	{name = 'Zomg', useFramebuffer = true, frag = 'shaders/fragment/zomg.frag'},
+	{name = 'Rainbowgpt', frag = 'shaders/fragment/rainbowgpt.frag' , drawColor = false},
+	{name = 'Lava', frag = 'shaders/fragment/flames.frag', drawColor = true},
+	{name = 'Galaxy',  frag = 'shaders/fragment/galaxy.frag'},
 	{name = 'Ghost', frag = 'shaders/fragment/ghost.frag'},
-	{name = 'Metallic', frag = 'shaders/fragment/metallic.frag'},
-	{name = 'Golden', frag = 'shaders/fragment/outline_golden.frag'},
+	{name = 'Metallic', frag = 'shaders/fragment/metallic.frag', drawColor = false},
+	{name = 'Golden', frag = 'shaders/fragment/outline_golden.frag', drawColor = false},
 	{name = 'Red Glow', frag = 'shaders/fragment/red_glow.frag'},
-	{name = 'Soul',  useFramebuffer = true, frag = 'shaders/fragment/soul.frag'},
+	{name = 'Soul',  frag = 'shaders/fragment/soul.frag'},
 	{name = 'Fragmented', frag = 'shaders/fragment/fragmented.frag'},
-	{name = 'Test', frag = 'shaders/fragment/test.frag'},
+	{name = 'Test', useFramebuffer = true, frag = 'shaders/fragment/outline.frag'},
 
 
 
