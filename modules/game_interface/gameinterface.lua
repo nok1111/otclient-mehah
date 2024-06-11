@@ -738,7 +738,7 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
             menu:addOption(tr(g_game.getClientVersion() >= 1000 and "Customise Character" or "Set Outfit"), function()
                 g_game.requestOutfit()
             end)
-<<<<<<< Updated upstream
+
 
             menu:addOption(tr('Loot List'), function() g_game.talk('!lootlist') end)
             menu:addOption(tr('Boss Cooldowns'), function() g_game.talk('!bosstimer') end)
@@ -746,9 +746,7 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
             menu:addOption(tr('Faction Tasks'), function() g_game.talk('!reptasks') end)
             menu:addOption(tr('Deposit Gold'), function() g_game.talk('!depositall') end)
 
-=======
-			
->>>>>>> Stashed changes
+
             if g_game.getFeature(GamePrey) then
                 menu:addOption(tr('Prey Dialog'), function()
                     modules.game_prey.show()
