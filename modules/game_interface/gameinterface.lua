@@ -733,6 +733,12 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
                 g_game.requestOutfit()
             end)
 
+            menu:addOption(tr('Loot List'), function() g_game.talk('!lootlist') end)
+            menu:addOption(tr('Boss Cooldowns'), function() g_game.talk('!bosstimer') end)
+            menu:addOption(tr('Commands'), function() g_game.talk('!showcommands') end)
+            menu:addOption(tr('Faction Tasks'), function() g_game.talk('!reptasks') end)
+            menu:addOption(tr('Deposit Gold'), function() g_game.talk('!depositall') end)
+
             if g_game.getFeature(GamePrey) then
                 menu:addOption(tr('Prey Dialog'), function()
                     modules.game_prey.show()
