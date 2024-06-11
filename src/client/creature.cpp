@@ -464,6 +464,7 @@ void Creature::internalDraw(Point dest, LightView* lightView, const Color& color
 
             if (g_shaders.getShader(m_outfit.getShader()))
                 g_drawPool.setShaderProgram(g_shaders.getShader(m_outfit.getShader()), true, m_shaderAction);
+            getThingType()->draw(dest - (getDisplacement() * g_drawPool.getScaleFactor()), 0, 0, 0, 0, animationPhase, color);
         }
     }
 
