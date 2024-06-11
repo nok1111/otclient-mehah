@@ -58,7 +58,7 @@ function create()
     return
   end
 
-  trackerButton = modules.client_topmenu.addRightGameToggleButton("trackerButton", tr("Tasks Tracker"), "/images/topbuttons/battle", toggleTracker)
+  trackerButton = modules.client_topmenu.addRightGameToggleButton("trackerButton", tr("Tasks Tracker"), "/images/options/button_frags", toggleTracker)
   trackerButton:setOn(true)
   trackerWindow = g_ui.loadUI("tasks_tracker", modules.game_interface.getRightPanel())
   local scrollbar = trackerWindow:getChildById("miniwindowScrollBar")

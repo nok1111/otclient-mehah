@@ -106,7 +106,7 @@ function init()
     spelllistWindow:hide()
 
     spelllistButton = modules.client_topmenu.addRightGameToggleButton('spelllistButton', tr('Spell List'),
-                                                                      '/images/topbuttons/spelllist', toggle)
+                                                                      '/images/options/button_spells', toggle)
     spelllistButton:setOn(false)
 
     nameValueLabel = spelllistWindow:getChildById('labelNameValue')

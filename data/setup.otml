@@ -1,7 +1,7 @@
 game
   sprite-size: 32
-  last-supported-version: 1321
-  draw-typing: true
+  last-supported-version: 1332
+  draw-typing: false
   typing-icon: /images/game/console/typing
   
   map
@@ -18,10 +18,10 @@ game
 
   creature
     draw-information-by-widget-beta: false
-    force-new-walking-formula: true
+    force-new-walking-formula: false
     shield-blink-ticks: 500
     volatile-square-duration: 1000
-    adjust-creature-information-based-crop-size: true
+    adjust-creature-information-based-crop-size: false
     diagonal-walk-speed: 3
 
   player
@@ -29,7 +29,7 @@ game
 
   render
     invisible-ticks-per-frame: 75
-    item-ticks-per-frame: 500
+    item-ticks-per-frame: 75
     effect-ticks-per-frame: 75
     missile-ticks-per-frame: 75
     animated-text-duration: 1000

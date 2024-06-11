@@ -4,7 +4,7 @@ HIGHSCORE_OPCODE = 151
 local refreshMemoryTime = 60
 
 function init()
-	highscoreButton = modules.client_topmenu.addLeftGameButton('highscoreButton', tr('highscore'), '/images/topbuttons/highscore', toggle, false, 8)
+	highscoreButton = modules.client_topmenu.addLeftGameButton('highscoreButton', tr('highscore'), '/images/options/button_prey', toggle, false, 8)
 	
 	g_ui.importStyle('highscorewindow')
 

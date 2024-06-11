@@ -279,7 +279,8 @@ end
 function init()
     g_ui.importStyle('npc_tasklist')
 
-    taskListButton = modules.client_topmenu.addRightGameToggleButton('taskListButton', tr('Task list') .. ' (Ctrl+T)', '/images/topbuttons/quest_icon', toggle)
+    taskListButton = modules.game_mainpanel.addStoreButton('taskListButton', tr('Quest List'), '/images/options/quests_large', toggle,
+        false)
     taskListButton:setOn(false)
 
     ProtocolGame.registerExtendedOpcode(ExtendedIds.TaskList, onExtendedTaskList)
