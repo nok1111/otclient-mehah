@@ -53,8 +53,8 @@ function init()
 			ProtocolGame.registerOpcode(GameServerOpcodes.GameServerUpdateAscended, parseUpdateAscended)
 			ProtocolGame.registerOpcode(GameServerOpcodes.GameServerJobs, parseJobs)
 
-    skillsButton = modules.client_topmenu.addRightGameToggleButton('skillsButton', tr('Skills') .. ' (Alt+S)',
-                                                                   '/images/options/button_skills', toggle)
+    skillsButton = modules.game_mainpanel.addToggleButton('skillsButton', tr('Skills') .. ' (Alt+S)',
+                                                                   '/images/options/button_skills', toggle, false, 1)
     skillsButton:setOn(true)
     skillsWindow = g_ui.loadUI('skills')
 

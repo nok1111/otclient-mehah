@@ -21,7 +21,7 @@ game
     force-new-walking-formula: false
     shield-blink-ticks: 500
     volatile-square-duration: 1000
-    adjust-creature-information-based-crop-size: false
+    adjust-creature-information-based-crop-size: true
     diagonal-walk-speed: 3
 
   player

@@ -74,15 +74,12 @@ MiniWindow
         id: label
         anchors.left: parent.left
         text-align: topleft
-        margin-left: 24
-        margin-top: 0
         !text: tr('Ascended level:')
       GameLabel
         id: ascendedLevel
         font: verdana-11px-monochrome
         !text: tr('0')
         anchors.right: parent.right
-        margin-right: 35
         anchors.top: label.top
         anchors.bottom: label.bottom
       SkillPercentPanel

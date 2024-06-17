@@ -10,7 +10,6 @@ Module
     - game_prey
     - game_imbuing
     - game_hotkeys
-    - game_questlog
     - game_textmessage
     - game_console
     - game_actionbar
@@ -35,7 +34,6 @@ Module
     - game_attachedeffects
     - game_stash
     - game_healthcircle
-    - game_shop
     - game_buffs
     - game_crafting
     - game_famenpcshop
@@ -43,6 +41,7 @@ Module
     - game_tokenshop
     - game_tasks
     - game_tasklist
+    - game_store
     - game_dungeon
     - game_interface
     - game_forging

@@ -19,7 +19,7 @@ local skillIdToUI = {
 }
 
 function init()
-	mainToggleButton = modules.client_topmenu.addRightGameToggleButton('jobButton', tr('Reputations'), '/images/topbuttons/reputation', toggle)
+	mainToggleButton = modules.client_topmenu.addRightGameToggleButton('jobButton', tr('Reputations'), '/images/options/button_flag', toggle)
 
 	-- profession
 	mainWindow = g_ui.displayUI('jobs')

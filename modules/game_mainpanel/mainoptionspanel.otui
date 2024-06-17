@@ -79,9 +79,9 @@ PhantomMiniWindow
       id: options
       anchors.left: store.left
       anchors.right: store.right
-      anchors.top: store.bottom
+      anchors.top: parent.top
       anchors.bottom: parent.bottom
-      margin-top: 6
+      margin-top: 50
       margin-left: 0
       margin-right: 0
       margin-bottom: 0

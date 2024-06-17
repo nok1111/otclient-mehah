@@ -19,6 +19,12 @@ vocationBoxSorcerer = nil
 vocationBoxDruid = nil
 vocationBoxPaladin = nil
 vocationBoxKnight = nil
+vocationBoxSoulWeaver = nil
+vocationBoxLightDancer = nil
+vocationBoxArcher = nil
+vocationBoxWarlock = nil
+vocationBoxStellar = nil
+vocationBoxTemplar = nil
 
 groupBoxAny = nil
 groupBoxAttack = nil
@@ -40,9 +46,15 @@ FILTER_PREMIUM_YES = 2
 
 FILTER_VOCATION_ANY = 0
 FILTER_VOCATION_SORCERER = 1
-FILTER_VOCATION_DRUID = 2
+FILTER_VOCATION_DRUID = 8
 FILTER_VOCATION_PALADIN = 3
 FILTER_VOCATION_KNIGHT = 4
+FILTER_VOCATION_SOULWEAVER = 7
+FILTER_VOCATION_LIGHTDANCER = 9
+FILTER_VOCATION_ARCHER = 10
+FILTER_VOCATION_WARLOCK = 5
+FILTER_VOCATION_STELLAR = 6
+FILTER_VOCATION_TEMPLAR = 2
 
 FILTER_GROUP_ANY = 0
 FILTER_GROUP_ATTACK = 1
@@ -105,8 +117,8 @@ function init()
     spelllistWindow = g_ui.displayUI('spelllist', modules.game_interface.getRightPanel())
     spelllistWindow:hide()
 
-    spelllistButton = modules.client_topmenu.addRightGameToggleButton('spelllistButton', tr('Spell List'),
-                                                                      '/images/options/button_spells', toggle)
+    spelllistButton = modules.game_mainpanel.addToggleButton('spelllistButton', tr('Spell List'),
+                                                                      '/images/options/button_spells', toggle, false, 4)
     spelllistButton:setOn(false)
 
     nameValueLabel = spelllistWindow:getChildById('labelNameValue')
@@ -125,6 +137,12 @@ function init()
     vocationBoxDruid = spelllistWindow:getChildById('vocationBoxDruid')
     vocationBoxPaladin = spelllistWindow:getChildById('vocationBoxPaladin')
     vocationBoxKnight = spelllistWindow:getChildById('vocationBoxKnight')
+    vocationBoxSoulWeaver = spelllistWindow:getChildById('vocationBoxSoulWeaver')
+    vocationBoxLightDancer = spelllistWindow:getChildById('vocationBoxLightDancer')
+    vocationBoxArcher = spelllistWindow:getChildById('vocationBoxArcher')
+    vocationBoxWarlock = spelllistWindow:getChildById('vocationBoxWarlock')
+    vocationBoxStellar = spelllistWindow:getChildById('vocationBoxStellar')
+    vocationBoxTemplar = spelllistWindow:getChildById('vocationBoxTemplar')
 
     groupBoxAny = spelllistWindow:getChildById('groupBoxAny')
     groupBoxAttack = spelllistWindow:getChildById('groupBoxAttack')
@@ -141,6 +159,12 @@ function init()
     vocationRadioGroup:addWidget(vocationBoxDruid)
     vocationRadioGroup:addWidget(vocationBoxPaladin)
     vocationRadioGroup:addWidget(vocationBoxKnight)
+    vocationRadioGroup:addWidget(vocationBoxSoulWeaver)
+    vocationRadioGroup:addWidget(vocationBoxLightDancer)
+    vocationRadioGroup:addWidget(vocationBoxArcher)
+    vocationRadioGroup:addWidget(vocationBoxWarlock)
+    vocationRadioGroup:addWidget(vocationBoxStellar)
+    vocationRadioGroup:addWidget(vocationBoxTemplar)
 
     groupRadioGroup = UIRadioGroup.create()
     groupRadioGroup:addWidget(groupBoxAny)
@@ -265,7 +289,7 @@ function updateSpelllist()
         if (not (filters.level) or info.level <= localPlayer:getLevel()) and
             (not (filters.vocation) or table.find(info.vocations, localPlayer:getVocation())) and
             (filters.vocationId == FILTER_VOCATION_ANY or table.find(info.vocations, filters.vocationId) or
-                table.find(info.vocations, filters.vocationId + 4)) and
+                table.find(info.vocations, filters.vocationId + 10)) and
             (filters.groupId == FILTER_GROUP_ANY or info.group[filters.groupId]) and
             (filters.premium == FILTER_PREMIUM_ANY or (info.premium and filters.premium == FILTER_PREMIUM_YES) or
                 (not (info.premium) and filters.premium == FILTER_PREMIUM_NO)) then
@@ -298,7 +322,7 @@ function updateSpellInformation(widget)
 
         for i = 1, #info.vocations do
             local vocationId = info.vocations[i]
-            if vocationId <= 4 or not (table.find(info.vocations, (vocationId - 4))) then
+            if vocationId <= 10 or not (table.find(info.vocations, (vocationId - 10))) then
                 vocation = vocation .. (vocation:len() == 0 and '' or ', ') .. VocationNames[vocationId]
             end
         end
@@ -334,7 +358,6 @@ function toggle()
     if spelllistButton:isOn() then
         spelllistButton:setOn(false)
         spelllistWindow:hide()
-		modules.game_interface.getRootPanel():focus()
     else
         spelllistButton:setOn(true)
         spelllistWindow:show()
@@ -356,6 +379,18 @@ function toggleFilter(widget, selectedWidget)
             filters.vocationId = FILTER_VOCATION_PALADIN
         elseif boxId == 'vocationBoxKnight' then
             filters.vocationId = FILTER_VOCATION_KNIGHT
+        elseif boxId == 'vocationBoxSoulWeaver' then
+            filters.vocationId = FILTER_VOCATION_SOULWEAVER
+        elseif boxId == 'vocationBoxLightDancer' then
+            filters.vocationId = FILTER_VOCATION_LIGHTDANCER
+        elseif boxId == 'vocationBoxArcher' then
+            filters.vocationId = FILTER_VOCATION_ARCHER
+        elseif boxId == 'vocationBoxWarlock' then
+            filters.vocationId = FILTER_VOCATION_WARLOCK
+        elseif boxId == 'vocationBoxStellar' then
+            filters.vocationId = FILTER_VOCATION_STELLAR
+        elseif boxId == 'vocationBoxTemplar' then
+            filters.vocationId = FILTER_VOCATION_TEMPLAR
         end
     elseif widget == groupRadioGroup then
         local boxId = selectedWidget:getId()
