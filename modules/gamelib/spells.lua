@@ -130,7 +130,7 @@ SpelllistSettings = {
 		'Lightning Spear',
 		'Overcharge',
 		'Magnetic Field',
-		'Thunderstorm',
+		'Magnetic Orb',
 		
 		--Archer
 		'Flaming Shot',
@@ -156,7 +156,7 @@ SpelllistSettings = {
 		'Protection', 
 		'Shield Bash', 		 
 
-		'Meteoric Phoenix', 
+		'Hells Core', 
 		'Quick Chains',
 		'Magic Shield', 
      	'Blood Rage',
@@ -831,9 +831,9 @@ SpellInfo = {
         vocations = {1},
         description = 'Deals elemental damage to all nearby enemies around the selected target. [MAGIC LEVEL]'
     },
-    ['Meteoric Phoenix'] = {
+    ['Hells Core'] = {
         id = 304,
-        words = 'Meteoric Phoenix',
+        words = 'Hells Core',
         exhaustion = 18000,
         premium = false,
         type = 'Instant',
@@ -2077,9 +2077,9 @@ SpellInfo = {
         vocations = {9},
         description = 'Place a magnetic field in the ground which makes all enemies unable to walk normally.'
     },
-    ['Thunderstorm'] = {
+    ['Magnetic Orb'] = {
         id = 169,
-        words = 'Thunderstorm',
+        words = 'Magnetic Orb',
         exhaustion = 25000,
         premium = false,
         type = 'Instant',
@@ -2092,7 +2092,7 @@ SpellInfo = {
         },
         parameter = false,
         vocations = {9},
-        description = 'Create a thunderstorm in the target location that will damage all nearby enemies. (this will not affect players) [MAGIC LEVEL]'
+        description = 'Create a Magnetic Orb in the target location that will damage all nearby enemies. (this will not affect players) [MAGIC LEVEL]'
     },
 
     -- Archer
