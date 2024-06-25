@@ -836,8 +836,10 @@ function saveActionBar()
 end
 
 function loadSpell(slot)
-    local spell, profile, spellName = Spells.getSpellByWords(slot.words)
-    iconId = tonumber(Spells.getClientId(spellName))
+	  local spellName = Spells.getSpellNameByWords(slot.words)
+	  iconId = tonumber(Spells.getClientId(spellName))
+	  local spell = Spells.getSpellByName(spellName)
+	  local profile = Spells.getSpellProfileByName(spellName)
     slot:setImageSource(Spells.getIconFileByProfile(profile))
     slot:setImageClip(Spells.getImageClip(iconId, profile))
     slot:getChildById('text'):setText('')
