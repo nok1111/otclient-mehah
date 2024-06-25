@@ -39,7 +39,7 @@ FilterButton < Button
 MainWindow
   id: spelllistWindow
   !text: tr('Spell List')
-  size: 550 450
+  size: 680 550
   @onEscape: toggle()
 
   TextList
@@ -195,6 +195,15 @@ MainWindow
     id: labelDescriptionValue
     anchors.left: labelDescription.right
     anchors.top: labelPremiumValue.bottom
+    border: 1 #343434
+    padding: 3
+    width: 230
+    margin-top: 2
+    padding-right: 0
+    margin-right: 20
+    margin-left: 8
+    text-wrap: true
+    text-auto-resize:true
 
   Label
     id: labelVocationFilter
@@ -203,7 +212,7 @@ MainWindow
     width: 70
     font: verdana-11px-monochrome
     !text: tr('Vocation')
-    margin-top: 30
+    margin-top: 105
     margin-left: 20
 
   CheckBox
@@ -245,7 +254,7 @@ MainWindow
     anchors.top: prev.bottom
     margin-top: 3
     !text: tr('Dragon Knight')
-    width: 75
+    width: 85
 
   CheckBox
     id: vocationBoxSoulWeaver
@@ -303,8 +312,8 @@ MainWindow
     width: 70
     font: verdana-11px-monochrome
     !text: tr('Group')
-    margin-top: 30
-    margin-left: 20
+    margin-top: 105
+    margin-left: 50
 
   CheckBox
     id: groupBoxAny
@@ -346,7 +355,7 @@ MainWindow
     width: 70
     font: verdana-11px-monochrome
     !text: tr('Premium')
-    margin-top: 30
+    margin-top: 105
     margin-left: 20
 
   CheckBox
