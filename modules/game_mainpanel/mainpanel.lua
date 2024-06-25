@@ -270,6 +270,32 @@ local function combatEvent()
     selectPvp(g_game.getPVPMode() == PVPRedFist, true)
 end
 
+local function getSlotImage(slot)
+    if slot == InventorySlotHead then
+        return "/images/inventory/inventory_head"
+    elseif slot == InventorySlotNeck then
+        return "/images/inventory/inventory_neck"
+    elseif slot == InventorySlotBack then
+        return "/images/inventory/inventory_back"
+    elseif slot == InventorySlotBody then
+        return "/images/inventory/inventory_torso"
+    elseif slot == InventorySlotRight then
+        return "/images/inventory/inventory_right_hand"
+    elseif slot == InventorySlotLeft then
+        return "/images/inventory/inventory_left_hand"
+    elseif slot == InventorySlotLeg then
+        return "/images/inventory/inventory_legs"
+    elseif slot == InventorySlotFeet then
+        return "/images/inventory/inventory_feet"
+    elseif slot == InventorySlotFinger then
+        return "/images/inventory/inventory_finger"
+    elseif slot == InventorySlotAmmo then
+        return "/images/inventory/inventory_hip"
+    else
+        return "/images/ui/item" -- default image if slot is not recognized
+    end
+end
+
 local function inventoryEvent(player, slot, item, oldItem)
     if inventoryShrink then
         return
@@ -278,6 +304,7 @@ local function inventoryEvent(player, slot, item, oldItem)
     local ui = getInventoryUi()
     local slotPanel
     local toggler
+
     if slot == InventorySlotHead then
         slotPanel = ui.helmet
         toggler = slotPanel.helmet
@@ -312,6 +339,41 @@ local function inventoryEvent(player, slot, item, oldItem)
 
     if not slotPanel then
         return
+    end
+
+    -- Added: UI update for item rarity
+    local itemWidget = slotPanel.item
+    if item then
+        local thisItem = item
+        local newColour = getItemRarityColor(thisItem)
+        if newColour == "none" then
+            itemWidget:setBorderWidth(0)
+        else
+            print(thisItem:getName() .. "| frame rarity:" .. tostring(newColour))
+            itemWidget:setBorderWidth(1)
+            itemWidget:setBorderColor(newColour)
+        end
+
+        local rarity = item:getItemRarity()
+        print(item:getName() .. "|rarity:" .. tostring(rarity))
+        local tierImgPath = "/images/ui/slots/item"
+        if rarity == 0 then
+            tierImgPath = "/images/ui/item"
+        elseif rarity == 1 then
+            tierImgPath = tierImgPath .. "Common"
+        elseif rarity == 2 then
+            tierImgPath = tierImgPath .. "Rare"
+        elseif rarity == 3 then
+            tierImgPath = tierImgPath .. "Epic"
+        elseif rarity == 4 then
+            tierImgPath = tierImgPath .. "Legendary"
+        else
+            tierImgPath = "/images/ui/item"
+        end
+        print("tierImgPath:" .. tostring(tierImgPath))
+        itemWidget:setImageSource(tierImgPath)
+    else
+        itemWidget:setImageSource(getSlotImage(slot))
     end
 
     slotPanel.item:setItem(item)
