@@ -25,6 +25,22 @@ function UIItem:onDragLeave(droppedWidget, mousePos)
   if self:isVirtual() then return false end
   self.currentDragThing = nil
   g_mouse.popCursor('target')
+
+  -- added
+  local item = self:getItem()
+  if not item then 
+    self:setBorderWidth(0)
+  else
+    local newColour = getItemRarityColor(item)
+    if newColour == "none" then
+      self:setBorderWidth(0)  
+    else
+      self:setBorderWidth(1)  
+      self:setBorderColor(newColour) 
+    end 
+  end 
+    -- added
+
   self:setBorderWidth(0)
   self.hoveredWho = nil
   return true
@@ -35,6 +51,8 @@ function UIItem:onDrop(widget, mousePos, forced)
 
   local item = widget.currentDragThing
   if not item or not item:isItem() then return false end
+
+  
 
   if self.selectable then
     if item:isPickupable() then
@@ -55,7 +73,14 @@ function UIItem:onDrop(widget, mousePos, forced)
     g_game.move(item, toPos, 1)
   end
 
-  self:setBorderWidth(0)
+  local newColour = getItemRarityColor(item)
+  if newColour == "none" then
+    self:setBorderWidth(0)  
+  else
+    self:setBorderWidth(1)  
+    self:setBorderColor(newColour)
+  end 
+  -- added
   return true
 end
 
