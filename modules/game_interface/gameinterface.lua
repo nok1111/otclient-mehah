@@ -283,7 +283,7 @@ function show()
     updateStretchShrink()
     logoutButton:setTooltip(tr('Logout'))
 
-    setupViewMode(0)
+    setupViewMode(1)
     if g_app.isScaled() then
         setupViewMode(1)
         setupViewMode(2)
@@ -301,7 +301,7 @@ function show()
 end
 
 function hide()
-    setupViewMode(0)
+    setupViewMode(1)
 
     disconnect(g_app, {
         onClose = tryExit
@@ -1243,9 +1243,9 @@ function setupViewMode(mode)
     elseif mode == 1 then
         gameMapPanel:setKeepAspectRatio(false)
         gameMapPanel:setLimitVisibleRange(true)
-        gameMapPanel:setZoom(11)
+        gameMapPanel:setZoom(13)
         gameMapPanel:setVisibleDimension({
-            width = 15,
+            width = 19,
             height = 11
         })
     elseif mode == 2 then
