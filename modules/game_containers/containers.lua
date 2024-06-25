@@ -51,6 +51,40 @@ function refreshContainerItems(container)
     for slot = 0, container:getCapacity() - 1 do
         local itemWidget = container.itemsPanel:getChildById('item' .. slot)
         itemWidget:setItem(container:getItem(slot))
+		
+		    if container:getItem(slot) ~= nil then
+            local rarity = container:getItem(slot):getItemRarity()
+            --print(container:getItem(slot):getName().."|rarity:"..tostring(rarity))
+            local tierImgPath = "/images/ui/slots/item"
+            if rarity == 0 then
+                tierImgPath = "/images/ui/item"
+            elseif rarity == 1 then
+                tierImgPath = tierImgPath .. "Common"
+            elseif rarity == 2 then
+                tierImgPath = tierImgPath .. "Rare"
+            elseif rarity == 3 then
+                tierImgPath = tierImgPath .. "Epic"
+            elseif rarity == 4 then
+                tierImgPath = tierImgPath .. "Legendary"
+            else
+                tierImgPath = "/images/ui/item"
+            end
+            --print("tierImgPath:"..tostring(tierImgPath))
+            itemWidget:setImageSource(tierImgPath)
+        end
+		--added
+	local thisItem = container:getItem(slot)
+	local newColour = getItemRarityColor(thisItem)
+	if newColour == "none" then
+		itemWidget:setBorderWidth(0)	
+	else
+		itemWidget:setBorderWidth(1)	
+		itemWidget:setBorderColor(newColour) -- added
+		local itemID = thisItem:getServerId()
+		itemWidget:setTooltip(getItemRarity(itemID))	
+	end	
+	--added
+	
     end
 
     if container:hasPages() then
@@ -139,6 +173,45 @@ function onContainerOpen(container, previousContainer)
         itemWidget:setItem(container:getItem(slot))
         itemWidget:setMargin(0)
         itemWidget.position = container:getSlotPosition(slot)
+		
+		 
+
+        if container:getItem(slot) ~= nil then
+		
+				--added
+			local thisItem = container:getItem(slot)
+			local newColour = getItemRarityColor(thisItem)
+			if newColour == "none" then
+				itemWidget:setBorderWidth(0)    
+			else
+				itemWidget:setBorderWidth(1)    
+				itemWidget:setBorderColor(newColour) -- added
+				local itemID = thisItem:getServerId()
+				print(itemID)
+				itemWidget:setTooltip(getItemRarity(itemID))    
+			end 
+			--added
+	
+            local rarity = container:getItem(slot):getItemRarity()
+            --print(container:getItem(slot):getName().."|rarity:"..tostring(rarity))
+            local tierImgPath = "/images/ui/slots/item"
+            if rarity == 0 then
+                tierImgPath = "/images/ui/item"
+            elseif rarity == 1 then
+                tierImgPath = tierImgPath .. "Common"
+            elseif rarity == 2 then
+                tierImgPath = tierImgPath .. "Rare"
+            elseif rarity == 3 then
+                tierImgPath = tierImgPath .. "Epic"
+            elseif rarity == 4 then
+                tierImgPath = tierImgPath .. "Legendary"
+            else
+                tierImgPath = "/images/ui/item"
+            end
+            --print("tierImgPath:"..tostring(tierImgPath))
+            itemWidget:setImageSource(tierImgPath)
+        end
+		
 
         if not container:isUnlocked() then
             itemWidget:setBorderColor('red')
