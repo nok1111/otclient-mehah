@@ -139,6 +139,9 @@ public:
 
     // otclient only
     void sendChangeMapAwareRange(const uint8_t xrange, const uint8_t yrange);
+#ifdef PROGRESSBAR
+    void parseProgressbar(const InputMessagePtr& msg);
+#endif
 
 protected:
     void onConnect() override;

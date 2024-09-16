@@ -130,6 +130,11 @@ void ProtocolGame::parseMessage(const InputMessagePtr& msg)
                 case Proto::GameServerChangeMapAwareRange:
                     parseChangeMapAwareRange(msg);
                     break;
+#ifdef PROGRESSBAR
+                case Proto::ServerRunProgressbar:
+                    parseProgressbar(msg);
+                    break;
+#endif
                 case Proto::GameServerAttchedEffect:
                     parseAttachedEffect(msg);
                     break;
@@ -4563,3 +4568,17 @@ void ProtocolGame::parseHighscores(const InputMessagePtr& msg)
 
     g_game.processHighscore(serverName, world, worldType, battlEye, vocations, categories, page, totalPages, highscores, entriesTs);
 }
+
+#ifdef PROGRESSBAR
+void ProtocolGame::parseProgressbar(const InputMessagePtr& msg)
+{
+    uint32_t id = msg->getU32();
+    uint32_t duration = msg->getU32();
+    bool ltr = msg->getU8();
+    CreaturePtr creature = g_map.getCreatureById(id);
+    if (creature)
+        creature->setProgressbar(duration, ltr);
+    else
+        g_logger.traceError(stdext::format("could not get creature with id %d", id));
+}
+#endif

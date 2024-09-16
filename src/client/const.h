@@ -23,6 +23,7 @@
 #pragma once
 
 #include <cstdint>
+#define PROGRESSBAR
 
 namespace Otc
 {

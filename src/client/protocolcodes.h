@@ -77,6 +77,9 @@ namespace Proto
         GameServerCreatureShader = 54,
         GameServerMapShader = 55,
         GameServerCreatureTyping = 56,
+#ifdef PROGRESSBAR
+        ServerRunProgressbar = 59,
+#endif
         GameServerFloorDescription = 75,
 
         // original tibia ONLY
