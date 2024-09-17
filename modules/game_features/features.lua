@@ -1,12 +1,19 @@
 controller = Controller:new()
 controller:registerEvents(g_game, {
     onClientVersionChange = function(version)
+	
+		g_game.enableFeature(GameWingsAurasEffectsShader)
+g_game.enableFeature(GameFormatCreatureName)
+g_game.enableFeature(GameCreatureShader)
+g_game.enableFeature(GameCreatureAttachedEffect) 
+g_game.enableFeature(GameItemShader)
+g_game.enableFeature(GameItemTooltipV8)
         -- g_game.enableFeature(GameKeepUnawareTiles)
         -- g_game.enableFeature(GameSmoothWalkElevation)
         -- g_game.enableFeature(GameNegativeOffset)
         -- g_game.enableFeature(GameWingsAurasEffectsShader)
         
-        g_game.enableFeature(GameFormatCreatureName)
+
 
         if version >= 750 then
             g_game.enableFeature(GameSoul)
