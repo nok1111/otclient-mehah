@@ -12,6 +12,8 @@ g_game.enableFeature(GameItemTooltipV8)
         -- g_game.enableFeature(GameSmoothWalkElevation)
         -- g_game.enableFeature(GameNegativeOffset)
         -- g_game.enableFeature(GameWingsAurasEffectsShader)
+		g_game.enableFeature(GameSpritesU32) -- To extended the sprites
+  g_game.enableFeature(GameSpritesAlphaChannel) -- To enable transparency
         
 
 
@@ -91,7 +93,7 @@ g_game.enableFeature(GameItemTooltipV8)
         end
 
         if version >= 960 then
-            g_game.enableFeature(GameSpritesU32)
+
             g_game.enableFeature(GameOfflineTrainingTime)
         end
 
