@@ -114,7 +114,9 @@ private:
     void init(uint16_t spriteSize);
     void terminate() const;
     void drawObject(const DrawPool::DrawObject& obj);
-    void drawPool(const DrawPoolType type);
+
+    bool drawPool(const DrawPoolType type);
+    bool drawPool(DrawPool* pool);
 
     CoordsBuffer m_coordsBuffer;
     std::array<DrawPool*, static_cast<uint8_t>(DrawPoolType::LAST)> m_pools{};

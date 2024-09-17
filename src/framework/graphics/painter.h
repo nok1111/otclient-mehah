@@ -61,7 +61,6 @@ public:
     void clearRect(const Color& color, const Rect& rect);
 
     void drawCoords(CoordsBuffer& coordsBuffer, DrawMode drawMode = DrawMode::TRIANGLES);
-    void drawLine(const std::vector<float>& vertex, int size, int width);
 
     float getOpacity() const { return m_opacity; }
     bool getAlphaWriting() const { return m_alphaWriting; }
@@ -141,7 +140,6 @@ protected:
     PainterShaderProgramPtr m_drawTexturedProgram;
     PainterShaderProgramPtr m_drawSolidColorProgram;
     PainterShaderProgramPtr m_drawReplaceColorProgram;
-    PainterShaderProgramPtr m_drawLineProgram;
 };
 
 extern std::unique_ptr<Painter> g_painter;

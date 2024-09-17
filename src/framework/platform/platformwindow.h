@@ -73,7 +73,6 @@ public:
     int getDisplayWidth() { return getDisplaySize().width(); }
     int getDisplayHeight() { return getDisplaySize().height(); }
     float getDisplayDensity() { return m_displayDensity; }
-    void setDisplayDensity(float v) { m_displayDensity = v; }
 
     Size getUnmaximizedSize() { return m_unmaximizedSize; }
     Size getSize() { return m_size; }

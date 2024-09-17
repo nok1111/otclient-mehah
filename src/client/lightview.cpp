@@ -93,6 +93,7 @@ void LightView::draw(const Rect& dest, const Rect& src)
 
     m_pool->getHashController().put(src.hash());
     m_pool->getHashController().put(m_globalLightColor.hash());
+    m_pool->getHashController().update();
     if (m_pool->getHashController().wasModified()) {
         std::scoped_lock l(m_pool->getMutex());
         updatePixels();

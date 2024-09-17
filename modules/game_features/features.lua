@@ -1,7 +1,6 @@
 controller = Controller:new()
 controller:registerEvents(g_game, {
     onClientVersionChange = function(version)
-
 	
 		g_game.enableFeature(GameWingsAurasEffectsShader)
 g_game.enableFeature(GameFormatCreatureName)
@@ -13,12 +12,6 @@ g_game.enableFeature(GameItemTooltipV8)
         -- g_game.enableFeature(GameSmoothWalkElevation)
         -- g_game.enableFeature(GameNegativeOffset)
         -- g_game.enableFeature(GameWingsAurasEffectsShader)
-
-         g_game.enableFeature(GameKeepUnawareTiles)
-         g_game.enableFeature(GameSmoothWalkElevation)
-         g_game.enableFeature(GameNegativeOffset)
-         g_game.enableFeature(GameAllowCustomBotScripts)
-
         
 
 
@@ -193,7 +186,7 @@ g_game.enableFeature(GameItemTooltipV8)
             g_game.enableFeature(GameLeechAmount)
         end
 
-        if version >= 1100 then
+        if version >= 1102 then
             g_game.enableFeature(GamePrey)
         end
 

@@ -24,7 +24,8 @@
 #include "attachedeffect.h"
 #include "thingtypemanager.h"
 #include "spritemanager.h"
-#include <framework/core/resourcemanager.h>
+#include <framework/graphics/texturemanager.h>
+#include <framework/graphics/animatedtexture.h>
 
 AttachedEffectManager g_attachedEffects;
 
@@ -41,7 +42,7 @@ AttachedEffectPtr AttachedEffectManager::getById(uint16_t id) {
         return nullptr;
     }
 
-    return obj->clone();
+    return obj;
 }
 
 AttachedEffectPtr AttachedEffectManager::registerByThing(uint16_t id, const std::string_view name, uint16_t thingId, ThingCategory category) {
@@ -69,17 +70,22 @@ AttachedEffectPtr AttachedEffectManager::registerByImage(uint16_t id, const std:
         return nullptr;
     }
 
-    const auto& filePath = g_resources.resolvePath(path.data());
-    const auto& filePathEx = g_resources.guessFilePath(filePath, "png");
-    if (!g_resources.fileExists(filePathEx)) {
-        g_logger.error(stdext::format("AttachedEffectManager::registerByImage(%d, %s): Texture(%s) not found.", id, name, path));
+    const auto& texture = g_textures.getTexture(path.data(), smooth);
+    if (!texture)
+        return nullptr;
+
+    if (!texture->isAnimatedTexture()) {
+        g_logger.error(stdext::format("AttachedEffectManager::registerByImage(%d, %s): only animated texture is allowed.", id, name));
         return nullptr;
     }
 
+    const auto& animatedTexture = std::static_pointer_cast<AnimatedTexture>(texture);
+    animatedTexture->setOnMap(true);
+    animatedTexture->restart();
+
     const auto& obj = std::make_shared<AttachedEffect>();
-    obj->m_texturePath = path;
-    obj->m_smooth = smooth;
     obj->m_id = id;
+    obj->m_texture = animatedTexture;
     obj->m_name = { name.data() };
 
     m_effects.emplace(id, obj);

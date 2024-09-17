@@ -38,19 +38,23 @@ Painter::Painter()
 {
     setResolution(g_window.getSize());
 
-    const auto& getProgram = [](const std::string_view vertexSourceCode, const std::string_view fragmentSourceCode) {
-        auto program = std::make_shared<PainterShaderProgram>();
-        assert(program);
-        program->addShaderFromSourceCode(ShaderType::VERTEX, vertexSourceCode);
-        program->addShaderFromSourceCode(ShaderType::FRAGMENT, fragmentSourceCode);
-        program->link();
-        return program;
-    };
+    m_drawTexturedProgram = std::make_shared<PainterShaderProgram>();
+    assert(m_drawTexturedProgram);
+    m_drawTexturedProgram->addShaderFromSourceCode(ShaderType::VERTEX, std::string{ glslMainWithTexCoordsVertexShader } + glslPositionOnlyVertexShader.data());
+    m_drawTexturedProgram->addShaderFromSourceCode(ShaderType::FRAGMENT, std::string{ glslMainFragmentShader } + glslTextureSrcFragmentShader.data());
+    m_drawTexturedProgram->link();
 
-    m_drawTexturedProgram = getProgram(std::string{ glslMainWithTexCoordsVertexShader } + glslPositionOnlyVertexShader.data(), std::string{ glslMainFragmentShader } + glslTextureSrcFragmentShader.data());
-    m_drawSolidColorProgram = getProgram(std::string{ glslMainVertexShader } + glslPositionOnlyVertexShader.data(), std::string{ glslMainFragmentShader } + glslSolidColorFragmentShader.data());
-    m_drawReplaceColorProgram = getProgram(std::string{ glslMainWithTexCoordsVertexShader } + glslPositionOnlyVertexShader.data(), std::string{ glslMainFragmentShader } + glslReplaceColorFragmentShader.data());
-    m_drawLineProgram = getProgram(lineVertexShader, lineFragmentShader);
+    m_drawSolidColorProgram = std::make_shared<PainterShaderProgram>();
+    assert(m_drawSolidColorProgram);
+    m_drawSolidColorProgram->addShaderFromSourceCode(ShaderType::VERTEX, std::string{ glslMainVertexShader } + glslPositionOnlyVertexShader.data());
+    m_drawSolidColorProgram->addShaderFromSourceCode(ShaderType::FRAGMENT, std::string{ glslMainFragmentShader } + glslSolidColorFragmentShader.data());
+    m_drawSolidColorProgram->link();
+
+    m_drawReplaceColorProgram = std::make_shared<PainterShaderProgram>();
+    assert(m_drawReplaceColorProgram);
+    m_drawReplaceColorProgram->addShaderFromSourceCode(ShaderType::VERTEX, std::string{ glslMainWithTexCoordsVertexShader } + glslPositionOnlyVertexShader.data());
+    m_drawReplaceColorProgram->addShaderFromSourceCode(ShaderType::FRAGMENT, std::string{ glslMainFragmentShader } + glslReplaceColorFragmentShader.data());
+    m_drawReplaceColorProgram->link();
 
     PainterShaderProgram::release();
 
@@ -119,23 +123,6 @@ void Painter::drawCoords(CoordsBuffer& coordsBuffer, DrawMode drawMode)
 
     if (!textured)
         PainterShaderProgram::enableAttributeArray(PainterShaderProgram::TEXCOORD_ATTR);
-}
-
-void Painter::drawLine(const std::vector<float>& vertex, int size, int width)
-{
-    m_drawLineProgram->bind();
-    m_drawLineProgram->setTransformMatrix(m_transformMatrix);
-    m_drawLineProgram->setProjectionMatrix(m_projectionMatrix);
-    m_drawLineProgram->setTextureMatrix(m_textureMatrix);
-    m_drawLineProgram->setColor(m_color);
-    glLineWidth(width);
-
-    PainterShaderProgram::disableAttributeArray(PainterShaderProgram::TEXCOORD_ATTR);
-    m_drawLineProgram->setAttributeArray(PainterShaderProgram::VERTEX_ATTR, vertex.data(), 2);
-
-    glDrawArrays(GL_LINE_STRIP, 0, size);
-
-    PainterShaderProgram::enableAttributeArray(PainterShaderProgram::TEXCOORD_ATTR);
 }
 
 void Painter::resetState()

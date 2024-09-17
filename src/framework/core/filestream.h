@@ -37,7 +37,7 @@ public:
     FileStream(std::string name, const std::string_view buffer);
     ~FileStream();
 
-    void cache(bool useEnc = false);
+    void cache();
     void close();
     void flush();
     void write(const void* buffer, uint32_t count);

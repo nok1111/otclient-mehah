@@ -23,9 +23,6 @@
 #pragma once
 
 #ifdef OPENGL_ES
- // for static linking
-#define GL_APICALL
-#define EGLAPI
 #include <GLES3/gl3.h>
 #else
 #ifndef _MSC_VER

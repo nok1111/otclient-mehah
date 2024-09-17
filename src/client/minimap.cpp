@@ -46,7 +46,10 @@ void MinimapBlock::update()
     if (!m_mustUpdate)
         return;
 
-    m_image = std::make_shared<Image>(m_size);
+    if (m_image)
+        m_image->resize(m_size);
+    else
+        m_image = std::make_shared<Image>(m_size);
 
     bool shouldDraw = false;
     for (uint_fast8_t x = 0; x < MMBLOCK_SIZE; ++x) {
@@ -64,7 +67,10 @@ void MinimapBlock::update()
     }
 
     if (shouldDraw)
-        m_texture = std::make_shared<Texture>(m_image, true, false);
+        if (m_texture)
+            m_texture->updateImage(m_image);
+        else
+            m_texture = std::make_shared<Texture>(m_image, true, false);
     else
         m_texture.reset();
 

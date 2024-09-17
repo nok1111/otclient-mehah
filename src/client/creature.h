@@ -117,12 +117,6 @@ public:
     uint8_t getIcon() { return m_icon; }
     uint8_t getHealthPercent() { return m_healthPercent; }
 
-#ifdef PROGRESSBAR
-    uint8_t getProgressbarPercent() { return m_progressbarPercent; }
-    void setProgressbar(uint32_t duration, bool ltr);
-    void updateProgressbar(uint32_t duration, bool ltr);
-#endif
-
     uint16_t getSpeed() { return m_speed; }
     uint16_t getBaseSpeed() { return m_baseSpeed; }
     uint16_t getStepDuration(bool ignoreDiagonal = false, Otc::Direction dir = Otc::InvalidDirection);
@@ -187,8 +181,6 @@ public:
     void clearText() { setText("", Color::white); }
     bool canShoot(int distance);
 #endif
-
-
 
 protected:
     virtual void updateWalkOffset(uint8_t totalPixelsWalked);
@@ -290,12 +282,6 @@ private:
     uint8_t m_icon{ Otc::NpcIconNone };
     uint8_t m_shield{ Otc::ShieldNone };
     uint8_t m_emblem{ Otc::EmblemNone };
-
-#ifdef PROGRESSBAR
-    uint8_t m_progressbarPercent;
-    ScheduledEventPtr m_progressbarUpdateEvent;
-    Timer m_progressbarTimer;
-#endif
 
     // walk related
     uint8_t m_walkAnimationPhase{ 0 };
