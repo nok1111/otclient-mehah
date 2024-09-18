@@ -1171,6 +1171,15 @@ void Creature::setCovered(bool covered) {
     });
 }
 
+bool Creature::isSummon()
+{
+    if (m_type >= Proto::CreatureTypeSummonOwn && m_type <= Proto::CreatureTypeSummonPet) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 #ifndef BOT_PROTECTION
 void Creature::setText(const std::string& text, const Color& color)
 {

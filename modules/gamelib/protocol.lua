@@ -51,6 +51,7 @@ GameServerOpcodes = {
     GameServerMissleEffect = 133, -- Anthem on 13.x
     GameServerMarkCreature = 134,
     GameServerTrappers = 135,
+    GameServerCreatureName = 138,
     GameServerCreatureHealth = 140,
     GameServerCreatureLight = 141,
     GameServerCreatureOutfit = 142,

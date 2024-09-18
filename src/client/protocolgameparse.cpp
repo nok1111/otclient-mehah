@@ -200,6 +200,9 @@ void ProtocolGame::parseMessage(const InputMessagePtr& msg)
                 case Proto::GameServerTrappers:
                     parseTrappers(msg);
                     break;
+                case Proto::GameServerCreatureName:
+                    parseCreatureName(msg);
+                    break;
                 case Proto::GameServerCreatureData:
                     parseCreatureData(msg);
                     break;
@@ -1835,6 +1838,15 @@ void ProtocolGame::parseCreatureData(const InputMessagePtr& msg)
             addCreatureIcon(msg, creature);
             break;
     }
+}
+
+void ProtocolGame::parseCreatureName(const InputMessagePtr& msg)
+{
+    const uint id = msg->getU32();
+    const std::string newName = msg->getString();
+
+    CreaturePtr creature = g_map.getCreatureById(id);
+    if (creature) creature->setName(newName);
 }
 
 void ProtocolGame::parseCreatureHealth(const InputMessagePtr& msg)

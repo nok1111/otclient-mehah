@@ -156,6 +156,8 @@ public:
     bool isCreature() override { return true; }
     bool isCovered() { return m_isCovered; }
 
+    bool isSummon() override;
+
     void setCovered(bool covered);
 
     bool isDisabledWalkAnimation() { return m_disableWalkAnimation > 0; }
