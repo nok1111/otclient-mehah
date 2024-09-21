@@ -332,7 +332,13 @@ ExtendedIds = {
     Game = 4,
     Particles = 5,
     MapShader = 6,
-    NeedsUpdate = 7
+    NeedsUpdate = 7,
+    TaskList = 0x10,
+    UpdateTask = 0x11,
+    NpcTaskList = 0x12,
+    NpcRewardList = 0x13,
+    DungeonWindow = 0x14,
+    NpcTaskWindowClose = 0x15,
 }
 
 PreviewState = {

@@ -126,6 +126,14 @@ ClientOpcodes = {
     -- NOTE: add any custom opcodes in this range
     -- 51 - 99
 
+     -- NOTE: add any custom opcodes in this range
+     ClientSelectTask                   = 52,
+    ClientSelectReward                  = 53,
+    ClientGetTaskList                   = 54,
+    --ClientGetInventoryAbilities         = 55,
+    ClientDeleteTask                    = 56,
+    ClientStartDungeon                  = 60,
+
     -- original tibia ONLY
     ClientAutoWalk = 100,
     ClientWalkNorth = 101,

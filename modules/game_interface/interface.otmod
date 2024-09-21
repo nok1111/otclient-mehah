@@ -44,6 +44,7 @@ Module
     - game_highscore
     - game_store
     - game_quickloot
+    - game_tasklist
 
   @onLoad: init()
   @onUnload: terminate()
