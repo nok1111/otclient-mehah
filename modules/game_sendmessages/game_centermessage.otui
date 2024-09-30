@@ -14,7 +14,7 @@ MainWindow
     color: white
     text-auto-resize: true
     padding: 15
-    image-source: /images/ui/miniwindow3
+    image-source: /images/ui/miniwindow
     text-align: center
     text-wrap: true
     anchors.top: parent.top

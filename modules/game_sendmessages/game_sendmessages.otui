@@ -2,7 +2,7 @@ HeadlessWindow
   id: sendMessages
   size: 600 300
   padding: 3
-  image-source: /images/ui/miniwindow2
+  image-source: /images/ui/miniwindow
   --@onClick: modules.game_sendmessages.closeWindow()
 
   Button

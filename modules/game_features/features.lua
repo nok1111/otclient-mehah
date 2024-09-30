@@ -1,19 +1,19 @@
 controller = Controller:new()
 controller:registerEvents(g_game, {
     onClientVersionChange = function(version)
-	
 		g_game.enableFeature(GameWingsAurasEffectsShader)
-g_game.enableFeature(GameFormatCreatureName)
-g_game.enableFeature(GameCreatureShader)
-g_game.enableFeature(GameCreatureAttachedEffect) 
-g_game.enableFeature(GameItemShader)
-g_game.enableFeature(GameItemTooltipV8)
+		g_game.enableFeature(GameFormatCreatureName)
+		g_game.enableFeature(GameCreatureShader)
+		g_game.enableFeature(GameCreatureAttachedEffect) 
+		g_game.enableFeature(GameItemShader)
+		g_game.enableFeature(GameItemTooltipV8)
         -- g_game.enableFeature(GameKeepUnawareTiles)
         -- g_game.enableFeature(GameSmoothWalkElevation)
         -- g_game.enableFeature(GameNegativeOffset)
         -- g_game.enableFeature(GameWingsAurasEffectsShader)
-		g_game.enableFeature(GameSpritesU32) -- To extended the sprites
-  g_game.enableFeature(GameSpritesAlphaChannel) -- To enable transparency
+		 -- To extended the sprites
+		g_game.enableFeature(GameMagicEffectU16)
+		g_game.enableFeature(GameSpritesAlphaChannel) -- To enable transparency
         
 
 
@@ -93,7 +93,7 @@ g_game.enableFeature(GameItemTooltipV8)
         end
 
         if version >= 960 then
-
+			g_game.enableFeature(GameSpritesU32)
             g_game.enableFeature(GameOfflineTrainingTime)
         end
 
