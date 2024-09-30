@@ -2,7 +2,7 @@ AskWidget < MainWindow
   size: 200 100
   draggable: false
   !text: tr('Delete task')
-  image-source: /images/taskList/background
+  image-source: /images/ui/miniwindow
 
   Label
     !text: tr('Are You sure about this?')
@@ -14,7 +14,7 @@ AskWidget < MainWindow
     margin-top: -10
     color: #ff3333
 
-  TaskButton
+  Button
     id: yesButton
     width: 80
     !text: tr('Yes')
@@ -23,7 +23,7 @@ AskWidget < MainWindow
     margin-bottom: -5
     @onClick: modules.game_tasklist.yes()
 
-  TaskButton
+  Button
     id: noButton
     width: 80
     !text: tr('No')
@@ -59,7 +59,7 @@ RewardItem < UIWidget
     color: #ff3333
 
 TaskRecord < UIWidget
-  image-source: /images/taskList/task_item
+  image-source: /images/ui/task_item
   width: 256
   height: 40
   @onClick: modules.game_tasklist.onTaskClick(self)
@@ -269,7 +269,7 @@ TaskDescription < UIWidget
 MainWindow
   id: taskListWindow
   !text: tr('Quest Log')
-  image-source: /images/taskList/miniwindow
+  image-source: /images/ui/miniwindow
   width: 300
   height: 700
   draggable: false
@@ -299,7 +299,7 @@ MainWindow
     margin-top: 10
     margin-left: 0
 
-  TaskButton
+  Button
     id: deleteButton
     !text: tr('Delete')
     anchors.bottom: parent.bottom
@@ -307,8 +307,9 @@ MainWindow
     margin-bottom: -5
     @onClick: modules.game_tasklist.delete()
 
-  TaskButton
+  Button
     id: buttonCancel
+    width: 65
     !text: tr('Close')
     anchors.right: parent.right
     anchors.bottom: parent.bottom

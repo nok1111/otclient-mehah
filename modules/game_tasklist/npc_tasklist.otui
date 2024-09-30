@@ -26,7 +26,7 @@ RewardItem < UIWidget
 TaskButton < Button
   size: 116 34
   text-offset: 0 0
-  image-source: /images/taskList/button
+  image-source: /images/ui/list1
   image-color: #dfdfdf
   image-clip: 0 0 116 34
   image-border: 3
@@ -40,13 +40,14 @@ TaskButton < Button
     text-offset: 1 1
 
 NpcTaskButton < Button
-  width: 256
+  width: 250
   height: 24
 
 NpcTaskWidget < UIWidget
-  image-source: /images/taskList/task_item
-  width: 256
+  image-source: /images/ui/list1
+  width: 250
   height: 24
+  margin-top: 1
 
   NpcTaskButton
     id: taskButton
@@ -150,19 +151,9 @@ NpcTaskDescription < UIWidget
 NpcTaskListWidget < MainWindow
   id: npcTaskListWidget
   !text: tr('World Quests')
-  image-source: /images/taskList/background
+  image-source: /images/ui/miniwindow
   width: 300
   height: 500
-
-  UIWidget
-    id: npcTopOverlay
-    image-source: /images/taskList/top_overlay
-    width: 300
-    height: 36
-    anchors.top: parent.top
-    anchors.left: parent.left
-    margin-top: -44
-    margin-left: -15
 
   NpcTaskListPanel
     id: npcTaskList
@@ -178,7 +169,7 @@ NpcTaskListWidget < MainWindow
     margin-top: 5
     margin-left: 6
 
-  TaskButton
+  Button
     id: acceptButton
     !text: 'Accept'
     anchors.left: parent.left
@@ -187,7 +178,7 @@ NpcTaskListWidget < MainWindow
     margin-bottom: -1
     @onClick: modules.game_tasklist.acceptNpcTask()
 
-  TaskButton
+  Button
     id: declioneButton
     !text: 'Close'
     anchors.right: parent.right
