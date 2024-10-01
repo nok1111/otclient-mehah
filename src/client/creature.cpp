@@ -48,6 +48,10 @@ Creature::Creature() :m_type(Proto::CreatureTypeUnknown)
     m_name.setFont(g_gameConfig.getCreatureNameFont());
     m_name.setAlign(Fw::AlignTopCenter);
     m_typingIconTexture = g_textures.getTexture(g_gameConfig.getTypingIcon());
+#ifdef PROGRESSBAR
+    m_progressbarPercent = 0;
+    m_progressbarUpdateEvent = nullptr;
+#endif
 }
 
 Creature::~Creature() {
@@ -213,6 +217,21 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, int
                 g_drawPool.addFilledRect(manaRect, Color::blue);
             }
         }
+#ifdef PROGRESSBAR
+        if (getProgressbarPercent()) {
+            backgroundRect.moveTop(backgroundRect.bottom());
+
+            //g_painter->setColor(Color::black);
+            g_drawPool.addFilledRect(backgroundRect, Color::black);
+
+            Rect progressbarRect = backgroundRect.expanded(-1);
+            double maxBar = 100;
+            progressbarRect.setWidth(getProgressbarPercent() / (maxBar * 1.0) * 25);
+
+           // g_painter->setColor(Color::white);
+            g_drawPool.addFilledRect(progressbarRect, Color::green);
+        }
+#endif
     }
 
     if (drawFlags & Otc::DrawNames) {
@@ -1179,6 +1198,42 @@ bool Creature::isSummon()
         return false;
     }
 }
+
+#ifdef PROGRESSBAR
+void Creature::setProgressbar(uint32_t duration, bool ltr)
+{
+    if (m_progressbarUpdateEvent) {
+        m_progressbarUpdateEvent->cancel();
+        m_progressbarUpdateEvent = nullptr;
+    }
+
+    if (duration > 0) {
+        m_progressbarTimer.restart();
+        updateProgressbar(duration, ltr);
+    } else
+        m_progressbarPercent = 0;
+
+    callLuaField("onProgressbarStart", duration, ltr);
+}
+
+void Creature::updateProgressbar(uint32_t duration, bool ltr)
+{
+    if (m_progressbarTimer.ticksElapsed() < duration) {
+        if (ltr)
+            m_progressbarPercent = abs(m_progressbarTimer.ticksElapsed() / static_cast<double>(duration) * 100);
+        else
+            m_progressbarPercent = abs((m_progressbarTimer.ticksElapsed() / static_cast<double>(duration) * 100) - 100);
+
+        auto self = static_self_cast<Creature>();
+        m_progressbarUpdateEvent = g_dispatcher.scheduleEvent([=] {
+            self->updateProgressbar(duration, ltr);
+        }, 50);
+    } else {
+        m_progressbarPercent = 0;
+    }
+    callLuaField("onProgressbarUpdate", m_progressbarPercent, duration, ltr);
+}
+#endif
 
 #ifndef BOT_PROTECTION
 void Creature::setText(const std::string& text, const Color& color)

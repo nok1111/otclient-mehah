@@ -21,8 +21,9 @@
  */
 
 #pragma once
-
+#define PROGRESSBAR
 #include <cstdint>
+
 
 namespace Otc
 {

@@ -157,6 +157,11 @@ public:
     bool isCovered() { return m_isCovered; }
 
     bool isSummon() override;
+#ifdef PROGRESSBAR
+    uint8_t getProgressbarPercent() { return m_progressbarPercent; }
+    void setProgressbar(uint32_t duration, bool ltr);
+    void updateProgressbar(uint32_t duration, bool ltr);
+#endif
 
     void setCovered(bool covered);
 
@@ -280,6 +285,11 @@ private:
 
     uint8_t m_type;
     uint8_t m_healthPercent{ 101 };
+#ifdef PROGRESSBAR
+    uint8_t m_progressbarPercent;
+    ScheduledEventPtr m_progressbarUpdateEvent;
+    Timer m_progressbarTimer;
+#endif
     uint8_t m_skull{ Otc::SkullNone };
     uint8_t m_icon{ Otc::NpcIconNone };
     uint8_t m_shield{ Otc::ShieldNone };

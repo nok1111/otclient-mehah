@@ -214,6 +214,9 @@ private:
     void parseCreatureMark(const InputMessagePtr& msg);
     void parseTrappers(const InputMessagePtr& msg);
     void parseCreatureName(const InputMessagePtr& msg);
+#ifdef PROGRESSBAR
+    void parseProgressbar(const InputMessagePtr& msg);
+#endif
     void addCreatureIcon(const InputMessagePtr& msg, const CreaturePtr& creature);
     void parseCreatureData(const InputMessagePtr& msg);
     void parseCreatureHealth(const InputMessagePtr& msg);
