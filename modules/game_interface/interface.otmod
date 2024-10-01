@@ -46,6 +46,7 @@ Module
     - game_quickloot
     - game_tasklist
     - game_crafting
+    - game_buffs
 
   @onLoad: init()
   @onUnload: terminate()
