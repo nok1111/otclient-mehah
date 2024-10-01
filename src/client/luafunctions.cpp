@@ -976,6 +976,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<UIMap>("setDrawHighlightTarget", &UIMap::setDrawHighlightTarget);
     g_lua.bindClassMemberFunction<UIMap>("setAntiAliasingMode", &UIMap::setAntiAliasingMode);
     g_lua.bindClassMemberFunction<UIMap>("setFloorFading", &UIMap::setFloorFading);
+    g_lua.bindClassMemberFunction<UIMap>("getMapRect", &UIMap::getMapRect);
     g_lua.bindClassMemberFunction<UIMap>("clearTiles", &UIMap::clearTiles);
 
     g_lua.registerClass<UIMinimap, UIWidget>();

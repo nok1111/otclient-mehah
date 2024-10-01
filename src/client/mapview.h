@@ -105,6 +105,7 @@ public:
     // map dimension related
     Size getVisibleDimension() { return m_visibleDimension; }
     void setVisibleDimension(const Size& visibleDimension);
+    
 
     // view mode related
     FloorViewMode getFloorViewMode() const { return m_floorViewMode; }
