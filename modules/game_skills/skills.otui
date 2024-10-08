@@ -219,7 +219,7 @@ MiniWindow
       SkillPercentPanel
 
     SkillButton
-      id: skillId6
+      id: skillId7
       SkillNameLabel
         !text: tr('Blacksmith')
       SkillValueLabel
@@ -229,7 +229,7 @@ MiniWindow
       SkillPercentPanel
 
     SkillButton
-      id: skillId6
+      id: skillId8
       SkillNameLabel
         !text: tr('Alchemy')
       SkillValueLabel
@@ -239,7 +239,7 @@ MiniWindow
       SkillPercentPanel
 
     SkillButton
-      id: skillId7
+      id: skillId9
       SkillNameLabel
         !text: tr('Cooking')
       SkillValueLabel
@@ -249,7 +249,7 @@ MiniWindow
       SkillPercentPanel
 
     SkillButton
-      id: skillId8
+      id: skillId10
       SkillNameLabel
         !text: tr('Enchanting')
       SkillValueLabel
@@ -259,7 +259,7 @@ MiniWindow
       SkillPercentPanel
 
     SkillButton
-      id: skillId9
+      id: skillId11
       SkillNameLabel
         !text: tr('Mining')
       SkillValueLabel
@@ -269,7 +269,7 @@ MiniWindow
       SkillPercentPanel
 
     SkillButton
-      id: skillId10
+      id: skillId12
       SkillNameLabel
         !text: tr('Herbalism')
       SkillValueLabel
@@ -279,7 +279,7 @@ MiniWindow
       SkillPercentPanel
 
     SkillButton
-      id: skillId11
+      id: skillId13
       SkillNameLabel
         !text: tr('Rune Seeker')
       SkillValueLabel
@@ -289,61 +289,61 @@ MiniWindow
       SkillPercentPanel
 
     SmallSkillButton
-      id: skillId12
+      id: skillId14
       SkillNameLabel
         !text: tr('Critical Hit Chance')
       SkillValueLabel
 
     SmallSkillButton
-      id: skillId13
+      id: skillId15
       SkillNameLabel
         !text: tr('Critical Hit Damage')
       SkillValueLabel
 
     SmallSkillButton
-      id: skillId14
+      id: skillId16
       SkillNameLabel
         !text: tr('Life Leech Chance')
       SkillValueLabel
 
     SmallSkillButton
-      id: skillId15
+      id: skillId17
       SkillNameLabel
         !text: tr('Life Leech Amount')
       SkillValueLabel
 
     SmallSkillButton
-      id: skillId16
+      id: skillId18
       SkillNameLabel
         !text: tr('Mana Leech Chance')
       SkillValueLabel
 
     SmallSkillButton
-      id: skillId17
+      id: skillId19
       SkillNameLabel
         !text: tr('Mana Leech Amount')
       SkillValueLabel
 
     SmallSkillButton
-      id: skillId18
+      id: skillId21
       SkillNameLabel
         !text: tr('Fatal')
       SkillValueLabel
 
     SmallSkillButton
-      id: skillId19
+      id: skillId122
       SkillNameLabel
         !text: tr('Dodge')
       SkillValueLabel
 
     SmallSkillButton
-      id: skillId20
+      id: skillId23
       SkillNameLabel
         !text: tr('Momentum')
       SkillValueLabel
 
     SmallSkillButton
-      id: skillId21
+      id: skillId24
       SkillNameLabel
         !text: tr('Transcendence')
       SkillValueLabel
