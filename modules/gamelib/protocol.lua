@@ -17,7 +17,8 @@ GameServerOpcodes = {
     -- otclient ONLY
     GameServerExtendedOpcode = 50,
 
-    GameServerOpenCrafting  = 54,
+    GameServerOpenCrafting  = 57, --54
+    GameServerJobs  = 60,
 
     -- NOTE: add any custom opcodes in this range
     -- 51 - 99
@@ -132,7 +133,7 @@ ClientOpcodes = {
      ClientSelectTask                   = 52,
     ClientSelectReward                  = 53,
     ClientGetTaskList                   = 54,
-    ClientCraftRecipe                   = 55,
+    ClientCraftRecipe                   = 58,
     ClientDeleteTask                    = 56,
     ClientStartDungeon                  = 60,
 
