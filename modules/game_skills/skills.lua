@@ -119,7 +119,7 @@ function setSkillValue(id, value)
     local skill = skillsWindow:recursiveGetChildById(id)
     if skill then
         local widget = skill:getChildById('value')
-        if id == "skillId14" or id == "skillId15" or id == "skillId16" or id == "skillId17" or id == "skillId18" or id == "skillId19" or id == "skillId20" then
+        if id == "skillId12" or id == "skillId13" or id == "skillId14" or id == "skillId15" or id == "skillId16" or id == "skillId17" or id == "skillId18" then
             local value = value / 100
             widget:setText(value .. "%")
         else
