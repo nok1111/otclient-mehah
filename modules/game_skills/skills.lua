@@ -1,3 +1,26 @@
+-- skill consts
+SKILL_BLACKSMITH = 1
+SKILL_ALCHEMY = 2
+SKILL_COOKING = 3
+SKILL_ENCHANTING = 4
+SKILL_MINING = 5
+SKILL_HERBALISM = 6
+SKILL_FISHING = 7
+SKILL_RUNE_SEEKER = 8
+
+-- helpers
+local skillIdToUI = {
+    [SKILL_BLACKSMITH] = "Blacksmith",
+    [SKILL_ALCHEMY] = "Alchemy",
+    [SKILL_COOKING] = "Cooking",
+    [SKILL_ENCHANTING] = "Enchanting",
+    [SKILL_MINING] = "Mining",
+    [SKILL_HERBALISM] = "Herbalism",
+    [SKILL_FISHING] = "Fishing",
+    [SKILL_RUNE_SEEKER] = "RuneSeeker",
+}
+
+
 skillsWindow = nil
 skillsButton = nil
 skillsSettings = nil
@@ -25,6 +48,8 @@ function init()
         onGameStart = online,
         onGameEnd = offline
     })
+
+    ProtocolGame.registerOpcode(GameServerOpcodes.GameServerJobs, parseJobs)
 
     skillsButton = modules.game_mainpanel.addToggleButton('skillsButton', tr('Skills') .. ' (Alt+S)',
                                                                    '/images/options/button_skills', toggle, false, 1)
@@ -69,12 +94,17 @@ function terminate()
         onGameEnd = offline
     })
 
+
     g_keyboard.unbindKeyDown('Alt+S')
     skillsWindow:destroy()
     skillsButton:destroy()
 
     skillsWindow = nil
     skillsButton = nil
+
+    ProtocolGame.unregisterOpcode(GameServerOpcodes.GameServerJobs, parseJobs)
+
+
 end
 
 function expForLevel(level)
@@ -545,4 +575,61 @@ end
 
 function onBaseSkillChange(localPlayer, id, baseLevel)
     setSkillBase('skillId' .. id, localPlayer:getSkillLevel(id), baseLevel)
+end
+
+-- protocol
+function parseJobs(protocol, msg)
+pwarning("parseJobs triggered")
+    local job_skill = {}
+    local skillSize = msg:getU8()
+    for i = 1, skillSize do
+        local job = {}
+        job.level = msg:getU16()
+        job.percentage = msg:getU8()
+        job_skill[i] = job
+    end
+
+    local professionId = msg:getU8()
+    local professionDescription = msg:getString()
+
+    updateMainJobs(job_skill, professionId)
+end
+
+function updateMainJobs(job_skill, profId)
+pwarning("updateMainJobs triggered")
+    for i = 1, 8 do
+    -- done? xD
+        -- finding 'id: professionIdX' inside skillsWindows
+        local skillWindow = skillsWindow:recursiveGetChildById("professionId" .. i)
+        if skillWindow then
+            if job_skill[i] then
+                skillWindow:show()
+                
+                -- finding 'id: label' inside id: 'professionIdX'
+                local label = skillWindow:getChildById("label")
+                if label then
+                    label:setText(skillIdToUI[i])
+                end
+
+                -- finding 'id: value' inside id: 'professionIdX'
+                local value = skillWindow:getChildById("value")
+                if value then
+                    value:setText(job_skill[i].level)
+                end
+                
+                -- finding 'id: percent' inside id: 'professionIdX'
+                local bar = skillWindow:getChildById("percent")
+                if bar then
+                    bar:setPercent(job_skill[i].percentage)
+                    if i > 4 or (i < 5 and profId == i) then
+                        bar:setTooltip("You have " .. 100 - job_skill[i].percentage .. " percent to go.")
+                    end
+                end
+            else
+                skillWindow:hide()
+            end
+        end
+    end
+
+    --show()
 end

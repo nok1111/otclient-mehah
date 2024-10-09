@@ -207,6 +207,75 @@ MiniWindow
         image-source: /images/icons/icon_shielding
         image-size: 9 9
       SkillPercentPanel
+    HorizontalSeparator
+      margin-top: 4
+      margin-bottom: 2
+
+    SkillButton
+      SkillNameLabel
+        !text: tr('jobs:')
+        margin-left: 65
+        margin-top: 3
+
+
+    HorizontalSeparator
+      margin-bottom: 4
+
+    SkillButton
+      id: professionId1
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId2
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId3
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId4
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId5
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId6
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId7
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId8
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      SkillPercentPanel
 
     SkillButton
       id: skillId6
