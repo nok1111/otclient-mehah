@@ -2185,7 +2185,7 @@ void ProtocolGame::parsePlayerSkills(const InputMessagePtr& msg) const
         m_localPlayer->setBaseMagicLevel(baseMagicLevel);
     }
 
-    for (int_fast32_t skill = Otc::Fist; skill <= Otc::Runeseeker; ++skill) {
+    for (int_fast32_t skill = Otc::Fist; skill <= Otc::Fishing; ++skill) {
         uint16_t level;
 
         if (g_game.getFeature(Otc::GameDoubleSkills))
