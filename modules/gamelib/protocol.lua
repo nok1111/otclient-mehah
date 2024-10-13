@@ -19,6 +19,7 @@ GameServerOpcodes = {
 
     GameServerOpenCrafting  = 57, --54
     GameServerJobs  = 60,
+    GameServerUpdateFame  = 61,
 
     -- NOTE: add any custom opcodes in this range
     -- 51 - 99

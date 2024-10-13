@@ -83,6 +83,58 @@ MiniWindow
       RedPercentPanel
 
     SkillButton
+      id: fame
+      height: 45
+      UIWidget
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+
+      SkillNameLabel
+        id: label
+        anchors.left: parent.left
+        text-align: topleft
+        !text: tr('Fame level:')
+      GameLabel
+        id: fameLevel
+        font: verdana-11px-monochrome
+        !text: tr('0')
+        anchors.right: parent.right
+        anchors.top: label.top
+        anchors.bottom: label.bottom
+      RedPercentPanel
+        id: famebar
+        anchors.top: label.top
+        anchors.left: parent.left
+        height: 14
+        background-color: orange
+
+      GameLabel
+        id: famePoints
+        font: verdana-11px-monochrome
+        !text: tr('0 pts')
+        anchors.left: parent.left
+        margin-left: 5
+        anchors.top: famebar.top
+        anchors.bottom: famebar.bottom
+    GameLabel
+      id: famePointslabel
+      font: verdana-11px-monochrome
+      !text: tr('Fame Points:')
+      margin-top: -12
+      GameLabel
+        id: famePtsToLvl
+        font: verdana-11px-monochrome
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        !text: tr('0')
+
+    HorizontalSeparator
+      margin-top: 6
+      margin-bottom: 2
+
+    SkillButton
       id: health
       height: 15
       SkillNameLabel

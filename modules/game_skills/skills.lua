@@ -49,6 +49,7 @@ function init()
         onGameEnd = offline
     })
 
+    ProtocolGame.registerOpcode(GameServerOpcodes.GameServerUpdateFame, parseUpdateFame)
     ProtocolGame.registerOpcode(GameServerOpcodes.GameServerJobs, parseJobs)
 
     skillsButton = modules.game_mainpanel.addToggleButton('skillsButton', tr('Skills') .. ' (Alt+S)',
@@ -102,6 +103,7 @@ function terminate()
     skillsWindow = nil
     skillsButton = nil
 
+    ProtocolGame.unregisterOpcode(GameServerOpcodes.GameServerUpdateFame, parseUpdateFame)
     ProtocolGame.unregisterOpcode(GameServerOpcodes.GameServerJobs, parseJobs)
 
 
@@ -575,6 +577,36 @@ end
 
 function onBaseSkillChange(localPlayer, id, baseLevel)
     setSkillBase('skillId' .. id, localPlayer:getSkillLevel(id), baseLevel)
+end
+
+function parseUpdateFame(protocol, msg)
+    local points = msg:getU32()
+    local level = msg:getU16()
+    local pointsToAdvance = msg:getU32()
+    local percentage = msg:getU16()
+    onFameChange(points, level, pointsToAdvance, percentage)
+end
+
+function onFameChange(points, level, pointsToAdvance, percentage)
+    local fame = skillsWindow:recursiveGetChildById('fame')
+    local fame2 = skillsWindow:recursiveGetChildById('famePointslabel')
+    local fameLevel = fame:getChildById('fameLevel')
+    fameLevel:setText(tostring(level))
+    fameLevel:setWidth(fameLevel:getTextSize().width)
+    --fame:setTooltip(("You need %d pts to unlock next fame level"):format(tostring(pointsToAdvance)))
+
+    local famePoints = fame:getChildById('famePoints')
+    famePoints:setText(points .. " exp")
+    famePoints:setWidth(famePoints:getTextSize().width)
+
+    local famePtsToLvl = fame2:getChildById('famePtsToLvl')
+    famePtsToLvl:setText(tostring(pointsToAdvance))
+    famePtsToLvl:setWidth(famePtsToLvl:getTextSize().width)
+
+    -- set percentage
+    local famebarpercent = skillsWindow:recursiveGetChildById('famebar')
+    famebarpercent:setPercent(tonumber(percentage))
+    famebarpercent:setTooltip("You have " .. 100 - tonumber(percentage) .. " percent to go.")
 end
 
 -- protocol
