@@ -51,8 +51,7 @@ vcpkg_installed/
 .builds
 *.pidb
 *.scc
-*.dll
-*.exe
+
 *.exp
 *.lib
 
