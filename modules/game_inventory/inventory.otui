@@ -33,8 +33,8 @@ PhantomMiniWindow
   id: maininventorypanel
   draggable: true
   phantom: false
-  height: 162
-  &panelHeight: 162
+  height: 220
+  &panelHeight: 220
   on: true
 
   $!on:
@@ -46,14 +46,55 @@ PhantomMiniWindow
     anchors.fill: parent
     phantom: true
 
+    UIButton
+      id: purseButton
+      image-source: /images/ui/spell_button
+      !tooltip: tr('click to open Spell Bag')
+      anchors.top: parent.top
+      anchors.left: parent.left
+      size: 32 33
+      image-clip: 0 0 32 33
+      margin-top: 5
+      margin-left: 8
+      margin-bottom: 5
+      @onMousePress: |
+        local purse = g_game.getLocalPlayer():getInventoryItem(InventorySlotPurse)
+        if purse then
+            g_game.use(purse)
+        end
+
+      $on:
+        image-clip: 0 0 32 33
+      $pressed:
+        image-clip: 0 0 32 33
+
+    UIButton
+      id: ShowSpellsButton
+      image-source: /images/ui/spell_button2
+      !tooltip: tr('Select active spells')
+      anchors.top: parent.top
+      anchors.left: purseButton.right
+      size: 32 33
+      image-clip: 0 0 32 33
+      margin-top: 5
+      margin-left: 4
+      margin-bottom: 5
+      @onMousePress: |
+        g_game.talk('!spells')
+
+      $on:
+        image-clip: 0 0 32 33
+      $pressed:
+        image-clip: 0 0 32 33
+
     Button
       id: changeSize
       image-source: /images/inventory/min_button_small
       image-clip: 0 0 12 12
-      anchors.top: parent.top
+      anchors.top: purseButton.top
       anchors.left: parent.left
       margin-left: 8
-      margin-top: 5
+      margin-top: 40
       size: 12 12
       @onClick: changeInventorySize()
 
@@ -71,26 +112,6 @@ PhantomMiniWindow
       
       $pressed !disabled:
         image-clip: 12 0 12 12
-
-    UIButton
-      id: purseButton
-      image-source: /images/inventory/purse
-      !tooltip: tr('Open purse')
-      anchors.left: backpack.left
-      anchors.bottom: backpack.top   
-      size: 34 12
-      image-clip: 0 0 34 12
-      margin-bottom: 3
-      @onClick: |
-        local purse = g_game.getLocalPlayer():getInventoryItem(InventorySlotPurse)
-        if purse then
-            g_game.use(purse)
-        end
-
-      $on:
-        image-clip: 0 12 34 12
-      $pressed:
-        image-clip: 0 12 34 12
 
     TopToggleButton
       id: standPosture

@@ -109,6 +109,8 @@ function init()
                                                                       '/images/options/button_spells', toggle, false, 4)
     spelllistButton:setOn(false)
 
+
+
     nameValueLabel = spelllistWindow:getChildById('labelNameValue')
     formulaValueLabel = spelllistWindow:getChildById('labelFormulaValue')
     vocationValueLabel = spelllistWindow:getChildById('labelVocationValue')
