@@ -1,0 +1,8 @@
+Module
+  name: game_widgets
+  description: Shows map text widgets
+  author: nokturno
+  sandboxed: true
+  scripts: [ widgets ]
+  @onLoad: init()
+  @onUnload: terminate()
