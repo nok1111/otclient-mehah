@@ -22,6 +22,7 @@ AttachedEffectManager.register(1, 'Spoke Lighting', 12, ThingCategoryEffect, {
 
 AttachedEffectManager.register(2, 'Bat Wings', 307, ThingCategoryCreature, {
     speed = 5,
+	duration = 2000,
     disableWalkAnimation = true,
     shader = 'Outfit - Rainbow',
     dirOffset = {
@@ -139,4 +140,18 @@ AttachedEffectManager.register(11, 'Bat', 307, ThingCategoryCreature, {
     speed = 0.5,
     offset = { 0, 0 },
     bounce = { 20, 20, 2000 }
+})
+
+AttachedEffectManager.register(12, 'stun jump', 32, ThingCategoryEffect, {
+
+	duration = 800,
+    disableWalkAnimation = true,
+
+    onAttach = function(effect, owner)
+        owner:setBounce(0, 65, 800)
+        effect:setBounce(0, 65, 800)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setBounce(0, 0)
+    end
 })
