@@ -15,9 +15,8 @@ void main()
                   texture2D(u_Tex0, vec2(v_TexCoord.x, v_TexCoord.y + offset)).a;
         if (col.a < 1.0 && a > 0.0) {
             float intensity = (cos(u_Time * 9.57) + 1.0)/2.0;
-            float blueShift = 0.3 + 0.7 * cos(u_Time * 2.0); // Dynamic blue intensity
-            float greenShift = 0.3 + 0.7 * sin(u_Time * 2.0); // Dynamic green intensity
-            gl_FragColor = vec4(intensity * 0.5, greenShift, blueShift, 1.0);
+            float transitionColor = 0.5 + 0.5 * sin(u_Time * 3.14); // Creates a dynamic purple blend
+            gl_FragColor = vec4(intensity * 0.9, intensity * 0.4, transitionColor, 1.0);
         } else {
             gl_FragColor = col;
         }

@@ -155,3 +155,88 @@ AttachedEffectManager.register(12, 'stun jump', 32, ThingCategoryEffect, {
         oldOwner:setBounce(0, 0)
     end
 })
+
+AttachedEffectManager.register(13, 'travel form', 217, ThingCategoryCreature, {
+    hideOwner = true,
+	duration = 15000,
+    speed = 1,
+    offset = { 0, 0 },
+    bounce = { 10, 20, 11000 },
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(647)
+        owner:getTile():addThing(e)
+		
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(647)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(14, 'animated1', '/images/game/effects/animated', ThingExternalTexture, {
+    size = { 128, 128 },
+    offset = { 50, 45 }
+})
+
+AttachedEffectManager.register(15, 'shadow form', 1565, ThingCategoryCreature, {
+    hideOwner = true,
+	duration = 4000,
+    speed = 1,
+    bounce = { 5, 7, 11000 },
+	disableWalkAnimation = true,
+    shader = 'Outfit - Rainbow',
+	
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(18)
+        owner:getTile():addThing(e)
+		
+		
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(18)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(16, 'blood blades', 353, ThingCategoryEffect, {
+	hideOwner = false,
+	duration = 8000,
+    shader = 'Red Glow',
+	speed = 1,
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(353)
+        owner:getTile():addThing(e)
+		
+		
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(353)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(17, 'overcharged', 60, ThingCategoryEffect, {
+	opacity = 0.75,
+	duration = 8000,
+	speed = 1.4,
+	offset = { 0, 0, true},
+	
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(394)
+        owner:getTile():addThing(e)
+		
+		
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(38)
+        oldOwner:getTile():addThing(e)
+    end
+})
