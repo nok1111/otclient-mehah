@@ -108,12 +108,13 @@ AttachedEffectManager.register(9, 'Thunder', '/images/game/effects/thunder', Thi
 
 AttachedEffectManager.register(10, 'Dynamic Effect', 0, 0, {
     duration = 500,
+	speed = 1,
     onAttach = function(effect, owner)
         local spriteSize = g_gameConfig.getSpriteSize()
         local length = 3
 
         local missile = AttachedEffect.create(38, ThingCategoryMissile)
-        missile:setDuration(effect:getDuration())
+        missile:setDuration(effect:getDuration() * 0.5)
         missile:setDirection(5)
         missile:setOffset(spriteSize * length, 0)
         missile:setBounce(0, 15, 1000)
@@ -121,13 +122,15 @@ AttachedEffectManager.register(10, 'Dynamic Effect', 0, 0, {
         effect:attachEffect(missile)
 
         missile = AttachedEffect.create(38, ThingCategoryMissile)
-        missile:setDuration(effect:getDuration())
+        missile:setDuration(effect:getDuration() * 0.5)
         missile:setDirection(3)
         missile:setOffset(-(spriteSize * length), 0)
         missile:setBounce(0, 15, 1000)
         missile:move(Position.translated(owner:getPosition(), length, 0), owner:getPosition())
 
         effect:attachEffect(missile)
+		
+		
     end,
     onDetach = function(effect, oldOwner)
         local e = Effect.create()
@@ -239,4 +242,68 @@ AttachedEffectManager.register(17, 'overcharged', 60, ThingCategoryEffect, {
         e:setId(38)
         oldOwner:getTile():addThing(e)
     end
+})
+
+AttachedEffectManager.register(18, 'mana flow', 510, ThingCategoryEffect, {
+	opacity = 1,
+	duration = 15000,
+	speed = 1.4,
+	offset = { -29, -22, true}
+	
+})
+
+AttachedEffectManager.register(19, 'mana flow (mana distortion)', 510, ThingCategoryEffect, {
+	opacity = 1,
+	duration = 850,
+	speed = 1.4,
+	offset = { -29, -22, true}
+	
+})
+
+AttachedEffectManager.register(20, 'taunted', 200, ThingCategoryEffect, {
+	opacity = 1,
+	duration = 600,
+	speed = 3.4,
+	offset = { -15, -15, true},
+	bounce = { 15, 15, 1000 },
+	
+})
+
+AttachedEffectManager.register(21, 'shield slam', 609, ThingCategoryEffect, {
+	opacity = 1,
+	duration = 2200,
+	speed = 1,
+	offset = { -15, -28, true},
+	
+	onAttach = function(effect, owner)
+        local angelLight = g_attachedEffects.getById(22)
+        local angelLight1 = angelLight:clone()
+        effect:attachEffect(angelLight1)
+
+    end
+	
+})
+
+AttachedEffectManager.register(22, 'ground break', 660, ThingCategoryEffect, {
+	opacity = 1,
+	duration = 2500,
+	speed = 0.7,
+	offset = { -104, -92, false},
+	
+})
+
+AttachedEffectManager.register(23, 'stuned', 32, ThingCategoryEffect, {
+	opacity = 1,
+	duration = 1200,
+	speed = 1,
+	offset = { 22, 22, true},
+	
+})
+
+AttachedEffectManager.register(24, 'stuned', 583, ThingCategoryEffect, {
+	opacity = 1,
+	duration = 15000,
+	speed = 1.5,
+	offset = { -18, -23, false},
+	
 })
