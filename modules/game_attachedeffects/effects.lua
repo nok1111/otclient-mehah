@@ -300,10 +300,25 @@ AttachedEffectManager.register(23, 'stuned', 32, ThingCategoryEffect, {
 	
 })
 
-AttachedEffectManager.register(24, 'stuned', 583, ThingCategoryEffect, {
+AttachedEffectManager.register(24, 'shild wall', 583, ThingCategoryEffect, {
 	opacity = 1,
 	duration = 15000,
 	speed = 1.5,
 	offset = { -18, -23, false},
 	
+})
+
+AttachedEffectManager.register(25, 'might buff', '/images/game/effects/amight', ThingExternalTexture, {
+	opacity = 0.7,
+	duration = 600,
+	speed = 0.7,
+    size = { 35, 35 },
+    offset = { 0, 0, true },
+	bounce = { 15, 70, 2800 },
+
+})
+
+AttachedEffectManager.register(26, 'might Aura', '/images/game/effects/animated2', ThingExternalTexture, {
+    size = { 64, 64 },
+    offset = { 13, 14 }
 })

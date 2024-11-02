@@ -23,7 +23,11 @@ local function onCreate(creature)
     end
 
     widget.manaBar:setVisible(creature:isLocalPlayer())
-
+	widget:setImageSource('/images/monsterbar/basic_monster_background2')
+	widget:setImageSize({
+            width = 50,
+            height = 12
+        })
     creature:setWidgetInformation(widget)
 end
 
