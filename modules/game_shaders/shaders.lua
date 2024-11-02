@@ -99,7 +99,9 @@ OUTFIT_SHADERS = { {
 	{name = 'chess',  frag = 'shaders/fragment/chess.frag', drawColor = false},
 	{name = 'ripple',  frag = 'shaders/fragment/ripple.frag', drawColor = false},
 	{name = 'magnetic',  frag = 'shaders/fragment/magnetic.frag', drawColor = true},
-
+	
+	--monster shaders
+	{name = 'Monster Might', frag = 'shaders/fragment/monster_might.frag'},
 
 
  }
