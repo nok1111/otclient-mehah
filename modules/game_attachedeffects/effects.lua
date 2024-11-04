@@ -147,12 +147,12 @@ AttachedEffectManager.register(11, 'Bat', 307, ThingCategoryCreature, {
 
 AttachedEffectManager.register(12, 'stun jump', 32, ThingCategoryEffect, {
 
-	duration = 800,
+	duration = 750,
     disableWalkAnimation = true,
 
     onAttach = function(effect, owner)
-        owner:setBounce(0, 65, 800)
-        effect:setBounce(0, 65, 800)
+        owner:setBounce(0, 120, 2200)
+        effect:setBounce(0, 120, 2200)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setBounce(0, 0)
