@@ -40,8 +40,8 @@ AttachedEffectManager.register(2, 'Bat Wings', 307, ThingCategoryCreature, {
     end
 })
 
-AttachedEffectManager.register(3, 'Angel Light', 50, ThingCategoryEffect, {
-    opacity = 0.5,
+AttachedEffectManager.register(3, 'Angel Light', 605, ThingCategoryEffect, {
+    opacity = 0.8,
     drawOnUI = false
 })
 
@@ -91,12 +91,12 @@ AttachedEffectManager.register(6, 'Lake Monster', 34, ThingCategoryEffect, {
     end
 })
 
-AttachedEffectManager.register(7, 'Pentagram Aura', '/images/game/effects/pentagram', ThingExternalTexture, {
+AttachedEffectManager.register(107, 'Pentagram Aura', '/images/game/effects/pentagram', ThingExternalTexture, {
     size = { 128, 128 },
     offset = { 50, 45 }
 })
 
-AttachedEffectManager.register(8, 'Ki', '/images/game/effects/ki', ThingExternalTexture, {
+AttachedEffectManager.register(108, 'Ki', '/images/game/effects/ki', ThingExternalTexture, {
     size = { 140, 110 },
     offset = { 60, 75, true }
 })
@@ -321,4 +321,67 @@ AttachedEffectManager.register(25, 'might buff', '/images/game/effects/amight', 
 AttachedEffectManager.register(26, 'might Aura', '/images/game/effects/animated2', ThingExternalTexture, {
     size = { 64, 64 },
     offset = { 13, 14 }
+})
+
+AttachedEffectManager.register(27, 'vortex (water wave)', 242, ThingCategoryEffect, {
+	duration = 3000,
+    size = { 128, 128 },
+    offset = { -22, -32 }
+})
+
+AttachedEffectManager.register(28, 'stun jump', 32, ThingCategoryEffect, {
+
+	duration = 3000,
+    disableWalkAnimation = true,
+
+    onAttach = function(effect, owner)
+        owner:setBounce(10, 15, 500)
+        effect:setBounce(20, 23, 2000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setBounce(0, 0)
+    end
+})
+
+AttachedEffectManager.register(29, 'holy form', 2288, ThingCategoryCreature, {
+    hideOwner = true,
+	duration = 15000,
+    speed = 1,
+    bounce = { 5, 7, 11000 },
+	disableWalkAnimation = true,
+	
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(662)
+        owner:getTile():addThing(e)
+		
+		
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(662)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(30, 'holy 4 Light', 0, 0, {
+
+	duration = 15000,
+    onAttach = function(effect, owner)
+        local angelLight = g_attachedEffects.getById(3)
+        local angelLight1 = angelLight:clone()
+        local angelLight2 = angelLight:clone()
+        local angelLight3 = angelLight:clone()
+        local angelLight4 = angelLight:clone()
+
+        angelLight1:setOffset(-50, 50, true)
+        angelLight2:setOffset(50, 50, true)
+        angelLight3:setOffset(50, -50, true)
+        angelLight4:setOffset(-50, -50, true)
+
+        effect:attachEffect(angelLight1)
+        effect:attachEffect(angelLight2)
+        effect:attachEffect(angelLight3)
+        effect:attachEffect(angelLight4)
+    end
 })
