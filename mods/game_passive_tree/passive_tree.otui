@@ -1,0 +1,65 @@
+MainWindow
+  id: passiveTreeWindow
+  !text: tr('Passive Tree')
+  size: 550 400
+  @onEscape: toggle()
+
+  TextList
+    id: statsPanel
+    vertical-scrollbar: statsScrollBar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.bottom: next.top
+    margin-bottom: 10
+    padding: 1
+    width: 150
+    focusable: false
+
+  Button
+    id: buttonCancel
+    !text: tr('Close')
+    width: 64
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: toggle()
+
+  Panel
+    id: treePanel
+    anchors.top: parent.top
+    anchors.left: statsPanel.right
+    anchors.right: parent.right
+    anchors.bottom: buttonCancel.top
+    margin-bottom: 10
+    
+    UIWidget
+      id: backgroundImage
+      anchors.fill: parent
+      image-source: /images/ui/passive_tree_bg
+      
+    Button
+      id: node1
+      !text: tr('HP +1')
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 20
+      size: 40 40
+      image-source: /images/ui/passive_node_red
+      @onClick: modules.game_passive_tree.applyPassiveTree("node1", 1)
+
+    Button
+      id: node2
+      !text: tr('MP +1')
+      anchors.top: prev.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 40
+      size: 40 40
+      image-source: /images/ui/passive_node_blue
+      @onClick: modules.game_passive_tree.applyPassiveTree("node2", 1)
+
+  VerticalScrollBar
+    id: statsScrollBar
+    anchors.top: statsPanel.top
+    anchors.bottom: statsPanel.bottom
+    anchors.right: statsPanel.right
+    step: 50
+    pixels-scroll: true
