@@ -38,23 +38,27 @@ MainWindow
       
     Button
       id: node1
-      !text: tr('HP +1')
+      !text: tr('HP +5\nLevel: 0')
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
       margin-top: 20
-      size: 40 40
+      size: 80 60
+      text-auto-resize: true
+      text-wrap: true
       image-source: /images/ui/passive_node_red
-      @onClick: modules.game_passive_tree.applyPassiveTree("node1", 1)
+      @onClick: modules.game_passive_tree.applyPassiveTree("node1")
 
     Button
       id: node2
-      !text: tr('MP +1')
+      !text: tr('MP +5\nLevel: 0')
       anchors.top: prev.bottom
       anchors.horizontalCenter: parent.horizontalCenter
       margin-top: 40
-      size: 40 40
+      size: 80 60
+      text-auto-resize: true
+      text-wrap: true
       image-source: /images/ui/passive_node_blue
-      @onClick: modules.game_passive_tree.applyPassiveTree("node2", 1)
+      @onClick: modules.game_passive_tree.applyPassiveTree("node2")
 
   VerticalScrollBar
     id: statsScrollBar
