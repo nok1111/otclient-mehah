@@ -201,16 +201,6 @@ MiniWindow
         background-color: red
 
     SkillButton
-      id: skillId0
-      SkillNameLabel
-        !text: tr('Fist Fighting')
-      SkillValueLabel
-      ImageSkill
-        image-source: /images/icons/icon_fist
-        image-size: 9 9
-      SkillPercentPanel
-
-    SkillButton
       id: skillId1
       SkillNameLabel
         !text: tr('Focus')
@@ -259,6 +249,17 @@ MiniWindow
         image-source: /images/icons/icon_shielding
         image-size: 9 9
       SkillPercentPanel
+
+    SkillButton
+      id: skillId0
+      SkillNameLabel
+        !text: tr('Luck')
+      SkillValueLabel
+      ImageSkill
+        image-source: /images/icons/icon_seasonalevent
+        image-size: 9 9
+      SkillPercentPanel
+
     HorizontalSeparator
       margin-top: 4
       margin-bottom: 2
