@@ -213,7 +213,7 @@ MiniWindow
     SkillButton
       id: skillId1
       SkillNameLabel
-        !text: tr('Club Fighting')
+        !text: tr('Focus')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_club
@@ -223,7 +223,7 @@ MiniWindow
     SkillButton
       id: skillId2
       SkillNameLabel
-        !text: tr('Sword Fighting')
+        !text: tr('Strenght')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_sword
@@ -233,7 +233,7 @@ MiniWindow
     SkillButton
       id: skillId3
       SkillNameLabel
-        !text: tr('Axe Fighting')
+        !text: tr('Arcana')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_axe
@@ -243,7 +243,7 @@ MiniWindow
     SkillButton
       id: skillId4
       SkillNameLabel
-        !text: tr('Distance Fighting')
+        !text: tr('Distance')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_distance
@@ -253,7 +253,7 @@ MiniWindow
     SkillButton
       id: skillId5
       SkillNameLabel
-        !text: tr('Shielding')
+        !text: tr('Defence')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_shielding
