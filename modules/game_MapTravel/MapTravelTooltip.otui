@@ -1,0 +1,31 @@
+
+
+MapTravelCostEntry < UIWidget
+  height: 25
+
+  UIWidget
+    id: icon
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent.left
+    size: 22 22
+    image-source: /images/topbuttons/commands
+
+  UIWidget
+    id: text
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: icon.right
+    margin-left: 5
+    text-auto-resize: true
+
+Panel
+  text-offset: 5 2
+  text-align: top
+  image-source: /images/ui/list1
+  image-border: 7
+  size: 220 100
+  phantom: true
+  padding: 15
+  layout:
+    type: verticalBox
+    fit-children: true
+    spacing: 0
