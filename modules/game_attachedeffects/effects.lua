@@ -385,3 +385,11 @@ AttachedEffectManager.register(30, 'holy 4 Light', 0, 0, {
         effect:attachEffect(angelLight4)
     end
 })
+
+AttachedEffectManager.register(31, 'quest marker', 669, ThingCategoryEffect, {
+    speed = 0.7,
+    size = { 5, 5 },
+    offset = { 35, 35, true },
+    bounce = { 0, 5, 10000 },
+    --shader = 'Rainbow',
+})
