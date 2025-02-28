@@ -151,7 +151,7 @@ function MapTravel.updateMap()
 		else
 			if nodeConfig.nameId == MapTravel.currentNodeNameId then
 				nodeImage = "images/nodes/current/" .. nodeConfig.nameId
-				nodeEnabled = false
+				nodeEnabled = true
 				nodeVisible = true
 			else
 				nodeImage = "images/nodes/normal/" .. nodeConfig.nameId
