@@ -47,6 +47,7 @@ Module
     - game_tasklist
     - game_crafting
     - game_buffs
+    - game_creatureinformation
 
   @onLoad: init()
   @onUnload: terminate()
