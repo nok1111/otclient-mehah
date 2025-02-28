@@ -1,17 +1,17 @@
 AskWidget < MainWindow
   size: 200 100
-  draggable: false
+  draggable: true
   !text: tr('Delete task')
   image-source: /images/ui/miniwindow
 
   Label
-    !text: tr('Are You sure about this?')
+    !text: tr('Are you sure?')
     size: 200 34
     text-align: center
     anchors.top: parent.top
     anchors.right: parent.right
     anchors.left: parent.left
-    margin-top: -10
+    margin-top: 1
     color: #ff3333
 
   Button
@@ -47,7 +47,7 @@ RewardItem < UIWidget
     anchors.left: prev.right
     margin-top: 10
     margin-left: 5
-    color: #ff3333
+    color: white
 
   Label
     id: rewardItemName
@@ -56,10 +56,10 @@ RewardItem < UIWidget
     anchors.left: prev.right
     margin-top: 0
     margin-left: 3
-    color: #ff3333
+    color: white
 
 TaskRecord < UIWidget
-  image-source: /images/ui/task_item
+  image-source: /images/taskList/task_item
   width: 256
   height: 40
   @onClick: modules.game_tasklist.onTaskClick(self)
@@ -90,7 +90,7 @@ TaskRecord < UIWidget
     text-align: center
 
 TaskRewardsPanel < Panel
-  size: 270 160
+  size: 270 230
 
   ScrollablePanel
     id: rewardItemsPanel
@@ -107,8 +107,8 @@ TaskRewardsPanel < Panel
   VerticalScrollBar
     id: rewardListScrollBar
     anchors.top: parent.top
-    anchors.bottom: parent.bottom
     anchors.right: parent.right
+    height: 185
     step: 14
     pixels-scroll: true
 
@@ -139,7 +139,6 @@ TaskListPanel < Panel
 TaskDescription < UIWidget
   size: 270 420
   draggable: false
-  background: #00000066
 
   Label
     !text: tr('Task description:')
@@ -149,8 +148,9 @@ TaskDescription < UIWidget
 
   Label
     id: taskDescription
-    size: 270 20
+    size: 260 20
     anchors.top: parent.top
+    anchors.left: parent.left
     color: #3396ff
     text-wrap: true
     margin-top: 15
@@ -160,7 +160,7 @@ TaskDescription < UIWidget
     !text: tr('Objectives: ')
     anchors.top: prev.bottom
     anchors.left: parent.left
-    margin-top: 2
+    margin-top: 5
 
   Label
     id: monsterGoals
@@ -272,18 +272,8 @@ MainWindow
   image-source: /images/ui/miniwindow
   width: 300
   height: 700
-  draggable: false
+  draggable: true
   @onEscape: hide()
-
-  UIWidget
-    id: listTopOverlay
-    image-source: /images/taskList/top_overlay
-    width: 300
-    height: 36
-    anchors.top: parent.top
-    anchors.left: parent.left
-    margin-top: -44
-    margin-left: -15
 
   TaskListPanel
     id: taskList

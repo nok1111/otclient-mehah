@@ -21,65 +21,65 @@ local deleteButton = nil
 
 function printOutTask(tmpTaskList)
     for i = 1, #tmpTaskList, 1 do
-        print("Task number: "..tostring(tmpTaskList[i].taskNumber))
-        print("Task name: "..tostring(tmpTaskList[i].taskName))
-        print("Task description: "..tostring(tmpTaskList[i].taskDesc))
+        --print("Task number: "..tostring(tmpTaskList[i].taskNumber))
+        --print("Task name: "..tostring(tmpTaskList[i].taskName))
+        --print("Task description: "..tostring(tmpTaskList[i].taskDesc))
 
         if tmpTaskList[i].taskGoals then
-            print("\tTask goals:")
+            --print("\tTask goals:")
             if tmpTaskList[i].taskGoals.monsters then
                 for j = 1, #tmpTaskList[i].taskGoals.monsters, 1 do
-                    print("\tMonster name: "..tostring(tmpTaskList[i].taskGoals.monsters[j].name))
-                    print("\tMonster id: "..tostring(tmpTaskList[i].taskGoals.monsters[j].spriteId))
+                    --print("\tMonster name: "..tostring(tmpTaskList[i].taskGoals.monsters[j].name))
+                    --print("\tMonster id: "..tostring(tmpTaskList[i].taskGoals.monsters[j].spriteId))
                 end
             end
             if tmpTaskList[i].taskGoals.items then
                 for j = 1, #tmpTaskList[i].taskGoals.items, 1 do
-                    print("\tItem name: "..tostring(tmpTaskList[i].taskGoals.items[j].name))
-                    print("\tItem id: "..tostring(tmpTaskList[i].taskGoals.items[j].itemId))
+                    --print("\tItem name: "..tostring(tmpTaskList[i].taskGoals.items[j].name))
+                    --print("\tItem id: "..tostring(tmpTaskList[i].taskGoals.items[j].itemId))
                 end
             end
             if tmpTaskList[i].taskGoals.storages then
                 for j = 1, #tmpTaskList[i].taskGoals.storages, 1 do
-                    print("\tStorage name: "..tostring(tmpTaskList[i].taskGoals.storages[j].name))
-                    print("\tStorage id: "..tostring(tmpTaskList[i].taskGoals.storages[j].itemId))
+                    --print("\tStorage name: "..tostring(tmpTaskList[i].taskGoals.storages[j].name))
+                    --print("\tStorage id: "..tostring(tmpTaskList[i].taskGoals.storages[j].itemId))
                 end
             end
         end
-        print("Task goal cnt: "..tostring(tmpTaskList[i].taskGoalCnt))
-        print("Task min level: "..tostring(tmpTaskList[i].taskMinLvl))
-        print("Task max level: "..tostring(tmpTaskList[i].taskMaxLvl))
-        print("Task can be repeat: "..tostring(tmpTaskList[i].taskRepeat))
-        print("Task state: "..tostring(tmpTaskList[i].taskState))
-        print("Task counter state: "..tostring(tmpTaskList[i].taskCurrentCnt))
+        --print("Task goal cnt: "..tostring(tmpTaskList[i].taskGoalCnt))
+        --print("Task min level: "..tostring(tmpTaskList[i].taskMinLvl))
+        --print("Task max level: "..tostring(tmpTaskList[i].taskMaxLvl))
+        --print("Task can be repeat: "..tostring(tmpTaskList[i].taskRepeat))
+        --print("Task state: "..tostring(tmpTaskList[i].taskState))
+        --print("Task counter state: "..tostring(tmpTaskList[i].taskCurrentCnt))
         if tmpTaskList[i].taskRewards then
-            print("\tTask rewards:")
+            --print("\tTask rewards:")
             if tmpTaskList[i].taskRewards.exp then
-                print("\tTask exp reward: "..tostring(tmpTaskList[i].taskRewards.exp))
+                --print("\tTask exp reward: "..tostring(tmpTaskList[i].taskRewards.exp))
             end
             if tmpTaskList[i].taskRewards.items then
                 for j = 1, #tmpTaskList[i].taskRewards.items, 1 do
-                    print("\tReward name: "..tostring(tmpTaskList[i].taskRewards.items[j].name))
-                    print("\tReward cid: "..tostring(tmpTaskList[i].taskRewards.items[j].itemCid))
-                    print("\tReward sid: "..tostring(tmpTaskList[i].taskRewards.items[j].itemSid))
-                    print("\tReward cnt: "..tostring(tmpTaskList[i].taskRewards.items[j].itemCnt))
+                    --print("\tReward name: "..tostring(tmpTaskList[i].taskRewards.items[j].name))
+                    --print("\tReward cid: "..tostring(tmpTaskList[i].taskRewards.items[j].itemCid))
+                    --print("\tReward sid: "..tostring(tmpTaskList[i].taskRewards.items[j].itemSid))
+                    --print("\tReward cnt: "..tostring(tmpTaskList[i].taskRewards.items[j].itemCnt))
                 end
             end
             if tmpTaskList[i].taskRewards.outfits then
                 for j = 1, #tmpTaskList[i].taskRewards.outfits, 1 do
-                    print("\tOutfit name: "..tostring(tmpTaskList[i].taskRewards.outfits[j].name))
-                    print("\tOutfit looktype: "..tostring(tmpTaskList[i].taskRewards.outfits[j].lookType))
+                    --print("\tOutfit name: "..tostring(tmpTaskList[i].taskRewards.outfits[j].name))
+                    --print("\tOutfit looktype: "..tostring(tmpTaskList[i].taskRewards.outfits[j].lookType))
                 end
             end
         end
-				print("Task zone: "..tostring(tmpTaskList[i].taskZone))
-				print("Task Source: "..tostring(tmpTaskList[i].taskSourceNpc))
-				print("Task Hint: "..tostring(tmpTaskList[i].taskHintNpc))
+				--print("Task zone: "..tostring(tmpTaskList[i].taskZone))
+				--print("Task Source: "..tostring(tmpTaskList[i].taskSourceNpc))
+				--print("Task Hint: "..tostring(tmpTaskList[i].taskHintNpc))
     end
 end
 
 function parseIncomingTaskList(buffer)
-    print("buffer:"..tostring(buffer))
+    --print("buffer:"..tostring(buffer))
     local parseTaskList = {}
     local mainSplit = {}
     for split in string.gmatch(buffer, "(.-)|") do
@@ -190,8 +190,8 @@ function onExtendedTaskList(protocol, opcode, buffer)
           end
       end
     end
-    local widgetTitle = "Quest Log ("
-    widgetTitle = widgetTitle .. tostring(#localTaskList) .. "/15)"
+    local widgetTitle = "Adventure Log ("
+    widgetTitle = widgetTitle .. tostring(#localTaskList) .. "/" .. tostring(#localTaskList) .. ")"
     taskListsWindow:setText(widgetTitle)
 end
 
@@ -213,13 +213,22 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
     npcTaskList = {}
     npcTaskList = parseIncomingTaskList(buffer)
 
+    -- If no tasks are available, hide the NPC Task Window
+    if #npcTaskList == 0 then
+        if npcTaskWidget then
+            npcTaskWidget:destroy()
+            npcTaskWidget = nil
+        end
+        return
+    end
+
     if npcTaskWidget ~= nil then
         npcTaskWidget:destroy()
     end
 
     npcTaskWidget = g_ui.createWidget('NpcTaskListWidget', modules.game_interface.getRootPanel())
     local posWidget = {x = 600, y = 300}
-    npcTaskWidget:setText("World Quests")
+    npcTaskWidget:setText("Main Story Quests")
     npcTaskWidget:getChildById("acceptButton"):setText("Accept")
     npcTaskWidget:setPosition(posWidget)
     npcTaskWidget:show()
@@ -279,7 +288,7 @@ end
 function init()
     g_ui.importStyle('npc_tasklist')
 
-    taskListButton = modules.game_mainpanel.addStoreButton('taskListButton', tr('Quest List'), '/images/options/quests_large', toggle,
+   taskListButton = modules.game_mainpanel.addStoreButton('taskListButton', tr('Quest List'), '/images/options/quests_large', toggle,
         false, 8)
     taskListButton:setOn(false)
 
@@ -357,7 +366,7 @@ function yes()
         askWidget:destroy()
         askWidget = nil
     end
-    print("selected task do delete:"..tostring(currentSelectedTask))
+    -- print("selected task do delete:"..tostring(currentSelectedTask))
     local protocol = g_game.getProtocolGame()
     if protocol and currentSelectedTask > 0 then
       protocol:sendExtendedOpcode(ClientOpcodes.ClientDeleteTask, tostring(currentSelectedTask))
@@ -449,6 +458,8 @@ function UpdateNpcTaskDescription()
                 local rewardItem = g_ui.createWidget('RewardItem', npcRewardItemPanel)
                 table.insert(localRewardItemList, rewardItem)
                 rewardItem:getChildById('rewardItem'):setItemId(taskListToShow[npcSelectedTask].taskRewards.items[i].itemCid)
+                rewardItem:getChildById('rewardItem'):setVirtual(true)
+                rewardItem:getChildById('rewardItem'):setItemCount(taskListToShow[npcSelectedTask].taskRewards.items[i].itemCnt)
                 rewardItem:getChildById('rewardItemCnt'):setText("x " .. tostring(taskListToShow[npcSelectedTask].taskRewards.items[i].itemCnt))
                 rewardItem:getChildById('rewardItemName'):setText(taskListToShow[npcSelectedTask].taskRewards.items[i].name)
             end
@@ -461,8 +472,7 @@ end
 
 
 function acceptNpcTask()
-    print("npcSelectedTask:"..tostring(npcSelectedTask))
-    if npcSelectedTask and npcSelectedTask > 0 then -- Check if npcSelectedTask is not nil and > 0
+    if npcSelectedTask and npcSelectedTask > 0 then
         local taskListToShow = nil
         local buttonIdStr = ""
         if lastOpcode == ExtendedIds.NpcTaskList then
@@ -473,32 +483,33 @@ function acceptNpcTask()
             buttonIdStr = "npcRewardButton"
         end
 
-        -- Check if taskListToShow has the selected task
         if taskListToShow and taskListToShow[npcSelectedTask] then
             sendSelectTask(taskListToShow[npcSelectedTask].taskNumber)
-            local npcTaskListPanel = npcTaskWidget:recursiveGetChildById("npcTaskListPanel")
-            if npcTaskListPanel then -- Check if npcTaskListPanel is found
-                local button = npcTaskListPanel:recursiveGetChildById(buttonIdStr..tostring(npcSelectedTask))
-                if button then -- Check if the button is found
-                    npcTaskListPanel:removeChild(button)
-					npcTaskWidget:getChildById("acceptButton"):hide()
-                else
-                    print("Button not found: "..buttonIdStr..tostring(npcSelectedTask))
-                end
-            else
-                print("npcTaskListPanel not found")
-            end
-            npcTaskDescription:hide()
-            if npcTaskListPanel and npcTaskListPanel:hasChildren() then
-                --npcTaskWidget:getChildById("acceptButton"):show()
-            else
-                npcTaskWidget:getChildById("acceptButton"):hide()
-            end
-        else
-            print("Selected task not found in the task list.")
+            table.remove(taskListToShow, npcSelectedTask)
         end
-    else
-        print("No task selected.")
+        
+        if npcTaskWidget then
+            local npcTaskListPanel = npcTaskWidget:getChildById("npcTaskList"):recursiveGetChildById('npcTaskListPanel')
+            local button = npcTaskListPanel:recursiveGetChildById(buttonIdStr..tostring(npcSelectedTask))
+            if button then
+                npcTaskListPanel:removeChild(button)
+            end
+        end
+        
+        if #taskListToShow == 1 then
+            sendSelectTask(taskListToShow[1].taskNumber)
+            table.remove(taskListToShow, 1)
+        end
+        
+        if #taskListToShow == 0 and npcTaskWidget then
+            npcTaskWidget:destroy()
+            npcTaskWidget = nil
+            
+            -- If we just finished rewards, check for new tasks
+            if lastOpcode == ExtendedIds.NpcRewardList and #npcTaskList > 0 then
+                onExtendedNpcTaskList(nil, ExtendedIds.NpcTaskList, npcTaskListBuffer)
+            end
+        end
     end
 end
 
@@ -510,10 +521,10 @@ function declineNpcTask()
 end
 
 function onTaskClick(widget)
-  print("Task clicked")
+  -- print("Task clicked")
   local taskName = widget:getChildById('taskName')
   local taskLevel = widget:getChildById('taskLevel')
-  print(tostring(taskName:getText()).."|"..tostring(taskLevel:getText()).."|"..tostring(widget:getId()).."|"..string.sub(widget:getId(), 5))
+  -- print(tostring(taskName:getText()).."|"..tostring(taskLevel:getText()).."|"..tostring(widget:getId()).."|"..string.sub(widget:getId(), 5))
   local taskNumber = tonumber(string.sub(widget:getId(), 5))
   
   for i = #localRewardItemList, 1, -1 do
@@ -553,6 +564,8 @@ function updateTaskDescription(taskNumber)
         local rewardItem = g_ui.createWidget('RewardItem', taskRewardItemPanel)
         table.insert(localRewardItemList, rewardItem)
         rewardItem:getChildById('rewardItem'):setItemId(localTaskList[taskNumber].taskRewards.items[i].itemCid)
+        rewardItem:getChildById('rewardItem'):setVirtual(true)
+        rewardItem:getChildById('rewardItem'):setItemCount(localTaskList[taskNumber].taskRewards.items[i].itemCnt)
         rewardItem:getChildById('rewardItemCnt'):setText("x " .. tostring(localTaskList[taskNumber].taskRewards.items[i].itemCnt))
         rewardItem:getChildById('rewardItemName'):setText(localTaskList[taskNumber].taskRewards.items[i].name)
       end
