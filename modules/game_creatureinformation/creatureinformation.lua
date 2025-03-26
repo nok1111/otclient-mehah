@@ -12,7 +12,9 @@ local npcTitles = {
 ["Alaistar"] = {title = "[Potion-Ressources]", color = "#e5f280"},
 ["Alesar"] = {title = "[Djinn Seller]", color = "#e5f280"},
 ["Alexander"] = {title = "[Magician Shop]", color = "#e5f280"},
-["Alice"] = {title = "[Blessing Seller]", color = "#e5f280", quest = true},
+
+--quests
+["Sheriff Gordon"] = {quest = true},
 
 }
 
@@ -43,6 +45,22 @@ local function setCreatureTitle(creature)
     local name = creature:getName()
     local titleFont = "verdana-11px-rounded"
 
+
+
+    --OFFSETS CODE
+
+     -- Default wings offset
+    local infoOffsetX = 0
+    local infoOffsetY = 0
+
+     if creature:getEmblem()  then
+        print(creature:getEmblem())
+    end
+    
+    --OFFSETS END
+
+
+
     -- Get the creature's existing widget
     local widget = creature:getWidgetInformation()
     if not widget then return end -- Safety check
@@ -72,10 +90,12 @@ local function setCreatureTitle(creature)
         creature:attachWidget(titleWidget)
 
     elseif creature:isNpc() and npcTitles[name] then
+
+        if npcTitles[name].title then
         titleWidget:setText(npcTitles[name].title)
         titleWidget:setBackgroundColor(npcTitles[name].color)
         creature:attachWidget(titleWidget)
-
+        end
         -- Add quest effect if applicable
         if npcTitles[name].quest then
             creature:attachEffect(g_attachedEffects.getById(31))

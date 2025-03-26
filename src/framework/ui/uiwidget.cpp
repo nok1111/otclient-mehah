@@ -30,6 +30,8 @@
 #include <framework/luaengine/luainterface.h>
 #include <framework/otml/otmlnode.h>
 #include <framework/platform/platformwindow.h>
+
+#include <framework/graphics/texturemanager.h>
 #include "framework/graphics/drawpoolmanager.h"
 #include "framework/graphics/shadermanager.h"
 
@@ -1367,6 +1369,9 @@ UIWidgetPtr UIWidget::recursiveGetChildByPos(const Point& childPos, bool wantsPh
     if (!containsPaddingPoint(childPos))
         return nullptr;
 
+    if (isPixelTesting() && isPixelTransparent(childPos))
+        return nullptr;
+
     for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
         const auto& child = (*it);
 
@@ -1374,7 +1379,7 @@ UIWidgetPtr UIWidget::recursiveGetChildByPos(const Point& childPos, bool wantsPh
             if (const auto& subChild = child->recursiveGetChildByPos(childPos, wantsPhantom))
                 return subChild;
 
-            if (wantsPhantom || !child->isPhantom())
+            else if (wantsPhantom || !child->isPhantom() && (!child->isPixelTesting() || !child->isPixelTransparent(childPos)))
                 return child;
         }
     }
@@ -1966,8 +1971,10 @@ bool UIWidget::propagateOnMouseEvent(const Point& mousePos, UIWidgetList& widget
 
     widgetList.emplace_back(static_self_cast<UIWidget>());
 
+    if (isPixelTesting() && isPixelTransparent(mousePos))
+        return false;
     if (!isPhantom())
-        ret = true;
+        return true;
     return ret;
 }
 
@@ -2042,4 +2049,29 @@ void UIWidget::removeOnDestroyCallback(const std::string& id)
     auto it = m_onDestroyCallbacks.find(id);
     if (it != m_onDestroyCallbacks.end())
         m_onDestroyCallbacks.erase(it);
+}
+
+void UIWidget::setPixelTesting(bool pixelTest)
+{
+    if (m_pixelTest == pixelTest)
+        return;
+
+    m_pixelTest = pixelTest;
+}
+
+bool UIWidget::isPixelTransparent(const Point& mousePos)
+{
+    if (!m_imageTexture || m_imageTexture->isEmpty()) {
+        return true;
+    }
+
+    if (!m_imageTexture->hasTransparentPixels()) {
+        g_textures.loadTextureTransparentPixels(m_imageSource);
+    }
+
+    int x = mousePos.x - m_rect.x();
+    int y = mousePos.y - m_rect.y();
+
+    uint32_t index = (y * m_imageTexture->getWidth() + x);
+    return m_imageTexture->isPixelTransparent(index);
 }

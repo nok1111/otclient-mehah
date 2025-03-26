@@ -74,20 +74,22 @@ TaskRecord < UIWidget
     margin-top: 5
 
   Label
-    id: taskName
-    size: 150 30
-    anchors.left: prev.right
-    anchors.top: parent.top
-    margin-top: 5
-    text-align: center
-
-  Label
     id: taskLevel
     size: 85 30
-    anchors.left: prev.right
+    anchors.left: parent.left
     anchors.top: parent.top
+    margin-left: 35
     margin-top: 5
-    text-align: center
+    text-align: left
+
+  Label
+    id: taskName
+    size: 150 30
+    anchors.left: taskLevel.right
+    anchors.top: parent.top
+    margin-left: 5
+    margin-top: 5
+    text-align: left
 
 TaskRewardsPanel < Panel
   size: 270 230
@@ -113,7 +115,7 @@ TaskRewardsPanel < Panel
     pixels-scroll: true
 
 TaskListPanel < Panel
-  width: 270
+  width: 350
   height: 200
 
   ScrollablePanel
@@ -270,38 +272,47 @@ MainWindow
   id: taskListWindow
   !text: tr('Quest Log')
   image-source: /images/ui/miniwindow
-  width: 300
-  height: 700
+  width: 750
+  height: 600
   draggable: true
   @onEscape: hide()
 
   TaskListPanel
     id: taskList
-    anchors.top: parent.top
     anchors.left: parent.left
-    margin-top: 0
-    margin-left: 0
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    width: 350
+    margin-top: 10
+    margin-left: 5
+    margin-bottom: 40
 
   TaskDescription
     id: taskDescriptionWnd
-    anchors.top: prev.bottom
-    anchors.left: parent.left
+    anchors.left: taskList.right
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
     margin-top: 10
-    margin-left: 0
+    margin-left: 10
+    margin-right: 5
+    margin-bottom: 40
 
   Button
     id: deleteButton
     !text: tr('Delete')
     anchors.bottom: parent.bottom
     anchors.left: parent.left
-    margin-bottom: -5
+    margin-bottom: 5
+    margin-left: 5
     @onClick: modules.game_tasklist.delete()
 
   Button
     id: buttonCancel
     width: 65
     !text: tr('Close')
-    anchors.right: parent.right
     anchors.bottom: parent.bottom
-    margin-bottom: -5
+    anchors.right: parent.right
+    margin-bottom: 5
+    margin-right: 5
     @onClick: hide()

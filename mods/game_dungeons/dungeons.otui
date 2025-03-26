@@ -1,0 +1,762 @@
+
+PlayersTableRow < TableRow
+  height: 19
+  focusable: false
+
+PlayersTableColumn < TableColumn
+  width: 80
+  text-align: center
+
+PlayersTableHeaderColumn < UIWidget
+  font: verdana-11px-antialised
+  color: #dfdfdf88
+  focusable: true
+  text-offset: 0 0
+  image-source: /images/ui/panel_flat
+  image-color: #999999
+  image-border: 1
+  focusable: false
+
+LeaderboardPanel < Panel
+  background-color: #000000CC
+  phantom: false
+
+  MiniPanel
+    id: internalSolo
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.right: parent.horizontalCenter
+    margin-right: 15
+    width: 350
+    text: Solo Leaderboard
+
+    Table
+      id: soloTable
+      anchors.fill: parent
+      focusable: false
+      table-data: soloTableData
+      row-style: PlayersTableRow
+      column-style: PlayersTableColumn
+      header-column-style: false
+      header-row-style: false
+
+      TableHeaderRow
+        id: header
+        height: 20
+        
+        PlayersTableHeaderColumn
+          !text: '#'
+          width: 33
+
+        PlayersTableHeaderColumn
+          !text: 'Name'
+          width: 228
+
+        PlayersTableHeaderColumn
+          !text: 'Time'
+          width: 82
+
+    TableData
+      id: soloTableData
+      anchors.fill: soloTable
+      padding: 1
+      padding-top: 20
+      vertical-scrollbar: soloTableScroll
+
+    VerticalScrollBar
+      id: soloTableScroll
+      anchors.top: soloTableData.top
+      anchors.bottom: soloTableData.bottom
+      anchors.left: soloTableData.right
+      step: 20
+      pixels-scroll: true
+  
+  MiniPanel
+    id: internalGroup
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent.horizontalCenter
+    margin-left: 15
+    width: 350
+    text: Group Leaderboard
+
+    Table
+      id: groupTable
+      anchors.fill: parent
+      focusable: false
+      table-data: groupTableData
+      row-style: PlayersTableRow
+      column-style: PlayersTableColumn
+      header-column-style: false
+      header-row-style: false
+
+      TableHeaderRow
+        id: header
+        height: 20
+        
+        PlayersTableHeaderColumn
+          !text: '#'
+          width: 33
+
+        PlayersTableHeaderColumn
+          !text: 'Name'
+          width: 228
+
+        PlayersTableHeaderColumn
+          !text: 'Time'
+          width: 82
+
+    TableData
+      id: groupTableData
+      anchors.fill: groupTable
+      padding: 1
+      padding-top: 20
+      vertical-scrollbar: groupTableScroll
+
+    VerticalScrollBar
+      id: groupTableScroll
+      anchors.top: groupTableData.top
+      anchors.bottom: groupTableData.bottom
+      anchors.left: groupTableData.right
+      step: 20
+      pixels-scroll: true
+
+  Label
+    id: diffculityLabel
+    text-auto-resize: true
+    anchors.right: internalGroup.right
+    anchors.left: internalSolo.left
+    anchors.bottom: internalSolo.top
+    text-align: center
+    margin-bottom: 20
+    shadow: true
+
+PartyEntry < Panel
+  height: 25
+  border: 1 #ffffff90
+
+  UIWidget
+    id: VocationalIcon
+    size: 19 19
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent.left
+    margin-left: 10
+    image-source: /images/dungeons/icons
+
+  Label
+    id: PlayerName
+    text-auto-resize: true
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: VocationalIcon.right
+    margin-left: 20
+    phantom: false
+
+  Label
+    id: PlayerLevel
+    text-auto-resize: true
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.right: parent.right
+    margin-right: 10
+    phantom: false
+
+MonsterEntry < Panel
+  height: 70
+  border: 1 #ffffff90
+
+  UICreature
+    id: creature
+    animate: true
+    size: 64 64
+    outfit-center: true
+    margin-left: 15
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent.left
+
+  Label
+    id: name
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: creature.right
+    margin-left: 5
+    text-auto-resize: true
+    text-wrap: true
+    phantom: false
+
+DungeonItem < UIItem
+  padding: 1
+  image-source: /images/ui/item
+  size: 34 34
+  font: verdana-11px-rounded
+  color: white
+  virtual: true
+
+LootItemEntry < UIWidget
+  border: 1 #ffffff90
+
+  Panel
+    id: itemPanel
+    anchors.top: parent.top
+    anchors.right: parent.right
+    anchors.left: parent.left
+    size: 32 32
+
+    UIItem
+      id: item
+      anchors.centerIn: parent
+      size: 32 32
+      virtual: true
+
+  Panel
+    id: chance
+    anchors.top: itemPanel.bottom
+    anchors.right: parent.right
+    anchors.left: parent.left
+    border: 1 #ffffff90
+    height: 16
+    margin-top: 0
+
+DungeonMiniPanel < Panel
+  text-offset: 0 2
+  text-align: top
+  image-source: /images/ui/miniwindow
+  image-border: 3
+  image-border-top: 22
+  padding-left: 5
+  padding-bottom: 2
+  padding-top: 20
+  padding-right: 4
+
+DungeonScrollablePanel < ScrollablePanel
+  text-offset: 0 2
+  text-align: top
+  image-source: /images/ui/window
+  image-border: 4
+  image-border-top: 23
+  padding: 4
+  padding-top: 20
+  padding-right: 18
+
+ChallengePanel < DungeonMiniPanel
+  height: 60
+  border: 1 #ffffff90
+  text-offset: 5 2
+  padding-top: 17
+
+  CheckBox
+    id: checkbox
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: -15
+    enabled: false
+
+  Label
+    id: description
+    anchors.fill: parent
+    text-wrap: true
+    text-auto-resize: true
+    margin: 3
+
+MainWindow
+  text: Dungeon
+  size: 910 650
+  text-offset: 0 2
+  text-align: top
+
+  UIWidget
+    id: banner
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 100
+    background: #555555
+    border: 1 #000000
+    margin-top: -10
+
+  Label
+    id: dungeonName
+    anchors.top: banner.bottom
+    anchors.horizontalCenter: banner.horizontalCenter
+    margin-top: 10
+    text-auto-resize: true
+    text: Rootkraken
+    shadow: true
+
+  DungeonMiniPanel
+    id: requirements
+    anchors.top: banner.bottom
+    anchors.left: parent.left
+    margin-top: 7
+    size: 222 185
+    margin-top: 10
+    text: Requirements
+
+    Label
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-left: 2
+      text: Level:
+      text-offset: 2 0
+
+      Label
+        id: levelRequirement
+        anchors.top: parent.top
+        anchors.right: parent.right
+        margin-right: 5
+        text-align: right
+        text-auto-resize: true
+        text: 100
+
+    Label
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-left: 2
+      text: Party:
+      text-offset: 2 0
+
+      Label
+        id: partyRequirement
+        anchors.top: parent.top
+        anchors.right: parent.right
+        margin-right: 5
+        text-align: right
+        text-auto-resize: true
+        text: 1-4
+
+    Label
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-left: 2
+      text: Gold:
+      text-offset: 2 0
+
+      Label
+        id: goldRequirement
+        anchors.top: parent.top
+        anchors.right: parent.right
+        margin-right: 5
+        text-align: right
+        text-auto-resize: true
+        text: 100.000.000
+
+    DungeonMiniPanel
+      id: quests
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 2
+      margin-left: 0
+      margin-right: 0
+      text: Quests
+      height: 55
+      padding-left: 8
+      padding-right: 8
+
+      Label
+        id: questsRequirement
+        anchors.fill: parent
+        text-auto-resize: true
+        text-wrap: true
+
+    UIWidget
+      id: noQuestsPanel
+      anchors.fill: quests
+      background-color: #00000090
+      phantom: false
+      text: No quests requirements
+      text-align: center
+      visible: false
+
+    DungeonMiniPanel
+      id: items
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 60
+      margin-top: 2
+      margin-left: 0
+      margin-right: 0
+      text: Items
+      padding-left: 5
+      padding-top: 20
+      layout:
+        type: grid
+        cell-size: 34 34
+        flow: true
+
+      DungeonItem
+        id: itemRequirement1
+      DungeonItem
+        id: itemRequirement2
+      DungeonItem
+        id: itemRequirement3
+      DungeonItem
+        id: itemRequirement4
+      DungeonItem
+        id: itemRequirement5
+      DungeonItem
+        id: itemRequirement6
+
+    UIWidget
+      id: noItemsPanel
+      anchors.fill: items
+      background-color: #00000090
+      phantom: false
+      text: No items requirements
+      text-align: center
+      visible: false
+
+  DungeonScrollablePanel
+    id: challenges
+    anchors.top: requirements.bottom
+    anchors.left: requirements.left
+    anchors.right: requirements.right
+    height: 165
+    margin-top: 5
+    margin-right: 12
+    padding-top: 17
+    padding-right: 5
+    padding-left: 7
+    padding-bottom: 5
+    text: Challenges
+    vertical-scrollbar: challengesScroll
+    layout:
+      type: verticalBox
+
+  VerticalScrollBar
+    id: challengesScroll
+    anchors.top: challenges.top
+    anchors.bottom: challenges.bottom
+    anchors.left: challenges.right
+    step: 24
+    pixels-scroll: true
+
+  UIWidget
+    id: noChallangesPanel
+    anchors.fill: challenges
+    background-color: #00000090
+    phantom: false
+    text: No challenges available
+    text-align: center
+    visible: false
+
+  UIWidget
+    image-source: /images/dungeons/tooltip
+    size: 12 12
+    anchors.top: challenges.top
+    anchors.left: challenges.left
+    margin-top: 2
+    margin-left: 2
+    tooltip: Challenges are dungeon achievements that reward challenge points
+
+  DungeonScrollablePanel
+    id: party
+    anchors.top: challenges.bottom
+    anchors.left: requirements.left
+    anchors.right: requirements.right
+    height: 100
+    margin-top: 5
+    margin-right: 12
+    text: Party
+    padding-top: 17
+    padding-right: 5
+    padding-left: 7
+    padding-bottom: 5
+    vertical-scrollbar: partyMembersScroll
+    layout:
+      type: verticalBox
+
+  VerticalScrollBar
+    id: partyMembersScroll
+    anchors.top: party.top
+    anchors.bottom: party.bottom
+    anchors.left: party.right
+    step: 24
+    pixels-scroll: true
+
+  UIWidget
+    id: noPartyPanel
+    anchors.fill: party
+    background-color: #00000090
+    phantom: false
+    text: No party available
+    text-align: center
+    visible: false
+
+  Button
+    id: queueButton
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 50
+    text: Join
+
+  Label
+    id: queueStatus
+    text-auto-resize: true
+    anchors.bottom: queueButton.top
+    anchors.horizontalCenter: queueButton.horizontalCenter
+    margin-bottom: 5
+
+  UIWidget
+    id: difficulty1
+    image-source: /images/dungeons/difficulty1
+    anchors.top: dungeonName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: -30
+    image-pixel-test: true
+    phantom: false
+    $hover !checked:
+      image-source: /images/dungeons/difficulty1-hover
+    $checked:
+      image-source: /images/dungeons/difficulty1-pressed
+
+  UIWidget
+    id: difficulty1Lock
+    image-source: /images/dungeons/difficulty1-lock
+    anchors.top: dungeonName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: -30
+    image-pixel-test: true
+    phantom: false
+    opacity: 0.6
+    visible: false
+
+  UIWidget
+    id: difficulty2
+    image-source: /images/dungeons/difficulty2
+    anchors.top: dungeonName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: -30
+    image-pixel-test:  true
+    phantom: false
+    $hover !checked:
+      image-source: /images/dungeons/difficulty2-hover
+    $checked:
+      image-source: /images/dungeons/difficulty2-pressed
+
+  UIWidget
+    id: difficulty2Lock
+    image-source: /images/dungeons/difficulty2-lock
+    anchors.top: dungeonName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: -30
+    image-pixel-test: true
+    phantom: false
+    opacity: 0.6
+    visible: false
+
+  UIWidget
+    id: difficulty3
+    image-source: /images/dungeons/difficulty3
+    anchors.top: dungeonName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: -30
+    image-pixel-test: true
+    phantom: false
+    $hover !checked:
+      image-source: /images/dungeons/difficulty3-hover
+    $checked:
+      image-source: /images/dungeons/difficulty3-pressed
+
+  UIWidget
+    id: difficulty3Lock
+    image-source: /images/dungeons/difficulty3-lock
+    anchors.top: dungeonName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: -30
+    image-pixel-test: true
+    phantom: false
+    opacity: 0.6
+    visible: false
+
+  UIWidget
+    id: difficulty4
+    image-source: /images/dungeons/difficulty4
+    anchors.top: dungeonName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: -30
+    image-pixel-test: true
+    phantom: false
+    $hover !checked:
+      image-source: /images/dungeons/difficulty4-hover
+    $checked:
+      image-source: /images/dungeons/difficulty4-pressed
+
+  UIWidget
+    id: difficulty4Lock
+    image-source: /images/dungeons/difficulty4-lock
+    anchors.top: dungeonName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: -30
+    image-pixel-test: true
+    phantom: false
+    opacity: 0.6
+    visible: false
+
+  UIWidget
+    id: difficulty5
+    image-source: /images/dungeons/difficulty5
+    anchors.top: dungeonName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: -30
+    image-pixel-test: true
+    phantom: false
+    $hover !checked:
+      image-source: /images/dungeons/difficulty5-hover
+    $checked:
+      image-source: /images/dungeons/difficulty5-pressed
+
+  UIWidget
+    id: difficulty5Lock
+    image-source: /images/dungeons/difficulty5-lock
+    anchors.top: dungeonName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: -30
+    image-pixel-test: true
+    phantom: false
+    opacity: 0.6
+    visible: false
+
+  UIWidget
+    id: difficulty6
+    image-source: /images/dungeons/difficulty6
+    anchors.top: dungeonName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: -30
+    image-pixel-test:  true
+    phantom: false
+    $hover !checked:
+      image-source: /images/dungeons/difficulty6-hover
+    $checked:
+      image-source: /images/dungeons/difficulty6-pressed
+
+  UIWidget
+    id: difficulty6Lock
+    image-source: /images/dungeons/difficulty6-lock
+    anchors.top: dungeonName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: -30
+    image-pixel-test: true
+    phantom: false
+    opacity: 0.6
+    visible: false
+
+  DungeonScrollablePanel
+    id: monsters
+    anchors.top: banner.bottom
+    margin-top: 7
+    margin-right: 12
+    anchors.right: parent.right
+    anchors.bottom: challenges.bottom
+    width: 221
+    margin-bottom: 24
+    text: Monsters
+    padding-bottom: 5
+    padding-left: 5
+    padding-right: 5
+    padding-top: 20
+    vertical-scrollbar: monstersScroll
+    layout:
+      type: verticalBox
+
+  VerticalScrollBar
+    id: monstersScroll
+    anchors.top: monsters.top
+    anchors.bottom: monsters.bottom
+    anchors.left: monsters.right
+    step: 24
+    pixels-scroll: true
+
+  DungeonScrollablePanel
+    id: loot
+    anchors.top: monsters.bottom
+    anchors.left: monsters.left
+    anchors.right: monsters.right
+    height: 124
+    margin-top: 5
+    text: Loot
+    vertical-scrollbar: lootScroll
+    padding-bottom: 5
+    padding-left: 14
+    padding-right: 5
+    padding-top: 20
+    layout:
+      type: grid
+      cell-size: 46 46
+      cell-spacing: 4
+      flow: true
+
+  VerticalScrollBar
+    id: lootScroll
+    anchors.top: loot.top
+    anchors.bottom: loot.bottom
+    anchors.left: loot.right
+    step: 24
+    pixels-scroll: true
+
+  UIWidget
+    id: noLootPanel
+    anchors.fill: loot
+    background-color: #00000090
+    phantom: false
+    text: No extra boss loot
+    text-align: center
+    visible: false
+
+  UIWidget
+    id: lootTooltip
+    image-source: /images/dungeons/tooltip
+    size: 12 12
+    anchors.top: loot.top
+    anchors.left: loot.left
+    margin-top: 2
+    margin-left: 2
+
+  Panel
+    id: bottomPanel
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    anchors.left: parent.left
+    margin-bottom: -5
+    image-source: /images/ui/panel_bottom
+    height: 35
+    image-border: 9
+
+    FlatPanel
+      id: challengePoints
+      height: 20
+      width: 100
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.left: parent.left
+      margin-left: 5
+
+      UIWidget
+        id: challengePointsIcon
+        size: 12 12
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        margin-left: 10
+        image-source: /images/dungeons/icons
+        tooltip: Challenge Points
+
+    Button
+      id: leaderboardButton
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.left: challengePoints.right
+      margin-left: 15
+      text: Leaderboard
+      width: 100
+
+    Button
+      id: closeButton
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.right: parent.right
+      margin-right: 5
+      text: Close
+      width: 60
+  
+  LeaderboardPanel
+    id: leaderboardPanel
+    size: 910 650
+    anchors.centerIn: parent
+    margin-bottom: 10
+    visible: false

@@ -17,7 +17,7 @@ local skillIdToUI = {
     [SKILL_MINING] = "Mining",
     [SKILL_HERBALISM] = "Herbalism",
     [SKILL_FISHING] = "Fishing",
-    [SKILL_RUNE_SEEKER] = "RuneSeeker",
+    [SKILL_RUNE_SEEKER] = "Woodcutting",
 }
 
 

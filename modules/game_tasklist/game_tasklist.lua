@@ -18,6 +18,7 @@ local npcTaskWidget = nil
 local npcTaskList = {}
 local npcRewardList = {}
 local deleteButton = nil
+local MaxTaskList = 15
 
 function printOutTask(tmpTaskList)
     for i = 1, #tmpTaskList, 1 do
@@ -191,7 +192,7 @@ function onExtendedTaskList(protocol, opcode, buffer)
       end
     end
     local widgetTitle = "Adventure Log ("
-    widgetTitle = widgetTitle .. tostring(#localTaskList) .. "/" .. tostring(#localTaskList) .. ")"
+    widgetTitle = widgetTitle .. tostring(#localTaskList) .. "/" .. MaxTaskList .. ")"
     taskListsWindow:setText(widgetTitle)
 end
 

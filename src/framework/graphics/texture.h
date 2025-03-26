@@ -61,6 +61,14 @@ public:
     virtual bool isAnimatedTexture() const { return false; }
     bool setupSize(const Size& size);
 
+    void loadTransparentPixels(const ImagePtr& image);
+    bool hasTransparentPixels() const {
+        return m_transparentPixels.size() > 0;
+    }
+    bool isPixelTransparent(uint32_t index) {
+        return m_transparentPixels[index] == 1;
+    }
+
 protected:
     void bind();
     void setupWrap() const;
@@ -69,6 +77,8 @@ protected:
     void setupTranformMatrix();
     void setupPixels(int level, const Size& size, uint8_t* pixels, int channels = 4, bool compress = false) const;
     void generateHash() { m_hash = stdext::hash_int(m_id > 0 ? m_id : m_uniqueId); }
+
+
 
     const uint32_t m_uniqueId;
 
@@ -81,6 +91,8 @@ protected:
     Matrix3 m_transformMatrix = DEFAULT_MATRIX3;
 
     ImagePtr m_image;
+
+    std::vector<char> m_transparentPixels; // vector of chars is better than vector of bools, silly C++
 
     enum Prop : uint16_t
     {

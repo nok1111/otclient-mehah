@@ -1,0 +1,95 @@
+Panel
+  id: TalentTooltip
+  text-offset: 0 2
+  text-align: top
+  image-source: /images/ui/miniwindow_gray
+  image-border: 1
+  size: 200 100
+  color: #D0A92D
+  phantom: true
+  padding: 15
+
+  UIWidget
+    id: healthIcon
+    size: 16 16
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-left: 5
+    margin-top: 5
+    image-source: /images/dungeons/icons
+
+  Label
+    id: healthLabel
+    anchors.top: healthIcon.top
+    anchors.left: healthIcon.right
+    margin-left: 5
+    text-auto-resize: true
+    shadow: true
+
+  UIWidget
+    id: damageIcon
+    size: 16 16
+    anchors.top: healthIcon.bottom
+    anchors.left: parent.left
+    margin-left: 5
+    margin-bottom: 5
+    image-source: /images/dungeons/icons
+
+  Label
+    id: damageLabel
+    anchors.top: damageIcon.top
+    anchors.left: damageIcon.right
+    margin-left: 5
+    text-auto-resize: true
+    shadow: true
+
+  UIWidget
+    id: expIcon
+    size: 16 16
+    anchors.top: damageIcon.bottom
+    anchors.left: parent.left
+    margin-left: 5
+    margin-bottom: 5
+    image-source: /images/dungeons/icons
+
+  Label
+    id: expLabel
+    anchors.top: expIcon.top
+    anchors.left: expIcon.right
+    margin-left: 5
+    text-auto-resize: true
+    shadow: true
+
+  UIWidget
+    id: goldIcon
+    size: 16 16
+    anchors.top: expIcon.bottom
+    anchors.left: parent.left
+    margin-left: 5
+    margin-bottom: 5
+    image-source: /images/dungeons/icons
+
+  Label
+    id: goldLabel
+    anchors.top: goldIcon.top
+    anchors.left: goldIcon.right
+    margin-left: 5
+    text-auto-resize: true
+    shadow: true
+
+  UIWidget
+    id: lootIcon
+    size: 16 16
+    anchors.top: goldIcon.bottom
+    anchors.left: parent.left
+    margin-left: 5
+    margin-bottom: 5
+    image-source: /images/dungeons/icons
+
+  Label
+    id: lootLabel
+    anchors.top: lootIcon.top
+    anchors.left: lootIcon.right
+    margin-left: 5
+    text-auto-resize: true
+    shadow: true

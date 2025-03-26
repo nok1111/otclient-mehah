@@ -393,3 +393,8 @@ AttachedEffectManager.register(31, 'quest marker', 669, ThingCategoryEffect, {
     bounce = { 0, 5, 10000 },
     --shader = 'Rainbow',
 })
+
+AttachedEffectManager.register(32, 'might Aura', '/images/game/effects/red_spin', ThingExternalTexture, {
+    size = { 68, 68 },
+    offset = { 13, 14, false }
+})

@@ -107,7 +107,9 @@ protected:
     OTMLNodePtr m_style;
 
     stdext::map<std::string, UIWidgetPtr> m_childrenById;
+    stdext::boolean<false> m_pixelTest;
     std::unordered_map<std::string, std::function<void()>> m_onDestroyCallbacks;
+
 
     Timer m_clickTimer;
     Fw::FocusReason m_lastFocusReason{ Fw::ActiveFocusReason };
@@ -175,6 +177,7 @@ public:
     void setAutoFocusPolicy(Fw::AutoFocusPolicy policy);
     void setAutoRepeatDelay(int delay) { m_autoRepeatDelay = delay; }
     void setVirtualOffset(const Point& offset);
+    void setPixelTesting(bool pixelTest);
 
     void setOnHtml(bool v) { setProp(PropOnHTML, v); }
     bool isOnHtml() { return hasProp(PropOnHTML); }
@@ -325,6 +328,9 @@ public:
     bool isClipping() { return hasProp(PropClipping); }
     bool isDestroyed() { return hasProp(PropDestroyed); }
     bool isFirstOnStyle() { return hasProp(PropFirstOnStyle); }
+
+    bool isPixelTesting() { return m_pixelTest; }
+    bool isPixelTransparent(const Point& mousePos);
 
     bool isFirstChild() { return m_parent && m_childIndex == 1; }
     bool isLastChild() { return m_parent && m_childIndex == static_cast<int32_t>(m_parent->m_children.size()); }
