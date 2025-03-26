@@ -32,7 +32,6 @@ AskWidget < MainWindow
     margin-bottom: -5
     @onClick: modules.game_tasklist.no()
 
-
 RewardItem < UIWidget
   size: 218 34
 
@@ -139,63 +138,113 @@ TaskListPanel < Panel
     pixels-scroll: true
 
 TaskDescription < UIWidget
-  size: 270 420
+  size: 330 420
   draggable: false
+  image-source: /images/ui/passive_tree_bg
+
+  Item
+    id: descIcon
+    size: 16 16
+    image-source: /images/icons/icon_misc
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 5
+    margin-left: 5
 
   Label
     !text: tr('Task description:')
-    size: 270 30
+    anchors.left: descIcon.right
     anchors.top: parent.top
+    anchors.right: parent.right
+    height: 20
     text-wrap: true
+    margin-left: 5
+    margin-top: 5
 
   Label
     id: taskDescription
-    size: 260 20
-    anchors.top: parent.top
+    anchors.top: prev.bottom
     anchors.left: parent.left
+    anchors.right: parent.right
     color: #3396ff
     text-wrap: true
-    margin-top: 15
+    text-auto-resize: true
+    margin-left: 5
+    margin-top: 2
+    margin-bottom: 5
+
+  Item
+    id: objectivesIcon
+    size: 16 16
+    image-source: /images/icons/show_gui_help_grey
+    anchors.left: parent.left
+    anchors.top: taskDescription.bottom
+    margin-left: 5
+    margin-top: 10
 
   Label
     id: taskObjectives
-    !text: tr('Objectives: ')
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    margin-top: 5
+    !text: tr('Objectives:')
+    anchors.left: objectivesIcon.right
+    anchors.top: objectivesIcon.top
+    anchors.right: parent.right
+    margin-left: 5
+    text-wrap: true
 
   Label
     id: monsterGoals
     anchors.top: taskObjectives.bottom
-    size: 270 30
+    anchors.left: parent.left
+    anchors.right: parent.right
     color: #3396ff
     visible: false
     text-wrap: true
+    text-auto-resize: true
+    margin-left: 5
+    margin-top: 5
 
   Label
     id: itemGoals
     anchors.top: taskObjectives.bottom
+    anchors.left: parent.left
     size: 270 30
     color: #3396ff
     visible: false
     text-wrap: true
+    text-auto-resize: true
+    margin-top: 5
+    margin-left: 5
 
   Label
     id: storageGoals
     anchors.top: taskObjectives.bottom
+    anchors.left: parent.left
     size: 270 30
     color: #3396ff
     visible: false
     text-wrap: true
+    text-auto-resize: true
+    margin-top: 5
+    margin-left: 5
+
+  Item
+    id: progressIcon
+    size: 20 20
+    anchors.top: storageGoals.bottom
+    image-source: /images/icons/wow_obj
+    anchors.left: parent.left
+    margin-top: 10
+    margin-left: 5
 
   Label
     id: itemProgress
     !text: tr('Progress:')
-    anchors.top: monsterGoals.bottom
-    anchors.left: parent.left
+    anchors.top: storageGoals.bottom
+    anchors.left: progressIcon.left
     width: 60
     visible: true
-    margin-top: 5
+    margin-top: 14
+    margin-left: 20
 
   Label
     id: itemCnt
@@ -203,13 +252,23 @@ TaskDescription < UIWidget
     anchors.left: prev.right
     width: 75
     color: #61f296
-    visible: false
+    margin-left: 5
+
+  Item
+    id: hintsIcon
+    size: 16 16
+    image-source: /images/icons/prey_no_bonus
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 10
+    margin-left: 5
 
   Label
-    !text: tr('Hints: ')
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    margin-top: 6
+    !text: tr('Hints:')
+    anchors.top: itemProgress.bottom
+    anchors.left: hintsIcon.left
+    margin-top: 10
+    margin-left: 20
 
   Label
     id: taskHint
@@ -218,11 +277,24 @@ TaskDescription < UIWidget
     anchors.left: prev.right
     color: #f69f32
     text-wrap: true
+    text-auto-resize: true
+    margin-left: 5
+
+  Item
+    id: zoneIcon
+    size: 16 16
+    image-source: /images/icons/wow_zone
+    anchors.left: parent.left
+    anchors.top: taskHint.bottom
+    margin-top: 10
+    margin-left: 5
 
   Label
-    !text: tr('Zone: ')
-    anchors.top: prev.bottom
-    anchors.left: parent.left
+    !text: tr('Zone:')
+    anchors.top: taskHint.bottom
+    anchors.left: zoneIcon.left
+    margin-top: 10
+    margin-left: 20
 
   Label
     id: taskZoneName
@@ -231,11 +303,23 @@ TaskDescription < UIWidget
     anchors.left: prev.right
     color: #32f6e6
     text-wrap: true
+    margin-left: 5
+
+  Item
+    id: sourceIcon
+    size: 16 16
+    image-source: /images/icons/wow_source
+    anchors.left: parent.left
+    anchors.top: taskZoneName.bottom
+    margin-top: 10
+    margin-left: 5
 
   Label
-    !text: tr('Source: ')
-    anchors.top: prev.bottom
-    anchors.left: parent.left
+    !text: tr('Source:')
+    anchors.top: taskZoneName.bottom
+    anchors.left: sourceIcon.left
+    margin-top: 10
+    margin-left: 20
 
   Label
     id: taskSource
@@ -244,29 +328,51 @@ TaskDescription < UIWidget
     anchors.left: prev.right
     color: #f69f32
     text-wrap: true
+    margin-left: 5
+
+  Item
+    id: rewardsIcon
+    size: 16 16
+    image-source: /images/icons/wow_loot
+    anchors.left: parent.left
+    anchors.top: taskSource.bottom
+    margin-top: 10
+    margin-left: 5
 
   Label
     !text: tr('Your rewards:')
-    anchors.top: prev.bottom
-    anchors.left: parent.left
+    anchors.top: taskSource.bottom
+    anchors.left: rewardsIcon.left
     margin-top: 10
+    margin-left: 20
 
   Label
     id: rewardExp
     size: 300 20
     anchors.top: prev.bottom
     anchors.left: parent.left
-    margin-bottom: 5
+    margin-top: 5
+    margin-left: 21
     color: #ffffff
 
   Label
     id: rewardOutfit
     size: 300 20
     anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 5
+    margin-left: 21
     color: #3396ff
 
   TaskRewardsPanel
     anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 5
+    margin-right: 5
+    min-width: 270
+    min-height: 185
 
 MainWindow
   id: taskListWindow
