@@ -398,3 +398,35 @@ AttachedEffectManager.register(32, 'might Aura', '/images/game/effects/red_spin'
     size = { 68, 68 },
     offset = { 13, 14, false }
 })
+
+AttachedEffectManager.register(33, 'disco ball', '/images/game/effects/disco_ball', ThingExternalTexture, {
+    speed = 0.7,
+    size = { 40, 40 },
+    offset = { 60, 60, true },
+    --shader = 'Rainbow',
+})
+
+AttachedEffectManager.register(34, 'black arrows', '/images/game/effects/arrows_black', ThingExternalTexture, {
+    size = { 90, 90 },
+    offset = { 30, 30, false }
+})
+
+AttachedEffectManager.register(35, 'green circle', '/images/game/effects/green', ThingExternalTexture, {
+    size = { 90, 90 },
+    offset = { 30, 30, false }
+})
+
+AttachedEffectManager.register(36, 'purple sharingan', '/images/game/effects/purple_sharingan', ThingExternalTexture, {
+    size = { 90, 90 },
+    offset = { 30, 30, false }
+})
+
+AttachedEffectManager.register(37, 'purple square', '/images/game/effects/purplesquare', ThingExternalTexture, {
+    size = { 55, 55 },
+    offset = { 15, 15, false }
+})
+
+AttachedEffectManager.register(38, 'red circle', '/images/game/effects/red_circle', ThingExternalTexture, {
+    size = { 90, 90 },
+    offset = { 30, 30, false }
+})
