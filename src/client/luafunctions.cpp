@@ -582,6 +582,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<Creature>("setWidgetInformation", &Creature::setWidgetInformation);
     g_lua.bindClassMemberFunction<Creature>("isFullHealth", &Creature::isFullHealth);
     g_lua.bindClassMemberFunction<Creature>("isCovered", &Creature::isCovered);
+    g_lua.bindClassMemberFunction<Creature>("setOutfitOffset", &Creature::setOutfitOffset);
 
 #ifndef BOT_PROTECTION
     g_lua.bindClassMemberFunction<Creature>("setText", &Creature::setText);

@@ -41,21 +41,52 @@ local debug = false
 local COVERED_COLOR = '#606060'
 local NPC_COLOR = '#66CCFF'
 
+
+-- The CORRECT way to get outfit ID in your client
+function Creature:getOutfitId()
+    local outfit = self:getOutfit()
+    return outfit and outfit.type or 0  -- In your version, the ID is in 'type'
+end
+
+local outfitOffsets = {
+    [2661] = {x = 32, y = 32},    -- Example: outfit ID 111
+    [2664] = {x = 32, y = 32},
+    [2624] = {x = 32, y = 32},
+
+    -- Add all your outfit IDs and their offsets here
+}
+
+-- Simple print function
+function printOutfitId(creature)
+    print("Outfit ID:", creature:getOutfitId())
+end
+
+
+
+function applyOutfitOffsets(creature)
+    local outfitId = creature:getOutfit() and creature:getOutfit().type or 0
+    local offsets = outfitOffsets[outfitId]
+    
+    if offsets then
+        creature:setOutfitOffset(offsets.x, offsets.y)
+        return true
+    end
+    return false
+end
+
 local function setCreatureTitle(creature)
     local name = creature:getName()
     local titleFont = "verdana-11px-rounded"
 
 
-
     --OFFSETS CODE
 
-     -- Default wings offset
-    local infoOffsetX = 0
-    local infoOffsetY = 0
+    printOutfitId(creature)
 
-     if creature:getEmblem()  then
-        print(creature:getEmblem())
+    if creature then
+        applyOutfitOffsets(creature)
     end
+
     
     --OFFSETS END
 

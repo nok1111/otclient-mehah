@@ -67,6 +67,9 @@ void Creature::draw(const Point& dest, bool drawThings, const LightViewPtr& /*li
     if (!canBeSeen() || !canDraw())
         return;
 
+    const int sprSize = g_gameConfig.getSpriteSize();
+    Point outfitOffset = Point(m_outfitOffset.x, m_outfitOffset.y);
+
     if (drawThings) {
         if (m_showTimedSquare) {
             g_drawPool.addBoundingRect(Rect(dest + (m_walkOffset - getDisplacement() + 2) * g_drawPool.getScaleFactor(), Size(28 * g_drawPool.getScaleFactor())), m_timedSquareColor, std::max<int>(static_cast<int>(2 * g_drawPool.getScaleFactor()), 1));
@@ -76,7 +79,7 @@ void Creature::draw(const Point& dest, bool drawThings, const LightViewPtr& /*li
             g_drawPool.addBoundingRect(Rect(dest + (m_walkOffset - getDisplacement()) * g_drawPool.getScaleFactor(), Size(g_gameConfig.getSpriteSize() * g_drawPool.getScaleFactor())), m_staticSquareColor, std::max<int>(static_cast<int>(2 * g_drawPool.getScaleFactor()), 1));
         }
 
-        const auto& _dest = dest + m_walkOffset * g_drawPool.getScaleFactor();
+        const auto& _dest = dest + m_walkOffset + outfitOffset * g_drawPool.getScaleFactor();
 
         internalDraw(_dest);
 
