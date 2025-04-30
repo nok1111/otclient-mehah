@@ -570,8 +570,8 @@ function onSkillChange(localPlayer, id, level, percent)
 
     onBaseSkillChange(localPlayer, id, localPlayer:getSkillBaseLevel(id))
 
-    if id > Skill.ManaLeechAmount then
-	    toggleSkill('skillId' .. id, level > 0)
+    if id > Skill.AttackSpeed then
+        toggleSkill('skillId' .. id, level > 0)
     end
 end
 

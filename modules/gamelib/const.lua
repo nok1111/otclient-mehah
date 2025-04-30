@@ -58,10 +58,11 @@ Skill = {
     LifeLeechAmount = 10,
     ManaLeechChance = 11,
     ManaLeechAmount = 12,
-    Fatal = 13,
-    Dodge = 14,
-    Momentum = 15,
-    Transcendence = 16
+    AttackSpeed = 13,
+    Fatal = 14,
+    Dodge = 15,
+    Momentum = 16,
+    Transcendence = 17
 }
 
 North = Directions.North
