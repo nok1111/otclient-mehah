@@ -51,8 +51,10 @@ public:
 
 protected:
     void onStyleApply(const std::string_view styleName, const OTMLNodePtr& styleNode) override;
+    void updateRarityBorder();
 
     ItemPtr m_item;
+    UIWidgetPtr m_rarityBorder;
     bool m_virtual{ false };
     bool m_showId{ false };
     bool m_itemVisible{ true };

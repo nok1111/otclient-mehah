@@ -98,10 +98,41 @@ void UIItem::setItemSubType(int subType)
 void UIItem::setItem(const ItemPtr& item) 
 { 
     m_item = item; 
-
+   // updateRarityBorder();
 #ifdef BOT_PROTECTION
     callLuaField("onItemChange");
 #endif
+}
+
+void UIItem::updateRarityBorder()
+{
+    if (!m_rarityBorder) {
+        // Correct widget creation pattern for OTClient
+        m_rarityBorder = std::make_shared<UIWidget>();
+        m_rarityBorder->setId("rarityBorder");
+        m_rarityBorder->setSize(getSize());
+        m_rarityBorder->setPosition(Point(0, 0));
+        m_rarityBorder->setVisible(false);
+    }
+
+    // Rest of the function remains unchanged...
+    if (m_item && m_item->getItemRarity() > ItemRarity::NONE) {
+        const std::string imagePath = "/images/ui/slots/rarity_" +
+            std::to_string(static_cast<int>(m_item->getItemRarity())) + ".png";
+
+        try {
+            if (g_things.getThingType(m_item->getId(), ThingCategoryItem)) {
+                m_rarityBorder->setImageSource(imagePath, "");
+                m_rarityBorder->setSize(getSize());
+                m_rarityBorder->setVisible(true);
+            }
+        } catch (...) {
+            g_logger.error("Failed to load rarity border for item " + std::to_string(m_item->getId()));
+            m_rarityBorder->setVisible(false);
+        }
+    } else {
+        m_rarityBorder->setVisible(false);
+    }
 }
 
 void UIItem::onStyleApply(const std::string_view styleName, const OTMLNodePtr& styleNode)
