@@ -430,3 +430,119 @@ AttachedEffectManager.register(38, 'red circle', '/images/game/effects/red_circl
     size = { 90, 90 },
     offset = { 30, 30, false }
 })
+
+AttachedEffectManager.register(39, 'monsters ground break', 660, ThingCategoryEffect, {
+    loop = 1,
+    speed = 0.7,
+    offset = { -104, -92, false},
+    
+})
+
+AttachedEffectManager.register(40, 'inlove', 36, ThingCategoryEffect, {
+    speed = 0.7,
+    duration = 9000,
+    size = { 40, 40 },
+    offset = { 32, 32, true },
+    bounce = { 0, 5, 10000 },
+    --shader = 'Rainbow',
+})
+
+AttachedEffectManager.register(41, 'fire 1', 758, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(42, 'ice 1', 759, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(43, 'holy 1', 760, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(44, 'fire 2', 755, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(45, 'ice 2', 756, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(46, 'life 2', 757, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(47, 'fire_ice 2', 761, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(48, 'fire_life 2', 762, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(49, 'ice_life 2', 763, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(50, 'fire 1', 760, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(51, 'fire 1', 760, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(52, 'fire 1', 760, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(53, 'fire 1', 760, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(54, 'fire 1', 760, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(55, 'fire 1', 760, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { -21, -21, false},
+    
+})
+
+
+AttachedEffectManager.register(56, 'fire 1', 764, ThingCategoryEffect, {
+    size = { 40, 40 },
+    speed = 1.2,
+    offset = { 15, -40, false},
+    duration = 3000,
+    
+})

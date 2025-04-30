@@ -47,7 +47,33 @@ local MAP_SHADERS = { {
 }, {
     name = 'Map - Noise',
     frag = 'shaders/fragment/noise.frag'
-} }
+},
+
+{name = 'Desert', frag = 'shaders/fragment/desert.frag', tex1 = 'images/clouds' },
+{name = 'Desert3', frag = 'shaders/fragment/desert.frag', tex1 = 'images/sandstorm' },
+{name = 'Desert4', frag = 'shaders/fragment/desert.frag', tex1 = 'images/desert2' },
+
+{
+    name = 'Map - Heatwave',
+    frag = 'shaders/fragment/heat2.frag',
+    drawViewportEdge = true
+},
+{
+    name = 'Map - confusion',
+    frag = 'shaders/fragment/confusion.frag',
+    drawViewportEdge = true
+},
+{
+    name = 'Map - blind',
+    frag = 'shaders/fragment/blind.frag',
+    drawViewportEdge = true
+},
+{
+    name = 'Map - fear',
+    frag = 'shaders/fragment/fear.frag',
+    drawViewportEdge = true
+},
+ }
 
 OUTFIT_SHADERS = { {
     name = 'Outfit - Default',
