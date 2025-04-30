@@ -233,3 +233,113 @@ MiniWindow
         !text: 'Spells cooldown'
       StatInfoValue
         !text: '+5%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: luck
+      UIWidget
+        image-source: /images/game/stats/luck
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Luck'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Dodge + Loot'
+      StatInfoValue
+        !text: '+10%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: resilience
+      UIWidget
+        image-source: /images/game/stats/resilience
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Resilience'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Damage reduction'
+      StatInfoValue
+        !text: '+10%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: compassion
+      UIWidget
+        image-source: /images/game/stats/compassion
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Compassion'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Healing power'
+      StatInfoValue
+        !text: '+10%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: voracity
+      UIWidget
+        image-source: /images/game/stats/voracity
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Voracity'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Life steal'
+      StatInfoValue
+        !text: '+10%'
+
+    HorizontalSeparator

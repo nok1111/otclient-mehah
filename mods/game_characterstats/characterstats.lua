@@ -24,7 +24,7 @@ function init()
   statsWindow:setup()
 
   local content = statsWindow:getChildById("contentsPanel")
-  local stats = {"strength", "intelligence", "dexterity", "vitality", "spirit", "wisdom"}
+  local stats = {"strength", "intelligence", "dexterity", "vitality", "spirit", "wisdom", "luck", "resilience", "compassion", "voracity"}
   for i = 1, #stats do
     local statWidget = content:getChildById(stats[i])
     statWidget:getChildById("plusButton").onClick = addStat
