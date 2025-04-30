@@ -69,7 +69,36 @@ local implicits = {
   ["maxhitpointspercent"] = "Increased Max Health",
   ["maxmanapointspercent"] = "Increased Max Mana",
 
+  ["hpgain"] = "Health Gain",
+  ["hpticks"] = "Health Regen Speed",
+  ["mpgain"] = "Mana Gain",
+  ["mpticks"] = "Mana Regen Speed",
+  ["cc"] = "Critical Chance",
+  ["ca"] = "Critical Damage",
+  ["lc"] = "Life Leech Chance",
+  ["la"] = "Life Leech",
+  ["mc"] = "Mana Leech Chance",
+  ["ma"] = "Mana Leech",
   
+  ["fist"] = "Fist Fighting",
+  ["axe"] = "Axe Fighting",
+  ["sword"] = "Sword Fighting",
+  ["club"] = "Club Fighting",
+  ["dist"] = "Distance Fighting",
+  ["shield"] = "Shielding",
+  ["fish"] = "Fishing",
+  
+  ["mag"] = "Magic Level",
+  ["maxhp"] = "Max Health",
+  ["maxmp"] = "Max Mana",
+  ["maxhp_p"] = "Max Health %",
+  ["maxmp_p"] = "Max Mana %",
+  
+  ["hpgain"] = "Health Regen",
+  ["hpticks"] = "Health Regen Speed",
+  ["mpgain"] = "Mana Regen",
+  ["mpticks"] = "Mana Regen Speed",
+  ["speed"] = "Speed",
 }
 
 local impPercent = {
@@ -154,6 +183,18 @@ function onExtendedOpcode(protocol, code, buffer)
 end
 
 function newTooltip(data)
+  -- Convert string numbers to numeric values
+  if data.imp then
+    if type(data.imp.hpticks) == 'string' then
+      data.imp.hpticks = tonumber(data.imp.hpticks:match('%d+')) or 0
+    end
+    if type(data.imp.mpticks) == 'string' then
+      data.imp.mpticks = tonumber(data.imp.mpticks:match('%d+')) or 0
+    end
+  end
+  
+  g_logger.info("Tooltip Data Received - HP Ticks: "..(data.imp and data.imp.hpticks or "nil").." MP Ticks: "..(data.imp and data.imp.mpticks or "nil"))
+  
   local _itemUId = data.uid
   local _itemName = data.itemName
   local _itemDesc = data.desc
