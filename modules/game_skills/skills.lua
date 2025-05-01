@@ -151,8 +151,8 @@ function setSkillValue(id, value)
     local skill = skillsWindow:recursiveGetChildById(id)
     if skill then
         local widget = skill:getChildById('value')
-        if id == "skillId7" or id == "skillId9" or id == "skillId11" or id == "skillId13" or id == "skillId14" or id == "skillId15" or id == "skillId16" then
-            local value = value / 100
+        if id == "skillId7" or id == "skillId9" or id == "skillId11" or id == "skillId13" then
+            local value = value
             widget:setText(value .. "%")
         else
             widget:setText(value)
@@ -284,9 +284,33 @@ function refresh()
     onRegenerationChange(player, player:getRegenerationTime())
     onSpeedChange(player, player:getSpeed())
 
-    local hasAdditionalSkills = g_game.getFeature(GameAdditionalSkills)
+    -- Define skill ranges at the top of the file for maintainability
+local COMBAT_SKILLS = {Skill.Fist, Skill.Club, Skill.Sword, Skill.Axe, Skill.Distance, Skill.Shielding, Skill.Fishing}
+local SPECIAL_SKILLS = {Skill.CriticalChance, Skill.CriticalDamage, Skill.LifeLeechChance, Skill.LifeLeechAmount, 
+                       Skill.ManaLeechChance, Skill.ManaLeechAmount, Skill.AttackSpeed}
+
+-- Update skills function
+for _, skillId in ipairs(COMBAT_SKILLS) do
+    local level = player:getSkillLevel(skillId)
+    local percent = player:getSkillLevelPercent(skillId)
+    if level and percent then
+        onSkillChange(player, skillId, level, percent)
+    end
+end
+
+for _, skillId in ipairs(SPECIAL_SKILLS) do
+    local level = player:getSkillLevel(skillId)
+    local percent = player:getSkillLevelPercent(skillId)
+
+    print(level, percent)
+    if level and percent then
+        onSkillChange(player, skillId, level, percent)
+    end
+end
+
+
+local hasAdditionalSkills = g_game.getFeature(GameAdditionalSkills)
     for i = Skill.Fist, Skill.Transcendence do
-        onSkillChange(player, i, player:getSkillLevel(i), player:getSkillLevelPercent(i))
 
         if i > Skill.Fishing then
             local ativedAdditionalSkills = hasAdditionalSkills
@@ -307,7 +331,6 @@ function refresh()
             toggleSkill('skillId' .. i, ativedAdditionalSkills)
         end
     end
-
     update()
     updateHeight()
 end
@@ -570,9 +593,6 @@ function onSkillChange(localPlayer, id, level, percent)
 
     onBaseSkillChange(localPlayer, id, localPlayer:getSkillBaseLevel(id))
 
-    if id > Skill.AttackSpeed then
-        toggleSkill('skillId' .. id, level > 0)
-    end
 end
 
 function onBaseSkillChange(localPlayer, id, baseLevel)
