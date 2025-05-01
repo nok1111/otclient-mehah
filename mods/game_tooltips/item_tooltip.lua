@@ -63,6 +63,7 @@ local implicits = {
   ["a_holy"] = "Holy Protection",
   ["a_death"] = "Death Protection",
   ["a_all"] = "Protection All",
+  ["attackspeed"] = "Attack Speed",
 
   ["maxhitpoints"] = "Increased Health",
   ["maxmanapoints"] = "Increased Mana",
@@ -79,6 +80,7 @@ local implicits = {
   ["la"] = "Life Leech",
   ["mc"] = "Mana Leech Chance",
   ["ma"] = "Mana Leech",
+  ["as"] = "Attack Speed",
   
   ["fist"] = "Fist Fighting",
   ["axe"] = "Axe Fighting",
@@ -121,7 +123,8 @@ local impPercent = {
   ["a_death"] = true,
   ["maxhitpointspercent"] = true,
   ["maxmanapointspercent"] = true,
-  ["a_all"] = true
+  ["a_all"] = true,
+  ["as"] = true,
 }
 
 function init()
@@ -426,7 +429,11 @@ function buildItemTooltip(item)
       else
         impText = implicits[key] .. " " .. (value > 0 and "+" or "") .. value .. (impPercent[key] and "%" or "")
       end
-      addString(impText, Colors.Implicit)
+      if key == "ca" then
+        addString("Critical Power", "180%")
+      else
+        addString(impText, Colors.Implicit)
+      end
     end
 
     if item.rarity ~= 0 then
