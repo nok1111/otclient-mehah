@@ -546,3 +546,61 @@ AttachedEffectManager.register(56, 'fire 1', 764, ThingCategoryEffect, {
     duration = 3000,
     
 })
+
+AttachedEffectManager.register(60, 'cyclone stun jump', 32, ThingCategoryEffect, {
+
+    duration = 750,
+    disableWalkAnimation = true,
+
+    onAttach = function(effect, owner)
+        owner:setBounce(0, 120, 2200)
+        effect:setBounce(0, 120, 2200)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setBounce(0, 0)
+    end
+})
+
+AttachedEffectManager.register(61, 'cyclone bounce', 0, 0, {
+    duration = 15000,
+    speed = 1,
+    offset = { 0, 0 },
+    bounce = { 10, 20, 11000 },
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(647)
+        owner:getTile():addThing(e)
+        
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(647)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(62, 'stuned cyclone', 32, ThingCategoryEffect, {
+    opacity = 2,
+    duration = 2000,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})
+
+AttachedEffectManager.register(63, 'blood wall', 266, ThingCategoryEffect, {
+    loop = 1,
+    offset = { 0, 0 }
+})
+
+AttachedEffectManager.register(64, 'fear', 170, ThingCategoryEffect, {
+    loop = 1,
+    offset = { 0, 0 }
+})
+
+AttachedEffectManager.register(65, 'magic echo', 598, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 2,
+    speed = 1,
+    offset = { -70, -60, false},
+    
+})
