@@ -308,6 +308,7 @@ function initializeSpelllist()
 end
 
 function updatePreviewSpell(focusedChild)
+    print("preview")
     local spellName = focusedChild:getId()
     iconId = tonumber(Spells.getClientId(spellName))
     local spell = Spells.getSpellByName(spellName)
@@ -325,6 +326,7 @@ end
 
 function spellAssignAccept()
     clearSlot()
+    print("spellAssignAccept")
     local focusedChild = spellsPanel:getFocusedChild()
     if not focusedChild then
         return
@@ -334,7 +336,7 @@ function spellAssignAccept()
     local spell = Spells.getSpellByName(spellName)
     local profile = Spells.getSpellProfileByName(spellName)
     local slot = actionBarPanel:getChildById(slotToEdit)
-    slot:setImageSource(Spells.getIconFileByProfile(profile))
+    slot:setImageSource('/images/game/spells/defaultspells')
     slot:setImageClip(Spells.getImageClip(iconId, profile))
     slot.words = spell.words
     slot.itemId = 469
@@ -417,7 +419,7 @@ function textAssignAccept()
     if spellName then
         iconId = tonumber(Spells.getClientId(spellName))
         clearSlot()
-        slot:setImageSource(Spells.getIconFileByProfile(profile))
+        slot:setImageSource('/images/game/spells/defaultspells')
         slot:setImageClip(Spells.getImageClip(iconId, profile))
         slot.words = spell.words
         slot.itemId = 469
@@ -828,9 +830,11 @@ function saveActionBar()
 end
 
 function loadSpell(slot)
-    local spell, profile, spellName = Spells.getSpellByWords(slot.words)
+    local spellName = Spells.getSpellNameByWords(slot.words)
     iconId = tonumber(Spells.getClientId(spellName))
-    slot:setImageSource(Spells.getIconFileByProfile(profile))
+    local spell = Spells.getSpellByName(spellName)
+    local profile = Spells.getSpellProfileByName(spellName)
+    slot:setImageSource('/images/game/spells/defaultspells')
     slot:setImageClip(Spells.getImageClip(iconId, profile))
     slot:getChildById('text'):setText('')
     slot:setBorderWidth(0)
