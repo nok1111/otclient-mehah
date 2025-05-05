@@ -180,56 +180,6 @@ SpelllistSettings = {
   }
 }
 
-local VocationMapping = {
-    [1] = "None",
-    [2] = "Druid",
-    [3] = "Sorcerer",
-    [4] = "Paladin",
-    [5] = "Knight",
-    [6] = "Master Sorcerer",
-    [7] = "Elder Druid",
-    [8] = "Royal Paladin",
-    [9] = "Elite Knight"
-}
-
-local spellsByVocation = {
-    -- Dragon Knight (5,9)
-    [5] = {'Rend', 'Earthquake', 'Fire Within', 'Brutal Swing', 'Charge', 'Dragon Aura', 
-           'Challenging Spear', 'Whirlwind', 'Dragon Shrine', 'Roar', 'Phoenix Wrath'},
-    [9] = {'Rend', 'Earthquake', 'Fire Within', 'Brutal Swing', 'Charge', 'Dragon Aura', 
-           'Challenging Spear', 'Whirlwind', 'Dragon Shrine', 'Roar', 'Phoenix Wrath'},
-    
-    -- Templar (4,8)
-    [4] = {'Divine Clock', 'Penitence', 'Holy Ground', 'Sacred Ground', 'Crusader Strike', 
-           'Divine Storm', 'Relieve Friend', 'Exorcism', 'Divine Force', 'Smite', 
-           'Light Beam', 'Summon Guardian of Light', 'Kings Blessings'},
-    [8] = {'Divine Clock', 'Penitence', 'Holy Ground', 'Sacred Ground', 'Crusader Strike', 
-           'Divine Storm', 'Relieve Friend', 'Exorcism', 'Divine Force', 'Smite', 
-           'Light Beam', 'Summon Guardian of Light', 'Kings Blessings'},
-    
-    -- Magician (2,3,6,7)
-    [2] = {'Living Bomb', 'Energy Blast', 'Fire Blast', 'Frost Blast', 'Elemental Blast', 
-           'Teleport', 'Mana Distortion', 'Mana Flow', 'Hand of God', 'Frost Wave', 
-           'Water Typhoon', 'Arcane Missiles', 'Blizzard'},
-    [3] = {'Living Bomb', 'Energy Blast', 'Fire Blast', 'Frost Blast', 'Elemental Blast', 
-           'Teleport', 'Mana Distortion', 'Mana Flow', 'Hand of God', 'Frost Wave', 
-           'Water Typhoon', 'Arcane Missiles', 'Blizzard'},
-    [6] = {'Living Bomb', 'Energy Blast', 'Fire Blast', 'Frost Blast', 'Elemental Blast', 
-           'Teleport', 'Mana Distortion', 'Mana Flow', 'Hand of God', 'Frost Wave', 
-           'Water Typhoon', 'Arcane Missiles', 'Blizzard'},
-    [7] = {'Living Bomb', 'Energy Blast', 'Fire Blast', 'Frost Blast', 'Elemental Blast', 
-           'Teleport', 'Mana Distortion', 'Mana Flow', 'Hand of God', 'Frost Wave', 
-           'Water Typhoon', 'Arcane Missiles', 'Blizzard'}
-}
-
-function getSpellsForVocation(vocationId)
-    return spellsByVocation[vocationId] or {}
-end
-
-function getVocationName(vocationId)
-    return VocationMapping[vocationId] or "Unknown"
-end
-
 SpellInfo = {
   ['Default'] = {
   --DRAGON Knight
@@ -724,12 +674,4 @@ function Spells.getSpellByClientId(clientId)
     end
   end
   return nil
-end
-
-function getSpellsForVocation(vocationId)
-    return spellsByVocation[vocationId] or {}
-end
-
-function getVocationName(vocationId)
-    return VocationMapping[vocationId] or "Unknown"
 end
