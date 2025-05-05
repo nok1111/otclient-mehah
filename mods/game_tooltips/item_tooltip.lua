@@ -220,18 +220,6 @@ function newTooltip(data)
   local _itemType = data.itemType
   local _equipType = data.equipType or nil
 
-  -- Set equipment type label
-  local equipTypeLabel = tooltipWindow and tooltipWindow:getChildById("equipTypeLabel")
-  if equipTypeLabel then
-    if _equipType then
-      equipTypeLabel:setText(_equipType)
-      equipTypeLabel:show()
-    else
-      equipTypeLabel:setText("")
-      equipTypeLabel:hide()
-    end
-  end
-
   local _firstStat = data.armor or data.attack or 0
   local _secondStat = data.hitChance or data.defense or 0
   local _thirdStat = data.shootRange or data.extraDefense or 0
@@ -379,7 +367,7 @@ function buildItemTooltip(item)
   addString(name, itemNameColor)
 
   if equipType then
-    addString(equipType, Colors.Default)
+    addString(equipType, "#909292")
   end
 
   if unidentified then

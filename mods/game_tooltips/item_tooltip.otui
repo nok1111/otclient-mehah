@@ -43,14 +43,3 @@ FlatPanel
     margin-bottom: 5
     margin-left: 37
     margin-right: 37
-
-  Label
-    id: equipTypeLabel
-    font: verdana-11px-rounded
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    text-auto-resize: true
-    text-align: center
-    margin-top: 1
-    color: #b0b0b0
