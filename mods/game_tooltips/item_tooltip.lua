@@ -218,6 +218,20 @@ function newTooltip(data)
   end
   local _isStackable = data.stackable
   local _itemType = data.itemType
+  local _equipType = data.equipType or nil
+
+  -- Set equipment type label
+  local equipTypeLabel = tooltipWindow and tooltipWindow:getChildById("equipTypeLabel")
+  if equipTypeLabel then
+    if _equipType then
+      equipTypeLabel:setText(_equipType)
+      equipTypeLabel:show()
+    else
+      equipTypeLabel:setText("")
+      equipTypeLabel:hide()
+    end
+  end
+
   local _firstStat = data.armor or data.attack or 0
   local _secondStat = data.hitChance or data.defense or 0
   local _thirdStat = data.shootRange or data.extraDefense or 0
@@ -237,6 +251,7 @@ function newTooltip(data)
     attributes = _itemAttributes,
     stackable = _isStackable,
     type = _itemType,
+    equipType = _equipType,
     first = _firstStat,
     second = _secondStat,
     third = _thirdStat,
@@ -329,6 +344,7 @@ function buildItemTooltip(item)
   local attributes = item.attributes
   local count = item.count
   local type = item.type
+  local equipType = item.equipType
   local first = item.first
   local second = item.second
   local third = item.third
@@ -361,6 +377,10 @@ function buildItemTooltip(item)
     name = name .. " +" .. item.uLvl
   end
   addString(name, itemNameColor)
+
+  if equipType then
+    addString(equipType, Colors.Default)
+  end
 
   if unidentified then
     addString("Unidentified", rarityColor[2].color)
