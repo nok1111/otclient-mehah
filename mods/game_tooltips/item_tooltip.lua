@@ -127,6 +127,34 @@ local impPercent = {
   ["as"] = true,
 }
 
+local implicitIcons = {
+  ["criticalhitchance"] = "icon_criticalchance",
+  ["criticalhitamount"] = "icon_criticaldamage",
+  ["la"] = "icon_lifesteal",
+  ["lc"] = "icon_lifestealchance",
+  ["ma"] = "icon_manaleech",
+  ["mc"] = "icon_manaleechchance",
+  ["as"] = "icon_attackspeed",
+  ["a_phys"] = "icon_physprot",
+  ["a_ene"] = "icon_magicprot",
+  ["a_earth"] = "icon_earthprot",
+  ["a_fire"] = "icon_fireprot",
+  ["a_ldrain"] = "icon_lifedrainprot",
+  ["a_mdrain"] = "icon_manadrainprot",
+  ["a_heal"] = "icon_healprot",
+  ["a_drown"] = "icon_drownprot",
+  ["a_ice"] = "icon_iceprot",
+  ["a_holy"] = "icon_holyprot",
+  ["a_death"] = "icon_deathprot",
+  ["a_all"] = "icon_allprot",
+  ["maxhitpoints"] = "icon_maxhp",
+  ["maxmanapoints"] = "icon_maxmp",
+  ["maxhitpointspercent"] = "icon_maxhppercent",
+  ["maxmanapointspercent"] = "icon_maxmppercent",
+  ["speed"] = "icon_speed",
+  -- Add more as needed
+}
+
 function init()
   connect(UIItem, {onHoverChange = onHoverChange})
   connect(g_game, {onGameEnd = resetData})
@@ -440,7 +468,12 @@ function buildItemTooltip(item)
       if key == "ca" then
         addString("Critical Power", "180%")
       else
-        addString(impText, Colors.Implicit)
+        local iconName = implicitIcons[key]
+        if iconName then
+          addStatRow(iconName, impText, Colors.Implicit)
+        else
+          addString(impText, Colors.Implicit)
+        end
       end
     end
 
@@ -492,6 +525,21 @@ function addString(text, color, resize)
       tooltipWidth = tooltipWidthBase + longestString
     end
     tooltipHeight = tooltipHeight + textSize.height
+  end
+end
+
+function addStatRow(iconName, text, color)
+  local row = g_ui.createWidget("TooltipStatRow", labels)
+  local iconWidget = row:getChildById("statIcon")
+  local labelWidget = row:getChildById("statLabel")
+  if iconWidget then
+    iconWidget:setImageSource("/images/tooltips/" .. iconName .. ".png")
+  end
+  if labelWidget then
+    labelWidget:setText(text)
+    if color then
+      labelWidget:setColor(color)
+    end
   end
 end
 

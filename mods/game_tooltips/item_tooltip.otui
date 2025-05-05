@@ -16,6 +16,23 @@ TooltipEmpty < UIWidget
   anchors.left: parent.left
   anchors.right: parent.right
 
+TooltipStatRow < UIWidget
+  layout: horizontal
+  height: 18
+  margin-top: 2
+
+  UIImage
+    id: statIcon
+    width: 16
+    height: 16
+    margin-right: 4
+
+  Label
+    id: statLabel
+    font: verdana-11px-rounded
+    text-auto-resize: true
+    color: #ffbb22
+
 FlatPanel
   Label
     id: itemWeightLabel
