@@ -215,12 +215,30 @@ function updateCraftingWindow(skill, recipes)
 	craftingWindow:getChildById("balance"):setText(tostring(balance))
 
 	local recipeList = craftingWindow:recursiveGetChildById("recipeList")
+	recipeList:setImageSource("/images/ui/panel_map.png")
 	recipeList:destroyChildren()
 
 	for i, recipe in ipairs(recipes) do
+		
+
 		local widget = g_ui.createWidget('Recipe', recipeList)
 		widget:setImageSource("/images/ui/list1.png")
-		widget:setText("T" .. recipe.tier .. " " .. recipe.name)
+		widget:setText(recipe.name)
+
+		-- Create the UIItem as a child of 'widget'
+		local item = g_ui.createWidget('UIItem', widget)  -- Add item to 'widget', not 'recipeList'
+		item:setItemId(recipe.spriteId)  -- Set the sprite ID for the recipe
+		item:setVirtual(true)            -- Make it non-draggable
+		item:setSize({width = 32, height = 32}) -- Set the size of the item
+		item:setMarginLeft(5) 
+
+		-- Adjust position to overlap
+		item:setPosition({x = 5, y = 5})  -- Position the item relative to 'widget'
+		--item:setImageSource("/images/ui/item.png")  -- Optional background for the item
+
+
+
+		
 		widget.recipe = recipe
 		widget.recipeId = i
 
@@ -247,6 +265,9 @@ function updateCraftingWindow(skill, recipes)
 				widget:setImageSource("/images/ui/list3.png")
 				--widget:setImageColor('#FFFFFF')
 			end
+		elseif recipe.upgraded == "true" then
+			--widget:setText(widget:getText() .. " (Upgraded)")
+			widget:setImageSource("/images/ui/list_upgrade.png")
 		end
 	end
 
@@ -256,10 +277,26 @@ function updateCraftingWindow(skill, recipes)
 end
 
 function showMessageBox(success, err)
-	local messageWindow = displayInfoBox(tr(success and 'Success' or 'Failed'), success and "You successfuly crafted desired items." or err)
-	messageWindow:grabKeyboard()
+    -- If there's an existing message window, destroy it first
+    if messageWindow and not messageWindow:isDestroyed() then
+        messageWindow:destroy()
+    end
+
+    -- Create a new message window
+    messageWindow = displayInfoBox(tr(success and 'Success' or 'Failed'), 
+                                   success and "You successfully crafted the desired items." or err)
+    
+    messageWindow:grabKeyboard()
+    messageWindow.onDestroy = function() 
+        messageWindow = nil 
+    end
 end
 
+local function toInitialCaps(str)
+    return str:gsub("(%a)(%w*)", function(first, rest)
+        return first:upper() .. rest:lower()
+    end)
+end
 -- protocol
 function parseServerInfo(protocol, msg)
 	local action = msg:getU8()
@@ -285,11 +322,12 @@ function parseServerInfo(protocol, msg)
 			local recipe = {ingredients = {}}
 			recipe.spriteId = msg:getU16() -- client id
 			recipe.count = msg:getU16() -- amount of crafted recipe
-			recipe.name = msg:getString()
+			recipe.name = toInitialCaps(msg:getString())
 			recipe.tier = msg:getU8()
 			recipe.desc = msg:getString()
 			recipe.cost = msg:getU16()
 			recipe.recipestorage = msg:getU16()
+			recipe.upgraded = msg:getString()
 			recipe.storagevalue = msg:getU16()
 			recipe.requiredSkill = msg:getU16()
 

@@ -1,6 +1,6 @@
 Bar < ProgressBar
   background-color: red
-  height: 7
+  height: 10
   phantom: false
 
 Recipe < Label
@@ -11,6 +11,20 @@ Recipe < Label
   background-color: #585858
   border-width: 1
 
+Recipe < UIWidget
+  height: 32
+  width: 20
+  border-width: 1
+  layout: horizontalBox
+  spacing: 5
+
+Imagecraft < UIWidget
+  size: 20 20
+
+Labelcraft < UIWidget
+  text-align: left
+  background-color: red
+
   $focus:
     color: #FFFFFF
     background-color: #414141
@@ -18,13 +32,13 @@ Recipe < Label
 
 MainWindow
   !text: tr('Crafting')
-  size: 650 418
+  size: 680 418
 
   Bar
     id: skillBar
     anchors.top: parent.top
     anchors.horizontalCenter: parent.horizontalCenter
-    width: 150
+    width: 200
     margin-top: 2
 
   Label
@@ -50,6 +64,7 @@ MainWindow
     anchors.top: prev.bottom
     anchors.right: parent.right
     enabled: true
+    margin-top: 25
 
   TextEdit
     id: amount
@@ -97,7 +112,7 @@ MainWindow
     !text: tr('	Crafting fee:')
     anchors.top: craftAllButton.bottom
     anchors.right: parent.right
-    margin-right: 4
+    margin-right: 10
     margin-top: 10
 
   TextEdit
@@ -105,7 +120,7 @@ MainWindow
     !text: tr('0 Gold')
     anchors.top: prev.bottom
     anchors.right: parent.right
-    margin-right: 4
+    margin-right: 10
     margin-top: 6
     text-wrap: true
     editable: false
@@ -118,16 +133,15 @@ MainWindow
     !text: tr('Total Balance:')
     anchors.top: cost.bottom
     anchors.right: parent.right
-    margin-right: 4
+    margin-right: 10
     margin-top: 10
-
 
   TextEdit
     id: balance
     !text: tr('0')
     anchors.top: balancelabel.bottom
     anchors.right: parent.right
-    margin-right: 4
+    margin-right: 10
     margin-top: 6
     text-wrap: true
     editable: false
@@ -140,12 +154,6 @@ MainWindow
     !text: tr('Close')
     anchors.bottom: parent.bottom
     anchors.right: parent.right
-
-  VerticalSeparator
-    anchors.right: closeButton.left
-    anchors.top: skillLabel.bottom
-    anchors.bottom: parent.bottom
-    margin-right: 15
 
   Panel
     id: mainPanel
@@ -162,11 +170,11 @@ MainWindow
 
     VerticalList
       id: recipeList
-      width: 200
+      width: 180
       anchors.left: parent.left
       anchors.bottom: parent.bottom
       anchors.top: prev.bottom
-      margin-right: 15
+      margin-right: 5
       margin-top: 5
       vertical-scrollbar: recipeListScrollBar
 
@@ -179,18 +187,31 @@ MainWindow
       pixels-scroll: true
       step: 5
 
+    VerticalSeparator
+      anchors.left: recipeList.right 
+      anchors.top: skillLabel.bottom
+      anchors.bottom: parent.bottom
+      margin-left: 30
+      height: 328
+
     Item
+      image-source: /data/images/ui/list1fade
+      image-size: 180 40
+        margin-right: -34
+        margin-top: -20
       id: recipeItem
       size: 40 40
       anchors.horizontalCenter: parent.horizontalCenter
       anchors.top: prev.top
+      padding-left: 7
+      padding-top: 5
 
     Label
       id: recipeLabel
       !text: tr('Recipe Name')
       anchors.left: recipeItem.right
       anchors.top: recipeItem.top
-      margin-left: 10
+      margin-left: 15
       margin-top: 12
 
     Label
@@ -198,20 +219,22 @@ MainWindow
       anchors.top: ingredientsPanel.top
       anchors.left: recipeItem.left
       margin-top: -20
+      margin-left: 5
 
     ScrollableFlatPanel
       id: ingredientsPanel
+      image-source: /images/ui/tooltip
       anchors.top: recipeItem.bottom
       anchors.left: recipeItem.left
-      size: 224 92
+      size: 235 34
       margin-top: 40
       vertical-scrollbar: ingredientsScrollBar
       layout:
         type: grid
         cell-size: 34 34
         flow: true
-        cell-spacing: 10
-        num-columns: 3
+        cell-spacing: 1
+        num-columns: 6
 
     VerticalScrollBar
       id: ingredientsScrollBar
@@ -221,6 +244,14 @@ MainWindow
       margin-left: 1
       pixels-scroll: true
       step: 10
+      visible: false
+
+    VerticalSeparator
+      anchors.left: ingredientsPanel.right
+      anchors.top: recipeItem.top
+      anchors.bottom: parent.bottom
+      margin-left: 30
+      height: 328
 
     Label
       !text: tr('Description')
