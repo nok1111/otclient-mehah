@@ -91,20 +91,23 @@ AttachedEffectManager.register(6, 'Lake Monster', 34, ThingCategoryEffect, {
     end
 })
 
-AttachedEffectManager.register(107, 'Pentagram Aura', '/images/game/effects/pentagram', ThingExternalTexture, {
+AttachedEffectManager.register(7, 'Pentagram Aura', '/images/game/effects/pentagram', ThingExternalTexture, {
     size = { 128, 128 },
     offset = { 50, 45 }
 })
 
-AttachedEffectManager.register(108, 'Ki', '/images/game/effects/ki', ThingExternalTexture, {
+AttachedEffectManager.register(8, 'Ki', '/images/game/effects/ki', ThingExternalTexture, {
     size = { 140, 110 },
-    offset = { 60, 75, true }
+    offset = { 60, 75, true },
+    pulse = { 0, 50, 3000 },
+    --fade = { 0, 100, 1000 },
 })
 
 AttachedEffectManager.register(9, 'Thunder', '/images/game/effects/thunder', ThingExternalTexture, {
     loop = 1,
     offset = { 215, 230 }
 })
+
 
 AttachedEffectManager.register(10, 'Dynamic Effect', 0, 0, {
     duration = 500,

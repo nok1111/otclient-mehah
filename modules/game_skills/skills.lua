@@ -151,7 +151,7 @@ function setSkillValue(id, value)
     local skill = skillsWindow:recursiveGetChildById(id)
     if skill then
         local widget = skill:getChildById('value')
-        if id == "skillId7" or id == "skillId9" or id == "skillId11" or id == "skillId13" then
+        if id == "skillId7" or id == "skillId9" or id == "skillId11" or id == "skillId13" or id == "skillId14" or id == "skillId15" then
             local value = value
             widget:setText(value .. "%")
         else
@@ -287,7 +287,7 @@ function refresh()
     -- Define skill ranges at the top of the file for maintainability
 local COMBAT_SKILLS = {Skill.Fist, Skill.Club, Skill.Sword, Skill.Axe, Skill.Distance, Skill.Shielding, Skill.Fishing}
 local SPECIAL_SKILLS = {Skill.CriticalChance, Skill.CriticalDamage, Skill.LifeLeechChance, Skill.LifeLeechAmount, 
-                       Skill.ManaLeechChance, Skill.ManaLeechAmount, Skill.AttackSpeed}
+                       Skill.ManaLeechChance, Skill.ManaLeechAmount, Skill.AttackSpeed, Skill.Weaken, Skill.ExtraHealing}
 
 -- Update skills function
 for _, skillId in ipairs(COMBAT_SKILLS) do

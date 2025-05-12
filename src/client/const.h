@@ -143,6 +143,8 @@ namespace Otc
         ManaLeechChance,
         ManaLeechAmount,
         AttackSpeed,
+        Weaken,
+        ExtraHealing,
         Fatal,
         Dodge,
         Momentum,

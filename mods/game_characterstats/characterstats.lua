@@ -19,7 +19,7 @@ function init()
   statsButton:setOn(true)
   statsWindow = g_ui.loadUI("characterstats", modules.game_interface.getRightPanel())
 
-  statsWindow:setContentMaximumHeight(290)
+  statsWindow:setContentMaximumHeight(475)
 
   statsWindow:setup()
 

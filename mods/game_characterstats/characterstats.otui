@@ -48,7 +48,7 @@ MiniWindow
   @onClose: modules.game_characterstats.onMiniWindowClose()
   &save: true
   &autoOpen: 4
-  height: 200
+  height: 475
 
   MiniWindowContents
     padding-left: 5

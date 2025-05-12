@@ -309,7 +309,7 @@ return {
         end
     },
     showActionbar                    = {
-        value = false,
+        value = true,
         action = function(value, options, controller, panels, extraWidgets)
             modules.game_actionbar.setActionBarVisible(value)
         end

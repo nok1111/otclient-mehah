@@ -409,23 +409,36 @@ MiniWindow
     SmallSkillButton
       id: skillId14
       SkillNameLabel
-        !text: tr('fatal')
+        !text: tr('Weakened')
       SkillValueLabel
 
     SmallSkillButton
       id: skillId15
       SkillNameLabel
-        !text: tr('dodge')
+        !text: tr('Extra Healing')
       SkillValueLabel
 
     SmallSkillButton
       id: skillId16
       SkillNameLabel
-        !text: tr('Momentum')
+        !text: tr('fatal')
       SkillValueLabel
 
     SmallSkillButton
       id: skillId17
       SkillNameLabel
+        !text: tr('dodge')
+      SkillValueLabel
+    
+    SmallSkillButton
+      id: skillId18
+      SkillNameLabel
+        !text: tr('Momentum')
+      SkillValueLabel
+    
+    SmallSkillButton
+      id: skillId19
+      SkillNameLabel
         !text: tr('Transcendence')
       SkillValueLabel
+    

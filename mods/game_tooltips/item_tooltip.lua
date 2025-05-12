@@ -62,8 +62,11 @@ local implicits = {
   ["a_ice"] = "Ice Protection",
   ["a_holy"] = "Holy Protection",
   ["a_death"] = "Death Protection",
-  ["a_all"] = "Protection All",
+  ["a_all"] = "Damage Reduction",
   ["attackspeed"] = "Attack Speed",
+  ["wkn"] = "Weakness",
+  ["eh"] = "Extra Healing",
+
 
   ["maxhitpoints"] = "Increased Health",
   ["maxmanapoints"] = "Increased Mana",
@@ -81,6 +84,7 @@ local implicits = {
   ["mc"] = "Mana Leech Chance",
   ["ma"] = "Mana Leech",
   ["as"] = "Attack Speed",
+
   
   ["fist"] = "Fist Fighting",
   ["axe"] = "Axe Fighting",
@@ -104,8 +108,8 @@ local implicits = {
 }
 
 local impPercent = {
-  ["criticalhitamount"] = true,
-  ["criticalhitchance"] = true,
+  ["ca"] = true,
+  ["cc"] = true,
   ["la"] = true,
   ["lc"] = true,
   ["ma"] = true,
@@ -125,6 +129,8 @@ local impPercent = {
   ["maxmanapointspercent"] = true,
   ["a_all"] = true,
   ["as"] = true,
+  ["wkn"] = true,
+  ["eh"] = true,
 }
 
 function init()

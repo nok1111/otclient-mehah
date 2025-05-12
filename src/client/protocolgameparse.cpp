@@ -2217,7 +2217,7 @@ void ProtocolGame::parsePlayerSkills(const InputMessagePtr& msg) const
 
     if (g_game.getFeature(Otc::GameAdditionalSkills)) {
         // Critical, Life Leech, Mana Leech
-        for (int_fast32_t skill = Otc::CriticalChance; skill <= Otc::AttackSpeed; ++skill) {
+        for (int_fast32_t skill = Otc::CriticalChance; skill <= Otc::ExtraHealing; ++skill) {
             if (!g_game.getFeature(Otc::GameLeechAmount)) {
                 if (skill == Otc::LifeLeechAmount || skill == Otc::ManaLeechAmount) {
                     continue;
