@@ -96,6 +96,19 @@ local function combatEvent()
     end
 end
 
+local function setFrames(item, itemWidget)
+    local name = item:getTooltip()
+    if (name) then
+      if (string.find(name, "legendary")) then
+        itemWidget:setImageSource('/images/ui/rarity_gold')
+      elseif (string.find(name, "epic")) then
+        itemWidget:setImageSource('/images/ui/rarity_purple')
+      elseif (string.find(name, "rare")) then
+        itemWidget:setImageSource('/images/ui/rarity_blue')
+      end
+    end
+end
+
 local function inventoryEvent(player, slot, item, oldItem)
     if inventoryShrink then
         return
@@ -110,6 +123,7 @@ local function inventoryEvent(player, slot, item, oldItem)
     local slotPanel, toggler = getSlotInfo(ui)
 
     slotPanel.item:setItem(item)
+    setFrames(item, slotPanel.item)
     toggler:setEnabled(not item)
     slotPanel.item:setWidth(34)
     slotPanel.item:setHeight(34)

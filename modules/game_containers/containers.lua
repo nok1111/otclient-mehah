@@ -47,10 +47,24 @@ function destroy(container)
     end
 end
 
+local function setFrames(item, itemWidget)
+    local name = item:getTooltip()
+    if (name) then
+      if (string.find(name, "legendary")) then
+        itemWidget:setImageSource('/images/ui/rarity_gold')
+      elseif (string.find(name, "epic")) then
+        itemWidget:setImageSource('/images/ui/rarity_purple')
+      elseif (string.find(name, "rare")) then
+        itemWidget:setImageSource('/images/ui/rarity_blue')
+      end
+    end
+end
+
 function refreshContainerItems(container)
     for slot = 0, container:getCapacity() - 1 do
         local itemWidget = container.itemsPanel:getChildById('item' .. slot)
         itemWidget:setItem(container:getItem(slot))
+        setFrames(container:getItem(slot), itemWidget)
     end
 
     if container:hasPages() then
@@ -137,6 +151,7 @@ function onContainerOpen(container, previousContainer)
         local itemWidget = g_ui.createWidget('Item', containerPanel)
         itemWidget:setId('item' .. slot)
         itemWidget:setItem(container:getItem(slot))
+        setFrames(container:getItem(slot), itemWidget)
         itemWidget:setMargin(0)
         itemWidget.position = container:getSlotPosition(slot)
 
@@ -188,4 +203,5 @@ function onContainerUpdateItem(container, slot, item, oldItem)
     end
     local itemWidget = container.itemsPanel:getChildById('item' .. slot)
     itemWidget:setItem(item)
+    setFrames(item, itemWidget)
 end
