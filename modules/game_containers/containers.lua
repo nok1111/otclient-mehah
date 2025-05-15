@@ -47,15 +47,22 @@ function destroy(container)
     end
 end
 
+
 local function setFrames(item, itemWidget)
     local name = item:getTooltip()
     if (name) then
-      if (string.find(name, "legendary")) then
+        print("tooltip:", name)
+      if (string.find(name, "Ascended")) then
         itemWidget:setImageSource('/images/ui/rarity_gold')
-      elseif (string.find(name, "epic")) then
+        itemWidget:setShader("pulse")
+      elseif (string.find(name, "Forged")) then
         itemWidget:setImageSource('/images/ui/rarity_purple')
-      elseif (string.find(name, "rare")) then
+        itemWidget:setShader("pulse")
+      elseif (string.find(name, "Orbital")) then
         itemWidget:setImageSource('/images/ui/rarity_blue')
+        itemWidget:setShader("pulse")
+      else
+        itemWidget:setImageSource('/images/ui/item')
       end
     end
 end
@@ -64,7 +71,15 @@ function refreshContainerItems(container)
     for slot = 0, container:getCapacity() - 1 do
         local itemWidget = container.itemsPanel:getChildById('item' .. slot)
         itemWidget:setItem(container:getItem(slot))
-        setFrames(container:getItem(slot), itemWidget)
+
+        if container:getItem(slot) then
+            print("rarity:", container:getItem(slot):getItemRarity())
+            setFrames(container:getItem(slot), itemWidget)
+        else
+            print("No item in slot", slot)
+            itemWidget:setImageSource(nil)
+        end
+       
     end
 
     if container:hasPages() then
@@ -103,6 +118,8 @@ function refreshContainerPages(container)
         end
     end
 end
+
+
 
 function onContainerOpen(container, previousContainer)
     local containerWindow
@@ -151,7 +168,8 @@ function onContainerOpen(container, previousContainer)
         local itemWidget = g_ui.createWidget('Item', containerPanel)
         itemWidget:setId('item' .. slot)
         itemWidget:setItem(container:getItem(slot))
-        setFrames(container:getItem(slot), itemWidget)
+       -- setFrames(container:getItem(slot), itemWidget)
+       
         itemWidget:setMargin(0)
         itemWidget.position = container:getSlotPosition(slot)
 
@@ -203,5 +221,13 @@ function onContainerUpdateItem(container, slot, item, oldItem)
     end
     local itemWidget = container.itemsPanel:getChildById('item' .. slot)
     itemWidget:setItem(item)
-    setFrames(item, itemWidget)
+    --setFrames(item, itemWidget)
+
+    if item then
+        print("rarity:", item:getItemRarity())
+        setFrames(item, itemWidget)
+    else
+        print("No item in slot", slot)
+        itemWidget:setImageSource(nil)
+    end
 end

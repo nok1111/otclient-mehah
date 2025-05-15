@@ -74,13 +74,13 @@ end
 
 local function onWidgetHoverChange(widget, hovered)
     if hovered then
-        if widget.tooltip and not g_mouse.isPressed() then
-            g_tooltip.display(widget.tooltip)
-            currentHoveredWidget = widget
-        elseif widget.specialtooltip and not g_mouse.isPressed() then
-            g_tooltip.displaySpecial(widget.specialtooltip)
-            currentHoveredWidget = widget
-        end
+        -- if widget.tooltip and not g_mouse.isPressed() then
+  --           g_tooltip.display(widget.tooltip)
+  --           currentHoveredWidget = widget
+  --       elseif widget.specialtooltip and not g_mouse.isPressed() then
+  --           g_tooltip.displaySpecial(widget.specialtooltip)
+  --           currentHoveredWidget = widget
+  --       end
     else
         if widget == currentHoveredWidget then
             if widget.tooltip then

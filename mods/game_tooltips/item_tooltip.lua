@@ -267,10 +267,10 @@ end
 
 function onHoverChange(widget, hovered)
   local item = widget:getItem()
-  
   if item and widget.getItemTooltip then
     if hovered then
       buildItemTooltip(widget:getItemTooltip())
+      
     else
       tooltipWindow:hide()
     end
