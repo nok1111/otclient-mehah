@@ -109,6 +109,23 @@ local function setFrames(item, itemWidget)
     end
 end
 
+local function setFrames(item, itemWidget)
+    local name = item:getTooltip()
+    if (name) then
+        print("tooltip:", name)
+      if (string.find(name, "Ascended")) then
+        itemWidget:setImageSource('/images/ui/rarity_gold')
+        itemWidget:setShader("pulse")
+      elseif (string.find(name, "Forged")) then
+        itemWidget:setImageSource('/images/ui/rarity_purple')
+        itemWidget:setShader("pulse")
+      elseif (string.find(name, "Orbital")) then
+        itemWidget:setImageSource('/images/ui/rarity_blue')
+        itemWidget:setShader("pulse")
+      end
+    end
+end
+
 local function inventoryEvent(player, slot, item, oldItem)
     if inventoryShrink then
         return
@@ -123,10 +140,19 @@ local function inventoryEvent(player, slot, item, oldItem)
     local slotPanel, toggler = getSlotInfo(ui)
 
     slotPanel.item:setItem(item)
-    setFrames(item, slotPanel.item)
+
     toggler:setEnabled(not item)
     slotPanel.item:setWidth(34)
     slotPanel.item:setHeight(34)
+
+    if item then
+        print("rarity:", item:getItemRarity())
+        setFrames(item, slotPanel.item)
+    else
+        print("No item in slot", slot)
+        slotPanel.item:setImageSource(nil)
+    end
+
     if g_game.getFeature(GameThingClock) then
         if item and item:getDurationTime() > 0 then
             itemSlotsWithDuration[slot] = {

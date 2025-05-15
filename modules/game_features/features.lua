@@ -6,7 +6,7 @@ controller:registerEvents(g_game, {
 		g_game.enableFeature(GameCreatureShader)
 		g_game.enableFeature(GameCreatureAttachedEffect) 
 		g_game.enableFeature(GameItemShader)
-		--g_game.enableFeature(GameItemTooltipV8)
+		g_game.enableFeature(GameItemTooltipV8)
         -- g_game.enableFeature(GameKeepUnawareTiles)
         -- g_game.enableFeature(GameSmoothWalkElevation)
         -- g_game.enableFeature(GameNegativeOffset)
