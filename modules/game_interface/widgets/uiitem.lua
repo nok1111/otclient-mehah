@@ -40,9 +40,18 @@ function UIItem:onDrop(widget, mousePos)
     local itemPos = item:getPosition()
     local itemTile = item:getTile()
     local toPos = self.position
-    if not(toPos) and self:getParent() and self:getParent().slotPosition then
+    if not (toPos) and self:getParent() and self:getParent().slotPosition then
         toPos = self:getParent().slotPosition
     end
+
+    if self.selectable then
+        if item:isPickupable() then
+            self:setItem(Item.create(item:getId(), item:getCountOrSubType()))
+            return true
+        end
+        return false
+    end
+
     if not itemPos or not toPos then
         local pressedWidget = g_ui.getPressedWidget()
         local rootWidget = g_ui.getRootWidget()
@@ -116,7 +125,7 @@ function UIItem:onHoverChange(hovered)
             for word in text:gmatch("%S+") do
                 table.insert(words, word)
             end
-        
+
             local lines = {}
             local currentLine = words[1]
             for i = 2, #words do
@@ -128,18 +137,17 @@ function UIItem:onHoverChange(hovered)
                 end
             end
             table.insert(lines, currentLine)
-        
+
             return table.concat(lines, "\n")
         end
 
         if self:getItem() and self:getItem():getTooltip():len() > 0 then
-            tooltip = splitTextIntoLines(self:getItem():getTooltip(), 80) 
+            tooltip = splitTextIntoLines(self:getItem():getTooltip(), 80)
             if tooltip then
                 self:setTooltip(tooltip)
             end
         end
     end
-    
 end
 
 function UIItem:onMouseRelease(mousePosition, mouseButton)
@@ -170,9 +178,10 @@ function UIItem:onMouseRelease(mousePosition, mouseButton)
 end
 
 function UIItem:canAcceptDrop(widget, mousePos)
-    if self:isVirtual() or not self:isDraggable() then
+    if not self.selectable and (self:isVirtual() or not self:isDraggable()) then
         return false
     end
+
     if not widget or not widget.currentDragThing then
         return false
     end

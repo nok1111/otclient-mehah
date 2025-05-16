@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,13 +27,14 @@
 
 #include <framework/core/application.h>
 #include <framework/core/eventdispatcher.h>
-#include "framework/stdext/math.h"
+
+#include "framework/core/graphicalapplication.h"
 
  // UINT16_MAX = just to avoid conflicts with GL generated ID.
 static std::atomic_uint32_t UID(UINT16_MAX);
 
-Texture::Texture() : m_uniqueId(++UID) { generateHash(); }
-Texture::Texture(const Size& size) : m_uniqueId(++UID)
+Texture::Texture() : m_uniqueId(UID.fetch_add(1)) { generateHash(); }
+Texture::Texture(const Size& size) : m_uniqueId(UID.fetch_add(1))
 {
     generateHash();
     if (!setupSize(size))
@@ -46,7 +47,7 @@ Texture::Texture(const Size& size) : m_uniqueId(++UID)
     setupFilters();
 }
 
-Texture::Texture(const ImagePtr& image, bool buildMipmaps, bool compress) : m_uniqueId(++UID)
+Texture::Texture(const ImagePtr& image, const bool buildMipmaps, const bool compress) : m_uniqueId(UID.fetch_add(1))
 {
     generateHash();
 
@@ -62,7 +63,7 @@ Texture::~Texture()
     assert(!g_app.isTerminated());
 #endif
     if (g_graphics.ok() && m_id != 0) {
-        g_mainDispatcher.addEvent([id = m_id]() {
+        g_mainDispatcher.addEvent([id = m_id] {
             glDeleteTextures(1, &id);
         });
     }
@@ -72,7 +73,7 @@ Texture* Texture::create()
 {
     if (m_image) {
         createTexture();
-        uploadPixels(m_image, getProp(Prop::buildMipmaps), getProp(Prop::compress));
+        uploadPixels(m_image, getProp(buildMipmaps), getProp(compress));
         m_image = nullptr;
     }
 
@@ -81,11 +82,11 @@ Texture* Texture::create()
 
 void Texture::updateImage(const ImagePtr& image) { m_image = image; setupSize(image->getSize()); }
 
-void Texture::updatePixels(uint8_t* pixels, int level, int channels, bool compress) {
+void Texture::updatePixels(uint8_t* pixels, const int level, const int channels, const bool compress) {
     bind();
     setupPixels(level, m_size, pixels, channels, compress);
 }
-void Texture::uploadPixels(const ImagePtr& image, bool buildMipmaps, bool compress)
+void Texture::uploadPixels(const ImagePtr& image, const bool buildMipmaps, const bool compress)
 {
     if (!setupSize(image->getSize()))
         return;
@@ -106,7 +107,7 @@ void Texture::bind() { if (m_id) glBindTexture(GL_TEXTURE_2D, m_id); }
 
 void Texture::buildHardwareMipmaps()
 {
-    if (getProp(Prop::hasMipMaps))
+    if (getProp(hasMipMaps))
         return;
 
 #ifndef OPENGL_ES
@@ -114,14 +115,14 @@ void Texture::buildHardwareMipmaps()
         return;
 #endif
 
-    setProp(Prop::hasMipMaps, true);
+    setProp(hasMipMaps, true);
 
     bind();
     setupFilters();
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-void Texture::setSmooth(bool smooth)
+void Texture::setSmooth(const bool smooth)
 {
     if (smooth == getProp(Prop::smooth))
         return;
@@ -133,7 +134,7 @@ void Texture::setSmooth(bool smooth)
     setupFilters();
 }
 
-void Texture::setRepeat(bool repeat)
+void Texture::setRepeat(const bool repeat)
 {
     if (getProp(Prop::repeat) == repeat)
         return;
@@ -145,7 +146,7 @@ void Texture::setRepeat(bool repeat)
     setupWrap();
 }
 
-void Texture::setUpsideDown(bool upsideDown)
+void Texture::setUpsideDown(const bool upsideDown)
 {
     if (getProp(Prop::upsideDown) == upsideDown)
         return;
@@ -188,7 +189,7 @@ bool Texture::setupSize(const Size& size)
 
 void Texture::setupWrap() const
 {
-    const GLint texParam = getProp(Prop::repeat) ? GL_REPEAT : GL_CLAMP_TO_EDGE;
+    const GLint texParam = getProp(repeat) ? GL_REPEAT : GL_CLAMP_TO_EDGE;
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texParam);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texParam);
 }
@@ -199,11 +200,11 @@ void Texture::setupFilters() const
 
     GLenum minFilter;
     GLenum magFilter;
-    if (getProp(Prop::smooth)) {
-        minFilter = getProp(Prop::hasMipMaps) ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+    if (getProp(smooth)) {
+        minFilter = getProp(hasMipMaps) ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
         magFilter = GL_LINEAR;
     } else {
-        minFilter = getProp(Prop::hasMipMaps) ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
+        minFilter = getProp(hasMipMaps) ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
         magFilter = GL_NEAREST;
     }
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
@@ -212,49 +213,49 @@ void Texture::setupFilters() const
 
 void Texture::setupTranformMatrix()
 {
-    const static Size SIZE32x64(32, 64);
-    const static Size SIZE64x32(64, 32);
-    const static Size SIZE64x128(64, 128);
-    const static Size SIZE128x256(128, 256);
-    const static Size SIZE256x512(256, 512);
-    const static Size SIZE512x1024(512, 1024);
+    static constexpr Size SIZE32x64(32, 64);
+    static constexpr Size SIZE64x32(64, 32);
+    static constexpr Size SIZE64x128(64, 128);
+    static constexpr Size SIZE128x256(128, 256);
+    static constexpr Size SIZE256x512(256, 512);
+    static constexpr Size SIZE512x1024(512, 1024);
 
-    static Matrix3 MATRIX11x11_CACHED = toMatrix(11);
-    static Matrix3 MATRIX32x32_CACHED = toMatrix(32);
-    static Matrix3 MATRIX64x64_CACHED = toMatrix(64);
-    static Matrix3 MATRIX128x128_CACHED = toMatrix(128);
-    static Matrix3 MATRIX256x256_CACHED = toMatrix(256);
-    static Matrix3 MATRIX512x512_CACHED = toMatrix(512);
+    static const auto MATRIX11x11_CACHED = toMatrix(11);
+    static const auto MATRIX32x32_CACHED = toMatrix(32);
+    static const auto MATRIX64x64_CACHED = toMatrix(64);
+    static const auto MATRIX128x128_CACHED = toMatrix(128);
+    static const auto MATRIX256x256_CACHED = toMatrix(256);
+    static const auto MATRIX512x512_CACHED = toMatrix(512);
 
-    static Matrix3 MATRIX32x64_CACHED = toMatrix(SIZE32x64);
-    static Matrix3 MATRIX64x32_CACHED = toMatrix(SIZE64x32);
-    static Matrix3 MATRIX64x128_CACHED = toMatrix(SIZE64x128);
-    static Matrix3 MATRIX128x256_CACHED = toMatrix(SIZE128x256);
-    static Matrix3 MATRIX256x512_CACHED = toMatrix(SIZE256x512);
-    static Matrix3 MATRIX512x1024_CACHED = toMatrix(SIZE512x1024);
+    static const auto MATRIX32x64_CACHED = toMatrix(SIZE32x64);
+    static const auto MATRIX64x32_CACHED = toMatrix(SIZE64x32);
+    static const auto MATRIX64x128_CACHED = toMatrix(SIZE64x128);
+    static const auto MATRIX128x256_CACHED = toMatrix(SIZE128x256);
+    static const auto MATRIX256x512_CACHED = toMatrix(SIZE256x512);
+    static const auto MATRIX512x1024_CACHED = toMatrix(SIZE512x1024);
 
-    if (getProp(Prop::upsideDown)) {
+    if (getProp(upsideDown)) {
         m_transformMatrix = { 1.0f / m_size.width(), 0.0f,                                                  0.0f,
                               0.0f,                 -1.0f / m_size.height(),                                0.0f,
                               0.0f,                  m_size.height() / static_cast<float>(m_size.height()), 1.0f };
     } else {
-        if (m_size == 11) m_transformMatrix = std::move(MATRIX11x11_CACHED);
-        else if (m_size == 32) m_transformMatrix = std::move(MATRIX32x32_CACHED);
-        else if (m_size == 64) m_transformMatrix = std::move(MATRIX64x64_CACHED);
-        else if (m_size == 128) m_transformMatrix = std::move(MATRIX128x128_CACHED);
-        else if (m_size == 256) m_transformMatrix = std::move(MATRIX256x256_CACHED);
-        else if (m_size == 512) m_transformMatrix = std::move(MATRIX512x512_CACHED);
-        else if (m_size == SIZE32x64) m_transformMatrix = std::move(MATRIX32x64_CACHED);
-        else if (m_size == SIZE64x32) m_transformMatrix = std::move(MATRIX64x32_CACHED);
-        else if (m_size == SIZE64x128) m_transformMatrix = std::move(MATRIX64x128_CACHED);
-        else if (m_size == SIZE128x256) m_transformMatrix = std::move(MATRIX128x256_CACHED);
-        else if (m_size == SIZE256x512) m_transformMatrix = std::move(MATRIX256x512_CACHED);
-        else if (m_size == SIZE512x1024) m_transformMatrix = std::move(MATRIX512x1024_CACHED);
+        if (m_size == 11) m_transformMatrix = MATRIX11x11_CACHED;
+        else if (m_size == 32) m_transformMatrix = MATRIX32x32_CACHED;
+        else if (m_size == 64) m_transformMatrix = MATRIX64x64_CACHED;
+        else if (m_size == 128) m_transformMatrix = MATRIX128x128_CACHED;
+        else if (m_size == 256) m_transformMatrix = MATRIX256x256_CACHED;
+        else if (m_size == 512) m_transformMatrix = MATRIX512x512_CACHED;
+        else if (m_size == SIZE32x64) m_transformMatrix = MATRIX32x64_CACHED;
+        else if (m_size == SIZE64x32) m_transformMatrix = MATRIX64x32_CACHED;
+        else if (m_size == SIZE64x128) m_transformMatrix = MATRIX64x128_CACHED;
+        else if (m_size == SIZE128x256) m_transformMatrix = MATRIX128x256_CACHED;
+        else if (m_size == SIZE256x512) m_transformMatrix = MATRIX256x512_CACHED;
+        else if (m_size == SIZE512x1024) m_transformMatrix = MATRIX512x1024_CACHED;
         else m_transformMatrix = toMatrix(m_size);
     }
 }
 
-void Texture::setupPixels(int level, const Size& size, uint8_t* pixels, int channels, bool compress) const
+void Texture::setupPixels(const int level, const Size& size, const uint8_t* pixels, const int channels, const bool compress) const
 {
     GLenum format = 0;
     switch (channels) {

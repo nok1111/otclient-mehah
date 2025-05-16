@@ -41,7 +41,8 @@ Directions = {
     NorthEast = 4,
     SouthEast = 5,
     SouthWest = 6,
-    NorthWest = 7
+    NorthWest = 7,
+    Invalid = 8
 }
 
 Skill = {
@@ -75,6 +76,17 @@ NorthEast = Directions.NorthEast
 SouthEast = Directions.SouthEast
 SouthWest = Directions.SouthWest
 NorthWest = Directions.NorthWest
+
+DirectionString = {
+    [North] = "North",
+    [East] = "East",
+    [South] = "South",
+    [West] = "West",
+    [NorthEast] = "North East",
+    [SouthEast] = "South East",
+    [SouthWest] = "South West",
+    [NorthWest] = "North West"
+}
 
 FightOffensive = 1
 FightBalanced = 2
@@ -200,9 +212,17 @@ GameContainerFilter = 113
 GameEnterGameShowAppearance = 114
 GameSmoothWalkElevation = 115
 GameNegativeOffset = 116
-GameItemTooltipV8 = 117 
+GameItemTooltipV8 = 117
 GameWingsAurasEffectsShader = 118
 GameForgeConvergence = 119
+
+GameAllowCustomBotScripts = 120
+GameColorizedLootValue = 121
+GameAllowPreWalk = 122
+GamePlayerFamiliars = 123
+GameLatencyAdaptiveCamera = 124
+GameMapCache = 125
+
 
 TextColors = {
     red = '#f55e5e',    -- '#c83200'
@@ -214,7 +234,8 @@ TextColors = {
     -- blue1     = '#6e50dc',
     -- blue2     = '#3264c8',
     -- blue3     = '#0096c8',
-    white = '#ffffff' -- '#bebebe'
+    white = '#ffffff', -- '#bebebe'
+    grey = '#AAAAAA'
 }
 
 MessageModes = {
@@ -415,6 +436,24 @@ ResourceTypes = {
     COIN_TRANSFERRABLE = 91,
     COIN_AUCTION = 92,
     COIN_TOURNAMENT = 93
-};
+}
 
+CyclopediaCharacterInfoTypes = {
+    BaseInformation = 0,
+    GeneralStats = 1,
+    CombatStats = 2,
+    RecentDeaths = 3,
+    RecentPVPKills = 4,
+    Achievements = 5,
+    ItemSummary = 6,
+    OutfitsAndMounts = 7,
+    StoreSummary = 8,
+    Ispection = 9,
+    Badges = 10,
+    Titles = 11
+}
+
+StoreConst = {
+   InstantRewardAccess = 233,
+}
 -- @}

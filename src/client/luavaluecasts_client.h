@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,10 @@ bool luavalue_cast(int index, Position& pos);
 int push_luavalue(const MarketData& data);
 bool luavalue_cast(int index, MarketData& data);
 
+// NPC
+int push_luavalue(const std::vector<NPCData>& data);
+bool luavalue_cast(int index, std::vector<NPCData>& data);
+
 // light
 int push_luavalue(const Light& light);
 bool luavalue_cast(int index, Light& light);
@@ -49,9 +53,50 @@ bool luavalue_cast(int index, UnjustifiedPoints& unjustifiedPoints);
 int push_luavalue(const Imbuement& i);
 int push_luavalue(const ImbuementTrackerItem& i);
 
+
+// bless
+int push_luavalue(const BlessData& bless);
+int push_luavalue(const LogData& log);
+int push_luavalue(const BlessDialogData& data);
+
+// store
+
 int push_luavalue(const StoreCategory& category);
 int push_luavalue(const SubOffer& subOffer);
 int push_luavalue(const StoreOffer& offer);
 int push_luavalue(const HomeOffer& homeOffer);
 int push_luavalue(const Banner& banner);
 int push_luavalue(const StoreData& storeData);
+
+// cyclopedia
+int push_luavalue(const CyclopediaBestiaryRace& race);
+int push_luavalue(const BestiaryOverviewMonsters& monster);
+int push_luavalue(const CharmData& charm);
+int push_luavalue(const BestiaryCharmsData& charmData);
+int push_luavalue(const CyclopediaCharacterGeneralStats& stats);
+int push_luavalue(const CyclopediaCharacterCombatStats& data);
+int push_luavalue(const CyclopediaCharacterItemSummary& data);
+int push_luavalue(const ItemSummary& item);
+int push_luavalue(const LootItem& lootItem);
+int push_luavalue(const BestiaryMonsterData& data);
+int push_luavalue(const BosstiaryData& boss);
+int push_luavalue(const BosstiarySlot& slot);
+int push_luavalue(const BossUnlocked& boss);
+int push_luavalue(const BosstiarySlotsData& data);
+int push_luavalue(const RecentPvPKillEntry& entry);
+int push_luavalue(const CyclopediaCharacterRecentPvPKills& data);
+int push_luavalue(const RecentDeathEntry& entry);
+int push_luavalue(const CyclopediaCharacterRecentDeaths& data);
+int push_luavalue(const OutfitColorStruct& currentOutfit);
+int push_luavalue(const CharacterInfoOutfits& outfit);
+int push_luavalue(const CharacterInfoMounts& mount);
+int push_luavalue(const CharacterInfoFamiliar& familiar);
+
+// bestiary
+int push_luavalue(const RaceType& raceData);
+
+// rewardWall
+int push_luavalue(const DailyRewardItem& item);
+int push_luavalue(const DailyRewardBundle& bundle);
+int push_luavalue(const DailyRewardDay& day);
+int push_luavalue(const DailyRewardData& data);

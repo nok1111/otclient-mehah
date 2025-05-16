@@ -92,11 +92,13 @@ function setSpelllistProfile(name)
 end
 
 function online()
-  if g_game.getFeature(GameSpellList) then
-    spelllistButton:show()
-  else
-    spelllistButton:hide()
-  end
+
+    if g_game.getFeature(GameSpellList) and not spelllistButton then
+        spelllistButton = modules.game_mainpanel.addToggleButton('spelllistButton', tr('Spell List'),
+        '/images/options/button_spells', toggle, false, 4)
+        spelllistButton:setOn(false)
+    end
+
 
   -- Vocation is only send in newer clients
   if g_game.getClientVersion() >= 950 then
@@ -117,9 +119,6 @@ function init()
   spelllistWindow = g_ui.displayUI('spelllist', modules.game_interface.getRightPanel())
   spelllistWindow:hide()
 
-  spelllistButton = modules.client_topmenu.addRightGameToggleButton('spelllistButton', tr('Spell List'), '/images/topbuttons/spelllist', toggle)
-  spelllistButton:setOn(false)
-
   nameValueLabel        = spelllistWindow:getChildById('labelNameValue')
   formulaValueLabel     = spelllistWindow:getChildById('labelFormulaValue')
   vocationValueLabel    = spelllistWindow:getChildById('labelVocationValue')
@@ -130,6 +129,7 @@ function init()
   manaValueLabel        = spelllistWindow:getChildById('labelManaValue')
   premiumValueLabel     = spelllistWindow:getChildById('labelPremiumValue')
   descriptionValueLabel = spelllistWindow:getChildById('labelDescriptionValue')
+
 
   vocationBoxAny        = spelllistWindow:getChildById('vocationBoxAny')
   vocationBoxMagician   = spelllistWindow:getChildById('vocationBoxMagician')
@@ -196,26 +196,44 @@ function init()
   initializeSpelllist()
   --resizeWindow()
 
-  if g_game.isOnline() then
-    online()
-  end
+
+    g_keyboard.bindKeyPress('Down', function()
+        spellList:focusNextChild(KeyboardFocusReason)
+    end, spelllistWindow)
+    g_keyboard.bindKeyPress('Up', function()
+        spellList:focusPreviousChild(KeyboardFocusReason)
+    end, spelllistWindow)
+
+    initializeSpelllist()
+    resizeWindow()
+
+    if g_game.isOnline() then
+        online()
+    end
+    Keybind.new("Windows", "Show/hide spell list", "Alt+L", "")
+    Keybind.bind("Windows", "Show/hide spell list", {
+      {
+        type = KEY_DOWN,
+        callback = toggle,
+      }
+    })
+
 end
 
 function terminate()
   disconnect(g_game, { onGameStart = online,
                        onGameEnd   = offline })
 
-  disconnect(spellList, { onChildFocusChange = function(self, focusedChild)
-                          if focusedChild == nil then return end
-                          updateSpellInformation(focusedChild)
-                        end })
+    spelllistWindow:destroy()
+    if spelllistButton then
+        spelllistButton:destroy()
+        spelllistButton = nil
+    end
+    vocationRadioGroup:destroy()
+    groupRadioGroup:destroy()
+    premiumRadioGroup:destroy()
+    Keybind.delete("Windows", "Show/hide spell list")
 
-  spelllistWindow:destroy()
-  spelllistButton:destroy()
-
-  vocationRadioGroup:destroy()
-  groupRadioGroup:destroy()
-  premiumRadioGroup:destroy()
 end
 
 function initializeSpelllist()
@@ -418,8 +436,12 @@ function resizeWindow()
 end
 
 function resetWindow()
-  spelllistWindow:hide()
-  spelllistButton:setOn(false)
+
+    spelllistWindow:hide()
+    if spelllistButton then
+        spelllistButton:setOn(false)
+    end
+
 
   -- Resetting filters
   filters.level = false
