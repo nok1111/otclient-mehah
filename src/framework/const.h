@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
 #pragma once
 
 #include <cstdint>
-#include <numbers>
 
 #define DEG_TO_RAD (std::acos(-1.f)/180.f)
 #define RAD_TO_DEC (180.f/std::acos(-1.f))
@@ -39,8 +38,6 @@
 #define BUILD_ARCH "x86"
 #elif defined(__arm__)
 #define BUILD_ARCH "ARM"
-#elif defined(__EMSCRIPTEN__)
-#define BUILD_ARCH "WASM32"
 #else
 #define BUILD_ARCH "unknown"
 #endif
@@ -49,7 +46,7 @@
 namespace Fw
 {
     // clang c++20 dont support std::numbers::pi
-    static constexpr float pi = std::numbers::pi_v<float>;
+    static constexpr float pi = 3.141592653589793f;
     static constexpr float MIN_ALPHA = 0.003f;
 
     enum Key : uint8_t
@@ -150,7 +147,6 @@ namespace Fw
         KeyBar = 124,         // |
         KeyRightCurly = 125,  // }
         KeyTilde = 126,       // ~
-        KeyDel = 127,       // DEL (Ctrl + Backspace)
         KeyF1 = 128,
         KeyF2 = 129,
         KeyF3 = 130,
@@ -293,7 +289,6 @@ namespace Fw
         AlternateState = 1 << 10,
         DraggingState = 1 << 11,
         HiddenState = 1 << 12,
-        MobileState = 1 << 13,
-        LastWidgetState = 1 << 14
+        LastWidgetState = 1 << 13
     };
 }

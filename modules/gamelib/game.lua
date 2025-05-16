@@ -2,7 +2,7 @@ function g_game.getRsa()
     return G.currentRsa
 end
 
-function g_game.findPlayerItem(itemId, subType, tier)
+function g_game.findPlayerItem(itemId, subType)
     local localPlayer = g_game.getLocalPlayer()
     if localPlayer then
         for slot = InventorySlotFirst, InventorySlotLast do
@@ -13,7 +13,7 @@ function g_game.findPlayerItem(itemId, subType, tier)
         end
     end
 
-    return g_game.findItemInContainers(itemId, subType, tier or 0)
+    return g_game.findItemInContainers(itemId, subType)
 end
 
 function g_game.chooseRsa(host)

@@ -53,13 +53,6 @@ MessageSettings = {
     private = {
         color = TextColors.lightblue,
         screenTarget = 'privateLabel'
-    },
-    loot = {
-        color = TextColors.white,
-        consoleTab = 'Loot',
-        screenTarget = 'highCenterLabel',
-        consoleOption = 'showInfoMessagesInConsole',
-        colored = true
     }
 }
 
@@ -74,7 +67,7 @@ MessageTypes = {
     [MessageModes.Status] = MessageSettings.status,
     [MessageModes.Warning] = MessageSettings.centerRed,
     [MessageModes.Look] = MessageSettings.centerGreen,
-    [MessageModes.Loot] = MessageSettings.loot,
+    [MessageModes.Loot] = MessageSettings.centerGreen,
     [MessageModes.Red] = MessageSettings.consoleRed,
     [MessageModes.Blue] = MessageSettings.consoleBlue,
     [MessageModes.PrivateFrom] = MessageSettings.consoleBlue,
@@ -151,27 +144,14 @@ function displayMessage(mode, text)
 
     if msgtype.consoleTab ~= nil and
         (msgtype.consoleOption == nil or modules.client_options.getOption(msgtype.consoleOption)) then
-        if msgtype == MessageSettings.loot then
-            local lootColoredText = ItemsDatabase.setColorLootMessage(text)
-            modules.game_console.addText(lootColoredText, msgtype, tr("Server Log"))
-            modules.game_console.addText(lootColoredText, msgtype, tr(msgtype.consoleTab))
-        else
-            modules.game_console.addText(text, msgtype, tr(msgtype.consoleTab))
-        end
+        modules.game_console.addText(text, msgtype, tr(msgtype.consoleTab))
+        -- TODO move to game_console
     end
 
     if msgtype.screenTarget then
         local label = messagesPanel:recursiveGetChildById(msgtype.screenTarget)
-        if msgtype == MessageSettings.loot and not modules.client_options.getOption('showLootMessagesOnScreen') then
-            return
-        elseif msgtype == MessageSettings.loot then
-            local coloredText = ItemsDatabase.setColorLootMessage(text)
-            label:setColoredText(coloredText)
-        else
-            label:setText(text)
-            label:setColor(msgtype.color)
-        end
-
+        label:setText(text)
+        label:setColor(msgtype.color)
         label:setVisible(true)
         removeEvent(label.hideEvent)
         label.hideEvent = scheduleEvent(function()

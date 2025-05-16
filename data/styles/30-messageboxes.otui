@@ -44,12 +44,12 @@ MessageBoxWindow < UIMessageBox
     margin-top: 32
 
   HorizontalSeparator
-    anchors.left: parent.left
-    anchors.right: parent.right
+    anchors.left: content.left
+    anchors.right: content.right
     anchors.top: content.bottom
+    image-source: /images/ui/horizontal_line_bright
+    height: 1
     margin-top: 10
-    margin-right: 15
-    margin-left: 15
 
   UIWidget
     id: holder
@@ -93,9 +93,8 @@ MessageBoxShopWindow < UIMessageBox
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    text-vertical-auto-resize: true
     opacity: 0.5
-    margin-right: 10
+
   Label
     id: content
     anchors.horizontalCenter: parent.horizontalCenter
@@ -119,27 +118,25 @@ MessageBoxShopWindow < UIMessageBox
     id: additionalLabel
     size: 260 96
     anchors.left: Box.left
-    anchors.right: parent.right
     anchors.top: content.bottom
     margin-top: 10
     margin-left: 100
     image-source:  /game_store/images/panel_flat
     image-border: 1
     text-wrap: true
-    margin-right: 10
+
   HorizontalSeparator
     anchors.left: Box.left
-    anchors.right: parent.right
+    anchors.right: additionalLabel.right
     anchors.top: additionalLabel.bottom
+    image-source: /images/ui/horizontal_line_bright
+    height: 1
     margin-top: 10
-    margin-right: 10
 
   UIWidget
     id: holder
-    anchors.right: parent.right
-    margin-right: 5
+    anchors.right: prev.right
     anchors.left: prev.left
     anchors.top: prev.bottom
     anchors.bottom: parent.bottom
     margin-top: 12
-    margin-right: 10

@@ -1,7 +1,7 @@
 Bit = {}
 
 function Bit.bit(p)
-    return 2 ^ (p - 1)
+    return 2 ^ p
 end
 
 function Bit.hasBit(x, p)

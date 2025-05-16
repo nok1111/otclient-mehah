@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,15 @@
 
 #include "application.h"
 
-#include "asyncdispatcher.h"
 #include <framework/core/configmanager.h>
 #include <framework/core/eventdispatcher.h>
 #include <framework/core/modulemanager.h>
 #include <framework/core/resourcemanager.h>
-#include <framework/graphics/drawpoolmanager.h>
 #include <framework/luaengine/luainterface.h>
 #include <framework/platform/crashhandler.h>
 #include <framework/platform/platform.h>
-#include <framework/proxy/proxy.h>
+#include <framework/graphics/drawpoolmanager.h>
+#include "asyncdispatcher.h"
 
 #include <csignal>
 #include <gitinfo.h>
@@ -42,14 +41,10 @@
 #include <locale>
 
 #ifdef FRAMEWORK_NET
-#ifdef __EMSCRIPTEN__
-#include <framework/net/webconnection.h>
-#else
 #include <framework/net/connection.h>
 #endif
-#endif
 
-void exitSignalHandler(const int sig)
+void exitSignalHandler(int sig)
 {
     static bool signaled = false;
     switch (sig) {
@@ -94,20 +89,12 @@ void Application::init(std::vector<std::string>& args, ApplicationContext* conte
     m_startupOptions = startupOptions;
     m_startupArgs = args;
 
-    // mobile testing
-    if (startupOptions.find("-mobile") != std::string::npos) {
-        g_platform.setDevice({ Platform::Mobile, Platform::Android });
-    }
-
     // initialize configs
     g_configs.init();
 
     // initialize lua
     g_lua.init();
     registerLuaFunctions();
-
-    // initalize proxy
-    g_proxy.init();
 }
 
 void Application::deinit()
@@ -134,11 +121,8 @@ void Application::deinit()
 void Application::terminate()
 {
 #ifdef FRAMEWORK_NET
-#ifdef __EMSCRIPTEN__
-    WebConnection::terminate();
-#else
+    // terminate network
     Connection::terminate();
-#endif
 #endif
 
     // release configs
@@ -149,9 +133,6 @@ void Application::terminate()
 
     // terminate script environment
     g_lua.terminate();
-
-    // terminate proxy
-    g_proxy.terminate();
 
     m_terminated = true;
 
@@ -164,22 +145,14 @@ void Application::poll()
     g_clock.update();
 
 #ifdef FRAMEWORK_NET
-#ifdef __EMSCRIPTEN__
-    WebConnection::poll();
-#else
     Connection::poll();
-#endif
 #endif
 
     g_dispatcher.poll();
 
     // poll connection again to flush pending write
 #ifdef FRAMEWORK_NET
-#ifdef __EMSCRIPTEN__
-    WebConnection::poll();
-#else
     Connection::poll();
-#endif
 #endif
 
     g_clock.update();
@@ -214,8 +187,6 @@ std::string Application::getOs()
     return "linux";
 #elif ANDROID
     return "android";
-#elif __EMSCRIPTEN__
-    return "browser";
 #else
     return "unknown";
 #endif

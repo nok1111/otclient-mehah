@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,6 @@ WIN32Window window;
 #elif defined ANDROID
 #include "androidwindow.h"
 AndroidWindow window;
-#elif defined __EMSCRIPTEN__
-#include "browserwindow.h"
-BrowserWindow window;
 #else
 #include "x11window.h"
 #include <framework/core/clock.h>
@@ -95,11 +92,11 @@ void PlatformWindow::processKeyDown(Fw::Key keyCode)
         return;
     }
 
-    if (m_keyInfo[keyCode].state)
+    if (m_keysState[keyCode])
         return;
 
-    m_keyInfo[keyCode].state = true;
-    m_keyInfo[keyCode].lastTicks = -1;
+    m_keysState[keyCode] = true;
+    m_lastKeysPress[keyCode] = -1;
 
     m_inputEvent.reset(Fw::KeyDownInputEvent);
     m_inputEvent.type = Fw::KeyDownInputEvent;
@@ -110,8 +107,8 @@ void PlatformWindow::processKeyDown(Fw::Key keyCode)
 
         m_inputEvent.reset(Fw::KeyPressInputEvent);
         m_inputEvent.keyCode = keyCode;
-        m_keyInfo[keyCode].lastTicks = g_clock.millis();
-        m_keyInfo[keyCode].firstTicks = g_clock.millis();
+        m_lastKeysPress[keyCode] = g_clock.millis();
+        m_firstKeysPress[keyCode] = g_clock.millis();
         m_onInputEvent(m_inputEvent);
     }
 }
@@ -141,15 +138,15 @@ void PlatformWindow::processKeyUp(Fw::Key keyCode)
     }
     if (keyCode == Fw::KeyNumLock) {
         for (uint8_t k = Fw::KeyNumpad0; k <= Fw::KeyNumpad9; ++k) {
-            if (m_keyInfo[static_cast<Fw::Key>(k)].state)
+            if (m_keysState[static_cast<Fw::Key>(k)])
                 processKeyUp(static_cast<Fw::Key>(k));
         }
     }
 
-    if (!m_keyInfo[keyCode].state)
+    if (!m_keysState[keyCode])
         return;
 
-    m_keyInfo[keyCode].state = false;
+    m_keysState[keyCode] = false;
 
     if (m_onInputEvent) {
         m_inputEvent.reset(Fw::KeyUpInputEvent);
@@ -161,7 +158,7 @@ void PlatformWindow::processKeyUp(Fw::Key keyCode)
 void PlatformWindow::releaseAllKeys()
 {
     for (size_t keyCode = 0; keyCode < Fw::KeyLast; ++keyCode) {
-        const bool pressed = m_keyInfo[keyCode].state;
+        const bool pressed = m_keysState[keyCode];
         if (!pressed)
             continue;
 
@@ -180,23 +177,21 @@ void PlatformWindow::fireKeysPress()
     m_keyPressTimer.restart();
 
     for (size_t keyCode = 0; keyCode < Fw::KeyLast; ++keyCode) {
-        auto& keyInfo = m_keyInfo[keyCode];
-
-        const bool pressed = keyInfo.state;
+        const bool pressed = m_keysState[keyCode];
 
         if (!pressed)
             continue;
 
-        const ticks_t lastPressTicks = keyInfo.lastTicks;
-        const ticks_t firstKeyPress = keyInfo.firstTicks;
-        if (g_clock.millis() - lastPressTicks >= keyInfo.delay) {
+        const ticks_t lastPressTicks = m_lastKeysPress[keyCode];
+        const ticks_t firstKeyPress = m_firstKeysPress[keyCode];
+        if (g_clock.millis() - lastPressTicks >= KEY_PRESS_REPEAT_INTERVAL) {
             if (m_onInputEvent) {
                 m_inputEvent.reset(Fw::KeyPressInputEvent);
                 m_inputEvent.keyCode = static_cast<Fw::Key>(keyCode);
                 m_inputEvent.autoRepeatTicks = g_clock.millis() - firstKeyPress;
                 m_onInputEvent(m_inputEvent);
             }
-            keyInfo.lastTicks = g_clock.millis();
+            m_lastKeysPress[keyCode] = g_clock.millis();
         }
     }
 }

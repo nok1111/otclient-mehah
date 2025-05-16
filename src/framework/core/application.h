@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,7 @@
 #pragma once
 
 #include <framework/global.h>
+#include <framework/graphics/declarations.h>
 
 class ApplicationContext
 {
@@ -78,7 +79,7 @@ protected:
     std::string m_charset{ "cp1252" };
     std::string m_organizationName{ "otbr" };
     std::string m_appName{ "OTClient - Redemption" };
-    std::string m_appCompactName{ "otclient" };
+    std::string m_appCompactName{ "otcr" };
     std::string m_startupOptions;
 
     std::vector<std::string> m_startupArgs;
@@ -91,6 +92,7 @@ protected:
 };
 
 #ifdef FRAMEWORK_GRAPHICS
+#include "graphicalapplication.h"
 #else
 #include "consoleapplication.h"
 #endif

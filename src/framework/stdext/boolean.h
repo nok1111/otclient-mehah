@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2017 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,21 @@
  * THE SOFTWARE.
  */
 
-#pragma once
+#ifndef BOOLEAN_H
+#define BOOLEAN_H
 
-#include "timer.h"
-#include <framework/global.h>
+namespace stdext {
 
-class GarbageCollection
-{
-public:
-    static void poll();
-
+template<bool def>
+struct boolean {
+    boolean() : v(def) { }
+    operator bool &() { return v; }
+    operator bool const &() const { return v; }
+    bool& operator=(const bool& o) { v = o; return v; }
 private:
-    static bool canCheck(Timer& timer, const uint32_t delay) {
-        if (timer.ticksElapsed() < delay)
-            return false;
-        timer.restart();
-        return true;
-    }
-
-    static void texture();
-    static void drawpoll();
-    static void thingType();
+    bool v;
 };
+
+}
+
+#endif

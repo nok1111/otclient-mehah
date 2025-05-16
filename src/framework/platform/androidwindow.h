@@ -145,9 +145,6 @@ private:
 
     std::queue<NativeEvent> m_events;
     NativeEvent m_currentEvent;
-
-    ticks_t m_lastPress = 0;
-    bool m_isDragging = false;
 };
 
 extern "C" {

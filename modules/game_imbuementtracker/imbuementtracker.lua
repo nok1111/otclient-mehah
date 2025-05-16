@@ -53,6 +53,7 @@ function initialize()
         onUpdateImbuementTracker = onUpdateImbuementTracker
     })
     
+    imbuementTrackerButton = modules.game_mainpanel.addToggleButton('imbuementTrackerButton', tr('Imbuement Tracker'), '/images/options/button_imbuementtracker', toggle)
     imbuementTracker = g_ui.createWidget('ImbuementTracker', modules.game_interface.getRightPanel())
 
     imbuementTracker.menuButton.onClick = function(widget, mousePos, mouseButton)
@@ -76,15 +77,11 @@ function initialize()
 end
 
 function onMiniWindowOpen()
-    if imbuementTrackerButton then
-        imbuementTrackerButton:setOn(true)
-    end
+    imbuementTrackerButton:setOn(true)
 end
 
 function onMiniWindowClose()
-    if imbuementTrackerButton then
-        imbuementTrackerButton:setOn(false)
-    end
+    imbuementTrackerButton:setOn(false)
 end
 
 function terminate()
@@ -93,12 +90,11 @@ function terminate()
         onGameEnd = onGameEnd,
         onUpdateImbuementTracker = onUpdateImbuementTracker
     })
-
-    if imbuementTrackerButton then
-        imbuementTrackerButton:destroy()
-        imbuementTrackerButton = nil
-    end
+    
+    imbuementTrackerButton:destroy()
     imbuementTracker:destroy()
+
+    imbuementTrackerButton = nil
 end
 
 function toggle()
@@ -157,7 +153,6 @@ end
 local function addTrackedItem(item)
     local trackedItem = g_ui.createWidget('InventoryItem')
     trackedItem.item:setItem(item['item'])
-    ItemsDatabase.setTier(trackedItem.item, trackedItem.item:getItem())
     trackedItem.item:setVirtual(true)
     local maxDuration = 0
     for _, imbuementSlot in ipairs(item['slots']) do
@@ -194,10 +189,11 @@ end
 
 function onGameStart()
     if g_game.getClientVersion() >= 1100 then
-        imbuementTrackerButton = modules.game_mainpanel.addToggleButton('imbuementTrackerButton', tr('Imbuement Tracker'), '/images/options/button_imbuementtracker', toggle)
         g_game.imbuementDurations(imbuementTrackerButton:isOn())
         imbuementTracker:setupOnStart()
         loadFilters()
+    else
+        imbuementTrackerButton:hide()
     end
 end
 

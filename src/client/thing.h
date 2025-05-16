@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,14 @@
 
 #pragma once
 
-#include "attachableobject.h"
+#include <framework/core/clock.h>
+#include <framework/graphics/drawpool.h>
+#include <framework/luaengine/luaobject.h>
 #include "declarations.h"
 #include "spritemanager.h"
 #include "thingtype.h"
 #include "thingtypemanager.h"
-#include <framework/core/clock.h>
-#include <framework/graphics/drawpool.h>
-#include <framework/luaengine/luaobject.h>
+#include "attachableobject.h"
 
  // @bindclass
 #pragma pack(push,1) // disable memory alignment
@@ -48,8 +48,7 @@ public:
     virtual uint32_t getId() { return m_clientId; }
     uint16_t getClientId() const { return m_clientId; }
 
-    virtual Position getPosition() { return m_position; }
-    Position getServerPosition() { return m_position; }
+    Position getPosition() { return m_position; }
 
     const TilePtr& getTile();
     ContainerPtr getParentContainer();
@@ -74,19 +73,17 @@ public:
     virtual Point getDisplacement() const { return getThingType()->getDisplacement(); }
     virtual int getDisplacementX() const { return getThingType()->getDisplacementX(); }
     virtual int getDisplacementY() const { return getThingType()->getDisplacementY(); }
-    virtual int getExactSize(const int layer = 0, const int xPattern = 0, const int yPattern = 0, const int zPattern = 0, const int animationPhase = 0) { return getThingType()->getExactSize(layer, xPattern, yPattern, zPattern, animationPhase); }
+    virtual int getExactSize(int layer = 0, int xPattern = 0, int yPattern = 0, int zPattern = 0, int animationPhase = 0) { return getThingType()->getExactSize(layer, xPattern, yPattern, zPattern, animationPhase); }
 
     virtual const Light& getLight() const { return getThingType()->getLight(); }
     virtual bool hasLight() const { return getThingType()->hasLight(); }
 
     const MarketData& getMarketData() { return getThingType()->getMarketData(); }
-    const std::vector<NPCData>& getNpcSaleData() { return getThingType()->getNpcSaleData(); }
-    int getMeanPrice() { return getThingType()->getMeanPrice(); }
     const Size& getSize() const { return getThingType()->getSize(); }
 
     int getWidth() const { return getThingType()->getWidth(); }
     int getHeight() const { return getThingType()->getHeight(); }
-    int getRealSize() const { return getThingType()->getRealSize(); }
+    int getRealSize()const { return getThingType()->getRealSize(); }
     int getLayers() const { return getThingType()->getLayers(); }
     int getNumPatternX()const { return getThingType()->getNumPatternX(); }
     int getNumPatternY()const { return getThingType()->getNumPatternY(); }
@@ -165,13 +162,12 @@ public:
 
     uint16_t getClassification() { return getThingType()->getClassification(); }
 
-    void canDraw(const bool canDraw) { m_canDraw = canDraw; }
-
-    bool canDraw(const Color& color = Color::white) const {
+    void canDraw(bool canDraw) { m_canDraw = canDraw; }
+    inline bool canDraw(const Color& color = Color::white) const {
         return m_canDraw && m_clientId > 0 && color.aF() > Fw::MIN_ALPHA && getThingType() && getThingType()->getOpacity() > Fw::MIN_ALPHA;
     }
 
-    void setShader(std::string_view name);
+    void setShader(const std::string_view name);
     uint8_t getShaderId() const { return m_shaderId; }
     PainterShaderProgramPtr getShader() const;
 
@@ -206,31 +202,10 @@ public:
 
     bool isHided() { return isOwnerHidden(); }
 
-    uint8_t getPatternX()const { return m_numPatternX; }
-    uint8_t getPatternY()const { return m_numPatternY; }
-    uint8_t getPatternZ()const { return m_numPatternZ; }
-
-    float getScaleFactor() {
-        if (m_scale.value == 100)
-            return 1.f;
-
-        const auto scale = m_scale.value * (m_scale.speed == 0 ? 1.f : m_scale.timer.ticksElapsed() / static_cast<float>(m_scale.speed));
-        return std::min<float>(scale, m_scale.value) / 100.f;
-    }
-
-    void setScaleFactor(float v, uint16_t ms = 0) {
-        m_scale.value = v * 100;
-        m_scale.speed = ms;
-        m_scale.timer.restart();
-    }
-	
-    bool canAnimate() { return m_animate; }
-    void setAnimate(bool aniamte) { m_animate = aniamte; }
-
 protected:
     virtual ThingType* getThingType() const = 0;
 
-    void setAttachedEffectDirection(const Otc::Direction dir) const
+    void setAttachedEffectDirection(Otc::Direction dir) const
     {
         if (!hasAttachedEffects()) return;
 
@@ -243,15 +218,8 @@ protected:
     Color m_markedColor{ Color::white };
     Color m_highlightColor{ Color::white };
 
-    struct
-    {
-        Timer timer;
-        uint16_t speed{ 0 };
-        uint16_t value{ 100 };
-    } m_scale;
-
     Position m_position;
-    DrawConductor m_drawConductor{ .agroup = false, .order = THIRD };
+    DrawConductor m_drawConductor{ false, DrawOrder::THIRD };
 
     uint16_t m_clientId{ 0 };
 
@@ -264,11 +232,10 @@ protected:
     uint8_t m_shaderId{ 0 };
 
 private:
-    void lua_setMarked(const std::string_view color) { setMarked(Color(color)); }
-    void lua_setHighlight(const std::string_view color) { setHighlight(Color(color)); }
+    void lua_setMarked(std::string_view color) { setMarked(Color(color)); }
+    void lua_setHighlight(std::string_view color) { setHighlight(Color(color)); }
 
     bool m_canDraw{ true };
-    bool m_animate{ true };
 
     friend class Client;
     friend class Tile;

@@ -8,25 +8,14 @@ controller:registerEvents(g_game, {
 		g_game.enableFeature(GameItemShader)
 		g_game.enableFeature(GameItemTooltipV8)
         -- g_game.enableFeature(GameKeepUnawareTiles)
+        -- g_game.enableFeature(GameSmoothWalkElevation)
         -- g_game.enableFeature(GameNegativeOffset)
         -- g_game.enableFeature(GameWingsAurasEffectsShader)
-
 		 -- To extended the sprites
 		g_game.enableFeature(GameMagicEffectU16)
 		g_game.enableFeature(GameSpritesAlphaChannel) -- To enable transparency
         
 
-
-        -- g_game.enableFeature(GameAllowCustomBotScripts)
-
-        g_game.enableFeature(GameFormatCreatureName)
-
-
-        -- For Walk
-        --g_game.enableFeature(GameLatencyAdaptiveCamera)
-        g_game.enableFeature(GameAllowPreWalk)
-        g_game.enableFeature(GameMapCache)
-        -- g_game.enableFeature(GameSmoothWalkElevation)
 
         if version >= 750 then
             g_game.enableFeature(GameSoul)
@@ -204,7 +193,6 @@ controller:registerEvents(g_game, {
         end
 
         if version >= 1200 then
-            g_game.enableFeature(GameColorizedLootValue)
             g_game.enableFeature(GameThingQuickLoot)
             g_game.enableFeature(GameTournamentPackets)
             g_game.enableFeature(GameVipGroups)
@@ -224,7 +212,6 @@ controller:registerEvents(g_game, {
         end
 
         if version >= 1281 then
-            g_game.enableFeature(GamePlayerFamiliars)
             g_game.disableFeature(GameEnvironmentEffect)
             g_game.disableFeature(GameItemAnimationPhase)
         end
@@ -246,7 +233,7 @@ controller:registerEvents(g_game, {
         end
 
         if version >= 1314 then
-            g_game.disableFeature(GameTournamentPackets)
+            g_game.disableFeature(GameTournamentPackets)  
             g_game.enableFeature(GameDynamicForgeVariables)
         end
 

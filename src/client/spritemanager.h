@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,34 +22,11 @@
 
 #pragma once
 
-#include "gameconfig.h"
 #include <framework/core/declarations.h>
-#include <framework/core/filestream.h>
 #include <framework/graphics/declarations.h>
+#include "gameconfig.h"
 
-class FileMetadata
-{
-public:
-    FileMetadata() = default;
-    FileMetadata(const FileStreamPtr& file) {
-        offset = file->getU32();
-        fileSize = file->getU32();
-        fileName = file->getString();
-        spriteId = std::stoi(fileName);
-    }
-
-    uint32_t getSpriteId() const { return spriteId; }
-    const std::string& getFileName() const { return fileName; }
-    uint32_t getOffset() const { return offset; }
-    uint32_t getFileSize() const { return fileSize; }
-private:
-    std::string fileName;
-    uint32_t offset = 0;
-    uint32_t fileSize = 0;
-    uint32_t spriteId = 0;
-};
-
-//@bindsingleton g_sprites
+ //@bindsingleton g_sprites
 class SpriteManager
 {
 public:
@@ -57,8 +34,6 @@ public:
     void terminate();
 
     bool loadSpr(std::string file);
-    bool loadRegularSpr(std::string file);
-    bool loadCwmSpr(std::string file);
     void reload();
     void unload();
 
@@ -73,31 +48,27 @@ public:
     bool isLoaded() { return m_loaded; }
 
 private:
-     struct FileStream_m {
-         FileStreamPtr file;
-         std::mutex mutex;
-
-         FileStream_m(FileStreamPtr f) : file(std::move(f)) {}
-     };
+    struct FileStream_m
+    {
+        FileStreamPtr file;
+        std::mutex mutex;
+    };
 
     void load();
     FileStreamPtr getSpriteFile() const {
         return m_spritesFiles[0]->file;
     }
 
-    ImagePtr getSpriteImageHd(int id, const FileStreamPtr& file);
     ImagePtr getSpriteImage(int id, const FileStreamPtr& file);
 
     std::string m_lastFileName;
 
-    bool m_spritesHd{ false };
     bool m_loaded{ false };
     uint32_t m_signature{ 0 };
     uint32_t m_spritesCount{ 0 };
     uint32_t m_spritesOffset{ 0 };
 
     std::vector<std::unique_ptr<FileStream_m>> m_spritesFiles;
-    std::unordered_map<uint32_t, FileMetadata> m_cwmSpritesMetadata;
 };
 
 extern SpriteManager g_sprites;

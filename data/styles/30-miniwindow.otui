@@ -215,7 +215,6 @@ PhantomMiniWindow < UIMiniWindow
     margin-left: 3
     margin-right: 3
     phantom: true
-    opacity: 0.6
 
   UIWidget
     id: miniwindowTopBar

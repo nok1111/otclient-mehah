@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,12 @@
 #include "attachedeffect.h"
 #include "gameconfig.h"
 #include "lightview.h"
-#include "thingtypemanager.h"
 
 #include <framework/core/clock.h>
 #include <framework/graphics/animatedtexture.h>
 #include <framework/graphics/shadermanager.h>
-#include <framework/graphics/texturemanager.h>
 
-AttachedEffectPtr AttachedEffect::create(const uint16_t thingId, const ThingCategory category) {
+AttachedEffectPtr AttachedEffect::create(uint16_t thingId, ThingCategory category) {
     if (!g_things.isValidDatId(thingId, category)) {
         g_logger.error(stdext::format("AttachedEffectManager::getInstance(%d, %d): invalid thing with id or category.", thingId, static_cast<uint8_t>(category)));
         return nullptr;
@@ -49,30 +47,12 @@ AttachedEffectPtr AttachedEffect::clone()
 
     obj->m_frame = 0;
     obj->m_animationTimer.restart();
-    obj->m_bounce.timer.restart();
-    obj->m_pulse.timer.restart();
-    obj->m_fade.timer.restart();
-
-    if (!obj->m_texturePath.empty()) {
-        if (obj->m_texture = g_textures.getTexture(obj->m_texturePath, obj->m_smooth)) {
-            if (obj->m_texture->isAnimatedTexture()) {
-                const auto& animatedTexture = std::static_pointer_cast<AnimatedTexture>(obj->m_texture);
-                animatedTexture->setOnMap(true);
-                animatedTexture->restart();
-            }
-        }
-    }
+    obj->m_bounceTimer.restart();
 
     return obj;
 }
 
-int getBounce(const AttachedEffect::Bounce bounce, const ticks_t ticks) {
-    const auto minHeight = bounce.minHeight * g_drawPool.getScaleFactor();
-    const auto height = bounce.height * g_drawPool.getScaleFactor();
-    return minHeight + (height - std::abs(height - static_cast<int>(ticks / (bounce.speed / 100.f)) % static_cast<int>(height * 2)));
-}
-
-void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightViewPtr& lightView, const bool drawThing) {
+void AttachedEffect::draw(const Point& dest, bool isOnTop, const LightViewPtr& lightView, const bool drawThing) {
     if (m_transform)
         return;
 
@@ -94,16 +74,6 @@ void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightView
         if (m_shader) g_drawPool.setShaderProgram(m_shader, true);
         if (m_opacity < 100) g_drawPool.setOpacity(getOpacity(), true);
 
-        const auto scaleFactor = g_drawPool.getScaleFactor();
-
-        if (m_pulse.height > 0 && m_pulse.speed > 0) {
-            g_drawPool.setScaleFactor(scaleFactor + getBounce(m_pulse, m_pulse.timer.ticksElapsed()) / 100.f);
-        }
-
-        if (m_fade.height > 0 && m_fade.speed > 0) {
-            g_drawPool.setOpacity(std::clamp<float>(getBounce(m_fade, m_fade.timer.ticksElapsed()) / 100.f, 0, 1.f));
-        }
-
         auto point = dest - (dirControl.offset * g_drawPool.getScaleFactor());
         if (!m_toPoint.isNull()) {
             const float fraction = std::min<float>(m_animationTimer.ticksElapsed() / static_cast<float>(m_duration), 1.f);
@@ -111,7 +81,10 @@ void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightView
         }
 
         if (m_bounce.height > 0 && m_bounce.speed > 0) {
-            point -= getBounce(m_bounce, m_bounce.timer.ticksElapsed());
+            const auto minHeight = m_bounce.minHeight * g_drawPool.getScaleFactor();
+            const auto height = m_bounce.height * g_drawPool.getScaleFactor();
+            const auto pixel = minHeight + (height - std::abs(height - static_cast<int>(m_bounceTimer.ticksElapsed() / (m_bounce.speed / 100.f)) % static_cast<int>(height * 2)));
+            point -= pixel;
         }
 
         if (lightView && m_light.intensity > 0)
@@ -120,20 +93,12 @@ void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightView
         if (m_texture) {
             if (drawThing) {
                 const auto& size = (m_size.isUnset() ? m_texture->getSize() : m_size) * g_drawPool.getScaleFactor();
-                const auto& texture = m_texture->isAnimatedTexture() ? std::static_pointer_cast<AnimatedTexture>(m_texture)->get(m_frame, m_animationTimer) : m_texture;
+                const auto& texture = m_texture->get(m_frame, m_animationTimer);
                 const auto& rect = Rect(Point(), texture->getSize());
                 g_drawPool.addTexturedRect(Rect(point, size), texture, rect, Color::white, { .order = getDrawOrder() });
             }
         } else {
             getThingType()->draw(point, 0, m_direction, 0, 0, animation, Color::white, drawThing, lightView, { .order = getDrawOrder() });
-        }
-
-        if (m_pulse.height > 0 && m_pulse.speed > 0) {
-            g_drawPool.setScaleFactor(scaleFactor);
-        }
-
-        if (m_fade.height > 0 && m_fade.speed > 0) {
-            g_drawPool.resetOpacity();
         }
     }
 
@@ -156,8 +121,7 @@ void AttachedEffect::drawLight(const Point& dest, const LightViewPtr& lightView)
 int AttachedEffect::getCurrentAnimationPhase()
 {
     if (m_texture) {
-        if (m_texture->isAnimatedTexture())
-            std::static_pointer_cast<AnimatedTexture>(m_texture)->get(m_frame, m_animationTimer);
+        m_texture->get(m_frame, m_animationTimer);
         return m_frame;
     }
 

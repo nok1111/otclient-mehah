@@ -89,11 +89,10 @@ EnterGameWindow
     $!on:
       visible: false
 
-  UIButton
+  Label
     !text: tr('Forgot password and/or email')
     id: Forgot_password_email
     font: verdana-11px-monochrome-underline
-    text-align: left
     anchors.left: rememberEmailBox.left
     anchors.right: parent.right
     anchors.top: rememberEmailBox.bottom
@@ -251,18 +250,15 @@ EnterGameWindow
     @onClick: EnterGame.doLogin()
 
   QtButton
-    id: btnCreateNewAccount
     !text: tr('Create New Account')
     anchors.left: parent.left
     anchors.top: prev.bottom
     margin-top: -17
     size: 109 20
-    @onClick: |
-      self:disable()
-      createWidgetAccount()
+    @onClick: g_platform.openUrl(Services.websites)
 
     @onSetup: | 
-      if Services and Servers_init and table.size(Servers_init) == 1 and Services.createAccount then
+      if Services and Services.websites then
         self:setVisible(true)
       else
         self:setVisible(false)

@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-#if !defined(WIN32) && !defined(__EMSCRIPTEN__)
+#ifndef WIN32
 
 #include "platform.h"
 #include <cstring>
@@ -43,7 +43,7 @@ void Platform::init(std::vector<std::string>& args)
 
 #ifdef __APPLE__
     #include "TargetConditionals.h"
-    #if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || (defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR)
+    #if defined(TARGET_OS_IPHONE) || defined(TARGET_IPHONE_SIMULATOR)
         setDevice({ Mobile, iOS });
     #else
         setDevice({ Desktop, macOS });

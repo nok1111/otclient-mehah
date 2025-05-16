@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,11 @@
 
 #include "modulemanager.h"
 #include "resourcemanager.h"
-#include "graphicalapplication.h"
-#include <framework/platform/platformwindow.h>
-#include <framework/core/application.h>
-#include <framework/core/asyncdispatcher.h>
-#include <framework/core/eventdispatcher.h>
-#include <framework/otml/otml.h>
 
-#include <algorithm>
+#include <framework/core/application.h>
+#include <framework/core/eventdispatcher.h>
+#include <framework/core/asyncdispatcher.h>
+#include <framework/otml/otml.h>
 
 ModuleManager g_modules;
 
@@ -58,7 +55,7 @@ void ModuleManager::discoverModules()
     }
 }
 
-void ModuleManager::autoLoadModules(const int maxPriority)
+void ModuleManager::autoLoadModules(int maxPriority)
 {
     for (const auto& [priority, module] : m_autoLoadModules) {
         if (priority > maxPriority)
@@ -135,7 +132,7 @@ ModulePtr ModuleManager::getModule(const std::string_view moduleName)
 
 void ModuleManager::updateModuleLoadOrder(const ModulePtr& module)
 {
-    if (const auto it = std::ranges::find(m_modules, module);
+    if (const auto it = std::find(m_modules.begin(), m_modules.end(), module);
         it != m_modules.end())
         m_modules.erase(it);
     if (module->isLoaded())
@@ -147,8 +144,6 @@ void ModuleManager::updateModuleLoadOrder(const ModulePtr& module)
 void ModuleManager::enableAutoReload() {
     if (m_reloadEnable)
         return;
-
-    g_window.setTitle(g_app.getName() + " (LIVE RELOAD ENABLED)");
 
     m_reloadEnable = true;
 
@@ -169,13 +164,13 @@ void ModuleManager::enableAutoReload() {
         if (!module->isReloadable())
             continue;
 
-        ModuleData data = { .ref = module, .files = {} };
+        ModuleData data = { module, {} };
 
         bool hasFile = false;
-        for (const auto& path : g_resources.listDirectoryFiles("/" + module->getName(), true, false, true)) {
+        for (auto path : g_resources.listDirectoryFiles("/" + module->getName(), true, false, true)) {
             ticks_t time = g_resources.getFileTime(path);
             if (time > 0) {
-                data.files.emplace_back(std::make_shared<FileInfo>(FileInfo{ path, time }));
+                data.files.emplace_back(std::make_shared<FileInfo>(std::move(path), time));
                 hasFile = true;
             }
         }

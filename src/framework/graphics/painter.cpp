@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,8 @@
 
 #include "painter.h"
 
-#include "framework/graphics/texture.h"
 #include <framework/platform/platformwindow.h>
+#include "framework/graphics/texture.h"
 
 #include "shader/shadersources.h"
 
@@ -38,19 +38,23 @@ Painter::Painter()
 {
     setResolution(g_window.getSize());
 
-    const auto& getProgram = [](const std::string_view vertexSourceCode, const std::string_view fragmentSourceCode) {
-        auto program = std::make_shared<PainterShaderProgram>();
-        assert(program);
-        program->addShaderFromSourceCode(ShaderType::VERTEX, vertexSourceCode);
-        program->addShaderFromSourceCode(ShaderType::FRAGMENT, fragmentSourceCode);
-        program->link();
-        return program;
-    };
+    m_drawTexturedProgram = std::make_shared<PainterShaderProgram>();
+    assert(m_drawTexturedProgram);
+    m_drawTexturedProgram->addShaderFromSourceCode(ShaderType::VERTEX, std::string{ glslMainWithTexCoordsVertexShader } + glslPositionOnlyVertexShader.data());
+    m_drawTexturedProgram->addShaderFromSourceCode(ShaderType::FRAGMENT, std::string{ glslMainFragmentShader } + glslTextureSrcFragmentShader.data());
+    m_drawTexturedProgram->link();
 
-    m_drawTexturedProgram = getProgram(std::string{ glslMainWithTexCoordsVertexShader } + glslPositionOnlyVertexShader.data(), std::string{ glslMainFragmentShader } + glslTextureSrcFragmentShader.data());
-    m_drawSolidColorProgram = getProgram(std::string{ glslMainVertexShader } + glslPositionOnlyVertexShader.data(), std::string{ glslMainFragmentShader } + glslSolidColorFragmentShader.data());
-    m_drawReplaceColorProgram = getProgram(std::string{ glslMainWithTexCoordsVertexShader } + glslPositionOnlyVertexShader.data(), std::string{ glslMainFragmentShader } + glslReplaceColorFragmentShader.data());
-    m_drawLineProgram = getProgram(lineVertexShader, lineFragmentShader);
+    m_drawSolidColorProgram = std::make_shared<PainterShaderProgram>();
+    assert(m_drawSolidColorProgram);
+    m_drawSolidColorProgram->addShaderFromSourceCode(ShaderType::VERTEX, std::string{ glslMainVertexShader } + glslPositionOnlyVertexShader.data());
+    m_drawSolidColorProgram->addShaderFromSourceCode(ShaderType::FRAGMENT, std::string{ glslMainFragmentShader } + glslSolidColorFragmentShader.data());
+    m_drawSolidColorProgram->link();
+
+    m_drawReplaceColorProgram = std::make_shared<PainterShaderProgram>();
+    assert(m_drawReplaceColorProgram);
+    m_drawReplaceColorProgram->addShaderFromSourceCode(ShaderType::VERTEX, std::string{ glslMainWithTexCoordsVertexShader } + glslPositionOnlyVertexShader.data());
+    m_drawReplaceColorProgram->addShaderFromSourceCode(ShaderType::FRAGMENT, std::string{ glslMainFragmentShader } + glslReplaceColorFragmentShader.data());
+    m_drawReplaceColorProgram->link();
 
     PainterShaderProgram::release();
 
@@ -121,29 +125,6 @@ void Painter::drawCoords(CoordsBuffer& coordsBuffer, DrawMode drawMode)
         PainterShaderProgram::enableAttributeArray(PainterShaderProgram::TEXCOORD_ATTR);
 }
 
-void Painter::drawLine(const std::vector<float>& vertex, const int size, const int width)
-{
-    m_drawLineProgram->bind();
-    m_drawLineProgram->setTransformMatrix(m_transformMatrix);
-    m_drawLineProgram->setProjectionMatrix(m_projectionMatrix);
-    m_drawLineProgram->setTextureMatrix(m_textureMatrix);
-    m_drawLineProgram->setColor(m_color);
-#ifndef OPENGL_ES
-    glEnable(GL_LINE_SMOOTH);
-#endif
-    glLineWidth(width);
-
-    PainterShaderProgram::disableAttributeArray(PainterShaderProgram::TEXCOORD_ATTR);
-    m_drawLineProgram->setAttributeArray(PainterShaderProgram::VERTEX_ATTR, vertex.data(), 2);
-
-    glDrawArrays(GL_LINE_STRIP, 0, size);
-
-    PainterShaderProgram::enableAttributeArray(PainterShaderProgram::TEXCOORD_ATTR);
-#ifndef OPENGL_ES
-    glDisable(GL_LINE_SMOOTH);
-#endif
-}
-
 void Painter::resetState()
 {
     resetColor();
@@ -180,7 +161,7 @@ void Painter::clearRect(const Color& color, const Rect& rect)
     setClipRect(oldClipRect);
 }
 
-void Painter::setCompositionMode(const CompositionMode compositionMode)
+void Painter::setCompositionMode(CompositionMode compositionMode)
 {
     if (m_compositionMode == compositionMode)
         return;
@@ -189,7 +170,7 @@ void Painter::setCompositionMode(const CompositionMode compositionMode)
     updateGlCompositionMode();
 }
 
-void Painter::setBlendEquation(const BlendEquation blendEquation)
+void Painter::setBlendEquation(BlendEquation blendEquation)
 {
     if (m_blendEquation == blendEquation)
         return;
@@ -222,7 +203,7 @@ void Painter::setTexture(Texture* texture)
     updateGlTexture();
 }
 
-void Painter::setAlphaWriting(const bool enable)
+void Painter::setAlphaWriting(bool enable)
 {
     if (m_alphaWriting == enable)
         return;

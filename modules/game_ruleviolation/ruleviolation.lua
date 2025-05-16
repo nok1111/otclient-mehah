@@ -45,7 +45,7 @@ function init()
     reasonsTextList = ruleViolationWindow:getChildById('reasonList')
     actionsTextList = ruleViolationWindow:getChildById('actionList')
 
-    g_keyboard.bindKeyDown('Ctrl+U', function()
+    g_keyboard.bindKeyDown('Ctrl+Y', function()
         show()
     end)
 
@@ -58,7 +58,7 @@ function terminate()
     disconnect(g_game, {
         onGMActions = loadReasons
     })
-    g_keyboard.unbindKeyDown('Ctrl+U')
+    g_keyboard.unbindKeyDown('Ctrl+Y')
 
     ruleViolationWindow:destroy()
 end

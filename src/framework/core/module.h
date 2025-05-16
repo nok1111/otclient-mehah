@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@
 #include <framework/otml/declarations.h>
 
  // @bindclass
-class Module final : public LuaObject
+class Module : public LuaObject
 {
 public:
-    Module(std::string_view name);
+    Module(const std::string_view name);
 
     bool load();
     void unload();
@@ -44,7 +44,7 @@ public:
     bool isReloadable() { return m_reloadable; }
     bool isDependent() const;
     bool isSandboxed() { return m_sandboxed; }
-    bool hasDependency(std::string_view name, bool recursive = false);
+    bool hasDependency(const std::string_view name, bool recursive = false);
     bool hasSupportedDevice(Platform::Device device);
     int getSandbox(LuaInterface* lua);
 

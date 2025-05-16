@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,8 @@
  */
 
 #include "game.h"
+#include <framework/core/application.h>
+#include <framework/core/eventdispatcher.h>
 #include "container.h"
 #include "creature.h"
 #include "localplayer.h"
@@ -28,14 +30,9 @@
 #include "map.h"
 #include "protocolcodes.h"
 #include "protocolgame.h"
-#include <framework/core/application.h>
-#include <framework/core/eventdispatcher.h>
 
-#include "framework/core/graphicalapplication.h"
 #include "tile.h"
-
-#include <framework/net/packet_player.h>
-#include <framework/net/packet_recorder.h>
+#include "framework/core/graphicalapplication.h"
 
 Game g_game;
 
@@ -58,10 +55,7 @@ void Game::resetGameStates()
     m_serverBeat = 50;
     m_seq = 0;
     m_ping = -1;
-    m_mapUpdatedAt = 0;
-    m_mapUpdateTimer = { true, Timer{} };
-    setCanReportBugs(false);
-
+    m_canReportBugs = false;
     m_fightMode = Otc::FightBalanced;
     m_chaseMode = Otc::DontChase;
     m_pvpMode = Otc::WhiteDove;
@@ -72,6 +66,7 @@ void Game::resetGameStates()
     m_pingSent = 0;
     m_pingReceived = 0;
     m_unjustifiedPoints = UnjustifiedPoints();
+    m_nextScheduledDir = Otc::InvalidDirection;
 
     for (const auto& it : m_containers) {
         const auto& container = it.second;
@@ -82,6 +77,11 @@ void Game::resetGameStates()
     if (m_pingEvent) {
         m_pingEvent->cancel();
         m_pingEvent = nullptr;
+    }
+
+    if (m_walkEvent) {
+        m_walkEvent->cancel();
+        m_walkEvent = nullptr;
     }
 
     if (m_checkConnectionEvent) {
@@ -377,24 +377,16 @@ void Game::processRuleViolationLock()
     g_lua.callGlobalField("g_game", "onRuleViolationLock");
 }
 
-
-void Game::processVipAdd(const uint32_t id, const std::string_view name, const uint32_t status, const std::string_view description, const uint32_t iconId, const bool notifyLogin, const std::vector<uint8_t>& groupID)
-
+void Game::processVipAdd(uint32_t id, const std::string_view name, uint32_t status, const std::string_view description, int iconId, bool notifyLogin)
 {
-    m_vips[id] = Vip(name, status, description, iconId, notifyLogin, groupID);
-    g_lua.callGlobalField("g_game", "onAddVip", id, name, status, description, iconId, notifyLogin, groupID);
+    m_vips[id] = Vip(name, status, description, iconId, notifyLogin);
+    g_lua.callGlobalField("g_game", "onAddVip", id, name, status, description, iconId, notifyLogin);
 }
 
 void Game::processVipStateChange(uint32_t id, uint32_t status)
 {
     std::get<1>(m_vips[id]) = status;
-    const std::vector<uint8_t>& groupID = std::get<5>(m_vips[id]);
-    g_lua.callGlobalField("g_game", "onVipStateChange", id, status, groupID);
-}
-
-void Game::processVipGroupChange(const std::vector<std::tuple<uint8_t, std::string, bool>>& vipGroups, const uint8_t groupsAmountLeft)
-{
-    g_lua.callGlobalField("g_game", "onVipGroupChange", vipGroups, groupsAmountLeft);
+    g_lua.callGlobalField("g_game", "onVipStateChange", id, status);
 }
 
 void Game::processTutorialHint(int id)
@@ -412,15 +404,12 @@ void Game::processRemoveAutomapFlag(const Position& pos, int icon, const std::st
     g_lua.callGlobalField("g_game", "onRemoveAutomapFlag", pos, icon, message);
 }
 
-
-void Game::processOpenOutfitWindow(const Outfit& currentOutfit, const std::vector<std::tuple<uint16_t, std::string, uint8_t, uint8_t>>& outfitList,
-                                   const std::vector<std::tuple<uint16_t, std::string, uint8_t>>& mountList,
-                                   const std::vector<std::tuple<uint16_t, std::string>>& familiarList,
-                                   const std::vector<std::tuple<uint16_t, std::string>>& wingsList,
-                                   const std::vector<std::tuple<uint16_t, std::string>>& aurasList,
-                                   const std::vector<std::tuple<uint16_t, std::string>>& effectList,
-                                   const std::vector<std::tuple<uint16_t, std::string>>& shaderList)
-
+void Game::processOpenOutfitWindow(const Outfit& currentOutfit, const std::vector<std::tuple<int, std::string, int> >& outfitList,
+                                   const std::vector<std::tuple<int, std::string> >& mountList,
+                                   const std::vector<std::tuple<int, std::string> >& wingsList,
+                                   const std::vector<std::tuple<int, std::string> >& aurasList,
+                                   const std::vector<std::tuple<int, std::string> >& effectList,
+                                   const std::vector<std::tuple<int, std::string>>& shaderList)
 {
     // create virtual creature outfit
     const auto& virtualOutfitCreature = std::make_shared<Creature>();
@@ -441,13 +430,7 @@ void Game::processOpenOutfitWindow(const Outfit& currentOutfit, const std::vecto
         virtualMountCreature->setOutfit(mountOutfit);
     }
 
-    if (getFeature(Otc::GamePlayerFamiliars)) {
-        Outfit familiarOutfit;
-        familiarOutfit.setId(currentOutfit.getFamiliar());
-        familiarOutfit.setCategory(ThingCategoryCreature);
-    }
-
-    g_lua.callGlobalField("g_game", "onOpenOutfitWindow", virtualOutfitCreature, outfitList, virtualMountCreature, mountList, familiarList, wingsList, aurasList, effectList, shaderList);
+    g_lua.callGlobalField("g_game", "onOpenOutfitWindow", virtualOutfitCreature, outfitList, virtualMountCreature, mountList, wingsList, aurasList, effectList, shaderList);
 }
 
 void Game::processOpenNpcTrade(const std::vector<std::tuple<ItemPtr, std::string, int, int, int> >& items)
@@ -495,8 +478,7 @@ void Game::processQuestLog(const std::vector<std::tuple<int, std::string, bool> 
     g_lua.callGlobalField("g_game", "onQuestLog", questList);
 }
 
-
-void Game::processQuestLine(const uint16_t questId, const std::vector<std::tuple<std::string, std::string, uint16_t>>& questMissions)
+void Game::processQuestLine(int questId, const std::vector<std::tuple<std::string, std::string> >& questMissions)
 {
     g_lua.callGlobalField("g_game", "onQuestLine", questId, questMissions);
 }
@@ -508,89 +490,7 @@ void Game::processModalDialog(uint32_t id, const std::string_view title, const s
     g_lua.callGlobalField("g_game", "onModalDialog", id, title, message, buttonList, enterButton, escapeButton, choiceList, priority);
 }
 
-
-void Game::processItemDetail(const uint32_t itemId, const std::vector<std::tuple<std::string, std::string>>& descriptions)
-{
-    g_lua.callGlobalField("g_game", "onParseItemDetail", itemId, descriptions);
-}
-
-void Game::processBestiaryRaces(const std::vector<CyclopediaBestiaryRace>& bestiaryRaces)
-{
-    g_lua.callGlobalField("g_game", "onParseBestiaryRaces", bestiaryRaces);
-}
-
-void Game::processCyclopediaCharacterGeneralStats(const CyclopediaCharacterGeneralStats& stats, const std::vector<std::vector<uint16_t>>& skills,
-                                                const std::vector<std::tuple<uint8_t, uint16_t>>& combats)
-{
-    g_lua.callGlobalField("g_game", "onParseCyclopediaCharacterGeneralStats", stats, skills, combats);
-}
-
-void Game::processCyclopediaCharacterCombatStats(const CyclopediaCharacterCombatStats& data, const double mitigation, const std::vector<std::vector<uint16_t>>& additionalSkillsArray,
-                                                const std::vector<std::vector<uint16_t>>& forgeSkillsArray, const std::vector<uint16_t>& perfectShotDamageRangesArray,
-                                                const std::vector<std::tuple<uint8_t, uint16_t>>& combatsArray, const std::vector<std::tuple<uint16_t, uint16_t>>& concoctionsArray)
-{
-    g_lua.callGlobalField("g_game", "onParseCyclopediaCharacterCombatStats", data, mitigation, additionalSkillsArray, forgeSkillsArray, perfectShotDamageRangesArray, combatsArray, concoctionsArray);
-}
-
-void Game::processCyclopediaCharacterGeneralStatsBadge(const uint8_t showAccountInformation, const uint8_t playerOnline, const uint8_t playerPremium,
-                                                const std::string_view loyaltyTitle, const std::vector<std::tuple<uint32_t, std::string>>& badgesVector)
-{
-    g_lua.callGlobalField("g_game", "onParseCyclopediaCharacterBadges", showAccountInformation, playerOnline, playerPremium, loyaltyTitle, badgesVector);
-}
-
-void Game::processCyclopediaCharacterItemSummary(const CyclopediaCharacterItemSummary& data)
-{
-    g_lua.callGlobalField("g_game", "onUpdateCyclopediaCharacterItemSummary", data);
-}
-
-void Game::processCyclopediaCharacterAppearances(const OutfitColorStruct& currentOutfit, const std::vector<CharacterInfoOutfits>& outfits,
-                                                const std::vector<CharacterInfoMounts>& mounts, const std::vector<CharacterInfoFamiliar>& familiars)
-{
-    g_lua.callGlobalField("g_game", "onParseCyclopediaCharacterAppearances", currentOutfit, outfits, mounts, familiars);
-}
-
-void Game::processCyclopediaCharacterRecentDeaths(const CyclopediaCharacterRecentDeaths& data)
-{
-    g_lua.callGlobalField("g_game", "onCyclopediaCharacterRecentDeaths", data);
-}
-
-void Game::processCyclopediaCharacterRecentPvpKills(const CyclopediaCharacterRecentPvPKills& data)
-{
-    g_lua.callGlobalField("g_game", "onCyclopediaCharacterRecentKills", data);
-}
-
-void Game::processBosstiaryInfo(const std::vector<BosstiaryData>& boss)
-{
-    g_lua.callGlobalField("g_game", "onParseSendBosstiary", boss);
-}
-
-void Game::processBosstiarySlots(const BosstiarySlotsData& data)
-{
-    g_lua.callGlobalField("g_game", "onParseBosstiarySlots", data);
-}
-
-void Game::processParseBestiaryRaces(const std::vector<CyclopediaBestiaryRace>& bestiaryData)
-{
-    g_lua.callGlobalField("g_game", "onParseBestiaryRaces", bestiaryData);
-}
-
-void Game::processParseBestiaryOverview(const std::string_view raceName, const std::vector<BestiaryOverviewMonsters>& data, const uint16_t animusMasteryPoints)
-{
-    g_lua.callGlobalField("g_game", "onParseBestiaryOverview", raceName, data, animusMasteryPoints);
-}
-
-void Game::processUpdateBestiaryMonsterData(const BestiaryMonsterData& data)
-{
-    g_lua.callGlobalField("g_game", "onUpdateBestiaryMonsterData", data);
-}
-
-void Game::processUpdateBestiaryCharmsData(const BestiaryCharmsData& charmData)
-{
-    g_lua.callGlobalField("g_game", "onUpdateBestiaryCharmsData", charmData);
-}
-
-void Game::processAttackCancel(const uint32_t seq)
-
+void Game::processAttackCancel(uint32_t seq)
 {
     if (isAttacking() && (seq == 0 || m_seq == seq))
         cancelAttack();
@@ -601,7 +501,7 @@ void Game::processWalkCancel(Otc::Direction direction)
     m_localPlayer->cancelWalk(direction);
 }
 
-void Game::loginWorld(const std::string_view account, const std::string_view password, const std::string_view worldName, const std::string_view worldHost, const int worldPort, const std::string_view characterName, const std::string_view authenticatorToken, const std::string_view sessionKey, const std::string_view& recordTo)
+void Game::loginWorld(const std::string_view account, const std::string_view password, const std::string_view worldName, const std::string_view worldHost, int worldPort, const std::string_view characterName, const std::string_view authenticatorToken, const std::string_view sessionKey)
 {
     if (m_protocolGame || isOnline())
         throw Exception("Unable to login into a world while already online or logging.");
@@ -617,36 +517,9 @@ void Game::loginWorld(const std::string_view account, const std::string_view pas
     m_localPlayer->setName(characterName);
 
     m_protocolGame = std::make_shared<ProtocolGame>();
-    if (!recordTo.empty()) {
-        m_protocolGame->setRecorder(std::make_shared<PacketRecorder>(recordTo));
-    }
     m_protocolGame->login(account, password, worldHost, static_cast<uint16_t>(worldPort), characterName, authenticatorToken, sessionKey);
     m_characterName = characterName;
     m_worldName = worldName;
-}
-
-void Game::playRecord(const std::string_view& file)
-{
-    if (m_protocolGame || isOnline())
-        throw Exception("Unable to login into a world while already online or logging.");
-
-    if (m_protocolVersion == 0)
-        throw Exception("Must set a valid game protocol version before logging.");
-
-    auto packetPlayer = std::make_shared<PacketPlayer>(file);
-    if (!packetPlayer)
-        throw Exception("Invalid record file.");
-
-    // reset the new game state
-    resetGameStates();
-
-    m_localPlayer = std::make_shared<LocalPlayer>();
-    m_localPlayer->setName("Player");
-
-    m_protocolGame = std::make_shared<ProtocolGame>();
-    m_protocolGame->playRecord(packetPlayer);
-    m_characterName = "Player";
-    m_worldName = "Record";
 }
 
 void Game::cancelLogin()
@@ -675,16 +548,90 @@ void Game::safeLogout()
     m_protocolGame->sendLogout();
 }
 
-
-bool Game::walk(const Otc::Direction direction)
-
+bool Game::walk(const Otc::Direction direction, bool isKeyDown /*= false*/)
 {
-    if (!canPerformGameAction() || direction == Otc::InvalidDirection)
+    if (!canPerformGameAction())
         return false;
+
+    // must cancel auto walking, and wait next try
+    if (m_localPlayer->isAutoWalking()) {
+        m_protocolGame->sendStop();
+        m_localPlayer->autoWalk(m_localPlayer->getPosition().translatedToDirection(direction));
+        return false;
+    }
+
+    // check we can walk and add new walk event if false
+    if (!m_localPlayer->canWalk()) {
+        if (m_nextScheduledDir != direction) {
+            const float ticks = std::clamp<float>(m_localPlayer->getStepTicksLeft(), 1, 2000);
+            if (isKeyDown || (m_scheduleLastWalk && ticks < std::min<int>(m_localPlayer->getStepDuration() / 3, 250))) {
+                // must add a new walk event
+                if (m_walkEvent) {
+                    m_walkEvent->cancel();
+                    m_walkEvent = nullptr;
+                }
+
+                m_walkEvent = g_dispatcher.scheduleEvent([this, direction] { walk(direction); }, ticks);
+                m_nextScheduledDir = direction;
+            }
+        }
+        return false;
+    }
+
+    m_nextScheduledDir = Otc::InvalidDirection;
+
+    // if it's going to walk, but there is another scheduled event, cancel it
+    if (m_walkEvent && !m_walkEvent->isExecuted()) {
+        m_walkEvent->cancel();
+        m_walkEvent = nullptr;
+    }
+
+    const auto& toPos = m_localPlayer->getPosition().translatedToDirection(direction);
+
+    // only do prewalks to walkable tiles (like grounds and not walls)
+    const auto& toTile = g_map.getTile(toPos);
+    if (toTile && toTile->isWalkable()) {
+        m_localPlayer->preWalk(direction);
+    } else {
+        // check if can walk to a lower floor
+        const auto& canChangeFloorDown = [&]() -> bool {
+            Position pos = toPos;
+            if (!pos.down())
+                return false;
+
+            const auto& toTile = g_map.getTile(pos);
+            return toTile && toTile->hasElevation(3);
+        };
+
+        // check if can walk to a higher floor
+        const auto& canChangeFloorUp = [&]() -> bool {
+            const auto& fromTile = m_localPlayer->getTile();
+            if (!fromTile || !fromTile->hasElevation(3))
+                return false;
+
+            Position pos = toPos;
+            if (!pos.up())
+                return false;
+
+            const auto& toTile = g_map.getTile(pos);
+            return toTile && toTile->isWalkable();
+        };
+
+        if (!(canChangeFloorDown() || canChangeFloorUp() || !toTile || toTile->isEmpty()))
+            return false;
+
+        m_localPlayer->lockWalk();
+    }
+
+    // must cancel follow before any new walk
+    if (isFollowing())
+        cancelFollow();
 
     g_lua.callGlobalField("g_game", "onWalk", direction);
 
     forceWalk(direction);
+
+    m_lastWalkDir = direction;
 
     return true;
 }
@@ -709,13 +656,15 @@ void Game::autoWalk(const std::vector<Otc::Direction>& dirs, const Position& sta
     }
 
     const Otc::Direction direction = *dirs.begin();
+
     if (const auto& toTile = g_map.getTile(startPos.translatedToDirection(direction))) {
-        if (m_localPlayer->isPreWalking() && startPos == m_localPlayer->getPosition() && toTile->isWalkable() && !m_localPlayer->isWalking() && m_localPlayer->canWalk(true)) {
+        if (startPos == m_localPlayer->m_lastPrewalkDestination && toTile->isWalkable() && m_localPlayer->canWalk(true)) {
             m_localPlayer->preWalk(direction);
         }
     }
 
-    g_lua.callGlobalField("g_game", "onAutoWalk", m_localPlayer, dirs);
+    g_lua.callGlobalField("g_game", "onAutoWalk", dirs);
+
     m_protocolGame->sendAutoWalk(dirs);
 }
 
@@ -723,11 +672,6 @@ void Game::forceWalk(Otc::Direction direction)
 {
     if (!canPerformGameAction())
         return;
-
-    if (m_mapUpdateTimer.first || m_localPlayer->m_preWalks.size() == 1) {
-        m_mapUpdateTimer.second.restart();
-        m_mapUpdateTimer.first = false;
-    }
 
     switch (direction) {
         case Otc::North:
@@ -903,13 +847,11 @@ void Game::useInventoryItemWith(int itemId, const ThingPtr& toThing)
     g_lua.callGlobalField("g_game", "onUseWith", pos, itemId, toThing, 0);
 }
 
-
-ItemPtr Game::findItemInContainers(const uint32_t itemId, const int subType, const uint8_t tier)
-
+ItemPtr Game::findItemInContainers(uint32_t itemId, int subType)
 {
     for (const auto& it : m_containers) {
         if (const auto& container = it.second) {
-            if (const auto& item = container->findItemById(itemId, subType, tier)) {
+            if (const auto& item = container->findItemById(itemId, subType)) {
                 return item;
             }
         }
@@ -1011,6 +953,13 @@ void Game::cancelAttackAndFollow()
 
     if (isAttacking())
         setAttackingCreature(nullptr);
+
+    if (m_walkEvent) {
+        m_walkEvent->cancel();
+        m_walkEvent = nullptr;
+    }
+
+    m_nextScheduledDir = Otc::InvalidDirection;
 
     m_localPlayer->stopAutoWalk();
 
@@ -1200,9 +1149,7 @@ void Game::removeVip(int playerId)
     m_protocolGame->sendRemoveVip(playerId);
 }
 
-
-void Game::editVip(const uint32_t playerId, const std::string_view description, const uint32_t iconId, const bool notifyLogin, const std::vector<uint8_t>& groupID)
-
+void Game::editVip(int playerId, const std::string_view description, int iconId, bool notifyLogin)
 {
     if (!canPerformGameAction())
         return;
@@ -1214,23 +1161,9 @@ void Game::editVip(const uint32_t playerId, const std::string_view description, 
     std::get<2>(m_vips[playerId]) = description;
     std::get<3>(m_vips[playerId]) = iconId;
     std::get<4>(m_vips[playerId]) = notifyLogin;
-    std::get<5>(m_vips[playerId]) = groupID;
 
-    if (getFeature(Otc::GameAdditionalVipInfo)) {
-        if (getFeature(Otc::GameVipGroups)) {
-            m_protocolGame->sendEditVip(playerId, description, iconId, notifyLogin, groupID);
-        } else {
-            m_protocolGame->sendEditVip(playerId, description, iconId, notifyLogin);
-        }
-    }
-}
-
-void Game::editVipGroups(const Otc::GroupsEditInfoType_t action, const uint8_t groupId, const std::string_view groupName)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendEditVipGroups(action, groupId, groupName);
+    if (getFeature(Otc::GameAdditionalVipInfo))
+        m_protocolGame->sendEditVip(playerId, description, iconId, notifyLogin);
 }
 
 void Game::setChaseMode(Otc::ChaseModes chaseMode)
@@ -1461,11 +1394,7 @@ void Game::equipItem(const ItemPtr& item)
     if (!canPerformGameAction())
         return;
 
-    if (g_game.getFeature(Otc::GameThingUpgradeClassification) && item->getClassification() > 0) {
-        m_protocolGame->sendEquipItemWithTier(item->getId(), item->getTier());
-    } else {
-        m_protocolGame->sendEquipItemWithCountOrSubType(item->getId(), item->getCountOrSubType());
-    }
+    m_protocolGame->sendEquipItem(item->getId(), item->getCountOrSubType());
 }
 
 void Game::mount(bool mount)
@@ -1508,14 +1437,12 @@ void Game::seekInContainer(int cid, int index)
     m_protocolGame->sendSeekInContainer(cid, index);
 }
 
-
-void Game::buyStoreOffer(const uint32_t offerId, const uint8_t action, const std::string_view& name, const uint8_t type, const std::string_view& location)
-
+void Game::buyStoreOffer(int offerId, int productType, const std::string_view name)
 {
     if (!canPerformGameAction())
         return;
 
-    m_protocolGame->sendBuyStoreOffer(offerId, action, name, type,location);
+    m_protocolGame->sendBuyStoreOffer(offerId, productType, name);
 }
 
 void Game::requestTransactionHistory(int page, int entriesPerPage)
@@ -1526,54 +1453,11 @@ void Game::requestTransactionHistory(int page, int entriesPerPage)
     m_protocolGame->sendRequestTransactionHistory(page, entriesPerPage);
 }
 
-
-void Game::requestStoreOffers(const std::string_view categoryName, const std::string_view subCategory, const uint8_t sortOrder, const uint8_t serviceType)
+void Game::requestStoreOffers(const std::string_view categoryName, int serviceType)
 {
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestStoreOffers(categoryName, subCategory, sortOrder, serviceType);
-}
-
-void Game::sendRequestStoreHome()
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestStoreHome();
-}
-
-void Game::sendRequestStorePremiumBoost()
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestStorePremiumBoost();
-}
-
-void Game::sendRequestUsefulThings(const uint8_t serviceType)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestUsefulThings(serviceType);
-}
-
-void Game::sendRequestStoreOfferById(const uint32_t offerId, const uint8_t sortOrder, const uint8_t serviceType)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestStoreOfferById(offerId, sortOrder , serviceType);
-}
-
-void Game::sendRequestStoreSearch(const std::string_view searchText, const uint8_t sortOrder, const uint8_t serviceType)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestStoreSearch(searchText, sortOrder, serviceType);
-
+    m_denyBotCall = false;
+    m_protocolGame->sendRequestStoreOffers(categoryName, serviceType);
+    m_denyBotCall = true;
 }
 
 void Game::openStore(int serviceType, const std::string_view category)
@@ -1623,6 +1507,19 @@ void Game::changeMapAwareRange(int xrange, int yrange)
     m_protocolGame->sendChangeMapAwareRange(xrange, yrange);
 }
 
+bool Game::checkBotProtection() const
+{
+#ifdef BOT_PROTECTION
+    // accepts calls comming from a stacktrace containing only C++ functions,
+    // if the stacktrace contains a lua function, then only accept if the engine is processing an input event
+    if (m_denyBotCall && g_lua.isInCppCallback() && !g_app.isOnInputEvent()) {
+        g_logger.error(g_lua.traceback("caught a lua call to a bot protected game function, the call was cancelled"));
+        return false;
+    }
+#endif
+    return true;
+}
+
 bool Game::canPerformGameAction() const
 {
     // we can only perform game actions if we meet these conditions:
@@ -1631,7 +1528,8 @@ bool Game::canPerformGameAction() const
     // - the local player is not dead
     // - we have a game protocol
     // - the game protocol is connected
-    return m_online && m_localPlayer && !m_dead && m_protocolGame && m_protocolGame->isConnected();
+    // - its not a bot action
+    return m_online && m_localPlayer && !m_dead && m_protocolGame && m_protocolGame->isConnected() && checkBotProtection();
 }
 
 void Game::setProtocolVersion(int version)
@@ -1828,167 +1726,16 @@ void Game::imbuementDurations(bool isOpen)
     m_protocolGame->sendImbuementDurations(isOpen);
 }
 
-
-void Game::sendQuickLoot(const uint8_t variant, const ItemPtr& item)
+void Game::requestQuickLootBlackWhiteList(uint8_t filter, uint16_t size, const std::vector<uint16_t>& listedItems)
 {
-    if (!canPerformGameAction())
-        return;
-
-    Position pos = (item && item->getPosition().isValid()) ? item->getPosition() : Position(0, 0, 0);
-    uint16_t itemId = item ? item->getId() : 0;
-    uint8_t stackPos = item ? item->getStackPos() : 0;
-    m_protocolGame->sendQuickLoot(variant, pos, itemId, stackPos);
-}
-
-void Game::requestQuickLootBlackWhiteList(const uint8_t filter, const uint16_t size, const std::vector<uint16_t>& listedItems)
-{
-    if (!canPerformGameAction())
-        return;
-
+    m_denyBotCall = false;
     m_protocolGame->requestQuickLootBlackWhiteList(filter, size, listedItems);
-
+    m_denyBotCall = true;
 }
 
 void Game::openContainerQuickLoot(uint8_t action, uint8_t category, const Position& pos, uint16_t itemId, uint8_t stackpos, bool useMainAsFallback)
 {
-
-    if (!canPerformGameAction())
-        return;
+    m_denyBotCall = false;
     m_protocolGame->openContainerQuickLoot(action, category, pos, itemId, stackpos, useMainAsFallback);
-}
-
-void Game::sendGmTeleport(const Position& pos)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendGmTeleport(pos);
-}
-
-void Game::inspectionNormalObject(const Position& position)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendInspectionNormalObject(position);
-}
-
-void Game::inspectionObject(const Otc::InspectObjectTypes inspectionType, const uint16_t itemId, const uint8_t itemCount)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendInspectionObject(inspectionType, itemId, itemCount);
-}
-
-void Game::requestBestiary()
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestBestiary();
-}
-
-void Game::requestBestiaryOverview(const std::string_view catName)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestBestiaryOverview(catName);
-}
-
-void Game::requestBestiarySearch(const uint16_t raceId)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestBestiarySearch(raceId);
-}
-
-void Game::requestSendBuyCharmRune(const uint8_t runeId, const uint8_t action, const uint16_t raceId)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendBuyCharmRune(runeId, action, raceId);
-}
-
-void Game::requestSendCharacterInfo(const uint32_t playerId, const Otc::CyclopediaCharacterInfoType_t characterInfoType, const uint16_t entriesPerPage, const uint16_t page)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendCyclopediaRequestCharacterInfo(playerId, characterInfoType, entriesPerPage, page);
-}
-
-void Game::requestSendCyclopediaHouseAuction(const Otc::CyclopediaHouseAuctionType_t type, const uint32_t houseId, const uint32_t timestamp, const uint64_t bidValue, const std::string_view name)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendCyclopediaHouseAuction(type, houseId, timestamp, bidValue, name);
-}
-
-void Game::requestBosstiaryInfo()
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestBosstiaryInfo();
-}
-
-void Game::requestBossSlootInfo()
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestBossSlootInfo();
-}
-
-void Game::requestBossSlotAction(const uint8_t action, const uint32_t raceId)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestBossSlotAction(action, raceId);
-}
-
-void Game::sendStatusTrackerBestiary(const uint16_t raceId, const bool status)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendStatusTrackerBestiary(raceId, status);
-}
-
-void Game::sendOpenRewardWall()
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendOpenRewardWall();
-}
-
-void Game::requestOpenRewardHistory()
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendOpenRewardHistory();
-}
-
-void Game::requestGetRewardDaily(const uint8_t bonusShrine, const std::map<uint16_t, uint8_t>& items)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendGetRewardDaily(bonusShrine, items);
-}
-
-void Game::sendRequestTrackerQuestLog(const std::map<uint16_t, std::string>& quests)
-{
-    if (!canPerformGameAction())
-        return;
-
-    m_protocolGame->sendRequestTrackerQuestLog(quests);
+    m_denyBotCall = true;
 }
