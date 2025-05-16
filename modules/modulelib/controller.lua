@@ -52,6 +52,7 @@ Controller = {
     ui = nil,
     name = nil,
     attrs = nil,
+    extendedOpcodes = nil,
     opcodes = nil,
     events = nil,
     htmlRoot = nil,
@@ -61,14 +62,16 @@ Controller = {
 }
 
 function Controller:new()
+    local module = g_modules.getCurrentModule()
     local obj = {
-        name = g_modules.getCurrentModule():getName(),
+        name = module and module:getName() or nil,
         currentTypeEvent = TypeEvent.MODULE_INIT,
         events = {},
         scheduledEvents = {},
         keyboardEvents = {},
         attrs = {},
-        opcodes = {}
+        extendedOpcodes = {},
+        opcodes = {},
     }
     setmetatable(obj, self)
     self.__index = self
@@ -165,10 +168,6 @@ function Controller:setUI(name, parent)
 end
 
 function Controller:terminate()
-    if self.onTerminate then
-        self:onTerminate()
-    end
-
     if self.onGameStart then
         disconnect(g_game, { onGameStart = self.onGameStart })
     end
@@ -178,12 +177,20 @@ function Controller:terminate()
         disconnect(g_game, { onGameEnd = self.onGameEnd })
     end
 
+    if self.onTerminate then
+        self:onTerminate()
+    end
+
     for i, event in pairs(self.keyboardEvents) do
         g_keyboard['unbind' .. event.name](event.args[1], event.args[2], event.args[3])
     end
 
-    for i, opcode in pairs(self.opcodes) do
+    for i, opcode in pairs(self.extendedOpcodes) do
         ProtocolGame.unregisterExtendedOpcode(opcode)
+    end
+
+    for _, opcode in ipairs(self.opcodes) do
+        ProtocolGame.unregisterOpcode(opcode)
     end
 
     for type, events in pairs(self.events) do
@@ -210,6 +217,7 @@ function Controller:terminate()
     self.attrs = nil
     self.events = nil
     self.dataUI = nil
+    self.extendedOpcodes = nil
     self.opcodes = nil
     self.keyboardEvents = nil
     self.keyboardAnchor = nil
@@ -238,6 +246,11 @@ end
 
 function Controller:registerExtendedOpcode(opcode, fnc)
     ProtocolGame.registerExtendedOpcode(opcode, fnc)
+    table.insert(self.extendedOpcodes, opcode)
+end
+
+function Controller:registerOpcode(opcode, fnc)
+    ProtocolGame.registerOpcode(opcode, fnc)
     table.insert(self.opcodes, opcode)
 end
 
@@ -322,7 +335,7 @@ function Controller:bindKeyDown(...)
         name = 'KeyDown',
         args = args
     })
-    g_keyboard.bindKeyDown(args[1], args[2], args[3])
+    g_keyboard.bindKeyDown(args[1], args[2], args[3], args[4])
 end
 
 function Controller:bindKeyUp(...)
@@ -336,7 +349,7 @@ function Controller:bindKeyUp(...)
         args = args
     })
 
-    g_keyboard.bindKeyUp(args[1], args[2], args[3])
+    g_keyboard.bindKeyUp(args[1], args[2], args[3], args[4])
 end
 
 function Controller:bindKeyPress(...)

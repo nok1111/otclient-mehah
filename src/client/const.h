@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -170,11 +170,14 @@ namespace Otc
         FluidTransparent = 0,
         FluidBlue,
         FluidRed,
-        FluidBrown,
+        FluidOrange,
         FluidGreen,
         FluidYellow,
         FluidWhite,
-        FluidPurple
+        FluidPurple,
+        FluidBlack,
+        FluidBrown,
+        FluidPink
     };
 
     enum FluidsType : uint8_t
@@ -193,10 +196,13 @@ namespace Otc
         FluidHealth,
         FluidUrine,
         FluidRum,
-        FluidFruidJuice,
+        FluidFruitJuice,
         FluidCoconutMilk,
         FluidTea,
-        FluidMead
+        FluidMead,
+        FluidInk,
+        FluidCandy,
+        FluidChocolate
     };
 
     enum FightModes : uint8_t
@@ -552,6 +558,13 @@ namespace Otc
         GameItemTooltipV8 = 117,
         GameWingsAurasEffectsShader = 118,
         GameForgeConvergence = 119,
+
+        GameAllowCustomBotScripts = 120,
+        GameColorizedLootValue = 121,
+        GameAllowPreWalk = 122,
+        GamePlayerFamiliars = 123,
+        GameLatencyAdaptiveCamera = 124,
+        GameMapCache = 125,
         LastGameFeature
     };
 
@@ -661,10 +674,18 @@ namespace Otc
     {
         RESOURCE_BANK_BALANCE = 0,
         RESOURCE_GOLD_EQUIPPED = 1,
+        RESOURCE_CURRENCY_CUSTOM_EQUIPPED = 2,
         RESOURCE_PREY_WILDCARDS = 10,
         RESOURCE_DAILYREWARD_STREAK = 20,
         RESOURCE_DAILYREWARD_JOKERS = 21,
         RESOURCE_TASK_HUNTING = 50,
+        RESOURCE_FORGE_DUST = 70,
+        RESOURCE_FORGE_SLIVER = 71,
+        RESOURCE_FORGE_CORES = 72,
+        RESOURCE_LESSER_GEMS = 81,
+        RESOURCE_REGULAR_GEMS = 82,
+        RESOURCE_GREATER_GEMS = 83,
+        RESOURCE_WHEEL_OF_DESTINY = 86,
         RESOURE_COIN_NORMAL = 90,
         RESOURE_COIN_TRANSFERRABLE = 91,
         RESOURE_COIN_AUCTION = 92,
@@ -733,6 +754,51 @@ namespace Otc
         SUPPLY_STASH_ACTION_WITHDRAW = 3
     };
 
+    enum CyclopediaHouseState_t : uint8_t
+    {
+        CYCLOPEDIA_HOUSE_STATE_AVAILABLE = 0,
+        // 1 ?
+        CYCLOPEDIA_HOUSE_STATE_RENTED = 2,
+        CYCLOPEDIA_HOUSE_STATE_TRANSFER = 3,
+        CYCLOPEDIA_HOUSE_STATE_MOVEOUT = 4,
+    };
+
+    enum CyclopediaHouseAuctionType_t : uint8_t
+    {
+        CYCLOPEDIA_HOUSE_TYPE_NONE = 0,
+        CYCLOPEDIA_HOUSE_TYPE_BID = 1,
+        CYCLOPEDIA_HOUSE_TYPE_MOVEOUT = 2,
+        CYCLOPEDIA_HOUSE_TYPE_TRANSFER = 3,
+        CYCLOPEDIA_HOUSE_TYPE_CANCEL_MOVEOUT = 4,
+        CYCLOPEDIA_HOUSE_TYPE_CANCEL_TRANSFER = 5,
+        CYCLOPEDIA_HOUSE_TYPE_ACCEPT_TRANSFER = 6,
+        CYCLOPEDIA_HOUSE_TYPE_REFECT_TRANSFER = 7,
+    };
+
+    enum CyclopediaCharacterInfoType_t : uint8_t
+    {
+        CYCLOPEDIA_CHARACTERINFO_BASEINFORMATION = 0,
+        CYCLOPEDIA_CHARACTERINFO_GENERALSTATS = 1,
+        CYCLOPEDIA_CHARACTERINFO_COMBATSTATS = 2,
+        CYCLOPEDIA_CHARACTERINFO_RECENTDEATHS = 3,
+        CYCLOPEDIA_CHARACTERINFO_RECENTPVPKILLS = 4,
+        CYCLOPEDIA_CHARACTERINFO_ACHIEVEMENTS = 5,
+        CYCLOPEDIA_CHARACTERINFO_ITEMSUMMARY = 6,
+        CYCLOPEDIA_CHARACTERINFO_OUTFITSMOUNTS = 7,
+        CYCLOPEDIA_CHARACTERINFO_STORESUMMARY = 8,
+        CYCLOPEDIA_CHARACTERINFO_INSPECTION = 9,
+        CYCLOPEDIA_CHARACTERINFO_BADGES = 10,
+        CYCLOPEDIA_CHARACTERINFO_TITLES = 11
+    };
+
+    enum InspectObjectTypes : uint8_t
+    {
+        INSPECT_NORMALOBJECT = 0,
+        INSPECT_NPCTRADE = 1,
+        INSPECT_PLAYERTRADE = 2,
+        INSPECT_CYCLOPEDIA = 3
+    };
+
     enum GameStoreInfoType_t : uint8_t
     {
         SHOW_NONE = 0,
@@ -748,5 +814,23 @@ namespace Otc
         STATE_NEW = 1,
         STATE_SALE = 2,
         STATE_TIMED = 3
+    };
+
+    enum GroupsEditInfoType_t : uint8_t
+    {
+        VIP_GROUP_NONE = 0,
+        VIP_GROUP_ADD = 1,
+        VIP_GROUP_EDIT = 2,
+        VIP_GROUP_REMOVE = 3,
+    };
+
+    enum Store_Type_Actions_t : uint8_t
+    {
+        OPEN_HOME = 0,
+        OPEN_PREMIUM_BOOST = 1,
+        OPEN_CATEGORY = 2,
+        OPEN_USEFUL_THINGS = 3,
+        OPEN_OFFER = 4,
+        OPEN_SEARCH = 5,
     };
 }
