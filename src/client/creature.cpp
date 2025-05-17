@@ -63,6 +63,9 @@ void Creature::draw(const Point& dest, const bool drawThings, const LightViewPtr
     if (!canBeSeen() || !canDraw())
         return;
 
+    const int sprSize = g_gameConfig.getSpriteSize();
+    Point outfitOffset = Point(m_outfitOffset.x, m_outfitOffset.y);
+
     if (drawThings) {
         if (m_showTimedSquare) {
             g_drawPool.addBoundingRect(Rect(dest + (m_walkOffset - getDisplacement() + 2) * g_drawPool.getScaleFactor(), Size(28 * g_drawPool.getScaleFactor())), m_timedSquareColor, std::max<int>(static_cast<int>(2 * g_drawPool.getScaleFactor()), 1));
@@ -72,7 +75,7 @@ void Creature::draw(const Point& dest, const bool drawThings, const LightViewPtr
             g_drawPool.addBoundingRect(Rect(dest + (m_walkOffset - getDisplacement()) * g_drawPool.getScaleFactor(), Size(g_gameConfig.getSpriteSize() * g_drawPool.getScaleFactor())), m_staticSquareColor, std::max<int>(static_cast<int>(2 * g_drawPool.getScaleFactor()), 1));
         }
 
-        const auto& _dest = dest + m_walkOffset * g_drawPool.getScaleFactor();
+        const auto& _dest = dest + m_walkOffset + outfitOffset * g_drawPool.getScaleFactor();
 
         auto oldScaleFactor = g_drawPool.getScaleFactor();
 
@@ -1194,6 +1197,14 @@ void Creature::setCovered(bool covered) {
     g_dispatcher.addEvent([self = static_self_cast<Creature>(), covered, oldCovered] {
         self->callLuaField("onCovered", covered, oldCovered);
     });
+}
+bool Creature::isSummon()
+{
+    if (m_type >= Proto::CreatureTypeSummonOwn && m_type <= Proto::CreatureTypeSummonPet) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void Creature::setText(const std::string& text, const Color& color)

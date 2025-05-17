@@ -66,6 +66,7 @@ public:
     virtual bool isMonster() { return false; }
     virtual bool isPlayer() { return false; }
     virtual bool isLocalPlayer() { return false; }
+    virtual bool isSummon() { return false; }
 
     Animator* getAnimator() const { return getThingType()->getAnimator(); }
     Animator* getIdleAnimator() const { return getThingType()->getIdleAnimator(); }
