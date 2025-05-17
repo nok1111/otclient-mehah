@@ -3,12 +3,14 @@ controller:registerEvents(g_game, {
     onClientVersionChange = function(version)
         -- g_game.enableFeature(GameKeepUnawareTiles)
         -- g_game.enableFeature(GameNegativeOffset)
-        g_game.enableFeature(GameWingsAurasEffectsShader)
         -- g_game.enableFeature(GameAllowCustomBotScripts)
+        g_game.enableFeature(GameWingsAurasEffectsShader)
+        g_game.enableFeature(GameFormatCreatureName)
         g_game.enableFeature(GameCreatureShader)
         g_game.enableFeature(GameCreatureAttachedEffect) 
 		g_game.enableFeature(GameItemShader)
-        g_game.enableFeature(GameFormatCreatureName)
+        g_game.enableFeature(GameItemTooltipV8)
+        
 
         -- For Walk
         --g_game.enableFeature(GameLatencyAdaptiveCamera)

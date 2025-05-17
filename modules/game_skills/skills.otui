@@ -83,6 +83,58 @@ MiniWindow
       RedPercentPanel
 
     SkillButton
+      id: fame
+      height: 45
+      UIWidget
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+
+      SkillNameLabel
+        id: label
+        anchors.left: parent.left
+        text-align: topleft
+        !text: tr('Fame level:')
+      GameLabel
+        id: fameLevel
+        font: verdana-11px-monochrome
+        !text: tr('0')
+        anchors.right: parent.right
+        anchors.top: label.top
+        anchors.bottom: label.bottom
+      RedPercentPanel
+        id: famebar
+        anchors.top: label.top
+        anchors.left: parent.left
+        height: 14
+        background-color: orange
+
+      GameLabel
+        id: famePoints
+        font: verdana-11px-monochrome
+        !text: tr('0 pts')
+        anchors.left: parent.left
+        margin-left: 5
+        anchors.top: famebar.top
+        anchors.bottom: famebar.bottom
+    GameLabel
+      id: famePointslabel
+      font: verdana-11px-monochrome
+      !text: tr('Fame Points:')
+      margin-top: -12
+      GameLabel
+        id: famePtsToLvl
+        font: verdana-11px-monochrome
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        !text: tr('0')
+
+    HorizontalSeparator
+      margin-top: 6
+      margin-bottom: 2
+
+    SkillButton
       id: health
       height: 15
       SkillNameLabel
@@ -149,19 +201,9 @@ MiniWindow
         background-color: red
 
     SkillButton
-      id: skillId0
-      SkillNameLabel
-        !text: tr('Fist Fighting')
-      SkillValueLabel
-      ImageSkill
-        image-source: /images/icons/icon_fist
-        image-size: 9 9
-      SkillPercentPanel
-
-    SkillButton
       id: skillId1
       SkillNameLabel
-        !text: tr('Club Fighting')
+        !text: tr('Focus')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_club
@@ -171,7 +213,7 @@ MiniWindow
     SkillButton
       id: skillId2
       SkillNameLabel
-        !text: tr('Sword Fighting')
+        !text: tr('Strenght')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_sword
@@ -181,7 +223,7 @@ MiniWindow
     SkillButton
       id: skillId3
       SkillNameLabel
-        !text: tr('Axe Fighting')
+        !text: tr('Arcana')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_axe
@@ -191,7 +233,7 @@ MiniWindow
     SkillButton
       id: skillId4
       SkillNameLabel
-        !text: tr('Distance Fighting')
+        !text: tr('Distance')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_distance
@@ -201,10 +243,124 @@ MiniWindow
     SkillButton
       id: skillId5
       SkillNameLabel
-        !text: tr('Shielding')
+        !text: tr('Defence')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_shielding
+        image-size: 9 9
+      SkillPercentPanel
+
+    SkillButton
+      id: skillId0
+      SkillNameLabel
+        !text: tr('Luck')
+      SkillValueLabel
+      ImageSkill
+        image-source: /images/icons/icon_seasonalevent
+        image-size: 9 9
+      SkillPercentPanel
+
+    HorizontalSeparator
+      margin-top: 4
+      margin-bottom: 2
+
+    SkillButton
+      SkillNameLabel
+        !text: tr('jobs:')
+        margin-left: 65
+        margin-top: 3
+
+
+    HorizontalSeparator
+      margin-bottom: 4
+
+    SkillButton
+      id: professionId1
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      ImageSkill
+        image-source: /images/icons/icon_fishing
+        image-size: 9 9
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId2
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      ImageSkill
+        image-source: /images/icons/icon_fishing
+        image-size: 9 9
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId3
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      ImageSkill
+        image-source: /images/icons/icon_fishing
+        image-size: 9 9
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId4
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      ImageSkill
+        image-source: /images/icons/icon_fishing
+        image-size: 9 9
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId5
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      ImageSkill
+        image-source: /images/icons/icon_fishing
+        image-size: 9 9
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId6
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      ImageSkill
+        image-source: /images/icons/icon_fishing
+        image-size: 9 9
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId7
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      ImageSkill
+        image-source: /images/icons/icon_fishing
+        image-size: 9 9
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId8
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      ImageSkill
+        image-source: /images/icons/icon_fishing
+        image-size: 9 9
+      SkillPercentPanel
+
+    SkillButton
+      id: professionId9
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      ImageSkill
+        image-source: /images/icons/icon_fishing
         image-size: 9 9
       SkillPercentPanel
 
@@ -217,10 +373,6 @@ MiniWindow
         image-source: /images/icons/icon_fishing
         image-size: 9 9
       SkillPercentPanel
-        
-    HorizontalSeparator
-      margin-top: 5
-      margin-bottom: 5
 
     SmallSkillButton
       id: skillId7
@@ -261,23 +413,42 @@ MiniWindow
     SmallSkillButton
       id: skillId13
       SkillNameLabel
-        !text: tr('Fatal')
+        !text: tr('Attack Speed')
       SkillValueLabel
 
     SmallSkillButton
       id: skillId14
       SkillNameLabel
-        !text: tr('Dodge')
+        !text: tr('Weakened')
       SkillValueLabel
 
     SmallSkillButton
       id: skillId15
       SkillNameLabel
-        !text: tr('Momentum')
+        !text: tr('Extra Healing')
       SkillValueLabel
 
     SmallSkillButton
       id: skillId16
       SkillNameLabel
+        !text: tr('fatal')
+      SkillValueLabel
+
+    SmallSkillButton
+      id: skillId17
+      SkillNameLabel
+        !text: tr('dodge')
+      SkillValueLabel
+    
+    SmallSkillButton
+      id: skillId18
+      SkillNameLabel
+        !text: tr('Momentum')
+      SkillValueLabel
+    
+    SmallSkillButton
+      id: skillId19
+      SkillNameLabel
         !text: tr('Transcendence')
       SkillValueLabel
+    

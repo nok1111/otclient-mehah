@@ -51,5 +51,9 @@ Module
     - game_cyclopedia
     - game_creatureinformation
     - game_rewardwall
+    - game_tasklist
+    - game_crafting
+    - game_buffs
+    - game_creatureinformation
   @onLoad: init()
   @onUnload: terminate()
