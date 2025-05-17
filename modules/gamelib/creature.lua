@@ -11,8 +11,7 @@ CreatureTypeMonster = 1
 CreatureTypeNpc = 2
 CreatureTypeSummonOwn = 3
 CreatureTypeSummonOther = 4
-CreatureTypeSummonPet = 5
-CreatureTypeHidden = 6
+CreatureTypeHidden = 5
 
 -- @}
 
@@ -91,8 +90,6 @@ function getTypeImagePath(creatureType)
         path = '/images/game/creaturetype/summon_own'
     elseif creatureType == CreatureTypeSummonOther then
         path = '/images/game/creaturetype/summon_other'
-    elseif creatureType == CreatureTypeSummonPet then
-        path = '/images/game/creaturetype/summon_pet'
     end
     return path
 end

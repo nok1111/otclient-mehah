@@ -59,13 +59,10 @@ Skill = {
     LifeLeechAmount = 10,
     ManaLeechChance = 11,
     ManaLeechAmount = 12,
-    AttackSpeed = 13,
-    Weaken = 14,
-    ExtraHealing = 15,
-    Fatal = 16,
-    Dodge = 17,
-    Momentum = 18,
-    Transcendence = 19
+    Fatal = 13,
+    Dodge = 14,
+    Momentum = 15,
+    Transcendence = 16
 }
 
 North = Directions.North
@@ -354,13 +351,7 @@ ExtendedIds = {
     Game = 4,
     Particles = 5,
     MapShader = 6,
-    NeedsUpdate = 7,
-    TaskList = 0x10,
-    UpdateTask = 0x11,
-    NpcTaskList = 0x12,
-    NpcRewardList = 0x13,
-    DungeonWindow = 0x14,
-    NpcTaskWindowClose = 0x15,
+    NeedsUpdate = 7
 }
 
 PreviewState = {

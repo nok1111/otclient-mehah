@@ -594,7 +594,6 @@
     <ClInclude Include="..\src\framework\sound\soundmanager.h" />
     <ClInclude Include="..\src\framework\sound\soundsource.h" />
     <ClInclude Include="..\src\framework\sound\streamsoundsource.h" />
-    <ClInclude Include="..\src\framework\stdext\boolean.h" />
     <ClInclude Include="..\src\framework\stdext\cast.h" />
     <ClInclude Include="..\src\framework\stdext\compiler.h" />
     <ClInclude Include="..\src\framework\stdext\demangle.h" />

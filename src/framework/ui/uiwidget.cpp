@@ -30,7 +30,6 @@
 #include <framework/otml/otmlnode.h>
 #include <framework/platform/platformwindow.h>
 
-#include <framework/graphics/texturemanager.h>
 #include <algorithm>
 
 #include <ranges>
@@ -1370,15 +1369,12 @@ UIWidgetPtr UIWidget::recursiveGetChildByPos(const Point& childPos, const bool w
     if (!containsPaddingPoint(childPos))
         return nullptr;
 
-    if (isPixelTesting() && isPixelTransparent(childPos))
-        return nullptr;
-
     for (auto& child : std::ranges::reverse_view(m_children)) {
         if (child->isExplicitlyVisible() && child->containsPoint(childPos)) {
             if (const auto& subChild = child->recursiveGetChildByPos(childPos, wantsPhantom))
                 return subChild;
 
-            else if (wantsPhantom || !child->isPhantom() && (!child->isPixelTesting() || !child->isPixelTransparent(childPos)))
+            if (wantsPhantom || !child->isPhantom())
                 return child;
         }
     }
@@ -1966,11 +1962,8 @@ bool UIWidget::propagateOnMouseEvent(const Point& mousePos, UIWidgetList& widget
 
     widgetList.emplace_back(static_self_cast<UIWidget>());
 
-    if (isPixelTesting() && isPixelTransparent(mousePos))
-        return false;
-
     if (!isPhantom())
-        return true;
+        ret = true;
     return ret;
 }
 
@@ -2045,29 +2038,4 @@ void UIWidget::removeOnDestroyCallback(const std::string& id)
     const auto it = m_onDestroyCallbacks.find(id);
     if (it != m_onDestroyCallbacks.end())
         m_onDestroyCallbacks.erase(it);
-}
-
-void UIWidget::setPixelTesting(bool pixelTest)
-{
-    if (m_pixelTest == pixelTest)
-        return;
-
-    m_pixelTest = pixelTest;
-}
-
-bool UIWidget::isPixelTransparent(const Point& mousePos)
-{
-    if (!m_imageTexture || m_imageTexture->isEmpty()) {
-        return true;
-    }
-
-    if (!m_imageTexture->hasTransparentPixels()) {
-        g_textures.loadTextureTransparentPixels(m_imageSource);
-    }
-
-    int x = mousePos.x - m_rect.x();
-    int y = mousePos.y - m_rect.y();
-
-    uint32_t index = (y * m_imageTexture->getWidth() + x);
-    return m_imageTexture->isPixelTransparent(index);
 }

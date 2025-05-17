@@ -1,9 +1,0 @@
-Module
-  name: game_tasklist
-  description: Player task list
-  author: edubart
-  website: https://github.com/edubart/otclient
-  sandboxed: true
-  scripts: [ game_tasklist ]
-  @onLoad: init()
-  @onUnload: terminate()

@@ -39,7 +39,6 @@ public:
     TexturePtr getTexture(const std::string& fileName, bool smooth = true);
     const TexturePtr& getEmptyTexture() { return m_emptyTexture; }
     TexturePtr loadTexture(std::stringstream& file);
-    void loadTextureTransparentPixels(const std::string& fileName);
 
 private:
     std::unordered_map<std::string, TexturePtr> m_textures;

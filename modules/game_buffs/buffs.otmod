@@ -1,9 +1,0 @@
-Module
-  name: game_buffs
-  description: Spellcooldowns
-  author: OTClient team
-  website: https://github.com/edubart/otclient
-  sandboxed: true
-  scripts: [ buffs ]
-  @onLoad: init()
-  @onUnload: terminate()

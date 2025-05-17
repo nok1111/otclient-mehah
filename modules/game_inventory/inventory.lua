@@ -23,10 +23,7 @@ local getSlotPanelBySlot = {
     [InventorySlotLeg] = function(ui) return ui.legs, ui.legs.legs end,
     [InventorySlotFeet] = function(ui) return ui.boots, ui.boots.boots end,
     [InventorySlotFinger] = function(ui) return ui.ring, ui.ring.ring end,
-    [InventorySlotAmmo] = function(ui) return ui.tools, ui.tools.tools end,
-    [InventorySlotRune1] = function(ui) return ui.rune1, ui.rune1.rune1 end,
-    [InventorySlotRune2] = function(ui) return ui.rune2, ui.rune2.rune2 end,
-    [InventorySlotRune3] = function(ui) return ui.rune3, ui.rune3.rune3 end
+    [InventorySlotAmmo] = function(ui) return ui.tools, ui.tools.tools end
 }
 
 local function formatDuration(duration)

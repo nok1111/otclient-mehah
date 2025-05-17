@@ -80,12 +80,9 @@ InventorySlotFeet = 8
 InventorySlotFinger = 9
 InventorySlotAmmo = 10
 InventorySlotPurse = 11
-InventorySlotRune1 = 12
-InventorySlotRune2 = 13
-InventorySlotRune3 = 14
 
 InventorySlotFirst = 1
-InventorySlotLast = 14
+InventorySlotLast = 10
 
 vocationNamesByClientId = {
     [0] = "No Vocation",

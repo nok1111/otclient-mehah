@@ -273,9 +273,6 @@ void ProtocolGame::parseMessage(const InputMessagePtr& msg)
                 case Proto::GameServerTrappers:
                     parseTrappers(msg);
                     break;
-                case Proto::GameServerCreatureName:
-                    parseCreatureName(msg);
-                    break;
                 case Proto::GameServerCloseForgeWindow:
                     parseCloseForgeWindow(msg);
                     break;
@@ -1958,15 +1955,6 @@ void ProtocolGame::parseCreatureData(const InputMessagePtr& msg)
     }
 }
 
-void ProtocolGame::parseCreatureName(const InputMessagePtr& msg)
-{
-    const uint id = msg->getU32();
-    const std::string newName = msg->getString();
-
-    CreaturePtr creature = g_map.getCreatureById(id);
-    if (creature) creature->setName(newName);
-}
-
 void ProtocolGame::parseCreatureHealth(const InputMessagePtr& msg)
 {
     const uint32_t creatureId = msg->getU32();
@@ -2272,7 +2260,7 @@ void ProtocolGame::parsePlayerSkills(const InputMessagePtr& msg) const
 
     if (g_game.getFeature(Otc::GameAdditionalSkills)) {
         // Critical, Life Leech, Mana Leech
-        for (int_fast32_t skill = Otc::CriticalChance; skill <= Otc::ExtraHealing; ++skill) {
+        for (int_fast32_t skill = Otc::CriticalChance; skill <= Otc::ManaLeechAmount; ++skill) {
             if (!g_game.getFeature(Otc::GameLeechAmount)) {
                 if (skill == Otc::LifeLeechAmount || skill == Otc::ManaLeechAmount) {
                     continue;

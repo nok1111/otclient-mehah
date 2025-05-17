@@ -28,7 +28,6 @@
 
 #include "types.h"
 
-#include "boolean.h"
 #include "cast.h"
 #include "compiler.h"
 #include "demangle.h"

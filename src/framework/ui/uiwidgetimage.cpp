@@ -81,8 +81,6 @@ void UIWidget::parseImageStyle(const OTMLNodePtr& styleNode)
             setImageAutoResize(node->value<bool>());
         else if (node->tag() == "image-individual-animation")
             setImageIndividualAnimation(node->value<bool>());
-        else if (node->tag() == "image-pixel-test")
-            setPixelTesting(node->value<bool>());
     }
 }
 
@@ -229,6 +227,4 @@ void UIWidget::setImageSource(const std::string_view source, const bool base64)
 
         setSize(size);
     }
-    if (m_imageSource != source)
-        m_imageSource = source;
 }

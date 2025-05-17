@@ -1,9 +1,0 @@
-Module
-  name: game_crafting
-  description: Crafting system, craft your recipe
-  author: Nekiro
-  website: https://github.com/nekiro
-  sandboxed: true
-  scripts: [ crafting ]
-  @onLoad: init()
-  @onUnload: terminate()

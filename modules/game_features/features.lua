@@ -3,19 +3,15 @@ controller:registerEvents(g_game, {
     onClientVersionChange = function(version)
         -- g_game.enableFeature(GameKeepUnawareTiles)
         -- g_game.enableFeature(GameNegativeOffset)
-        g_game.enableFeature(GameWingsAurasEffectsShader)
+        -- g_game.enableFeature(GameWingsAurasEffectsShader)
         -- g_game.enableFeature(GameAllowCustomBotScripts)
-        g_game.enableFeature(GameCreatureShader)
-        g_game.enableFeature(GameCreatureAttachedEffect) 
-		g_game.enableFeature(GameItemShader)
+
         g_game.enableFeature(GameFormatCreatureName)
 
         -- For Walk
         --g_game.enableFeature(GameLatencyAdaptiveCamera)
         g_game.enableFeature(GameAllowPreWalk)
         g_game.enableFeature(GameMapCache)
-        g_game.enableFeature(GameMagicEffectU16)
-		g_game.enableFeature(GameSpritesAlphaChannel)
         -- g_game.enableFeature(GameSmoothWalkElevation)
 
         if version >= 750 then

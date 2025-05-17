@@ -102,9 +102,9 @@ namespace Otc
         InventorySlotRing,
         InventorySlotAmmo,
         InventorySlotPurse,
-        InventorySlotRune1,
-        InventorySlotRune2,
-        InventorySlotRune3,
+        InventorySlotExt1,
+        InventorySlotExt2,
+        InventorySlotExt3,
         InventorySlotExt4,
         LastInventorySlot
     };
@@ -141,9 +141,6 @@ namespace Otc
         LifeLeechAmount,
         ManaLeechChance,
         ManaLeechAmount,
-        AttackSpeed,
-        Weaken,
-        ExtraHealing,
         Fatal,
         Dodge,
         Momentum,

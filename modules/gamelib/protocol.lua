@@ -19,9 +19,6 @@ GameServerOpcodes = {
 
     -- NOTE: add any custom opcodes in this range
     -- 51 - 99
-    GameServerOpenCrafting  = 57, --54
-    GameServerJobs  = 60,
-    GameServerUpdateFame  = 61,
 
     -- original tibia ONLY
     GameServerPassiveCooldown = 94,
@@ -54,7 +51,6 @@ GameServerOpcodes = {
     GameServerMissleEffect = 133, -- Anthem on 13.x
     GameServerMarkCreature = 134,
     GameServerTrappers = 135,
-    GameServerCreatureName = 138,
     GameServerCreatureHealth = 140,
     GameServerCreatureLight = 141,
     GameServerCreatureOutfit = 142,
@@ -128,12 +124,6 @@ ClientOpcodes = {
 
     -- NOTE: add any custom opcodes in this range
     -- 51 - 99
-    ClientSelectTask                   = 52,
-    ClientSelectReward                  = 53,
-    ClientGetTaskList                   = 54,
-    ClientCraftRecipe                   = 58,
-    ClientDeleteTask                    = 56,
-    ClientStartDungeon                  = 60,
 
     -- original tibia ONLY
     ClientAutoWalk = 100,
