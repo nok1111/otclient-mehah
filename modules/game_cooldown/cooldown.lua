@@ -4,7 +4,7 @@ local ProgressCallback = {
 }
 
 cooldownWindow = nil
-
+cooldownButton = nil
 contentsPanel = nil
 cooldownPanel = nil
 lastPlayer = nil
@@ -20,13 +20,23 @@ function init()
         onSpellCooldown = onSpellCooldown
     })
 
+    cooldownButton = modules.game_mainpanel.addToggleButton('cooldownButton', tr('Cooldowns'),
+        '/images/options/cooldowns', toggle, false, 5)
+
     if modules.client_options.getOption('showSpellGroupCooldowns') then
+        cooldownButton:setOn(true)
         modules.client_options.setOption('showSpellGroupCooldowns', true)
     else
+        cooldownButton:setOn(false)
         modules.client_options.setOption('showSpellGroupCooldowns', false)
     end
 
+    cooldownButton:hide()
+
     cooldownWindow = g_ui.loadUI('cooldown', modules.game_interface.getBottomPanel())
+
+
+
     contentsPanel = cooldownWindow:getChildById('contentsPanel2')
     cooldownPanel = contentsPanel:getChildById('cooldownPanel')
 
@@ -49,6 +59,7 @@ function terminate()
     })
 
     cooldownWindow:destroy()
+    cooldownButton:destroy()
 
 end
 
@@ -87,11 +98,24 @@ function loadIcon(iconId)
 end
 
 function onMiniWindowOpen()
+    cooldownButton:setOn(true)
     modules.client_options.setOption('showSpellGroupCooldowns', true)
 end
 
 function onMiniWindowClose()
+    cooldownButton:setOn(false)
     modules.client_options.setOption('showSpellGroupCooldowns', false)
+end
+
+function toggle()
+    local console = modules.game_console.consolePanel
+    if cooldownButton:isOn() then
+        modules.client_options.setOption('showSpellGroupCooldowns', false)
+        cooldownButton:setOn(false)
+    else
+        modules.client_options.setOption('showSpellGroupCooldowns', true)
+        cooldownButton:setOn(true)
+    end
 end
 
 function online()
@@ -99,9 +123,14 @@ function online()
     if console then
         console:addAnchor(AnchorTop, cooldownWindow:getId(), AnchorBottom)
     end
-    if not g_game.getFeature(GameSpellList) then
+    if g_game.getFeature(GameSpellList) then
+        cooldownButton:show()
+        cooldownButton:setOn(true)
+        modules.client_options.setOption('showSpellGroupCooldowns', true)
+    else
+        cooldownButton:hide()
+        cooldownButton:setOn(false)
         modules.client_options.setOption('showSpellGroupCooldowns', false)
-        return
     end
 
     if not lastPlayer or lastPlayer ~= g_game.getCharacterName() then
@@ -232,8 +261,8 @@ function onSpellGroupCooldown(groupId, duration)
         removeEvent(icon.event)
     end
 
+    progressRect.icon = icon
     if progressRect then
-        progressRect.icon = icon
         removeEvent(progressRect.event)
         local updateFunc = function()
             updateCooldown(progressRect, duration)
@@ -248,6 +277,11 @@ function onSpellGroupCooldown(groupId, duration)
 end
 
 function setSpellGroupCooldownsVisible(visible)
+    if not g_game.getFeature(GameSpellList) then
+        cooldownWindow:hide()
+        cooldownWindow:setHeight(10)
+        return
+    end
     if visible then
         cooldownWindow:setHeight(30)
         cooldownWindow:show()
@@ -255,4 +289,6 @@ function setSpellGroupCooldownsVisible(visible)
         cooldownWindow:hide()
         cooldownWindow:setHeight(10)
     end
+
+    cooldownButton:setOn(visible)
 end

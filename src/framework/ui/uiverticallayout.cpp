@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,7 @@
 
 #include "uiverticallayout.h"
 #include <framework/core/eventdispatcher.h>
-
 #include "uiwidget.h"
-#include <ranges>
 
 void UIVerticalLayout::applyStyle(const OTMLNodePtr& styleNode)
 {
@@ -79,14 +77,14 @@ bool UIVerticalLayout::internalUpdate()
             changed = true;
 
         gap = (m_alignBottom) ? -widget->getMarginTop() : (widget->getHeight() + widget->getMarginBottom());
-        gap += m_alignBottom ? -m_spacing : m_spacing;
+        gap += m_spacing;
         pos.y += gap;
         preferredHeight += gap;
     };
 
     if (m_alignBottom) {
-        for (auto& it : std::ranges::reverse_view(parentWidget->m_children))
-            action(it);
+        for (auto it = parentWidget->m_children.rbegin(); it != parentWidget->m_children.rend(); ++it)
+            action(*it);
     } else for (const auto& widget : parentWidget->m_children)
         action(widget);
 

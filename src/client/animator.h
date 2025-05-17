@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+* Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@
 #include <framework/core/declarations.h>
 #include <framework/core/timer.h>
 
-#include <appearances.pb.h>
+#include <protobuf/appearances.pb.h>
 
 using namespace otclient::protobuf;
 

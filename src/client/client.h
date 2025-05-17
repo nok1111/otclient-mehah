@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@
 
 #include "uimap.h"
 
+#include <framework/graphics/declarations.h>
 #include <framework/core/graphicalapplication.h>
 
 class Client : public ApplicationDrawEvents
@@ -48,10 +49,10 @@ public:
     UIMapPtr getMapWidget() { return m_mapWidget; }
 
     float getEffectAlpha() const { return m_effectAlpha; }
-    void setEffectAlpha(const float v) { m_effectAlpha = v; }
+    void setEffectAlpha(float v) { m_effectAlpha = v; }
 
     float getMissileAlpha() const { return m_missileAlpha; }
-    void setMissileAlpha(const float v) { m_missileAlpha = v; }
+    void setMissileAlpha(float v) { m_missileAlpha = v; }
 
 private:
     UIMapPtr m_mapWidget;

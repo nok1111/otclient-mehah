@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,11 @@
 
 #pragma once
 
-#include "declarations.h"
 #include <framework/luaengine/luaobject.h>
+#include "declarations.h"
 
  // @bindclass
-class OutputMessage final : public LuaObject
+class OutputMessage : public LuaObject
 {
 public:
     enum
@@ -45,7 +45,7 @@ public:
     void addU16(uint16_t value);
     void addU32(uint32_t value);
     void addU64(uint64_t value);
-    void addString(std::string_view buffer);
+    void addString(const std::string_view buffer);
     void addPaddingBytes(int bytes, uint8_t byte = 0);
 
     void encryptRsa();
@@ -53,8 +53,8 @@ public:
     uint16_t getWritePos() { return m_writePos; }
     uint16_t getMessageSize() { return m_messageSize; }
 
-    void setWritePos(const uint16_t writePos) { m_writePos = writePos; }
-    void setMessageSize(const uint16_t messageSize) { m_messageSize = messageSize; }
+    void setWritePos(uint16_t writePos) { m_writePos = writePos; }
+    void setMessageSize(uint16_t messageSize) { m_messageSize = messageSize; }
 
 protected:
     uint8_t* getWriteBuffer() { return m_buffer + m_writePos; }
@@ -66,7 +66,6 @@ protected:
     void writeMessageSize();
 
     friend class Protocol;
-    friend class PacketPlayer;
 
 private:
     bool canWrite(int bytes) const;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,30 +21,27 @@
  */
 
 #include "graphicalapplication.h"
-#include "garbagecollection.h"
 
-#include "framework/stdext/time.h"
 #include <framework/core/asyncdispatcher.h>
 #include <framework/core/clock.h>
 #include <framework/core/eventdispatcher.h>
 #include <framework/graphics/drawpool.h>
 #include <framework/graphics/drawpoolmanager.h>
 #include <framework/graphics/graphics.h>
-#include <framework/graphics/image.h>
 #include <framework/graphics/particlemanager.h>
 #include <framework/graphics/texturemanager.h>
 #include <framework/input/mouse.h>
 #include <framework/platform/platformwindow.h>
 #include <framework/ui/uimanager.h>
 #include <framework/ui/uiwidget.h>
+#include "framework/stdext/time.h"
+#include <framework/graphics/image.h>
 
 #ifdef FRAMEWORK_SOUND
 #include <framework/sound/soundmanager.h>
 #endif
 
-#ifdef __EMSCRIPTEN__
-#include <emscripten/emscripten.h>
-#endif
+#include <thread>
 
 GraphicalApplication g_app;
 
@@ -52,7 +49,7 @@ void GraphicalApplication::init(std::vector<std::string>& args, ApplicationConte
 {
     Application::init(args, context);
 
-    auto graphicalContext = static_cast<GraphicalApplicationContext*>(context);
+    GraphicalApplicationContext* graphicalContext = static_cast<GraphicalApplicationContext*>(context);
     setDrawEvents(graphicalContext->getDrawEvents());
 
     // setup platform window
@@ -66,10 +63,10 @@ void GraphicalApplication::init(std::vector<std::string>& args, ApplicationConte
 
     g_window.setOnInputEvent([this](auto&& PH1) {
         if (!m_running) inputEvent(PH1);
-        else g_dispatcher.addEvent([&, PH1] { inputEvent(PH1); });
+        else g_dispatcher.addEvent([&, PH1]() { inputEvent(PH1); });
     });
 
-    g_window.setOnClose([this] { g_dispatcher.addEvent([this] { close(); }); });
+    g_window.setOnClose([this] { g_dispatcher.addEvent([&]() { close(); }); });
 
     g_mouse.init();
 
@@ -126,35 +123,6 @@ void GraphicalApplication::terminate()
     m_terminated = true;
 }
 
-#ifdef __EMSCRIPTEN__
-void GraphicalApplication::mainLoop() {
-    if (m_stopping) {
-        emscripten_cancel_main_loop();
-        MAIN_THREAD_EM_ASM({ window.location.reload(); });
-        return;
-    }
-    mainPoll();
-
-    if (!g_window.isVisible()) {
-        stdext::millisleep(10);
-        return;
-    }
-
-    const auto FPS = [this] {
-        m_mapProcessFrameCounter.setTargetFps(g_window.vsyncEnabled() || getMaxFps() || getTargetFps() ? 500u : 0u);
-        return m_graphicFrameCounter.getFps();
-    };
-
-    g_drawPool.draw();
-
-    if (m_graphicFrameCounter.update()) {
-        g_dispatcher.addEvent([this, fps = FPS()] {
-            g_lua.callGlobalField("g_app", "onFps", fps);
-        });
-    }
-}
-#endif
-
 void GraphicalApplication::run()
 {
     // run the first poll
@@ -170,20 +138,17 @@ void GraphicalApplication::run()
 
     g_lua.callGlobalField("g_app", "onRun");
 
-#ifndef __EMSCRIPTEN__
-    const auto FPS = [this] {
+    const auto& FPS = [&] {
         m_mapProcessFrameCounter.setTargetFps(g_window.vsyncEnabled() || getMaxFps() || getTargetFps() ? 500u : 0u);
         return m_graphicFrameCounter.getFps();
     };
-#endif
+
     // THREAD - POOL & MAP
-    const auto& mapThread = g_asyncDispatcher.submit_task([this] {
+    const auto& mapThread = g_asyncDispatcher.submit_task([&] {
         const auto uiPool = g_drawPool.get(DrawPoolType::FOREGROUND);
         const auto fgMapPool = g_drawPool.get(DrawPoolType::FOREGROUND_MAP);
 
-        BS::multi_future<void> tasks;
-
-        g_luaThreadId = g_eventThreadId = stdext::getThreadId();
+        g_eventThreadId = EventDispatcher::getThreadId();
         while (!m_stopping) {
             poll();
 
@@ -201,22 +166,23 @@ void GraphicalApplication::run()
 
             m_drawEvents->preLoad();
 
-            tasks.clear();
+            BS::multi_future<void> threads;
+            threads.reserve(3);
 
             if (m_drawEvents->canDraw(DrawPoolType::LIGHT)) {
-                tasks.emplace_back(g_asyncDispatcher.submit_task([this] {
+                threads.emplace_back(g_asyncDispatcher.submit_task([&] {
                     m_drawEvents->draw(DrawPoolType::LIGHT);
                 }));
             }
 
             if (uiPool->canRepaint()) {
-                tasks.emplace_back(g_asyncDispatcher.submit_task([this] {
+                threads.emplace_back(g_asyncDispatcher.submit_task([&] {
                     g_ui.render(DrawPoolType::FOREGROUND);
                 }));
             }
 
             if (fgMapPool->canRepaint()) {
-                tasks.emplace_back(g_asyncDispatcher.submit_task([this] {
+                threads.emplace_back(g_asyncDispatcher.submit_task([&] {
                     m_drawEvents->draw(DrawPoolType::CREATURE_INFORMATION);
                     m_drawEvents->draw(DrawPoolType::FOREGROUND_MAP);
                 }));
@@ -224,16 +190,12 @@ void GraphicalApplication::run()
 
             m_drawEvents->draw(DrawPoolType::MAP);
 
-            tasks.wait();
+            threads.wait();
 
             m_mapProcessFrameCounter.update();
         }
     });
 
-#ifdef __EMSCRIPTEN__
-    m_running = true;
-    emscripten_set_main_loop(([] { g_app.mainLoop(); }), 0, 1);
-#else
     m_running = true;
     while (!m_stopping) {
         mainPoll();
@@ -254,19 +216,14 @@ void GraphicalApplication::run()
             });
         }
     }
-#endif
     mapThread.wait();
 
     m_running = false;
     m_stopping = false;
-
-    g_luaThreadId = g_eventThreadId = -1;
 }
 
 void GraphicalApplication::poll()
 {
-    GarbageCollection::poll();
-
     Application::poll();
 
 #ifdef FRAMEWORK_SOUND
@@ -306,6 +263,11 @@ void GraphicalApplication::resize(const Size& size)
 
     g_mainDispatcher.addEvent([size, scale] {
         g_drawPool.get(DrawPoolType::FOREGROUND)->setFramebuffer(size / scale);
+
+        if (USE_FRAMEBUFFER) {
+            g_drawPool.get(DrawPoolType::CREATURE_INFORMATION)->setFramebuffer(size);
+            g_drawPool.get(DrawPoolType::FOREGROUND_MAP)->setFramebuffer(size);
+        }
     });
 }
 
@@ -338,10 +300,10 @@ void GraphicalApplication::doScreenshot(std::string file)
 
     g_mainDispatcher.addEvent([file] {
         auto resolution = g_graphics.getViewportSize();
-        const int width = resolution.width();
-        const int height = resolution.height();
+        int width = resolution.width();
+        int height = resolution.height();
         auto pixels = std::make_shared<std::vector<uint8_t>>(width * height * 4 * sizeof(GLubyte), 0);
-        glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels->data());
+        glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, (GLubyte*)(pixels->data()));
 
         g_asyncDispatcher.detach_task([resolution, pixels, file] {
             try {
@@ -359,10 +321,4 @@ void GraphicalApplication::doScreenshot(std::string file)
 void GraphicalApplication::doMapScreenshot(std::string fileName)
 {
     if (m_drawEvents) m_drawEvents->doMapScreenshot(fileName);
-}
-
-float GraphicalApplication::getHUDScale() const { return g_window.getDisplayDensity(); }
-void GraphicalApplication::setHUDScale(const float v) {
-    g_window.setDisplayDensity(v);
-    resize(g_graphics.getViewportSize());
 }

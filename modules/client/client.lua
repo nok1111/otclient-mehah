@@ -1,4 +1,4 @@
-local musicFilename = 'sounds/startup'
+local musicFilename = '/sounds/startup'
 local musicChannel = nil
 if g_sounds then
     musicChannel = g_sounds.getChannel(SoundChannels.Music)
@@ -14,6 +14,7 @@ function setMusic(filename)
 end
 
 function startup()
+    -- Play startup music (The Silver Tree, by Mattias Westlund)
     if musicChannel then
         musicChannel:enqueue(musicFilename, 3)
         connect(g_game, {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,12 @@
 #include "luaobject.h"
 #include "luainterface.h"
 
-#include <framework/core/application.h>
-#include "framework/core/graphicalapplication.h"
-
 #include <typeinfo>
-
-int16_t g_luaThreadId = -1;
+#include <framework/core/application.h>
 
 LuaObject::LuaObject() :
     m_fieldsTableRef(-1)
-{
-}
+{}
 
 LuaObject::~LuaObject()
 {

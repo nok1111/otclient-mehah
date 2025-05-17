@@ -3,11 +3,9 @@
   "version-string": "1.0.0",
   "dependencies": [
     "asio",
-    "abseil",
     "cpp-httplib",
     "discord-rpc",
     "liblzma",
-    "libobfuscate",
     "libogg",
     "libvorbis",
     "nlohmann-json",
@@ -19,10 +17,9 @@
     "pugixml",
     "stduuid",
     "zlib",
-    "bshoshany-thread-pool",
     {
       "name": "luajit",
-      "platform": "!android & !wasm32"
+      "platform": "!android"
     },
     {
       "name": "opengl",
@@ -33,5 +30,5 @@
       "platform": "windows | osx"
     }
   ],
-  "builtin-baseline":"b322364f06308bdd24823f9d8f03fe0cc86fd46f"
+  "builtin-baseline":"01f602195983451bc83e72f4214af2cbc495aa94"
 }

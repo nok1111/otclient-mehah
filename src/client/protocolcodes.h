@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -77,13 +77,9 @@ namespace Proto
         GameServerCreatureShader = 54,
         GameServerMapShader = 55,
         GameServerCreatureTyping = 56,
-
 #ifdef PROGRESSBAR
         ServerRunProgressbar = 59,
 #endif
-
-        GameServerFeatures = 67,
-
         GameServerFloorDescription = 75,
 
         // original tibia ONLY
@@ -107,9 +103,7 @@ namespace Proto
         GameServerCreateContainer = 112,
         GameServerChangeInContainer = 113,
         GameServerDeleteInContainer = 114,
-        GameServerBosstiaryInfo = 115,
         GameServerTakeScreenshot = 117,
-        GameServerCyclopediaItemDetail = 118,
         GameServerSetInventory = 120,
         GameServerDeleteInventory = 121,
         GameServerOpenNpcTrade = 122,
@@ -124,11 +118,7 @@ namespace Proto
         GameServerMissleEffect = 133, // Anthem on 13.x
         GameServerItemClasses = 134,
         GameServerTrappers = 135,
-
         GameServerCreatureName = 138,
-
-        GameServerCloseForgeWindow = 137,
-
         GameServerCreatureData = 139,
         GameServerCreatureHealth = 140,
         GameServerCreatureLight = 141,
@@ -173,34 +163,23 @@ namespace Proto
         GameServerWalkWait = 182,
         GameServerUnjustifiedStats = 183,
         GameServerPvpSituations = 184,
-        GameServerBestiaryRefreshTracker = 185,
+        GameServerRefreshBestiaryTracker = 185,
         GameServerTaskHuntingBasicData = 186,
         GameServerTaskHuntingData = 187,
         GameServerBosstiaryCooldownTimer = 189,
         GameServerFloorChangeUp = 190,
         GameServerFloorChangeDown = 191,
         GameServerLootContainers = 192,
-        GameServerCyclopediaHouseAuctionMessage = 195,
-        GameServerCyclopediaHousesInfo = 198,
-        GameServerCyclopediaHouseList = 199,
         GameServerChooseOutfit = 200,
         GameServerSendUpdateImpactTracker = 204,
         GameServerSendItemsPrice = 205,
         GameServerSendUpdateSupplyTracker = 206,
         GameServerSendUpdateLootTracker = 207,
-
-        GameServerQuestTracker = 208,
-        GameServerKillTracker = 209,
-
+        GameServerKillTracker = 209, // 1281
         GameServerVipAdd = 210,
         GameServerVipState = 211,
         GameServerVipLogout = 212,
-        GameServerBestiaryRaces = 213,
-        GameServerBestiaryOverview = 214,
-        GameServerBestiaryMonsterData = 215,
-        GameServerBestiaryCharmsData = 216,
-        GameServerBestiaryEntryChanged = 217,
-        GameServerCyclopediaCharacterInfoData = 218,
+        GameServerSendBestiaryEntryChanged = 217,
         GameServerTutorialHint = 220,
         GameServerAutomapFlag = 221,
         GameServerSendDailyRewardCollectionState = 222,
@@ -247,7 +226,6 @@ namespace Proto
         ClientPing = 29,
         ClientPingBack = 30,
         ClientUseStash = 40,
-        ClientBestiaryTrackerStatus = 42,
 
         // all in game opcodes must be equal or greater than 50
         ClientFirstGameOpcode = 50,
@@ -275,10 +253,7 @@ namespace Proto
         ClientTurnEast = 112,
         ClientTurnSouth = 113,
         ClientTurnWest = 114,
-
-        ClientGmTeleport = 115,
-        ClientEquipItem = 119,
-
+        ClientEquipItem = 119, // 910
         ClientMove = 120,
         ClientInspectNpcTrade = 121,
         ClientBuyItem = 122,
@@ -299,9 +274,6 @@ namespace Proto
         ClientOnWrapItem = 139,
         ClientLook = 140,
         ClientLookCreature = 141,
-        ClientSendQuickLoot = 143,
-        ClientLootContainer = 144,
-        ClientQuickLootBlackWhitelist = 145,
         ClientTalk = 150,
         ClientRequestChannels = 151,
         ClientJoinChannel = 152,
@@ -324,39 +296,21 @@ namespace Proto
         ClientOpenOwnChannel = 170,
         ClientInviteToOwnChannel = 171,
         ClientExcludeFromOwnChannel = 172,
-        ClientCyclopediaHouseAuction = 173,
-        ClientBosstiaryRequestInfo = 174,
-        ClientBosstiaryRequestSlotInfo = 175,
-        ClientBosstiaryRequestSlotAction = 176,
         ClientRequestHighscore = 177,
         ClientCancelAttackAndFollow = 190,
         ClientUpdateTile = 201,
         ClientRefreshContainer = 202,
         ClientBrowseField = 203,
         ClientSeekInContainer = 204,
-
-        ClientInspectionObject = 205,
-        ClientRequestBless = 207,
-        ClientRequestTrackerQuestLog = 208,
-
         ClientRequestOutfit = 210,
         ClientChangeOutfit = 211,
         ClientMount = 212, // 870
         ClientApplyImbuement = 213,
         ClientClearImbuement = 214,
         ClientCloseImbuingWindow = 215,
-        ClientOpenRewardWall = 216,
-        ClientOpenRewardHistory = 217,
-        sendGetRewardDaily = 218,
         ClientAddVip = 220,
         ClientRemoveVip = 221,
         ClientEditVip = 222,
-        ClientEditVipGroups = 223,
-        ClientBestiaryRequest = 225,
-        ClientBestiaryRequestOverview = 226,
-        ClientBestiaryRequestSearch = 227,
-        ClientCyclopediaSendBuyCharmRune = 228,
-        ClientCyclopediaRequestCharacterInfo = 229,
         ClientBugReport = 230,
         ClientRuleViolation = 231,
         ClientDebugReport = 232,

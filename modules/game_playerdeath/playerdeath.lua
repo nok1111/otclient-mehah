@@ -1,3 +1,5 @@
+deathWindow = nil
+
 local deathTexts = {
     regular = {
         text = 'Alas! Brave adventurer, you have met a sad fate.\nBut do not despair, for the gods will bring you back\ninto this world in exchange for a small sacrifice\n\nSimply click on Ok to resume your journeys!',
@@ -16,30 +18,34 @@ local deathTexts = {
     }
 }
 
-deathController = Controller:new()
-deathController:setUI('deathwindow')
-function deathController:onInit()
-    deathController:registerEvents(g_game, {
+function init()
+    g_ui.importStyle('deathwindow')
+
+    connect(g_game, {
         onDeath = display,
         onGameEnd = reset
     })
 end
 
-function deathController:onTerminate()
+function terminate()
+    disconnect(g_game, {
+        onDeath = display,
+        onGameEnd = reset
+    })
+
     reset()
 end
 
 function reset()
-    if deathController.ui then
-        deathController.ui:destroy()
-        deathController.ui = nil
+    if deathWindow then
+        deathWindow:destroy()
+        deathWindow = nil
     end
 end
 
 function display(deathType, penalty)
     displayDeadMessage()
     openWindow(deathType, penalty)
-    scheduleReconnect()
 end
 
 function displayDeadMessage()
@@ -52,61 +58,47 @@ function displayDeadMessage()
 end
 
 function openWindow(deathType, penalty)
-    if deathController.ui then
-        deathController.ui:destroy()
+    if deathWindow then
+        deathWindow:destroy()
         return
     end
 
-    deathController.ui = g_ui.createWidget('DeathWindow', rootWidget)
+    deathWindow = g_ui.createWidget('DeathWindow', rootWidget)
 
-    local textLabel = deathController.ui:getChildById('labelText')
+    local textLabel = deathWindow:getChildById('labelText')
     if deathType == DeathType.Regular then
         if penalty == 100 then
             textLabel:setText(deathTexts.regular.text)
-            deathController.ui:setHeight(deathController.ui.baseHeight + deathTexts.regular.height)
-            deathController.ui:setWidth(deathController.ui.baseWidth + deathTexts.regular.width)
+            deathWindow:setHeight(deathWindow.baseHeight + deathTexts.regular.height)
+            deathWindow:setWidth(deathWindow.baseWidth + deathTexts.regular.width)
         else
             textLabel:setText(string.format(deathTexts.unfair.text, 100 - penalty))
-            deathController.ui:setHeight(deathController.ui.baseHeight + deathTexts.unfair.height)
-            deathController.ui:setWidth(deathController.ui.baseWidth + deathTexts.unfair.width)
+            deathWindow:setHeight(deathWindow.baseHeight + deathTexts.unfair.height)
+            deathWindow:setWidth(deathWindow.baseWidth + deathTexts.unfair.width)
         end
     elseif deathType == DeathType.Blessed then
         textLabel:setText(deathTexts.blessed.text)
-        deathController.ui:setHeight(deathController.ui.baseHeight + deathTexts.blessed.height)
-        deathController.ui:setWidth(deathController.ui.baseWidth + deathTexts.blessed.width)
+        deathWindow:setHeight(deathWindow.baseHeight + deathTexts.blessed.height)
+        deathWindow:setWidth(deathWindow.baseWidth + deathTexts.blessed.width)
     end
 
-    local okButton = deathController.ui:getChildById('buttonOk')
-    local cancelButton = deathController.ui:getChildById('buttonCancel')
+    local okButton = deathWindow:getChildById('buttonOk')
+    local cancelButton = deathWindow:getChildById('buttonCancel')
 
     local okFunc = function()
         CharacterList.doLogin()
         okButton:getParent():destroy()
-        deathController.ui = nil
+        deathWindow = nil
     end
     local cancelFunc = function()
         g_game.safeLogout()
         cancelButton:getParent():destroy()
-        deathController.ui = nil
+        deathWindow = nil
     end
 
-    deathController.ui.onEnter = okFunc
-    deathController.ui.onEscape = cancelFunc
+    deathWindow.onEnter = okFunc
+    deathWindow.onEscape = cancelFunc
 
     okButton.onClick = okFunc
     cancelButton.onClick = cancelFunc
-end
-
-function scheduleReconnect()
-    if not g_settings.getBoolean('autoReconnect') then
-        return
-    end
-    deathController:scheduleEvent(function()
-        if deathController.ui then
-            deathController.ui:destroy()
-            deathController.ui = nil
-        end
-        g_game.cancelLogin()
-        CharacterList.doLogin()
-    end, 2000, 'scheduleAutoReconnect')
 end

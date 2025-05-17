@@ -127,13 +127,7 @@ end
 -- public functions
 function EnterGame.init()
     enterGame = g_ui.displayUI('entergame')
-    Keybind.new("Misc.", "Change Character", "Ctrl+G", "")
-    Keybind.bind("Misc.", "Change Character", {
-      {
-        type = KEY_DOWN,
-        callback = EnterGame.openWindow,
-      }
-    })
+    g_keyboard.bindKeyDown('Ctrl+G', EnterGame.openWindow)
 
     local account = g_settings.get('account')
     local password = g_settings.get('password')
@@ -225,17 +219,13 @@ function EnterGame.init()
 end
 
 function EnterGame.hidePanels()
-    if g_modules.getModule("client_bottommenu"):isLoaded()  then
-        modules.client_bottommenu.hide()
-    end
-    modules.client_topmenu.hide()
+    modules.client_bottommenu.hide()
+    modules.client_topmenu.toggle()
 end
 
 function EnterGame.showPanels()
-    if g_modules.getModule("client_bottommenu"):isLoaded()  then
-        modules.client_bottommenu.show()
-    end
-    modules.client_topmenu.show()
+    modules.client_bottommenu.show()
+    modules.client_topmenu.toggle()
 end
 
 function EnterGame.firstShow()
@@ -255,17 +245,15 @@ function EnterGame.firstShow()
     end
 
     if Services and Services.status then
-        if g_modules.getModule("client_bottommenu"):isLoaded()  then
-            EnterGame.postCacheInfo()
-            EnterGame.postEventScheduler()
-            -- EnterGame.postShowOff() -- myacc/znote no send login.php
-            EnterGame.postShowCreatureBoost()
-        end
+        EnterGame.postCacheInfo()
+        EnterGame.postEventScheduler()
+        EnterGame.postShowOff()
+        EnterGame.postShowCreatureBoost()
     end
 end
 
 function EnterGame.terminate()
-    Keybind.delete("Misc.", "Change Character")
+    g_keyboard.unbindKeyDown('Ctrl+G')
 
     disconnect(clientBox, {
         onOptionChange = EnterGame.onClientVersionChange
@@ -283,7 +271,7 @@ function EnterGame.terminate()
     end
 
     if clientBox then
-        clientBox = nil
+	    clientBox = nil
     end
 
     if motdWindow then
@@ -304,32 +292,27 @@ function EnterGame.terminate()
     EnterGame = nil
 end
 
-local function reportRequestWarning(requestType, msg, errorCode)
-    g_logger.warning(("[Webscraping - %s] %s"):format(requestType, msg), errorCode)
-end
-
 function EnterGame.postCacheInfo()
-    local requestType = 'cacheinfo'
     local onRecvInfo = function(message, err)
 
         if err then
             -- onError(nil, 'Bad Request. Game_entergame postCacheInfo1 ', 400)
-            reportRequestWarning(requestType, "Bad Request. Game_entergame postCacheInfo1")
+            g_logger.warning("[Webscraping] " .. "Bad Request. Game_entergame postCacheInfo1")
             return
         end
 
         local _, bodyStart = message:find('{')
         local _, bodyEnd = message:find('.*}')
         if not bodyStart or not bodyEnd then
+            g_logger.warning("[Webscraping] " .. "Bad Request.Game_entergame postCacheInfo2")
             -- onError(nil, 'Bad Request.Game_entergame postCacheInfo2', 400)
-            reportRequestWarning(requestType, "Bad Request.Game_entergame postCacheInfo2")
             return
         end
 
         local response = json.decode(message:sub(bodyStart, bodyEnd))
         if response.errorMessage then
+            g_logger.warning("[Webscraping] " .. response.errorMessage, response.errorCode)
             -- onError(nil, response.errorMessage, response.errorCode)
-            reportRequestWarning(requestType, response.errorMessage, response.errorCode)
             return
         end
 
@@ -343,55 +326,62 @@ function EnterGame.postCacheInfo()
     end
 
     HTTP.post(Services.status, json.encode({
-        type = requestType
+        type = 'cacheinfo'
     }), onRecvInfo, false)
 end
 
 function EnterGame.postEventScheduler()
-    local requestType = 'eventschedule'
     local onRecvInfo = function(message, err)
         if err then
-            reportRequestWarning(requestType, "Bad Request.Game_entergame postEventScheduler1")
-            return
-        end
-
-        local bodyStart, _ = message:find('{')
-        local _, bodyEnd = message:find('%}%b{}')
-
-        local jsonString = message:sub(bodyStart, bodyEnd)
-
-        local response = json.decode(jsonString)
-        if response.errorMessage then
-            reportRequestWarning(requestType, response.errorMessage, response.errorCode)
-            return
-        end
-        modules.client_bottommenu.setEventsSchedulerTimestamp(response.lastupdatetimestamp)
-        modules.client_bottommenu.setEventsSchedulerCalender(response.eventlist)
-    end
-
-    HTTP.post(Services.status, json.encode({
-        type = requestType
-    }), onRecvInfo, false)
-end
-
-function EnterGame.postShowOff()
-    local requestType = 'showoff'
-    local onRecvInfo = function(message, err)
-        if err then
-            reportRequestWarning(requestType, "Bad Request.Game_entergame postShowOff")
+            -- onError(nil, 'Bad Request. Game_entergame postEventScheduler1', 400)
+            g_logger.warning("[Webscraping] " .. "Bad Request.Game_entergame postEventScheduler1")
             return
         end
 
         local _, bodyStart = message:find('{')
         local _, bodyEnd = message:find('.*}')
         if not bodyStart or not bodyEnd then
-            reportRequestWarning(requestType, "Bad Request.Game_entergame postShowOff")
+            -- onError(nil, 'Bad Request. Game_entergame postEventScheduler2', 400)
+            g_logger.warning("[Webscraping] " .. "Bad Request.Game_entergame postEventScheduler2")
             return
         end
 
         local response = json.decode(message:sub(bodyStart, bodyEnd))
         if response.errorMessage then
-            reportRequestWarning(requestType, response.errorMessage, response.errorCode)
+            -- onError(nil, response.errorMessage, response.errorCode)
+            g_logger.warning("[Webscraping] " .. "response.errorMessage,response.errorCode")
+            return
+        end
+
+        modules.client_bottommenu.setEventsSchedulerTimestamp(response.lastupdatetimestamp)
+        modules.client_bottommenu.setEventsSchedulerCalender(response.eventlist)
+    end
+
+    HTTP.post(Services.status, json.encode({
+        type = 'eventschedule'
+    }), onRecvInfo, false)
+end
+
+function EnterGame.postShowOff()
+    local onRecvInfo = function(message, err)
+        if err then
+            --  onError(nil, 'Bad Request. 1 Game_entergame postShowOff', 400)
+            g_logger.warning("[Webscraping] " .. "Bad Request.Game_entergame postShowOff")
+            return
+        end
+
+        local _, bodyStart = message:find('{')
+        local _, bodyEnd = message:find('.*}')
+        if not bodyStart or not bodyEnd then
+            -- onError(nil, 'Bad Request. 2 Game_entergame postShowOff', 400)
+            g_logger.warning("[Webscraping] " .. "Bad Request.Game_entergame postShowOff")
+            return
+        end
+
+        local response = json.decode(message:sub(bodyStart, bodyEnd))
+        if response.errorMessage then
+            -- onError(nil, response.errorMessage, response.errorCode)
+            g_logger.warning("[Webscraping] " .. response.errorMessage, response.errorCode)
             return
         end
 
@@ -399,39 +389,38 @@ function EnterGame.postShowOff()
     end
 
     HTTP.post(Services.status, json.encode({
-        type = requestType
+        type = 'showoff'
     }), onRecvInfo, false)
 end
 
 function EnterGame.postShowCreatureBoost()
-    local requestType = 'boostedcreature'
     local onRecvInfo = function(message, err)
         if err then
             -- onError(nil, 'Bad Request. 1 Game_entergame postShowCreatureBoost', 400)
-            reportRequestWarning(requestType, "Bad Request.Game_entergame postShowCreatureBoost1")
+            g_logger.warning("[Webscraping] " .. "Bad Request.Game_entergame postShowCreatureBoost1")
             return
         end
 
         local _, bodyStart = message:find('{')
         local _, bodyEnd = message:find('.*}')
         if not bodyStart or not bodyEnd then
+            g_logger.warning("[Webscraping] " .. "Bad Request.Game_entergame postShowCreatureBoost2")
             -- onError(nil, 'Bad Request. 2 Game_entergame postShowCreatureBoost', 400)
-            reportRequestWarning(requestType, "Bad Request.Game_entergame postShowCreatureBoost2")
             return
         end
 
         local response = json.decode(message:sub(bodyStart, bodyEnd))
         if response.errorMessage then
+            g_logger.warning("[Webscraping] " .. response.errorMessage, response.errorCode)
             -- onError(nil, response.errorMessage, response.errorCode)
-            reportRequestWarning(requestType, response.errorMessage, response.errorCode)
             return
         end
 
-        modules.client_bottommenu.setBoostedCreatureAndBoss(response)
+        modules.client_bottommenu.Booster_creature(response)
     end
 
     HTTP.post(Services.status, json.encode({
-        type = requestType
+        type = 'Creatureboost'
     }), onRecvInfo, false)
 end
 
@@ -565,17 +554,13 @@ function EnterGame.tryHttpLogin(clientVersion, httpLogin)
     g_game.setClientVersion(clientVersion)
     g_game.setProtocolVersion(g_game.getClientProtocolVersion(clientVersion))
     g_game.chooseRsa(G.host)
+
     if not modules.game_things.isLoaded() then
         if loadBox then
             loadBox:destroy()
             loadBox = nil
         end
-
-        local errorBox = displayErrorBox(tr("Login Error"), string.format("Things are not loaded, please put assets in things/%d/<assets>.", clientVersion))
-        connect(errorBox, {
-            onOk = EnterGame.show
-        })
-        return
+        return EnterGame.show()
     end
 
     local host, path = G.host:match("([^/]+)/([^/].*)")
@@ -744,12 +729,7 @@ function EnterGame.doLogin()
                 loadBox:destroy()
                 loadBox = nil
             end
-
-            local errorBox = displayErrorBox(tr("Login Error"), string.format("Things are not loaded, please put spr and dat in things/%d/<here>.", clientVersion))
-            connect(errorBox, {
-               onOk = EnterGame.show
-            })
-            return
+            return EnterGame.show()
         end
     end
 end
@@ -802,8 +782,7 @@ function EnterGame.setUniqueServer(host, port, protocol, windowWidth, windowHeig
     stayLoggedBox:setChecked(false)
     stayLoggedBox:setOn(false)
 
-    local clientVersion = tonumber(protocol)
-    clientBox:setCurrentOption(clientVersion)
+    clientBox:setCurrentOption(tonumber(protocol))
     clientBox:setVisible(false)
     clientBox:setHeight(0)
 
@@ -841,13 +820,6 @@ function EnterGame.setUniqueServer(host, port, protocol, windowWidth, windowHeig
 
     enterGame:setHeight(windowHeight)
     enterGame.disableToken = true
-
-    -- preload the assets
-    -- this is for the client_bottommenu module
-    -- it needs images of outfits
-    -- so it can display the boosted creature
-    g_game.setClientVersion(clientVersion)
-    g_game.setProtocolVersion(g_game.getClientProtocolVersion(clientVersion))
 end
 
 function EnterGame.setServerInfo(message)
@@ -857,8 +829,4 @@ end
 
 function EnterGame.disableMotd()
     motdEnabled = false
-end
-
-function ensableBtnCreateNewAccount()
-    enterGame.btnCreateNewAccount:enable()
 end

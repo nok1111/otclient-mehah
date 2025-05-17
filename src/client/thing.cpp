@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,11 @@
 #include "thing.h"
 #include "game.h"
 #include "map.h"
+#include "thingtypemanager.h"
+#include "tile.h"
 
+#include <framework/core/eventdispatcher.h>
+#include <framework/core/graphicalapplication.h>
 #include <framework/graphics/shadermanager.h>
 
 void Thing::setPosition(const Position& position, uint8_t /*stackPos*/, bool /*hasElevation*/)
@@ -40,25 +44,25 @@ int Thing::getStackPriority()
 {
     // Bug fix for old versions
     if (g_game.getClientVersion() <= 800 && isSplash())
-        return GROUND;
+        return STACK_PRIORITY::GROUND;
 
     if (isGround())
-        return GROUND;
+        return STACK_PRIORITY::GROUND;
 
     if (isGroundBorder())
-        return GROUND_BORDER;
+        return STACK_PRIORITY::GROUND_BORDER;
 
     if (isOnBottom())
-        return ON_BOTTOM;
+        return STACK_PRIORITY::ON_BOTTOM;
 
     if (isOnTop())
-        return ON_TOP;
+        return STACK_PRIORITY::ON_TOP;
 
     if (isCreature())
-        return CREATURE;
+        return STACK_PRIORITY::CREATURE;
 
     // common items
-    return COMMON_ITEMS;
+    return STACK_PRIORITY::COMMON_ITEMS;
 }
 
 const TilePtr& Thing::getTile()

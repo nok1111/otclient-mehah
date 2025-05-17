@@ -64,13 +64,7 @@ local hotkeysWindowButton = nil
 -- public functions
 function init()
 
-    Keybind.new("Windows", "Show/hide Hotkeys", "Ctrl+K", "")
-    Keybind.bind("Windows", "Show/hide Hotkeys", {
-      {
-        type = KEY_DOWN,
-        callback = toggle,
-      }
-    })
+    g_keyboard.bindKeyDown('Ctrl+K', toggle)
     hotkeysWindow = g_ui.displayUI('hotkeys_manager')
     hotkeysWindow:setVisible(false)
     hotkeysWindowButton = modules.client_topmenu.addRightGameToggleButton('hotkeysWindowButton', tr('Hotkeys'), '/images/options/hotkeys', toggle)
@@ -134,7 +128,7 @@ function terminate()
         onGameEnd = offline
     })
 
-    Keybind.delete("Windows", "Show/hide Hotkeys")
+    g_keyboard.unbindKeyDown('Ctrl+K')
 
     unload()
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,6 @@
 #include "color.h"
 #include <framework/stdext/hash.h>
 #include <iomanip>
-
-#include "framework/stdext/string.h"
 
  // NOTE: AABBGGRR order
 const Color Color::alpha = 0x00000000U;
@@ -54,7 +52,7 @@ Color::Color(const std::string_view coltext)
     update();
 }
 
-void Color::update() { m_hash = rgba(); }
+void Color::update() { m_hash = stdext::hash_int(rgba()); }
 
 std::ostream& operator<<(std::ostream& out, const Color& color)
 {

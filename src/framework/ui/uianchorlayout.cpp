@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -185,8 +185,7 @@ bool UIAnchorLayout::updateWidget(const UIWidgetPtr& widget, const UIAnchorGroup
                     extraMarginTop += hookedWidget->getMarginBottom();
                     extraMarginBottom += hookedWidget->getMarginTop();
                     break;
-                }
-                if (anchor->getAnchoredEdge() == Fw::AnchorLeft && anchor->getHookedEdge() == Fw::AnchorRight) {
+                } else if (anchor->getAnchoredEdge() == Fw::AnchorLeft && anchor->getHookedEdge() == Fw::AnchorRight) {
                     extraMarginTop -= hookedWidget->getMarginTop();
                     extraMarginBottom -= hookedWidget->getMarginBottom();
                     break;
@@ -268,7 +267,7 @@ bool UIAnchorLayout::updateWidget(const UIWidgetPtr& widget, const UIAnchorGroup
 bool UIAnchorLayout::internalUpdate()
 {
     // reset all anchors groups update state
-    for (const auto& it : m_anchorsGroups)
+    for (auto& it : m_anchorsGroups)
         it.second->setUpdated(false);
 
     bool changed = false;

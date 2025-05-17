@@ -18,9 +18,8 @@ TargetBotLootingPanel < Panel
 
   BotSwitch
     id: everyItem
-    !text: tr("Loot every item, except these")
+    !text: tr("Loot every item")
     margin-top: 2
-    font: small-9px
 
   Label
     margin-top: 5

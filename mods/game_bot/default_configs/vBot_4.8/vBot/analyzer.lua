@@ -133,12 +133,7 @@ local toggle = function()
 end
 
 local drawGraph = function(graph, value)
-    if graph:getGraphsCount() == 0 then
-        graph:createGraph()
-        graph:setLineWidth(1, 1)
-        graph:setLineColor(1, "#FF0000")
-    end
-    graph:addValue(1, value)
+    graph:addValue(value)
 end
 
 local toggleAnalyzer = function(window)
@@ -728,10 +723,11 @@ local expPerHour = function(calculation)
 end
 
 local function add(t, text, color, last)
-    local coloredText = "{" .. text .. ", " .. color .. "}"
-    table.insert(t, coloredText)
+    table.insert(t, text)
+    table.insert(t, color)
     if not last then
-        table.insert(t, "{, , #FFFFFF}")
+        table.insert(t, ", ")
+        table.insert(t, "#FFFFFF")
     end
 end
 
@@ -962,8 +958,7 @@ onTextMessage(function(mode, text)
     local panel = console.consoleTabBar:getTabPanel(tab)
     local consoleBuffer = panel:getChildById('consoleBuffer')
     local message = consoleBuffer:getLastChild()
-    message:setColoredText(table.concat(t))
-
+    message:setColoredText(t)
 end)
 
 local function niceFormat(v)
@@ -1065,7 +1060,6 @@ end
 local interface = modules.game_interface
 
 local function setFrames()
-  if g_game.getFeature(GameColorizedLootValue) then return end
   if not storage.analyzers.rarityFrames then return end
   for _, container in pairs(getContainers()) do
       local window = container.itemsPanel

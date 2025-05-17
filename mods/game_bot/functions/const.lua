@@ -26,9 +26,4 @@ context.InventorySlotRune2 = 13
 context.InventorySlotRune3 = 14
 
 context.InventorySlotFirst = 1
-
 context.InventorySlotLast = 14
-
-
-context.GameColorizedLootValue = GameColorizedLootValue
-

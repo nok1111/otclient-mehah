@@ -47,16 +47,39 @@ function destroy(container)
     end
 end
 
+
+local function setFrames(item, itemWidget)
+    local name = item:getTooltip()
+    if (name) then
+        print("tooltip:", name)
+      if (string.find(name, "Ascended")) then
+        itemWidget:setImageSource('/images/ui/rarity_gold')
+        itemWidget:setShader("pulse")
+      elseif (string.find(name, "Forged")) then
+        itemWidget:setImageSource('/images/ui/rarity_purple')
+        itemWidget:setShader("pulse")
+      elseif (string.find(name, "Orbital")) then
+        itemWidget:setImageSource('/images/ui/rarity_blue')
+        itemWidget:setShader("pulse")
+      else
+        itemWidget:setImageSource('/images/ui/item')
+      end
+    end
+end
+
 function refreshContainerItems(container)
     for slot = 0, container:getCapacity() - 1 do
         local itemWidget = container.itemsPanel:getChildById('item' .. slot)
         itemWidget:setItem(container:getItem(slot))
-        ItemsDatabase.setRarityItem(itemWidget, container:getItem(slot))
-        ItemsDatabase.setTier(itemWidget, container:getItem(slot))
-        if modules.client_options.getOption('showExpiryInContainers') then
-            ItemsDatabase.setCharges(itemWidget, container:getItem(slot))
-            ItemsDatabase.setDuration(itemWidget, container:getItem(slot))
+
+        if container:getItem(slot) then
+            print("rarity:", container:getItem(slot):getItemRarity())
+            setFrames(container:getItem(slot), itemWidget)
+        else
+            print("No item in slot", slot)
+            itemWidget:setImageSource(nil)
         end
+       
     end
 
     if container:hasPages() then
@@ -96,6 +119,8 @@ function refreshContainerPages(container)
     end
 end
 
+
+
 function onContainerOpen(container, previousContainer)
     local containerWindow
     if previousContainer then
@@ -128,8 +153,9 @@ function onContainerOpen(container, previousContainer)
     local name = container:getName()
     name = name:sub(1, 1):upper() .. name:sub(2)
 
-    if name:len() > 14 then
-        name = name:sub(1, 14) .. "..."
+    if name:len() > 11 then
+        name = string.sub(name, 1, #name - 3)
+        name = name .. "..."
     end
 
     containerWindow:setText(name)
@@ -142,12 +168,8 @@ function onContainerOpen(container, previousContainer)
         local itemWidget = g_ui.createWidget('Item', containerPanel)
         itemWidget:setId('item' .. slot)
         itemWidget:setItem(container:getItem(slot))
-        ItemsDatabase.setRarityItem(itemWidget, container:getItem(slot))
-        ItemsDatabase.setTier(itemWidget, container:getItem(slot))
-        if modules.client_options.getOption('showExpiryInContainers') then
-            ItemsDatabase.setCharges(itemWidget, container:getItem(slot))
-            ItemsDatabase.setDuration(itemWidget, container:getItem(slot))
-        end
+       -- setFrames(container:getItem(slot), itemWidget)
+       
         itemWidget:setMargin(0)
         itemWidget.position = container:getSlotPosition(slot)
 
@@ -199,8 +221,13 @@ function onContainerUpdateItem(container, slot, item, oldItem)
     end
     local itemWidget = container.itemsPanel:getChildById('item' .. slot)
     itemWidget:setItem(item)
-    if modules.client_options.getOption('showExpiryInContainers') then
-        ItemsDatabase.setCharges(itemWidget, container:getItem(slot))
-        ItemsDatabase.setDuration(itemWidget, container:getItem(slot))
+    --setFrames(item, itemWidget)
+
+    if item then
+        print("rarity:", item:getItemRarity())
+        setFrames(item, itemWidget)
+    else
+        print("No item in slot", slot)
+        itemWidget:setImageSource(nil)
     end
 end

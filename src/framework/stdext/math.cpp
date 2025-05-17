@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,11 @@
  * THE SOFTWARE.
  */
 
+#include "math.h"
 #include <algorithm>
 #include <climits>
 #include <cmath>
 #include <random>
-#include <stdexcept>
 
 #ifdef _MSC_VER
 #pragma warning(disable:4267) // '?' : conversion from 'A' to 'B', possible loss of data
@@ -34,72 +34,60 @@ namespace stdext
 {
     uint32_t adler32(const uint8_t* buffer, size_t size)
     {
-        constexpr uint32_t MOD_ADLER = 65521;
-        uint32_t a = 1, b = 0;
-
+        size_t a = 1, b = 0;
         while (size > 0) {
-            size_t tlen = std::min<size_t>(size, size_t(5552));
+            size_t tlen = size > 5552 ? 5552 : size;
             size -= tlen;
-
-            for (size_t i = 0; i < tlen; ++i) {
-                a += buffer[i];
+            do {
+                a += *buffer++;
                 b += a;
-            }
-            buffer += tlen; // Avança o ponteiro do buffer
+            } while (--tlen);
 
-            a %= MOD_ADLER;
-            b %= MOD_ADLER;
+            a %= 65521;
+            b %= 65521;
         }
-
         return (b << 16) | a;
-    }
-
-    std::mt19937& random_gen() {
-        thread_local static std::mt19937 generator([] {
-            std::random_device rd;
-            std::seed_seq seq{ rd(), rd(), rd(), rd(), rd(), rd(), rd(), rd() };
-            return std::mt19937(seq);
-        }());
-
-        return generator;
     }
 
     int random_range(int min, int max)
     {
-        if (min > max) std::swap(min, max);
-
-        std::uniform_int_distribution<int> dis(min, max);
-        return dis(random_gen());
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        static std::uniform_int_distribution dis(0, INT_MAX);
+        return min + (dis(gen) % (max - min + 1));
     }
 
     float random_range(float min, float max)
     {
-        if (min > max) std::swap(min, max);
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        static std::uniform_real_distribution<float> dis(0.0, 1.0);
+        return min + (max - min) * dis(gen);
+    }
 
-        std::uniform_real_distribution<float> dis(min, max);
-        return dis(random_gen());
+    std::mt19937& random_gen()
+    {
+	    static std::random_device rd;
+	    static std::mt19937 generator(rd());
+	    return generator;
     }
 
     bool random_bool(double probability)
     {
-        if (probability < 0.0 || probability > 1.0)
-            throw std::invalid_argument("Probability must be between 0 and 1");
-
-        std::bernoulli_distribution dis(probability);
-        return dis(random_gen());
+	    static std::bernoulli_distribution booleanRand;
+	    return booleanRand(random_gen(), std::bernoulli_distribution::param_type(probability));
     }
 
     int32_t normal_random(int32_t minNumber, int32_t maxNumber)
     {
-        if (minNumber > maxNumber) std::swap(minNumber, maxNumber);
-
-        thread_local static std::normal_distribution<float> normalRand(0.5f, 0.25f);
+        static std::normal_distribution<float> normalRand(0.5f, 0.25f);
 
         float v;
         do {
-            v = normalRand(random_gen());
-        } while (v < 0.0f || v > 1.0f); // Garante que o valor está entre 0 e 1
+            v = normalRand(stdext::random_gen());
+        } while (v < 0.0 || v > 1.0);
 
-        return static_cast<int32_t>(std::round(minNumber + v * (maxNumber - minNumber)));
+        auto&& [a, b] = std::minmax(minNumber, maxNumber);
+        return a + std::lround(v * (b - a));
     }
 }

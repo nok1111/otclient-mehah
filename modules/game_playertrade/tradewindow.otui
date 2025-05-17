@@ -2,7 +2,7 @@ TradeWindow < MiniWindow
   !text: tr('Trade')
   height: 150
 
-  Item
+  UIItem
     id: tradeItem
     virtual: true
     size: 16 16
