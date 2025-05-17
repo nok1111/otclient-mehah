@@ -197,6 +197,48 @@ MainInventoryItem < UIWidget
     $!disabled:
       opacity: 1
 
+  UIWidget
+    id: rune1
+    image-source: /images/inventory/inventory_rune1
+    anchors.centerIn: parent
+    phantom: true
+    enabled: false
+    size: 32 32
+
+    $disabled:
+      opacity: 0
+
+    $!disabled:
+      opacity: 1
+
+  UIWidget
+    id: rune2
+    image-source: /images/inventory/inventory_rune1
+    anchors.centerIn: parent
+    phantom: true
+    enabled: false
+    size: 32 32
+
+    $disabled:
+      opacity: 0
+
+    $!disabled:
+      opacity: 1
+
+  UIWidget
+    id: rune3
+    image-source: /images/inventory/inventory_rune1
+    anchors.centerIn: parent
+    phantom: true
+    enabled: false
+    size: 32 32
+
+    $disabled:
+      opacity: 0
+
+    $!disabled:
+      opacity: 1
+
   UIItem
     id: item
     anchors.centerIn: parent

@@ -510,6 +510,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<Thing>("getScaleFactor", &Thing::getScaleFactor);
     g_lua.bindClassMemberFunction<Thing>("setScaleFactor", &Thing::setScaleFactor);
     g_lua.bindClassMemberFunction<Thing>("canAnimate", &Thing::canAnimate);
+    g_lua.bindClassMemberFunction<Thing>("isSummon", &Thing::isSummon);
 
 #ifdef FRAMEWORK_EDITOR
     g_lua.registerClass<House>();
@@ -617,6 +618,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<Creature>("setWidgetInformation", &Creature::setWidgetInformation);
     g_lua.bindClassMemberFunction<Creature>("isFullHealth", &Creature::isFullHealth);
     g_lua.bindClassMemberFunction<Creature>("isCovered", &Creature::isCovered);
+    g_lua.bindClassMemberFunction<Creature>("setOutfitOffset", &Creature::setOutfitOffset);
 
     g_lua.bindClassMemberFunction<Creature>("setText", &Creature::setText);
     g_lua.bindClassMemberFunction<Creature>("getText", &Creature::getText);
@@ -1048,6 +1050,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<UIMap>("setAntiAliasingMode", &UIMap::setAntiAliasingMode);
     g_lua.bindClassMemberFunction<UIMap>("setFloorFading", &UIMap::setFloorFading);
     g_lua.bindClassMemberFunction<UIMap>("clearTiles", &UIMap::clearTiles);
+    g_lua.bindClassMemberFunction<UIMap>("getMapRect", &UIMap::getMapRect);
 
     g_lua.registerClass<UIMinimap, UIWidget>();
     g_lua.bindClassStaticFunction<UIMinimap>("create", [] { return std::make_shared<UIMinimap>(); });

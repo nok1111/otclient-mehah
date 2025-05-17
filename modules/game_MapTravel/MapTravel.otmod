@@ -1,0 +1,9 @@
+Module
+  name: game_MapTravel
+  description: MapTravel
+  author: Fifth
+  sandboxed: true
+  autoload: true
+  scripts: [ MapTravelConfig, MapTravel ]
+  @onLoad: MapTravel.init()
+  @onUnload: MapTravel.terminate()

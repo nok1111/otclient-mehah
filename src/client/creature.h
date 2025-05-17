@@ -129,12 +129,17 @@ public:
 
     Otc::Direction getDirection() { return m_direction; }
     Outfit getOutfit() { return m_outfit; }
+    int getOutfitId() const { return static_cast<int>(m_outfit.getId()); }
     const Light& getLight() const override;
     bool hasLight() const override { return Thing::hasLight() || getLight().intensity > 0; }
     bool hasMountShader() const { return m_mountShaderId > 0; }
 
     Point getDisplacement() const override;
     Point getWalkOffset() { return m_walkOffset; }
+
+    Point getOutfitOffset() { return m_outfitOffset; }
+    void setOutfitOffset(int x, int y) { m_outfitOffset = Point(x, y); }
+
     PointF getJumpOffset() { return m_jumpOffset; }
     Position getLastStepFromPosition() const { return m_lastStepFromPosition; }
     Position getLastStepToPosition() const { return m_lastStepToPosition; }
@@ -156,6 +161,7 @@ public:
     bool isCreature() override { return true; }
     bool isCovered() { return m_isCovered; }
 
+    bool isSummon() override;
     void setCovered(bool covered);
 
     bool isDisabledWalkAnimation() { return m_disableWalkAnimation > 0; }
@@ -208,6 +214,7 @@ protected:
     bool m_walking{ false };
 
     Point m_walkOffset;
+    Point m_outfitOffset;
     Otc::Direction m_direction{ Otc::South };
 
     Timer m_walkTimer;

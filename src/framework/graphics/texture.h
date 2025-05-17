@@ -62,6 +62,14 @@ public:
     virtual bool isAnimatedTexture() const { return false; }
     bool setupSize(const Size& size);
 
+    void loadTransparentPixels(const ImagePtr& image);
+    bool hasTransparentPixels() const {
+        return m_transparentPixels.size() > 0;
+    }
+    bool isPixelTransparent(uint32_t index) {
+        return m_transparentPixels[index] == 1;
+    }
+
 protected:
     void bind();
     void setupWrap() const;
@@ -83,6 +91,7 @@ protected:
     Matrix3 m_transformMatrix = DEFAULT_MATRIX3;
 
     ImagePtr m_image;
+    std::vector<char> m_transparentPixels; // vector of chars is better than vector of bools, silly C++
 
     enum Prop : uint16_t
     {

@@ -1,0 +1,22 @@
+MainWindow
+  id: sendMessage
+  size: 350 200
+  border: 0 #039be5
+  image-color: #00000000
+  background-color: #00000000
+  phantom: true
+  @onClick: modules.game_sendmessages.closeWindow()
+
+  Label
+    id: messageTitle
+    !text: tr('#TITLE_HERE')
+    --font: sans-bold-16px
+    color: white
+    text-auto-resize: true
+    padding: 15
+    image-source: /images/ui/miniwindow
+    text-align: center
+    text-wrap: true
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
