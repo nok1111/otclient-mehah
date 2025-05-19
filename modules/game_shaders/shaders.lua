@@ -47,7 +47,33 @@ local MAP_SHADERS = { {
 }, {
     name = 'Map - Noise',
     frag = 'shaders/fragment/noise.frag'
-} }
+},
+
+{name = 'Desert', frag = 'shaders/fragment/desert.frag', tex1 = 'images/clouds' },
+{name = 'Desert3', frag = 'shaders/fragment/desert.frag', tex1 = 'images/sandstorm' },
+{name = 'Desert4', frag = 'shaders/fragment/desert.frag', tex1 = 'images/desert2' },
+
+{
+    name = 'Map - Heatwave',
+    frag = 'shaders/fragment/heat2.frag',
+    drawViewportEdge = true
+},
+{
+    name = 'Map - confusion',
+    frag = 'shaders/fragment/confusion.frag',
+    drawViewportEdge = true
+},
+{
+    name = 'Map - blind',
+    frag = 'shaders/fragment/blind.frag',
+    drawViewportEdge = true
+},
+{
+    name = 'Map - fear',
+    frag = 'shaders/fragment/fear.frag',
+    drawViewportEdge = true
+},
+ }
 
 OUTFIT_SHADERS = { {
     name = 'Outfit - Default',
@@ -66,13 +92,45 @@ OUTFIT_SHADERS = { {
     name = 'Outfit - Fragmented',
     frag = 'shaders/fragment/noise.frag'
 }, {
-    name = 'Outfit - cyclopedia-black',
-    frag = 'shaders/fragment/cyclopedia.frag'
-}, {
     name = 'Outfit - Outline',
     useFramebuffer = true,
     frag = 'shaders/fragment/outline.frag'
-} }
+},
+ {      name = 'Aura',
+        frag = 'shaders/fragment/radialblur.frag',
+        drawColor = false
+    }, 
+
+    {name = 'Jelly', frag = 'shaders/fragment/heat.frag'},
+    {name = 'Distorted', frag = 'shaders/fragment/noise.frag'},
+    {name = 'Rainbow', useFramebuffer = true, frag = 'shaders/fragment/party.frag'},
+    {name = 'Bloom', useFramebuffer = true, frag = 'shaders/fragment/bloom.frag'},
+    {name = 'Radial Blur', useFramebuffer = true, frag = 'shaders/fragment/radialblur.frag'},
+    {name = 'Old Tv', useFramebuffer = true, frag = 'shaders/fragment/oldtv.frag'},
+    {name = 'Zomg', useFramebuffer = true, frag = 'shaders/fragment/zomg.frag'},
+    {name = 'Rainbowgpt', frag = 'shaders/fragment/rainbowgpt.frag' , drawColor = false},
+    {name = 'Lava', frag = 'shaders/fragment/flames.frag', drawColor = true},
+    {name = 'Galaxy',  frag = 'shaders/fragment/galaxy.frag', drawColor = false},
+    {name = 'Ghost', frag = 'shaders/fragment/ghost.frag'},
+    {name = 'Metallic', frag = 'shaders/fragment/metallic.frag', drawColor = false},
+    {name = 'Golden', frag = 'shaders/fragment/outline_golden.frag', drawColor = false},
+    {name = 'Red Glow', frag = 'shaders/fragment/red_glow.frag'},
+    {name = 'Soul',  frag = 'shaders/fragment/soul.frag'},
+    
+    {name = 'Fragmented', frag = 'shaders/fragment/fragmented.frag'},
+    {name = 'Test', useFramebuffer = true, frag = 'shaders/fragment/outline.frag'},
+    
+    
+    
+    {name = 'chess',  frag = 'shaders/fragment/chess.frag', drawColor = false},
+    {name = 'ripple',  frag = 'shaders/fragment/ripple.frag', drawColor = false},
+    {name = 'magnetic',  frag = 'shaders/fragment/magnetic.frag', drawColor = true},
+    
+    --monster shaders
+    {name = 'Monster Might', frag = 'shaders/fragment/monster_might.frag'},
+
+
+ }
 
 MOUNT_SHADERS = { {
     name = 'Mount - Default',

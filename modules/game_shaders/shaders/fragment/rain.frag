@@ -1,3 +1,9 @@
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+#extension GL_OES_standard_derivatives : enable
+
 uniform float u_Time;
 uniform sampler2D u_Tex0;
 varying vec2 v_TexCoord;
@@ -44,4 +50,6 @@ void main(void)
 
   float opacity = 0.6;
   gl_FragColor = vec4(Game + rain * opacity);
+
+
 }

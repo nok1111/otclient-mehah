@@ -52,7 +52,7 @@ function init()
   -- Binding Ctrl + B shortcut
   --g_keyboard.bindKeyDown('Ctrl+H', show)
 
-  cooldownTopButton = modules.client_topmenu.addRightGameToggleButton('cooldownTopButton', tr('Show Buffs'), '/images/options/button_buffs', show)
+  cooldownTopButton = modules.client_topmenu.addRightGameToggleButton('cooldownTopButton', tr('Show Buffs'), '/images/options/button_prey', show)
   cooldownTopButton:setOn(true)
 
   if g_game.isOnline() then

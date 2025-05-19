@@ -255,7 +255,8 @@ function show()
     updateStretchShrink()
     logoutButton:setTooltip(tr('Logout'))
 
-    setupViewMode(0)
+    setupViewMode(1)
+    setupViewMode(2)
     if g_platform.isMobile() then
         mobileConfig.mobileWidthJoystick = modules.game_joystick.getPanel():getWidth()
         mobileConfig.mobileWidthShortcuts = modules.game_shortcuts.getPanel():getWidth()
@@ -1216,6 +1217,7 @@ function setupViewMode(mode)
     end
 
     if currentViewMode == 2 then
+        print("Setting up view mode 2")
         gameMapPanel:addAnchor(AnchorLeft, 'gameLeftPanel', AnchorRight)
         gameMapPanel:addAnchor(AnchorRight, 'gameRightPanel', AnchorLeft)
         gameMapPanel:addAnchor(AnchorRight, 'gameRightExtraPanel', AnchorLeft)
@@ -1240,6 +1242,7 @@ function setupViewMode(mode)
     end
 
     if mode == 0 then
+        print("Setting up mode 0")
         gameMapPanel:setKeepAspectRatio(true)
         gameMapPanel:setLimitVisibleRange(false)
         gameMapPanel:setZoom(11)
@@ -1252,6 +1255,7 @@ function setupViewMode(mode)
             gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
         end
     elseif mode == 1 then
+        print("Setting up mode 1")
         gameMapPanel:setKeepAspectRatio(false)
         gameMapPanel:setLimitVisibleRange(true)
         gameMapPanel:setZoom(11)
@@ -1264,21 +1268,27 @@ function setupViewMode(mode)
             gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
         end
     elseif mode == 2 then
+        print("Setting up mode 2")
         local limit = limitedZoom and not g_game.isGM()
         gameMapPanel:setLimitVisibleRange(limit)
-        gameMapPanel:setZoom(11)
+        gameMapPanel:setZoom(13)
         gameMapPanel:setVisibleDimension({
             width = 15,
             height = 11
         })
         gameMapPanel:fill('parent')
         gameRootPanel:fill('parent')
-        gameLeftPanel:setImageColor('alpha')
-        gameRightPanel:setImageColor('alpha')
+       -- gameLeftPanel:setImageColor('alpha')
+       -- gameRightPanel:setImageColor('alpha')
         gameRightExtraPanel:setImageColor('alpha')
         gameLeftExtraPanel:setImageColor('alpha')
         gameLeftPanel:setOn(true)
         gameLeftPanel:setVisible(true)
+        gameMainRightPanel:setOn(true)
+        gameMainRightPanel:setVisible(true)
+        
+        gameMainRightPanel:setImageSource("/images/ui/miniwindow_gray.png")
+        
         gameRightPanel:setOn(true)
         gameRightExtraPanel:setOn(false)
         gameRightExtraPanel:setVisible(false)
@@ -1286,6 +1296,8 @@ function setupViewMode(mode)
         gameLeftExtraPanel:setVisible(false)
         gameMapPanel:setOn(true)
         gameBottomPanel:setImageColor('#ffffff88')
+        gameBottomPanel:setMarginLeft(100)  -- Set left margin to 10 pixels (adjust as needed)
+        gameBottomPanel:setMarginRight(100) -- Set right margin to 10 pixels (adjust as needed)
         if g_platform.isMobile() then
             gameRightPanel:setMarginBottom(mobileConfig.mobileHeightShortcuts)
             gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
