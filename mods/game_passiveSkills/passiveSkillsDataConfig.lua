@@ -4,7 +4,7 @@ PassiveSkills.opCode = 173
 
 
 PassiveSkills.nodeWidth = 64
-PassiveSkills.marginBetweenBranches = 50
+PassiveSkills.marginBetweenBranches = 35
 PassiveSkills.marginBetweenNodes = 50
 
 

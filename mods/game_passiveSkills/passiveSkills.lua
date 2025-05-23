@@ -226,13 +226,19 @@ function PassiveSkills.setupTreeUI()
 		PassiveSkills.UI.background:setImageSource("images/backgrounds/default")
 	end
 
+	-- Centering logic
+	local totalBranches = #currentTreeData.branches
+	local totalWidth = totalBranches * PassiveSkills.nodeWidth + (totalBranches + 1) * PassiveSkills.marginBetweenBranches
+	local parentWidth = PassiveSkills.UI.internalPanel:getWidth()
+	local treeLeftOffset = math.max(0, math.floor((parentWidth - totalWidth) / 2))
+
 	for branchIndex, branchData in ipairs(currentTreeData.branches) do
-		PassiveSkills.createBranch(treeId, branchIndex, branchData, progress[branchIndex] or {})
+		PassiveSkills.createBranch(treeId, branchIndex, branchData, progress[branchIndex] or {}, treeLeftOffset)
 	end
 end
 
-function PassiveSkills.createBranch(treeId, branchIndex, branchData, branchProgress)
-	local leftMargin = (branchIndex - 1) * (PassiveSkills.nodeWidth + PassiveSkills.marginBetweenBranches) + PassiveSkills.marginBetweenBranches
+function PassiveSkills.createBranch(treeId, branchIndex, branchData, branchProgress, treeLeftOffset)
+	local leftMargin = (treeLeftOffset or 0) + (branchIndex - 1) * (PassiveSkills.nodeWidth + PassiveSkills.marginBetweenBranches) + PassiveSkills.marginBetweenBranches
 	local prevButton = nil
 
 	for nodeIndex, nodeData in ipairs(branchData.nodes) do
