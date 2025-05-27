@@ -192,10 +192,10 @@ void Item::updatePatterns()
                     color = Otc::FluidPurple;
                     break;
                 case Otc::FluidBeer:
-                    color = Otc::FluidBrown;
+                    color = Otc::FluidOrange;
                     break;
                 case Otc::FluidOil:
-                    color = Otc::FluidBrown;
+                    color = Otc::FluidOrange;
                     break;
                 case Otc::FluidBlood:
                     color = Otc::FluidRed;
@@ -204,7 +204,7 @@ void Item::updatePatterns()
                     color = Otc::FluidGreen;
                     break;
                 case Otc::FluidMud:
-                    color = Otc::FluidBrown;
+                    color = Otc::FluidOrange;
                     break;
                 case Otc::FluidLemonade:
                     color = Otc::FluidYellow;
@@ -222,7 +222,7 @@ void Item::updatePatterns()
                     color = Otc::FluidYellow;
                     break;
                 case Otc::FluidRum:
-                    color = Otc::FluidBrown;
+                    color = Otc::FluidOrange;
                     break;
                 case Otc::FluidFruitJuice:
                     color = Otc::FluidYellow;
@@ -231,7 +231,7 @@ void Item::updatePatterns()
                     color = Otc::FluidWhite;
                     break;
                 case Otc::FluidTea:
-                    color = Otc::FluidBrown;
+                    color = Otc::FluidOrange;
                     break;
                 case Otc::FluidMead:
                     color = Otc::FluidOrange;
