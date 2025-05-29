@@ -181,31 +181,36 @@ TexturePtr TextureManager::loadTexture(std::stringstream& file)
     return texture;
 }
 
-void TextureManager::loadTextureTransparentPixels(const std::string& fileName)
-{
-    TexturePtr texture;
-    std::string filePath = g_resources.resolvePath(fileName);
-    auto it = m_textures.find(fileName);
-    if (it != m_textures.end()) {
-        texture = it->second;
+Matrix3 toMatrix(const Size& size, const bool upsideDown) {
+    if (upsideDown) {
+        return { 1.0f / size.width(), 0.0f,                                                  0.0f,
+                      0.0f,                 -1.0f / size.height(),                                0.0f,
+                      0.0f,                  size.height() / static_cast<float>(size.height()), 1.0f };
     }
-    if (!texture) {
-        return;
+
+    return { 1.0f / size.width(), 0.0f, 0.0f,
+        0.0f, 1.0f / size.height(), 0.0f,
+        0.0f, 0.0f, 1.0f };
+}
+
+const Matrix3* TextureManager::getMatrixById(uint16_t id) {
+    return id < m_matrixCache.objects.size() ? m_matrixCache.objects[id].get() : nullptr;
+}
+
+uint16_t TextureManager::getMatrixId(const Size& size, bool upsidedown) {
+    size_t hash = 0;
+    stdext::hash_combine(hash, size.height());
+    stdext::hash_combine(hash, size.width());
+    stdext::hash_combine(hash, upsidedown);
+
+    auto it = m_matrixCache.indexMap.find(hash);
+    if (it != m_matrixCache.indexMap.end()) {
+        return it->second;
     }
-    std::string filePathEx = g_resources.guessFilePath(filePath, "png");
-    // load texture file data
-    std::stringstream file;
-    g_resources.readFileStream(filePathEx, file);
-    apng_data apng;
-    if (load_apng(file, &apng) == 0) {
-        Size imageSize(apng.width, apng.height);
-        ImagePtr image = ImagePtr(new Image(imageSize, apng.bpp, apng.pdata));
-        if (!image) {
-            g_logger.error(stdext::format("Can't load texture: %s", filePath));
-        } else {
-            texture->loadTransparentPixels(image);
-            image = nullptr;
-        }
-        free_apng(&apng);
-    }
+
+    const auto id = m_matrixCache.objects.size();
+    m_matrixCache.indexMap[hash] = id;
+    m_matrixCache.objects.emplace_back(std::make_unique<Matrix3>(toMatrix(size, upsidedown)));
+
+    return id;
 }
