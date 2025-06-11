@@ -6,6 +6,7 @@
         offset{x, y, onTop}, dirOffset[dir]{x, y, onTop},
         light { color, intensity}, drawOrder(only for tiles),
         bounce{minHeight, height, speed}
+        fade{start, end, speed}
         onAttach, onDetach
     }
 ]]
@@ -606,4 +607,12 @@ AttachedEffectManager.register(65, 'magic echo', 598, ThingCategoryEffect, {
     speed = 1,
     offset = { -70, -60, false},
     
+})
+
+AttachedEffectManager.register(67, 'stuned judgement', 32, ThingCategoryEffect, {
+	opacity = 1,
+	duration = 2000,
+	speed = 1,
+	offset = { 22, 22, true},
+	
 })
