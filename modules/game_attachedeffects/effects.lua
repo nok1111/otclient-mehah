@@ -610,3 +610,194 @@ AttachedEffectManager.register(65, 'magic echo', 598, ThingCategoryEffect, {
     offset = { -70, -60, false},
     
 })
+
+AttachedEffectManager.register(66, 'stuned judment', 32, ThingCategoryEffect, {
+    opacity = 2,
+    duration = 2000,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})
+
+AttachedEffectManager.register(67, 'floor judment', 644, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 0.83,
+    offset = { -32, -32, false},
+    
+})
+
+AttachedEffectManager.register(68, 'shockwave ground', '/images/game/effects/shockwave ground', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    offset = { 80, 80, false},
+    size = { 180, 180 },
+    
+})
+
+AttachedEffectManager.register(69, 'shockwave aura', '/images/game/effects/shockwave aura', ThingExternalTexture, {
+    loop = 1,
+    opacity = 1,
+    speed = 0.83,
+    offset = { 80, 80, false},
+    size = { 180, 180 },
+    
+})
+
+AttachedEffectManager.register(70, 'blackout', 32, ThingCategoryEffect, {
+    opacity = 2,
+    duration = 4000,
+    speed = 1,
+    offset = { 22, 22, true},
+
+    onAttach = function(effect, owner)
+        owner:setShader('Blackout')
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setShader('Outfit - Default')
+    end
+    
+})
+
+AttachedEffectManager.register(71, 'deathbringer', 318, ThingCategoryEffect, {
+    loop = 1,
+    duration = 2000,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})
+
+AttachedEffectManager.register(72, 'Protection', 268, ThingCategoryEffect, {
+    duration = 3500,
+    speed = 1,
+    offset = { 0, 0, true},
+    
+})
+
+AttachedEffectManager.register(73, 'Dragon Aura', 540, ThingCategoryEffect, {
+    duration = 18000,
+    speed = 1,
+    offset = { 0, 0, true},
+    
+})
+AttachedEffectManager.register(74, 'Dragon aura spin', 755, ThingCategoryEffect, {
+    duration = 18000,
+    size = { 40, 40 },
+    speed = 1.8,
+    offset = { -21, -21, false},
+    
+})
+AttachedEffectManager.register(75, 'Draconic rage', 663, ThingCategoryEffect, {
+    duration = 15000,
+    size = { 40, 40 },
+    speed = 1.8,
+    offset = { -21, -21, true},
+    
+})
+
+AttachedEffectManager.register(76, 'dragon Wings', 2135, ThingCategoryCreature, {
+    speed = 1,
+    duration = 7000,
+    disableWalkAnimation = true,
+    shader = 'Red Glow',
+    dirOffset = {
+        [North] = { -13, -23, true },
+        [East] = { 12, -19 },
+        [South] = { -10, 14 },
+        [West] = { -16, -16, true }
+    },
+})
+
+AttachedEffectManager.register(77, 'dragon form', 2274, ThingCategoryCreature, {
+    transform = true,
+    duration = 5000,
+    shader = 'Monster Might',
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(497)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(497)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(78, 'chains 1', 825, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.8,
+    offset = { -128, -128, true},
+    
+})
+
+AttachedEffectManager.register(79, 'chains 2', 826, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.8,
+    offset = { -128, -128, true},
+    
+})  
+
+AttachedEffectManager.register(80, 'chains 3', 827, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.8,
+    offset = { -128, -128, true},
+    
+})
+ 
+AttachedEffectManager.register(81, 'chains 4', 828, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.8,
+    offset = { -128, -128, true},
+    
+})
+
+AttachedEffectManager.register(82, 'fire', 590, ThingCategoryEffect, {
+    duration = 1000,
+    speed = 1,
+    offset = { 0, 0, true},
+    
+})
+
+AttachedEffectManager.register(83, 'dragon soul', 782, ThingCategoryEffect, {
+    loop = 1,
+    duration = 1000,
+    speed = 1,
+    shader = 'Monster Might',
+    offset = { 0, 0, true},
+    
+})
+
+AttachedEffectManager.register(84, 'dragon soul circle', '/images/game/effects/red_spin', ThingExternalTexture, {
+    loop = 1,
+    shader = 'Monster Might',
+    size = { 90, 90 },
+    offset = { 30, 30, false }
+})
+
+AttachedEffectManager.register(85, 'haunt', 838, ThingCategoryEffect, {
+    duration = 10000,
+    speed = 1,
+    offset = { -10, -10, false }
+})
+
+AttachedEffectManager.register(86, 'star fall', 661, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -32, -32, false }
+})
+
+AttachedEffectManager.register(87, 'dark aura', 795, ThingCategoryEffect, {
+    speed = 1,
+    offset = { 0, 0, true },
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(841)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(841)
+        oldOwner:getTile():addThing(e)
+    end
+})

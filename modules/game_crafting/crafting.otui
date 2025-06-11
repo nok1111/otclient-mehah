@@ -52,11 +52,11 @@ MainWindow
   UIWidget
     id: professionIcon
     image-source: /data/images/game/profession/blacksmith
-    image-size: 80 80
-    size: 80 80
+    image-size: 120 120
+    size: 120 120
     anchors.top: parent.top
     anchors.right: parent.right
-    margin-right: 5
+    margin-right: 0
 
   Button
     id: craftButton

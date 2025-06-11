@@ -30,8 +30,8 @@ local Colors = {
 local rarityColor = {
   {name = "", color = "#ffffff"},
   {name = "Common", color = "#ffffff"},
-  {name = "Rare", color = "#02e2fc"},
-  {name = "Epic", color = "#d300ff"},
+  {name = "Orbital", color = "#02e2fc"},
+  {name = "Forged", color = "#d300ff"},
   {name = "Legendary", color = "#ff7605"}
 }
 

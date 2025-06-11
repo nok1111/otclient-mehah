@@ -9,7 +9,7 @@ NodeButton < Button
   !tooltip: tr("Ctrl + left click to level up with out confirmation request")
 
 NodeEntry < Panel
-  size: 40 40
+  size: 42 42
   image-smooth: true
 
 NodeEntryBorder < Panel

@@ -128,6 +128,8 @@ OUTFIT_SHADERS = { {
     
     --monster shaders
     {name = 'Monster Might', frag = 'shaders/fragment/monster_might.frag'},
+    {name = 'Blackout', frag = 'shaders/fragment/blackout.frag'},
+    {name = 'Stealth', frag = 'shaders/fragment/stealth.frag'},
 
 
  }
