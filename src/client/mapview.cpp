@@ -138,6 +138,9 @@ void MapView::drawFloor()
 
         const auto& map = m_floors[z].cachedVisibleTiles;
 
+        // Create a vector of creatures that are currently dashing
+        std::vector<std::pair<CreaturePtr, Point>> creatures;
+
         for (const auto& tile : map.tiles) {
             uint32_t tileFlags = flags;
 
@@ -149,7 +152,7 @@ void MapView::drawFloor()
                 g_drawPool.setOpacity(inRange ? .16 : .7);
             }
 
-            tile->draw(transformPositionTo2D(tile->getPosition()), tileFlags);
+            tile->draw(transformPositionTo2D(tile->getPosition()), &creatures, tileFlags);
 
             if (alwaysTransparent)
                 g_drawPool.resetOpacity();
@@ -157,6 +160,11 @@ void MapView::drawFloor()
 
         for (const auto& missile : g_map.getFloorMissiles(z))
             missile->draw(transformPositionTo2D(missile->getPosition()), true);
+
+            // Iterate through all dashing creatures and draw the blur behind the creature
+            for (auto& [creature, dest] : creatures) {
+                creature->drawDashEffect(dest);
+            }
 
         if (m_shadowFloorIntensity > 0 && z == cameraPosition.z + 1) {
             g_drawPool.setOpacity(m_shadowFloorIntensity, true);

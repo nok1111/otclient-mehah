@@ -99,7 +99,7 @@ public:
     bool isTile() override { return true; }
 
     void onAddInMapView();
-    void draw(const Point& dest, int flags, const LightViewPtr& lightView = nullptr);
+    void draw(const Point& dest, std::vector<std::pair<CreaturePtr, Point>>* creatures, int flags, const LightViewPtr& lightView = nullptr);
     void drawLight(const Point& dest, const LightViewPtr& lightView);
 
     void clean();
@@ -218,7 +218,7 @@ public:
 private:
     void updateThingStackPos();
     void drawTop(const Point& dest, int flags, bool forceDraw, uint8_t drawElevation);
-    void drawCreature(const Point& dest, int flags, bool forceDraw, uint8_t drawElevation, const LightViewPtr& lightView = nullptr);
+    void drawCreature(const Point& dest, std::vector<std::pair<CreaturePtr, Point>>* creatures,int flags, bool forceDraw, uint8_t drawElevation, const LightViewPtr& lightView = nullptr);
 
     void setThingFlag(const ThingPtr& thing);
 
