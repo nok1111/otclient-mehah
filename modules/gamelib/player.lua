@@ -89,14 +89,16 @@ InventorySlotLast = 14
 
 vocationNamesByClientId = {
     [0] = "No Vocation",
-    [1] = "Knight",
-    [2] = "Paladin",
-    [3] = "Sorcerer",
-    [4] = "Druid",
-    [11]= "Elite Knight",
-    [12] = "Royal Paladin",
-    [13] = "Master Sorcerer",
-    [14] = "Elder Druid"
+    [1] = "Magician",
+    [2] = "Templar",
+    [3] = "Nightblade",
+    [4] = "Dragon Knight",
+    [5] = "Warlock",
+    [6] = "Stellar",
+    [7] = "Monk",
+    [8] = "Druid",
+    [9] = "Light Dancer",
+    [10] = "Archer"
 }
 
 function Player:isPartyLeader()

@@ -801,3 +801,99 @@ AttachedEffectManager.register(87, 'dark aura', 795, ThingCategoryEffect, {
         oldOwner:getTile():addThing(e)
     end
 })
+
+AttachedEffectManager.register(88, 'holy fire', 835, ThingCategoryEffect, {
+    loop = 1,
+    speed = 2,
+    offset = { 0, 0, true},
+    
+})
+
+AttachedEffectManager.register(89, 'moon light', 503, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    shader = 'Galaxy',
+    offset = { -10, -5, true},
+    
+})
+
+AttachedEffectManager.register(90, 'cosmic effect', 566, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 0.8,
+    drawOnUI = false
+})
+
+AttachedEffectManager.register(91, 'cosmic force', 0, 0, {
+    duration = 650,
+    onAttach = function(effect, owner)
+        local cosmicEffect = g_attachedEffects.getById(90)
+        local cosmicEffect1 = cosmicEffect:clone()
+        local cosmicEffect2 = cosmicEffect:clone()
+        local cosmicEffect3 = cosmicEffect:clone()
+        local cosmicEffect4 = cosmicEffect:clone()
+
+        cosmicEffect1:setOffset(-25, 25, true)
+        cosmicEffect2:setOffset(25, 25, true)
+        cosmicEffect3:setOffset(25, -25, true)
+        cosmicEffect4:setOffset(-25, -25, true)
+
+        effect:attachEffect(cosmicEffect1)
+        effect:attachEffect(cosmicEffect2)
+        effect:attachEffect(cosmicEffect3)
+        effect:attachEffect(cosmicEffect4)
+    end
+})
+
+AttachedEffectManager.register(92, 'fire fist', 2895, ThingCategoryCreature, {
+    speed = 1.5,
+    duration = 3000,
+    disableWalkAnimation = false,
+    --shader = 'Outfit - Rainbow',
+    dirOffset = {
+        [North] = { -35, 0, false }, 
+        [East] = { -80, -38, true },
+        [South] = { -39, -96, true },
+        [West] = { 0, -50, false }
+    }
+})
+
+AttachedEffectManager.register(93, 'life fist', 2896, ThingCategoryCreature, {
+    speed = 1.5,
+    duration = 5000,
+    disableWalkAnimation = false,
+    --shader = 'Outfit - Rainbow',
+    dirOffset = {
+        [North] = { -35, 0, false }, 
+        [East] = { -80, -38, true },
+        [South] = { -39, -96, true },
+        [West] = { 0, -50, false }
+    }
+})
+
+AttachedEffectManager.register(94, 'ice fist', 2897, ThingCategoryCreature, {
+    speed = 1.5,
+    duration = 5000,
+    disableWalkAnimation = false,
+    --shader = 'Outfit - Rainbow',
+    dirOffset = {
+        [North] = { -35, 0, false }, 
+        [East] = { -80, -38, true },
+        [South] = { -39, -96, true },
+        [West] = { 0, -50, false }
+    }
+})
+
+AttachedEffectManager.register(95, 'adaptive ice', 847, ThingCategoryEffect, {
+    loop = 1,
+    speed = 0.5,
+    offset = { -33, -33, true},
+    
+})
+
+AttachedEffectManager.register(96, 'adaptive life', 846, ThingCategoryEffect, {
+    loop = 1,
+    speed = 0.7,
+    offset = { -33, -33, true},
+    
+})
+    

@@ -1,4 +1,4 @@
-local SpelllistProfile = 'Default'
+local SpelllistProfile = 'Custom'
 
 spelllistWindow = nil
 spelllistButton = nil
@@ -15,10 +15,18 @@ premiumValueLabel = nil
 descriptionValueLabel = nil
 
 vocationBoxAny = nil
-vocationBoxSorcerer = nil
+
+
+vocationBoxMagician = nil
+vocationBoxTemplar = nil
+vocationBoxNightblade = nil
+vocationBoxDragonKnight = nil
+vocationBoxWarlock = nil
+vocationBoxStellar = nil
+vocationBoxMonk = nil
 vocationBoxDruid = nil
-vocationBoxPaladin = nil
-vocationBoxKnight = nil
+vocationBoxLightDancer = nil
+vocationBoxArcher = nil
 
 groupBoxAny = nil
 groupBoxAttack = nil
@@ -39,10 +47,16 @@ FILTER_PREMIUM_NO = 1
 FILTER_PREMIUM_YES = 2
 
 FILTER_VOCATION_ANY = 0
-FILTER_VOCATION_SORCERER = 1
-FILTER_VOCATION_DRUID = 2
-FILTER_VOCATION_PALADIN = 3
-FILTER_VOCATION_KNIGHT = 4
+FILTER_VOCATION_MAGICIAN = 1
+FILTER_VOCATION_TEMPLAR = 2
+FILTER_VOCATION_NIGHTBLADE = 3
+FILTER_VOCATION_DRAGONKNIGHT = 4
+FILTER_VOCATION_WARLOCK = 5
+FILTER_VOCATION_STELLAR = 6
+FILTER_VOCATION_MONK = 7
+FILTER_VOCATION_DRUID = 8
+FILTER_VOCATION_LIGHTDANCER = 9
+FILTER_VOCATION_ARCHER = 10
 
 FILTER_GROUP_ANY = 0
 FILTER_GROUP_ATTACK = 1
@@ -117,10 +131,16 @@ function init()
     descriptionValueLabel = spelllistWindow:getChildById('labelDescriptionValue')
 
     vocationBoxAny = spelllistWindow:getChildById('vocationBoxAny')
-    vocationBoxSorcerer = spelllistWindow:getChildById('vocationBoxSorcerer')
+    vocationBoxMagician = spelllistWindow:getChildById('vocationBoxMagician')
+    vocationBoxTemplar = spelllistWindow:getChildById('vocationBoxTemplar')
+    vocationBoxNightblade = spelllistWindow:getChildById('vocationBoxNightblade')
+    vocationBoxDragonKnight = spelllistWindow:getChildById('vocationBoxDragonKnight')
+    vocationBoxWarlock = spelllistWindow:getChildById('vocationBoxWarlock')
+    vocationBoxStellar = spelllistWindow:getChildById('vocationBoxStellar')
+    vocationBoxMonk = spelllistWindow:getChildById('vocationBoxMonk')
     vocationBoxDruid = spelllistWindow:getChildById('vocationBoxDruid')
-    vocationBoxPaladin = spelllistWindow:getChildById('vocationBoxPaladin')
-    vocationBoxKnight = spelllistWindow:getChildById('vocationBoxKnight')
+    vocationBoxLightDancer = spelllistWindow:getChildById('vocationBoxLightDancer')
+    vocationBoxArcher = spelllistWindow:getChildById('vocationBoxArcher')
 
     groupBoxAny = spelllistWindow:getChildById('groupBoxAny')
     groupBoxAttack = spelllistWindow:getChildById('groupBoxAttack')
@@ -133,10 +153,16 @@ function init()
 
     vocationRadioGroup = UIRadioGroup.create()
     vocationRadioGroup:addWidget(vocationBoxAny)
-    vocationRadioGroup:addWidget(vocationBoxSorcerer)
+    vocationRadioGroup:addWidget(vocationBoxMagician)
+    vocationRadioGroup:addWidget(vocationBoxTemplar)
+    vocationRadioGroup:addWidget(vocationBoxNightblade)
+    vocationRadioGroup:addWidget(vocationBoxDragonKnight)
+    vocationRadioGroup:addWidget(vocationBoxWarlock)
+    vocationRadioGroup:addWidget(vocationBoxStellar)
+    vocationRadioGroup:addWidget(vocationBoxMonk)
     vocationRadioGroup:addWidget(vocationBoxDruid)
-    vocationRadioGroup:addWidget(vocationBoxPaladin)
-    vocationRadioGroup:addWidget(vocationBoxKnight)
+    vocationRadioGroup:addWidget(vocationBoxLightDancer)
+    vocationRadioGroup:addWidget(vocationBoxArcher)
 
     groupRadioGroup = UIRadioGroup.create()
     groupRadioGroup:addWidget(groupBoxAny)
@@ -220,8 +246,8 @@ function initializeSpelllist()
         tmpLabel:setHeight(SpelllistSettings[SpelllistProfile].iconSize.height + 4)
         tmpLabel:setTextOffset(topoint((SpelllistSettings[SpelllistProfile].iconSize.width + 10) .. ' ' ..
                                            (SpelllistSettings[SpelllistProfile].iconSize.height - 32) / 2 + 3))
-        tmpLabel:setImageSource(SpelllistSettings[SpelllistProfile].iconFile)
-        tmpLabel:setImageClip(Spells.getImageClip(iconId, SpelllistProfile))
+        --tmpLabel:setImageSource(SpelllistSettings[SpelllistProfile].iconFile)
+        tmpLabel:setImageSource(Spells.getIconId(iconId, SpelllistProfile))
         tmpLabel:setImageSize(tosize(SpelllistSettings[SpelllistProfile].iconSize.width .. ' ' ..
                                          SpelllistSettings[SpelllistProfile].iconSize.height))
         tmpLabel.onClick = updateSpellInformation
@@ -295,7 +321,7 @@ function updateSpellInformation(widget)
 
         for i = 1, #info.vocations do
             local vocationId = info.vocations[i]
-            if vocationId <= 4 or not (table.find(info.vocations, (vocationId - 4))) then
+            if vocationId <= 10 or not (table.find(info.vocations, (vocationId - 10))) then
                 vocation = vocation .. (vocation:len() == 0 and '' or ', ') .. VocationNames[vocationId]
             end
         end
@@ -344,14 +370,26 @@ function toggleFilter(widget, selectedWidget)
         local boxId = selectedWidget:getId()
         if boxId == 'vocationBoxAny' then
             filters.vocationId = FILTER_VOCATION_ANY
-        elseif boxId == 'vocationBoxSorcerer' then
-            filters.vocationId = FILTER_VOCATION_SORCERER
+        elseif boxId == 'vocationBoxMagician' then
+            filters.vocationId = FILTER_VOCATION_MAGICIAN
+        elseif boxId == 'vocationBoxTemplar' then
+            filters.vocationId = FILTER_VOCATION_TEMPLAR
+        elseif boxId == 'vocationBoxNightblade' then
+            filters.vocationId = FILTER_VOCATION_NIGHTBLADE
+        elseif boxId == 'vocationBoxDragonKnight' then
+            filters.vocationId = FILTER_VOCATION_DRAGONKNIGHT
+        elseif boxId == 'vocationBoxWarlock' then
+            filters.vocationId = FILTER_VOCATION_WARLOCK
+        elseif boxId == 'vocationBoxStellar' then
+            filters.vocationId = FILTER_VOCATION_STELLAR
+        elseif boxId == 'vocationBoxMonk' then
+            filters.vocationId = FILTER_VOCATION_MONK
         elseif boxId == 'vocationBoxDruid' then
             filters.vocationId = FILTER_VOCATION_DRUID
-        elseif boxId == 'vocationBoxPaladin' then
-            filters.vocationId = FILTER_VOCATION_PALADIN
-        elseif boxId == 'vocationBoxKnight' then
-            filters.vocationId = FILTER_VOCATION_KNIGHT
+        elseif boxId == 'vocationBoxLightDancer' then
+            filters.vocationId = FILTER_VOCATION_LIGHTDANCER
+        elseif boxId == 'vocationBoxArcher' then
+            filters.vocationId = FILTER_VOCATION_ARCHER
         end
     elseif widget == groupRadioGroup then
         local boxId = selectedWidget:getId()
@@ -388,10 +426,10 @@ function toggleFilter(widget, selectedWidget)
 end
 
 function resizeWindow()
-    spelllistWindow:setWidth(SpelllistSettings['Default'].spellWindowWidth +
+    spelllistWindow:setWidth(SpelllistSettings['Custom'].spellWindowWidth +
                                  SpelllistSettings[SpelllistProfile].iconSize.width - 32)
     spellList:setWidth(
-        SpelllistSettings['Default'].spellListWidth + SpelllistSettings[SpelllistProfile].iconSize.width - 32)
+        SpelllistSettings['Custom'].spellListWidth + SpelllistSettings[SpelllistProfile].iconSize.width - 32)
 end
 
 function resetWindow()

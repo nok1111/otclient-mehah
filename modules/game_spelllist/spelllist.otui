@@ -22,7 +22,7 @@ SpellInfoLabel < Label
 
 SpellInfoValueLabel < Label
   text-align: left
-  width: 190
+  width: 400
   margin-left: 10
   margin-top: 5
 
@@ -39,7 +39,7 @@ FilterButton < Button
 MainWindow
   id: spelllistWindow
   !text: tr('Spell List')
-  size: 550 400
+  size: 700 500
   @onEscape: toggle()
 
   TextList
@@ -195,6 +195,14 @@ MainWindow
     id: labelDescriptionValue
     anchors.left: labelDescription.right
     anchors.top: labelPremiumValue.bottom
+    border: 1 #343434
+    padding: 3
+    margin-top: 2
+    padding-right: 0
+    margin-right: 10
+    margin-left: 8
+    text-wrap: true
+    text-auto-resize:true
 
   Label
     id: labelVocationFilter
@@ -203,7 +211,7 @@ MainWindow
     width: 70
     font: verdana-11px-monochrome
     !text: tr('Vocation')
-    margin-top: 30
+    margin-top: 60
     margin-left: 20
 
   CheckBox
@@ -216,11 +224,59 @@ MainWindow
     width: 75
 
   CheckBox
-    id: vocationBoxSorcerer
+    id: vocationBoxMagician
     anchors.left: prev.left
     anchors.top: prev.bottom
     margin-top: 3
-    !text: tr('Sorcerer')
+    !text: tr('Magician')
+    width: 75
+
+  CheckBox
+    id: vocationBoxTemplar
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    margin-top: 3
+    !text: tr('Templar')
+    width: 75
+
+  CheckBox
+    id: vocationBoxNightblade
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    margin-top: 3
+    !text: tr('Nightblade')
+    width: 75
+
+  CheckBox
+    id: vocationBoxDragonKnight
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    margin-top: 3
+    !text: tr('Dragon Knight')
+    width: 75
+
+  CheckBox
+    id: vocationBoxWarlock
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    margin-top: 3
+    !text: tr('Warlock')
+    width: 75
+
+  CheckBox
+    id: vocationBoxStellar
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    margin-top: 3
+    !text: tr('Stellar')
+    width: 75
+
+  CheckBox
+    id: vocationBoxMonk
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    margin-top: 3
+    !text: tr('Monk')
     width: 75
 
   CheckBox
@@ -232,19 +288,19 @@ MainWindow
     width: 75
 
   CheckBox
-    id: vocationBoxPaladin
+    id: vocationBoxLightDancer
     anchors.left: prev.left
     anchors.top: prev.bottom
     margin-top: 3
-    !text: tr('Paladin')
+    !text: tr('Light Dancer')
     width: 75
 
   CheckBox
-    id: vocationBoxKnight
+    id: vocationBoxArcher
     anchors.left: prev.left
     anchors.top: prev.bottom
     margin-top: 3
-    !text: tr('Knight')
+    !text: tr('Archer')
     width: 75
 
   Label
@@ -254,7 +310,7 @@ MainWindow
     width: 70
     font: verdana-11px-monochrome
     !text: tr('Group')
-    margin-top: 30
+    margin-top: 60
     margin-left: 20
 
   CheckBox
@@ -297,7 +353,7 @@ MainWindow
     width: 70
     font: verdana-11px-monochrome
     !text: tr('Premium')
-    margin-top: 30
+    margin-top: 60
     margin-left: 20
 
   CheckBox
