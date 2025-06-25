@@ -2105,3 +2105,4 @@ bool UIWidget::isPixelTransparent(const Point& mousePos)
     uint32_t index = (y * m_imageTexture->getWidth() + x);
     return m_imageTexture->isPixelTransparent(index);
 }
+
