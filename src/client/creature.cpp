@@ -318,7 +318,6 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
     if (g_gameConfig.drawTyping() && getTyping() && m_typingIconTexture)
         g_drawPool.addTexturedPos(m_typingIconTexture, p.x + (nameSize.width() / 2.0) + 2, textRect.y() - 4);
 
-    // Draw additional icons using texture atlas (client >= 1281)
     if (g_game.getClientVersion() >= 1281 && m_icons && !m_icons->atlasGroups.empty()) {
         int iconOffset = 0;
         for (const auto& iconTex : m_icons->atlasGroups) {
@@ -332,8 +331,6 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
             ++iconOffset;
         }
     }
-
-    g_drawPool.resetDrawOrder();
 }
 
 void Creature::internalDraw(Point dest, const Color& color)
@@ -929,12 +926,37 @@ void Creature::setBaseSpeed(const uint16_t baseSpeed)
 
 void Creature::setType(const uint8_t v) { if (m_type != v) callLuaField("onTypeChange", m_type = v); }
 void Creature::setIcon(const uint8_t v) { if (m_icon != v) callLuaField("onIconChange", m_icon = v); }
+void Creature::setIcons(const std::vector<std::tuple<uint8_t, uint8_t, uint16_t>>& icons)
+{
+    if (!m_icons) {
+        m_icons = std::make_unique<IconRenderData>();
+        m_icons->numberText.setFont(g_gameConfig.getStaticTextFont());
+        m_icons->numberText.setAlign(Fw::AlignCenter);
+    }
+
+    m_icons->atlasGroups.clear();
+    m_icons->iconEntries = icons;
+
+    for (const auto& [icon, category, count] : icons) {
+        callLuaField("onIconsChange", icon, category, count);
+    }
+}
 void Creature::setSkull(const uint8_t v) { if (m_skull != v) callLuaField("onSkullChange", m_skull = v); }
 void Creature::setShield(const uint8_t v) { if (m_shield != v) callLuaField("onShieldChange", m_shield = v); }
 void Creature::setEmblem(const uint8_t v) { if (m_emblem != v) callLuaField("onEmblemChange", m_emblem = v); }
 
 void Creature::setTypeTexture(const std::string& filename) { m_typeTexture = g_textures.getTexture(filename); }
 void Creature::setIconTexture(const std::string& filename) { m_iconTexture = g_textures.getTexture(filename); }
+void Creature::setIconsTexture(const std::string& filename, const Rect& clip, const uint16_t count)
+{
+    if (!m_icons) {
+        m_icons = std::make_unique<IconRenderData>();
+        m_icons->numberText.setFont(g_gameConfig.getStaticTextFont());
+        m_icons->numberText.setAlign(Fw::AlignCenter);
+    }
+
+    m_icons->atlasGroups.emplace_back(IconRenderData::AtlasIconGroup{ g_textures.getTexture(filename), clip, count });
+}
 void Creature::setSkullTexture(const std::string& filename) { m_skullTexture = g_textures.getTexture(filename); }
 void Creature::setEmblemTexture(const std::string& filename) { m_emblemTexture = g_textures.getTexture(filename); }
 
