@@ -94,6 +94,14 @@ public:
 private:
     thread_local static DispatcherContext dispacherContext;
 
+    enum class ThreadTaskEventState
+    {
+        ADDING,
+        ADDED,
+        MERGING,
+        MERGED,
+    };;
+
     // Thread Events
     struct ThreadTask
     {
@@ -105,9 +113,15 @@ private:
         std::vector<EventPtr> events;
         std::vector<Event> deferEvents;
         std::vector<ScheduledEventPtr> scheduledEventList;
-        std::mutex mutex;
-        std::atomic_bool hasEvents;
-        std::atomic_bool hasDeferEvents;
+        std::atomic<ThreadTaskEventState> state = ThreadTaskEventState::MERGED;
+
+        void waitWhileStateIs(ThreadTaskEventState st) {
+            while (state.load(std::memory_order_acquire) == st); // spinlock
+        }
+
+        void setState(ThreadTaskEventState st) {
+            state.store(st, std::memory_order_release);
+        }
     };
 
     inline void mergeEvents();

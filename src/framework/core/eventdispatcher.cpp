@@ -71,9 +71,10 @@ void EventDispatcher::startEvent(const ScheduledEventPtr& event)
     }
 
     const auto& thread = getThreadTask();
-    thread->hasEvents.store(true, std::memory_order_release);
-    std::scoped_lock l(thread->mutex);
+    thread->waitWhileStateIs(ThreadTaskEventState::MERGING);
+    thread->setState(ThreadTaskEventState::ADDING);
     thread->scheduledEventList.emplace_back(event);
+    thread->setState(ThreadTaskEventState::ADDED);
 }
 
 ScheduledEventPtr EventDispatcher::scheduleEvent(const std::function<void()>& callback, int delay)
@@ -87,9 +88,11 @@ ScheduledEventPtr EventDispatcher::scheduleEvent(const std::function<void()>& ca
         return thread->scheduledEventList.emplace_back(std::make_shared<ScheduledEvent>(callback, delay, 1));
     });
     const auto& thread = getThreadTask();
-    thread->hasEvents.store(true, std::memory_order_release);
-    std::scoped_lock l(thread->mutex);
-    return thread->scheduledEventList.emplace_back(std::make_shared<ScheduledEvent>(callback, delay, 1));
+    thread->waitWhileStateIs(ThreadTaskEventState::MERGING);
+    thread->setState(ThreadTaskEventState::ADDING);
+    auto e = thread->scheduledEventList.emplace_back(std::make_shared<ScheduledEvent>(callback, delay, 1));
+    thread->setState(ThreadTaskEventState::ADDED);
+    return e;
 }
 
 ScheduledEventPtr EventDispatcher::cycleEvent(const std::function<void()>& callback, int delay)
@@ -103,9 +106,11 @@ ScheduledEventPtr EventDispatcher::cycleEvent(const std::function<void()>& callb
         return thread->scheduledEventList.emplace_back(std::make_shared<ScheduledEvent>(callback, delay, 0));
     });
     const auto& thread = getThreadTask();
-    thread->hasEvents.store(true, std::memory_order_release);
-    std::scoped_lock l(thread->mutex);
-    return thread->scheduledEventList.emplace_back(std::make_shared<ScheduledEvent>(callback, delay, 0));
+    thread->waitWhileStateIs(ThreadTaskEventState::MERGING);
+    thread->setState(ThreadTaskEventState::ADDING);
+    auto e = thread->scheduledEventList.emplace_back(std::make_shared<ScheduledEvent>(callback, delay, 0));
+    thread->setState(ThreadTaskEventState::ADDED);
+    return e;
 }
 
 EventPtr EventDispatcher::addEvent(const std::function<void()>& callback)
@@ -122,9 +127,11 @@ EventPtr EventDispatcher::addEvent(const std::function<void()>& callback)
         return thread->events.emplace_back(std::make_shared<Event>(callback));
     });
     const auto& thread = getThreadTask();
-    thread->hasEvents.store(true, std::memory_order_release);
-    std::scoped_lock l(thread->mutex);
-    return thread->events.emplace_back(std::make_shared<Event>(callback));
+    thread->waitWhileStateIs(ThreadTaskEventState::MERGING);
+    thread->setState(ThreadTaskEventState::ADDING);
+    auto e = thread->events.emplace_back(std::make_shared<Event>(callback));
+    thread->setState(ThreadTaskEventState::ADDED);
+    return e;
 }
 
 void EventDispatcher::asyncEvent(std::function<void()>&& callback) {
@@ -132,8 +139,8 @@ void EventDispatcher::asyncEvent(std::function<void()>&& callback) {
         return;
 
     const auto& thread = getThreadTask();
-    thread->hasEvents.store(true, std::memory_order_release);
-    std::scoped_lock l(thread->mutex);
+    thread->waitWhileStateIs(ThreadTaskEventState::MERGING);
+    thread->setState(ThreadTaskEventState::ADDING);
     thread->asyncEvents.emplace_back(std::move(callback));
 }
 
@@ -145,9 +152,10 @@ void EventDispatcher::deferEvent(const std::function<void()>& callback) {
         thread->deferEvents.emplace_back(callback);
     });
     const auto& thread = getThreadTask();
-    thread->hasDeferEvents.store(true, std::memory_order_release);
-    std::scoped_lock l(thread->mutex);
+    thread->waitWhileStateIs(ThreadTaskEventState::MERGING);
+    thread->setState(ThreadTaskEventState::ADDING);
     thread->deferEvents.emplace_back(callback);
+    thread->setState(ThreadTaskEventState::ADDED);
 }
 
 void EventDispatcher::executeEvents() {
@@ -175,16 +183,15 @@ void EventDispatcher::executeDeferEvents() {
         m_deferEventList.clear();
 
         for (const auto& thread : m_threads) {
-            if (!thread->hasDeferEvents.exchange(false, std::memory_order_acquire))
-                continue;
-
-            std::scoped_lock lock(thread->mutex);
+            thread->waitWhileStateIs(ThreadTaskEventState::ADDING);
+            thread->setState(ThreadTaskEventState::MERGING);
             if (m_deferEventList.size() < thread->deferEvents.size())
                 m_deferEventList.swap(thread->deferEvents);
             if (!thread->deferEvents.empty()) {
                 m_deferEventList.insert(m_deferEventList.end(), make_move_iterator(thread->deferEvents.begin()), make_move_iterator(thread->deferEvents.end()));
                 thread->deferEvents.clear();
             }
+            thread->setState(ThreadTaskEventState::MERGED);
         }
     } while (!m_deferEventList.empty());
 
@@ -220,10 +227,8 @@ void EventDispatcher::executeScheduledEvents() {
 
 void EventDispatcher::mergeEvents() {
     for (const auto& thread : m_threads) {
-        if (!thread->hasEvents.exchange(false, std::memory_order_acquire))
-            continue;
-
-        std::scoped_lock l(thread->mutex);
+        thread->waitWhileStateIs(ThreadTaskEventState::ADDING);
+        thread->setState(ThreadTaskEventState::MERGING);
         if (!thread->events.empty()) {
             if (m_eventList.size() < thread->events.size())
                 m_eventList.swap(thread->events);
@@ -238,5 +243,7 @@ void EventDispatcher::mergeEvents() {
             m_scheduledEventList.insert(make_move_iterator(thread->scheduledEventList.begin()), make_move_iterator(thread->scheduledEventList.end()));
             thread->scheduledEventList.clear();
         }
+
+        thread->setState(ThreadTaskEventState::MERGED);
     }
 }
