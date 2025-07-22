@@ -23,7 +23,7 @@ AttachedEffectManager.register(1, 'Spoke Lighting', 12, ThingCategoryEffect, {
     end
 })
 
-AttachedEffectManager.register(2, 'Bat Wings', 307, ThingCategoryCreature, {
+AttachedEffectManager.register(2, 'Bat Wings', 2198, ThingCategoryCreature, {
     speed = 5,
     duration = 2000,
     disableWalkAnimation = true,
@@ -84,6 +84,8 @@ AttachedEffectManager.register(5, 'Transform', 40, ThingCategoryCreature, {
 })
 
 AttachedEffectManager.register(6, 'Lake Monster', 34, ThingCategoryEffect, {
+    speed = 5,
+    transform = true,
     hideOwner = true,
     duration = 1500,
     -- loop = 1,
@@ -897,3 +899,327 @@ AttachedEffectManager.register(96, 'adaptive life', 846, ThingCategoryEffect, {
     
 })
     
+AttachedEffectManager.register(97, 'turtle rush', 2198, ThingCategoryCreature, {
+    transform = true,
+    duration = 2000,
+    -- loop = 1,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(7)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(98, 'zen sphere', 837, ThingCategoryEffect, {
+    speed = 1,
+    opacity = 0.7,
+    duration = 8000,
+    offset = { -10, -10, true },
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(54)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(100, 'mystic punch 1', 814, ThingCategoryEffect, {
+    speed = 0.4,
+    loop = 1,
+    offset = { -10, -10, true },
+})
+
+AttachedEffectManager.register(101, 'mystic punch 2', 815, ThingCategoryEffect, {
+    speed = 0.4,
+    loop = 1,
+    offset = { -10, -10, true },
+})
+
+AttachedEffectManager.register(102, 'mystic punch 3', 816, ThingCategoryEffect, {
+    speed = 0.4,
+    loop = 1,
+    offset = { -10, -10, true },
+})
+
+AttachedEffectManager.register(103, 'mystic punch 4', 817, ThingCategoryEffect, {
+    speed = 0.4,
+    loop = 1,
+    offset = { -10, -10, true },
+})
+
+AttachedEffectManager.register(104, 'mountain stance', 249, ThingCategoryEffect, {
+    speed = 1,
+    duration = 10000,
+    offset = { 0, 0, false },
+})
+
+AttachedEffectManager.register(105, 'mountain stance', 249, ThingCategoryEffect, {
+    speed = 0.8,
+    duration = 10000,
+    offset = { 11, 11, false },
+})
+
+
+AttachedEffectManager.register(106, 'mountain stance 2', 249, ThingCategoryEffect, {
+    speed = 0.6,
+    duration = 10000,
+    offset = { 22, 22, true },
+})
+
+AttachedEffectManager.register(107, 'solar blessing', 836, ThingCategoryEffect, {
+    speed = 2,
+    loop = 1,
+    offset = { 5, 10, true },
+})
+
+AttachedEffectManager.register(108, 'solar blessing ground', 614, ThingCategoryEffect, {
+    speed = 1,
+    duration = 8000,
+    offset = { -15, -13, false },
+})
+
+AttachedEffectManager.register(109, 'rock punch', 845, ThingCategoryEffect, {
+    speed = 0.65,
+    loop = 1,
+    offset = { -32, -32, true },
+})
+
+AttachedEffectManager.register(110, 'life punch', 846, ThingCategoryEffect, {
+    speed = 0.45,
+    loop = 1,
+    offset = { -32, -32, true },
+})
+
+AttachedEffectManager.register(111, 'fire punch', 849, ThingCategoryEffect, {
+    speed = 0.45,
+    loop = 1,
+    offset = { -32, -32, true },
+})
+
+AttachedEffectManager.register(112, 'ice punch', 847, ThingCategoryEffect, {
+    speed = 0.45,
+    loop = 1,
+    offset = { -32, -32, true },
+})
+
+AttachedEffectManager.register(113, 'Mystic punch', 848, ThingCategoryEffect, {
+    speed = 0.45,
+    loop = 1,
+    offset = { -32, -32, true },
+})
+
+AttachedEffectManager.register(114, 'Insect swarm', 503, ThingCategoryEffect, {
+    speed = 1,
+    duration = 9000,
+    offset = { -15, -15, true },
+})
+
+AttachedEffectManager.register(115, 'carnivorous vile', 446, ThingCategoryEffect, {
+    speed = 1.3,
+    loop = 1,
+    offset = { -32, -32, true },
+})
+
+AttachedEffectManager.register(116, 'piercing wave stun', 32, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 3000,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})
+
+AttachedEffectManager.register(117, 'ice shatter', 807, ThingCategoryEffect, {
+    opacity = 0.85,
+    loop = 1,
+    speed = 1.1,
+    offset = { -19, -17, true},
+})
+
+AttachedEffectManager.register(118, 'ice shatter break', 328, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -19, -17, true},
+})
+
+AttachedEffectManager.register(119, 'frost cage', 545, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -32, -32, false},
+})
+
+AttachedEffectManager.register(120, 'frost armor', 493, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 8000,
+    speed = 1,
+    offset = { -5, 0, true},
+    --shader = 'frost armor',
+
+    onAttach = function(effect, owner)
+        owner:setShader('Outfit - ice')     
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setShader('Outfit - Default')
+    end
+})
+
+AttachedEffectManager.register(121, 'frost armor initial', 53, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { 0, 0, true},
+    shader = 'frost armor',
+})
+
+AttachedEffectManager.register(122, 'carnivorous vile empower', 446, ThingCategoryEffect, {
+    speed = 1.3,
+    loop = 1,
+    offset = { -32, -32, true },
+    shader = 'Red Glow',
+})
+
+AttachedEffectManager.register(123, 'frost armor aura', 616, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 8000,
+    speed = 1.3,
+    offset = { -64, -64, false},
+    shader = 'frost armor',
+})
+
+AttachedEffectManager.register(124, 'frost armor aura 2', '/images/game/effects/animated2', ThingExternalTexture, {
+    size = { 150, 150 },
+    opacity = 0.7,
+    duration = 3000,
+    offset = { 64, 64, false },
+    shader = 'frost armor',
+})
+
+AttachedEffectManager.register(125, 'life bloom', 454, ThingCategoryEffect, {
+    loop = 1,
+    offset = { 5, -15, true },
+})
+
+AttachedEffectManager.register(126, 'focus healing', 459, ThingCategoryEffect, {
+    loop = 1,
+    offset = { -25, -25, true },
+})
+
+AttachedEffectManager.register(127, 'focus healing', 381, ThingCategoryEffect, {
+    loop = 1,
+    speed = 0.4,
+    offset = { -5, -5, true },
+})
+
+AttachedEffectManager.register(128, 'magnetic orb', 550, ThingCategoryEffect, {
+    hideOwner = true,
+    speed = 1.5,
+    offset = {-32, -32, true },
+    --bounce = { 20, 20, 2000 },
+
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(60)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(60)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(129, 'fire within aura new', 893, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -64, -32, true },
+})
+
+AttachedEffectManager.register(130, 'whirlwind new', 1124, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -64, -85, true },
+})
+
+AttachedEffectManager.register(131, 'dragons call ground', 894, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -50, -25, false },
+})
+
+AttachedEffectManager.register(132, 'divine storm', 859, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -100, -111, false },
+})
+
+AttachedEffectManager.register(133, 'divine storm 2', 1115, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -64, -64, false },
+    shader = 'Golden',
+})
+
+AttachedEffectManager.register(134, 'shadowstep1', 1070, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.5,
+    offset = { -32, -32, true },
+})
+
+AttachedEffectManager.register(135, 'backstab', 1019, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -32, -32, true },
+})
+
+AttachedEffectManager.register(136, 'mutilate', 1082, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -82, -78, true },
+    shader = 'Monster Might',
+})
+
+AttachedEffectManager.register(137, 'mutilate shadow', 1082, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -82, -78, true },
+    shader = 'Blackout',
+})
+
+AttachedEffectManager.register(138, 'mutilate shadow', 1090, ThingCategoryEffect, {
+    duration = 3100,
+    hideOwner = true,
+    speed = 0.75,
+    offset = { -90, -60, true },
+})
+
+AttachedEffectManager.register(139, 'dark rupture', 987, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.5,
+    offset = { -24, -22, true },
+})
+AttachedEffectManager.register(140, 'dark rupture red', 987, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.5,
+    offset = { -24, -22, true },
+    shader = 'Monster Might',
+})
+
+AttachedEffectManager.register(141, 'blood', 995, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -24, -22, true },
+})
+
+AttachedEffectManager.register(142, 'Falling star', 874, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -85, -30, true },
+})
+
+AttachedEffectManager.register(143, 'stuned falling star', 32, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 3000,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})

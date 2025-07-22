@@ -98,7 +98,7 @@ ConfirmMessageBase < UIWidget
 
 LockUI < Panel
   anchors.fill: parent
-  opacity: 0.3
+  opacity: 0.6
   phantom: false
   visible: false
   background-color: #8c8c8c
@@ -168,7 +168,7 @@ MainWindow
   UIWidget
     id: background
     anchors.fill: internalPanel
-    opacity: 0.3
+    opacity: 0.6
     image-fixed-ratio: true
     image-repeat: false
     image-smooth: true

@@ -96,6 +96,12 @@ OUTFIT_SHADERS = { {
     useFramebuffer = true,
     frag = 'shaders/fragment/outline.frag'
 },
+{
+    name = 'Outfit - ice',
+    useFramebuffer = true,
+    frag = 'shaders/fragment/outline - colorfull.frag'
+},
+
  {      name = 'Aura',
         frag = 'shaders/fragment/radialblur.frag',
         drawColor = false
@@ -114,11 +120,12 @@ OUTFIT_SHADERS = { {
     {name = 'Ghost', frag = 'shaders/fragment/ghost.frag'},
     {name = 'Metallic', frag = 'shaders/fragment/metallic.frag', drawColor = false},
     {name = 'Golden', frag = 'shaders/fragment/outline_golden.frag', drawColor = false},
+    {name = 'frost armor', frag = 'shaders/fragment/frost_armor.frag', drawColor = false},
     {name = 'Red Glow', frag = 'shaders/fragment/red_glow.frag'},
     {name = 'Soul',  frag = 'shaders/fragment/soul.frag'},
     
     {name = 'Fragmented', frag = 'shaders/fragment/fragmented.frag'},
-    {name = 'Test', useFramebuffer = true, frag = 'shaders/fragment/outline.frag'},
+    {name = 'Test', useFramebuffer = true, frag = 'shaders/fragment/outline.frag', drawColor = false},
     
     
     
@@ -130,6 +137,8 @@ OUTFIT_SHADERS = { {
     {name = 'Monster Might', frag = 'shaders/fragment/monster_might.frag'},
     {name = 'Blackout', frag = 'shaders/fragment/blackout.frag'},
     {name = 'Stealth', frag = 'shaders/fragment/stealth.frag'},
+
+    
 
 
  }
