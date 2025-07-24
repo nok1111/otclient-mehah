@@ -499,6 +499,11 @@ function terminate()
     ownPrivateName = nil
     gameBottomPanel = nil
     Console = nil
+
+    clearReadOnlyTab()
+    if readOnlyModeEnabled then
+        toggleReadOnlyMode()
+    end
 end
 
 function save()
@@ -606,6 +611,14 @@ function clear()
     if channelsWindow then
         channelsWindow:destroy()
         channelsWindow = nil
+    end
+    if g_game.getClientVersion() < 862 then
+        Keybind.delete("Dialogs", "Open Rule Violation")
+    end
+
+    clearReadOnlyTab()
+    if readOnlyModeEnabled then
+        toggleReadOnlyMode()
     end
 end
 
