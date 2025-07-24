@@ -35,7 +35,7 @@ void EventDispatcher::init() {
     for (size_t i = 0; i < g_asyncDispatcher.get_thread_count(); ++i) {
         m_threads.emplace_back(std::make_unique<ThreadTask>());
     }
-};
+}
 
 void EventDispatcher::shutdown()
 {
@@ -83,6 +83,9 @@ ScheduledEventPtr EventDispatcher::scheduleEvent(const std::function<void()>& ca
 
     assert(delay >= 0);
 
+    return pushThreadTask<ScheduledEventPtr>([&](const std::unique_ptr<ThreadTask>& thread) {
+        return thread->scheduledEventList.emplace_back(std::make_shared<ScheduledEvent>(callback, delay, 1));
+    });
     const auto& thread = getThreadTask();
     thread->hasEvents.store(true, std::memory_order_release);
     std::scoped_lock l(thread->mutex);
@@ -96,6 +99,9 @@ ScheduledEventPtr EventDispatcher::cycleEvent(const std::function<void()>& callb
 
     assert(delay > 0);
 
+    return pushThreadTask<ScheduledEventPtr>([&](const std::unique_ptr<ThreadTask>& thread) {
+        return thread->scheduledEventList.emplace_back(std::make_shared<ScheduledEvent>(callback, delay, 0));
+    });
     const auto& thread = getThreadTask();
     thread->hasEvents.store(true, std::memory_order_release);
     std::scoped_lock l(thread->mutex);
@@ -112,6 +118,9 @@ EventPtr EventDispatcher::addEvent(const std::function<void()>& callback)
         return std::make_shared<Event>(nullptr);
     }
 
+    return pushThreadTask<EventPtr>([&](const std::unique_ptr<ThreadTask>& thread) {
+        return thread->events.emplace_back(std::make_shared<Event>(callback));
+    });
     const auto& thread = getThreadTask();
     thread->hasEvents.store(true, std::memory_order_release);
     std::scoped_lock l(thread->mutex);
@@ -132,6 +141,9 @@ void EventDispatcher::deferEvent(const std::function<void()>& callback) {
     if (m_disabled)
         return;
 
+    pushThreadTask([&](const std::unique_ptr<ThreadTask>& thread) {
+        thread->deferEvents.emplace_back(callback);
+    });
     const auto& thread = getThreadTask();
     thread->hasDeferEvents.store(true, std::memory_order_release);
     std::scoped_lock l(thread->mutex);
@@ -151,55 +163,6 @@ void EventDispatcher::executeEvents() {
 
     m_eventList.clear();
     dispacherContext.reset();
-}
-
-std::vector<std::pair<uint64_t, uint64_t>> generatePartition(const size_t size) {
-    if (size == 0)
-        return {};
-
-    static const int threads = g_asyncDispatcher.get_thread_count();
-    std::vector<std::pair<uint64_t, uint64_t>> list;
-    list.reserve(threads);
-
-    const auto size_per_block = std::ceil(size / static_cast<float>(threads));
-    for (uint_fast64_t i = 0; i < size; i += size_per_block)
-        list.emplace_back(i, std::min<uint64_t >(size, i + size_per_block));
-
-    return list;
-}
-
-void EventDispatcher::executeAsyncEvents() {
-    if (m_asyncEventList.empty())
-        return;
-
-    const auto& partitions = generatePartition(m_asyncEventList.size());
-
-    BS::multi_future<void> retFuture;
-
-    if (partitions.size() > 1) {
-        const auto min = partitions[1].first;
-        const auto max = partitions[partitions.size() - 1].second;
-        retFuture = g_asyncDispatcher.submit_loop(min, max, [&](const unsigned int i) {
-            dispacherContext.type = DispatcherType::AsyncEvent;
-            dispacherContext.group = TaskGroup::GenericParallel;
-            m_asyncEventList[i].execute();
-            dispacherContext.reset();
-        });
-    }
-
-    dispacherContext.type = DispatcherType::AsyncEvent;
-    dispacherContext.group = TaskGroup::GenericParallel;
-
-    const auto& [min, max] = partitions[0];
-    for (uint_fast64_t i = min; i < max; ++i)
-        m_asyncEventList[i].execute();
-
-    dispacherContext.reset();
-
-    if (partitions.size() > 1)
-        retFuture.wait();
-
-    m_asyncEventList.clear();
 }
 
 void EventDispatcher::executeDeferEvents() {
@@ -268,16 +231,6 @@ void EventDispatcher::mergeEvents() {
             if (!thread->events.empty()) {
                 m_eventList.insert(m_eventList.end(), make_move_iterator(thread->events.begin()), make_move_iterator(thread->events.end()));
                 thread->events.clear();
-            }
-        }
-
-        if (!thread->asyncEvents.empty()) {
-            if (m_asyncEventList.size() < thread->asyncEvents.size())
-                m_asyncEventList.swap(thread->asyncEvents);
-
-            if (!thread->asyncEvents.empty()) {
-                m_asyncEventList.insert(m_asyncEventList.end(), make_move_iterator(thread->asyncEvents.begin()), make_move_iterator(thread->asyncEvents.end()));
-                thread->asyncEvents.clear();
             }
         }
 
