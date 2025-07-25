@@ -80,7 +80,6 @@ void GarbageCollection::thingType() {
         IDLE_TIME = 60 * 1000, // Maximum time it can be idle, default 60 seconds.
         AMOUNT_PER_CHECK = 500; // maximum number of objects to be checked.
 
-    static std::vector<ThingTypePtr> thingTypesToUnload;
     static uint8_t category{ ThingLastCategory };
     static size_t index = 0;
 
@@ -93,7 +92,7 @@ void GarbageCollection::thingType() {
     while (index < limit) {
         auto& thing = thingTypes[index];
         if (thing->hasTexture() && thing->getLastTimeUsage().ticksElapsed() > IDLE_TIME) {
-            thingTypesToUnload.emplace_back(thing);
+            thing->unload();
         }
         ++index;
     }
