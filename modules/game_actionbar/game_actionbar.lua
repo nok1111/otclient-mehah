@@ -254,14 +254,13 @@ function openSpellAssignWindow()
     spellAssignWindow:raise()
     spellAssignWindow:focus()
     spellAssignWindow:getChildById('filterTextEdit'):focus()
-    modules.game_hotkeys.enableHotkeys(false)
+    spellAssignWindow.hotkeyBlock = modules.game_hotkeys.createHotkeyBlock("spell_assign_window")
 end
 
 function closeSpellAssignWindow()
     spellAssignWindow:destroy()
     spellAssignWindow = nil
     spellsPanel = nil
-    modules.game_hotkeys.enableHotkeys(true)
 end
 
 function initializeSpelllist()
@@ -424,13 +423,12 @@ function openTextAssignWindow()
     textAssignWindow = g_ui.loadUI('assign_text', g_ui.getRootWidget())
     textAssignWindow:raise()
     textAssignWindow:focus()
-    modules.game_hotkeys.enableHotkeys(false)
+    textAssignWindow.hotkeyBlock = modules.game_hotkeys.createHotkeyBlock("text_assign_window")
 end
 
 function closeTextAssignWindow()
     textAssignWindow:destroy()
     textAssignWindow = nil
-    modules.game_hotkeys.enableHotkeys(true)
 end
 
 function textAssignAccept()
@@ -510,7 +508,6 @@ function closeObjectAssignWindow()
     objectAssignWindow:destroy()
     objectAssignWindow = nil
     actionRadioGroup = nil
-    modules.game_hotkeys.enableHotkeys(true)
 end
 
 function startChooseItem()
@@ -667,13 +664,12 @@ function openEditHotkeyWindow()
     editHotkeyWindow.onKeyDown = hotkeyCapture
     editHotkeyWindow:raise()
     editHotkeyWindow:focus()
-    modules.game_hotkeys.enableHotkeys(false)
+    editHotkeyWindow.hotkeyBlock = modules.game_hotkeys.createHotkeyBlock("edit_hotkey_window")
 end
 
 function closeEditHotkeyWindow()
     editHotkeyWindow:destroy()
     editHotkeyWindow = nil
-    modules.game_hotkeys.enableHotkeys(true)
 end
 
 function unbindHotkeys()
