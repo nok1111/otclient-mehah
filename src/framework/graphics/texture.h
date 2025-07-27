@@ -25,6 +25,8 @@
 #include "declarations.h"
 #include <framework/core/timer.h>
 
+class TextureAtlas;
+
 class Texture
 {
 public:
@@ -63,14 +65,16 @@ public:
     virtual void setCached(bool v) { setProp(cached, v); }
     virtual bool isAnimatedTexture() const { return false; }
     bool setupSize(const Size& size);
-
+    // Transparent pixels helpers
     void loadTransparentPixels(const ImagePtr& image);
-    bool hasTransparentPixels() const {
-        return m_transparentPixels.size() > 0;
-    }
-    bool isPixelTransparent(uint32_t index) {
-        return m_transparentPixels[index] == 1;
-    }
+    bool hasTransparentPixels() const { return m_transparentPixels.size() > 0; }
+    bool isPixelTransparent(uint32_t index) { return m_transparentPixels[index] == 1; }
+
+    // Texture atlas accessors
+    auto getAtlas() const { return m_atlas; }
+    auto getAtlasX() const { return m_atlasX; }
+    auto getAtlasY() const { return m_atlasY; }
+    auto getAtlasLayer() const { return m_atlasLayer; }
 
 protected:
     void bind();
@@ -95,6 +99,11 @@ protected:
     ImagePtr m_image;
     std::vector<char> m_transparentPixels; // vector of chars is better than vector of bools, silly C++
 
+    TextureAtlas* m_atlas{ nullptr };
+    int16_t m_atlasX{ -1 };
+    int16_t m_atlasY{ -1 };
+    int8_t m_atlasLayer{ -1 };
+
     enum Prop : uint16_t
     {
         hasMipMaps = 1 << 0,
@@ -112,4 +121,5 @@ protected:
 
     friend class GarbageCollection;
     friend class TextureManager;
+    friend class TextureAtlas;
 };
