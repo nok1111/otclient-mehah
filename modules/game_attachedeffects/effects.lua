@@ -1223,3 +1223,67 @@ AttachedEffectManager.register(143, 'stuned falling star', 32, ThingCategoryEffe
     offset = { 22, 22, true},
     
 })
+
+AttachedEffectManager.register(144, 'elusive blade', 871, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -90, -64, true},
+    
+})
+
+AttachedEffectManager.register(145, 'elusive blade twice', 873, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -80, -48, true},
+    
+})
+
+AttachedEffectManager.register(146, 'elusive dance', 881, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -60, -55, true},
+    
+})
+
+AttachedEffectManager.register(147, 'short circuit', 1140, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 0.7,
+    offset = { -60, -55, true},
+    
+})
+
+AttachedEffectManager.register(148, 'parry', 548, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1.4,
+    offset = { 0, 0, true},
+    
+})
+
+AttachedEffectManager.register(149, 'parry 2', 695, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { 0, 0, true},
+    
+})
+
+AttachedEffectManager.register(150, 'magnetic shield', 878, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 5000,
+    speed = 1,
+    offset = { -22, -22, true},
+    
+})
+
+AttachedEffectManager.register(151, 'elusive dance evolve', 865, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -60, -65, false},
+    
+})
