@@ -25,8 +25,6 @@
 #include "declarations.h"
 #include <framework/core/timer.h>
 
-class TextureAtlas;
-
 class Texture
 {
 public:
@@ -50,6 +48,8 @@ public:
     const Size& getSize() const { return m_size; }
     auto getTransformMatrixId() const { return m_transformMatrixId; }
 
+    const auto& getAtlas(Fw::TextureAtlasType type) const { return m_atlas[type]; }
+
     ticks_t getTime() const { return m_time; }
     uint32_t getId() const { return m_id; }
     uint32_t getUniqueId() const { return m_uniqueId; }
@@ -58,23 +58,19 @@ public:
     int getWidth() const { return m_size.width(); }
     int getHeight() const { return m_size.height(); }
 
+    virtual bool isAnimatedTexture() const { return false; }
     bool isEmpty() const { return m_id == 0; }
     bool hasRepeat() const { return getProp(repeat); }
     bool hasMipmaps() const { return getProp(hasMipMaps); }
-    bool isCached() const { return getProp(cached); }
-    virtual void setCached(bool v) { setProp(cached, v); }
-    virtual bool isAnimatedTexture() const { return false; }
+    bool isCached(Fw::TextureAtlasType type) const { return getAtlas(type).z > -1; }
+    bool canCacheInAtlas()const { return getProp(Prop::_allowAtlasCache); }
     bool setupSize(const Size& size);
     // Transparent pixels helpers
     void loadTransparentPixels(const ImagePtr& image);
     bool hasTransparentPixels() const { return m_transparentPixels.size() > 0; }
     bool isPixelTransparent(uint32_t index) { return m_transparentPixels[index] == 1; }
 
-    // Texture atlas accessors
-    auto getAtlas() const { return m_atlas; }
-    auto getAtlasX() const { return m_atlasX; }
-    auto getAtlasY() const { return m_atlasY; }
-    auto getAtlasLayer() const { return m_atlasLayer; }
+    virtual void allowAtlasCache() { setProp(Prop::_allowAtlasCache, true); }
 
 protected:
     void bind();
@@ -86,6 +82,14 @@ protected:
     void generateHash() { m_hash = stdext::hash_int(m_id > 0 ? m_id : m_uniqueId); }
 
     const uint32_t m_uniqueId;
+
+    struct AtlasInfo
+    {
+        int16_t x{ -1 };
+        int16_t y{ -1 };
+        int8_t z{ -1 };
+    };
+    std::array<AtlasInfo, Fw::TextureAtlasType::LAST> m_atlas;
 
     uint32_t m_id{ 0 };
     ticks_t m_time{ 0 };
@@ -99,11 +103,6 @@ protected:
     ImagePtr m_image;
     std::vector<char> m_transparentPixels; // vector of chars is better than vector of bools, silly C++
 
-    TextureAtlas* m_atlas{ nullptr };
-    int16_t m_atlasX{ -1 };
-    int16_t m_atlasY{ -1 };
-    int8_t m_atlasLayer{ -1 };
-
     enum Prop : uint16_t
     {
         hasMipMaps = 1 << 0,
@@ -112,7 +111,7 @@ protected:
         repeat = 1 << 3,
         compress = 1 << 4,
         buildMipmaps = 1 << 5,
-        cached = 1 << 6
+        _allowAtlasCache = 1 << 6
     };
 
     uint16_t m_props{ 0 };
