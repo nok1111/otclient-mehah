@@ -198,19 +198,6 @@ AttachedEffectManager.register(15, 'shadow form', 1565, ThingCategoryCreature, {
     bounce = { 5, 7, 11000 },
     disableWalkAnimation = true,
     shader = 'Outfit - Rainbow',
-    
-    onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(18)
-        owner:getTile():addThing(e)
-        
-        
-    end,
-    onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(18)
-        oldOwner:getTile():addThing(e)
-    end
 })
 
 AttachedEffectManager.register(16, 'blood blades', 353, ThingCategoryEffect, {
@@ -1287,3 +1274,40 @@ AttachedEffectManager.register(151, 'elusive dance evolve', 865, ThingCategoryEf
     offset = { -60, -65, false},
     
 })
+
+AttachedEffectManager.register(152, 'shadow light', 1022, ThingCategoryEffect, {
+    opacity = 0.8,
+    drawOnUI = false,
+    offset = { -50, -25, false},
+})
+
+AttachedEffectManager.register(153, 'shadow form 3', 1008, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 4000,
+    speed = 1,
+    offset = { -15, -15, false},
+    shader = 'Blackout',
+    
+})
+
+AttachedEffectManager.register(154, 'shadow form 2', 2903, ThingCategoryCreature, {
+    hideOwner = false,
+    duration = 4000,
+    speed = 1,
+    bounce = { 5, 7, 11000 },
+   -- disableWalkAnimation = true,
+    dirOffset = {
+        [North] = { -50, -50, true },
+        [East] = { -50, -50, true },
+        [South] = { -50, -50, true },
+        [West] = { -50, -50, true }
+    },
+    
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(18)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+
