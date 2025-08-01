@@ -35,6 +35,14 @@ local rarityColor = {
   {name = "Legendary", color = "#ff7605"}
 }
 
+local rarityBackground = {
+  [1] = '/images/ui/tooltip-white.png',     -- ""
+  [2] = '/images/ui/tooltip-white.png',     -- Common
+  [3] = '/images/ui/tooltip-blue.png',    -- Orbital
+  [4] = '/images/ui/tooltip-purple.png',     -- Forged
+  [5] = '/images/ui/tooltip-orange.png'   -- Legendary
+}
+
 local implicits = {
   ["criticalhitamount"] = "Critical Damage",
   ["criticalhitchance"] = "Critical Chance",
@@ -350,14 +358,19 @@ function buildItemTooltip(item)
   itemSprite:setItemCount(count)
 
   local itemNameColor
+  local bgImage
   if unidentified then
     itemNameColor = rarityColor[2].color
+    bgImage = '/images/ui/tooltip_unidentified.png'
   elseif item.uniqueName then
     itemNameColor = "#05fb45"
+    bgImage = '/images/ui/tooltip_unique.png'
   elseif rarity > 1 then
     itemNameColor = rarityColor[rarity].color
+    bgImage = rarityBackground[rarity] or '/images/ui/tooltip_common.png'
   else
     itemNameColor = "#ffffff"
+    bgImage = rarityBackground[1]
   end
 
   name =
@@ -473,7 +486,7 @@ function buildItemTooltip(item)
   end
 
   shrinkSeparators()
-  showItemTooltip()
+  showItemTooltip(item, bgImage)
 end
 
 function addString(text, color, resize)
@@ -523,11 +536,17 @@ function addEmpty(height)
   tooltipHeight = tooltipHeight + height
 end
 
-function showItemTooltip()
+function showItemTooltip(item, bgImage)
   local mousePos = g_window.getMousePosition()
   tooltipHeight = math.max(tooltipHeight, 40)
   tooltipWindow:setWidth(tooltipWidth)
   tooltipWindow:setHeight(tooltipHeight)
+  tooltipWindow:setImageSource(bgImage)
+  tooltipWindow:setImageBorderTop(2)
+  tooltipWindow:setImageBorderRight(2)
+  tooltipWindow:setImageBorderBottom(2)
+  tooltipWindow:setImageBorderLeft(2)
+  tooltipWindow:setImageBorder(2)
   if mousePos.x > g_window.getSize().width / 2 then
     tooltipWindow:move(mousePos.x - (tooltipWidth + 5), mousePos.y + 10)
   else

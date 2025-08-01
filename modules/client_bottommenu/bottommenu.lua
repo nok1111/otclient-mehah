@@ -33,53 +33,7 @@ local default_info = {
 }
 
 function init()
-    g_ui.importStyle('calendar')
-    bottomMenu = g_ui.displayUI('bottommenu')
-
-    calendarWindow = g_ui.createWidget('CalendarGrid', rootWidget)
-    calendarCurrentMonth = calendarWindow:recursiveGetChildById('calendarCurrentMonth')
-    calendarCurrentDate = calendarWindow:recursiveGetChildById('calendarCurrentDate')
-    calendarPrevButton = calendarWindow:recursiveGetChildById('calendarPrevButton')
-    calendarNextButton = calendarWindow:recursiveGetChildById('calendarNextButton')
-    calendarWindow:hide()
-
-    showOffWindow = bottomMenu:recursiveGetChildById('showOffWindow')
-    showOffWindow.title = showOffWindow:recursiveGetChildById('showOffWindowText')
-    activeScheduleEvent = bottomMenu:recursiveGetChildById('activeScheduleEvent')
-    upcomingScheduleEvent = bottomMenu:recursiveGetChildById('upcomingScheduleEvent')
-    upcomingScheduleEvent:recursiveGetChildById('fill'):setOn(false)
-    eventSchedulerCalendarYearIndex = 1
-    eventSchedulerCalendarMonth = tonumber(os.date("%m"))
-
-    boostedWindow = bottomMenu:recursiveGetChildById('boostedWindow')
-    monsterOutfit = boostedWindow:recursiveGetChildById('creature')
-    bossOutfit = boostedWindow:recursiveGetChildById('boss')
-
---  if not Services.status and default_info then
-    if default_info then
-        local scrollable = showOffWindow:recursiveGetChildById('contentsPanel')
-        local widget = g_ui.createWidget('ShowOffWidget', scrollable)
-        local description = widget:recursiveGetChildById('description')
-        local image = widget:recursiveGetChildById('image')
-
-        math.randomseed(os.time())
-        local randomIndex = math.random(1, #default_info)
-        local randomItem = default_info[randomIndex]
-        showOffWindow.title:setText(tr(randomItem.Title))
-        image:setImageSource(randomItem.image)
-        description:setText(tr(randomItem.description))
-        monsterOutfit:setVisible(false)
-        bossOutfit:setVisible(false)
-        widget:resize(widget:getWidth(), description:getHeight())
-
-        monsterImage = boostedWindow:recursiveGetChildById('monsterImage')
-        bossImage = boostedWindow:recursiveGetChildById('bossImage')
-
-        monsterImage:setImageSource("images/icon-questionmark")
-        monsterImage:setVisible(true)
-        bossImage:setImageSource("images/icon-questionmark")
-        bossImage:setVisible(true)
-    end
+  hide()
     if g_game.isOnline() then
         hide()
     end

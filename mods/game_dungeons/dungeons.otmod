@@ -1,0 +1,9 @@
+Module
+  name: game_dungeons
+  description: Dungeons
+  author: Oen | edited by Fifth
+  sandboxed: true
+  autoload: true
+  scripts: [ dungeons ]
+  @onLoad: Dungeons.init()
+  @onUnload: Dungeons.terminate()

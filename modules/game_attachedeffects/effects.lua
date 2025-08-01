@@ -1310,4 +1310,23 @@ AttachedEffectManager.register(154, 'shadow form 2', 2903, ThingCategoryCreature
     end
 })
 
+AttachedEffectManager.register(155, 'lucella transform', 1760, ThingCategoryCreature, {
+    hideOwner = true,
+    speed = 1,
+    bounce = { 5, 7, 11000 },
+   -- disableWalkAnimation = true,
+    dirOffset = {
+        [North] = { -50, -50, true },
+        [East] = { -50, -50, true },
+        [South] = { -50, -50, true },
+        [West] = { -50, -50, true }
+    },
+    
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(18)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
 
