@@ -48,7 +48,7 @@ public:
     const Size& getSize() const { return m_size; }
     auto getTransformMatrixId() const { return m_transformMatrixId; }
 
-    const auto& getAtlas(Fw::TextureAtlasType type) const { return m_atlas[type]; }
+    const auto getAtlas(Fw::TextureAtlasType type) const { return m_atlas[type]; }
 
     ticks_t getTime() const { return m_time; }
     uint32_t getId() const { return m_id; }
@@ -62,15 +62,16 @@ public:
     bool isEmpty() const { return m_id == 0; }
     bool hasRepeat() const { return getProp(repeat); }
     bool hasMipmaps() const { return getProp(hasMipMaps); }
-    bool isCached(Fw::TextureAtlasType type) const { return getAtlas(type).z > -1; }
-    bool canCacheInAtlas()const { return getProp(Prop::_allowAtlasCache); }
+    bool isSmooth() const { return getProp(smooth); }
+    bool isCached(Fw::TextureAtlasType type) const { return getAtlas(type) != nullptr; }
+    bool canCacheInAtlas() const { return getProp(Prop::_allowAtlasCache); }
     bool setupSize(const Size& size);
     // Transparent pixels helpers
     void loadTransparentPixels(const ImagePtr& image);
     bool hasTransparentPixels() const { return m_transparentPixels.size() > 0; }
     bool isPixelTransparent(uint32_t index) { return m_transparentPixels[index] == 1; }
 
-    virtual void allowAtlasCache() { setProp(Prop::_allowAtlasCache, true); }
+    virtual void allowAtlasCache();
 
 protected:
     void bind();
@@ -83,13 +84,7 @@ protected:
 
     const uint32_t m_uniqueId;
 
-    struct AtlasInfo
-    {
-        int16_t x{ -1 };
-        int16_t y{ -1 };
-        int8_t z{ -1 };
-    };
-    std::array<AtlasInfo, Fw::TextureAtlasType::LAST> m_atlas;
+    std::array<AtlasRegion*, Fw::TextureAtlasType::LAST> m_atlas{ };
 
     uint32_t m_id{ 0 };
     ticks_t m_time{ 0 };

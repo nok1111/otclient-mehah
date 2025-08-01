@@ -288,6 +288,8 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
         }
     }
 
+    g_drawPool.setDrawOrder(DrawOrder::SECOND);
+
     if (drawFlags & Otc::DrawNames) {
         m_name.draw(textRect, fillColor);
 
@@ -315,6 +317,23 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
 
     if (g_gameConfig.drawTyping() && getTyping() && m_typingIconTexture)
         g_drawPool.addTexturedPos(m_typingIconTexture, p.x + (nameSize.width() / 2.0) + 2, textRect.y() - 4);
+
+    // Draw additional icons using texture atlas (client >= 1281)
+    if (g_game.getClientVersion() >= 1281 && m_icons && !m_icons->atlasGroups.empty()) {
+        int iconOffset = 0;
+        for (const auto& iconTex : m_icons->atlasGroups) {
+            if (!iconTex.texture) continue;
+            const Rect dest(backgroundRect.x() + 13.5 + 12, backgroundRect.y() + 5 + iconOffset * 14, iconTex.clip.size());
+            g_drawPool.addTexturedRect(dest, iconTex.texture, iconTex.clip);
+            m_icons->numberText.setText(std::to_string(iconTex.count));
+            const auto textSize = m_icons->numberText.getTextSize();
+            const Rect numberRect(dest.right() + 2, dest.y() + (dest.height() - textSize.height()) / 2, textSize);
+            m_icons->numberText.draw(numberRect, Color::white);
+            ++iconOffset;
+        }
+    }
+
+    g_drawPool.resetDrawOrder();
 }
 
 void Creature::internalDraw(Point dest, const Color& color)
@@ -733,7 +752,7 @@ void Creature::nextWalkUpdate()
 void Creature::updateWalk()
 {
     const int stepDuration = getStepDuration(true);
-    const float stabilizeCam = isCameraFollowing() && g_window.vsyncEnabled() ? 6.f : 0.f;
+    const float stabilizeCam = isCameraFollowing() && g_window.vsyncEnabled() ? 10.f - (fmod(stepDuration, 100.f) / 10.f) : 0.f;
     const float walkTicksPerPixel = (stepDuration + stabilizeCam) / static_cast<float>(g_gameConfig.getSpriteSize());
 
     const int totalPixelsWalked = std::min<int>(m_walkTimer.ticksElapsed() / walkTicksPerPixel, g_gameConfig.getSpriteSize());
@@ -978,18 +997,21 @@ int getSmoothedElevation(const Creature* creature, const int currentElevation, c
 }
 
 int Creature::getDrawElevation() {
-    int elevation = 0;
     if (m_walkingTile) {
-        elevation = m_walkingTile->getDrawElevation();
+        int elevation = m_walkingTile->getDrawElevation();
 
         if (g_game.getFeature(Otc::GameSmoothWalkElevation)) {
             const float factor = std::clamp<float>(getWalkTicksElapsed() / static_cast<float>(m_stepCache.getDuration(m_lastStepDirection)), .0f, 1.f);
             elevation = getSmoothedElevation(this, elevation, factor);
         }
-    } else if (const auto& tile = getTile())
-        elevation = tile->getDrawElevation();
 
-    return elevation;
+        return elevation;
+    }
+
+    if (const auto& tile = g_map.getTile(getPosition()))
+        return tile->getDrawElevation();
+
+    return 0;
 }
 
 bool Creature::hasSpeedFormula() { return g_game.getFeature(Otc::GameNewSpeedLaw) && speedA != 0 && speedB != 0 && speedC != 0; }
