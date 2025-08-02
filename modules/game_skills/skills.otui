@@ -440,5 +440,19 @@ MiniWindow
       id: skillId19
       SkillNameLabel
         !text: tr('Transcendence')
-      SkillValueLabel
-    
+      SkillValueLabel  
+    SmallSkillButton
+      id: amplification
+      visible: false
+      SkillNameLabel
+        !text: tr('Amplification')
+      SkillValueLabel  
+
+  UIWidget
+    id: miniborder
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    image-source: /images/ui/miniborder
+    size: 14 14
+    margin-left: 2
+    margin-bottom: 2
