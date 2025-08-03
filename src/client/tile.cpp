@@ -130,8 +130,8 @@ void Tile::drawLight(const Point& dest, const LightViewPtr& lightView) {
     drawCreature(dest, nullptr, Otc::DrawLights, true, drawElevation, lightView);
 
     if (m_effects) {
-        for (const auto& effet : *m_effects)
-            effet->draw(dest - drawElevation * g_drawPool.getScaleFactor(), false, lightView);
+        for (const auto& effect : *m_effects)
+            effect->draw(dest - drawElevation * g_drawPool.getScaleFactor(), false, lightView);
     }
 
     drawAttachedLightEffect(dest, lightView);
@@ -276,7 +276,7 @@ void Tile::addThing(const ThingPtr& thing, int stackPos)
             }
         }
 
-        if (newEffect->isTopEffect())
+        if (!newEffect->isTopEffect())
             m_effects->insert(m_effects->begin(), newEffect);
         else
             m_effects->emplace_back(newEffect);
