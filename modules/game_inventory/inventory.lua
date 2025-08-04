@@ -121,8 +121,10 @@ local function inventoryEvent(player, slot, item, oldItem)
     local ui = getInventoryUi()
     local getSlotInfo = getSlotPanelBySlot[slot]
     if not getSlotInfo then
+        --print("Slot not found:", slot)
         return
     end
+    --print("Slot found:", slot)
 
     local slotPanel, toggler = getSlotInfo(ui)
 
@@ -216,7 +218,7 @@ local function refreshInventory_panel()
         return
     end
 
-    for i = InventorySlotFirst, InventorySlotPurse do
+    for i = InventorySlotFirst, InventorySlotRune3 do
         if g_game.isOnline() then
             inventoryEvent(player, i, player:getInventoryItem(i))
         else

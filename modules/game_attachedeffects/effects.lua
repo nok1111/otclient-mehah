@@ -1329,4 +1329,28 @@ AttachedEffectManager.register(155, 'lucella transform', 1760, ThingCategoryCrea
     end
 })
 
+AttachedEffectManager.register(156, 'elixir of ghosts', 48, ThingCategoryCreature, {
+    hideOwner = true,
+    speed = 1,
+    duration = 2500,
+    bounce = { 5, 8, 8000 },
+   -- disableWalkAnimation = true,
+    dirOffset = {
+        [North] = { 0, 0, true },
+        [East] = { 0, 0, true },
+        [South] = { 0, 0, true },
+        [West] = { 0, 0, true }
+    },
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(66)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(66)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
 

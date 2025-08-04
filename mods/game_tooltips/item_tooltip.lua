@@ -32,7 +32,7 @@ local rarityColor = {
   {name = "Common", color = "#ffffff"},
   {name = "Orbital", color = "#02e2fc"},
   {name = "Forged", color = "#d300ff"},
-  {name = "Legendary", color = "#ff7605"}
+  {name = "[Corrupted]", color = "#ff7605"} 
 }
 
 local rarityBackground = {
@@ -457,7 +457,7 @@ function buildItemTooltip(item)
         impText = implicits[key] .. " " .. (value > 0 and "+" or "") .. value .. (impPercent[key] and "%" or "")
       end
       if key == "ca" then
-        addString("Critical Power", "180%")
+       -- addString("Critical Power", "180%")
       else
         addString(impText, Colors.Implicit)
       end

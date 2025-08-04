@@ -138,6 +138,11 @@ OUTFIT_SHADERS = { {
     {name = 'Blackout', frag = 'shaders/fragment/blackout.frag'},
     {name = 'Stealth', frag = 'shaders/fragment/stealth.frag'},
 
+
+    {name = 'Forged', frag = 'shaders/fragment/forged.frag', drawColor = false},
+    {name = 'Orbital', frag = 'shaders/fragment/orbital.frag', drawColor = false},
+    {name = 'Corrupted', frag = 'shaders/fragment/corrupted.frag', drawColor = false},
+
     
 
 
