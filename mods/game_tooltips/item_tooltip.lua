@@ -407,23 +407,24 @@ function buildItemTooltip(item)
   if (type == "Armor" or type == "Helmet" or type == "Legs" or type == "Ring" or type == "Necklace" or type == "Boots" or type == "Ammunition") and first ~= 0 then
     firstText = "Armor: " .. first
   elseif
-    type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Wand" or type == "Axe" or type == "Fist" or
-      type == "Distance" 
-   then
+    type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Axe" or type == "Fist" or
+      type == "Distance" then 
+        print("type", type)
     firstText = "Attack: " .. first
+    print("firstText", firstText) 
   elseif type == "Shield" then
     firstText = "Defense: " .. second
   end
 
-  if type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Axe" or type == "Fist"  or type == "Distance" or type == "Wand" then
+  if type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" then
     secondText = "Defense: " .. second
 
   end
 
-  if type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Axe" or type == "Fist" then
+  if type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" then
     thirdText = "Extra-Defense: " .. third
-  elseif type == "Distance" then
-    thirdText = "Shoot Range: " .. third
+  elseif type == "Distance" or type == "Axe" then
+    secondText = "Shoot Range: " .. third
   end
 
   if (firstText and (type == "Shield" or type == "Ring" or type == "Necklace")) or (first ~= 0 and second == 0 and third == 0) then
@@ -435,12 +436,11 @@ function buildItemTooltip(item)
     addEmpty(5)
     addString(firstText, Colors.Default)
     addString(secondText, Colors.Default)
-  elseif first ~= 0 and second ~= 0 and third ~= 0 or type == "Distance" then
+  elseif type == "Distance" or type == "Axe" then
     addSeparator()
     addEmpty(5)
     addString(firstText, Colors.Default)
     addString(secondText, Colors.Default)
-    addString(thirdText, Colors.Default)
   end
 
   if item.imp then
