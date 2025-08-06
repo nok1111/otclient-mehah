@@ -287,8 +287,7 @@ function updateSpelllist()
         local localPlayer = g_game.getLocalPlayer()
         if (not (filters.level) or info.level <= localPlayer:getLevel()) and
             (not (filters.vocation) or table.find(info.vocations, localPlayer:getVocation())) and
-            (filters.vocationId == FILTER_VOCATION_ANY or table.find(info.vocations, filters.vocationId) or
-                table.find(info.vocations, filters.vocationId + 4)) and
+            (filters.vocationId == FILTER_VOCATION_ANY or table.find(info.vocations, filters.vocationId)) and
             (filters.groupId == FILTER_GROUP_ANY or info.group[filters.groupId]) and
             (filters.premium == FILTER_PREMIUM_ANY or (info.premium and filters.premium == FILTER_PREMIUM_YES) or
                 (not (info.premium) and filters.premium == FILTER_PREMIUM_NO)) then

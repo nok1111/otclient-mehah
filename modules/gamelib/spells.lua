@@ -133,7 +133,6 @@ SpelllistSettings = {
       'Charged Strike',
       'Static Charge',
       'Light Dash',
-      'Lightning Orb',
       'Veil of Swords',
       'Magnetic Shield',
       'Lightning Spear',
@@ -256,16 +255,16 @@ SpellInfo = {
 
     --Monk
     ['Lotus Kick'] = {id = 127, words = 'lotus kick', icon_id = 127, description = 'xxxxxxx', exhaustion = 7000, premium = false, type = 'Instant', icon = 127, mana = 30, level = 40, soul = 0, group = {[3] = 0}, vocations = {7}},
-    ['Adaptive Punch'] = {id = 130, words = 'adaptive punch', icon_id = 130, description = 'xxxxxxx', exhaustion = 10000, premium = false, type = 'Instant', icon = 130, mana = 80, level = 15, soul = 0, group = {[3] = 2000}, vocations = {7}},
-    ['Fire Punch'] = {id = 131, words = 'fire punch', icon_id = 131, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 131, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {7}},
-    ['Ice Punch'] = {id = 132, words = 'ice punch', icon_id = 132, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 132, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {7}},
-    ['Life Punch'] = {id = 133, words = 'life punch', icon_id = 133, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 133, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {7}},
-    ['Fists of Fire'] = {id = 134, words = 'fists of fire', icon_id = 134, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 134, mana = 115, level = 42, soul = 0, group = {[1] = 3000}, vocations = {7}},
-    ['Volcanic Dash'] = {id = 137, words = 'volcanic dash', icon_id = 137, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 137, mana = 115, level = 42, soul = 0, group = {[1] = 3000}, vocations = {7}},
-    ['Stormfist'] = {id = 138, words = 'stormfist', icon_id = 138, description = 'xxxxxxx', exhaustion = 20000, premium = false, type = 'Instant', icon = 138, mana = 350, level = 1, soul = 0, group = {[1] = 0}, vocations = {7}},
-    ['Mountain Stance'] = {id = 139, words = 'mountain stance', icon_id = 139, description = 'xxxxxxx', exhaustion = 50000, premium = false, type = 'Instant', icon = 139, mana = 650, level = 1, soul = 0, group = {[1] = 1900}, vocations = {7}},
-    ['Zen Barrier'] = {id = 140, words = 'zen barrier', icon_id = 140, description = 'xxxxxxx', exhaustion = 45000, parameter = true, premium = false, type = 'Instant', icon = 140, mana = 500, level = 1, soul = 0, group = {[1] = 1900}, vocations = {7}},
-    ['Mystic Fist'] = {id = 141, words = 'mystic fist', icon_id = 141, description = 'xxxxxxx', exhaustion = 8000, premium = false, type = 'Instant', icon = 141, mana = 150, level = 50, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Adaptive Punch'] = {id = 128, words = 'adaptive punch', icon_id = 128, description = 'xxxxxxx', exhaustion = 10000, premium = false, type = 'Instant', icon = 128, mana = 80, level = 15, soul = 0, group = {[3] = 2000}, vocations = {7}},
+    ['Fire Punch'] = {id = 129, words = 'fire punch', icon_id = 129, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 129, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Ice Punch'] = {id = 130, words = 'ice punch', icon_id = 130, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 130, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Life Punch'] = {id = 131, words = 'life punch', icon_id = 131, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 131, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Fists of Fire'] = {id = 132, words = 'fists of fire', icon_id = 132, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 132, mana = 115, level = 42, soul = 0, group = {[1] = 3000}, vocations = {7}},
+    ['Volcanic Dash'] = {id = 133, words = 'volcanic dash', icon_id = 133, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 133, mana = 115, level = 42, soul = 0, group = {[1] = 3000}, vocations = {7}},
+    ['Stormfist'] = {id = 134, words = 'stormfist', icon_id = 134, description = 'xxxxxxx', exhaustion = 20000, premium = false, type = 'Instant', icon = 134, mana = 350, level = 1, soul = 0, group = {[1] = 0}, vocations = {7}},
+    ['Mountain Stance'] = {id = 135, words = 'mountain stance', icon_id = 135, description = 'xxxxxxx', exhaustion = 50000, premium = false, type = 'Instant', icon = 135, mana = 650, level = 1, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Zen Barrier'] = {id = 136, words = 'zen barrier', icon_id = 136, description = 'xxxxxxx', exhaustion = 45000, parameter = true, premium = false, type = 'Instant', icon = 136, mana = 500, level = 1, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Mystic Fist'] = {id = 137, words = 'mystic fist', icon_id = 137, description = 'xxxxxxx', exhaustion = 8000, premium = false, type = 'Instant', icon = 137, mana = 150, level = 50, soul = 0, group = {[1] = 1900}, vocations = {7}},
  
     --Druid
     ['Terra Strike'] = {id = 150, words = 'terra strike', icon_id = 150, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 150, mana = 30, level = 8, soul = 0, group = {[1] = 1900}, vocations = {8}},
@@ -288,7 +287,6 @@ SpellInfo = {
     ['Charged Strike'] = {id = 170, words = 'charged strike', icon_id = 170, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 170, mana = 25, level = 8, soul = 0, group = {[1] = 1900}, vocations = {9}},
     ['Static Charge'] = {id = 171, words = 'static charge', icon_id = 171, description = 'xxxxxxx', exhaustion = 2200, premium = false, type = 'Instant', icon = 171, mana = 0, level = 15, soul = 0, group = {[1] = 0}, vocations = {9}},
     ['Light Dash'] = {id = 172, words = 'light dash', icon_id = 172, description = 'xxxxxxx', exhaustion = 6000, premium = false, type = 'Instant', icon = 172, mana = 65, level = 18, soul = 0, group = {[1] = 0}, vocations = {9}},
-    ['Lightning Orb'] = {id = 173, words = 'lightning orb', icon_id = 173, description = 'xxxxxxx', exhaustion = 10000, premium = false, type = 'Instant', icon = 173, mana = 75, level = 80, soul = 0, group = {[1] = 1900}, vocations = {9}},
     ['Veil of Swords'] = {id = 174, words = 'veil of swords', icon_id = 174, description = 'xxxxxxx', exhaustion = 15000, premium = false, type = 'Instant', icon = 174, mana = 0, level = 1, soul = 0, group = {[1] = 1900}, vocations = {9}},
     ['Magnetic Shield'] = {id = 175, words = 'magnetic shield', icon_id = 175, description = 'xxxxxxx', exhaustion = 45000, premium = false, type = 'Instant', icon = 175, mana = 115, level = 1, soul = 0, group = {[1] = 0}, vocations = {9}},
     ['Lightning Spear'] = {id = 176, words = 'lightning spear', icon_id = 176, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 176, mana = 85, level = 30, soul = 0, group = {[1] = 1900}, vocations = {9}},
@@ -298,9 +296,9 @@ SpellInfo = {
     ['Tempest Coin'] = {id = 180, words = 'tempest coin', icon_id = 180, description = 'xxxxxxx', exhaustion = 22000, premium = false, type = 'Instant', icon = 180, mana = 115, level = 1, soul = 0, group = {[1] = 0}, vocations = {9}},
 
     --others
-    ['Minor Heal'] = {id = 200, words = 'minor heal', icon_id = 200, description = 'xxxxxxx', exhaustion = 1000, premium = false, type = 'Instant', icon = 200, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {8}},
-    ['Strong Heal'] = {id = 201, words = 'strong heal', icon_id = 201, description = 'xxxxxxx', exhaustion = 1000, premium = false, type = 'Instant', icon = 201, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {8}},
-    ['Great Heal'] = {id = 202, words = 'great heal', icon_id = 202, description = 'xxxxxxx', exhaustion = 1000, premium = false, type = 'Instant', icon = 202, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {8}},
+    ['Minor Heal'] = {id = 200, words = 'minor heal', icon_id = 200, description = 'xxxxxxx', exhaustion = 1000, premium = false, type = 'Instant', icon = 200, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Strong Heal'] = {id = 201, words = 'strong heal', icon_id = 201, description = 'xxxxxxx', exhaustion = 1000, premium = false, type = 'Instant', icon = 201, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Great Heal'] = {id = 202, words = 'great heal', icon_id = 202, description = 'xxxxxxx', exhaustion = 1000, premium = false, type = 'Instant', icon = 202, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
 
   
   }
