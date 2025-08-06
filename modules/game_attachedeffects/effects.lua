@@ -219,24 +219,11 @@ AttachedEffectManager.register(16, 'blood blades', 353, ThingCategoryEffect, {
     end
 })
 
-AttachedEffectManager.register(17, 'overcharged', 60, ThingCategoryEffect, {
-    opacity = 0.75,
+AttachedEffectManager.register(17, 'overcharged', 495, ThingCategoryEffect, {
+    opacity = 1,
     duration = 8000,
     speed = 1.4,
     offset = { 0, 0, true},
-    
-    onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(394)
-        owner:getTile():addThing(e)
-        
-        
-    end,
-    onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(38)
-        oldOwner:getTile():addThing(e)
-    end
 })
 
 AttachedEffectManager.register(18, 'mana flow', 510, ThingCategoryEffect, {
@@ -1353,4 +1340,19 @@ AttachedEffectManager.register(156, 'elixir of ghosts', 48, ThingCategoryCreatur
     end
 })
 
+
+AttachedEffectManager.register(157, 'nightfiend jump', 1070, ThingCategoryEffect, {
+    hideOwner = true,
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -25, -25, true},
+})
+
+AttachedEffectManager.register(158, 'saranor purple aura', 917, ThingCategoryEffect, {
+    opacity = 0.7,
+    duration = 6000,
+    speed = 1,
+    offset = { -50, -34, true},
+})
 
