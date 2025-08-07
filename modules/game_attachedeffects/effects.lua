@@ -1356,3 +1356,93 @@ AttachedEffectManager.register(158, 'saranor purple aura', 917, ThingCategoryEff
     offset = { -50, -34, true},
 })
 
+AttachedEffectManager.register(159, 'tempest coin 1', 829, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -64, -64, true},
+})
+AttachedEffectManager.register(160, 'tempest coin 2', 830, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -64, -64, true},
+})
+AttachedEffectManager.register(161, 'tempest coin 3', 831, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -64, -64, true},
+})
+AttachedEffectManager.register(162, 'tempest coin 4', 832, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -64, -64, true},
+})    
+AttachedEffectManager.register(163, 'explosive shot', 950, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -34, -40, true},
+})    
+
+  
+AttachedEffectManager.register(164, 'frost barrel ice', 842, ThingCategoryEffect, {
+    opacity = 0.8,
+    duration = 2000,
+    speed = 1,
+    offset = { -5, -5, true},
+    
+    onAttach = function(effect, owner)
+        owner:setShader('frost armor')
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(44)
+        if oldOwner and oldOwner:getTile() then
+        oldOwner:getTile():addThing(e)
+        oldOwner:setShader('Outfit - Default')
+        end
+    end
+})    
+
+AttachedEffectManager.register(165, 'wind barrel', 780, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 6000,
+    speed = 1,
+    offset = { 0, 0, true},
+}) 
+
+AttachedEffectManager.register(166, 'wind barrel attached', 1143, ThingCategoryEffect, {
+    hideOwner = true,
+    speed = 1,
+    offset = { -96, -96, false},
+}) 
+
+AttachedEffectManager.register(167, 'explosive barrel', 1144, ThingCategoryEffect, {
+    hideOwner = true,
+    speed = 1,
+    offset = { -96, -96, false},
+}) 
+
+AttachedEffectManager.register(168, 'destructive shot ground', 875, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 2000,
+    speed = 1,
+    offset = { -32, -32, false},
+}) 
+
+AttachedEffectManager.register(169, 'destructive shot aura', 875, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 2000,
+    speed = 1,
+    offset = { -32, -32, false},
+}) 
+
+AttachedEffectManager.register(170, 'destructive shot aim', 558, ThingCategoryEffect, {
+    opacity = 0.8,
+    loop = 1,
+    speed = 0.9,
+    offset = { -2, -2, true},
+}) 
