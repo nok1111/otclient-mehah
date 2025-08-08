@@ -76,8 +76,8 @@ PhantomMiniWindow
       id: purseButton
       image-source: /images/inventory/purse
       !tooltip: tr('Open purse')
-      anchors.left: backpack.left
-      anchors.bottom: backpack.top   
+      anchors.left: boots.left
+      anchors.bottom: boots.top   
       size: 34 12
       image-clip: 0 0 34 12
       margin-bottom: 3
@@ -260,23 +260,24 @@ PhantomMiniWindow
 
     MainInventoryItem
       id: amulet
-      anchors.top: changeSize.bottom
-      anchors.left: changeSize.left
-      margin-top: 3
+      anchors.bottom: rune2.top
+      anchors.left: rune2.left
+      anchors.right: rune2.right
+      margin-bottom: 3
       &slotPosition: {x = 65535, y = 2, z = 0}
 
     MainInventoryItem
       id: helmet
-      anchors.top: changeSize.top
-      anchors.left: amulet.right
+      anchors.top: changeSize.bottom
+      anchors.left: changeSize.left
       margin-left: 3
       &slotPosition: {x = 65535, y = 1, z = 0}
 
     MainInventoryItem
       id: rune1
-      anchors.top: boots.bottom
-      anchors.left: amulet.left
-      anchors.right: amulet.right
+      anchors.top: ring.bottom
+      anchors.left: ring.left
+      anchors.right: ring.right
       margin-top: 3
       &slotPosition: {x = 65535, y = 12, z = 0}
 
@@ -296,57 +297,60 @@ PhantomMiniWindow
 
     MainInventoryItem
       id: backpack
-      anchors.top: rune3.top
-      anchors.left: rune3.right
-      margin-left: 3
+      anchors.top: boots.bottom
+      anchors.left: boots.left
+      anchors.right: boots.right
+      margin-top: 3
       &slotPosition: {x = 65535, y = 3, z = 0}
 
     MainInventoryItem
       id: sword
-      anchors.top: amulet.bottom
-      anchors.left: amulet.left
+      anchors.top: helmet.bottom
+      anchors.left: helmet.left
       margin-top: 3
       &slotPosition: {x = 65535, y = 6, z = 0}
 
     MainInventoryItem
       id: ring
       anchors.top: sword.bottom
-      anchors.left: amulet.left
+      anchors.left: helmet.left
       margin-top: 3
       &slotPosition: {x = 65535, y = 9, z = 0}
 
     MainInventoryItem
       id: armor
-      anchors.top: helmet.bottom
-      anchors.left: helmet.left
-      margin-top: 3
+      anchors.top: changeSize.bottom
+      anchors.left: helmet.right
+      margin-left: 3
       &slotPosition: {x = 65535, y = 4, z = 0}
 
     MainInventoryItem
       id: legs
-      anchors.top: armor.bottom
-      anchors.left: helmet.left
+      anchors.top: soulPanel.bottom
+      anchors.left: soulPanel.left
       margin-top: 3
       &slotPosition: {x = 65535, y = 7, z = 0}
 
     MainInventoryItem
       id: boots
-      anchors.top: legs.bottom
-      anchors.left: helmet.left
-      margin-top: 3
+      anchors.top: changeSize.bottom
+      anchors.left: armor.right
+      margin-left: 3
       &slotPosition: {x = 65535, y = 8, z = 0}
 
     MainInventoryItem
       id: shield
-      anchors.top: backpack.bottom
-      anchors.left: backpack.left
-      margin-top: 3
+      anchors.bottom: amulet.top
+      anchors.left: amulet.left
+      anchors.right: amulet.right
+      margin-bottom: 3
       &slotPosition: {x = 65535, y = 5, z = 0}
 
     MainInventoryItem
       id: tools
-      anchors.top: shield.bottom
+      anchors.top: backpack.bottom
       anchors.left: backpack.left
+      anchors.right: backpack.right
       margin-top: 3
       &slotPosition: {x = 65535, y = 10, z = 0}
 
