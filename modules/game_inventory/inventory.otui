@@ -352,10 +352,9 @@ PhantomMiniWindow
 
     MainInventoryItem
       id: soulPanel
-      anchors.left: amulet.left
-      anchors.right: amulet.right
-      anchors.bottom: boots.bottom
-      anchors.top: ring.bottom
+      anchors.top: rune2.bottom
+      anchors.left: rune1.left
+      anchors.right: rune1.right
       margin-top: 3
 
       Label
@@ -378,10 +377,9 @@ PhantomMiniWindow
 
     MainInventoryItem
       id: capacityPanel
-      anchors.left: backpack.left
-      anchors.right: backpack.right
-      anchors.bottom: boots.bottom
-      anchors.top: tools.bottom
+      anchors.top: rune2.bottom
+      anchors.left: rune2.left
+      anchors.right: rune2.right
       margin-top: 3
 
       Label
