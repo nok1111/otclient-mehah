@@ -1431,6 +1431,7 @@ AttachedEffectManager.register(168, 'destructive shot ground', 875, ThingCategor
     duration = 2000,
     speed = 1,
     offset = { -32, -32, false},
+    shader = 'Blackout',
 }) 
 
 AttachedEffectManager.register(169, 'destructive shot aura', 875, ThingCategoryEffect, {
@@ -1438,6 +1439,7 @@ AttachedEffectManager.register(169, 'destructive shot aura', 875, ThingCategoryE
     duration = 2000,
     speed = 1,
     offset = { -32, -32, false},
+    shader = 'Blackout',
 }) 
 
 AttachedEffectManager.register(170, 'destructive shot aim', 558, ThingCategoryEffect, {
@@ -1445,4 +1447,12 @@ AttachedEffectManager.register(170, 'destructive shot aim', 558, ThingCategoryEf
     loop = 1,
     speed = 0.9,
     offset = { -2, -2, true},
+    shader = 'Blackout',
+}) 
+
+AttachedEffectManager.register(171, 'destructive shot explode', 1054, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -32, -64, true},
 }) 
