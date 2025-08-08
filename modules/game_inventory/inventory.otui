@@ -328,6 +328,8 @@ PhantomMiniWindow
       id: legs
       anchors.top: soulPanel.bottom
       anchors.left: soulPanel.left
+      enabled: false
+      visible: false
       margin-top: 3
       &slotPosition: {x = 65535, y = 7, z = 0}
 
