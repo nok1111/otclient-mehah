@@ -368,6 +368,9 @@ function buildItemTooltip(item)
   elseif rarity > 1 then
     itemNameColor = rarityColor[rarity].color
     bgImage = rarityBackground[rarity] or '/images/ui/tooltip_common.png'
+  elseif item.type == "Spell" then
+    itemNameColor = "#ffffff"
+    bgImage = rarityBackground[3]
   else
     itemNameColor = "#ffffff"
     bgImage = rarityBackground[1]
@@ -404,7 +407,7 @@ function buildItemTooltip(item)
   end
 
   local firstText, secondText, thirdText
-  if (type == "Armor" or type == "Helmet" or type == "Legs" or type == "Ring" or type == "Necklace" or type == "Boots" or type == "Ammunition") and first ~= 0 then
+  if (type == "Armor" or type == "Spell" or type == "Legs" or type == "Ring" or type == "Necklace" or type == "Boots" or type == "Ammunition") and first ~= 0 then
     firstText = "Armor: " .. first
   elseif
     type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Axe" or type == "Fist" or
