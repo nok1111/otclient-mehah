@@ -59,7 +59,7 @@ local outfitOffsets = {
 
 -- Simple print function
 function printOutfitId(creature)
-    print("Outfit ID:", creature:getOutfitId())
+    print("Outfit ID for ", creature:getName(), ":", creature:getOutfitId())
 end
 
 
@@ -164,7 +164,7 @@ local function onDisappear(creature)
             widget.titleWidget:destroy()
             widget.titleWidget = nil
         end
-        print("Title removed for " .. creature:getName())
+       -- print("Title removed for " .. creature:getName())
     end
 end
 
@@ -248,10 +248,10 @@ local function onCovered(creature, isCovered, oldIsCovered)
         infoWidget.name:setColor(COVERED_COLOR)
         infoWidget.lifeBar:setBackgroundColor(COVERED_COLOR)
 
-        print("Covered: " .. creature:getName())
+       -- print("Covered: " .. creature:getName())
 
     else
-        print("Not Covered: " .. creature:getName())
+       -- print("Not Covered: " .. creature:getName())
         onHealthPercentChange(creature, creature:getHealthPercent())
     end
 end
