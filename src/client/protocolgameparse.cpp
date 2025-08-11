@@ -2521,7 +2521,7 @@ void ProtocolGame::parseTextMessage(const InputMessagePtr& msg)
     const Otc::MessageMode mode = Proto::translateMessageModeFromServer(code);
     std::string text;
 
-    g_logger.debug("[ProtocolGame::parseTextMessage] code: {}, mode: {}", code, code);
+    g_logger.debug("[ProtocolGame::parseTextMessage] code: {}, mode: {}", code, mode);
 
     switch (mode) {
         case Otc::MessageChannelManagement:
