@@ -153,14 +153,15 @@ AttachedEffectManager.register(11, 'Bat', 307, ThingCategoryCreature, {
     bounce = { 20, 20, 2000 }
 })
 
-AttachedEffectManager.register(12, 'stun jump', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(12, 'earthquake jump', 256, ThingCategoryEffect, {
 
-    duration = 750,
+    duration = 1000,
     disableWalkAnimation = true,
+    offset = { 0, 0, false },
 
     onAttach = function(effect, owner)
-        owner:setBounce(0, 120, 2200)
-        effect:setBounce(0, 120, 2200)
+        owner:setBounce(12, 32, 2000)
+       -- effect:setBounce(40, 45, 15000)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setBounce(0, 0)
@@ -1456,3 +1457,203 @@ AttachedEffectManager.register(171, 'destructive shot explode', 1054, ThingCateg
     speed = 1,
     offset = { -32, -64, true},
 }) 
+
+AttachedEffectManager.register(172, 'boots of timewalking', 598, ThingCategoryEffect, {
+    duration = 4000,
+    opacity = 1,
+    speed = 1,
+    offset = { -70, -60, false},
+    
+})
+
+AttachedEffectManager.register(173, 'boots of levitation', 629, ThingCategoryEffect, {
+    speed = 1,
+    duration = 3000,
+    disableWalkAnimation = true,
+    offset = { 0, 0, false},
+    onAttach = function(effect, owner)
+        owner:setBounce(13, 15, 1400)
+        effect:setBounce(1, 2, 10000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setBounce(0, 0)
+    end
+})
+
+AttachedEffectManager.register(174, 'boots of of the void', 2955, ThingCategoryCreature, {
+    duration = 2000,
+    disableWalkAnimation = true,
+    opacity = 1,
+    speed = 1,
+    dirOffset = {
+        [North] = { 0, 0, true },
+        [East] = { 0, 0, true},
+        [South] = { 0, 0, true},
+        [West] = { 0, 0, true}
+    },
+    
+})
+
+AttachedEffectManager.register(175, 'boots of void aura (NOT USED)', 1127, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { -58, -64, false},
+    
+})
+
+AttachedEffectManager.register(176, 'boots of void aura 2', 1020, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { -58, -64, false},
+    
+})
+
+AttachedEffectManager.register(177, 'boots of the dreamer 1', 1081, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { -22, -15, true},
+    
+})
+
+AttachedEffectManager.register(178, 'boots of the dreamer 2', 1077, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { -54, -30, false}, 
+    
+})
+
+
+AttachedEffectManager.register(179, '[Vampiric]', 2911, ThingCategoryCreature, {
+    opacity = 1,
+    speed = 1,
+    offset = { -38, -38, true},
+    
+})
+
+AttachedEffectManager.register(180, '[Sacred]', 2906, ThingCategoryCreature, {
+    opacity = 1,
+    speed = 2.5,
+    offset = { -38, -38, true},
+    
+})
+
+AttachedEffectManager.register(181, '[Arcane]', 2908, ThingCategoryCreature, {
+    opacity = 1,
+    speed = 2.5,
+    offset = { -38, -38, true},
+    
+})
+
+AttachedEffectManager.register(182, '[Corrosive]', 2907, ThingCategoryCreature, {
+    opacity = 1,
+    speed = 2.5,
+    offset = { -38, -38, true},
+    
+})
+
+AttachedEffectManager.register(183, '[Frostbound]', 2905, ThingCategoryCreature, {
+    opacity = 1,
+    speed = 2.5,
+    offset = { -38, -38, true},
+    shader = "frost armor",
+    
+})
+
+AttachedEffectManager.register(184, '[Plagued]', 2907, ThingCategoryCreature, {
+    opacity = 1,
+    speed = 2.5,
+    offset = { -38, -38, true},
+    
+})
+
+AttachedEffectManager.register(185, '[Burning]', 2902, ThingCategoryCreature, {
+    opacity = 1,
+    speed = 2.5,
+    offset = { -38, -38, true},
+    
+})
+
+AttachedEffectManager.register(186, '[Reaper]', 2904, ThingCategoryCreature, {
+    opacity = 1,
+    speed = 2.5,
+    offset = { -38, -38, true},
+})
+
+AttachedEffectManager.register(187, '[Darkness]', 2903, ThingCategoryCreature, {
+    opacity = 1,
+    speed = 2.5,
+    offset = { -38, -38, true},
+})
+
+AttachedEffectManager.register(188, 'plagued aoe summon effect', 910, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 2.5,
+    offset = { -20, -20, true},
+})
+
+AttachedEffectManager.register(189, '[vampiric]', '/images/game/effects/red_spin', ThingExternalTexture, {
+    size = { 220, 220 },
+    offset = { 95, 90, false },
+    duration = 3000,
+    shader = "red glow",
+})
+
+AttachedEffectManager.register(190, '[Frostbound]', 842, ThingCategoryEffect, {
+    opacity = 0.8,
+    duration = 2000,
+    speed = 1,
+    offset = { -5, -5, true},
+    
+    onAttach = function(effect, owner)
+        owner:setShader('frost armor')
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(44)
+        if oldOwner and oldOwner:getTile() then
+        oldOwner:getTile():addThing(e)
+        oldOwner:setShader('Outfit - Default')
+        end
+    end
+})  
+
+AttachedEffectManager.register(191, 'spider web', 1146, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 2000,
+    speed = 0.7,
+    offset = { -20, -20, true},
+})
+
+
+AttachedEffectManager.register(192, 'vortex (water wave) 2', 242, ThingCategoryEffect, {
+    duration = 1000,
+    disableWalkAnimation = true,
+    size = { 128, 128 },
+    offset = { -22, -32, false },
+    onAttach = function(effect, owner)
+        owner:setBounce(13, 15, 1400)
+        effect:setBounce(1, 2, 10000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setBounce(0, 0)
+    end
+})
+
+AttachedEffectManager.register(193, 'vortex stun', 32, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 1000,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})
+
+AttachedEffectManager.register(194, 'water torrent', 923 , ThingCategoryEffect, {
+    duration = 500,
+    speed = 1,
+    offset = { -96, -96, true},
+})
