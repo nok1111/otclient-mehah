@@ -470,7 +470,7 @@ end
 
 function Spells.getIconId(iconid, profile)
     --use iconid as SpellInfo[profile].id to finde SpellInfo[profile].iconid
-    print(iconid)
+    --print(iconid)
     for k, v in pairs(SpellInfo[profile]) do
         if v.id == iconid then
             return SpelllistSettings[profile].iconFile .. '/' .. tostring(v.icon_id) .. '.png'

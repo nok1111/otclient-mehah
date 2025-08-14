@@ -1657,3 +1657,80 @@ AttachedEffectManager.register(194, 'water torrent', 923 , ThingCategoryEffect, 
     speed = 1,
     offset = { -96, -96, true},
 })
+
+AttachedEffectManager.register(195, 'thunder leap stun', 32, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 1000,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})
+
+AttachedEffectManager.register(196, 'thunder leap ground effect', 646 , ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 0.4,
+    offset = { -32, -32, false},
+})
+
+AttachedEffectManager.register(197, 'thunder leap ground effect 2', '/images/game/effects/shockwave ground', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    offset = { 50, 50, false},
+    size = { 128, 128 },
+    
+})
+
+AttachedEffectManager.register(198, 'thunder leap ground aura', '/images/game/effects/shockwave aura', ThingExternalTexture, {
+    loop = 1,
+    opacity = 1,
+    speed = 0.83,
+    offset = { 50, 50, false},
+    size = { 128, 128 },
+    
+})
+
+AttachedEffectManager.register(199, 'healing prisma 1', 1142 , ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { -80, -80, true},
+})
+
+AttachedEffectManager.register(200, 'healing prisma 2', 1050 , ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { -64, -64, false},
+})
+
+AttachedEffectManager.register(201, 'fire tornado', 935 , ThingCategoryEffect, {
+    hideOwner = true,
+    duration = 4000,
+    opacity = 1,
+    speed = 1,
+    offset = { -48, -5, true}, 
+})
+
+AttachedEffectManager.register(202, 'opelus', 1028 , ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 0.7,
+    offset = { -60, -60, false}, 
+})
+
+AttachedEffectManager.register(203, 'blood aura 1', 1156 , ThingCategoryEffect, {
+    opacity = 1,
+    duration = 8000,
+    speed = 1.3,
+    offset = { -80, -78, false},
+    shader = 'Red Glow',
+
+    onAttach = function(effect, owner)
+        owner:setShader('Red Glow')     
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setShader('Outfit - Default')
+    end
+})
+
