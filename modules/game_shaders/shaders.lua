@@ -143,6 +143,8 @@ OUTFIT_SHADERS = { {
     {name = 'Orbital', frag = 'shaders/fragment/orbital.frag', drawColor = false},
     {name = 'Corrupted', frag = 'shaders/fragment/corrupted.frag', drawColor = false},
 
+    {name = 'Damaged', useFramebuffer = true, frag = 'shaders/fragment/damaged.frag', drawColor = true},
+
     
 
 

@@ -6,7 +6,7 @@ uniform vec2 u_WalkOffset;
 
 vec2 direction = vec2(1.0, 0.3);
 float speed = 0.05;
-float pressure = 0.45;
+float pressure = 1.8;
 float zoom = 0.5;
 
 void main(void)
