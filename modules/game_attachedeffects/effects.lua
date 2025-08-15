@@ -1390,10 +1390,10 @@ AttachedEffectManager.register(163, 'explosive shot', 950, ThingCategoryEffect, 
 
   
 AttachedEffectManager.register(164, 'frost barrel ice', 842, ThingCategoryEffect, {
-    opacity = 0.8,
+    opacity = 0.65,
     duration = 2000,
     speed = 1,
-    offset = { -5, -5, true},
+    offset = { -15, -15, true},
     
     onAttach = function(effect, owner)
         owner:setShader('frost armor')
@@ -1733,4 +1733,60 @@ AttachedEffectManager.register(203, 'blood aura 1', 1156 , ThingCategoryEffect, 
         oldOwner:setShader('Outfit - Default')
     end
 })
+
+AttachedEffectManager.register(204, 'shadowstep stun', 32, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 500,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})
+
+AttachedEffectManager.register(205, 'charge stun', 32, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 1000,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})
+
+AttachedEffectManager.register(206, 'light-dash stun', 32, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 1800,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})
+
+AttachedEffectManager.register(207, 'frost wave', 842, ThingCategoryEffect, {
+    opacity = 0.65,
+    duration = 3500,
+    speed = 1,
+    offset = { -15, -15, true},
+    
+    onAttach = function(effect, owner)
+        owner:setShader('frost armor')
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(44)
+        if oldOwner and oldOwner:getTile() then
+        oldOwner:getTile():addThing(e)
+        oldOwner:setShader('Outfit - Default')
+        end
+    end
+})  
+
+AttachedEffectManager.register(208, 'damaged', 0, 0, {
+    opacity = 1,
+    duration = 200,
+    onAttach = function(effect, owner)
+        owner:setShader('Damaged')
+    end,
+    onDetach = function(effect, oldOwner)
+        if oldOwner then
+        oldOwner:setShader('Outfit - Default')
+        end
+    end
+})  
 
