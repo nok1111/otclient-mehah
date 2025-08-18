@@ -23,7 +23,7 @@ return {
             g_window.setFullscreen(value)
         end
     },
-    classicControl                    = g_platform.isMobile() and true or false,
+    classicControl                    = true,
     smartWalk                         = false,
     autoChaseOverride                 = true,
     moveStack                         = false,
@@ -107,7 +107,7 @@ return {
         end
     },
     ambientLight                      = {
-        value = 0,
+        value = 40,
         action = function(value, options, controller, panels, extraWidgets)
             panels.graphicsEffectsPanel:recursiveGetChildById('ambientLight'):setText(string.format(
                 'Ambient light: %s%%', value))
@@ -195,7 +195,7 @@ return {
         end
     },
     enableHighlightMouseTarget        = {
-        value = true,
+        value = false,
         action = function(value, options, controller, panels, extraWidgets)
             panels.gameMapPanel:setDrawHighlightTarget(value)
         end
@@ -343,7 +343,7 @@ return {
         end
     },
     showActionbar                     = {
-        value = false,
+        value = true,
         action = function(value, options, controller, panels, extraWidgets)
             modules.game_actionbar.setActionBarVisible(value)
         end
