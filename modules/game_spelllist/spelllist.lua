@@ -94,7 +94,7 @@ end
 function online()
     if g_game.getFeature(GameSpellList) and not spelllistButton then
         spelllistButton = modules.game_mainpanel.addToggleButton('spelllistButton', tr('Spell List'),
-        '/images/options/button_spells', toggle, false, 4)
+        '/images/options/button_spells', toggle, false, 3)
         spelllistButton:setOn(false)
     end
 
@@ -425,10 +425,8 @@ function toggleFilter(widget, selectedWidget)
 end
 
 function resizeWindow()
-    spelllistWindow:setWidth(SpelllistSettings['Custom'].spellWindowWidth +
-                                 SpelllistSettings[SpelllistProfile].iconSize.width - 32)
-    spellList:setWidth(
-        SpelllistSettings['Custom'].spellListWidth + SpelllistSettings[SpelllistProfile].iconSize.width - 32)
+    spelllistWindow:setWidth(SpelllistSettings['Custom'].spellWindowWidth + SpelllistSettings[SpelllistProfile].iconSize.width - 32)
+    spellList:setWidth(SpelllistSettings['Custom'].spellListWidth + SpelllistSettings[SpelllistProfile].iconSize.width - 32)
 end
 
 function resetWindow()
