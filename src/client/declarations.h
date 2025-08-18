@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,9 @@
 
 #pragma once
 
+#include "global.h"
 #include <framework/net/declarations.h>
 #include <framework/ui/declarations.h>
-#include "global.h"
 
  // core
 class Map;
@@ -108,6 +108,8 @@ using ProtocolLoginPtr = std::shared_ptr<ProtocolLogin>;
 
 // ui
 class UIItem;
+class UIEffect;
+class UIMissile;
 class UICreature;
 class UIGraph;
 class UIMap;
@@ -118,6 +120,8 @@ class UIPositionAnchor;
 class UISprite;
 
 using UIItemPtr = std::shared_ptr<UIItem>;
+using UIEffectPtr = std::shared_ptr<UIEffect>;
+using UIMissilePtr = std::shared_ptr<UIMissile>;
 using UICreaturePtr = std::shared_ptr<UICreature>;
 using UIGraphPtr = std::shared_ptr<UIGraph>;
 using UISpritePtr = std::shared_ptr<UISprite>;

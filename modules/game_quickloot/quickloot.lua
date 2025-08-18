@@ -1,4 +1,4 @@
-﻿QuickLoot = {}
+QuickLoot = {}
 
 local function getFilter(id)
     local filter = {
@@ -21,24 +21,24 @@ function quickLootController:onInit()
             {}
         }
     }
-    QuickLoot.mouseGrabberWidget = g_ui.createWidget("UIWidget")
-
-    QuickLoot.mouseGrabberWidget:setVisible(false)
-    QuickLoot.mouseGrabberWidget:setFocusable(false)
-
-    QuickLoot.mouseGrabberWidget.onMouseRelease = QuickLoot.onChooseItem
-    QuickLoot.lastSelectBag = nil
-    QuickLoot.ErrorWindow = nil
 
     quickLootController.ui:hide()
 
     quickLootController:registerEvents(g_game, {
         onQuickLootContainers = QuickLoot.start
     })
+    Keybind.new("Loot", "Quick Loot Nearby Corpses", "Alt+Q", "")
+    Keybind.bind("Loot", "Quick Loot Nearby Corpses", {
+      {
+        type = KEY_DOWN,
+        callback = function() g_game.sendQuickLoot(2) end,
+      }
+    })
 
 end
 
 function quickLootController:onTerminate()
+    Keybind.delete("Loot", "Quick Loot Nearby Corpses")
     if QuickLoot.mouseGrabberWidget then
         QuickLoot.mouseGrabberWidget:destroy()
         QuickLoot.mouseGrabberWidget = nil
@@ -48,6 +48,19 @@ function quickLootController:onTerminate()
 end
 
 function quickLootController:onGameStart()
+    if not g_game.getFeature(GameThingQuickLoot) then
+        return
+    end
+
+    QuickLoot.mouseGrabberWidget = g_ui.createWidget("UIWidget")
+
+    QuickLoot.mouseGrabberWidget:setVisible(false)
+    QuickLoot.mouseGrabberWidget:setFocusable(false)
+
+    QuickLoot.mouseGrabberWidget.onMouseRelease = QuickLoot.onChooseItem
+    QuickLoot.lastSelectBag = nil
+    QuickLoot.ErrorWindow = nil
+
     quickLootController.ui.information.vipPanel.premium:setOn(not g_game.getLocalPlayer():isPremium())
     QuickLoot.load()
 
@@ -56,6 +69,9 @@ function quickLootController:onGameStart()
 end
 
 function quickLootController:onGameEnd()
+    if not g_game.getFeature(GameThingQuickLoot) then
+        return
+    end
     QuickLoot.save()
     QuickLoot.toggle()
     if quickLootController.ui:isVisible() then
@@ -95,25 +111,29 @@ function QuickLoot.Define()
         QuickLoot.loadFilterItems()
     end
 
-    function QuickLoot.lootExists(itemId)
-        return table.contains(QuickLoot.data.loots[QuickLoot.data.filter], itemId)
+    function QuickLoot.lootExists(itemId, filter)
+        if not filter then
+            filter = QuickLoot.data.filter
+        end
+        return table.contains(QuickLoot.data.loots[filter], itemId)
     end
 
-    function QuickLoot.addLootList(itemId)
-        if table.contains(QuickLoot.data.loots[QuickLoot.data.filter], itemId) then
+    function QuickLoot.addLootList(itemId,filter)
+        if not filter then
+            filter = QuickLoot.data.filter
+        end
+        if table.contains(QuickLoot.data.loots[filter], itemId) then
             return
         end
 
-        table.insert(QuickLoot.data.loots[QuickLoot.data.filter], itemId)
+        table.insert(QuickLoot.data.loots[filter], itemId)
 
-        g_game.requestQuickLootBlackWhiteList(getFilter(QuickLoot.data.filter),
-            #QuickLoot.data.loots[QuickLoot.data.filter], QuickLoot.data.loots[QuickLoot.data.filter])
+        g_game.requestQuickLootBlackWhiteList(getFilter(filter),
+            #QuickLoot.data.loots[filter], QuickLoot.data.loots[filter])
         if quickLootController.ui:isVisible() then
             QuickLoot.loadFilterItems()
         end
-
     end
-
     function QuickLoot.clearFilterItems()
         QuickLoot.data.loots[QuickLoot.data.filter] = {}
 
@@ -122,16 +142,21 @@ function QuickLoot.Define()
         QuickLoot.loadFilterItems()
     end
 
-    function QuickLoot.removeLootList(itemId)
-
-        if not table.contains(QuickLoot.data.loots[QuickLoot.data.filter], itemId) then
+    function QuickLoot.removeLootList(itemId, filter)
+        if not filter then
+            filter = QuickLoot.data.filter
+        end
+        if not table.contains(QuickLoot.data.loots[filter], itemId) then
             return
         end
 
-        table.removevalue(QuickLoot.data.loots[QuickLoot.data.filter], itemId)
+        table.removevalue(QuickLoot.data.loots[filter], itemId)
 
-        g_game.requestQuickLootBlackWhiteList(getFilter(QuickLoot.data.filter),
-            #QuickLoot.data.loots[QuickLoot.data.filter], QuickLoot.data.loots[QuickLoot.data.filter])
+        g_game.requestQuickLootBlackWhiteList(getFilter(filter),
+            #QuickLoot.data.loots[filter], QuickLoot.data.loots[filter])
+        if quickLootController.ui:isVisible() then
+            QuickLoot.loadFilterItems()
+        end
     end
 
     function QuickLoot.load()
@@ -147,7 +172,15 @@ function QuickLoot.Define()
                 return g_logger.error("Error while reading containers settings file. " .. result)
             end
 
-            QuickLoot.data = result
+            if result == nil then
+                QuickLoot.data = {
+                    filter = 1,
+                    loots = {{}, {}}
+                }
+            else
+                QuickLoot.data = result
+            end
+
         else
             QuickLoot.data = {
                 filter = 1,
@@ -164,7 +197,7 @@ function QuickLoot.Define()
         end)
 
         if not status then
-            return g_logger.error("Error while saving top bar settings. Data won't be saved. Details: " .. result)
+            return g_logger.warning("Error while saving QuickLoot settings. Data won't be saved. Details: " .. result)
         end
 
         if result:len() > 104857600 then
@@ -194,9 +227,9 @@ function QuickLoot.Define()
         quickLootController.ui.fallbackPanel.checkbox:setChecked(fallback)
         -- LuaFormatter off
 		local slotBags = {
-			{ color = "#484848", name = "Unassigned", type = 1 },
+			{ color = "#484848", name = "Unassigned", type = 31 },
 			{ color = "#414141", name = "Gold", type = 30 },
-			{ color = "#484848", name = "Armors", type = 31 },
+			{ color = "#484848", name = "Armors", type = 1 },
 			{ color = "#414141", name = "Amulets", type = 2  },
 			{ color = "#484848", name = "Boots", type = 3 },
 			{ color = "#414141", name = "Containers", type = 4 },
@@ -234,8 +267,8 @@ function QuickLoot.Define()
 
             for _, container in pairs(lootContainers) do
                 if container[1] == id then
-                    local lootContainerId = container[2]
-                    local obtainerContainerId = container[3]
+                    local lootContainerId = container[3]
+                    local obtainerContainerId = container[2]
 
                     widget.item:setItemId(lootContainerId)
                     widget.item2:setItemId(obtainerContainerId)
@@ -388,6 +421,9 @@ function QuickLoot.Define()
         end
         QuickLoot.show()
         QuickLoot.loadFilterItems()
+        if QuickLoot.data.filter == 2 and not quickLootController.ui.filters.accepted:isChecked() then
+            quickLootController.ui.filters.accepted:onClick()
+        end
     end
 
     function QuickLoot.show()

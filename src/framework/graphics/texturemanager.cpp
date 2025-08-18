@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -61,14 +61,14 @@ void TextureManager::poll()
 
     lastUpdate = now;
 
-    std::scoped_lock l(m_mutex);
+    std::shared_lock l(m_mutex);
     for (const auto& animatedTexture : m_animatedTextures)
         animatedTexture->update();
 }
 
 void TextureManager::clearCache()
 {
-    std::scoped_lock l(m_mutex);
+    std::unique_lock l(m_mutex);
     m_animatedTextures.clear();
     m_textures.clear();
 }
@@ -93,7 +93,7 @@ void TextureManager::liveReload()
     }, 1000);
 }
 
-TexturePtr TextureManager::getTexture(const std::string& fileName, bool smooth)
+TexturePtr TextureManager::getTexture(const std::string& fileName, const bool smooth)
 {
     TexturePtr texture;
 
@@ -101,9 +101,12 @@ TexturePtr TextureManager::getTexture(const std::string& fileName, bool smooth)
     const auto& filePath = g_resources.resolvePath(fileName);
 
     // check if the texture is already loaded
-    const auto it = m_textures.find(filePath);
-    if (it != m_textures.end()) {
-        texture = it->second;
+    {
+        std::shared_lock l(m_mutex);
+        const auto it = m_textures.find(filePath);
+        if (it != m_textures.end()) {
+            texture = it->second;
+        }
     }
 
 #ifdef FRAMEWORK_NET
@@ -135,8 +138,13 @@ TexturePtr TextureManager::getTexture(const std::string& fileName, bool smooth)
         if (texture) {
             texture->setTime(stdext::time());
             texture->setSmooth(smooth);
+            std::unique_lock l(m_mutex);
             m_textures[filePath] = texture;
         }
+    }
+
+    if (texture) {
+        texture->m_lastTimeUsage.restart();
     }
 
     return texture;

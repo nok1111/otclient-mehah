@@ -46,55 +46,14 @@ PhantomMiniWindow
     anchors.fill: parent
     phantom: true
 
-    UIButton
-      id: purseButton
-      image-source: /images/ui/spell_button
-      !tooltip: tr('click to open Spell Bag')
-      anchors.top: parent.top
-      anchors.left: parent.left
-      size: 32 33
-      image-clip: 0 0 32 33
-      margin-top: 5
-      margin-left: 8
-      margin-bottom: 5
-      @onMousePress: |
-        local purse = g_game.getLocalPlayer():getInventoryItem(InventorySlotPurse)
-        if purse then
-            g_game.use(purse)
-        end
-
-      $on:
-        image-clip: 0 0 32 33
-      $pressed:
-        image-clip: 0 0 32 33
-
-    UIButton
-      id: ShowSpellsButton
-      image-source: /images/ui/spell_button2
-      !tooltip: tr('Select active spells')
-      anchors.top: parent.top
-      anchors.left: purseButton.right
-      size: 32 33
-      image-clip: 0 0 32 33
-      margin-top: 5
-      margin-left: 4
-      margin-bottom: 5
-      @onMousePress: |
-        g_game.talk('!spells')
-
-      $on:
-        image-clip: 0 0 32 33
-      $pressed:
-        image-clip: 0 0 32 33
-
     Button
       id: changeSize
       image-source: /images/inventory/min_button_small
       image-clip: 0 0 12 12
-      anchors.top: purseButton.top
+      anchors.top: parent.top
       anchors.left: parent.left
       margin-left: 8
-      margin-top: 40
+      margin-top: 5
       size: 12 12
       @onClick: changeInventorySize()
 
@@ -109,9 +68,29 @@ PhantomMiniWindow
       anchors.left: changeSize.right
       margin-left: 3
       size: 12 12
-      
+      @onClick: modules.game_blessing.toggle()
       $pressed !disabled:
         image-clip: 12 0 12 12
+
+    UIButton
+      id: purseButton
+      image-source: /images/inventory/purse
+      !tooltip: tr('Open purse')
+      anchors.left: boots.left
+      anchors.bottom: boots.top   
+      size: 34 12
+      image-clip: 0 0 34 12
+      margin-bottom: 3
+      @onClick: |
+        local purse = g_game.getLocalPlayer():getInventoryItem(InventorySlotPurse)
+        if purse then
+            g_game.use(purse)
+        end
+
+      $on:
+        image-clip: 0 12 34 12
+      $pressed:
+        image-clip: 0 12 34 12
 
     TopToggleButton
       id: standPosture
@@ -276,71 +255,29 @@ PhantomMiniWindow
       anchors.right: backpack.right
       anchors.bottom: parent.bottom
       anchors.top: stop.top
-      margin-top: 0
       layout:
         type: horizontalBox
 
     MainInventoryItem
       id: amulet
-      anchors.top: changeSize.bottom
-      anchors.left: changeSize.left
-      margin-top: 3
+      anchors.bottom: rune2.top
+      anchors.left: rune2.left
+      anchors.right: rune2.right
+      margin-bottom: 3
       &slotPosition: {x = 65535, y = 2, z = 0}
 
     MainInventoryItem
       id: helmet
-      anchors.top: changeSize.top
-      anchors.left: amulet.right
+      anchors.top: changeSize.bottom
+      anchors.left: changeSize.left
       margin-left: 3
       &slotPosition: {x = 65535, y = 1, z = 0}
 
     MainInventoryItem
-      id: backpack
-      anchors.top: amulet.top
-      anchors.left: helmet.right
-      margin-left: 3
-      &slotPosition: {x = 65535, y = 3, z = 0}
-
-    MainInventoryItem
-      id: sword
-      anchors.top: amulet.bottom
-      anchors.left: amulet.left
-      margin-top: 3
-      &slotPosition: {x = 65535, y = 6, z = 0}
-
-    MainInventoryItem
-      id: ring
-      anchors.top: sword.bottom
-      anchors.left: amulet.left
-      margin-top: 3
-      &slotPosition: {x = 65535, y = 9, z = 0}
-
-    MainInventoryItem
-      id: armor
-      anchors.top: helmet.bottom
-      anchors.left: helmet.left
-      margin-top: 3
-      &slotPosition: {x = 65535, y = 4, z = 0}
-
-    MainInventoryItem
-      id: legs
-      anchors.top: armor.bottom
-      anchors.left: helmet.left
-      margin-top: 3
-      &slotPosition: {x = 65535, y = 7, z = 0}
-
-    MainInventoryItem
-      id: boots
-      anchors.top: legs.bottom
-      anchors.left: helmet.left
-      margin-top: 3
-      &slotPosition: {x = 65535, y = 8, z = 0}
-
-    MainInventoryItem
       id: rune1
-      anchors.top: boots.bottom
-      anchors.left: amulet.left
-      anchors.right: amulet.right
+      anchors.top: ring.bottom
+      anchors.left: ring.left
+      anchors.right: ring.right
       margin-top: 3
       &slotPosition: {x = 65535, y = 12, z = 0}
 
@@ -359,25 +296,71 @@ PhantomMiniWindow
       &slotPosition: {x = 65535, y = 14, z = 0}
 
     MainInventoryItem
-      id: shield
-      anchors.top: backpack.bottom
-      anchors.left: backpack.left
+      id: backpack
+      anchors.top: boots.bottom
+      anchors.left: boots.left
+      anchors.right: boots.right
       margin-top: 3
+      &slotPosition: {x = 65535, y = 3, z = 0}
+
+    MainInventoryItem
+      id: sword
+      anchors.top: helmet.bottom
+      anchors.left: helmet.left
+      margin-top: 3
+      &slotPosition: {x = 65535, y = 6, z = 0}
+
+    MainInventoryItem
+      id: ring
+      anchors.top: sword.bottom
+      anchors.left: helmet.left
+      margin-top: 3
+      &slotPosition: {x = 65535, y = 9, z = 0}
+
+    MainInventoryItem
+      id: armor
+      anchors.top: changeSize.bottom
+      anchors.left: helmet.right
+      margin-left: 3
+      &slotPosition: {x = 65535, y = 4, z = 0}
+
+    MainInventoryItem
+      id: legs
+      anchors.top: soulPanel.bottom
+      anchors.left: soulPanel.left
+      enabled: false
+      visible: false
+      margin-top: 3
+      &slotPosition: {x = 65535, y = 7, z = 0}
+
+    MainInventoryItem
+      id: boots
+      anchors.top: changeSize.bottom
+      anchors.left: armor.right
+      margin-left: 3
+      &slotPosition: {x = 65535, y = 8, z = 0}
+
+    MainInventoryItem
+      id: shield
+      anchors.bottom: amulet.top
+      anchors.left: amulet.left
+      anchors.right: amulet.right
+      margin-bottom: 3
       &slotPosition: {x = 65535, y = 5, z = 0}
 
     MainInventoryItem
       id: tools
-      anchors.top: shield.bottom
+      anchors.top: backpack.bottom
       anchors.left: backpack.left
+      anchors.right: backpack.right
       margin-top: 3
       &slotPosition: {x = 65535, y = 10, z = 0}
 
     MainInventoryItem
       id: soulPanel
-      anchors.left: amulet.left
-      anchors.right: amulet.right
-      anchors.bottom: boots.bottom
-      anchors.top: ring.bottom
+      anchors.top: rune2.bottom
+      anchors.left: rune1.left
+      anchors.right: rune1.right
       margin-top: 3
 
       Label
@@ -400,10 +383,9 @@ PhantomMiniWindow
 
     MainInventoryItem
       id: capacityPanel
-      anchors.left: backpack.left
-      anchors.right: backpack.right
-      anchors.bottom: boots.bottom
-      anchors.top: tools.bottom
+      anchors.top: rune2.bottom
+      anchors.left: rune2.left
+      anchors.right: rune2.right
       margin-top: 3
 
       Label
@@ -601,7 +583,7 @@ PhantomMiniWindow
       anchors.left: changeSize.left
       margin-top: 3
       size: 12 12
-
+      @onClick: modules.game_blessing.toggle()
       $pressed !disabled:
         image-clip: 12 0 12 12
 

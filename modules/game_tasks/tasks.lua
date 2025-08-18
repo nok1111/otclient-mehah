@@ -60,13 +60,14 @@ end
 function create()
   if tasksWindow then
     return
-  end
-openTasksButton = modules.client_topmenu.addLeftGameToggleButton("openTasksButton", tr("Open Tasks Panel"), "/images/topbuttons/ancestraltask", toggleTasksPanel)
-  openTasksButton:setOn(true)
-  trackerButton = modules.client_topmenu.addLeftGameToggleButton("trackerButton", tr("Tasks Tracker"), "/images/topbuttons/ancestraltasktracker", toggleTracker)
-  trackerButton:setOn(true)
-  trackerWindow = g_ui.loadUI("tasks_tracker", modules.game_interface.getRightPanel())
-  trackerWindow.miniwindowScrollBar:mergeStyle({["$!on"] = {}})
+  end             
+  
+openTasksButton = modules.game_mainpanel.addStoreButton('openTasksButton', tr('Task Window'), '/images/options/task_large', toggleTasksPanel, false, 9)
+openTasksButton:setOn(false)
+trackerButton = modules.game_mainpanel.addToggleButton("trackerButton", tr("Tasks Tracker"), "/images/options/ButtonBossSlot", toggleTracker, false, 3)
+trackerButton:setOn(true)
+trackerWindow = g_ui.loadUI("tasks_tracker", modules.game_interface.getRightPanel())
+trackerWindow.miniwindowScrollBar:mergeStyle({["$!on"] = {}})
   trackerWindow:setContentMinimumHeight(120)
   trackerWindow:setup()
 

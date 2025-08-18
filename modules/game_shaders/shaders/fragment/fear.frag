@@ -30,7 +30,7 @@ void main() {
     // --- EFFECT 2: Tunnel Vision ---
     vec2 center = vec2(0.5, 0.5);
     float dist = distance(v_TexCoord, center);
-    float vignette = 1.0 - smoothstep(vignetteSize * 0.5, vignetteSize, dist) * vignetteDarkness * 1;
+    float vignette = 1.0 - smoothstep(vignetteSize * 0.5, vignetteSize, dist) * vignetteDarkness;
     color *= vignette;
 
     // --- EFFECT 3: Color Drain ---

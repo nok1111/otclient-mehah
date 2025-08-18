@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,25 @@
 
 #pragma once
 
-#include <framework/core/declarations.h>
-#include <framework/core/timer.h>
-#include <framework/graphics/cachedtext.h>
 #include "mapview.h"
 #include "outfit.h"
 #include "thing.h"
+#include <framework/core/declarations.h>
+#include <framework/core/timer.h>
+#include <framework/graphics/cachedtext.h>
 
 struct PreyMonster
 {
-public:
     std::string name;
     Outfit outfit;
+};
+
+struct DashData
+{
+    DashData(Point _offset, float _opacity) : offset(_offset), opacity(_opacity) {}
+
+    Point offset;
+    float opacity;
 };
 
 // @bindclass
@@ -45,7 +52,7 @@ public:
     static double speedC;
 
     Creature();
-    ~Creature();
+    ~Creature() override;
 
     static bool hasSpeedFormula();
 
@@ -61,9 +68,9 @@ public:
     void internalDraw(Point dest, const Color& color = Color::white);
     void drawInformation(const MapPosInfo& mapRect, const Point& dest, int drawFlags);
 
-    void setId(uint32_t id) override { m_id = id; }
-    void setMasterId(uint32_t id) { m_masterId = id; }
-    void setName(const std::string_view name);
+    void setId(const uint32_t id) override { m_id = id; }
+    void setMasterId(const uint32_t id) { m_masterId = id; }
+    void setName(std::string_view name);
     void setHealthPercent(uint8_t healthPercent);
     void setDirection(Otc::Direction direction);
     void setOutfit(const Outfit& outfit);
@@ -80,9 +87,13 @@ public:
     void setEmblemTexture(const std::string& filename);
     void setTypeTexture(const std::string& filename);
     void setIconTexture(const std::string& filename);
-    void setPassable(bool passable) { m_passable = passable; }
-    void setMountShader(const std::string_view name);
+    void setPassable(const bool passable) { m_passable = passable; }
+    void setMountShader(std::string_view name);
     void setStaticWalking(uint16_t v);
+
+    void drawDashEffect(Point& dest);
+    void setDash(bool enabled) { m_dash = enabled; }
+    bool isDash() const { return m_dash; }
 
     void onStartAttachEffect(const AttachedEffectPtr& effect) override;
     void onDispatcherAttachEffect(const AttachedEffectPtr& effect) override;
@@ -107,7 +118,7 @@ public:
     int getDisplacementY() const override;
     int getExactSize(int layer = 0, int xPattern = 0, int yPattern = 0, int zPattern = 0, int animationPhase = 0) override;
 
-    float getStepProgress() { return m_walkTimer.ticksElapsed() / m_stepCache.duration; }
+    float getStepProgress() { return m_walkTimer.ticksElapsed() / static_cast<float>(m_stepCache.duration); }
     float getStepTicksLeft() { return static_cast<float>(m_stepCache.getDuration(m_lastStepDirection)) - m_walkTimer.ticksElapsed(); }
 
     uint8_t getSkull() { return m_skull; }
@@ -130,10 +141,7 @@ public:
 
     Otc::Direction getDirection() { return m_direction; }
     Outfit getOutfit() { return m_outfit; }
-
     int getOutfitId() const { return static_cast<int>(m_outfit.getId()); }
-
-
     const Light& getLight() const override;
     bool hasLight() const override { return Thing::hasLight() || getLight().intensity > 0; }
     bool hasMountShader() const { return m_mountShaderId > 0; }
@@ -156,6 +164,7 @@ public:
 
     bool isPassable() const { return m_passable; }
     bool isWalking() { return m_walking; }
+
     bool isRemoved() { return m_removed; }
     bool isInvisible() { return m_outfit.isEffect() && m_outfit.getAuxId() == 13; }
     bool isDead() { return m_healthPercent <= 0; }
@@ -164,19 +173,11 @@ public:
     bool isCreature() override { return true; }
     bool isCovered() { return m_isCovered; }
 
-
-
     bool isSummon() override;
-#ifdef PROGRESSBAR
-    uint8_t getProgressbarPercent() { return m_progressbarPercent; }
-    void setProgressbar(uint32_t duration, bool ltr);
-    void updateProgressbar(uint32_t duration, bool ltr);
-#endif
-
     void setCovered(bool covered);
 
     bool isDisabledWalkAnimation() { return m_disableWalkAnimation > 0; }
-    void setDisableWalkAnimation(bool v) {
+    void setDisableWalkAnimation(const bool v) {
         if (v) ++m_disableWalkAnimation; else {
             if (m_disableWalkAnimation <= 1) m_disableWalkAnimation = 0;
             else --m_disableWalkAnimation;
@@ -187,22 +188,34 @@ public:
     void sendTyping();
     bool getTyping() { return m_typing; }
     void setTypingIconTexture(const std::string& filename);
-    void setBounce(uint8_t minHeight, uint8_t height, uint16_t speed) { m_bounce = { minHeight, height , speed }; }
+    void setBounce(const uint8_t minHeight, const uint8_t height, const uint16_t speed) {
+        m_bounce = { .minHeight =
+minHeight,
+.height = height, .speed = speed
+        };
+    }
 
     void setWidgetInformation(const UIWidgetPtr& info);
     UIWidgetPtr getWidgetInformation() { return m_widgetInformation; }
 
-#ifndef BOT_PROTECTION
     void setText(const std::string& text, const Color& color);
     std::string getText();
     void clearText() { setText("", Color::white); }
     bool canShoot(int distance);
-#endif
+
+    bool isCameraFollowing() const {
+        return m_cameraFollowing;
+    }
+
+    void setCameraFollowing(bool v) {
+        m_cameraFollowing = v;
+    }
 
 protected:
-    virtual void updateWalkOffset(uint8_t totalPixelsWalked);
-    virtual void updateWalk(bool isPreWalking = false);
     virtual void terminateWalk();
+    virtual void onWalking() {};
+    void updateWalkOffset(uint8_t totalPixelsWalked);
+    void updateWalk();
 
     ThingType* getThingType() const override;
     ThingType* getMountThingType() const;
@@ -211,11 +224,14 @@ protected:
     void onPositionChange(const Position& newPos, const Position& oldPos) override;
 
     bool m_walking{ false };
+
     Point m_walkOffset;
     Point m_outfitOffset;
     Otc::Direction m_direction{ Otc::South };
 
     Timer m_walkTimer;
+
+    int16_t m_lastMapDuration = -1;
 
 private:
     void nextWalkUpdate();
@@ -223,7 +239,6 @@ private:
     void updateShield();
     void updateWalkingTile();
     void updateWalkAnimation();
-    void resetWalkAnimationPhase(bool toSchedule = false);
 
     uint16_t getCurrentAnimationPhase(bool mount = false);
 
@@ -236,7 +251,7 @@ private:
         uint16_t walkDuration{ 0 };
         uint16_t diagonalDuration{ 0 };
 
-        uint16_t getDuration(Otc::Direction dir) const { return Position::isDiagonal(dir) ? diagonalDuration : duration; }
+        uint16_t getDuration(const Otc::Direction dir) const { return Position::isDiagonal(dir) ? diagonalDuration : duration; }
     };
 
     UIWidgetPtr m_widgetInformation;
@@ -250,7 +265,7 @@ private:
     TexturePtr m_iconTexture;
     TexturePtr m_typingIconTexture;
 
-    ScheduledEventPtr m_walkUpdateEvent;
+    EventPtr m_walkUpdateEvent;
     ScheduledEventPtr m_walkFinishAnimEvent;
     ScheduledEventPtr m_outfitColorUpdateEvent;
 
@@ -259,8 +274,8 @@ private:
     CachedText m_name;
     CachedStep m_stepCache;
 
-    Position m_lastStepFromPosition;
     Position m_lastStepToPosition;
+    Position m_lastStepFromPosition;
     Position m_oldPosition;
 
     Timer m_footTimer;
@@ -296,11 +311,6 @@ private:
 
     uint8_t m_type;
     uint8_t m_healthPercent{ 101 };
-#ifdef PROGRESSBAR
-    uint8_t m_progressbarPercent;
-    ScheduledEventPtr m_progressbarUpdateEvent;
-    Timer m_progressbarTimer;
-#endif
     uint8_t m_skull{ Otc::SkullNone };
     uint8_t m_icon{ Otc::NpcIconNone };
     uint8_t m_shield{ Otc::ShieldNone };
@@ -317,6 +327,8 @@ private:
     // Mount Shader
     uint8_t m_mountShaderId{ 0 };
 
+    static std::map<Otc::Direction, std::vector<DashData>> m_outfitOffsets;
+
     Otc::Direction m_walkTurnDirection{ Otc::InvalidDirection };
     Otc::Direction m_lastStepDirection{ Otc::InvalidDirection };
 
@@ -325,6 +337,8 @@ private:
     bool m_allowAppearWalk{ false };
     bool m_showTimedSquare{ false };
     bool m_showStaticSquare{ false };
+    bool m_cameraFollowing{ false };
+    bool m_dash{ false };
 
     bool m_removed{ true };
     bool m_drawOutfitColor{ true };
@@ -332,20 +346,18 @@ private:
     bool m_typing{ false };
     bool m_isCovered{ false };
 
-#ifndef BOT_PROTECTION
     StaticTextPtr m_text;
-#endif
 };
 
 // @bindclass
-class Npc : public Creature
+class Npc final : public Creature
 {
 public:
     bool isNpc() override { return true; }
 };
 
 // @bindclass
-class Monster : public Creature
+class Monster final : public Creature
 {
 public:
     bool isMonster() override { return true; }

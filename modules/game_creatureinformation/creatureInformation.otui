@@ -19,8 +19,8 @@ UIWidget
 
   ProgressBar
     id: lifeBar
-    width: 50
-    height: 8
+    width: 40
+    height: 4
     image-draw-order: 2
     anchors.top: prev.bottom
     anchors.left: parent.left
@@ -30,7 +30,7 @@ UIWidget
     id: manaBar
     visible: false
     background-color: blue
-    width: 50
+    width: 40
     height: 4
     margin-top: 2
     image-draw-order: 2

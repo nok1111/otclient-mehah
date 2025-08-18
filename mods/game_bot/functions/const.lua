@@ -21,9 +21,7 @@ context.InventorySlotFeet = 8
 context.InventorySlotFinger = 9
 context.InventorySlotAmmo = 10
 context.InventorySlotPurse = 11
-context.InventorySlotRune1 = 12
-context.InventorySlotRune2 = 13
-context.InventorySlotRune3 = 14
-
 context.InventorySlotFirst = 1
-context.InventorySlotLast = 14
+context.InventorySlotLast = 10
+
+context.GameColorizedLootValue = GameColorizedLootValue

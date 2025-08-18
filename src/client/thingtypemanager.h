@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +22,16 @@
 
 #pragma once
 
-#include <framework/global.h>
 #include "thingtype.h"
+#include "staticdata.h"
+#include <framework/global.h>
 
 #ifdef FRAMEWORK_EDITOR
 #include "itemtype.h"
 #endif
+
+using RaceList = std::vector<RaceType>;
+static const RaceType emptyRaceType{};
 
 class ThingTypeManager
 {
@@ -38,6 +42,7 @@ public:
     bool loadDat(std::string file);
     bool loadOtml(std::string file);
     bool loadAppearances(const std::string& file);
+    bool loadStaticData(const std::string& file);
 
 #ifdef FRAMEWORK_EDITOR
     void parseItemType(uint16_t id, pugi::xml_node node);
@@ -63,6 +68,9 @@ public:
 
     ThingTypeList findThingTypeByAttr(ThingAttr attr, ThingCategory category);
 
+    const RaceType& getRaceData(uint32_t raceId);
+    RaceList getRacesByName(const std::string& searchString);
+
     const ThingTypePtr& getNullThingType() { return m_nullThingType; }
 
     const ThingTypePtr& getThingType(uint16_t id, ThingCategory category);
@@ -73,17 +81,11 @@ public:
     uint16_t getContentRevision() { return m_contentRevision; }
 
     bool isDatLoaded() { return m_datLoaded; }
-    bool isValidDatId(uint16_t id, ThingCategory category) const { return id >= 1 && id < m_thingTypes[category].size(); }
+    bool isValidDatId(const uint16_t id, const ThingCategory category) const { return id >= 1 && id < m_thingTypes[category].size(); }
 
 private:
-    struct GarbageCollection
-    {
-        uint8_t category{ ThingLastCategory };
-        size_t index;
-        ScheduledEventPtr event;
-    };
-
     ThingTypeList m_thingTypes[ThingLastCategory];
+    RaceList m_monsterRaces;
 
     ThingTypePtr m_nullThingType;
 
@@ -91,8 +93,6 @@ private:
 
     uint32_t m_datSignature{ 0 };
     uint16_t m_contentRevision{ 0 };
-
-    GarbageCollection m_gc;
 
 #ifdef FRAMEWORK_EDITOR
     ItemTypePtr m_nullItemType;
@@ -103,6 +103,8 @@ private:
     bool m_xmlLoaded{ false };
     bool m_otbLoaded{ false };
 #endif
+
+    friend class GarbageCollection;
 };
 
 extern ThingTypeManager g_things;

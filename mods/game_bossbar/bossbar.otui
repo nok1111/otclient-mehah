@@ -2,7 +2,7 @@ Panel
   id: creatureBar
   anchors.top: parent.top
   anchors.horizontalCenter: parent.horizontalCenter
-  margin-top: 75
+  margin-top: 40
   size: 400 75
   phantom: true
 
@@ -12,9 +12,10 @@ Panel
     anchors.horizontalCenter: parent.horizontalCenter
     font: verdana-14px-rounded
     text-align: center
-    text-offset: 35 0
+    text-offset: 0 0
     margin-top: 6
     text-auto-resize: true
+    color: #000000
 
   ProgressBar
     id: special

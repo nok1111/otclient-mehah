@@ -7,19 +7,17 @@ SKILL_MINING = 5
 SKILL_HERBALISM = 6
 SKILL_FISHING = 7
 SKILL_RUNE_SEEKER = 8
-SKILL_REFINERY = 9
 
 -- helpers
 local skillIdToUI = {
     [SKILL_BLACKSMITH] = "Blacksmith",
     [SKILL_ALCHEMY] = "Alchemy",
-    [SKILL_COOKING] = "Cooking",
+    [SKILL_COOKING] = "Refinery",
     [SKILL_ENCHANTING] = "Enchanting",
     [SKILL_MINING] = "Mining",
     [SKILL_HERBALISM] = "Herbalism",
     [SKILL_FISHING] = "Fishing",
     [SKILL_RUNE_SEEKER] = "Woodcutting",
-    [SKILL_REFINERY] = "Refinery",
 }
 
 
@@ -651,7 +649,7 @@ end
 
 function updateMainJobs(job_skill, profId)
 pwarning("updateMainJobs triggered")
-    for i = 1, 9 do
+    for i = 1, 8 do
     -- done? xD
         -- finding 'id: professionIdX' inside skillsWindows
         local skillWindow = skillsWindow:recursiveGetChildById("professionId" .. i)

@@ -12,9 +12,6 @@ context.SlotFeet = InventorySlotFeet
 context.SlotFinger = InventorySlotFinger
 context.SlotAmmo = InventorySlotAmmo
 context.SlotPurse = InventorySlotPurse
-context.SlotRune1 = InventorySlotRune1
-context.SlotRune2 = InventorySlotRune2
-context.SlotRune3 = InventorySlotRune3
 
 context.getInventoryItem = function(slot) return context.player:getInventoryItem(slot) end
 context.getSlot = context.getInventoryItem
@@ -30,9 +27,6 @@ context.getFeet = function() return context.getInventoryItem(context.SlotFeet) e
 context.getFinger = function() return context.getInventoryItem(context.SlotFinger) end
 context.getAmmo = function() return context.getInventoryItem(context.SlotAmmo) end
 context.getPurse = function() return context.getInventoryItem(context.SlotPurse) end
-context.getRune1 = function() return context.getInventoryItem(context.SlotRune1) end
-context.getRune2 = function() return context.getInventoryItem(context.SlotRune2) end
-context.getRune3 = function() return context.getInventoryItem(context.SlotRune3) end
 
 context.getContainers = function() return g_game.getContainers() end
 context.getContainer = function(index) return g_game.getContainer(index) end
