@@ -229,7 +229,7 @@ AttachedEffectManager.register(17, 'overcharged', 495, ThingCategoryEffect, {
 
 AttachedEffectManager.register(18, 'mana flow', 510, ThingCategoryEffect, {
     opacity = 1,
-    duration = 15000,
+    duration = 8000,
     speed = 1.4,
     offset = { -29, -22, true}
     
@@ -1781,12 +1781,143 @@ AttachedEffectManager.register(208, 'damaged', 0, 0, {
     opacity = 1,
     duration = 200,
     onAttach = function(effect, owner)
-        owner:setShader('Damaged')
+        local hasOtherShader = owner:getAttachedEffectById(70) 
+        or owner:getAttachedEffectById(120) 
+        or owner:getAttachedEffectById(164)
+        or owner:getAttachedEffectById(190)
+        or owner:getAttachedEffectById(203)
+        or owner:getAttachedEffectById(207)
+        or owner:getAttachedEffectById(214)
+
+        if not hasOtherShader then
+            owner:setShader('Damaged')
+        end
     end,
     onDetach = function(effect, oldOwner)
         if oldOwner then
+            local hasOtherShader = oldOwner:getAttachedEffectById(70) 
+            or oldOwner:getAttachedEffectById(120) 
+            or oldOwner:getAttachedEffectById(164)
+            or oldOwner:getAttachedEffectById(190)
+            or oldOwner:getAttachedEffectById(203)
+            or oldOwner:getAttachedEffectById(207)
+            or oldOwner:getAttachedEffectById(214)
+            if not hasOtherShader then
+                oldOwner:setShader('Outfit - Default')
+            end
+        end
+    end
+})  
+
+AttachedEffectManager.register(209, 'frost quiver damage', 967 , ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { -18, -18, true}, 
+})
+
+AttachedEffectManager.register(210, 'momentum aura', 1167 , ThingCategoryEffect, {
+    duration = 6000,
+    opacity = 1,
+    speed = 1,
+    offset = { -32, -32, false}, 
+})
+
+AttachedEffectManager.register(211, 'falcon aura slow', 885 , ThingCategoryEffect, {
+    loop = 1,
+    opacity = 0.65,
+    speed = 1,
+    offset = { -64, -64, false}, 
+})
+
+AttachedEffectManager.register(212, 'falcon aura on player', 922 , ThingCategoryEffect, {
+    loop = 1,
+    opacity = 0.65,
+    speed = 1,
+    offset = { -96, -128, false}, 
+})
+
+AttachedEffectManager.register(213, 'dragon aura', 2902, ThingCategoryCreature, {
+    opacity = 0.55,
+    speed = 2.0,
+    duration = 17000,
+    offset = { -38, -38, true},
+    
+})
+AttachedEffectManager.register(214, 'ice clones', 0, 0, {
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(44)
+        owner:getTile():addThing(e)
+        owner:setShader('frost armor')
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(44)
+        if oldOwner and oldOwner:getTile() then
+        oldOwner:getTile():addThing(e)
         oldOwner:setShader('Outfit - Default')
         end
     end
 })  
 
+AttachedEffectManager.register(215, 'frostbloom', 1171, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 8000,
+    speed = 1,
+    offset = { -19, -15, true},
+    shader = 'frost armor',
+    
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(44)
+        owner:getTile():addThing(e)
+
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(44)
+        if oldOwner and oldOwner:getTile() then
+        oldOwner:getTile():addThing(e)
+        end
+    end
+})  
+
+AttachedEffectManager.register(216, 'thunderfist electricity', 495, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1.4,
+    offset = { 0, 0, true},
+})
+
+AttachedEffectManager.register(217, 'mountain stance', 952, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 6000,
+    speed = 1.0,
+    offset = { -15, -15, true}, 
+})
+
+AttachedEffectManager.register(218, 'hand of god', 237, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1.0,
+    offset = { 15, 5, true}, 
+})
+
+AttachedEffectManager.register(219, 'hand of god ground break', 661, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -32, -32, false }
+})
+
+AttachedEffectManager.register(220, 'hand of god ground break', 668, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -64, -64, false }
+})
+
+AttachedEffectManager.register(221, 'blood pact', 977, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.8,
+    offset = { -20, -5, true }
+})
