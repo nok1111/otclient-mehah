@@ -1,7 +1,7 @@
 controller = Controller:new()
 controller:registerEvents(g_game, {
     onClientVersionChange = function(version)
-        --g_game.enableFeature(GameKeepUnawareTiles)
+        g_game.enableFeature(GameKeepUnawareTiles)
         -- g_game.enableFeature(GameNegativeOffset)
         -- g_game.enableFeature(GameAllowCustomBotScripts)
         g_game.enableFeature(GameWingsAurasEffectsShader)
@@ -13,7 +13,7 @@ controller:registerEvents(g_game, {
         
 
         -- For Walk
-        --g_game.enableFeature(GameLatencyAdaptiveCamera)
+        g_game.enableFeature(GameLatencyAdaptiveCamera)
         g_game.enableFeature(GameAllowPreWalk)
         g_game.enableFeature(GameMapCache)
         g_game.enableFeature(GameMagicEffectU16)
