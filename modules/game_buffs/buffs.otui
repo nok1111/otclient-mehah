@@ -9,8 +9,8 @@ SpellIcon < UIWidget
     id: icon
     anchors.top: parent.top
     anchors.left: parent.left
-    margin-top: 4
-    margin-left: 4
+    margin-top: 50
+    margin-left: 50
     size: 34 34
     image-size: 34 34
     focusable: false

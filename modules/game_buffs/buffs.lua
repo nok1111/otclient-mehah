@@ -27,10 +27,7 @@ BuffsDebuffsSettings = {iconFile = '/images/game/buffs/buffs', iconSize = {width
 
 BuffsDebuffs = {}
 function BuffsDebuffs.getImageClip(id)
-  return (((id-1)%12)*BuffsDebuffsSettings.iconSize.width) .. ' ' 
-    .. ((math.ceil(id/12)-1)*BuffsDebuffsSettings.iconSize.height) .. ' ' 
-    .. BuffsDebuffsSettings.iconSize.width .. ' ' 
-    .. BuffsDebuffsSettings.iconSize.height
+  return tostring(id) .. '.png'
 end
 
 function init()
@@ -157,13 +154,11 @@ end
 
 function online()
   if buffsWindow and not buffsWindow:isVisible() then
-    local defaultPos = { x = modules.game_interface.gameMapPanel:getMapRect().x,
-                         y = modules.game_interface.gameMapPanel:getMapRect().y}
-    local pos = defaultPos
-    pos.x = math.max(pos.x, 0)
-    pos.y = math.max(pos.y, 0)
-    buffsWindow:setX(pos.x)
-    buffsWindow:setY(pos.y)
+    buffsWindow:breakAnchors()
+buffsWindow:addAnchor(AnchorTop, "gameTopPanel", AnchorBottom)
+buffsWindow:addAnchor(AnchorHorizontalCenter, "gameTopPanel", AnchorHorizontalCenter)
+buffsWindow:setMarginTop(50) -- or your preferred spacing
+buffsWindow:show()
 
     buffsWindow:setPhantom(g_settings.getBoolean('phantomBuffs'))
     local childs = buffsWindow:recursiveGetChildren()
@@ -172,12 +167,11 @@ function online()
     end
     buffsWindow:show()
   elseif buffsWindow and buffsWindow:isVisible() then
-    local pos = { x = modules.game_interface.gameMapPanel:getMapRect().x,
-                  y = modules.game_interface.gameMapPanel:getMapRect().y}
-    pos.x = math.max(pos.x, 0)
-    pos.y = math.max(pos.y, 0)
-    buffsWindow:setX(pos.x)
-    buffsWindow:setY(pos.y)
+    buffsWindow:breakAnchors()
+buffsWindow:addAnchor(AnchorTop, "gameTopPanel", AnchorBottom)
+buffsWindow:addAnchor(AnchorHorizontalCenter, "gameTopPanel", AnchorHorizontalCenter)
+buffsWindow:setMarginTop(50) -- or your preferred spacing
+buffsWindow:show()
   end
   if not lastPlayer or lastPlayer ~= g_game.getCharacterName() then
     refresh()

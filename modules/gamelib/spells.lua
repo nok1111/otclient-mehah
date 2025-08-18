@@ -2,8 +2,8 @@ SpelllistSettings = {
   ['Default'] = {
     iconFile = '/images/game/spells/defaultspells',
     iconSize = {width = 32, height = 32},
-    spellListWidth = 245,
-    spellWindowWidth = 550,
+    spellListWidth = 200,
+    spellWindowWidth = 300,
     spellOrder = {
     --dragon knight
         'Rend', 
@@ -133,15 +133,18 @@ SpelllistSettings = {
         --Archer
         'Flaming Shot',
         'Beer Barrel',
-        'Explosive Shots',
+        'Explosive Barrel',
+        'Explosive Shot',
         'Wind Barrel',
         'Condemn Shot',
-        'Nail Bomb',
         'Healing Barrel',
-        'Arrow Rain',
+        'Arrow rain',
         'Frost Barrel',
-        'Arrow Barrage', 
-        'Aspect Mastery',
+        'Phantom Shot',
+        'Arrow Barrage',
+        'Rapid Fire',
+        'Ice Arrow',
+        'Falcon Shot',
         
         --healing spells
         'Minor Heal', 
@@ -312,17 +315,20 @@ SpellInfo = {
     ['Thunderstorm'] =              {id = 169, words = 'Thunderstorm',        exhaustion = 25000, premium = false, type = 'Instant', icon = 'thunders',        mana = 250,        level = 125, soul = 0,            group = {[1] = 1000},     parameter = false, vocations = {9}, description = 'create a thunderstorm in the target location that will damage all nearvy enemies.(this will not affect players) [MAGIC LEVEL]'},
     
     --Archer
-    ['Flaming Shot'] =             {id = 180, words = 'Flaming Shot',        exhaustion = 3000, premium = false, type = 'Instant', icon = 'fireshot',          mana = 30,        level = 8, soul = 0,           group = {[1] = 1000},     parameter = false, vocations = {10}, description = 'shoot a flaming shot to the target dealing fire damage and burning the target (based on your ml), if the target is affected by beer barrel this spell will be powered and deal target max health damage. [Weapon Damage, DISTANCE, MAGIC LEVEL] & [Target MxHP]'},
-    ['Beer Barrel'] =              {id = 181, words = 'Beer Barrel',        exhaustion = 2000, premium = false, type = 'Instant', icon = 'barrel',         mana = 25,        level = 15, soul = 0,          group = {[3] = 1000},     parameter = false, vocations = {10}, description = 'throws a beer barrel to the enemy target that spreads to all nearby enemies.'},
-    ['Wind Barrel'] =              {id = 183, words = 'Wind Barrel',        exhaustion = 5000, premium = false, type = 'Instant', icon = 'deathattack',        mana = 40,        level = 40, soul = 0,          group = {[3] = 1000},     parameter = false, vocations = {10}, description = 'creates a wind barrel that explodes after a short time duration increasing your movement speed drastically.'},
-    ['Healing Barrel'] =           {id = 186, words = 'Healing Barrel',        exhaustion = 8000, premium = false, type = 'Instant', icon = 'icicle',          mana = 120,        level = 60, soul = 0,             group = {[2] = 1000},     parameter = false, vocations = {10}, description = 'creates a healing barrel that explodes after a short time duration healing all players in the area.'},
-    ['Arrow Rain'] =               {id = 187, words = 'Arrow rain',       exhaustion = 15000, premium = false, type = 'Instant', icon = 'arrowbarrage',   mana = 130,     level = 46, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {10}, description = 'cast a arrow rain into the target dealing physical damage to all enemies in the area.[Weapon Damage, DISTANCE]'},
-    ['Nail Bomb'] =                {id = 185, words = 'Nail Bomb',        exhaustion = 8000, premium = false, type = 'Instant', icon = 'firestom',        mana = 90,      level = 30, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {10}, description = 'throw a nail bomb that instantly explode dealing high amounts of physical damage. [Weapon Damage, DISTANCE]'},
-    ['Explosive Shots'] =          {id = 182, words = 'Explosive Shots', exhaustion = 15000, premium = false, type = 'Instant', icon = 'arrowshot1',      mana = 90,     level = 18, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {10}, description = 'shoot 4 rounds of explosive shots dealing aoe damage to the target location, if the target is affected by beer barrel this spell will be powered and deal target max health damage. [Weapon Damage, DISTANCE]'},
-    ['Condemn Shot'] =             {id = 184,  words = 'Condemn Shot',    exhaustion = 25000, premium = false, type = 'Instant', icon = 'arrowbreak',    mana = 60,      level = 28, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {10}, description = 'repels your target away from the caster. [Weapon Damage, DISTANCE]'},
-    ['Arrow Barrage'] =            {id = 189, words = 'Arrow Barrage',    exhaustion = 22000, premium = false, type = 'Instant', icon = 'arrowshots',    mana = 250,     level = 100, soul = 0, group = {[1] = 1000, [1] = 2000},    parameter = false, vocations = {10}, description = 'shoot multiple dark shots into all nearby enemies dealing physical damage. [Weapon Damage, DISTANCE]'},
-    ['Frost Barrel'] =             {id = 188, words = 'Frost Barrel',        exhaustion = 15000, premium = false, type = 'Instant', icon = 'firearrow',        mana = 150,        level = 70, soul = 0,             group = {[3] = 1000},     parameter = false, vocations = {10}, description = 'creates a frost barrel that explodes after a short time duration freezing all enemies in the area.'},
-    ['Aspect Mastery'] =             {id = 123, words = 'Aspect Mastery',        exhaustion = 22000, premium = false, type = 'Instant', icon = 'firestance',           mana = 150,        level = 125, soul = 0,            group = {[1] = 1000},     parameter = false, vocations = {10}, description = 'change between demolition stance and beast mode. Demlolition mode: allows the user to deal aoe damage on hit. Beast Mode: allows the user tu summon a wolf that evolves into a war wolf later on to assist you on combat.'},
+    ['Flaming Shot'] =              {id = 180, words = 'Flaming Shot', exhaustion = 3000, premium = false, type = 'Instant', icon = 'fireshot', mana = 30, level = 8, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoot a flaming shot to the target dealing fire damage and burning the target (based on your ml), if the target is affected by beer barrel this spell will be powered and deal target max health damage. [Weapon Damage, DISTANCE, MAGIC LEVEL] & [Target MxHP]'},
+    ['Beer Barrel'] =               {id = 181, words = 'Beer Barrel', exhaustion = 2000, premium = false, type = 'Instant', icon = 'barrel', mana = 25, level = 15, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'throws a beer barrel to the enemy target that spreads to all nearby enemies.'},
+    ['Explosive Barrel'] =          {id = 182, words = 'Explosive Barrel', exhaustion = 15000, premium = false, type = 'Instant', icon = 'barrel', mana = 150, level = 1, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'throws an explosive barrel that explodes after a short time duration, dealing area damage.'},
+    ['Explosive Shot'] =            {id = 183, words = 'Explosive Shot', exhaustion = 15000, premium = false, type = 'Instant', icon = 'arrowshot1', mana = 90, level = 1, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoot 4 rounds of explosive shots dealing aoe damage to the target location, if the target is affected by beer barrel this spell will be powered and deal target max health damage. [Weapon Damage, DISTANCE]'},
+    ['Wind Barrel'] =               {id = 184, words = 'Wind Barrel', exhaustion = 5000, premium = false, type = 'Instant', icon = 'deathattack', mana = 40, level = 40, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'creates a wind barrel that explodes after a short time duration increasing your movement speed drastically.'},
+    ['Condemn Shot'] =              {id = 185, words = 'Condemn Shot', exhaustion = 25000, premium = false, type = 'Instant', icon = 'arrowbreak', mana = 60, level = 28, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'repels your target away from the caster. [Weapon Damage, DISTANCE]'},
+    ['Healing Barrel'] =            {id = 186, words = 'Healing Barrel', exhaustion = 8000, premium = false, type = 'Instant', icon = 'icicle', mana = 120, level = 60, soul = 0, group = {[2] = 1000}, parameter = false, vocations = {10}, description = 'creates a healing barrel that explodes after a short time duration healing all players in the area.'},
+    ['Arrow rain'] =                {id = 187, words = 'Arrow rain', exhaustion = 15000, premium = false, type = 'Instant', icon = 'arrowbarrage', mana = 130, level = 50, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'cast a arrow rain into the target dealing physical damage to all enemies in the area.[Weapon Damage, DISTANCE]'},
+    ['Frost Barrel'] =              {id = 188, words = 'Frost Barrel', exhaustion = 15000, premium = false, type = 'Instant', icon = 'firearrow', mana = 150, level = 70, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'creates a frost barrel that explodes after a short time duration freezing all enemies in the area.'},
+    ['Phantom Shot'] =              {id = 190, words = 'Phantom Shot', exhaustion = 22000, premium = false, type = 'Instant', icon = 'phantomshot', mana = 250, level = 1, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoots a phantom shot at the target, dealing high damage. [Weapon Damage, DISTANCE]'},
+    ['Arrow Barrage'] =             {id = 191, words = 'Arrow Barrage', exhaustion = 22000, premium = false, type = 'Instant', icon = 'arrowshots', mana = 250, level = 50, soul = 0, group = {[1] = 1000, [1] = 2000}, parameter = false, vocations = {10}, description = 'shoot multiple dark shots into all nearby enemies dealing physical damage. [Weapon Damage, DISTANCE]'},
+    ['Rapid Fire'] =                {id = 192, words = 'Rapid Fire', exhaustion = 6000, premium = false, type = 'Instant', icon = 'rapidfire', mana = 75, level = 30, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoots a rapid succession of arrows at the target. [Weapon Damage, DISTANCE]'},
+    ['Ice Arrow'] =                 {id = 193, words = 'Ice Arrow', exhaustion = 3000, premium = false, type = 'Instant', icon = 'icearrow', mana = 30, level = 8, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoots an ice arrow at the target, dealing ice damage and slowing the target. [Weapon Damage, DISTANCE]'},
+    ['Falcon Shot'] =               {id = 194, words = 'Falcon Shot', exhaustion = 3000, premium = false, type = 'Instant', icon = 'falconshot', mana = 120, level = 1, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoots a falcon shot at the target, dealing high damage. [Weapon Damage, DISTANCE]'},
     
 
 
@@ -353,7 +359,7 @@ SpellInfo = {
     ['Mass Healing'] =             {id = 318,  words = 'exura gran mas res',               exhaustion = 2000, premium = false, type = 'Instant', icon = 'ultimatehealing',        strenght = 8, dexterity = 8, intelligence = 8, faith = 8, mana = 150,    level = 36, soul = 0,    group = {[4] = 2000},                parameter = false, vocations = {11}, description = 'unlocked at faith 60.'},     
     ['Protect Party'] =            {id = 319,  words = 'utamo mas sio',            exhaustion = 2000, premium = false, type = 'Instant', icon = 'partyshield',        strenght = 8, dexterity = 70, intelligence = 8,   faith = 8,     mana = 90,        level = 32,    soul = 0,           group = {[4] = 2000},                parameter = false, vocations = {11}, description = 'unlocked at faith 55.'},   
     ['Strong Haste'] =             {id = 322,  words = 'utani gran hur', exhaustion = 2000, premium = false, type = 'Instant', icon = 'haste',     mana = 100,     level = 40, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {11}, description = 'unlocked at Faith 20'},     
-    ['Kings Call'] =                    {id = 325,  words = 'kings call',        exhaustion = 3600000, premium = false, type = 'Instant', icon = 'holycross',    mana = 0,     level = 8, soul = 0,                              group = {[3] = 1000},                parameter = false, vocations = {11}, description = 'Summoned by your kings command, Kings Call instantly teleports you to your hometown. A spell of royal privilege, granted to those bearing the Kings Scroll.'},      
+    ['Kings Call'] =               {id = 325,  words = 'kings call',        exhaustion = 3600000, premium = false, type = 'Instant', icon = 'holycross',    mana = 0,     level = 8, soul = 0,                              group = {[3] = 1000},                parameter = false, vocations = {11}, description = 'Summoned by your kings command, Kings Call instantly teleports you to your hometown. A spell of royal privilege, granted to those bearing the Kings Scroll.'},      
     
     
   }
