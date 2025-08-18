@@ -849,6 +849,7 @@ end
 
 function loadSpell(slot)
     local spell, profile, spellName = Spells.getSpellByWords(slot.words)
+    print("slot.words spell name: " .. slot.words)
     iconId = tonumber(Spells.getClientId(spellName))
    -- slot:setImageSource(Spells.getIconFileByProfile(profile))
     slot:setImageSource(Spells.getIconId(iconId, profile))
