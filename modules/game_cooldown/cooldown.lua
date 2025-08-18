@@ -78,7 +78,7 @@ function loadIcon(iconId)
     local spellSettings = SpelllistSettings[profile]
     if spellSettings then
         icon:setImageSource(spellSettings.iconFile)
-        icon:setImageClip(Spells.getImageClip(clientIconId, profile))
+      --  icon:setImageClip(Spells.getImageClip(clientIconId, profile))
     else
         print('[WARNING] loadIcon: empty spell icon for tfs spell id: ' .. iconId)
         icon = nil
