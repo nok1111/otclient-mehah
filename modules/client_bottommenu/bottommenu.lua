@@ -45,8 +45,8 @@ function terminate()
 end
 
 function hide()
-    bottomMenu:hide()
-    bottomMenu:lower()
+   -- bottomMenu:hide()
+--bottomMenu:lower()
 
     if not calendarWindow:isHidden() then
         onClickCloseCalendar()
