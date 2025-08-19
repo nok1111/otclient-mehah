@@ -199,12 +199,3 @@ function UIComboBox:HTML_onReadNodes(nodes)
 
     return false
 end
-
-function UIComboBox:getCurrentIndex()
-    return self.currentIndex
-end
-
-function UIComboBox:updateCurrentOption(newText)
-    self.options[self.currentIndex].text = newText
-    self:setText(newText)
-end

@@ -136,7 +136,7 @@ function load()
         return json.decode(g_resources.readFileContents(file))
     end)
     if not status then
-        return g_logger.warning(
+        return onError(
                    "Error while reading profiles file. To fix this problem you can delete storage.json. Details: " ..
                        result)
     end
@@ -148,12 +148,12 @@ function save()
   local file = "/settings/profiles.json"
   local status, result = pcall(function() return json.encode(settings, 2) end)
   if not status then
-      return g_logger.warning(
+      return onError(
                  "Error while saving profile settings. Data won't be saved. Details: " ..
                      result)
   end
   if result:len() > 100 * 1024 * 1024 then
-      return g_logger.warning(
+      return onError(
                  "Something went wrong, file is above 100MB, won't be saved")
   end
   g_resources.writeFileContents(file, result)

@@ -14,7 +14,7 @@ balance = 0
 local skillIdToUI = {
 	[SKILL_BLACKSMITH] = "Blacksmith",
 	[SKILL_ALCHEMY] = "Alchemy",
-	[SKILL_COOKING] = "Refinery",
+	[SKILL_COOKING] = "Cooking",
 	[SKILL_ENCHANTING] = "Enchanting",
 	[SKILL_TEMPORAL_CRAFTING] = "Temporal Crafting",
 }
@@ -22,7 +22,7 @@ local skillIdToUI = {
 local skillIdToImage = {
 	[SKILL_BLACKSMITH] = "/data/images/game/profession/blacksmith",
 	[SKILL_ALCHEMY] = "/data/images/game/profession/alchemy",
-	[SKILL_COOKING] = "/data/images/game/profession/refinery",
+	[SKILL_COOKING] = "/data/images/game/profession/farming",
 	[SKILL_ENCHANTING] = "/data/images/game/profession/diplomacy",
 	[SKILL_TEMPORAL_CRAFTING] = "/data/images/game/profession/chrono",
 }

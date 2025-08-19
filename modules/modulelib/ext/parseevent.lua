@@ -32,7 +32,6 @@ local EVENTS_TRANSLATED = {
     ontextareaupdate = 'onTextAreaUpdate',
     onfontchange     = 'onFontChange',
     ontextchange     = 'onTextChange',
-    onescape         = 'onEscape',
 }
 
 local parseEvents = function(el, widget, eventName, callStr, controller)

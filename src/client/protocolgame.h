@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,16 @@
 
 #pragma once
 
+#include <framework/net/protocol.h>
 #include "creature.h"
 #include "declarations.h"
 #include "protocolcodes.h"
-#include <framework/net/protocol.h>
 
-class ProtocolGame final : public Protocol
+class ProtocolGame : public Protocol
 {
 public:
-    void login(std::string_view accountName, std::string_view accountPassword, std::string_view host, uint16_t port, std::string_view characterName, std::string_view authenticatorToken, std::string_view sessionKey);
+    void login(const std::string_view accountName, const std::string_view accountPassword, const std::string_view host, uint16_t port, const std::string_view characterName, const std::string_view authenticatorToken, const std::string_view sessionKey);
+    void send(const OutputMessagePtr& outputMessage) override;
 
     void sendExtendedOpcode(uint8_t opcode, const std::string& buffer);
     void sendLoginPacket(uint32_t challengeTimestamp, uint8_t challengeRandom);
@@ -52,36 +53,34 @@ public:
     void sendTurnEast();
     void sendTurnSouth();
     void sendTurnWest();
-    void sendGmTeleport(const Position& pos);
-    void sendEquipItemWithTier(uint16_t itemId, uint8_t tierOrFluid);
-    void sendEquipItemWithCountOrSubType(uint16_t itemId, uint16_t tierOrFluid);
-    void sendMove(const Position& fromPos, uint16_t thingId, uint8_t stackpos, const Position& toPos, uint16_t count);
-    void sendInspectNpcTrade(uint16_t itemId, uint16_t count);
-    void sendBuyItem(uint16_t itemId, uint8_t subType, uint16_t amount, bool ignoreCapacity, bool buyWithBackpack);
-    void sendSellItem(uint16_t itemId, uint8_t subType, uint16_t amount, bool ignoreEquipped);
+    void sendEquipItem(int itemId, int countOrSubType);
+    void sendMove(const Position& fromPos, int thingId, int stackpos, const Position& toPos, int count);
+    void sendInspectNpcTrade(int itemId, int count);
+    void sendBuyItem(int itemId, int subType, int amount, bool ignoreCapacity, bool buyWithBackpack);
+    void sendSellItem(int itemId, int subType, int amount, bool ignoreEquipped);
     void sendCloseNpcTrade();
-    void sendRequestTrade(const Position& pos, uint16_t thingId, uint8_t stackpos, uint32_t creatureId);
-    void sendInspectTrade(bool counterOffer, uint8_t index);
+    void sendRequestTrade(const Position& pos, int thingId, int stackpos, uint32_t creatureId);
+    void sendInspectTrade(bool counterOffer, int index);
     void sendAcceptTrade();
     void sendRejectTrade();
-    void sendUseItem(const Position& position, uint16_t itemId, uint8_t stackpos, uint8_t index);
-    void sendUseItemWith(const Position& fromPos, uint16_t itemId, uint8_t fromStackPos, const Position& toPos, uint16_t toThingId, uint8_t toStackPos);
-    void sendUseOnCreature(const Position& pos, uint16_t thingId, uint8_t stackpos, uint32_t creatureId);
-    void sendRotateItem(const Position& pos, uint16_t thingId, uint8_t stackpos);
-    void sendOnWrapItem(const Position& pos, uint16_t thingId, uint8_t stackpos);
-    void sendCloseContainer(uint8_t containerId);
-    void sendUpContainer(uint8_t containerId);
-    void sendEditText(uint32_t id, std::string_view text);
-    void sendEditList(uint32_t id, uint8_t doorId, std::string_view text);
-    void sendLook(const Position& position, uint16_t itemId, uint8_t stackpos);
+    void sendUseItem(const Position& position, int itemId, int stackpos, int index);
+    void sendUseItemWith(const Position& fromPos, int itemId, int fromStackPos, const Position& toPos, int toThingId, int toStackPos);
+    void sendUseOnCreature(const Position& pos, int thingId, int stackpos, uint32_t creatureId);
+    void sendRotateItem(const Position& pos, int thingId, int stackpos);
+    void sendOnWrapItem(const Position& pos, int thingId, int stackpos);
+    void sendCloseContainer(int containerId);
+    void sendUpContainer(int containerId);
+    void sendEditText(uint32_t id, const std::string_view text);
+    void sendEditList(uint32_t id, int doorId, const std::string_view text);
+    void sendLook(const Position& position, int itemId, int stackpos);
     void sendLookCreature(uint32_t creatureId);
-    void sendTalk(Otc::MessageMode mode, uint16_t channelId, std::string_view receiver, std::string_view message);
+    void sendTalk(Otc::MessageMode mode, int channelId, const std::string_view receiver, const std::string_view message);
     void sendRequestChannels();
-    void sendJoinChannel(uint16_t channelId);
-    void sendLeaveChannel(uint16_t channelId);
-    void sendOpenPrivateChannel(std::string_view receiver);
-    void sendOpenRuleViolation(std::string_view reporter);
-    void sendCloseRuleViolation(std::string_view reporter);
+    void sendJoinChannel(int channelId);
+    void sendLeaveChannel(int channelId);
+    void sendOpenPrivateChannel(const std::string_view receiver);
+    void sendOpenRuleViolation(const std::string_view reporter);
+    void sendCloseRuleViolation(const std::string_view reporter);
     void sendCancelRuleViolation();
     void sendCloseNpcChannel();
     void sendChangeFightModes(Otc::FightModes fightMode, Otc::ChaseModes chaseMode, bool safeFight, Otc::PVPModes pvpMode);
@@ -94,41 +93,33 @@ public:
     void sendLeaveParty();
     void sendShareExperience(bool active);
     void sendOpenOwnChannel();
-    void sendInviteToOwnChannel(std::string_view name);
-    void sendExcludeFromOwnChannel(std::string_view name);
+    void sendInviteToOwnChannel(const std::string_view name);
+    void sendExcludeFromOwnChannel(const std::string_view name);
     void sendCancelAttackAndFollow();
-    void sendRefreshContainer(uint8_t containerId);
-    void sendRequestBless();
-    void sendRequestTrackerQuestLog(const std::map<uint16_t, std::string>& quests);
+    void sendRefreshContainer(int containerId);
     void sendRequestOutfit();
-    void sendTyping(bool typing);
     void sendChangeOutfit(const Outfit& outfit);
+    void sendTyping(bool typing);
     void sendMountStatus(bool mount);
-    void sendAddVip(std::string_view name);
+    void sendAddVip(const std::string_view name);
     void sendRemoveVip(uint32_t playerId);
-    void sendEditVip(uint32_t playerId, std::string_view description, uint32_t iconId, bool notifyLogin, const std::vector<uint8_t>& groupIDs = {});
-    void sendEditVipGroups(Otc::GroupsEditInfoType_t action, uint8_t groupId, std::string_view groupName);
-    void sendBugReport(std::string_view comment);
-    void sendRuleViolation(std::string_view target, uint8_t reason, uint8_t action, std::string_view comment, std::string_view statement, uint16_t statementId, bool ipBanishment);
-    void sendDebugReport(std::string_view a, std::string_view b, std::string_view c, std::string_view d);
+    void sendEditVip(uint32_t playerId, const std::string_view description, int iconId, bool notifyLogin);
+    void sendBugReport(const std::string_view comment);
+    void sendRuleViolation(const std::string_view target, int reason, int action, const std::string_view comment, const std::string_view statement, int statementId, bool ipBanishment);
+    void sendDebugReport(const std::string_view a, const std::string_view b, const std::string_view c, const std::string_view d);
     void sendRequestQuestLog();
-    void sendRequestQuestLine(uint16_t questId);
-    void sendNewNewRuleViolation(uint8_t reason, uint8_t action, std::string_view characterName, std::string_view comment, std::string_view translation);
-    void sendRequestItemInfo(uint16_t itemId, uint8_t subType, uint8_t index);
-    void sendAnswerModalDialog(uint32_t dialog, uint8_t button, uint8_t choice);
+    void sendRequestQuestLine(int questId);
+    void sendNewNewRuleViolation(int reason, int action, const std::string_view characterName, const std::string_view comment, const std::string_view translation);
+    void sendRequestItemInfo(int itemId, int subType, int index);
+    void sendAnswerModalDialog(uint32_t dialog, int button, int choice);
     void sendBrowseField(const Position& position);
-    void sendSeekInContainer(uint8_t containerId, uint16_t index);
-    void sendBuyStoreOffer(const uint32_t offerId, const uint8_t action, const std::string_view& name, const uint8_t type, const std::string_view& location);
-    void sendRequestTransactionHistory(uint32_t page, uint32_t entriesPerPage);
-    void sendRequestStoreOffers(const std::string_view categoryName, const std::string_view subCategory, const uint8_t sortOrder = 0, const uint8_t serviceType = 0);
-    void sendRequestStoreHome();
-    void sendRequestStorePremiumBoost();
-    void sendRequestUsefulThings(const uint8_t offerId);
-    void sendRequestStoreOfferById(uint32_t offerId, uint8_t sortOrder = 0, uint8_t serviceType = 0);
-    void sendRequestStoreSearch(const std::string_view searchText, uint8_t sortOrder = 0, uint8_t serviceType = 0);
-    void sendOpenStore(uint8_t serviceType, std::string_view category);
-    void sendTransferCoins(std::string_view recipient, uint16_t amount);
-    void sendOpenTransactionHistory(uint8_t entriesPerPage);
+    void sendSeekInContainer(int cid, int index);
+    void sendBuyStoreOffer(int offerId, int productType, const std::string_view name);
+    void sendRequestTransactionHistory(int page, int entriesPerPage);
+    void sendRequestStoreOffers(const std::string_view categoryName, int serviceType);
+    void sendOpenStore(int serviceType, const std::string_view category);
+    void sendTransferCoins(const std::string_view recipient, int amount);
+    void sendOpenTransactionHistory(int entriesPerPage);
     void sendMarketLeave();
     void sendMarketBrowse(uint8_t browseId, uint16_t browseType);
     void sendMarketCreateOffer(uint8_t type, uint16_t itemId, uint8_t itemTier, uint16_t amount, uint64_t price, uint8_t anonymous);
@@ -139,36 +130,19 @@ public:
     void sendApplyImbuement(uint8_t slot, uint32_t imbuementId, bool protectionCharm);
     void sendClearImbuement(uint8_t slot);
     void sendCloseImbuingWindow();
-    void sendOpenRewardWall();
-    void sendOpenRewardHistory();
-    void sendGetRewardDaily(const uint8_t bonusShrine, const std::map<uint16_t, uint8_t>& items);
     void sendStashWithdraw(uint16_t itemId, uint32_t count, uint8_t stackpos);
-    void sendHighscoreInfo(uint8_t action, uint8_t category, uint32_t vocation, std::string_view world, uint8_t worldType, uint8_t battlEye, uint16_t page, uint8_t totalPages);
+    void sendHighscoreInfo(uint8_t action, uint8_t category, uint32_t vocation, const std::string& world, uint8_t worldType, uint8_t battlEye, uint16_t page, uint8_t totalPages);
     void sendImbuementDurations(bool isOpen = false);
-    void sendRequestBestiary();
-    void sendRequestBestiaryOverview(std::string_view catName);
-    void sendRequestBestiarySearch(uint16_t raceId);
-    void sendBuyCharmRune(uint8_t runeId, uint8_t action, uint16_t raceId);
-    void sendCyclopediaRequestCharacterInfo(uint32_t playerId, Otc::CyclopediaCharacterInfoType_t characterInfoType, uint16_t entriesPerPage, uint16_t page);
-    void sendCyclopediaHouseAuction(Otc::CyclopediaHouseAuctionType_t type, uint32_t houseId, uint32_t timestamp, uint64_t bidValue, std::string_view name);
-    void sendRequestBosstiaryInfo();
-    void sendRequestBossSlootInfo();
-    void sendRequestBossSlotAction(uint8_t action, uint32_t raceId);
-    void sendStatusTrackerBestiary(uint16_t raceId, bool status);
-    void sendQuickLoot(const uint8_t variant, const Position& pos, const uint16_t itemId, const uint8_t stackpos);
     void requestQuickLootBlackWhiteList(uint8_t filter, uint16_t size, const std::vector<uint16_t>& listedItems);
     void openContainerQuickLoot(uint8_t action, uint8_t category, const Position& pos, uint16_t itemId, uint8_t stackpos, bool useMainAsFallback);
-    void sendInspectionNormalObject(const Position& position);
-    void sendInspectionObject(Otc::InspectObjectTypes inspectionType, uint16_t itemId, uint8_t itemCount);
 
     // otclient only
-    void sendChangeMapAwareRange(uint8_t xrange, uint8_t yrange);
+    void sendChangeMapAwareRange(int xrange, int yrange);
 
 protected:
     void onConnect() override;
     void onRecv(const InputMessagePtr& inputMessage) override;
     void onError(const std::error_code& error) override;
-    void onSend() override;
 
     friend class Game;
 
@@ -212,7 +186,6 @@ private:
     void parseFloorDescription(const InputMessagePtr& msg);
     void parseMapDescription(const InputMessagePtr& msg);
     void parseCreatureTyping(const InputMessagePtr& msg);
-    void parseFeatures(const InputMessagePtr& msg);
     void parseMapMoveNorth(const InputMessagePtr& msg);
     void parseMapMoveEast(const InputMessagePtr& msg);
     void parseMapMoveSouth(const InputMessagePtr& msg);
@@ -227,9 +200,6 @@ private:
     void parseContainerAddItem(const InputMessagePtr& msg);
     void parseContainerUpdateItem(const InputMessagePtr& msg);
     void parseContainerRemoveItem(const InputMessagePtr& msg);
-    void parseBosstiaryInfo(const InputMessagePtr& msg);
-    void parseTakeScreenshot(const InputMessagePtr& msg);
-    void parseCyclopediaItemDetail(const InputMessagePtr& msg);
     void parseAddInventoryItem(const InputMessagePtr& msg);
     void parseRemoveInventoryItem(const InputMessagePtr& msg);
     void parseOpenNpcTrade(const InputMessagePtr& msg);
@@ -237,7 +207,6 @@ private:
     void parseCloseNpcTrade(const InputMessagePtr&);
     void parseWorldLight(const InputMessagePtr& msg);
     void parseMagicEffect(const InputMessagePtr& msg);
-    void parseRemoveMagicEffect(const InputMessagePtr& msg);
     void parseAnimatedText(const InputMessagePtr& msg);
     void parseDistanceMissile(const InputMessagePtr& msg);
     void parseAnthem(const InputMessagePtr& msg);
@@ -245,8 +214,10 @@ private:
     void parseCreatureMark(const InputMessagePtr& msg);
     void parseTrappers(const InputMessagePtr& msg);
     void parseCreatureName(const InputMessagePtr& msg);
-    void addCreatureIcon(const InputMessagePtr& msg) const;
-    void parseCloseForgeWindow(const InputMessagePtr& msg);
+#ifdef PROGRESSBAR
+    void parseProgressbar(const InputMessagePtr& msg);
+#endif
+    void addCreatureIcon(const InputMessagePtr& msg, const CreaturePtr& creature);
     void parseCreatureData(const InputMessagePtr& msg);
     void parseCreatureHealth(const InputMessagePtr& msg);
     void parseCreatureLight(const InputMessagePtr& msg);
@@ -285,7 +256,6 @@ private:
     void parseWalkWait(const InputMessagePtr& msg) const;
     void parseFloorChangeUp(const InputMessagePtr& msg);
     void parseFloorChangeDown(const InputMessagePtr& msg);
-    void parseQuestTracker(const InputMessagePtr& msg);
     void parseKillTracker(const InputMessagePtr& msg);
     void parseOpenOutfitWindow(const InputMessagePtr& msg) const;
     void parseVipAdd(const InputMessagePtr& msg);
@@ -302,7 +272,6 @@ private:
     void parseExtendedOpcode(const InputMessagePtr& msg);
     void parseChangeMapAwareRange(const InputMessagePtr& msg);
     void parseCreaturesMark(const InputMessagePtr& msg);
-    void parseCreatureDash(const InputMessagePtr& msg);
     // 12x
     void parseShowDescription(const InputMessagePtr& msg);
     void parseBestiaryTracker(const InputMessagePtr& msg);
@@ -310,10 +279,6 @@ private:
     void parseTaskHuntingData(const InputMessagePtr& msg);
     void parseExperienceTracker(const InputMessagePtr& msg);
     void parseLootContainers(const InputMessagePtr& msg);
-    void parseCyclopediaHouseAuctionMessage(const InputMessagePtr& msg);
-    void parseCyclopediaHousesInfo(const InputMessagePtr& msg);
-    void parseCyclopediaHouseList(const InputMessagePtr& msg);
-
     void parseSupplyStash(const InputMessagePtr& msg);
     void parseSpecialContainer(const InputMessagePtr& msg);
     void parsePartyAnalyzer(const InputMessagePtr& msg);
@@ -328,7 +293,6 @@ private:
     void parseUpdateSupplyTracker(const InputMessagePtr& msg);
     void parseUpdateLootTracker(const InputMessagePtr& msg);
     void parseBestiaryEntryChanged(const InputMessagePtr& msg);
-    void parseCyclopediaCharacterInfo(const InputMessagePtr& msg);
     void parseDailyRewardCollectionState(const InputMessagePtr& msg);
     void parseOpenRewardWall(const InputMessagePtr& msg);
     void parseDailyReward(const InputMessagePtr& msg);
@@ -350,12 +314,9 @@ private:
     void parseBosstiarySlots(const InputMessagePtr& msg);
     void parseBosstiaryCooldownTimer(const InputMessagePtr& msg);
     void parseBosstiaryEntryChanged(const InputMessagePtr& msg);
-    void parseBestiaryRaces(const InputMessagePtr& msg);
-    void parseBestiaryOverview(const InputMessagePtr& msg);
-    void parseBestiaryMonsterData(const InputMessagePtr& msg);
-    void parseBestiaryCharmsData(const InputMessagePtr& msg);
-
+    void parseTakeScreenshot(const InputMessagePtr& msg);
     void parseHighscores(const InputMessagePtr& msg);
+
     void parseAttachedEffect(const InputMessagePtr& msg);
     void parseDetachEffect(const InputMessagePtr& msg);
     void parseCreatureShader(const InputMessagePtr& msg);
@@ -384,7 +345,6 @@ private:
     bool m_gameInitialized{ false };
     bool m_mapKnown{ false };
     bool m_firstRecv{ true };
-    bool m_record {false};
 
     std::string m_accountName;
     std::string m_accountPassword;

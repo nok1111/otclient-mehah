@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -61,7 +61,6 @@ public:
     void clearRect(const Color& color, const Rect& rect);
 
     void drawCoords(CoordsBuffer& coordsBuffer, DrawMode drawMode = DrawMode::TRIANGLES);
-    void drawLine(const std::vector<float>& vertex, int size, int width);
 
     float getOpacity() const { return m_opacity; }
     bool getAlphaWriting() const { return m_alphaWriting; }
@@ -81,7 +80,7 @@ public:
 
     void setColor(const Color& color) { if (m_color != color) m_color = color; }
     void setTexture(Texture* texture);
-    void setOpacity(const float opacity) { m_opacity = opacity; }
+    void setOpacity(float opacity) { m_opacity = opacity; }
     void setClipRect(const Rect& clipRect);
     void setResolution(const Size& resolution, const Matrix3& projectionMatrix = DEFAULT_MATRIX3);
     void setDrawProgram(PainterShaderProgram* drawProgram) { m_drawProgram = drawProgram; }
@@ -141,7 +140,6 @@ protected:
     PainterShaderProgramPtr m_drawTexturedProgram;
     PainterShaderProgramPtr m_drawSolidColorProgram;
     PainterShaderProgramPtr m_drawReplaceColorProgram;
-    PainterShaderProgramPtr m_drawLineProgram;
 };
 
 extern std::unique_ptr<Painter> g_painter;

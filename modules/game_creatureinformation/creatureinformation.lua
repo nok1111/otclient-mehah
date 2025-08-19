@@ -1,32 +1,31 @@
 local playerTitles = {
 
-    ["Nok"] = {title = "[Administrator]", color = "alpha"}
-    
-    }
-    
-    local npcTitles = {
-    --shops
-    ["Lubo"] = {title = "[Tools Shop]", color = "#677ef5"}, --addlight blue code
-    ["Alchemist Hanna"] = {title = "[Alchemy Shop]", color = "#677ef5"}, --addlight blue code
-    ["Blacksmith Sam"] = {title = "[Blacksmith Shop]", color = "#677ef5"}, --addlight blue code
-    ["Lucy"] = {title = "[Products Buyer]", color = "#677ef5"},
-    --extras
-    ["Sage Liora"] = {title = "[Valuable Pouches]", color = "#677ef5" , marginBottom = 65}, 
-    ["Arcanist Veyron"] = {title = "[Valuable Pouches]", color = "#677ef5"}, 
-    ["Eldric The Woodwise"] = {title = "[Valuable Pouches]", color = "#677ef5"},
+["Nok"] = {title = "[Administrator]", color = "alpha"}
 
-    --quests
-    ["Sheriff Gordon"] = {quest = true},
-    
-    }
-    
-    local creatureTitles = {
-    ["Al-Razi"] = {title= "[The Void Alchemist]", color = "#FFFFFF"},
-    ["Gor'kaal"] = {title= "[Dunefang Clan]", color = "#FFDE21"},
-    ["Drekhul"] = {title= "[Dunefang Clan]", color = "#FFDE21"},
-    ["Drakkarim"] = {title= "[Dunefang Clan]", color = "#FFDE21"},
-    ["Gor'zul"] = {title= "[Dunefang Clan]", color = "#FFDE21"}
-    }
+}
+
+local npcTitles = {
+["Khadin"] = {title = "[Ressource Shop]", color = "#f5c367", quest = true},
+["Armin"] = {title = "[Ancestral Task]", color = "#677ef5"},
+["Magnus Blackwater"] = {title = "[Captain of Ships]", color = "#67caf5"},
+["Shipwright Trader"] = {title = "[Ship Parts]", color = "#a68556"},
+["Alaistar"] = {title = "[Potion-Ressources]", color = "#e5f280"},
+["Alesar"] = {title = "[Djinn Seller]", color = "#e5f280"},
+["Alexander"] = {title = "[Magician Shop]", color = "#e5f280"},
+
+--quests
+["Sheriff Gordon"] = {quest = true},
+
+}
+
+local creatureTitles = {
+["Avarithia"] = {title = "[The Goddess of Greed]", color = "#FFD700"},
+["Al-Razi"] = {title= "[The Void Alchemist]", color = "#FFFFFF"},
+["Gor'kaal"] = {title= "[Dunefang Clan]", color = "#FFDE21"},
+["Drekhul"] = {title= "[Dunefang Clan]", color = "#FFDE21"},
+["Drakkarim"] = {title= "[Dunefang Clan]", color = "#FFDE21"},
+["Gor'zul"] = {title= "[Dunefang Clan]", color = "#FFDE21"}
+}
 
 controller = Controller:new()
 
@@ -59,7 +58,7 @@ local outfitOffsets = {
 
 -- Simple print function
 function printOutfitId(creature)
-    print("Outfit ID for ", creature:getName(), ":", creature:getOutfitId())
+    print("Outfit ID:", creature:getOutfitId())
 end
 
 
@@ -88,6 +87,11 @@ local function setCreatureTitle(creature)
         applyOutfitOffsets(creature)
     end
 
+    
+    --OFFSETS END
+
+
+
     -- Get the creature's existing widget
     local widget = creature:getWidgetInformation()
     if not widget then return end -- Safety check
@@ -104,18 +108,8 @@ local function setCreatureTitle(creature)
     titleWidget:setTextAutoResize(true)
     titleWidget:setColor('white')
     titleWidget:setFontScale(1)
-
-    -- Position titleWidget 20 units above and center over widget.name
-    local nameWidget = creature:getWidgetInformation().lifeBar
-    local parent = nameWidget and nameWidget:getParent() or nil
-    if parent then
-        parent:addChild(titleWidget)
-        titleWidget:fill('none') -- Remove previous anchors
-        titleWidget:addAnchor(AnchorLeft, 'parent', AnchorLeft)
-        titleWidget:addAnchor(AnchorRight, 'parent', AnchorRight)
-        titleWidget:setMarginRight(55) -- Negative value moves it up
-        
-    end
+    titleWidget:setMarginBottom(30) -- Adjust height above name
+    titleWidget:setMarginRight(50)  -- Adjust horizontal position
 
     -- Store the titleWidget in the creature's widget
     widget.titleWidget = titleWidget
@@ -124,20 +118,13 @@ local function setCreatureTitle(creature)
     if creature:isPlayer() and playerTitles[name] then
         titleWidget:setText(playerTitles[name].title)
         titleWidget:setBackgroundColor(playerTitles[name].color)
-        titleWidget:setMarginBottom(40) -- Negative value moves it up
         creature:attachWidget(titleWidget)
 
     elseif creature:isNpc() and npcTitles[name] then
 
         if npcTitles[name].title then
-            if npcTitles[name].marginBottom then
-                titleWidget:setMarginBottom(npcTitles[name].marginBottom)
-            else
-                titleWidget:setMarginBottom(55)
-            end
         titleWidget:setText(npcTitles[name].title)
         titleWidget:setBackgroundColor(npcTitles[name].color)
-        
         creature:attachWidget(titleWidget)
         end
         -- Add quest effect if applicable
@@ -148,7 +135,6 @@ local function setCreatureTitle(creature)
     elseif creatureTitles[name] then -- Assume all other creatures
         titleWidget:setText(creatureTitles[name].title)
         titleWidget:setBackgroundColor(creatureTitles[name].color)
-        titleWidget:setMarginBottom(55) -- Negative value moves it up
         creature:attachWidget(titleWidget)
 
     else
@@ -159,12 +145,9 @@ end
 
 local function onDisappear(creature)
     local widget = creature:getWidgetInformation()
-    if widget then
-        if widget.titleWidget then
-            widget.titleWidget:destroy()
-            widget.titleWidget = nil
-        end
-       -- print("Title removed for " .. creature:getName())
+    if widget and widget.titleWidget then
+        widget.titleWidget:destroy()
+        widget.titleWidget = nil
     end
 end
 
@@ -188,9 +171,9 @@ local function onCreate(creature)
     end
 
     widget.manaBar:setVisible(creature:isLocalPlayer())
-
+	
     creature:setWidgetInformation(widget)
-end
+    end
 
 local function onHealthPercentChange(creature, healthPercent, oldHealthPercent)
     local gameMapPanel = modules.game_interface.getMapPanel()
@@ -212,9 +195,16 @@ local function onHealthPercentChange(creature, healthPercent, oldHealthPercent)
     end
 
     widget.name:setColor(color)
+
+          -- Set a background image for the health bar
+    --widget.lifeBar:setImageSource('/images/monsterbar/basic_monster_background2')
+    --widget.lifeBar:setImageSize({ width = 50, height = 12 })
+    
     widget.lifeBar:setPercent(healthPercent)
     widget.lifeBar:setBackgroundColor(color)
     widget.lifeBar:setVisible(gameMapPanel:isDrawingHealthBars())
+
+
 end
 
 local function onManaChange(player, mana, maxMana, oldMana, oldMaxMana)
@@ -240,6 +230,9 @@ local function onChangeName(creature, name, oldName)
 
     infoWidget.name:setText(name)
     infoWidget.name:setVisible(gameMapPanel:isDrawingNames())
+    -- Attach title using the new function
+    --setCreatureTitle(creature)
+
 end
 
 local function onCovered(creature, isCovered, oldIsCovered)
@@ -247,15 +240,10 @@ local function onCovered(creature, isCovered, oldIsCovered)
     if isCovered then
         infoWidget.name:setColor(COVERED_COLOR)
         infoWidget.lifeBar:setBackgroundColor(COVERED_COLOR)
-
-       -- print("Covered: " .. creature:getName())
-
     else
-       -- print("Not Covered: " .. creature:getName())
         onHealthPercentChange(creature, creature:getHealthPercent())
     end
 end
-
 
 local function onOutfitChange(creature, outfit, oldOutfit)
     local infoWidget = creature:getWidgetInformation()
@@ -281,7 +269,6 @@ local function blinkIcon(icon, ticks)
 end
 
 local function setIcon(creature, id, getIconPath, typeIcon)
-    
     local setParentAnchor = function(w)
         w:addAnchor(AnchorTop, 'parent', AnchorTop)
         w:addAnchor(AnchorLeft, 'parent', AnchorLeft)
@@ -350,8 +337,6 @@ function toggleInformation()
     for _, creature in ipairs(spectators) do
         creature:getWidgetInformation().name:setVisible(gameMapPanel:isDrawingNames())
         creature:getWidgetInformation().lifeBar:setVisible(gameMapPanel:isDrawingHealthBars())
-
-       
     end
 end
 
@@ -360,7 +345,7 @@ function controller:onInit()
     controller:registerEvents(LocalPlayer, { onManaChange = onManaChange })
 end
 
-if devMode then
+ if devMode then
     function controller:onGameStart()
         local spectators = modules.game_interface.getMapPanel():getSpectators()
         for _, creature in ipairs(spectators) do
@@ -381,7 +366,8 @@ if devMode then
             creatureEvents.onSkullChange(creature, creature:getSkull())
             creatureEvents.onShieldChange(creature, creature:getShield())
             creatureEvents.onEmblemChange(creature, creature:getEmblem())
-            onAppear(creature)
         end
     end
 end
+
+

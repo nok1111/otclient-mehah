@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,13 @@
  */
 
 #pragma once
-#ifndef __EMSCRIPTEN__
 
 #include <asio/streambuf.hpp>
 
-#include "declarations.h"
 #include <framework/luaengine/luaobject.h>
+#include "declarations.h"
 
-class Connection final : public LuaObject
+class Connection : public LuaObject
 {
     using ErrorCallback = std::function<void(const std::error_code&)>;
     using RecvCallback = std::function<void(uint8_t*, uint16_t)>;
@@ -48,12 +47,12 @@ public:
     static void poll();
     static void terminate();
 
-    void connect(std::string_view host, uint16_t port, const std::function<void()>& connectCallback);
+    void connect(const std::string_view host, uint16_t port, const std::function<void()>& connectCallback);
     void close();
 
-    void write(const uint8_t* buffer, size_t size);
+    void write(uint8_t* buffer, size_t size);
     void read(uint16_t bytes, const RecvCallback& callback);
-    void read_until(std::string_view what, const RecvCallback& callback);
+    void read_until(const std::string_view what, const RecvCallback& callback);
     void read_some(const RecvCallback& callback);
 
     void setErrorCallback(const ErrorCallback& errorCallback) { m_errorCallback = errorCallback; }
@@ -98,4 +97,3 @@ protected:
 
     friend class Server;
 };
-#endif

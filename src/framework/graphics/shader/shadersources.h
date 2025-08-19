@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -78,20 +78,4 @@ static constexpr std::string_view glslMainVertexShader = "\n\
         if(texture2D(u_Tex0, v_TexCoord).a > 0.01)\n\
             return u_Color;\n\
         return vec4(0,0,0,0);\n\
-    }\n",
-
-    lineVertexShader = "\n\
-    attribute vec2 a_Vertex;\n\
-    uniform mat3 u_TransformMatrix;\n\
-    uniform mat3 u_ProjectionMatrix;\n\
-    void main()\n\
-    {\n\
-        gl_Position = vec4((u_ProjectionMatrix * u_TransformMatrix * vec3(a_Vertex.xy, 1.0)).xy, 1.0, 1.0);\n\
-    }\n",
-
-    lineFragmentShader = "\n\
-    uniform vec4 u_Color;\n\
-    void main()\n\
-    {\n\
-        gl_FragColor = u_Color;\n\
     }\n";

@@ -1,11 +1,14 @@
-local highscoreButton = nil
-local worldTypeRadioGroup = nil
-local currentPage = 0
-local countPages = 0
+-- @ widgets
+local highscoreButton, worldTypeRadioGroup = nil, nil
 
-local vocationArray = {}
-local Category = {}
+-- @ number
+local currentPage, countPages = 0, 0
+local entriesPerPage = 20
+local categoryId, vocationId = 0, 4294967295.0
 
+-- @ Array
+-- LuaFormatter off
+local vocationArray, Category = {}, {}
 local tempFixworldType = {
     {0, "Open Pvp"},
     {1, "Optional Pvp"},
@@ -24,6 +27,7 @@ local serverSide = {
     page = 1,
     totalInPages = 20
 }
+-- LuaFormatter on
 
 local function getMinutesDifference(t1, t2)
     local diffInSeconds = os.difftime(t2, t1)
@@ -71,10 +75,13 @@ highscoreController = Controller:new()
 highscoreController:setUI('game_highscore')
 
 function highscoreController:onInit()
+
     highscoreController.ui:hide()
+
     highscoreController:registerEvents(g_game, {
         onProcessHighscores = onProcessHighscores
     })
+
 end
 
 function highscoreController:onTerminate()
@@ -82,15 +89,16 @@ function highscoreController:onTerminate()
         highscoreButton:destroy()
         highscoreButton = nil
     end
-
     if worldTypeRadioGroup then
         worldTypeRadioGroup:destroy()
         worldTypeRadioGroup = nil
     end
+
 end
 
 function onProcessHighscores(serverName, world, worldType, battlEye, vocations, categories, page, totalInPages,
     highscores, entriesTs)
+
     vocationArray = table.copy(vocations)
     Category = table.copy(categories)
     currentPage = page
@@ -107,7 +115,7 @@ function onProcessHighscores(serverName, world, worldType, battlEye, vocations, 
         end
         uiFilters.PanelWorld.isFilled = true
     end
-
+    -- LuaFormatter off
     local filterData = {
         {box = uiFilters.vocationBox, data = vocations, label = "All Vocations"},
         {box = uiFilters.categoryBox, data = categories, label = nil},
@@ -124,6 +132,7 @@ function onProcessHighscores(serverName, world, worldType, battlEye, vocations, 
             filter.box.isFilled = true
         end
     end
+    -- LuaFormatter on
 
     if not uiFilters.BattlEyeBox.isFilled then
         uiFilters.BattlEyeBox:addOption(battlEye)
@@ -143,22 +152,25 @@ function onProcessHighscores(serverName, world, worldType, battlEye, vocations, 
     ui.prev:setEnabled(not isFirstPage)
     ui.prevLast:setEnabled(not isFirstPage)
     ui.ownRankButton:setEnabled(true)
+
     ui.page:setText(page .. " / " .. totalInPages)
 
     local diferenciaEnMinutos = getMinutesDifference(entriesTs, os.time())
-    ui.last_update:setText(diferenciaEnMinutos)
 
+    ui.last_update:setText(diferenciaEnMinutos)
     createHighscores(highscores)
 end
 
 function highscoreController:onGameStart()
+
     if g_game.getClientVersion() < 1310 then
         return
     end
 
-    highscoreButton = modules.client_topmenu.addRightGameToggleButton('highscore', tr('Highscores'),
+    highscoreButton = modules.client_topmenu.addRightGameToggleButton('highscore', tr('highscore'),
         '/images/options/highscores', toggle, false)
     highscoreButton:setOn(false)
+
 end
 
 function highscoreController:onGameEnd()
@@ -166,7 +178,6 @@ function highscoreController:onGameEnd()
         highscoreController.ui:hide()
     end
 end
-
 function hide()
     if not highscoreController.ui then
         return
@@ -193,11 +204,11 @@ function toggle()
     if highscoreController.ui:isVisible() then
         return hide()
     end
-
     show()
 end
 
 function createHighscores(list)
+    -- LuaFormatter off
     local data = highscoreController.ui.data
     data:getLayout():disableUpdates()
     data:destroyChildren()
@@ -219,9 +230,9 @@ function createHighscores(list)
             end
         end
     end
-
     data:getLayout():enableUpdates()
     data:getLayout():update()
+    -- LuaFormatter on
 end
 
 local function changePage(newPage)
@@ -229,10 +240,12 @@ local function changePage(newPage)
     highscoreRequest(newPage, 0)
 end
 
+-- LuaFormatter off
 function nextPage() changePage(currentPage + 1) end
 function nextEndPage() changePage(countPages) end
 function prevPage() changePage(currentPage - 1) end
 function prevEndPage() changePage(1) end
+-- LuaFormatter on
 
 function disableButtons()
     for _, btn in ipairs({"next", "nextLast", "prev", "prevLast", "ownRankButton"}) do
@@ -251,6 +264,7 @@ function showOwnRank()
 end
 
 function highscoreRequest(currentPage, typex)
+
     local id = getVocation(highscoreController.ui.filters.vocationBox:getCurrentOption().text)
     id = (id == "All Vocations" and 0xFFFFFFFF or id)
 
@@ -261,6 +275,8 @@ function highscoreRequest(currentPage, typex)
 end
 
 function requestInfo()
+
     g_game.requestHighscore(serverSide.action, serverSide.category, serverSide.vocation, serverSide.world,
         serverSide.worldType, serverSide.battlEye, serverSide.page, serverSide.totalInPages)
+
 end

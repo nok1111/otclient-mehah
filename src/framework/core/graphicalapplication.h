@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,10 @@
 
 #include "application.h"
 
+#include <framework/graphics/declarations.h>
 #include <framework/core/adaptativeframecounter.h>
 #include <framework/core/inputevent.h>
-#include <framework/graphics/declarations.h>
+#include <framework/core/timer.h>
 #include <framework/platform/platformwindow.h>
 
 class ApplicationDrawEvents
@@ -47,14 +48,13 @@ protected:
 class GraphicalApplicationContext : public ApplicationContext
 {
 public:
-    GraphicalApplicationContext(const uint8_t spriteSize, ApplicationDrawEventsPtr drawEvents) :
+    GraphicalApplicationContext(uint8_t spriteSize, ApplicationDrawEventsPtr drawEvents) :
         ApplicationContext(),
         m_spriteSize(spriteSize),
-        m_drawEvents(std::move(drawEvents))
-    {
-    }
+        m_drawEvents(drawEvents)
+    {}
 
-    void setSpriteSize(const uint8_t size) { m_spriteSize = size; }
+    void setSpriteSize(uint8_t size) { m_spriteSize = size; }
     uint8_t getSpriteSize() { return m_spriteSize; }
 
     void setDrawEvents(ApplicationDrawEventsPtr drawEvents) { m_drawEvents = drawEvents; }
@@ -65,7 +65,7 @@ protected:
     ApplicationDrawEventsPtr m_drawEvents;
 };
 
-class GraphicalApplication final : public Application
+class GraphicalApplication : public Application
 {
 public:
     void init(std::vector<std::string>& args, ApplicationContext* context) override;
@@ -76,8 +76,8 @@ public:
     void mainPoll();
     void close() override;
 
-    void setMaxFps(const uint16_t maxFps) { m_graphicFrameCounter.setMaxFps(maxFps); }
-    void setTargetFps(const uint16_t targetFps) { m_graphicFrameCounter.setTargetFps(targetFps); }
+    void setMaxFps(uint16_t maxFps) { m_graphicFrameCounter.setMaxFps(maxFps); }
+    void setTargetFps(uint16_t targetFps) { m_graphicFrameCounter.setTargetFps(targetFps); }
 
     uint16_t getFps() { return m_graphicFrameCounter.getFps(); }
     uint8_t getMaxFps() { return m_graphicFrameCounter.getMaxFps(); }
@@ -101,25 +101,22 @@ public:
     void setDrawEffectOnTop(const bool draw) { m_drawEffectOnTop = draw; }
     bool isDrawingEffectsOnTop() { return m_drawEffectOnTop || mustOptimize(); }
 
-    void setDrawTexts(const bool v) { m_drawText = v; }
+    void setDrawTexts(bool v) { m_drawText = v; }
     bool isDrawingTexts() { return m_drawText; }
 
-    float getHUDScale() const;
-    void setHUDScale(float v);
-
     float getCreatureInformationScale() const { return m_creatureInformationScale; }
-    void setCreatureInformationScale(const float v) { m_creatureInformationScale = v; }
+    void setCreatureInformationScale(float v) { m_creatureInformationScale = v; }
 
     float getAnimatedTextScale() const { return m_animatedTextScale; }
-    void setAnimatedTextScale(const float v) { m_animatedTextScale = v; }
+    void setAnimatedTextScale(float v) { m_animatedTextScale = v; }
 
     float getStaticTextScale() const { return m_staticTextScale; }
-    void setStaticTextScale(const float v) { m_staticTextScale = v; }
+    void setStaticTextScale(float v) { m_staticTextScale = v; }
 
     bool isLoadingAsyncTexture();
     void setLoadingAsyncTexture(bool v);
 
-    bool isScaled() { return g_window.getDisplayDensity() != 1.f; }
+    bool isScaled() { return g_window.getDisplayDensity() != PlatformWindow::DEFAULT_DISPLAY_DENSITY; }
 
     bool isEncrypted() {
 #if ENABLE_ENCRYPTION == 1
@@ -131,9 +128,6 @@ public:
     void setDrawEvents(const ApplicationDrawEventsPtr& drawEvents) { m_drawEvents = drawEvents; }
     void doScreenshot(std::string file);
     void doMapScreenshot(std::string file);
-#ifdef __EMSCRIPTEN__
-    void mainLoop();
-#endif
 
 protected:
     void resize(const Size& size);

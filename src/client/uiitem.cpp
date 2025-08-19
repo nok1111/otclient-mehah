@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
 
 UIItem::UIItem() { setProp(PropDraggable, true, false); }
 
-void UIItem::drawSelf(const DrawPoolType drawPane)
+void UIItem::drawSelf(DrawPoolType drawPane)
 {
     if (drawPane != DrawPoolType::FOREGROUND)
         return;
@@ -49,7 +49,7 @@ void UIItem::drawSelf(const DrawPoolType drawPane)
         g_drawPool.releaseFrameBuffer(getPaddingRect());
 
         if (m_font && (m_alwaysShowCount || m_item->isStackable() || m_item->isChargeable()) && m_item->getCountOrSubType() > 1) {
-            static constexpr Color STACK_COLOR(231, 231, 231);
+            static const Color STACK_COLOR(231, 231, 231);
             const auto& count = m_item->getCountOrSubType();
             const auto& countText = count < 1000 ? std::to_string(count) : stdext::format("%.0fk", count / 1000.f);
             m_font->drawText(countText, Rect(m_rect.topLeft(), m_rect.bottomRight() - Point(3, 0)), STACK_COLOR, Fw::AlignBottomRight);
@@ -66,7 +66,7 @@ void UIItem::drawSelf(const DrawPoolType drawPane)
     drawText(m_rect);
 }
 
-void UIItem::setItemId(const int id)
+void UIItem::setItemId(int id)
 {
     if (id == 0)
         m_item = nullptr;
@@ -74,29 +74,65 @@ void UIItem::setItemId(const int id)
         m_item->setId(id);
     else
         m_item = Item::create(id);
-
+#ifdef BOT_PROTECTION
     callLuaField("onItemChange");
+#endif
 }
 
-void UIItem::setItemCount(const int count)
+void UIItem::setItemCount(int count) 
 {
     if (m_item) m_item->setCount(count);
-
+#ifdef BOT_PROTECTION
     callLuaField("onItemChange");
+#endif
 }
 
-void UIItem::setItemSubType(const int subType)
-{
-    if (m_item) m_item->setSubType(subType);
-
+void UIItem::setItemSubType(int subType)
+{ 
+    if (m_item) m_item->setSubType(subType); 
+#ifdef BOT_PROTECTION
     callLuaField("onItemChange");
+#endif
 }
 
-void UIItem::setItem(const ItemPtr& item)
-{
-    m_item = item;
-
+void UIItem::setItem(const ItemPtr& item) 
+{ 
+    m_item = item; 
+   // updateRarityBorder();
+#ifdef BOT_PROTECTION
     callLuaField("onItemChange");
+#endif
+}
+
+void UIItem::updateRarityBorder()
+{
+    if (!m_rarityBorder) {
+        // Correct widget creation pattern for OTClient
+        m_rarityBorder = std::make_shared<UIWidget>();
+        m_rarityBorder->setId("rarityBorder");
+        m_rarityBorder->setSize(getSize());
+        m_rarityBorder->setPosition(Point(0, 0));
+        m_rarityBorder->setVisible(false);
+    }
+
+    // Rest of the function remains unchanged...
+    if (m_item && m_item->getItemRarity() > ItemRarity::NONE) {
+        const std::string imagePath = "/images/ui/slots/rarity_" +
+            std::to_string(static_cast<int>(m_item->getItemRarity())) + ".png";
+
+        try {
+            if (g_things.getThingType(m_item->getId(), ThingCategoryItem)) {
+                m_rarityBorder->setImageSource(imagePath, "");
+                m_rarityBorder->setSize(getSize());
+                m_rarityBorder->setVisible(true);
+            }
+        } catch (...) {
+            g_logger.error("Failed to load rarity border for item " + std::to_string(m_item->getId()));
+            m_rarityBorder->setVisible(false);
+        }
+    } else {
+        m_rarityBorder->setVisible(false);
+    }
 }
 
 void UIItem::onStyleApply(const std::string_view styleName, const OTMLNodePtr& styleNode)

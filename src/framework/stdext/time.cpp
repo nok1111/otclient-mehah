@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,7 @@
 
 #include <chrono>
 #include <ctime>
+#include <ctime>
 #include <thread>
 
 #include "types.h"
@@ -41,7 +42,7 @@ namespace stdext
         return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - startup_time).count();
     }
 
-    void microsleep(const size_t us) { std::this_thread::sleep_for(std::chrono::microseconds(us)); }
+    void microsleep(size_t us) { std::this_thread::sleep_for(std::chrono::microseconds(us)); }
 
-    void millisleep(const size_t ms) { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); }
+    void millisleep(size_t ms) { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); }
 }

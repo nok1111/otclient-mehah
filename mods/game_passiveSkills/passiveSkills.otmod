@@ -1,9 +1,0 @@
-Module
-  name: game_passiveSkills
-  description: Passive Skills
-  author: Fifth
-  sandboxed: true
-  autoload: true
-  scripts: [ passiveSkillsDataConfig, passiveSkills ]
-  @onLoad: PassiveSkills.init()
-  @onUnload: PassiveSkills.terminate()

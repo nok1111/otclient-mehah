@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,11 @@
 
 #pragma once
 
+#include <framework/ui/uiwidget.h>
 #include "declarations.h"
 #include "item.h"
-#include <framework/ui/uiwidget.h>
 
-class UIItem final : public UIWidget
+class UIItem : public UIWidget
 {
 public:
     UIItem();
@@ -35,10 +35,10 @@ public:
     void setItemId(int id);
     void setItemCount(int count);
     void setItemSubType(int subType);
-    void setItemVisible(const bool visible) { m_itemVisible = visible; }
+    void setItemVisible(bool visible) { m_itemVisible = visible; }
     void setItem(const ItemPtr& item);
-    void setShowCount(const bool value) { m_alwaysShowCount = value; }
-    void setVirtual(const bool virt) { m_virtual = virt; }
+    void setShowCount(bool value) { m_alwaysShowCount = value; }
+    void setVirtual(bool virt) { m_virtual = virt; }
     void clearItem() { setItemId(0); }
 
     int getItemId() { return m_item ? m_item->getId() : 0; }
@@ -50,9 +50,11 @@ public:
     bool isItemVisible() { return m_itemVisible; }
 
 protected:
-    void onStyleApply(std::string_view styleName, const OTMLNodePtr& styleNode) override;
+    void onStyleApply(const std::string_view styleName, const OTMLNodePtr& styleNode) override;
+    void updateRarityBorder();
 
     ItemPtr m_item;
+    UIWidgetPtr m_rarityBorder;
     bool m_virtual{ false };
     bool m_showId{ false };
     bool m_itemVisible{ true };

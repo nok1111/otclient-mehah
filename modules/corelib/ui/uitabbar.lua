@@ -48,9 +48,7 @@ function UITabBar:addTab(text, panel, icon)
     tab.onClick = onTabClick
     tab.onMouseRelease = onTabMouseRelease
     tab.onDestroy = function()
-        if not tab.tabPanel:isDestroyed() then
-            tab.tabPanel:destroy()
-        end
+        tab.tabPanel:destroy()
     end
 
     table.insert(self.tabs, tab)

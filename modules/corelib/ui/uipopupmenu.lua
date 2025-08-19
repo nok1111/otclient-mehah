@@ -62,11 +62,11 @@ function UIPopupMenu:onGeometryChange(newRect, oldRect)
     self:bindRectToParent()
 end
 
-function UIPopupMenu:addOption(optionName, optionCallback, shortcut, disabled)
+function UIPopupMenu:addOption(optionName, optionCallback, shortcut)
     local optionWidget = g_ui.createWidget(self:getStyleName() .. 'Button', self)
     optionWidget.onClick = function(widget)
         self:destroy()
-        optionCallback(self:getPosition())
+        optionCallback()
     end
     optionWidget:setText(optionName)
     local width = optionWidget:getTextSize().width + optionWidget:getMarginLeft() + optionWidget:getMarginRight() + 15
@@ -77,32 +77,12 @@ function UIPopupMenu:addOption(optionName, optionCallback, shortcut, disabled)
         width = width + shortcutLabel:getTextSize().width + shortcutLabel:getMarginLeft() +
                     shortcutLabel:getMarginRight()
     end
-    optionWidget:setEnabled(not disabled)
+
     self:setWidth(math.max(190, math.max(self:getWidth(), width)))
 end
 
 function UIPopupMenu:addSeparator()
-    g_ui.createWidget('HorizontalSeparator', self)
-end
-
-function UIPopupMenu:addText(text)
-    local optionWidget = g_ui.createWidget("PopupScrollMenuShortcutLabel", self)
-    optionWidget:setText(text)
-    local width = optionWidget:getTextSize().width + optionWidget:getMarginLeft() + optionWidget:getMarginRight() + 15
-    self:setWidth(math.max(self:getWidth(), width))
-end
-
-function UIPopupMenu:addCheckBox(text, checked, callback)
-    local checkBox = g_ui.createWidget(self:getStyleName() .. 'CheckBox', self)
-    checkBox:setText(text)
-    checkBox:setChecked(checked or false)
-    checkBox.onClick = function()
-        self:destroy()
-        callback(checkBox, checkBox:isChecked())
-    end
-    local width = checkBox:getTextSize().width + checkBox:getMarginLeft() + checkBox:getMarginRight() + 30
-    self:setWidth(math.max(self:getWidth(), width))
-    return checkBox
+    g_ui.createWidget(self:getStyleName() .. 'Separator', self)
 end
 
 function UIPopupMenu:setGameMenu(state)

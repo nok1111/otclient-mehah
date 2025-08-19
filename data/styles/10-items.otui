@@ -9,34 +9,6 @@ Item < UIItem
   $disabled:
     color: #646464
 
-  Label
-    id: duration
-    anchors.bottom: parent.bottom
-    anchors.left: parent.left
-    phantom: true
-    font: "verdana-11px-rounded"
-
-  Label
-    id: charges
-    anchors.top: parent.top
-    anchors.left: parent.left
-    phantom: true
-    text-auto-resize: true
-    font: "verdana-11px-rounded"
-
-  UIWidget
-    id: tier
-    size: 10 9
-    image-source: /images/inventory/tiers-strip
-    image-clip: 0 0 10 9
-    image-size: 10 9
-    anchors.top: parent.top
-    anchors.right: parent.right
-    phantom: true
-    focusable: false
-    visible: false
-    image-smooth: true
-    
 MainInventoryItem < UIWidget
   image-source: /images/inventory/containerslot
   image-border: 3
@@ -197,6 +169,7 @@ MainInventoryItem < UIWidget
     $!disabled:
       opacity: 1
 
+
   UIWidget
     id: rune1
     image-source: /images/inventory/inventory_rune1
@@ -249,28 +222,6 @@ MainInventoryItem < UIWidget
     color: white
 	
     Label
-      id: duration
-      anchors.bottom: parent.bottom
-      anchors.left: parent.left
-      phantom: true
-    Label
-      id: charges
-      anchors.top: parent.top
-      anchors.left: parent.left
-      phantom: true
-      text-auto-resize: true
-      font: "verdana-11px-rounded"
-
-    UIWidget
-      id: tier
-      size: 10 9
-      image-source: /images/inventory/tiers-strip
-      image-clip: 0 0 10 9
-      image-size: 10 9
-      anchors.top: parent.top
-      anchors.right: parent.right
-      phantom: true
-      focusable: false
-      visible: false
-      image-smooth: true
+      id: Duration
+      anchors.fill: parent
       

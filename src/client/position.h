@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,10 @@
 
 #pragma once
 
-#include "const.h"
 #include <framework/const.h>
+#include <framework/stdext/types.h>
 #include <framework/util/point.h>
+#include "const.h"
 
 #include <array>
 #include <istream>
@@ -37,10 +38,10 @@ class Position
 {
 public:
     Position() = default;
-    Position(const int32_t x, const int32_t y, const uint8_t z) : x(x), y(y), z(z) {}
+    Position(int32_t x, int32_t y, uint8_t z) : x(x), y(y), z(z) {}
     Position(const Position& position) = default;
 
-    Position translatedToDirection(const Otc::Direction direction) const
+    Position translatedToDirection(Otc::Direction direction) const
     {
         Position pos = *this;
         switch (direction) {
@@ -78,7 +79,7 @@ public:
         return pos;
     }
 
-    Position translatedToReverseDirection(const Otc::Direction direction)  const
+    Position translatedToReverseDirection(Otc::Direction direction)  const
     {
         Position pos = *this;
         switch (direction) {
@@ -193,8 +194,8 @@ public:
     double distance(const Position& pos) const { return sqrt(pow<int32_t>(pos.x - x, 2) + pow<int32_t>(pos.y - y, 2)); }
     uint16_t manhattanDistance(const Position& pos) const { return static_cast<uint16_t>(std::abs(pos.x - x) + std::abs(pos.y - y)); }
 
-    void translate(const int32_t dx, const int32_t dy, const int8_t dz = 0) { x += dx; y += dy; z += dz; }
-    Position translated(const int32_t dx, const int32_t dy, const int8_t dz = 0) const { Position pos = *this; pos.x += dx; pos.y += dy; pos.z += dz; return pos; }
+    void translate(int32_t dx, int32_t dy, int8_t dz = 0) { x += dx; y += dy; z += dz; }
+    Position translated(int32_t dx, int32_t dy, int8_t dz = 0) const { Position pos = *this; pos.x += dx; pos.y += dy; pos.z += dz; return pos; }
 
     std::array<Position, 8> getPositionsAround() const
     {
@@ -225,7 +226,7 @@ public:
     bool operator==(const Position& other) const { return other.x == x && other.y == y && other.z == z; }
     bool operator!=(const Position& other) const { return other.x != x || other.y != y || other.z != z; }
 
-    bool isInRange(const Position& pos, const uint16_t xRange, const uint16_t yRange, const bool ignoreZ = false) const
+    bool isInRange(const Position& pos, uint16_t xRange, uint16_t yRange, const bool ignoreZ = false) const
     {
         auto _pos = pos;
         if (pos.z != z) {
@@ -236,7 +237,7 @@ public:
         return std::abs(x - _pos.x) <= xRange && std::abs(y - _pos.y) <= yRange && z == pos.z;
     }
 
-    bool isInRange(const Position& pos, const uint16_t minXRange, const uint16_t maxXRange, const uint16_t minYRange, const uint16_t maxYRange, const bool ignoreZ = false) const
+    bool isInRange(const Position& pos, uint16_t minXRange, uint16_t maxXRange, uint16_t minYRange, uint16_t maxYRange, const bool ignoreZ = false) const
     {
         auto _pos = pos;
         if (pos.z != z) {

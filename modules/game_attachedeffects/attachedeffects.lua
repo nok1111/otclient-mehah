@@ -58,6 +58,7 @@ function controller:onTerminate()
     g_attachedEffects.clear()
 end
 
+-- @ note: sorry, I couldn't find any other way to do it
 function getCategory(id)
     return AttachedEffectManager.get(id).thingCategory
 end
@@ -83,3 +84,5 @@ function thingId(id)
         return "None"
     end
 end
+
+-- @

@@ -1,5 +1,3 @@
-local iconTopMenu = nil
-
 local inventoryShrink = false
 local itemSlotsWithDuration = {}
 local updateSlotsDurationEvent = nil
@@ -48,21 +46,6 @@ local function updateSlotsDuration()
     end
     -- @
 
-    if not modules.client_options.getOption('showExpiryInInvetory') then
-        stopEvent()
-        local ui = getInventoryUi()
-        for slot, itemDurationReg in pairs(itemSlotsWithDuration) do
-            local getSlotInfo = getSlotPanelBySlot[slot]
-            if getSlotInfo then
-                local slotPanel = getSlotInfo(ui)
-                if slotPanel and slotPanel.item then
-                    slotPanel.item.duration:setText("")
-                end
-            end
-        end
-        return
-    end
-
     local currTime = g_clock.seconds()
     local ui = getInventoryUi()
     local hasItemsWithDuration = false
@@ -76,7 +59,7 @@ local function updateSlotsDuration()
             if getSlotInfo then
                 local slotPanel = getSlotInfo(ui)
                 if slotPanel and slotPanel.item then
-                    slotPanel.item.duration:setText(formatDuration(durationTimeLeft))
+                    slotPanel.item.Duration:setText(formatDuration(durationTimeLeft))
                 end
             end
         end
@@ -92,7 +75,7 @@ end
 local function walkEvent()
     if modules.client_options.getOption('autoChaseOverride') then
         if g_game.isAttacking() and g_game.getChaseMode() == ChaseOpponent then
-            selectPosture('stand', false)
+            selectPosture('stand', true)
         end
     end
 end
@@ -113,6 +96,36 @@ local function combatEvent()
     end
 end
 
+local function setFrames(item, itemWidget)
+    local name = item:getTooltip()
+    if (name) then
+      if (string.find(name, "legendary")) then
+        itemWidget:setImageSource('/images/ui/rarity_gold')
+      elseif (string.find(name, "epic")) then
+        itemWidget:setImageSource('/images/ui/rarity_purple')
+      elseif (string.find(name, "rare")) then
+        itemWidget:setImageSource('/images/ui/rarity_blue')
+      end
+    end
+end
+
+local function setFrames(item, itemWidget)
+    local name = item:getTooltip()
+    if (name) then
+        print("tooltip:", name)
+      if (string.find(name, "Ascended")) then
+        itemWidget:setImageSource('/images/ui/rarity_gold')
+        itemWidget:setShader("pulse")
+      elseif (string.find(name, "Forged")) then
+        itemWidget:setImageSource('/images/ui/rarity_purple')
+        itemWidget:setShader("pulse")
+      elseif (string.find(name, "Orbital")) then
+        itemWidget:setImageSource('/images/ui/rarity_blue')
+        itemWidget:setShader("pulse")
+      end
+    end
+end
+
 local function inventoryEvent(player, slot, item, oldItem)
     if inventoryShrink then
         return
@@ -121,41 +134,40 @@ local function inventoryEvent(player, slot, item, oldItem)
     local ui = getInventoryUi()
     local getSlotInfo = getSlotPanelBySlot[slot]
     if not getSlotInfo then
-        --print("Slot not found:", slot)
         return
     end
-    --print("Slot found:", slot)
 
     local slotPanel, toggler = getSlotInfo(ui)
 
     slotPanel.item:setItem(item)
+
     toggler:setEnabled(not item)
     slotPanel.item:setWidth(34)
     slotPanel.item:setHeight(34)
-    slotPanel.item.duration:setText("")
-    slotPanel.item.charges:setText("")
+
+    if item then
+        print("rarity:", item:getItemRarity())
+        setFrames(item, slotPanel.item)
+    else
+        print("No item in slot", slot)
+        slotPanel.item:setImageSource(nil)
+    end
+
     if g_game.getFeature(GameThingClock) then
         if item and item:getDurationTime() > 0 then
-            if not itemSlotsWithDuration[slot] or itemSlotsWithDuration[slot].item ~= item then
-                itemSlotsWithDuration[slot] = {
-                    item = item,
-                    timeEnd = g_clock.seconds() + item:getDurationTime()
-                }
-            end
-            if modules.client_options.getOption('showExpiryInInvetory') then
-                if not updateSlotsDurationEvent then
-                    updateSlotsDuration()
-                end
-            end
+            itemSlotsWithDuration[slot] = {
+                item = item,
+                timeEnd = g_clock.seconds() + item:getDurationTime()
+            }
+            updateSlotsDuration()
         else
             itemSlotsWithDuration[slot] = nil
+            if slotPanel and slotPanel.item then
+                slotPanel.item.Duration:setText("")
+            end
         end
     end
-    
-    if modules.client_options.getOption('showExpiryInInvetory') then
-        ItemsDatabase.setCharges(slotPanel.item, item)
-    end
-    ItemsDatabase.setTier(slotPanel.item, item)
+
 end
 
 local function onSoulChange(localPlayer, soul)
@@ -218,7 +230,7 @@ local function refreshInventory_panel()
         return
     end
 
-    for i = InventorySlotFirst, InventorySlotRune3 do
+    for i = InventorySlotFirst, InventorySlotPurse do
         if g_game.isOnline() then
             inventoryEvent(player, i, player:getInventoryItem(i))
         else
@@ -285,21 +297,6 @@ function inventoryController:onInit()
 end
 
 function inventoryController:onGameStart()
-    local player = g_game.getLocalPlayer()
-    if player then
-        local char = g_game.getCharacterName()
-        local lastCombatControls = g_settings.getNode('LastCombatControls')
-        if not table.empty(lastCombatControls) then
-            if lastCombatControls[char] then
-                g_game.setFightMode(lastCombatControls[char].fightMode)
-                g_game.setChaseMode(lastCombatControls[char].chaseMode)
-                g_game.setSafeFight(lastCombatControls[char].safeFight)
-                if lastCombatControls[char].pvpMode then
-                    g_game.setPVPMode(lastCombatControls[char].pvpMode)
-                end
-            end
-        end
-    end
     inventoryController:registerEvents(LocalPlayer, {
         onInventoryChange = inventoryEvent,
         onSoulChange = onSoulChange,
@@ -346,31 +343,6 @@ end
 
 function inventoryController:onGameEnd()
     stopEvent()
-
-    local lastCombatControls = g_settings.getNode('LastCombatControls')
-    if not lastCombatControls then
-        lastCombatControls = {}
-    end
-    local player = g_game.getLocalPlayer()
-    if player then
-        local char = g_game.getCharacterName()
-        lastCombatControls[char] = {
-            fightMode = g_game.getFightMode(),
-            chaseMode = g_game.getChaseMode(),
-            safeFight = g_game.isSafeFight()
-        }
-        if g_game.getFeature(GamePVPMode) then
-            lastCombatControls[char].pvpMode = g_game.getPVPMode()
-        end
-        g_settings.setNode('LastCombatControls', lastCombatControls)
-    end
-end
-
-function inventoryController:onTerminate()
-    if iconTopMenu then
-        iconTopMenu:destroy()
-        iconTopMenu = nil
-    end
 end
 
 function onSetSafeFight(self, checked)
@@ -473,57 +445,4 @@ end
 
 function getSlot5()
     return inventoryController.ui.onPanel.shield
-end
-
-function reloadInventory()
-    if modules.client_options.getOption('showExpiryInInvetory') then
-        updateSlotsDuration()
-    end
-    
-    for slot, getSlotInfo in pairs(getSlotPanelBySlot) do
-        local ui = getInventoryUi()
-        local slotPanel, toggler = getSlotInfo(ui)
-        if slotPanel then
-            local player = g_game.getLocalPlayer()
-            if player then
-                inventoryEvent(player, slot, player:getInventoryItem(slot))
-            end
-        end
-    end
-end
-
-function extendedView(extendedView)
-    if extendedView then
-        if not iconTopMenu then
-            iconTopMenu = modules.client_topmenu.addTopRightToggleButton('inventory', tr('Show inventory'),
-                '/images/topbuttons/inventory', toggle)
-            iconTopMenu:setOn(inventoryController.ui:isVisible())
-            inventoryController.ui:setBorderColor('black')
-            inventoryController.ui:setBorderWidth(2)
-        end
-    else
-        if iconTopMenu then
-            iconTopMenu:destroy()
-            iconTopMenu = nil
-        end
-        inventoryController.ui:setBorderColor('alpha')
-        inventoryController.ui:setBorderWidth(0)
-        local mainRightPanel = modules.game_interface.getMainRightPanel()
-        if not mainRightPanel:hasChild(inventoryController.ui) then
-            mainRightPanel:insertChild(3, inventoryController.ui)
-        end
-        inventoryController.ui:show(true)
-    end
-    inventoryController.ui.moveOnlyToMain = not extendedView
-
-end
-
-function toggle()
-    if iconTopMenu:isOn() then
-        inventoryController.ui:hide()
-        iconTopMenu:setOn(false)
-    else
-        inventoryController.ui:show()
-        iconTopMenu:setOn(true)
-    end
 end

@@ -20,21 +20,34 @@ function UIWidget:setMargin(...)
 end
 
 function UIWidget:parseColoredText(text, default_color)
-    default_color = default_color or "#ffffff"
-    local result, last_pos = "", 1
-    for start, stop in text:gmatch("()%[color=#?%x+%]()") do
-        if start > last_pos then
-            result = result .. "{" .. text:sub(last_pos, start - 1) .. ", " .. default_color .. "}"
-        end
-        local closing_tag_start = text:find("%[/color%]", stop)
-        if not closing_tag_start then break end
-        local content = text:sub(stop, closing_tag_start - 1)
-        local color = text:match("#%x+", start) or default_color
-        result = result .. "{" .. content .. ", " .. color .. "}"
-        last_pos = closing_tag_start + 8
+  local default_color = default_color or "white"
+  local result = {}
+  local i = 1
+  while i <= #text do
+    local start, stop = text:find("%[color=.-%]", i)
+    if start then
+      table.insert(result, text:sub(i, start - 1))
+      table.insert(result, default_color)
+      local closing_tag_start, closing_tag_stop = text:find("%[/color%]", stop + 1)
+      if closing_tag_start then
+        local content = text:sub(stop + 1, closing_tag_start - 1)
+        table.insert(result, content)
+        i = closing_tag_stop + 1
+      else
+        break
+      end
+      local color_start, color_stop = text:find("#%x+", start)
+      if color_start then
+        local color = text:sub(color_start, color_stop)
+        table.insert(result, color)
+      end
+    else
+      table.insert(result, text:sub(i))
+      table.insert(result, default_color)
+      break
     end
-    if last_pos <= #text then
-        result = result .. "{" .. text:sub(last_pos) .. ", " .. default_color .. "}"
-    end
+  end
+  if #result >= 2 then
     self:setColoredText(result)
+  end
 end

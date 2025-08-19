@@ -1,0 +1,345 @@
+StatsPanel < Panel
+  height: 32
+
+StatsButton < Button
+  id: plusButton
+  anchors.top: parent.top
+  anchors.left: parent.left
+  size: 16 16
+  text: +
+
+StatName < Label
+  anchors.top: parent.top
+  anchors.left: prev.right
+  margin-left: 5
+  text-align: center
+
+StatPoints < Label
+  id: points
+  anchors.top: parent.top
+  anchors.right: parent.right
+  text-align: center
+  text-auto-resize: true
+
+StatsButtonMinus < Button
+  id: minusButton
+  anchors.top: parent.top
+  anchors.left: parent.left
+  margin-top: 17
+  size: 16 16
+  text: -
+
+StatInfo < Label
+  anchors.bottom: parent.bottom
+  anchors.left: parent.left
+  text-auto-resize: true
+  margin-left: 20
+
+StatInfoValue < Label
+  id: value
+  anchors.bottom: parent.bottom
+  anchors.right: parent.right
+  text-auto-resize: true
+
+MiniWindow
+  id: characterStatsWindow
+  !text: 'Character Stats'
+  icon: /images/topbuttons/swordicon
+  @onClose: modules.game_characterstats.onMiniWindowClose()
+  &save: true
+  &autoOpen: 4
+  height: 475
+
+  MiniWindowContents
+    padding-left: 5
+    padding-right: 5
+    layout: verticalBox
+      spacing: 5
+    
+    Panel
+      margin-top: 5
+      height: 16
+      Label
+        id: remainingPoints
+        anchors.top: parent.top
+        anchors.left: parent.left
+        text-auto-resize: true
+        !text: 'Points: 10'
+      Button
+        anchors.top: parent.top
+        anchors.right: parent.right
+        text: Reset
+        size: 60 16
+        @onClick: modules.game_characterstats.resetStats()
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: strength
+      UIWidget
+        image-source: /images/game/stats/str
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Weapon Mastery'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Weapon damage'
+      StatInfoValue
+        !text: '+10%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: intelligence
+      UIWidget
+        image-source: /images/game/stats/ele
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Ability Power'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'spell damage'
+      StatInfoValue
+        !text: '+10%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: dexterity
+      UIWidget
+        image-source: /images/game/stats/dex
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Dexterity'
+        margin-left: 25
+      StatPoints
+        !text: '15'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Attack speed'
+      StatInfoValue
+        !text: '+15%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: vitality
+      UIWidget
+        image-source: /images/game/stats/vit
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Vitality'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Maximum health'
+      StatInfoValue
+        !text: '+10%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: spirit
+      UIWidget
+        image-source: /images/game/stats/spirit
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Spirit'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Maximum mana'
+      StatInfoValue
+        !text: '+10%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: wisdom
+      UIWidget
+        image-source: /images/game/stats/int
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Wisdom'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Spells cooldown'
+      StatInfoValue
+        !text: '+5%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: luck
+      UIWidget
+        image-source: /images/game/stats/luck
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Luck'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Dodge + Loot'
+      StatInfoValue
+        !text: '+10%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: resilience
+      UIWidget
+        image-source: /images/game/stats/resilience
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Resilience'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Damage reduction'
+      StatInfoValue
+        !text: '+10%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: compassion
+      UIWidget
+        image-source: /images/game/stats/compassion
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Compassion'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Healing power'
+      StatInfoValue
+        !text: '+10%'
+
+    HorizontalSeparator
+
+    StatsPanel
+      id: voracity
+      UIWidget
+        image-source: /images/game/stats/voracity
+        anchors.left: parent.left
+        margin-left: 20
+        height: 16
+        width: 16
+        anchors.top: parent.top
+        anchors.left: parent.left
+      Label
+        margin-left: 20
+        margin-bottom: 0
+      StatsButton
+      StatName
+        !text: 'Voracity'
+        margin-left: 25
+      StatPoints
+        !text: '10'
+      StatsButtonMinus
+      StatInfo
+        !text: 'Life steal'
+      StatInfoValue
+        !text: '+10%'
+
+    HorizontalSeparator

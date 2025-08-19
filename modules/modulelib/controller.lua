@@ -27,7 +27,7 @@ local function onGameEnd(self)
     local eventList = self.events[TypeEvent.GAME_INIT]
     if eventList ~= nil then
         for _, event in pairs(eventList) do
-            event:destroy()
+            event:disconnect()
         end
 
         self.events[TypeEvent.GAME_INIT] = nil
@@ -43,23 +43,15 @@ local function onGameEnd(self)
     end
 
     if self.dataUI ~= nil and self.dataUI.onGameStart and self.ui then
-        self:destroyUI()
+        self.ui:destroy()
+        self.ui = nil
     end
-
-    table.remove_if(self.keyboardEvents, function(i, event)
-        local destroy = event.controllerEventType == TypeEvent.GAME_INIT
-        if destroy then
-            g_keyboard['unbind' .. event.name](event.args[1], event.args[2], event.args[3])
-        end
-        return destroy
-    end)
 end
 
 Controller = {
     ui = nil,
     name = nil,
     attrs = nil,
-    extendedOpcodes = nil,
     opcodes = nil,
     events = nil,
     htmlRoot = nil,
@@ -69,16 +61,14 @@ Controller = {
 }
 
 function Controller:new()
-    local module = g_modules.getCurrentModule()
     local obj = {
-        name = module and module:getName() or nil,
+        name = g_modules.getCurrentModule():getName(),
         currentTypeEvent = TypeEvent.MODULE_INIT,
         events = {},
         scheduledEvents = {},
         keyboardEvents = {},
         attrs = {},
-        extendedOpcodes = {},
-        opcodes = {},
+        opcodes = {}
     }
     setmetatable(obj, self)
     self.__index = self
@@ -136,28 +126,6 @@ function Controller:loadHtml(path, parent)
     self.ui = self.htmlRoot.widget
 end
 
-function Controller:destroyUI()
-    if self.htmlRoot ~= nil then
-        self.htmlRoot.widget = nil
-        self.htmlRoot = nil
-    end
-
-    if self.ui then
-        self.ui:destroy()
-        self.ui = nil
-    end
-
-    for type, events in pairs(self.events) do
-        table.remove_if(events, function(i, event)
-            local canRemove = event:actorIsDestroyed()
-            if canRemove then
-                event:destroy() -- force destroy
-            end
-            return canRemove
-        end)
-    end
-end
-
 function Controller:findElements(query)
     return self.htmlRoot and self.htmlRoot:find(query:trim()) or {}
 end
@@ -197,6 +165,10 @@ function Controller:setUI(name, parent)
 end
 
 function Controller:terminate()
+    if self.onTerminate then
+        self:onTerminate()
+    end
+
     if self.onGameStart then
         disconnect(g_game, { onGameStart = self.onGameStart })
     end
@@ -206,26 +178,18 @@ function Controller:terminate()
         disconnect(g_game, { onGameEnd = self.onGameEnd })
     end
 
-    if self.onTerminate then
-        self:onTerminate()
-    end
-
     for i, event in pairs(self.keyboardEvents) do
         g_keyboard['unbind' .. event.name](event.args[1], event.args[2], event.args[3])
     end
 
-    for i, opcode in pairs(self.extendedOpcodes) do
+    for i, opcode in pairs(self.opcodes) do
         ProtocolGame.unregisterExtendedOpcode(opcode)
-    end
-
-    for _, opcode in ipairs(self.opcodes) do
-        ProtocolGame.unregisterOpcode(opcode)
     end
 
     for type, events in pairs(self.events) do
         if events ~= nil then
             for _, event in pairs(events) do
-                event:destroy()
+                event:disconnect()
             end
         end
     end
@@ -246,7 +210,6 @@ function Controller:terminate()
     self.attrs = nil
     self.events = nil
     self.dataUI = nil
-    self.extendedOpcodes = nil
     self.opcodes = nil
     self.keyboardEvents = nil
     self.keyboardAnchor = nil
@@ -275,11 +238,6 @@ end
 
 function Controller:registerExtendedOpcode(opcode, fnc)
     ProtocolGame.registerExtendedOpcode(opcode, fnc)
-    table.insert(self.extendedOpcodes, opcode)
-end
-
-function Controller:registerOpcode(opcode, fnc)
-    ProtocolGame.registerOpcode(opcode, fnc)
     table.insert(self.opcodes, opcode)
 end
 
@@ -362,10 +320,9 @@ function Controller:bindKeyDown(...)
     end
     table.insert(self.keyboardEvents, {
         name = 'KeyDown',
-        args = args,
-        controllerEventType = self.currentTypeEvent
+        args = args
     })
-    g_keyboard.bindKeyDown(args[1], args[2], args[3], args[4])
+    g_keyboard.bindKeyDown(args[1], args[2], args[3])
 end
 
 function Controller:bindKeyUp(...)
@@ -376,11 +333,10 @@ function Controller:bindKeyUp(...)
     end
     table.insert(self.keyboardEvents, {
         name = 'KeyUp',
-        args = args,
-        controllerEventType = self.currentTypeEvent
+        args = args
     })
 
-    g_keyboard.bindKeyUp(args[1], args[2], args[3], args[4])
+    g_keyboard.bindKeyUp(args[1], args[2], args[3])
 end
 
 function Controller:bindKeyPress(...)
@@ -391,8 +347,7 @@ function Controller:bindKeyPress(...)
     end
     table.insert(self.keyboardEvents, {
         name = 'KeyPress',
-        args = args,
-        controllerEventType = self.currentTypeEvent
+        args = args
     })
     g_keyboard.bindKeyPress(args[1], args[2], args[3])
 end

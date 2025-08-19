@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,6 @@
  */
 
 #pragma once
-#include <obfuscate.h>
 
  // APPEARANCES
 #define BYTES_IN_SPRITE_SHEET 384 * 384 * 4
@@ -36,9 +35,7 @@
 // You can compile it once and use this executable to only encrypt client files once with command --encrypt which will be using password below.
 #define ENABLE_ENCRYPTION_BUILDER 0
 // for security reasons make sure you are using password with at last 100+ characters
-#define ENCRYPTION_PASSWORD AY_OBFUSCATE("SET_YOUR_PASSWORD_HERE")
-// do not insert special characters in the header (ONLY UPPERCASE LETTERS, LOWERCASE LETTERS AND NUMBERS) | example: #define ENCRYPTION_HEADER AY_OBFUSCATE("21UsO5ARfRnIScs415BNMab")
-#define ENCRYPTION_HEADER AY_OBFUSCATE("SET_YOUR_HEADER_HERE")
+#define ENCRYPTION_PASSWORD "SET_YOUR_PASSWORD_HERE"
 
 // DISCORD RPC (https://discord.com/developers/applications)
 // Note: Only for VSSolution, doesn't work with CMAKE

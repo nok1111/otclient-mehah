@@ -15,27 +15,57 @@ local eventSchedulerCalendarYearIndex
 local eventSchedulerCalendarMonth
 
 local boostedWindow
-local monsterOutfit
-local monsterImage
-local bossOutfit
-local bossImage
+local creature_boosted
+local boss_boosted
 
 local default_info = {
-    -- hint 1
-    {
-        image = "images/randomhint",
-        Title = "Enabling Boosted Creature Panel",
-        description = "Boosted creatures panel requires configuring a webservice (init.lua) and preloading a client version by either setting one server in Servers_init (init.lua) or by altering entergame.lua.\n\nFor more hints, visit:\t\t https://github.com/mehah/otclient/wiki"
-    },
-
-    -- hint 2
-    -- {image = "image of label", Title = "title", description = "your hint here"},
+    [1] = {image = "images/randomhint", Title = "Random Hint", creature1="images/boost_monster1",creature2= "images/boost_monster2",description = "The customisable status bar includes big health and mana bars and can be placed on the bottom, the top or on the side of your game windows\n\n -\t\t https://github.com/mehah/otclient/wiki "},
+  --  [2] = {image = "image of label", Title = "title", creature1="images of creature",creature2= "images of boos",description = "text in label see tutorial :  https://github.com/mehah/otclient/wiki"},
 }
-
 function init()
-  hide()
-    if g_game.isOnline() then
-        hide()
+    g_ui.importStyle('calendar')
+    bottomMenu = g_ui.displayUI('bottommenu')
+
+    calendarWindow = g_ui.createWidget('CalendarGrid', rootWidget)
+    calendarCurrentMonth = calendarWindow:recursiveGetChildById('calendarCurrentMonth')
+    calendarCurrentDate = calendarWindow:recursiveGetChildById('calendarCurrentDate')
+    calendarPrevButton = calendarWindow:recursiveGetChildById('calendarPrevButton')
+    calendarNextButton = calendarWindow:recursiveGetChildById('calendarNextButton')
+    calendarWindow:hide()
+
+    showOffWindow = bottomMenu:recursiveGetChildById('showOffWindow')
+    showOffWindow.title = showOffWindow:recursiveGetChildById('showOffWindowText')
+    activeScheduleEvent = bottomMenu:recursiveGetChildById('activeScheduleEvent')
+    upcomingScheduleEvent = bottomMenu:recursiveGetChildById('upcomingScheduleEvent')
+    upcomingScheduleEvent:recursiveGetChildById('fill'):setOn(false)
+    eventSchedulerCalendarYearIndex = 1
+    eventSchedulerCalendarMonth = tonumber(os.date("%m"))
+
+    boostedWindow = bottomMenu:recursiveGetChildById('boostedWindow')
+    creature_boosted = boostedWindow:recursiveGetChildById('creature')
+    boss_boosted = boostedWindow:recursiveGetChildById('boss')
+
+    if not Services.status and default_info then
+        local widget = g_ui.createWidget('ShowOffWidget', showOffWindow)
+        local description = widget:recursiveGetChildById('description')
+        local image = widget:recursiveGetChildById('image')
+
+        math.randomseed(os.time())
+        local randomIndex = math.random(1, #default_info)
+        local randomItem = default_info[randomIndex]
+        showOffWindow.title:setText(tr(randomItem.Title))
+        image:setImageSource(randomItem.image)
+        description:setText(tr(randomItem.description))
+        creature_boosted:setVisible(false)
+        boss_boosted:setVisible(false)
+
+        local creature2 = boostedWindow:recursiveGetChildById('creature2')
+        local boss2 = boostedWindow:recursiveGetChildById('boss2')
+
+        creature2:setImageSource(randomItem.creature1)    
+        creature2:setVisible(true) 
+        boss2:setImageSource(randomItem.creature2)
+        boss2:setVisible(true)
     end
 end
 
@@ -45,8 +75,8 @@ function terminate()
 end
 
 function hide()
-   -- bottomMenu:hide()
---bottomMenu:lower()
+    bottomMenu:hide()
+    bottomMenu:lower()
 
     if not calendarWindow:isHidden() then
         onClickCloseCalendar()
@@ -462,45 +492,10 @@ function onClickOnNextCalendar()
     reloadEventsSchedulerCurrentPage()
 end
 
--- (internal)
--- set creature/boss to boosted slot
-local function applyToBoostedSlot(raceId, outfitWidget, imageWidget, fileName)
-    -- check if raceId was provided in the JSON response
-    if not raceId then
-        return
+function Booster_creature(data)
+    if modules.game_things.isLoaded() then
+        -- note: is better image *
+        creature_boosted:setOutfit(data.creature)
+        boss_boosted:setOutfit(data.boss)
     end
-
-    -- fetch race data
-    local raceData = g_things.getRaceData(raceId)
-
-    -- check if race id is present in the staticdata
-    if raceData.raceId == 0 then
-        local msg = string.format("[%s] Creature with race id %s was not found.", fileName, data.creatureraceid)
-        g_logger.warning(msg)
-        return
-    end
-
-    -- apply to selected widget
-    outfitWidget:setOutfit(raceData.outfit)
-    outfitWidget:getCreature():setStaticWalking(1000)
-    outfitWidget:setVisible(true)
-    imageWidget:setVisible(false)
-end
-
-function setBoostedCreatureAndBoss(data)
-    if not modules.game_things.isLoaded() then
-        return
-    end
-
-    -- file name for error reporting
-    local fileName = debug.getinfo(1, "S").source -- current file name - bottommenu.lua
-
-    -- boosted creature
-    -- before bosstiary was introduced, the webservice was sending creature race in 'raceid' field
-    -- after bosstiary was added, it was changed to 'creatureraceid'
-    -- this 'or' statement ensures backwards compatibility
-    applyToBoostedSlot(data.creatureraceid or data.raceid, monsterOutfit, monsterImage, fileName)
-
-    -- boosted boss
-    applyToBoostedSlot(data.bossraceid, bossOutfit, bossImage, fileName)
 end

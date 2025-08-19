@@ -1,95 +1,3 @@
-historyData2 < UIWidget
-  height: 15
-  Label
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.bottom : parent.bottom
-    id: date
-    width: 148
-    text-align: left
-    color: #dfdfdfcf
-    phantom: false
-    margin-left: 4
-
-  VerticalSeparator
-    anchors.top: parent.top
-    anchors.left: prev.right
-    anchors.bottom: parent.bottom
-
-    
-  Label
-    anchors.top: parent.top
-    anchors.left: prev.right
-    anchors.bottom : parent.bottom
-    id: Balance
-    width: 87
-    text-align: right
-    phantom: true
-    text-offset: -16 0
-    icon-align: right
-  VerticalSeparator
-    anchors.top: parent.top
-    anchors.left: prev.right
-    anchors.bottom: parent.bottom
-    
-  Label
-    anchors.top: parent.top
-    anchors.left: prev.right
-    anchors.bottom : parent.bottom
-    id: Description
-    width: 259
-    text-align: left
-    phantom: true
-    margin-left: 5
-
-  
-OfferPanel2 < Panel
-  StoreButton
-    id: btnBuy
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.right: parent.right
-    !text: tr('Buy')
-    font: cipsoftFont
-    image-color: #75bfff
-
-  StoreFlatPanel
-    id: lblPrice
-    size: 104 20
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin: 3 1 0 1
-    text-align: center
-    text-offset: -18 0
-    image-color: #1111118c
-    text: 8900
-    icon: /images/ui/tibiaCoin
-    icon-align: center
-    icon-offset: 10 0
-  
-stackOfferPanel < Panel
-  Label
-    id: count
-    anchors.bottom: parent.bottom
-    anchors.left: parent.left
-    margin: 0 5 5 0
-    text-align: center
-    text-auto-resize: true
-
-  StoreFlatPanel
-    id: lblPrice
-    size: 104 20
-    anchors.bottom: parent.bottom
-    anchors.right: parent.right
-    margin: 0 5 5 0
-    text-align: center
-    text-offset: 15 0
-    image-color: #1111118c
-    icon: /images/ui/tibiaCoin
-    icon-align: right
-    icon-offset: -2 0
-  
 StoreFlatPanel < UIWidget
   phantom: true
   auto-focus: first
@@ -269,43 +177,39 @@ confirmarSHOP < UIMessageBox
     anchors.top: parent.top
     text-wrap: true
     text-auto-resize: true
-    text-offset: 5 0
     color: #c0c0c0ff
     margin-top: 32
-    text-align: center
 
   Label
 
     id: Box
-    size: 250 105
+    size: 200 105
     anchors.left: parent.left
     anchors.top: content.bottom
     margin-left: 10
-    text-wrap: true
-    text-align: topLeft
     image-source:  /game_store/images/panel_flat
     image-border: 1
   Button
-    id: buttonAnimation
+    id: additionalLabel
     size: 105 105
     anchors.left: Box.right
     anchors.top: content.bottom
     margin-left:16
-    image-source:  /images/ui/button-blue-qt
+    image-source:  /game_store/images/button-blue-down
     image-border: 1
     text-wrap: true
     image-clip: 0 0 98 40
-
+    $on:
+      image-clip: 0 40 98 40
     $pressed:
       image-clip: 0 40 98 40
+    
 
     UIWidget
-      id: animation
-      image-source:  /game_store/images/purchase_animation
+      id: Duration2
+      image-source:  /game_store/images/close
       anchors.fill: parent
       phantom: true
-      size: 108 108
-      image-clip: 0 0 108 108
 
   HorizontalSeparator
     anchors.left: Box.left

@@ -23,8 +23,14 @@ return {
             g_window.setFullscreen(value)
         end
     },
-    classicControl                    = true,
+    classicControl                    = false,
     smartWalk                         = false,
+    preciseControl                    = {
+        value = false,
+        action = function(value, options, controller, panels, extraWidgets)
+            g_game.setScheduleLastWalk(not value)
+        end
+    },
     autoChaseOverride                 = true,
     moveStack                         = false,
     showStatusMessagesInConsole       = true,
@@ -35,7 +41,6 @@ return {
     showPrivateMessagesInConsole      = true,
     showOthersStatusMessagesInConsole = false,
     showPrivateMessagesOnScreen       = true,
-    showLootMessagesOnScreen          = true,
     showOutfitsOnList                 = {
         value = true,
         action = function(value, options, controller, panels, extraWidgets)
@@ -107,10 +112,9 @@ return {
         end
     },
     ambientLight                      = {
-        value = 40,
+        value = 0,
         action = function(value, options, controller, panels, extraWidgets)
-            panels.graphicsEffectsPanel:recursiveGetChildById('ambientLight'):setText(string.format(
-                'Ambient light: %s%%', value))
+            panels.graphicsEffectsPanel:recursiveGetChildById('ambientLight'):setText(string.format('Ambient light: %s%%', value))
             panels.gameMapPanel:setMinimumAmbientLight(value / 100)
             panels.gameMapPanel:setDrawLights(options.enableLights.value)
         end
@@ -151,28 +155,10 @@ return {
             g_app.setDrawTexts(value)
         end
     },
-    walkTurnDelay                     = {
-        value = 100,
-        action = function(value, options, controller, panels, extraWidgets)
-            panels.generalPanel:recursiveGetChildById('walkTurnDelay'):setText(string.format(
-                'Walk delay after turn: %sms',
-                value))
-        end
-    },
-    walkTeleportDelay                 = {
+    turnDelay                         = {
         value = 50,
         action = function(value, options, controller, panels, extraWidgets)
-            panels.generalPanel:recursiveGetChildById('walkTeleportDelay'):setText(string.format(
-                'Walk delay after teleport: %sms',
-                value))
-        end
-    },
-    walkStairsDelay                   = {
-        value = 50,
-        action = function(value, options, controller, panels, extraWidgets)
-            panels.generalPanel:recursiveGetChildById('walkStairsDelay'):setText(string.format(
-                'Walk delay after floor change: %sms',
-                value))
+            panels.generalPanel:recursiveGetChildById('turnDelay'):setText(string.format('Turn delay: %sms', value))
         end
     },
     hotkeyDelay                       = {
@@ -195,7 +181,7 @@ return {
         end
     },
     enableHighlightMouseTarget        = {
-        value = false,
+        value = true,
         action = function(value, options, controller, panels, extraWidgets)
             panels.gameMapPanel:setDrawHighlightTarget(value)
         end
@@ -222,7 +208,7 @@ return {
         end
     },
     forceEffectOptimization           = {
-        value = false,
+        value = true,
         action = function(value, options, controller, panels, extraWidgets)
             g_app.forceEffectOptimization(value)
         end
@@ -246,8 +232,7 @@ return {
     floorFading                       = {
         value = 500,
         action = function(value, options, controller, panels, extraWidgets)
-            panels.graphicsEffectsPanel:recursiveGetChildById('floorFading'):setText(string.format('Floor Fading: %s ms',
-                value))
+            panels.graphicsEffectsPanel:recursiveGetChildById('floorFading'):setText(string.format('Floor Fading: %s ms', value))
             panels.gameMapPanel:setFloorFading(tonumber(value))
         end
     },
@@ -266,27 +251,8 @@ return {
             g_app.setLoadingAsyncTexture(value)
         end
     },
-    hudScale                          = {
-        event = nil,
-        value = g_platform.isMobile() and 2 or 0,
-        action = function(value, options, controller, panels, extraWidgets)
-            value = value / 2
-
-            if options.hudScale.event ~= nil then
-                removeEvent(options.hudScale.event)
-            end
-
-            options.hudScale.event = scheduleEvent(function()
-                g_app.setHUDScale(math.max(value + 0.5, 1))
-                options.hudScale.event = nil
-            end, 250)
-
-            local hudWidget = panels.interfaceHUD:recursiveGetChildById('hudScale')
-            hudWidget:setText(string.format('HUD Scale: %sx', math.max(value + 0.5, 1)))
-        end
-    },
     creatureInformationScale          = {
-        value = g_platform.isMobile() and 2 or 0,
+        value = 0,
         action = function(value, options, controller, panels, extraWidgets)
             if value == 0 then
                 value = g_window.getDisplayDensity() - 0.5
@@ -299,7 +265,7 @@ return {
         end
     },
     staticTextScale                   = {
-        value = g_platform.isMobile() and 2 or 0,
+        value = 0,
         action = function(value, options, controller, panels, extraWidgets)
             if value == 0 then
                 value = g_window.getDisplayDensity() - 0.5
@@ -312,7 +278,7 @@ return {
         end
     },
     animatedTextScale                 = {
-        value = g_platform.isMobile() and 2 or 0,
+        value = 0,
         action = function(value, options, controller, panels, extraWidgets)
             if value == 0 then
                 value = g_window.getDisplayDensity() - 0.5
@@ -331,7 +297,7 @@ return {
         end
     },
     showLeftPanel                     = {
-        value = true,
+        value = false,
         action = function(value, options, controller, panels, extraWidgets)
             modules.game_interface.getLeftPanel():setOn(value)
         end
@@ -342,7 +308,7 @@ return {
             modules.game_interface.getRightExtraPanel():setOn(value)
         end
     },
-    showActionbar                     = {
+    showActionbar                    = {
         value = true,
         action = function(value, options, controller, panels, extraWidgets)
             modules.game_actionbar.setActionBarVisible(value)
@@ -366,16 +332,14 @@ return {
         value = 100,
         action = function(value, options, controller, panels, extraWidgets)
             g_client.setEffectAlpha(value / 100)
-            panels.graphicsEffectsPanel:recursiveGetChildById('setEffectAlphaScroll'):setText(tr('Opacity Effect: %s%%',
-                value))
+            panels.graphicsEffectsPanel:recursiveGetChildById('setEffectAlphaScroll'):setText(tr('Opacity Effect: %s%%', value))
         end
     },
     setMissileAlphaScroll             = {
         value = 100,
         action = function(value, options, controller, panels, extraWidgets)
             g_client.setMissileAlpha(value / 100)
-            panels.graphicsEffectsPanel:recursiveGetChildById('setMissileAlphaScroll'):setText(tr(
-                'Opacity Missile: %s%%', value))
+            panels.graphicsEffectsPanel:recursiveGetChildById('setMissileAlphaScroll'):setText(tr('Opacity Missile: %s%%', value))
         end
     },
     distFromCenScrollbar              = {
@@ -394,81 +358,7 @@ return {
             modules.game_healthcircle.setCircleOpacity(bar:recursiveGetChildById('valueBar'):getValue() / 100)
         end
     },
-    profile                           = {
+    profile                          = {
         value = 1,
-    },
-    rightJoystick                     = {
-        value = false,
-        action = function(value, options, controller, panels, extraWidgets)
-            if not g_platform.isMobile() then return end
-            if value == true then
-                modules.game_shortcuts.getPanel():breakAnchors()
-                modules.game_shortcuts.getPanel():addAnchor(AnchorBottom, "parent", AnchorBottom)
-                modules.game_shortcuts.getPanel():addAnchor(AnchorLeft, "parent", AnchorLeft)
-
-                modules.game_joystick.getPanel():breakAnchors()
-                modules.game_joystick.getPanel():addAnchor(AnchorBottom, "parent", AnchorBottom)
-                modules.game_joystick.getPanel():addAnchor(AnchorRight, "parent", AnchorRight)
-            else
-                modules.game_joystick.getPanel():breakAnchors()
-                modules.game_joystick.getPanel():addAnchor(AnchorBottom, "parent", AnchorBottom)
-                modules.game_joystick.getPanel():addAnchor(AnchorLeft, "parent", AnchorLeft)
-
-                modules.game_shortcuts.getPanel():breakAnchors()
-                modules.game_shortcuts.getPanel():addAnchor(AnchorBottom, "parent", AnchorBottom)
-                modules.game_shortcuts.getPanel():addAnchor(AnchorRight, "parent", AnchorRight)
-            end
-        end
-    },
-    showExpiryInInvetory              = {
-        value = true,
-        event = nil,
-        action = function(value, options, controller, panels, extraWidgets)
-            if options.showExpiryInContainers.event ~= nil then
-                removeEvent(options.showExpiryInInvetory.event)
-            end
-            options.showExpiryInInvetory.event = scheduleEvent(function()
-                modules.game_inventory.reloadInventory()
-                options.showExpiryInInvetory.event = nil
-            end, 100)
-        end
-    },
-    showExpiryInContainers            = {
-        value = true,
-        event = nil,
-        action = function(value, options, controller, panels, extraWidgets)
-            if options.showExpiryInContainers.event ~= nil then
-                removeEvent(options.showExpiryInContainers.event)
-            end
-            options.showExpiryInContainers.event = scheduleEvent(function()
-                modules.game_containers.reloadContainers()
-                options.showExpiryInContainers.event = nil
-            end, 100)
-        end
-    },
-    showExpiryOnUnusedItems           = true,
-    framesRarity                      = {
-        value = 'frames',
-        event = nil,
-        action = function(value, options, controller, panels, extraWidgets)
-            local newValue = value
-            if newValue == 'None' then
-                newValue = nil
-            end
-            panels.interface:recursiveGetChildById('frames'):setCurrentOptionByData(newValue, true)
-            if options.framesRarity.event ~= nil then
-                removeEvent(options.framesRarity.event)
-            end
-            options.framesRarity.event = scheduleEvent(function()
-                modules.game_containers.reloadContainers()
-                options.framesRarity.event = nil
-            end, 100)
-        end
-    },
-    autoSwitchPreset                  = false,
-    listKeybindsPanel                 = {
-        action = function(value, options, controller, panels, extraWidgets)
-            listKeybindsComboBox(value)
-        end
-    },
+    }
 }

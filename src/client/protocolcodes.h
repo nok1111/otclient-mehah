@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,7 +53,7 @@ namespace Proto
         GameServerLoginWait = 22,
         GameServerLoginSuccess = 23,
         GameServerSessionEnd = 24,
-        GameServerStoreButtonIndicators = 25,
+        GameServerStoreButtonIndicators = 25, // 1097
         GameServerBugReport = 26,
         GameServerPingBack = 29,
         GameServerPing = 30,
@@ -77,9 +77,10 @@ namespace Proto
         GameServerCreatureShader = 54,
         GameServerMapShader = 55,
         GameServerCreatureTyping = 56,
-        GameServerFeatures = 67,
+#ifdef PROGRESSBAR
+        ServerRunProgressbar = 59,
+#endif
         GameServerFloorDescription = 75,
-        GameServerDash = 77,
 
         // original tibia ONLY
         GameServerImbuementDurations = 93,
@@ -102,9 +103,7 @@ namespace Proto
         GameServerCreateContainer = 112,
         GameServerChangeInContainer = 113,
         GameServerDeleteInContainer = 114,
-        GameServerBosstiaryInfo = 115,
         GameServerTakeScreenshot = 117,
-        GameServerCyclopediaItemDetail = 118,
         GameServerSetInventory = 120,
         GameServerDeleteInventory = 121,
         GameServerOpenNpcTrade = 122,
@@ -120,7 +119,6 @@ namespace Proto
         GameServerItemClasses = 134,
         GameServerTrappers = 135,
         GameServerCreatureName = 138,
-        GameServerCloseForgeWindow = 137,
         GameServerCreatureData = 139,
         GameServerCreatureHealth = 140,
         GameServerCreatureLight = 141,
@@ -138,17 +136,17 @@ namespace Proto
         GameServerSendBlessDialog = 155,
         GameServerBlessings = 156,
         GameServerPreset = 157,
-        GameServerPremiumTrigger = 158,
-        GameServerPlayerDataBasic = 159,
+        GameServerPremiumTrigger = 158, // 1038
+        GameServerPlayerDataBasic = 159, // 950
         GameServerPlayerData = 160,
         GameServerPlayerSkills = 161,
         GameServerPlayerState = 162,
         GameServerClearTarget = 163,
-        GameServerSpellDelay = 164,
-        GameServerSpellGroupDelay = 165,
-        GameServerMultiUseDelay = 166,
         GameServerPlayerModes = 167,
-        GameServerSetStoreDeepLink = 168,
+        GameServerSpellDelay = 164, // 870
+        GameServerSpellGroupDelay = 165, // 870
+        GameServerMultiUseDelay = 166, // 870
+        GameServerSetStoreDeepLink = 168, // 1097
         GameServerSendRestingAreaState = 169,
         GameServerTalk = 170,
         GameServerChannels = 171,
@@ -165,42 +163,34 @@ namespace Proto
         GameServerWalkWait = 182,
         GameServerUnjustifiedStats = 183,
         GameServerPvpSituations = 184,
-        GameServerBestiaryRefreshTracker = 185,
+        GameServerRefreshBestiaryTracker = 185,
         GameServerTaskHuntingBasicData = 186,
         GameServerTaskHuntingData = 187,
         GameServerBosstiaryCooldownTimer = 189,
         GameServerFloorChangeUp = 190,
         GameServerFloorChangeDown = 191,
         GameServerLootContainers = 192,
-        GameServerCyclopediaHouseAuctionMessage = 195,
-        GameServerCyclopediaHousesInfo = 198,
-        GameServerCyclopediaHouseList = 199,
         GameServerChooseOutfit = 200,
         GameServerSendUpdateImpactTracker = 204,
         GameServerSendItemsPrice = 205,
         GameServerSendUpdateSupplyTracker = 206,
         GameServerSendUpdateLootTracker = 207,
-        GameServerQuestTracker = 208,
-        GameServerKillTracker = 209,
+        GameServerKillTracker = 209, // 1281
         GameServerVipAdd = 210,
         GameServerVipState = 211,
         GameServerVipLogout = 212,
-        GameServerBestiaryRaces = 213,
-        GameServerBestiaryOverview = 214,
-        GameServerBestiaryMonsterData = 215,
-        GameServerBestiaryCharmsData = 216,
-        GameServerBestiaryEntryChanged = 217,
-        GameServerCyclopediaCharacterInfoData = 218,
+        GameServerSendBestiaryEntryChanged = 217,
         GameServerTutorialHint = 220,
         GameServerAutomapFlag = 221,
         GameServerSendDailyRewardCollectionState = 222,
-        GameServerCoinBalance = 223,
-        GameServerStoreError = 224,
-        GameServerRequestPurchaseData = 225,
+        GameServerCoinBalance = 223, // 1080
+        GameServerStoreError = 224, // 1080
+        GameServerRequestPurchaseData = 225, // 1080
         GameServerSendOpenRewardWall = 226,
         GameServerSendDailyReward = 228,
         GameServerSendRewardHistory = 229,
-        GameServerSendPreyFreeRerolls = 230, // GameServerSendBosstiaryEntryChanged = 230,
+        GameServerSendPreyFreeRerolls = 230,
+        GameServerSendBosstiaryEntryChanged = 230,
         GameServerSendPreyTimeLeft = 231,
         GameServerSendPreyData = 232,
         GameServerSendPreyRerollPrice = 233,
@@ -208,23 +198,23 @@ namespace Proto
         GameServerSendImbuementWindow = 235,
         GameServerSendCloseImbuementWindow = 236,
         GameServerSendError = 237,
-        GameServerResourceBalance = 238,
-        GameServerWorldTime = 239,
+        GameServerResourceBalance = 238, // 1281
+        GameServerWorldTime = 239, // 1281
         GameServerQuestLog = 240,
         GameServerQuestLine = 241,
-        GameServerCoinBalanceUpdating = 242,
-        GameServerChannelEvent = 243,
-        GameServerItemInfo = 244,
-        GameServerPlayerInventory = 245,
-        GameServerMarketEnter = 246,
-        GameServerMarketLeave = 247,
-        GameServerMarketDetail = 248,
-        GameServerMarketBrowse = 249,
-        GameServerModalDialog = 250,
-        GameServerStore = 251,
-        GameServerStoreOffers = 252,
-        GameServerStoreTransactionHistory = 253,
-        GameServerStoreCompletePurchase = 254
+        GameServerCoinBalanceUpdating = 242, // 1080
+        GameServerChannelEvent = 243, // 910
+        GameServerItemInfo = 244, // 910
+        GameServerPlayerInventory = 245, // 910
+        GameServerMarketEnter = 246, // 944
+        GameServerMarketLeave = 247, // 944
+        GameServerMarketDetail = 248, // 944
+        GameServerMarketBrowse = 249, // 944
+        GameServerModalDialog = 250, // 960
+        GameServerStore = 251, // 1080
+        GameServerStoreOffers = 252, // 1080
+        GameServerStoreTransactionHistory = 253, // 1080
+        GameServerStoreCompletePurchase = 254  // 1080
     };
 
     enum ClientOpcodes : uint8_t
@@ -236,7 +226,6 @@ namespace Proto
         ClientPing = 29,
         ClientPingBack = 30,
         ClientUseStash = 40,
-        ClientBestiaryTrackerStatus = 42,
 
         // all in game opcodes must be equal or greater than 50
         ClientFirstGameOpcode = 50,
@@ -264,8 +253,7 @@ namespace Proto
         ClientTurnEast = 112,
         ClientTurnSouth = 113,
         ClientTurnWest = 114,
-        ClientGmTeleport = 115,
-        ClientEquipItem = 119,
+        ClientEquipItem = 119, // 910
         ClientMove = 120,
         ClientInspectNpcTrade = 121,
         ClientBuyItem = 122,
@@ -286,9 +274,6 @@ namespace Proto
         ClientOnWrapItem = 139,
         ClientLook = 140,
         ClientLookCreature = 141,
-        ClientSendQuickLoot = 143,
-        ClientLootContainer = 144,
-        ClientQuickLootBlackWhitelist = 145,
         ClientTalk = 150,
         ClientRequestChannels = 151,
         ClientJoinChannel = 152,
@@ -311,58 +296,42 @@ namespace Proto
         ClientOpenOwnChannel = 170,
         ClientInviteToOwnChannel = 171,
         ClientExcludeFromOwnChannel = 172,
-        ClientCyclopediaHouseAuction = 173,
-        ClientBosstiaryRequestInfo = 174,
-        ClientBosstiaryRequestSlotInfo = 175,
-        ClientBosstiaryRequestSlotAction = 176,
         ClientRequestHighscore = 177,
         ClientCancelAttackAndFollow = 190,
         ClientUpdateTile = 201,
         ClientRefreshContainer = 202,
         ClientBrowseField = 203,
         ClientSeekInContainer = 204,
-        ClientInspectionObject = 205,
-        ClientRequestBless = 207,
-        ClientRequestTrackerQuestLog = 208,
         ClientRequestOutfit = 210,
         ClientChangeOutfit = 211,
-        ClientMount = 212,
+        ClientMount = 212, // 870
         ClientApplyImbuement = 213,
         ClientClearImbuement = 214,
         ClientCloseImbuingWindow = 215,
-        ClientOpenRewardWall = 216,
-        ClientOpenRewardHistory = 217,
-        sendGetRewardDaily = 218,
         ClientAddVip = 220,
         ClientRemoveVip = 221,
         ClientEditVip = 222,
-        ClientEditVipGroups = 223,
-        ClientBestiaryRequest = 225,
-        ClientBestiaryRequestOverview = 226,
-        ClientBestiaryRequestSearch = 227,
-        ClientCyclopediaSendBuyCharmRune = 228,
-        ClientCyclopediaRequestCharacterInfo = 229,
         ClientBugReport = 230,
         ClientRuleViolation = 231,
         ClientDebugReport = 232,
         ClientPreyAction = 235,
         ClientPreyRequest = 237,
-        ClientTransferCoins = 239,
+        ClientTransferCoins = 239, // 1080
         ClientRequestQuestLog = 240,
         ClientRequestQuestLine = 241,
-        ClientNewRuleViolation = 242,
-        ClientRequestItemInfo = 243,
-        ClientMarketLeave = 244,
-        ClientMarketBrowse = 245,
-        ClientMarketCreate = 246,
-        ClientMarketCancel = 247,
-        ClientMarketAccept = 248,
-        ClientAnswerModalDialog = 249,
-        ClientOpenStore = 250,
-        ClientRequestStoreOffers = 251,
-        ClientBuyStoreOffer = 252,
-        ClientOpenTransactionHistory = 253,
-        ClientRequestTransactionHistory = 254
+        ClientNewRuleViolation = 242, // 910
+        ClientRequestItemInfo = 243, // 910
+        ClientMarketLeave = 244, // 944
+        ClientMarketBrowse = 245, // 944
+        ClientMarketCreate = 246, // 944
+        ClientMarketCancel = 247, // 944
+        ClientMarketAccept = 248, // 944
+        ClientAnswerModalDialog = 249, // 960
+        ClientOpenStore = 250, // 1080
+        ClientRequestStoreOffers = 251, // 1080
+        ClientBuyStoreOffer = 252, // 1080
+        ClientOpenTransactionHistory = 253, // 1080
+        ClientRequestTransactionHistory = 254  // 1080
     };
 
     enum CreatureType

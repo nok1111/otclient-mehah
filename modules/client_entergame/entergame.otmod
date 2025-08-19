@@ -4,14 +4,13 @@ Module
   author: edubart
   website: https://github.com/edubart/otclient
 
-  dependencies:
+  load-later:
     - game_features
     - game_things
 
   @onLoad: |
     dofile 'entergame'
     dofile 'characterlist'
-    dofile 'createAccount'
     EnterGame.init()
     CharacterList.init()
 

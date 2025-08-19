@@ -355,6 +355,16 @@ MiniWindow
       SkillPercentPanel
 
     SkillButton
+      id: professionId9
+      SkillNameLabel
+        id: label
+      SkillValueLabel
+      ImageSkill
+        image-source: /images/icons/icon_fishing
+        image-size: 9 9
+      SkillPercentPanel
+
+    SkillButton
       id: skillId6
       SkillNameLabel
         !text: tr('Fishing')

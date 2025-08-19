@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,10 @@
 
 #include "declarations.h"
 #include "framebuffer.h"
+#include "texture.h"
 #include "framework/core/timer.h"
-#include <framework/core/graphicalapplication.h>
 #include <framework/platform/platformwindow.h>
+#include <framework/core/graphicalapplication.h>
 
 #include "../stdext/storage.h"
 #include <unordered_set>
@@ -55,20 +56,25 @@ enum DrawOrder : uint8_t
 
 struct DrawHashController
 {
-    DrawHashController(bool agroup = false) : m_agroup(agroup) {}
-
     bool put(size_t hash) {
-        if ((m_agroup && m_hashs.emplace(hash).second) || m_lastObjectHash != hash) {
-            m_lastObjectHash = hash;
-            stdext::hash_union(m_currentHash, hash);
-            return true;
-        }
+        if (m_agroup)
+            return m_hashs.emplace(m_lastObjectHash = hash).second;
 
-        return false;
+        stdext::hash_union(m_currentHash, hash);
+        return true;
     }
 
     bool isLast(const size_t hash) const {
         return m_lastObjectHash == hash;
+    }
+
+    void update() {
+        if (!m_agroup || m_hashs.empty()) return;
+
+        m_currentHash = 0;
+        for (const auto hash : m_hashs)
+            stdext::hash_union(m_currentHash, hash);
+        m_hashs.clear();
     }
 
     void forceUpdate() {
@@ -82,23 +88,27 @@ struct DrawHashController
     void reset() {
         m_hashs.clear();
         m_lastHash = m_currentHash;
-        m_currentHash = 0;
         m_lastObjectHash = 0;
     }
 
+    void agroup(bool v) {
+        m_agroup = v;
+    }
+
 private:
-    stdext::set<size_t> m_hashs;
+    std::unordered_set<size_t> m_hashs;
 
     size_t m_lastHash{ 0 };
     size_t m_currentHash{ 0 };
     size_t m_lastObjectHash{ 0 };
-    bool m_agroup{ false };
+
+    bool m_agroup{ true };
 };
 
 struct DrawConductor
 {
     bool agroup{ false };
-    uint8_t order{ FIRST };
+    uint8_t order{ DrawOrder::FIRST };
 };
 
 constexpr DrawConductor DEFAULT_DRAW_CONDUCTOR;
@@ -111,27 +121,27 @@ public:
         FPS20 = 1000 / 20,
         FPS60 = 1000 / 60;
 
-    void setEnable(const bool v) { m_enabled = v; }
+    void setEnable(bool v) { m_enabled = v; }
 
     DrawPoolType getType() const { return m_type; }
 
     bool isEnabled() const { return m_enabled; }
-    bool isType(const DrawPoolType type) const { return m_type == type; }
+    bool isType(DrawPoolType type) const { return m_type == type; }
 
     bool isValid() const { return !m_framebuffer || m_framebuffer->isValid(); }
     bool hasFrameBuffer() const { return m_framebuffer != nullptr; }
     FrameBufferPtr getFrameBuffer() const { return m_framebuffer; }
 
     bool canRepaint();
-    void repaint() { if (hasFrameBuffer()) m_hashCtrl.forceUpdate(); m_refreshTimer.update(-1000); }
+    void repaint() { m_hashCtrl.forceUpdate(); m_refreshTimer.update(-1000); }
     void resetState();
     void scale(float factor);
 
-    void agroup(const bool agroup) { m_alwaysGroupDrawings = agroup; }
+    void agroup(bool agroup) { m_alwaysGroupDrawings = agroup; }
 
-    void setScaleFactor(const float scale) { m_scaleFactor = scale; }
-    float getScaleFactor() const { return m_scaleFactor; }
-    bool isScaled() const { return m_scaleFactor != PlatformWindow::DEFAULT_DISPLAY_DENSITY; }
+    void setScaleFactor(float scale) { m_scaleFactor = scale; }
+    inline float getScaleFactor() const { return m_scaleFactor; }
+    inline bool isScaled() const { return m_scaleFactor != PlatformWindow::DEFAULT_DISPLAY_DENSITY; }
 
     void setFramebuffer(const Size& size);
     void removeFramebuffer();
@@ -147,13 +157,6 @@ public:
 
     auto& getHashController() {
         return m_hashCtrl;
-    }
-
-    void resetBuffer() {
-        for (auto& buffer : m_coordsCache) {
-            buffer.coords.clear();
-            buffer.last = 0;
-        }
     }
 
 protected:
@@ -195,10 +198,25 @@ protected:
     struct DrawObject
     {
         DrawObject(std::function<void()> action) : action(std::move(action)) {}
-        DrawObject(PoolState&& state, const std::shared_ptr<CoordsBuffer>& coords) : coords(coords), state(std::move(state)) {}
+        DrawObject(PoolState&& state, const size_t coordSize) : coords(std::make_unique<CoordsBuffer>(coordSize)), state(std::move(state)) {}
+        DrawObject(const DrawMode drawMode, PoolState&& state, DrawMethod&& method) :
+            state(std::move(state)), drawMode(drawMode) {
+            methods.reserve(10);
+            methods.emplace_back(std::move(method));
+        }
+
+        void addMethod(DrawMethod&& method)
+        {
+            drawMode = DrawMode::TRIANGLES;
+            methods.emplace_back(std::move(method));
+        }
+
+        std::vector<DrawMethod> methods;
         std::function<void()> action{ nullptr };
-        std::shared_ptr<CoordsBuffer> coords;
+        std::unique_ptr<CoordsBuffer> coords;
+
         PoolState state;
+        DrawMode drawMode{ DrawMode::TRIANGLES };
     };
 
     struct DrawObjectState
@@ -212,8 +230,8 @@ protected:
     };
 
 private:
-    static DrawPool* create(DrawPoolType type);
-    static void addCoords(CoordsBuffer* buffer, const DrawMethod& method);
+    static DrawPool* create(const DrawPoolType type);
+    static void addCoords(CoordsBuffer* buffer, const DrawPool::DrawMethod& method, DrawMode drawMode);
 
     enum STATE_TYPE : uint32_t
     {
@@ -224,16 +242,17 @@ private:
         STATE_BLEND_EQUATION = 1 << 4,
     };
 
-    void add(const Color& color, const TexturePtr& texture, DrawMethod&& method, const DrawConductor& conductor = DEFAULT_DRAW_CONDUCTOR,
+    void add(const Color& color, const TexturePtr& texture, DrawPool::DrawMethod&& method,
+             DrawMode drawMode = DrawMode::TRIANGLES, const DrawConductor& conductor = DEFAULT_DRAW_CONDUCTOR,
              const CoordsBufferPtr& coordsBuffer = nullptr);
 
     void addAction(const std::function<void()>& action);
     void bindFrameBuffer(const Size& size, const Color& color = Color::white);
     void releaseFrameBuffer(const Rect& dest);
 
-    void setFPS(const uint16_t fps) { m_refreshDelay = 1000 / fps; }
+    inline void setFPS(uint16_t fps) { m_refreshDelay = 1000 / fps; }
 
-    bool updateHash(const DrawMethod& method, const TexturePtr& texture, const Color& color, bool hasCoord);
+    bool updateHash(const DrawPool::DrawMethod& method, const TexturePtr& texture, const Color& color, const bool hasCoord);
     PoolState getState(const TexturePtr& texture, const Color& color);
 
     PoolState& getCurrentState() { return m_states[m_lastStateIndex]; }
@@ -261,27 +280,25 @@ private:
     void translate(const Point& p) { translate(p.x, p.y); }
     void rotate(float angle);
     void rotate(float x, float y, float angle);
-    void rotate(const Point& p, const float angle) { rotate(p.x, p.y, angle); }
-
-    std::shared_ptr<CoordsBuffer> getCoordsBuffer();
+    void rotate(const Point& p, float angle) { rotate(p.x, p.y, angle); }
 
     template<typename T>
     void setParameter(std::string_view name, T&& value) {
         m_parameters.emplace(name, value);
     }
     template<typename T>
-    T getParameter(const std::string_view name) {
-        const auto it = m_parameters.find(name);
+    T getParameter(std::string_view name) {
+        auto it = m_parameters.find(name);
         if (it != m_parameters.end()) {
             return std::any_cast<T>(it->second);
         }
 
         return T();
     }
-    bool containsParameter(const std::string_view name) {
+    bool containsParameter(std::string_view name) {
         return m_parameters.contains(name);
     }
-    void removeParameter(const std::string_view name) {
+    void removeParameter(std::string_view name) {
         const auto& it = m_parameters.find(name);
         if (it != m_parameters.end())
             m_parameters.erase(it);
@@ -296,9 +313,8 @@ private:
         }
     }
 
-    void release(const bool flush = true) {
+    void release(bool flush = true) {
         m_objectsDraw.clear();
-
         if (flush) {
             if (!m_objectsFlushed.empty())
                 m_objectsDraw.insert(m_objectsDraw.end(), make_move_iterator(m_objectsFlushed.begin()), make_move_iterator(m_objectsFlushed.end()));
@@ -308,10 +324,8 @@ private:
                 objs.clear();
             }
         }
-        m_objectsFlushed.clear();
 
-        std::swap(m_coordsCache[0].coords, m_coordsCache[1].coords);
-        m_coordsCache[1].last = m_coordsCache[0].last;
+        m_objectsFlushed.clear();
     }
 
     void resetOnlyOnceParameters() {
@@ -343,7 +357,7 @@ private:
         --m_lastStateIndex;
     }
 
-    const FrameBufferPtr& getTemporaryFrameBuffer(uint8_t index);
+    const FrameBufferPtr& getTemporaryFrameBuffer(const uint8_t index);
 
     bool m_enabled{ true };
     bool m_alwaysGroupDrawings{ false };
@@ -366,21 +380,17 @@ private:
     std::vector<Matrix3> m_transformMatrixStack;
     std::vector<FrameBufferPtr> m_temporaryFramebuffers;
 
-    std::vector<DrawObject> m_objects[static_cast<uint8_t>(LAST)];
+    std::vector<DrawObject> m_objects[static_cast<uint8_t>(DrawOrder::LAST)];
     std::vector<DrawObject> m_objectsFlushed;
     std::vector<DrawObject> m_objectsDraw;
-
-    struct
-    {
-        std::vector<std::shared_ptr<CoordsBuffer>> coords;
-        uint_fast32_t last{ 0 };
-    } m_coordsCache[2];
 
     stdext::map<size_t, CoordsBuffer*> m_coords;
     stdext::map<std::string_view, std::any> m_parameters;
 
     float m_scaleFactor{ 1.f };
     float m_scale{ PlatformWindow::DEFAULT_DISPLAY_DENSITY };
+
+    size_t m_lastCoordBufferSize{ 64 };
 
     FrameBufferPtr m_framebuffer;
 

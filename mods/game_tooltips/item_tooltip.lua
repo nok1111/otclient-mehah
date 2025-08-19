@@ -30,17 +30,9 @@ local Colors = {
 local rarityColor = {
   {name = "", color = "#ffffff"},
   {name = "Common", color = "#ffffff"},
-  {name = "Orbital", color = "#02e2fc"},
-  {name = "Forged", color = "#d300ff"},
-  {name = "[Corrupted]", color = "#ff7605"} 
-}
-
-local rarityBackground = {
-  [1] = '/images/ui/tooltip-white.png',     -- ""
-  [2] = '/images/ui/tooltip-white.png',     -- Common
-  [3] = '/images/ui/tooltip-blue.png',    -- Orbital
-  [4] = '/images/ui/tooltip-purple.png',     -- Forged
-  [5] = '/images/ui/tooltip-orange.png'   -- Legendary
+  {name = "Rare", color = "#02e2fc"},
+  {name = "Epic", color = "#d300ff"},
+  {name = "Legendary", color = "#ff7605"}
 }
 
 local implicits = {
@@ -358,22 +350,14 @@ function buildItemTooltip(item)
   itemSprite:setItemCount(count)
 
   local itemNameColor
-  local bgImage
   if unidentified then
     itemNameColor = rarityColor[2].color
-    bgImage = '/images/ui/tooltip_unidentified.png'
   elseif item.uniqueName then
     itemNameColor = "#05fb45"
-    bgImage = '/images/ui/tooltip_unique.png'
   elseif rarity > 1 then
     itemNameColor = rarityColor[rarity].color
-    bgImage = rarityBackground[rarity] or '/images/ui/tooltip_common.png'
-  elseif item.type == "Spell" then
-    itemNameColor = "#ffffff"
-    bgImage = rarityBackground[3]
   else
     itemNameColor = "#ffffff"
-    bgImage = rarityBackground[1]
   end
 
   name =
@@ -407,27 +391,26 @@ function buildItemTooltip(item)
   end
 
   local firstText, secondText, thirdText
-  if (type == "Armor" or type == "Spell" or type == "Legs" or type == "Ring" or type == "Necklace" or type == "Boots" or type == "Ammunition") and first ~= 0 then
+  if (type == "Armor" or type == "Helmet" or type == "Legs" or type == "Ring" or type == "Necklace" or type == "Boots" or type == "Ammunition") and first ~= 0 then
     firstText = "Armor: " .. first
   elseif
-    type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Axe" or type == "Fist" or
-      type == "Distance" then 
-        print("type", type)
+    type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Wand" or type == "Axe" or type == "Fist" or
+      type == "Distance" 
+   then
     firstText = "Attack: " .. first
-    print("firstText", firstText) 
   elseif type == "Shield" then
     firstText = "Defense: " .. second
   end
 
-  if type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" then
+  if type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Axe" or type == "Fist"  or type == "Distance" or type == "Wand" then
     secondText = "Defense: " .. second
 
   end
 
-  if type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" then
+  if type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Axe" or type == "Fist" then
     thirdText = "Extra-Defense: " .. third
-  elseif type == "Distance" or type == "Axe" then
-    secondText = "Shoot Range: " .. third
+  elseif type == "Distance" then
+    thirdText = "Shoot Range: " .. third
   end
 
   if (firstText and (type == "Shield" or type == "Ring" or type == "Necklace")) or (first ~= 0 and second == 0 and third == 0) then
@@ -439,11 +422,12 @@ function buildItemTooltip(item)
     addEmpty(5)
     addString(firstText, Colors.Default)
     addString(secondText, Colors.Default)
-  elseif type == "Distance" or type == "Axe" then
+  elseif first ~= 0 and second ~= 0 and third ~= 0 or type == "Distance" then
     addSeparator()
     addEmpty(5)
     addString(firstText, Colors.Default)
     addString(secondText, Colors.Default)
+    addString(thirdText, Colors.Default)
   end
 
   if item.imp then
@@ -460,7 +444,7 @@ function buildItemTooltip(item)
         impText = implicits[key] .. " " .. (value > 0 and "+" or "") .. value .. (impPercent[key] and "%" or "")
       end
       if key == "ca" then
-       -- addString("Critical Power", "180%")
+        addString("Critical Power", "180%")
       else
         addString(impText, Colors.Implicit)
       end
@@ -489,7 +473,7 @@ function buildItemTooltip(item)
   end
 
   shrinkSeparators()
-  showItemTooltip(item, bgImage)
+  showItemTooltip()
 end
 
 function addString(text, color, resize)
@@ -539,17 +523,11 @@ function addEmpty(height)
   tooltipHeight = tooltipHeight + height
 end
 
-function showItemTooltip(item, bgImage)
+function showItemTooltip()
   local mousePos = g_window.getMousePosition()
   tooltipHeight = math.max(tooltipHeight, 40)
   tooltipWindow:setWidth(tooltipWidth)
   tooltipWindow:setHeight(tooltipHeight)
-  tooltipWindow:setImageSource(bgImage)
-  tooltipWindow:setImageBorderTop(2)
-  tooltipWindow:setImageBorderRight(2)
-  tooltipWindow:setImageBorderBottom(2)
-  tooltipWindow:setImageBorderLeft(2)
-  tooltipWindow:setImageBorder(2)
   if mousePos.x > g_window.getSize().width / 2 then
     tooltipWindow:move(mousePos.x - (tooltipWidth + 5), mousePos.y + 10)
   else

@@ -27,16 +27,12 @@ local fpsPanel2
 local PingWidget
 local pingImg
 
-local zoomInButton = nil
-local zoomOutButton = nil
-local zoomLevel = 2
-
 local managerAccountsButton
 -- private functions
 local function addButton(id, description, icon, callback, panel, toggle, front)
     local class
     if toggle then
-        class = 'MainToggleButton'
+        class = 'TopToggleButton'
     else
         class = 'Button'
     end
@@ -64,23 +60,6 @@ local function addButton(id, description, icon, callback, panel, toggle, front)
         end
     end
     return button
-end
-
-local function updateZoomButtons()
-    if zoomInButton then
-        zoomInButton:setEnabled(zoomLevel < 6)
-    end
-    if zoomOutButton then
-        zoomOutButton:setEnabled(zoomLevel > 1.5)
-    end
-end
-
-local function setZoom(value)
-    local oldValue = zoomLevel
-    zoomLevel = math.max(1.5, math.min(6, value))
-    modules.client_options.setOption('hudScale', zoomLevel)
-    updateZoomButtons()
-    return oldValue ~= zoomLevel
 end
 
 -- public functions
@@ -113,28 +92,10 @@ function init()
     topLeftYoutubeLink = topMenu:recursiveGetChildById('youtubeIcon')
     topLeftDiscordLink = topMenu:recursiveGetChildById('discordIcon')
 
-    Keybind.new("UI", "Toggle Top Menu", "Ctrl+Shift+T", "")
-    Keybind.bind("UI", "Toggle Top Menu", {
-      {
-        type = KEY_DOWN,
-        callback = toggle,
-      }
-    })
+    g_keyboard.bindKeyDown('Ctrl+Shift+T', toggle)
     if Services.websites then
         managerAccountsButton = modules.client_topmenu.addTopRightRegularButton('hotkeysButton', tr('Manage Account'),
             nil, openManagerAccounts)
-    end
-    if g_platform.isMobile() then
-        zoomInButton = modules.client_topmenu.addLeftToggleButton('zoomInButton', 'Zoom In',
-            '/images/topbuttons/zoomin', function()
-                setZoom(zoomLevel + 0.5)
-            end)
-
-        zoomOutButton = modules.client_topmenu.addLeftToggleButton('zoomOutButton', 'Zoom Out',
-            '/images/topbuttons/zoomout', function()
-                setZoom(zoomLevel - 0.5)
-            end)
-        updateZoomButtons()
     end
     if g_game.isOnline() then
         online()
@@ -152,7 +113,7 @@ function terminate()
     })
 
     topMenu:destroy()
-    if PingWidget and not PingWidget:isDestroyed() then
+    if PingWidget then
         PingWidget:destroy()
         PingWidget = nil
     end
@@ -160,23 +121,11 @@ function terminate()
         managerAccountsButton:destroy()
         managerAccountsButton = nil
     end
-    if g_platform.isMobile() then
-        if zoomInButton and not zoomOutButton:isDestroyed() then
-            zoomInButton:destroy()
-            zoomInButton= nil
-        end
-        if zoomOutButton and not zoomOutButton:isDestroyed() then
-            zoomOutButton:destroy()
-            zoomOutButton= nil
-        end
-    end
 
-    Keybind.delete("UI", "Toggle Top Menu")
 end
 
 function hide()
     topMenu:hide()
-    modules.game_interface.getRootPanel():addAnchor(AnchorTop, 'parent', AnchorTop)
 end
 
 function show()
@@ -189,23 +138,8 @@ function online()
     showGameButtons()
 
     addEvent(function()
-        local showPing = modules.client_options.getOption('showPing')
-        local pingFeatureAvailable = g_game.getFeature(GameClientPing) or g_game.getFeature(GameExtendedClientPing)
-        
-        if not PingWidget then
-            PingWidget = g_ui.loadUI("pingFps", modules.game_interface.getMapPanel())
-            MainPingPanel = g_ui.createWidget("testPingPanel", PingWidget:getChildByIndex(1))
-            MainPingPanel:setId("ping")
-            
-            pingImg = MainPingPanel:getChildByIndex(1)
-            pingPanel = MainPingPanel:getChildByIndex(2)
-            
-            mainFpsPanel = g_ui.createWidget("testPingPanel", PingWidget:getChildByIndex(2))
-            mainFpsPanel:setId("fps")
-            fpsPanel2 = mainFpsPanel:getChildByIndex(2)
-        end
-
-        if showPing and pingFeatureAvailable then
+        if modules.client_options.getOption('showPing') and
+            (g_game.getFeature(GameClientPing) or g_game.getFeature(GameExtendedClientPing)) then
             pingLabel:show()
             if pingPanel then
                 pingPanel:show()
@@ -218,13 +152,32 @@ function online()
                 pingImg:hide()
             end
         end
-
-        pingImg:setVisible(showPing)
-        pingPanel:setVisible(showPing)
-        
-        local showFps = modules.client_options.getOption('showFps')
-        fpsPanel2:setVisible(showFps)
     end)
+    if PingWidget then
+        return
+    end
+
+    PingWidget = g_ui.loadUI("pingFps", modules.game_interface.getMapPanel())
+
+    MainPingPanel = g_ui.createWidget("testPingPanel", PingWidget:getChildByIndex(1))
+    MainPingPanel.setId(MainPingPanel, "ping")
+    pingImg = MainPingPanel.getChildByIndex(MainPingPanel, 1)
+    pingPanel = MainPingPanel.getChildByIndex(MainPingPanel, 2)
+    if modules.client_options.getOption('showPing') then
+        pingImg:setVisible(true)
+        pingPanel:setVisible(true)
+    else
+        pingImg:setVisible(false)
+        pingPanel:setVisible(true)
+    end
+    mainFpsPanel = g_ui.createWidget("testPingPanel", PingWidget:getChildByIndex(2))
+    mainFpsPanel.setId(mainFpsPanel, "fps")
+    fpsPanel2 = mainFpsPanel.getChildByIndex(mainFpsPanel, 2)
+    if modules.client_options.getOption('showFps') then
+        fpsPanel2:setVisible(true)
+    else
+        fpsPanel2:setVisible(false)
+    end
 end
 
 function offline()
@@ -466,19 +419,18 @@ function getTopMenu()
     return topMenu
 end
 
-function getRightGameButtonsPanel()
-    return topLeftTogglesPanel
-end
-
 function toggle()
-    if not topMenu then
+    local menu = getTopMenu()
+    if not menu then
         return
     end
 
-    if topMenu:isVisible() then
-        hide()
+    if menu:isVisible() then
+        menu:hide()
+        modules.game_interface.getRootPanel():addAnchor(AnchorTop, 'parent', AnchorTop)
     else
-        show()
+        menu:show()
+        modules.game_interface.getRootPanel():addAnchor(AnchorTop, 'topMenu', AnchorTop)
     end
 end
 
@@ -487,36 +439,4 @@ function openManagerAccounts()
         g_platform.openUrl(Services.websites)
     end
 
-end
-
-function extendedView(extendedView)
-    if not topMenu then
-        return
-    end
-    topMenu:breakAnchors()
-    if extendedView then
-        topMenu:show()
-        topMenu:addAnchor(AnchorLeft, 'parent', AnchorLeft)
-        topMenu:addAnchor(AnchorRight, 'parent', AnchorRight)
-        modules.game_interface.getRootPanel():addAnchor(AnchorTop, 'topMenu', AnchorBottom)
-        pingLabel:setVisible(false)
-        fpsLabel:setVisible(false)
-        topMenu.topLeftOnlinePlayers:hide()
-        topMenu.topLeftDiscord:setWidth(0)
-        topMenu.topLeftYoutube:setWidth(0)
-        topMenu.topLeftDiscord:hide()
-        topMenu.topLeftYoutube:hide()
-    else
-        if g_game.isOnline() then
-            topMenu:hide()
-        end
-        topMenu:addAnchor(AnchorHorizontalCenter, 'parent', AnchorHorizontalCenter)
-        modules.game_interface.getRootPanel():addAnchor(AnchorTop, 'parent', AnchorTop)
-        topMenu:setWidth(1020)
-        topMenu.topLeftDiscord:setWidth(110)
-        topMenu.topLeftYoutube:setWidth(100)
-        topMenu.topLeftOnlinePlayers:show()
-        topMenu.topLeftDiscord:show()
-        topMenu.topLeftYoutube:show()
-    end
 end

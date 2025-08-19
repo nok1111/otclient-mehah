@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,15 @@
  */
 
 #include "spritemanager.h"
-#include "game.h"
-#include "gameconfig.h"
-#include "spriteappearances.h"
-#include <framework/core/asyncdispatcher.h>
 #include <framework/core/filestream.h>
-#include <framework/core/graphicalapplication.h>
+#include <framework/core/asyncdispatcher.h>
+#include <framework/core/eventdispatcher.h>
 #include <framework/core/resourcemanager.h>
 #include <framework/graphics/image.h>
+#include "game.h"
+#include "spriteappearances.h"
+#include <framework/core/graphicalapplication.h>
+#include "gameconfig.h"
 
 SpriteManager g_sprites;
 
@@ -46,11 +47,11 @@ void SpriteManager::reload() {
 }
 
 void SpriteManager::load() {
-    m_spritesFiles.resize(g_asyncDispatcher.get_thread_count());
+    m_spritesFiles.resize(g_asyncDispatcher.get_thread_count() + 1);
     if (g_app.isLoadingAsyncTexture()) {
         for (auto& file : m_spritesFiles)
             file = std::make_unique<FileStream_m>(g_resources.openFile(m_lastFileName));
-    } else (m_spritesFiles[0] = std::make_unique<FileStream_m>(g_resources.openFile(m_lastFileName)))->file->cache(true);
+    } else (m_spritesFiles[0] = std::make_unique<FileStream_m>(g_resources.openFile(m_lastFileName)))->file->cache();
 }
 
 bool SpriteManager::loadSpr(std::string file)
@@ -58,27 +59,13 @@ bool SpriteManager::loadSpr(std::string file)
     m_spritesCount = 0;
     m_signature = 0;
     m_loaded = false;
-    m_spritesHd = false;
-
-    const auto cwmFile = g_resources.guessFilePath(file, "cwm");
-    if (g_resources.fileExists(cwmFile)) {
-        m_spritesHd = true;
-        return loadCwmSpr(cwmFile);
-    }
-
-    const auto sprFile = g_resources.guessFilePath(file, "spr");
-    if (g_resources.fileExists(sprFile)) {
-        return loadRegularSpr(sprFile);
-    }
-
-    return false;
-}
-
-bool SpriteManager::loadRegularSpr(std::string file)
-{
     try {
         m_lastFileName = g_resources.guessFilePath(file, "spr");
         load();
+
+        if (g_app.isEncrypted()) {
+            ResourceManager::decrypt(getSpriteFile()->m_data.data(), getSpriteFile()->m_data.size());
+        }
 
         m_signature = getSpriteFile()->getU32();
         m_spritesCount = g_game.getFeature(Otc::GameSpritesU32) ? getSpriteFile()->getU32() : getSpriteFile()->getU16();
@@ -88,52 +75,6 @@ bool SpriteManager::loadRegularSpr(std::string file)
         g_lua.callGlobalField("g_sprites", "onLoadSpr", file);
         return true;
     } catch (const stdext::exception& e) {
-        g_logger.error(stdext::format("Failed to load sprites from '%s': %s", file, e.what()));
-        return false;
-    }
-}
-
-bool SpriteManager::loadCwmSpr(std::string file)
-{
-    m_cwmSpritesMetadata.clear();
-
-    if (g_gameConfig.getSpriteSize() <= 32) {
-        g_logger.error(stdext::format("Change your sprite size to 64x64 or larger for CWM support '%s'", file));
-        return false;
-    }
-
-    try {
-        m_lastFileName = g_resources.guessFilePath(file, "cwm");
-        load();
-
-        const auto& spritesFile = getSpriteFile();
-
-        const uint8_t version = spritesFile->getU8();
-        if (version != 0x01) {
-            g_logger.error(stdext::format("Invalid CWM file version - %s", file));
-            return false;
-        }
-
-        m_spritesCount = spritesFile->getU16();
-
-        const uint32_t entries = spritesFile->getU32();
-        m_cwmSpritesMetadata.reserve(entries);
-        for (uint32_t i = 0; i < entries; ++i) {
-            FileMetadata spriteMetadata{ spritesFile };
-            m_cwmSpritesMetadata[spriteMetadata.getSpriteId()] = std::move(spriteMetadata);
-        }
-
-        m_spritesOffset = spritesFile->tell();
-
-        if (m_spritesCount == 0) {
-            g_logger.error(stdext::format("Failed to load sprites from '%s' - no sprites", file));
-            return false;
-        }
-
-        m_loaded = true;
-        g_lua.callGlobalField("g_sprites", "onLoadCWMSpr", file);
-        return true;
-    } catch (stdext::exception& e) {
         g_logger.error(stdext::format("Failed to load sprites from '%s': %s", file, e.what()));
         return false;
     }
@@ -205,39 +146,22 @@ void SpriteManager::unload()
     m_spritesFiles.clear();
 }
 
-ImagePtr SpriteManager::getSpriteImage(const int id)
+ImagePtr SpriteManager::getSpriteImage(int id)
 {
-    if (g_game.getProtocolVersion() >= 1281 && !g_game.getFeature(Otc::GameLoadSprInsteadProtobuf)) {
+    if (g_game.getClientVersion() >= 1281 && !g_game.getFeature(Otc::GameLoadSprInsteadProtobuf)) {
         return g_spriteAppearances.getSpriteImage(id);
     }
 
-    const auto threadId = g_app.isLoadingAsyncTexture() ? stdext::getThreadId() : 0;
-    if (const auto& sf = m_spritesFiles[threadId % m_spritesFiles.size()]) {
+    const auto threadId = g_app.isLoadingAsyncTexture() ? g_dispatcher.getThreadId() : 0;
+    if (const auto& sf = m_spritesFiles[threadId]) {
         std::scoped_lock l(sf->mutex);
-        return m_spritesHd ? getSpriteImageHd(id, sf->file) : getSpriteImage(id, sf->file);
+        return getSpriteImage(id, sf->file);
     }
 
     return nullptr;
 }
 
-ImagePtr SpriteManager::getSpriteImageHd(const int id, const FileStreamPtr& file)
-{
-    const auto it = m_cwmSpritesMetadata.find(id);
-    if (it == m_cwmSpritesMetadata.end())
-        return nullptr;
-
-    const auto& metadata = it->second;
-
-    std::string buffer(metadata.getFileSize(), 0);
-
-    file->seek(m_spritesOffset + metadata.getOffset());
-    file->read(buffer.data(), metadata.getFileSize());
-
-    return Image::loadPNG(buffer.data(), buffer.size());
-}
-
-ImagePtr SpriteManager::getSpriteImage(const int id, const FileStreamPtr& file)
-{
+ImagePtr SpriteManager::getSpriteImage(int id, const FileStreamPtr& file) {
     if (id == 0 || !file)
         return nullptr;
 

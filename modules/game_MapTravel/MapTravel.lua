@@ -91,7 +91,6 @@ end
 function MapTravel.hide()
 	if MapTravel.UI then
 		MapTravel.UI:hide()
-		MapTravel.UI.NodesTooltip:hide()
 	end
 end
 
