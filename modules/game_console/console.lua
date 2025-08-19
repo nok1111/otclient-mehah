@@ -139,6 +139,9 @@ HELP_CHANNEL = 9
 
 consolePanel = nil
 consoleContentPanel = nil
+local extendedViewButtonToggleChat = nil
+local extendedViewButtonShowAlphaChat = nil
+local gameBottomPanel = nil
 consoleTabBar = nil
 consoleTextEdit = nil
 consoleToggleChat = nil
@@ -183,8 +186,8 @@ function init()
         onGameEnd = offline,
         onChannelEvent = onChannelEvent
     })
-
-    consolePanel = g_ui.loadUI('console', modules.game_interface.getBottomPanel())
+    gameBottomPanel = modules.game_interface.getBottomPanel()
+    consolePanel = g_ui.loadUI('console', gameBottomPanel)
     consoleTextEdit = consolePanel:getChildById('consoleTextEdit')
     consoleContentPanel = consolePanel:getChildById('consoleContentPanel')
     consoleTabBar = consolePanel:getChildById('consoleTabBar')
@@ -222,14 +225,8 @@ function init()
     g_keyboard.bindKeyPress('Shift+Down', function()
         navigateMessageHistory(-1)
     end, consolePanel)
-    g_keyboard.bindKeyPress('Tab', function()
-        consoleTabBar:selectNextTab()
-    end, consolePanel)
-    g_keyboard.bindKeyPress('Shift+Tab', function()
-        consoleTabBar:selectPrevTab()
-    end, consolePanel)
+  
     g_keyboard.bindKeyDown('Enter', switchChatOnCall, consolePanel)
-    g_keyboard.bindKeyDown('Enter', sendCurrentMessage, consolePanel)
     g_keyboard.bindKeyDown('Escape', disableChatOnCall, consolePanel)
     g_keyboard.bindKeyPress('Ctrl+A', function()
         consoleTextEdit:clearText()
@@ -241,9 +238,52 @@ function init()
     consoleTabBar.onTabChange = onTabChange
 
     -- tibia like hotkeys
-    g_keyboard.bindKeyDown('Ctrl+O', g_game.requestChannels)
-    g_keyboard.bindKeyDown('Ctrl+E', removeCurrentTab)
-    g_keyboard.bindKeyDown('Ctrl+H', openHelp)
+    local gameRootPanel = modules.game_interface.getRootPanel()
+    Keybind.new("Chat Channel", "Next Channel", "Tab", "")
+    Keybind.bind("Chat Channel", "Next Channel", {
+        {
+          type = KEY_PRESS,
+          callback = function() consoleTabBar:selectNextTab() end,
+        }
+      }, consolePanel)
+
+    Keybind.new("Chat Channel", "Previous Channel", "Shift+Tab", "")
+    Keybind.bind("Chat Channel", "Previous Channel", {
+        {
+          type = KEY_PRESS,
+          callback = function() consoleTabBar:selectPrevTab() end,
+        }
+    }, consolePanel)
+    Keybind.new("Chat", "Send current chat line", { [CHAT_MODE.ON] = "Enter", [CHAT_MODE.OFF] = "" }, "")
+    Keybind.bind("Chat", "Send current chat line", {
+        {
+          type = KEY_DOWN,
+          callback = sendCurrentMessage,
+        }
+      }, consolePanel)
+    Keybind.new("Chat Channel", "Open Channel List", "Ctrl+O", "")
+    Keybind.bind("Chat Channel", "Open Channel List", {
+        {
+          type = KEY_DOWN,
+          callback = g_game.requestChannels,
+        }
+      }, gameRootPanel)
+    Keybind.new("Chat Channel", "Close Current Channel", "Ctrl+E", "")
+
+    Keybind.bind("Chat Channel", "Close Current Channel", {
+      {
+        type = KEY_DOWN,
+        callback = removeCurrentTab,
+      }
+    }, gameRootPanel)
+
+    Keybind.new("Chat Channel", "Open Help Channel", "Ctrl+H", "")
+    Keybind.bind("Chat Channel", "Open Help Channel", {
+        {
+          type = KEY_DOWN,
+          callback = openHelp,
+        }
+      }, consolePanel)
 
     -- toggle WASD
     consoleToggleChat = consolePanel:getChildById('toggleChat')
@@ -294,39 +334,39 @@ function updateChatMode()
 end
 
 local function unbindMovingKeys()
-    local gameInterface = modules.game_interface
-    gameInterface.unbindWalkKey('W')
-    gameInterface.unbindWalkKey('D')
-    gameInterface.unbindWalkKey('S')
-    gameInterface.unbindWalkKey('A')
+    local gameWalk = modules.game_walk
+    gameWalk.unbindWalkKey('W')
+    gameWalk.unbindWalkKey('D')
+    gameWalk.unbindWalkKey('S')
+    gameWalk.unbindWalkKey('A')
 
-    gameInterface.unbindWalkKey('E')
-    gameInterface.unbindWalkKey('Q')
-    gameInterface.unbindWalkKey('C')
-    gameInterface.unbindWalkKey('Z')
+    gameWalk.unbindWalkKey('E')
+    gameWalk.unbindWalkKey('Q')
+    gameWalk.unbindWalkKey('C')
+    gameWalk.unbindWalkKey('Z')
 
-    gameInterface.unbindTurnKey('Ctrl+W')
-    gameInterface.unbindTurnKey('Ctrl+D')
-    gameInterface.unbindTurnKey('Ctrl+S')
-    gameInterface.unbindTurnKey('Ctrl+A')
+    gameWalk.unbindTurnKey('Ctrl+W')
+    gameWalk.unbindTurnKey('Ctrl+D')
+    gameWalk.unbindTurnKey('Ctrl+S')
+    gameWalk.unbindTurnKey('Ctrl+A')
 end
 
 local function bindMovingKeys()
-    local gameInterface = modules.game_interface
-    gameInterface.bindWalkKey('W', North)
-    gameInterface.bindWalkKey('D', East)
-    gameInterface.bindWalkKey('S', South)
-    gameInterface.bindWalkKey('A', West)
+    local gameWalk = modules.game_walk
+    gameWalk.bindWalkKey('W', North)
+    gameWalk.bindWalkKey('D', East)
+    gameWalk.bindWalkKey('S', South)
+    gameWalk.bindWalkKey('A', West)
 
-    gameInterface.bindWalkKey('E', NorthEast)
-    gameInterface.bindWalkKey('Q', NorthWest)
-    gameInterface.bindWalkKey('C', SouthEast)
-    gameInterface.bindWalkKey('Z', SouthWest)
+    gameWalk.bindWalkKey('E', NorthEast)
+    gameWalk.bindWalkKey('Q', NorthWest)
+    gameWalk.bindWalkKey('C', SouthEast)
+    gameWalk.bindWalkKey('Z', SouthWest)
 
-    gameInterface.bindTurnKey('Ctrl+W', North)
-    gameInterface.bindTurnKey('Ctrl+D', East)
-    gameInterface.bindTurnKey('Ctrl+S', South)
-    gameInterface.bindTurnKey('Ctrl+A', West)
+    gameWalk.bindTurnKey('Ctrl+W', North)
+    gameWalk.bindTurnKey('Ctrl+D', East)
+    gameWalk.bindTurnKey('Ctrl+S', South)
+    gameWalk.bindTurnKey('Ctrl+A', West)
 end
 
 function switchChat(enabled)
@@ -340,9 +380,11 @@ function switchChat(enabled)
     if enabled then
         unbindMovingKeys()
         consoleToggleChat:setTooltip(tr('Disable chat mode, allow to walk using WASD'))
+        Keybind.setChatMode(CHAT_MODE.ON)
     else
         bindMovingKeys()
         consoleToggleChat:setTooltip(tr('Enable chat mode'))
+        Keybind.setChatMode(CHAT_MODE.OFF)
     end
 end
 
@@ -401,10 +443,12 @@ function terminate()
         clear()
     end
 
-    g_keyboard.unbindKeyDown('Ctrl+O')
-    g_keyboard.unbindKeyDown('Ctrl+E')
-    g_keyboard.unbindKeyDown('Ctrl+H')
-
+    Keybind.delete("Chat Channel", "Close Current Channel")
+    Keybind.delete("Chat Channel", "Next Channel")
+    Keybind.delete("Chat Channel", "Previous Channel")
+    Keybind.delete("Chat Channel", "Open Channel List")
+    Keybind.delete("Chat Channel", "Open Help Channel")
+    Keybind.delete("Chat", "Send current chat line")
     saveCommunicationSettings()
 
     if channelsWindow then
@@ -427,7 +471,7 @@ function terminate()
     consolePanel:destroy()
     consolePanel = nil
     ownPrivateName = nil
-
+    gameBottomPanel = nil
     Console = nil
 end
 
@@ -500,7 +544,9 @@ function clear()
         lastChannelsOpen[char] = nil
     end
     g_settings.setNode('lastChannelsOpen', lastChannelsOpen)
-
+    if not gameBottomPanel:isVisible() then
+        returnChat()
+    end
     -- close channels
     for _, channelName in pairs(channels) do
         local tab = consoleTabBar:getTab(channelName)
@@ -975,7 +1021,13 @@ function addTabText(text, speaktype, tab, creatureName)
     local consoleBuffer = panel:getChildById('consoleBuffer')
     local label = g_ui.createWidget('ConsoleLabel', consoleBuffer)
     label:setId('consoleLabel' .. consoleBuffer:getChildCount())
-    label:setText(text)
+
+    if speaktype.colored then
+        label:setColoredText(text)
+    else
+        label:setText(text)
+    end
+    
     label:setColor(speaktype.color)
     -- consoleTabBar:blinkTab(tab)
     if consoleTabBar:getCurrentTab() ~= tab then
@@ -1994,7 +2046,14 @@ function online()
         tab.npcChat = true
     end
     if g_game.getClientVersion() < 862 then
-        g_keyboard.bindKeyDown('Ctrl+R', openPlayerReportRuleViolationWindow)
+        Keybind.new("Dialogs", "Open Rule Violation", "Ctrl+R", "")
+        local gameRootPanel = modules.game_interface.getRootPanel()
+        Keybind.bind("Dialogs", "Open Rule Violation", {
+          {
+            type = KEY_DOWN,
+            callback = openPlayerReportRuleViolationWindow,
+          }
+        }, gameRootPanel)
     end
     -- open last channels
     local lastChannelsOpen = g_settings.getNode('lastChannelsOpen')
@@ -2019,7 +2078,7 @@ end
 
 function offline()
     if g_game.getClientVersion() < 862 then
-        g_keyboard.unbindKeyDown('Ctrl+R')
+        Keybind.delete("Dialogs", "Open Rule Violation")
     end
     clear()
 end
@@ -2049,5 +2108,165 @@ function onTextChange(text)
         end
     else
         player:setTyping(false)
+    end
+end
+
+function setExtendedView(bool)
+    if bool then
+        consolePanel:setMarginRight(10)
+        consolePanel:setMarginBottom(10)
+        consolePanel:getChildById('extendedViewDraggable'):show()
+        consolePanel:getChildById('extendedViewHide'):show()
+        consolePanel:getChildById('extendedViewHide'):setChecked(not gameBottomPanel:isVisible())
+    else
+        consolePanel:setMarginRight(0)
+        consolePanel:setMarginBottom(0)
+        consolePanel:getChildById('extendedViewDraggable'):hide()
+        consolePanel:getChildById('extendedViewHide'):hide()
+        gameBottomPanel:show(true)
+        destroyButtonChat()
+    end
+    gameBottomPanel:setDraggable(not bool)
+end
+
+function extendedViewDraggable(bool)
+    gameBottomPanel:setDraggable(not bool)
+end
+
+function extendedViewCanSee(bool)
+    local consoleTabBar = gameBottomPanel:getChildById('consolePanel'):getChildById('consoleTabBar')
+    local consoleBuffer = consoleTabBar:getCurrentTab().tabPanel:getChildById('consoleBuffer')
+
+    local children = gameBottomPanel:getChildren()
+    if bool then
+        for _, child in pairs(children) do
+            child:setVisible(false)
+        end
+        consoleBuffer:setVisible(true)
+        gameBottomPanel:setPhantom(true)
+        gameBottomPanel:setVisible(true)
+        gameBottomPanel:getChildById('consolePanel'):setVisible(true)
+        for _, child in pairs(gameBottomPanel:getChildById('consolePanel'):getChildren()) do
+            if child:getId() == "consoleContentPanel" then
+                child:disable()
+                child:setVisible(true)
+                child.tabPanel.consoleScrollBar:setVisible(false)
+            else
+                child:setVisible(false)
+            end
+        end
+        consoleTabBar:getCurrentTab().tabPanel:getChildById('consoleBuffer'):setImageSource("")
+        gameBottomPanel:setImageSource("")
+    else
+        for _, child in pairs(gameBottomPanel:getChildById('consolePanel'):getChildren()) do
+            if child:getId() == "consoleContentPanel" then
+                child:enable()
+                child:setVisible(false)
+            end
+        end
+    end
+end
+
+function returnChat()
+    local consoleTabBar = gameBottomPanel:getChildById('consolePanel'):getChildById('consoleTabBar')
+    local consoleBuffer = consoleTabBar:getCurrentTab().tabPanel:getChildById('consoleBuffer')
+
+    local children = gameBottomPanel:getChildren()
+    for _, child in pairs(children) do
+        if child:getId() == "cooldownWindow" then
+            child:setVisible(modules.client_options.getOption('showSpellGroupCooldowns'))
+        else
+            child:setVisible(true)
+        end
+    end
+    gameBottomPanel:getChildById('consolePanel'):setVisible(true)
+    for _, child in pairs(gameBottomPanel:getChildById('consolePanel'):getChildren()) do
+        if child:getId() ~= "consoleTextEdit" then
+            child:setVisible(true)
+        else
+            child:setVisible(not consoleToggleChat.isChecked)
+        end
+    end
+    consoleTabBar:getCurrentTab().tabPanel:getChildById('consoleBuffer'):setImageSource(
+        "/images/ui/3pixel_frame_borderimage")
+    gameBottomPanel:setImageSource("/images/ui/background_dark")
+    gameBottomPanel:setPhantom(false)
+end
+
+function extendedViewHide(bool)
+    if bool then
+        gameBottomPanel:hide()
+        createButtonChat()
+        extendedViewCanSee(extendedViewButtonShowAlphaChat:isOn())
+    else
+        consolePanel:getChildById('extendedViewHide'):setChecked(false)
+        gameBottomPanel:show(true)
+        extendedViewCanSee(false)
+        returnChat()
+        if extendedViewButtonShowAlphaChat then
+            extendedViewButtonShowAlphaChat:setOn(false)
+        end
+        destroyButtonChat()
+    end
+end
+
+function createButtonChat()
+    if extendedViewButtonToggleChat then
+        return
+    end
+    local mapPanel = modules.game_interface.getMapPanel()
+    local stringNameMobileOrPc = g_platform.isMobile() and "GameAction" or "MainToggleButton"
+    extendedViewButtonToggleChat = g_ui.createWidget(stringNameMobileOrPc, mapPanel)
+    extendedViewButtonToggleChat:setId("test")
+    local hightMobileWidget = 0
+    if g_platform.isMobile() then
+        hightMobileWidget = modules.game_joystick.getPanel():getHeight()
+        extendedViewButtonToggleChat.image:setImageSource("/images/game/mobile/chat")
+        extendedViewButtonToggleChat:addAnchor(AnchorRight, "parent", AnchorRight)
+        extendedViewButtonToggleChat:setMarginBottom(hightMobileWidget)
+        extendedViewButtonToggleChat:setMarginRight(15)
+        extendedViewButtonToggleChat:setMarginBottom(hightMobileWidget)
+        extendedViewButtonToggleChat:setSize("60 60")
+    else
+        extendedViewButtonToggleChat:setIcon("/images/game/npcicons/icon_chat")
+        extendedViewButtonToggleChat:setMarginBottom(10)
+        extendedViewButtonToggleChat:setSize("30 23")
+        extendedViewButtonToggleChat:addAnchor(AnchorLeft, "parent", AnchorLeft)
+    end
+    extendedViewButtonToggleChat:addAnchor(AnchorBottom, "parent", AnchorBottom)
+    extendedViewButtonToggleChat.onClick = function(a, b)
+        extendedViewHide(modules.game_interface.currentViewMode ~= 2)
+    end
+    extendedViewButtonShowAlphaChat = g_ui.createWidget(stringNameMobileOrPc, mapPanel)
+    extendedViewButtonShowAlphaChat:setIcon("/images/game/npcicons/icon_chat")
+    extendedViewButtonShowAlphaChat:addAnchor(AnchorBottom, "parent", AnchorBottom)
+    if g_platform.isMobile() then
+        extendedViewButtonShowAlphaChat:setMarginBottom(hightMobileWidget)
+        extendedViewButtonShowAlphaChat:setSize("60 60")
+        extendedViewButtonShowAlphaChat:addAnchor(AnchorRight, "test", AnchorLeft)
+    else
+        extendedViewButtonShowAlphaChat:setSize("30 23")
+        extendedViewButtonShowAlphaChat:addAnchor(AnchorLeft, "test", AnchorRight)
+        extendedViewButtonShowAlphaChat:setMarginBottom(10)
+    end
+    extendedViewButtonShowAlphaChat:setMarginLeft(5)
+    extendedViewButtonShowAlphaChat.onClick = function(a, b)
+        if extendedViewButtonShowAlphaChat:isOn() then
+            extendedViewButtonShowAlphaChat:setOn(false)
+        else
+            extendedViewButtonShowAlphaChat:setOn(true)
+        end
+        extendedViewCanSee(extendedViewButtonShowAlphaChat:isOn())
+    end
+end
+
+function destroyButtonChat()
+    if extendedViewButtonToggleChat and not extendedViewButtonToggleChat:isDestroyed() then
+        extendedViewButtonToggleChat:destroy()
+        extendedViewButtonToggleChat = nil
+    end
+    if extendedViewButtonShowAlphaChat and not extendedViewButtonShowAlphaChat:isDestroyed() then
+        extendedViewButtonShowAlphaChat:destroy()
+        extendedViewButtonShowAlphaChat = nil
     end
 end

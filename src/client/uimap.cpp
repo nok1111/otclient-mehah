@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,10 @@
  */
 
 #include "uimap.h"
-#include <framework/core/eventdispatcher.h>
-#include <framework/core/graphicalapplication.h>
-#include <framework/graphics/drawpoolmanager.h>
-#include <framework/graphics/graphics.h>
 #include "game.h"
 #include "map.h"
 #include "mapview.h"
+#include <framework/graphics/drawpoolmanager.h>
 
 UIMap::UIMap()
 {
@@ -49,11 +46,12 @@ UIMap::~UIMap()
     g_map.removeMapView(m_mapView);
 }
 
-void UIMap::draw(DrawPoolType drawPane) {
+void UIMap::draw(const DrawPoolType drawPane) {
     if (drawPane == DrawPoolType::MAP) {
         g_drawPool.preDraw(drawPane, [this] {
-            m_mapView->registerEvents();
             m_mapView->drawFloor();
+        }, [this] {
+            m_mapView->registerEvents();
         }, m_mapView->m_posInfo.rect, m_mapView->m_posInfo.srcRect, Color::black);
     } else if (drawPane == DrawPoolType::LIGHT) {
         g_drawPool.preDraw(drawPane, [this] {
@@ -66,13 +64,12 @@ void UIMap::draw(DrawPoolType drawPane) {
         });
     } else if (drawPane == DrawPoolType::FOREGROUND_MAP) {
         g_drawPool.preDraw(drawPane, [this] {
-            const auto& mapRect = g_app.isScaled() ? Rect(0, 0, g_graphics.getViewportSize()) : m_mapRect;
-            m_mapView->drawForeground(mapRect);
+            m_mapView->drawForeground(m_mapviewRect);
         });
     }
 }
 
-void UIMap::drawSelf(DrawPoolType drawPane)
+void UIMap::drawSelf(const DrawPoolType drawPane)
 {
     UIWidget::drawSelf(drawPane);
 
@@ -81,15 +78,14 @@ void UIMap::drawSelf(DrawPoolType drawPane)
         g_drawPool.addAction([] {glDisable(GL_BLEND); });
         g_drawPool.addFilledRect(m_mapRect, Color::alpha);
         g_drawPool.addAction([] {glEnable(GL_BLEND); });
-        return;
     }
 }
 
 void UIMap::updateMapRect() {
-    m_mapView->updateRect(g_app.isScaled() ? Rect(0, 0, g_graphics.getViewportSize()) : m_mapRect);
+    m_mapView->updateRect(m_mapviewRect);
 }
 
-bool UIMap::setZoom(int zoom)
+bool UIMap::setZoom(const int zoom)
 {
     m_zoom = std::clamp<int>(zoom, m_maxZoomIn, m_maxZoomOut);
     updateVisibleDimension();
@@ -143,7 +139,7 @@ void UIMap::setVisibleDimension(const Size& visibleDimension)
         updateMapSize();
 }
 
-void UIMap::setKeepAspectRatio(bool enable)
+void UIMap::setKeepAspectRatio(const bool enable)
 {
     m_keepAspectRatio = enable;
     if (enable)
@@ -181,6 +177,21 @@ bool UIMap::onMouseMove(const Point& mousePos, const Point& mouseMoved)
     return UIWidget::onMouseMove(mousePos, mouseMoved);
 }
 
+bool UIMap::onMousePress(const Point& mousePos, Fw::MouseButton button)
+{
+    return UIWidget::onMousePress(mousePos, button);
+}
+
+bool UIMap::onMouseRelease(const Point& mousePos, Fw::MouseButton button)
+{
+    return UIWidget::onMouseRelease(mousePos, button);
+}
+
+bool UIMap::onMouseWheel(const Point& mousePos, Fw::MouseWheelDirection direction)
+{
+    return UIWidget::onMouseWheel(mousePos, direction);
+}
+
 void UIMap::updateVisibleDimension()
 {
     int dimensionHeight = m_zoom;
@@ -215,6 +226,8 @@ void UIMap::updateMapSize()
 
     m_mapRect.resize(mapSize);
     m_mapRect.moveCenter(clippingRect.center());
+
+    m_mapviewRect = Rect(m_mapRect.topLeft() * g_window.getDisplayDensity(), m_mapRect.size() * g_window.getDisplayDensity());
 
     if (!m_keepAspectRatio)
         updateVisibleDimension();

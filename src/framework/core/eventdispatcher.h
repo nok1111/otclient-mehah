@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,61 @@
 
 #pragma once
 
-#include "clock.h"
 #include "scheduledevent.h"
 
-#include <thread>
+enum class TaskGroup : int8_t
+{
+    None = -1, // is outside the context of the dispatcher
+    Serial,
+    GenericParallel,
+    Last
+};
 
- // @bindsingleton g_dispatcher
+enum class DispatcherType : uint8_t
+{
+    None,
+    Event,
+    AsyncEvent,
+    ScheduledEvent,
+    CycleEvent,
+    DeferEvent
+};
+
+struct DispatcherContext
+{
+    bool isGroup(const TaskGroup _group) const {
+        return group == _group;
+    }
+
+    bool isAsync() const {
+        return type == DispatcherType::AsyncEvent;
+    }
+
+    auto getGroup() const {
+        return group;
+    }
+
+    auto getType() const {
+        return type;
+    }
+
+private:
+    void reset() {
+        group = TaskGroup::None;
+        type = DispatcherType::None;
+    }
+
+    DispatcherType type = DispatcherType::None;
+    TaskGroup group = TaskGroup::None;
+
+    friend class EventDispatcher;
+};
+
+// @bindsingleton g_dispatcher
 class EventDispatcher
 {
 public:
-    EventDispatcher() {
-        m_threads.emplace_back(std::make_unique<ThreadTask>());
-    }
+    EventDispatcher();
 
     void init();
     void shutdown();
@@ -47,45 +90,12 @@ public:
 
     void startEvent(const ScheduledEventPtr& event);
 
-    static int16_t getThreadId() {
-        static std::atomic_int16_t lastId = -1;
-        thread_local static int16_t id = -1;
-
-        if (id == -1) {
-            lastId.fetch_add(1);
-            id = lastId.load();
-        }
-
-        return id;
-    };
-
-private:
-    inline void mergeEvents();
-    inline void executeEvents();
-    inline void executeAsyncEvents();
-    inline void executeDeferEvents();
-    inline void executeScheduledEvents();
-
-    const auto& getThreadTask() const {
-        const auto id = getThreadId();
-        bool grow = false;
-
-        {
-            std::shared_lock l(m_sharedLock);
-            grow = id >= static_cast<int16_t>(m_threads.size());
-        }
-
-        if (grow) {
-            std::unique_lock l(m_sharedLock);
-            for (auto i = static_cast<int16_t>(m_threads.size()); i <= id; ++i)
-                m_threads.emplace_back(std::make_unique<ThreadTask>());
-        }
-
-        return m_threads[id];
+    const auto& context() const {
+        return dispacherContext;
     }
 
-    size_t m_pollEventsSize{};
-    bool m_disabled{ false };
+private:
+    thread_local static DispatcherContext dispacherContext;
 
     // Thread Events
     struct ThreadTask
@@ -100,9 +110,25 @@ private:
         std::vector<Event> asyncEvents;
         std::vector<ScheduledEventPtr> scheduledEventList;
         std::mutex mutex;
+
+        void try_lock();
+        void try_unlock();
     };
+
+    inline void mergeEvents();
+    inline void executeEvents();
+    inline void executeAsyncEvents();
+    inline void executeDeferEvents();
+    inline void executeScheduledEvents();
+
+    const std::unique_ptr<ThreadTask>& getThreadTask() const {
+        return m_threads[stdext::getThreadId() % m_threads.size()];
+    }
+
+    size_t m_pollEventsSize{};
+    bool m_disabled{ false };
+
     mutable std::vector<std::unique_ptr<ThreadTask>> m_threads;
-    mutable std::shared_mutex m_sharedLock;
 
     // Main Events
     std::vector<EventPtr> m_eventList;

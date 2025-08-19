@@ -450,19 +450,18 @@ function tdump(title, input)
     return dump_str
 end
 
-
 function switch(indice)
-  return function(codetable)
-    local case = codetable[indice] or codetable.default
-    if ( case ) then
-      if ( type(case) == "function" ) then
-        return case(indice)
-      else
-        error("action "..tostring(indice).." not a function")
+    return function(codetable)
+      local case = codetable[indice] or codetable.default
+      if ( case ) then
+        if ( type(case) == "function" ) then
+          return case(indice)
+        else
+          error("action "..tostring(indice).." not a function")
+        end
       end
     end
   end
-end
 
 -- @}
 

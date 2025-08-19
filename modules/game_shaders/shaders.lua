@@ -96,38 +96,56 @@ OUTFIT_SHADERS = { {
     useFramebuffer = true,
     frag = 'shaders/fragment/outline.frag'
 },
+{
+    name = 'Outfit - ice',
+    useFramebuffer = true,
+    frag = 'shaders/fragment/outline - colorfull.frag'
+},
+
  {      name = 'Aura',
         frag = 'shaders/fragment/radialblur.frag',
         drawColor = false
     }, 
 
-	{name = 'Jelly', frag = 'shaders/fragment/heat.frag'},
+    {name = 'Jelly', frag = 'shaders/fragment/heat.frag'},
     {name = 'Distorted', frag = 'shaders/fragment/noise.frag'},
-	{name = 'Rainbow', useFramebuffer = true, frag = 'shaders/fragment/party.frag'},
-	{name = 'Bloom', useFramebuffer = true, frag = 'shaders/fragment/bloom.frag'},
-	{name = 'Radial Blur', useFramebuffer = true, frag = 'shaders/fragment/radialblur.frag'},
-	{name = 'Old Tv', useFramebuffer = true, frag = 'shaders/fragment/oldtv.frag'},
-	{name = 'Zomg', useFramebuffer = true, frag = 'shaders/fragment/zomg.frag'},
-	{name = 'Rainbowgpt', frag = 'shaders/fragment/rainbowgpt.frag' , drawColor = false},
-	{name = 'Lava', frag = 'shaders/fragment/flames.frag', drawColor = true},
-	{name = 'Galaxy',  frag = 'shaders/fragment/galaxy.frag', drawColor = false},
-	{name = 'Ghost', frag = 'shaders/fragment/ghost.frag'},
-	{name = 'Metallic', frag = 'shaders/fragment/metallic.frag', drawColor = false},
-	{name = 'Golden', frag = 'shaders/fragment/outline_golden.frag', drawColor = false},
-	{name = 'Red Glow', frag = 'shaders/fragment/red_glow.frag'},
-	{name = 'Soul',  frag = 'shaders/fragment/soul.frag'},
-	
-	{name = 'Fragmented', frag = 'shaders/fragment/fragmented.frag'},
-	{name = 'Test', useFramebuffer = true, frag = 'shaders/fragment/outline.frag'},
-	
-	
-	
-	{name = 'chess',  frag = 'shaders/fragment/chess.frag', drawColor = false},
-	{name = 'ripple',  frag = 'shaders/fragment/ripple.frag', drawColor = false},
-	{name = 'magnetic',  frag = 'shaders/fragment/magnetic.frag', drawColor = true},
-	
-	--monster shaders
-	{name = 'Monster Might', frag = 'shaders/fragment/monster_might.frag'},
+    {name = 'Rainbow', useFramebuffer = true, frag = 'shaders/fragment/party.frag'},
+    {name = 'Bloom', useFramebuffer = true, frag = 'shaders/fragment/bloom.frag'},
+    {name = 'Radial Blur', useFramebuffer = true, frag = 'shaders/fragment/radialblur.frag'},
+    {name = 'Old Tv', useFramebuffer = true, frag = 'shaders/fragment/oldtv.frag'},
+    {name = 'Zomg', useFramebuffer = true, frag = 'shaders/fragment/zomg.frag'},
+    {name = 'Rainbowgpt', frag = 'shaders/fragment/rainbowgpt.frag' , drawColor = false},
+    {name = 'Lava', frag = 'shaders/fragment/flames.frag', drawColor = true},
+    {name = 'Galaxy',  frag = 'shaders/fragment/galaxy.frag', drawColor = false},
+    {name = 'Ghost', frag = 'shaders/fragment/ghost.frag'},
+    {name = 'Metallic', frag = 'shaders/fragment/metallic.frag', drawColor = false},
+    {name = 'Golden', frag = 'shaders/fragment/outline_golden.frag', drawColor = false},
+    {name = 'frost armor', frag = 'shaders/fragment/frost_armor.frag', drawColor = false},
+    {name = 'Red Glow', frag = 'shaders/fragment/red_glow.frag'},
+    {name = 'Soul',  frag = 'shaders/fragment/soul.frag'},
+    
+    {name = 'Fragmented', frag = 'shaders/fragment/fragmented.frag'},
+    {name = 'Test', useFramebuffer = true, frag = 'shaders/fragment/outline.frag', drawColor = false},
+    
+    
+    
+    {name = 'chess',  frag = 'shaders/fragment/chess.frag', drawColor = false},
+    {name = 'ripple',  frag = 'shaders/fragment/ripple.frag', drawColor = false},
+    {name = 'magnetic',  frag = 'shaders/fragment/magnetic.frag', drawColor = true},
+    
+    --monster shaders
+    {name = 'Monster Might', frag = 'shaders/fragment/monster_might.frag'},
+    {name = 'Blackout', frag = 'shaders/fragment/blackout.frag'},
+    {name = 'Stealth', frag = 'shaders/fragment/stealth.frag'},
+
+
+    {name = 'Forged', frag = 'shaders/fragment/forged.frag', drawColor = false},
+    {name = 'Orbital', frag = 'shaders/fragment/orbital.frag', drawColor = false},
+    {name = 'Corrupted', frag = 'shaders/fragment/corrupted.frag', drawColor = false},
+
+    {name = 'Damaged', useFramebuffer = true, frag = 'shaders/fragment/damaged.frag', drawColor = true},
+
+    
 
 
  }
@@ -182,18 +200,22 @@ function ShaderController:onInit()
     for _, opts in pairs(MOUNT_SHADERS) do
         registerShader(opts, 'setupMountShader')
     end
+    Keybind.new('Windows', 'show/hide Shader Windows', HOTKEY, '')
+    Keybind.bind('Windows', 'show/hide Shader Windows', {
+        {
+          type = KEY_DOWN,
+          callback = function() ShaderController.ui:setVisible(not ShaderController.ui:isVisible()) end,
+         }
+    })
 end
 
 function ShaderController:onTerminate()
     g_shaders.clear()
+    Keybind.delete('Windows', 'show/hide Shader Windows')
 end
 
 function ShaderController:onGameStart()
     attachShaders()
-
-    self:bindKeyDown(HOTKEY, function()
-        ShaderController.ui:setVisible(not ShaderController.ui:isVisible())
-    end)
 
     self:loadHtml('shaders.html', modules.game_interface.getMapPanel())
 

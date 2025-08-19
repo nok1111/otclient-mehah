@@ -1,683 +1,530 @@
 SpelllistSettings = {
-  ['Default'] = {
-    iconFile = '/images/game/spells/defaultspells',
+  ['Custom'] =  {
+    iconFile = '/images/game/spells',
     iconSize = {width = 32, height = 32},
-    spellListWidth = 200,
-    spellWindowWidth = 300,
+    spellListWidth = 245,
+    spellWindowWidth = 800,
     spellOrder = {
-    --dragon knight
-        'Rend', 
-        'Earthquake', 
-        'Fire Within', 
-        'Brutal Swing', 
-        'Charge', 
-        'Dragon Aura', 
-        'Challenging Spear', 
-        'Whirlwind', 
-        'Dragon Shrine', 
-        'Roar', 
-        'Phoenix Wrath', 
-        --templar
-        'Divine Clock', 
-        'Penitence', 
-        'Holy Ground', 
-        'Sacred Ground',
-        'Crusader Strike', 
-        'Divine Storm',
-        'Relieve Friend',
-        'Exorcism', 
-        'Divine Force', 
-        'Smite', 
-        'Light Beam', 
-        'Summon Guardian of Light',
-        'Kings Blessings',
-        --Magician
-        'Living Bomb', 
-        'Energy Blast', 
-        'Fire Blast', 
-        'Frost Blast', 
-        'Elemental Blast', 
-        'Teleport', 
-        'Mana Distortion', 
-        'Mana Flow', 
-        'Hand of God', 
-        'Frost Wave', 
-        'Water Typhoon', 
-        'Arcane Missiles', 
-        'Blizzard',
-        
-        --warlock
-        'Zombie Wall', 
-        'Curse', 
-        'Fear', 
-        'Shadow Strike', 
-        'Summon Shadow Seeker', 
-        'Blood Pact', 
-        'Party Vitality', 
-        'Summon Abomination', 
-        'Summon Heket', 
-        'Blood Wall', 
-        'Dark Plague', 
-        'Astral Revival',
-        'Soul Rain',
-        'Void Creep',
-        'Void Recall',  
-        
-        --nightblade
-        'Stealth', 
-        'Mutilate', 
-        'Backstab', 
-        'Dark Ambush',
-        'Shadow Hunt',
-        'Shadowstep',       
-        'Fan of Knives', 
-        'Shadow Form', 
-        'Dark Rupture', 
-        'Void Execution', 
-        'Blood Blades', 
-        
-        --stellar
-        'Earth Call',
-        'Regrowth',
-        'Aery Wrath',
-        'Star Fall',
-        'Falling Star',
-        'Rain Fall', 
-        'Heal Party',
-        'Lunar Beam',
-        'Aery Dance',
-        'Earth Dance',
-        'Full Moon',
-        
-        --soul weave
-        'Soul Fists',
-        'Soul Barrage',
-        'Anger Release',
-        'Spectral Wave',
-        'Underworld Gaze',
-        'Hollow Blade',
-        'Veil of Anguish',
-        'Absolute Denial',
-        'Soul Link',
-        'Void Slumber',
-        'Drain Soul',
-        
-        --Druid
-        'Terra Strike',
-        'Living Seeds',
-        'Life Bloom',
-        'Rejuvenation',
-        'Seed Germination',
-        'Travel Form',
-        'Carnivorous Vile',
-        'living ground',
-        'Thorns',
-        'Peircing Wave',
-        'Bear Form',
-        'Bless of the Forest',
-        'Wrath of Nature',
-        'Soul Form',
-        
-        --Light Dancer
-        'Charged Strike',
-        'Static Charge',
-        'Light Dash',
-        'Lightning Orb',
-        'Fission Break',
-        'Aereal Shock',
-        'Lightning Spear',
-        'Overcharge',
-        'Magnetic Field',
-        'Thunderstorm',
-        
-        --Archer
-        'Flaming Shot',
-        'Beer Barrel',
-        'Explosive Barrel',
-        'Explosive Shot',
-        'Wind Barrel',
-        'Condemn Shot',
-        'Healing Barrel',
-        'Arrow rain',
-        'Frost Barrel',
-        'Phantom Shot',
-        'Arrow Barrage',
-        'Rapid Fire',
-        'Ice Arrow',
-        'Falcon Shot',
-        
-        --healing spells
-        'Minor Heal', 
-        'Strong Heal', 
-        'Great Heal', 
-        
-        
-        --mastery
-        'Shield Wall', 
-        'Protection', 
-        'Shield Bash',       
-        'Grow',
-        'Hells Core', 
-        'Quick Chains',
-        'Magic Shield', 
-        'Blood Rage',
-        --etc
-        'Find Person', 
-        'Food', 
-        'Magic Rope',  
-        'Heal Friend', 
-        'Haste', 
-        
-        'Invisibility', 
-        'Levitate', 
-        'Light', 
-        'Protect Party', 
-        'Mass Healing', 
-        'Strong Haste',
-        'Taunt',
-        'Kings Call'
+      --Dragon Knight
+      'Rend',
+      'Brutal Swing',
+      'Challenging Spear',
+      'Fire Within',
+      'Charge',
+      'whirlwind',
+      'Phoenix Wrath',
+      'Dragon Aura',
+      'Dragons Call',
+      'Draconic Chains',
+      'Shockwave',
+      'Bloodlust',
+      'Dragon Soul',
+
+      --Templar
+      'Divine Punishment',
+      'Penitence',
+      'Holy Ground',
+      'Sacred Ground',
+      'Crusader Strike',
+      'Divine Storm',
+      'Exorcism',
+      'Smite',
+      'Light Beam',
+      'Summon Guardian of Light',
+      'Kings Blessing',
+      'Angelic Form',
+      'Judgement',
+
+      --Magician
+      'Energy Blast',
+      'Fire Blast',
+      'Ice Nova',
+      'Mana Distortion',
+      'Mana Flow',
+      'Hand of God',
+      'Frost Wave',
+      'Arcane Missiles',
+      'Teleport',
+      'Blizzard',
+      'Hells Core',
+      'Ice Barrage',
+      'Ice Wall',
+      'Ice Clones',
+      'Ice Tomb',
+      'Glacial Steps',
+
+      --warlock
+      'Zombie Wall',
+      'Curse',
+      'Fear',
+      'Shadow Strike',
+      'Summon Void Mender',
+      'Blood Pact',
+      'Party Vitality',
+      'Summon Void Guard',
+      'Summon Void Sentinel',
+      'Blood Wall',
+      'Dark Plague',
+      'Soul Rain',
+      'Drain Soul',
+      'Malediction',
+      'Haunt',
+      'Dark Aura',
+    
+    --Nightblade
+      'Stealth',
+      'Mutilate',
+      'Shadow Hunt',
+      'Shadowstep',
+      'Backstab',
+      'Assassination',
+      'Fan of Knives',
+      'Shadow Form',
+      'Dark Rupture',
+      'Void Execution',
+      'Blood Blades',
+      'Lethal Dagger',
+      'Blackout',
+
+      --Stellar
+      'Cosmic Force',
+      'Aery Wrath',
+      'Starfall',
+      'Falling Star',
+      'Rain fall',
+      'Grow',
+      'Lunar Beam',
+      'Aery Strikes',
+      'Full Moon',
+      'Moonlight',
+      'Holy Flare',
+      'Solar Blessing',
+
+
+        --monk
+      'Lotus Kick',
+      'Adaptive Punch',
+      'Fire Punch',
+      'Ice Punch',
+      'Life Punch',
+      'Fist of Fire',
+      'Volcanic Dash',
+      'Stormfist',
+      'Mountain Stance',
+      'Zen Barrier',
+      'Mystic Fist',
+
+      --druid
+      'Terra Strike',
+      'Life Bloom',
+      'Rejuvenation',
+      'Insect Swarm',
+      'Travel Form',
+      'Carnivorous Vile',
+      'living ground',
+      'Thorns',
+      'Piercing Wave',
+      'Bear Form',
+      'Bless of the Forest',
+      'Wrath of Nature',
+      'Focus Healing',
+      'Ice Shatter',
+      'Frost Armor',
+
+      --light dancer
+      'Charged Strike',
+      'Static Charge',
+      'Light Dash',
+      'Veil of Swords',
+      'Magnetic Shield',
+      'Lightning Spear',
+      'Overcharge',
+      'Elusive Blade',
+      'Magnetic Orb',
+      'Tempest Coin',
+
+      --Archer
+      'Flaming Shot',
+      'Explosive Barrel',
+      'Explosive Shot',
+      'Wind Barrel',
+      'Condemn Shot',
+      'Healing Barrel',
+      'Arrow rain',
+      'Frost Barrel',
+      'Phantom Shot',
+      'Arrow Barrage',
+      'Rapid Fire',
+      'Ice Arrow',
+      'Falcon Shot',
 
 
 
+
+
+      'Minor Heal',
+      'Strong Heal',
+      'Great Heal',
+
+      'Magic Shield',
+      'Find Person',
+      'Food',
+      'Haste',
+      'Levitate',
+      'Light',
+
+     
+     
     }
   }
 }
 
 SpellInfo = {
-  ['Default'] = {
-  --DRAGON Knight
-    ['Rend'] =                     {id = 1, words = 'rend',                exhaustion = 3000, premium = false, type = 'Instant', icon = 'bloodaxe',        mana = 20,     level = 8,  soul = 0, group = {[1] = 1000},                 parameter = false, vocations = {4}, description = 'Deals physical damage to the target and all sorrounding enemies. [Weapon base attack Damage, Melee Skill]'},
-    ['Earthquake'] =               {id = 2,  words = 'Earthquake',            exhaustion = 20000, premium = false, type = 'Instant', icon = 'fireearth',    mana = 300,    level = 100,  soul = 0, group = {[1] = 1000},                parameter = false, vocations = {4}, description = 'deals aoe damage and stun all enemies reached. [Weapon Damage, Melee Skill, MAGIC LEVEL]'},
-    ['Fire Within'] =              {id = 3,  words = 'Fire Within',          exhaustion = 6000, premium = false, type = 'Instant', icon = 'firesoul',   mana = 45,     level = 70,  soul = 0, group = {[1] = 1000},              parameter = false, vocations = {4}, description = 'expels fire waves that deal fire damage arround the caster. [MxHP, MAGIC LEVEL]'},
-    ['Brutal Swing'] =             {id = 4,  words = 'Brutal Swing',             exhaustion = 6000, premium = false, type = 'Instant', icon = 'bloodaxe',  mana = 55,     level = 18, soul = 0, group = {[1] = 1000},                 parameter = false, vocations = {4}, description = 'deals a brutal strike based on the direction and weapon used. heals the caster based on the damage done. [Weapon base attack Damage, Melee Skill]'},
-    ['Charge'] =                   {id = 5,  words = 'Charge',             exhaustion = 15000, premium = false, type = 'Instant', icon = 'charge',          mana = 70,     level = 40, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {4}, description = 'charge at a high speed into your target dealing physical damage upon landing. [Weapon Damage, Melee Skill]'},
-    ['Dragon Aura'] =              {id = 6,  words = 'Dragon Aura',         exhaustion = 20000, premium = false, type = 'Instant', icon = 'dragonstance',   mana = 150,    level = 46, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {4}, description = 'the caster gains the dragons aura dealing fire damage over time to all enemies near the player. caster will also heal on every orb rotation. [MxHp, MAGIC LEVEL]'},
-    ['Challenging Spear'] =        {id = 7, words = 'Challenging Spear',          exhaustion = 5000, premium = false, type = 'Instant', icon = 'pending', mana = 30,     level = 20, soul = 0, group = {[3] = 1000},                 parameter = false, vocations = {4}, description = 'throw a spear at the target dealing damage and taunting it for a short duration. [Weapon base attack Damage, Melee Skill]'},
-    ['Whirlwind'] =                {id = 8,  words = 'whirlwind',             exhaustion = 5000, premium = false, type = 'Instant', icon = 'firetornado', mana = 85,    level = 30, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {4}, description = 'creates a fire whirlwind around the caster. affected targets will also burn. [MxHp, MAGIC LEVEL]'},
-    ['Dragon Shrine'] =            {id = 9,  words = 'Dragon Shrine',        exhaustion = 20000, premium = false, type = 'Instant', icon = 'dragonshrine', mana = 325,     level = 150, soul = 0, group = {[3] = 1000},              parameter = false, vocations = {4}, description = 'pull all enemies around the target dealing a moderate amount of damage. [MAGIC LEVEL]'},
-    ['Roar'] =                     {id = 10,  words = 'Roar',            exhaustion = 8000, premium = false, type = 'Instant', icon = 'roar',               mana = 20,     level = 60, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {4}, description = 'repels all enemies surrounding the target, if an enemy hits a wall it will get stunned. [Weapon Damage, Melee Skill]'},
-    ['Phoenix Wrath'] =            {id = 11,  words = 'Phoenix Wrath',            exhaustion = 17000, premium = false, type = 'Instant', icon = 'dragonbreath',      mana = 115,     level = 125, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {4}, description = 'Call the phoenix breath dealing fire damage to all enemies in front the caster direction. [MAGIC LEVEL]'},
-    
-    --TEMPLAR
-    ['Divine Clock'] =             {id = 20,  words = 'Divine Clock',             exhaustion = 20000, premium = false, type = 'Instant', icon = 'divineclock',  mana = 200,    level = 125, soul = 1, group = {[1] = 1000},                parameter = false, vocations = {2}, description = 'brings the hevenly hourglass dealing high amount of holy damage in a wide area. [MAGIC LEVEL]'},
-    ['Penitence'] =                {id = 21,  words = 'Penitence',             exhaustion = 7000, premium = false, type = 'Instant', icon = 'penitence',       mana = 60,     level = 25, soul = 1, group = {[1] = 1000},                parameter = false, vocations = {2}, description = 'hits multiple enemies and taunt them for a few seconds. [MAGIC LEVEL]'},
-    ['Holy Ground'] =              {id = 22,   words = 'Holy Ground',             exhaustion = 15000, premium = false, type = 'Instant', icon = 'holyarea',     mana = 75,    level = 46, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {2}, description = 'place a holy ground beneat the player dealing holy damage over time to all enemies inside. (shares cooldown with sacred ground) [MAGIC LEVEL]'},
-    ['Sacred Ground'] =            {id = 17, words = 'Sacred Ground',           exhaustion = 30000, premium = false, type = 'Instant', icon = 'sacredarea',     mana = 75,    level = 40, soul = 0, group = {[2] = 1000},                parameter = false, vocations = {2}, description = 'place a sacred ground healling all players inside the area. (shares cooldown with holy ground) [MAGIC LEVEL]'},
-    ['Crusader Strike'] =          {id = 23,  words = 'Crusader Strike',        exhaustion = 6000, premium = false, type = 'Instant', icon = 'holysword',      mana = 50,     level = 18, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {2}, description = 'deals physical damage at close range. [Weapon Damage, Melee Skill]'},
-    ['Divine Storm'] =             {id = 24,  words = 'Divine Storm',            exhaustion = 15000, premium = false, type = 'Instant', icon = 'divineclock', mana = 150,    level = 70, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {2},   description = 'Deals aoe damage to all nearby enemies and heal the player for an small amount. [Weapon Damage, Melee Skill, MAGIC LEVEL]'},
-    ['Relieve Friend'] =           {id = 25,  words = 'Relieve Friend',           exhaustion = 3000, premium = false, type = 'Instant', icon = 'lighthealing', mana = 85,     level = 60, soul = 0, group = {[2] = 2000},                parameter = true, vocations = {2}, description = 'heals an ally (ex. heal friend "player"). [MAGIC LEVEL]'},
-    ['Exorcism'] =                 {id = 26,  words = 'Exorcism',            exhaustion = 15000, premium = false, type = 'Instant', icon = 'holyarea',          mana = 125,     level = 100, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {2},  description = 'shoot holy damage to all nearby enemies. [MxHP, MAGIC LEVEL]'},
-    ['Divine Force'] =             {id = 27, words = 'Divine Force',             exhaustion = 15000, premium = false, type = 'Instant', icon = 'holysmite',     mana = 125,     level = 80, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {2},  description = 'use light force to bring a targeted enemy near the player. [MAGIC LEVEL]'},
-    ['Smite'] =                    {id = 28,  words = 'Smite',        exhaustion = 4100, premium = false, type = 'Instant', icon = 'smite',                    mana = 20,     level = 8,  soul = 0, group = {[1] = 1000},                parameter = false, vocations = {2},     description = 'smite the player dealing holy damage. [Weapon Damage, Melee Skill, MAGIC LEVEL]'},
-    ['Light Beam'] =               {id = 29,  words = 'Light Beam',        exhaustion = 12000, premium = false, type = 'Instant', icon = 'holyslash',           mana = 95,     level = 30, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {2},     description = 'deals holy damage multiple times based on the players direction. [MAGIC LEVEL]'},
-    ['Summon Guardian of Light'] = {id = 30, words = 'Summon Guardian',             exhaustion = 100000, premium = false, type = 'Instant', icon = 'elf',        mana = 250,    level = 150, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {2},  description = 'summons a seraphine the heals the summoner and random party members. [MAGIC LEVEL]'},
-    ['Kings Blessings'] =          {id = 31, words = 'Kings Blessing',             exhaustion = 1000, premium = false, type = 'Instant', icon = 'holycross',        mana = 50,    level = 60, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {2},  description = 'Bless the player and all party members by increasing all offensive skills by 10% for 20 minutes.'},
-    
-    --magician
-    ['Living Bomb'] =              {id = 40, words = 'Living Bomb',        exhaustion = 17000, premium = false, type = 'Instant', icon = 'firesoul',       mana = 200,     level = 150, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {1}, description = 'ignite the target dealing magic damage. after a few seconds the fire within the target will explode expreading the same effect on nearby enemies. [MAGIC LEVEL]'},
-    ['Energy Blast'] =             {id = 41,   words = 'Energy Blast',      exhaustion = 4000, premium = false, type = 'Instant', icon = 'energybeam1',   mana = 25,      level = 10, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {1}, description = 'shoots an energy attack dealing magic damage and restoring 4% of the users total mana. [MAGIC LEVEL]'},
-    ['Fire Blast'] =               {id = 42,  words = 'Fire Blast',         exhaustion = 3000, premium = false, type = 'Instant', icon = 'fireshot',      mana = 40,      level = 8, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {1}, description = 'shoots a fire ball that explodes upon reaching the target dealing magic damage. [MAGIC LEVEL]'},
-    ['Frost Blast'] =              {id = 44, words = 'Frost Blast',         exhaustion = 3000, premium = false, type = 'Instant', icon = 'frostmissile',  mana = 45,      level = 15, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {1}, description = 'shoots multiple ice attacks at the same time dealing magic damage. [MAGIC LEVEL]'},
-    ['Elemental Blast'] =          {id = 43,  words = 'Elemental Blast',   exhaustion = 10000, premium = false, type = 'Instant', icon = 'elementalblast', mana = 200,     level = 150, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {1}, description = 'gather all elements into one powerfull attack. [MAGIC LEVEL]'},
-    ['Teleport'] =                 {id = 52,  words = 'Teleport',           exhaustion = 12000, premium = false, type = 'Instant', icon = 'travel',       mana = 150,     level = 60, soul = 0, group = {[3] = 3000},                parameter = false, vocations = {1}, description = 'teleports the caster few tiles forward based on directing.'},
-    ['Mana Distortion'] =          {id = 46,   words = 'Mana Distortion',   exhaustion = 120000, premium = false, type = 'Instant', icon = 'electrticity',  mana = 0,       level = 80, soul = 0, group = {[2] = 1000},                parameter = false, vocations = {1}, description = 'distort your mana to create a magic field in the ground that gives mana and magic power.'},
-    ['Mana Flow'] =                {id = 47, words = 'Mana Flow',           exhaustion = 25000, premium = false, type = 'Instant', icon = 'bluehand',      mana = 0,       level = 40, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {1}, description = 'restores players mana by percentage in a short amount of time.'},
-    ['Hand of God'] =              {id = 48,  words = 'Hand of God',        exhaustion = 5000, premium = false, type = 'Instant', icon = 'firefist',      mana = 75,     level = 30, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {1}, description = 'summon the fire gods hand to deal massive fire damage to the target and enemies nearby. [MAGIC LEVEL]'},
-    ['Frost Wave'] =               {id = 49, words = 'Frost Wave',          exhaustion = 13000, premium = false, type = 'Instant', icon = 'frostice',      mana = 155,     level = 70, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {1}, description = 'deals high amount of ice damage and freezes all the enemies for 4 seconds. [MAGIC LEVEL]'},
-    ['Water Typhoon'] =            {id = 50,  words = 'Water Typhoon',      exhaustion = 25000, premium = false, type = 'Instant', icon = 'tornado',      mana = 250,    level = 100, soul = 0, group = {[1] = 5000},                parameter = false, vocations = {1}, description = 'take the form of a typhoon dealing water damage to all enemies around the caster. [MAGIC LEVEL]'},
-    ['Arcane Missiles'] =          {id = 51,   words = 'Arcane Missiles',   exhaustion = 6000, premium = false, type = 'Instant', icon = 'energymissiles',  mana = 65,      level = 18, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {1}, description = 'shoots arcane missiles dealing magic damage. the amount of missilis increases with your total magic level. [MAGIC LEVEL]'},
-    ['Blizzard'] =                {id = 53,  words = 'Blizzard',        exhaustion = 15000, premium = false, type = 'Instant', icon = 'frostaura',        mana = 150,     level = 46, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {1}, description = 'deals elemental damage to all nearby enemies around the selected target. [MAGIC LEVEL]'},
-    ['Hells Core'] =               {id = 304, words = 'Hells Core',         exhaustion = 18000, premium = false, type = 'Instant', icon = 'meteor',          mana = 350,     level = 125,   soul = 0,       group = {[1] = 1000},     parameter = false, vocations = {1}, description = 'Call down meteors at your position dealing damage to all nearbt enemies. [MAGIC LEVEL]'}, 
-   
-    -- warlock
-    ['Void Recall'] =              {id = 60, words = 'void recall',    exhaustion = 15000, premium = false, type = 'Instant', icon = 'ghost',        mana = 250,     level = 115, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {5}, description = 'summon skeletons that fight at your side Max: 4.'},
-    ['Zombie Wall'] =              {id = 61, words = 'Zombie Wall',    exhaustion = 20000, premium = false, type = 'Instant', icon = 'zombiewall',   mana = 50,     level = 40, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {5}, description = 'place a undead wall in front of the caster. '},
-    ['Curse'] =                    {id = 62,  words = 'Curse',         exhaustion = 2000, premium = false, type = 'Instant', icon = 'shadoweye',             mana = 35,     level = 8, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {5}, description = 'curse the target dealing death damage over time. [MAGIC LEVEL]'},
-    ['Fear'] =                     {id = 63, words = 'Fear',           exhaustion = 30000, premium = false, type = 'Instant', icon = 'fear',               mana = 150,    level = 60, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {5}, description = 'fears the target. feared enemies are unable to move or cast by themselves.'},
-    ['Shadow Strike'] =            {id = 64,  words = 'Shadow Strike', exhaustion = 5000, premium = false, type = 'Instant', icon = 'shadowbolts', mana = 70,    level = 30, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {5}, description = 'strikes the target with death damage. [MAGIC LEVEL]'},
-    ['Summon Shadow Seeker'] =     {id = 65, words = 'Summon Shadow',  exhaustion = 60000, premium = false, type = 'Instant', icon = 'minion',     mana = 300,     level = 100, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {5}, description = 'summon shadow seeker. shadow seeker drains the enemies soul and gives it back to the caster as mana. [MxHP, MAGIC LEVEL]'},
-    ['Blood Pact'] =               {id = 66, words = 'Blood Pact',     exhaustion = 1500, premium = false, type = 'Instant', icon = 'bloodpact',          mana = 0,      level = 40, soul = 0, group = {[2] = 1000},                parameter = false, vocations = {5}, description = 'sacrifice some of your health in exchange for mana. you cant die while casting this. [MxHP]'},
-    ['Party Vitality'] =           {id = 67,  words = 'Party Vitality',  exhaustion = 1000, premium = false, type = 'Instant', icon = 'bloodmush',    mana = 50,    level = 60, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {5}, description = 'increases your and party total maxhealth by 20% for 20 minutes. '},
-    ['Summon Abomination'] =       {id = 68,  words = 'Summon Abomination',   exhaustion = 60000, premium = false, type = 'Instant', icon = 'minion',    mana = 500,    level = 150, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {5}, description = 'summon an abomination that deals aoe damage, taunt and has a large health pool. [MxHP, MAGIC LEVEL]'},
-    ['Summon Heket'] =             {id = 69,  words = 'Summon Heket',  exhaustion = 60000, premium = false, type = 'Instant', icon = 'minion',               mana = 250,    level = 70, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {5}, description = 'summon heket, deals high amounts of single target damage and has increased range. [MxHP, MAGIC LEVEL]'},
-    ['Blood Wall'] =               {id = 70, words = 'Blood Wall',         exhaustion = 20000, premium = false, type = 'Instant', icon = 'bloodpact',        mana = 0,      level = 90, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {5}, description = 'in exchange of some of your health you will gain a 50% increased shielding and maxhealth buff.'},
-    ['Dark Plague'] =              {id = 71,  words = 'Dark plague',    exhaustion = 22000, premium = false, type = 'Instant', icon = 'bats',                 mana = 300,    level = 100, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {5}, description = 'deals poison damage to all nearby enemies araound your target for several seconds.'},
-    ['Astral Revival'] =           {id = 72, words = 'Astral Revival',             exhaustion = 25000, premium = false, type = 'Instant', icon = 'ghost',     mana = 300,     level = 125, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {5}, description = 'open the gates of hell. [MAGIC LEVEL]'},
-    ['Void Creep'] =               {id = 73, words = 'creep',             exhaustion = 6000, premium = false, type = 'Instant', icon = 'minion',             mana = 60,     level = 18, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {5}, description = 'summon a void creep that explodes when reaching his target. [MAGIC LEVEL]'},
-    ['Soul Rain'] =                {id = 74,  words = 'Soul Rain',    exhaustion = 15000, premium = false, type = 'Instant', icon = 'shadowexplode',         mana = 150,    level = 46, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {5}, description = 'deals damage to all nearby enemies around the selected target. [MxHP, MAGIC LEVEL]'},
-    
-    --NIGHTBLADE
-    ['Stealth'] =                  {id = 80, words = 'Stealth',          exhaustion = 60000, premium = false, type = 'Instant', icon = 'stealth',      mana = 110,     level = 40, soul = 0, group = {[3] = 5000},                parameter = false, vocations = {3}, description = 'enter stealth mode for a 2.5 seconds, while stealth you become inmune to all incomming damage.'},
-    ['Shadowstep'] =               {id = 83, words = 'Shadowstep',    exhaustion = 15000, premium = false, type = 'Instant', icon = 'jump',          mana = 125,     level = 90, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {3}, description = 'turn into shadows to teleport into your target and stunning them for 1.8 seconds. [Melee Skill]'},    
-    ['Mutilate'] =                 {id = 81, words = 'Mutilate',         exhaustion = 4000, premium = false, type = 'Instant', icon = 'markofdeath',    mana = 35,      level = 8, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {3}, description = 'mutilate the target dealing damage multiple times. [Weapon Damage, Melee Skill]'},
-    ['Backstab'] =                 {id = 84, words = 'Backstab',         exhaustion = 7000, premium = false, type = 'Instant', icon = 'backstab',       mana = 60,      level = 15, soul = 0, group = {[1] = 0},                parameter = false, vocations = {3}, description = 'stuns the target for 1.8 seconds and deals physical damage. [Melee Skill, MAGIC LEVEL]'},
-    ['Shadow Hunt'] =              {id = 82, words = 'Shadow Hunt',        exhaustion = 6000, premium = false, type = 'Instant', icon = 'bats',       mana = 60,     level = 18, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {3}, description = 'hunt the target with crows dealing consecutive amounts of magic damage. [Weapon Damage, Melee Skill, MAGIC LEVEL]'},
-    ['Dark Ambush'] =              {id = 85, words = 'Dark Ambush',        exhaustion = 22000, premium = false, type = 'Instant', icon = 'daggers',       mana = 250,     level = 70, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {3}, description = 'exterminates all enemies in your sight. [Weapon Damage, Melee Skill]'},
-    ['Shadow Form'] =              {id = 87, words = 'Shadow Form',    exhaustion = 30000, premium = false, type = 'Instant', icon = 'void',            mana = 65,     level = 60, soul = 0, group = {[2] = 3000},              parameter = false, vocations = {3}, description = 'enter the shadow form wich heals yourself for a moderate period of time. [MxHP, MAGIC LEVEL]'},
-    ['Fan of Knives'] =            {id = 86, words = 'Fan of knives',    exhaustion = 5000, premium = false, type = 'Instant', icon = 'shadowblade',    mana = 100,     level = 46, soul = 0, group = {[1] = 1000, [1] = 2000},    parameter = false, vocations = {3}, description = 'strike and poison all enemies around the yourself with physical damage and earth damage based on proximity. [Weapon Damage, Melee Skill]'},
-    ['Dark Rupture'] =             {id = 88, words = 'Dark Rupture',    exhaustion = 6000, premium = false, type = 'Instant', icon = 'shadowexplode',    mana = 45,     level = 30, soul = 0, group = {[1] = 1000, [1] = 2000},    parameter = false, vocations = {3}, description = 'strike your target with a death attack, if the target is stunned damage will be significantly increased. [Weapon Damage, Melee Skill] or [Weapon Damage, Melee Skill, MAGIC LEVEL]'},
-    ['Void Execution'] =           {id = 89, words = 'Void Execution',    exhaustion = 15000, premium = false, type = 'Instant', icon = 'execution',    mana = 125,     level = 100, soul = 0, group = {[1] = 1000, [1] = 2000},    parameter = false, vocations = {3}, description = 'Call death and Executes any target that is below 25%. [TRUE DAMAGE]'},
-    ['Blood Blades'] =             {id = 90, words = 'Blood Blades',    exhaustion = 25000, premium = false, type = 'Instant', icon = 'firedagger',    mana = 50,     level = 125, soul = 0, group = {[1] = 1000, [1] = 2000},    parameter = false, vocations = {3}, description = 'Heals the target everytime it hits with melee attacks by a small percent.'},
+  ['Custom'] = {
 
-    --Stellar
-    ['Earth Call'] =                {id = 100, words = 'Earth Call',         exhaustion = 3000, premium = false, type = 'Instant', icon = 'naturefist',    mana = 30,      level = 8, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {6}, description = 'Call the earth spirits to shoot an earth attack into your target. [MAGIC LEVEL]'},
-    ['Regrowth'] =                  {id = 101,  words = 'Regrowth',          exhaustion = 2000, premium = false, type = 'Instant', icon = 'healhand',         mana = 65,      level = 40,       soul = 0, group = {[2] = 1000},          parameter = false, vocations = {6}, description = 'heals the caster with healing winds. [MAGIC LEVEL]'}, 
-    ['Aery Wrath'] =                {id = 102, words = 'Aery Wrath',         exhaustion = 10000, premium = false, type = 'Instant', icon = 'penitence',    mana = 45,      level = 18, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {6}, description = 'Call aery into batle hitting all enemies around the main target. [MAGIC LEVEL]'},
-    ['Star Fall'] =                 {id = 103, words = 'Star Fall',          exhaustion = 7000, premium = false, type = 'Instant', icon = 'frostmissile',    mana = 0,      level = 46, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {6}, description = 'Call down one star dealing energy damage. (this spells does not consume mana) [MAGIC LEVEL].'},
-    ['Falling Star'] =              {id = 104, words = 'Falling Star',       exhaustion = 7000, premium = false, type = 'Instant', icon = 'divinemissile',    mana = 95,      level = 30, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {6}, description = 'Call down one star dealing earth damage and stunning the target. [MxMANA, MAGIC LEVEL]'},
-    ['Rain Fall'] =                 {id = 105, words = 'Rain Fall',             exhaustion = 20000, premium = false, type = 'Instant', icon = 'nightwolf',        mana = 85,       level = 25, soul = 0,            group = {[2] = 1000},    parameter = false, vocations = {6}, description = 'Bring a healling rain at your locationm healing all players inside the radius. [Target MxHP, MAGIC LEVEL]'}, 
-    ['Heal Party'] =                {id = 106, words = 'Heal Party',            exhaustion = 4000, premium = false, type = 'Instant', icon = 'ultimatehealing',        mana = 150,       level = 28, soul = 0,          group = {[2] = 1000},    parameter = false, vocations = {6}, description = 'Heal all party members close to the caster. [MAGIC LEVEL]'}, 
-    ['Aery Dance'] =                {id = 109, words = 'Aery Dance',         exhaustion = 8000, premium = false, type = 'Instant', icon = 'holysmite',    mana = 135,      level = 70, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {6}, description = 'Call aery into batle hitting all enemies around the main target. [MAGIC LEVEL]'},
-    ['Lunar Beam'] =                {id = 108, words = 'Lunar Beam',        exhaustion = 13000, premium = false, type = 'Instant', icon = 'energybeam1',           mana = 260,        level = 125, soul = 0,            group = {[3] = 1000},     parameter = false, vocations = {6}, description = 'Deals energy damage to all enemies in front the caster direction. [MAGIC LEVEL]'},
-    ['Full Moon'] =                 {id = 111, words = 'Full Moon',         exhaustion = 40000, premium = false, type = 'Instant', icon = 'moon',    mana = 300,      level = 100, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {6}, description = 'Procs Your passive (stellar alligment) continiusly. [MAGIC LEVEL]'},
-    ['Grow'] =                      {id = 107, words = 'Grow',        exhaustion = 25000, premium = false, type = 'Instant', icon = 'nature',          mana = 100,        level = 60, soul = 0,             group = {[3] = 1000},     parameter = false, vocations = {6, 8}, description = 'grown multiple earth columns that can block paths.'},
+    -- Dragon Knight
+    ['Rend'] = {id = 1, words = 'rend', icon_id = 1, description = 'rend the target dealing physical damage and reaching nearby enemies. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 1, mana = 20, level = 8, soul = 0, group = {[1] = 2000}, vocations = {4}},
+    ['Brutal Swing'] = {id = 2, words = 'brutal swing', icon_id = 2, description = 'smash the target dealing high ammounts of physical damage the reached area can vary based on one handed or two handed weapon. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 2, mana = 55, level = 18, soul = 0, group = {[1] = 2000}, vocations = {4}},
+    ['Challenging Spear'] = {id = 3, words = 'Challenging Spear', icon_id = 3, description = 'shoot a spear wich taunts the target and deals physical damage. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 3, mana = 30, level = 20, soul = 0, group = {[3] = 2000}, vocations = {4}},
+    ['Fire Within'] = {id = 4, words = 'fire within', icon_id = 4, description = 'ignite yourself into fire to deal fire damage to your nearest enemy and spread it to nearby enemies. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 4, mana = 75, level = 70, soul = 0, group = {[1] = 2000}, vocations = {4}},
+    ['Charge'] = {id = 5, words = 'charge', icon_id = 5, description = 'charge into your target from the distance and stun it for 1 second. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 5, mana = 70, level = 40, soul = 0, group = {[3] = 2000}, vocations = {4}},
+    ['whirlwind'] = {id = 6, words = 'whirlwind', icon_id = 6, description = 'slash your surroundings dealing fire damage and igniting all enemies in the area. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 6, mana = 85, level = 30, soul = 0, group = {[1] = 2000}, vocations = {4}},
+    ['Phoenix Wrath'] = {id = 8, words = 'phoenix wrath', icon_id = 8, description = 'command a phoenix to attack in a straight line dealing fire damage to all enemies in that direction. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 8, mana = 115, level = 125, soul = 0, group = {[1] = 2000}, vocations = {4}},
+    ['Dragon Aura'] = {id = 9, words = 'dragon aura', icon_id = 9, description = 'create a dragon aura that deals fire damage to enemies around you. [maxHP+Magic]', exhaustion = 2000, premium = false, type = 'Instant', icon = 9, mana = 75, level = 50, soul = 0, group = {[1] = 2000}, vocations = {4}},
+    ['Dragons Call'] = {id = 10, words = 'dragons call', icon_id = 10, description = 'xxxxx missing description xxxxxx[skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 10, mana = 85, level = 100, soul = 0, group = {[1] = 2000}, vocations = {4}},
+    ['Draconic Chains'] = {id = 11, words = 'draconic chains', icon_id = 11, description = 'unleash your dragon chains pullin all enemies into you dealing physical damage to all enemies. [magic]', exhaustion = 2000, premium = false, type = 'Instant', icon = 11, mana = 325, level = 150, soul = 0, group = {[3] = 2000}, vocations = {4}},
+    ['Shockwave'] = {id = 12, words = 'shockwave', icon_id = 12, description = 'stomp the floor creating a shockwave and stunning all enemies in the area for 2 seconds. [skill+attack+magic]', exhaustion = 2000, premium = false, type = 'Instant', icon = 12, mana = 75, level = 30, soul = 0, group = {[1] = 2000}, vocations = {4}},
+    ['Bloodlust'] = {id = 13, words = 'bloodlust', icon_id = 13, description = 'for the next 8 seconds enter a frenzy state increasing your melee skill, attack speed and critical hit chance by 50%.', exhaustion = 2000, premium = false, type = 'Instant', icon = 13, mana = 85, level = 1, soul = 0, group = {[3] = 2000}, vocations = {4}},
+    ['Dragon Soul'] = {id = 14, words = 'dragon soul', icon_id = 14, description = 'restore high amounts of max health scaled by your max health.', exhaustion = 2000, premium = false, type = 'Instant', icon = 14, mana = 20, level = 1, soul = 0, group = {[2] = 2000}, vocations = {4}},
     
-    --Soul Weaver
-    ['Soul Fists'] =                {id = 120, words = 'Soul Fists',        exhaustion = 3000, premium = false, type = 'Instant', icon = 'energyhand',         mana = 35,        level = 8, soul = 0,           group = {[1] = 1000},     parameter = false, vocations = {7}, description = 'Fist your target with your gathered souls, the damage is applied for every stored soul. [Mx Health, MAGIC LEVEL]'},
-    ['Soul Barrage'] =              {id = 121, words = 'Soul Barrage',        exhaustion = 6000, premium = false, type = 'Instant', icon = 'deathhand',        mana = 75,        level = 30, soul = 0,          group = {[1] = 1000},     parameter = false, vocations = {7}, description = 'blast nearby targets with your gathered souls, the damage is applied for every stored soul. [Mx Health, MAGIC LEVEL]'},
-    ['Anger Release'] =             {id = 122, words = 'Anger Release',        exhaustion = 12000, premium = false, type = 'Instant', icon = 'firehand',           mana = 125,        level = 55, soul = 0,             group = {[1] = 1000},     parameter = false, vocations = {7}, description = 'gather and release the anger of souls dealing death damage to all surrounding enemies. [Mx Health, MAGIC LEVEL]'},
-    ['Spectral Wave'] =             {id = 124, words = 'Spectral Wave',        exhaustion = 15000, premium = false, type = 'Instant', icon = 'icearrow',           mana = 115,        level = 46, soul = 0,             group = {[1] = 1000},     parameter = false, vocations = {7}, description = 'Call from death spectral wave of creatures that deals damage to all enemies in front the caster direction. [Mx Health, MAGIC LEVEL]'},
-    ['Underworld Gaze'] =           {id = 125, words = 'Underworld Gaze',        exhaustion = 10000, premium = false, type = 'Instant', icon = 'holyhand',         mana = 220,        level = 125, soul = 0,            group = {[1] = 1000},     parameter = false, vocations = {7}, description = 'deals AOE death damage to all surrounding enemies. [MAGIC LEVEL]'},
-    ['Hollow Blade'] =              {id = 126, words = 'Hollow Blade',        exhaustion = 4000, premium = false, type = 'Instant', icon = 'bloodhand',        mana = 20,        level = 18, soul = 0,          group = {[1] = 1000},     parameter = false, vocations = {7}, description = 'strike the target with a hollow blade this spell has a 50% chance to generate 1 soul charge. [MAGIC LEVEL]'},
-    ['Veil of Anguish'] =           {id = 127, words = 'Veil of Anguish',        exhaustion = 7000, premium = false, type = 'Instant', icon = 'spikes',        mana = 60,        level = 40, soul = 0,          group = {[3] = 1000},     parameter = false, vocations = {7}, description = 'Increase physical damage reflection by: 10% by 10 seconds.'},
-    ['Absolute Denial'] =           {id = 128, words = 'Absolute Denial',        exhaustion = 20000, premium = false, type = 'Instant', icon = 'void',         mana = 200,        level = 60, soul = 0,             group = {[3] = 1000},     parameter = false, vocations = {7}, description = 'creates a hollow attack around the target that deals minor damage but heals the target based on the amount on enemies reached. [MAGIC LEVEL]'},
-    ['Soul Link'] =                 {id = 129, words = 'Soul Link',        exhaustion = 50000, premium = false, type = 'Instant', icon = 'poisonhand',         mana = 100,        level = 90, soul = 0,             group = {[2] = 1000},     parameter = false, vocations = {7}, description = 'swap your current max health with your target. (only works on non elite monters)'},
-    ['Drain Soul'] =                 {id = 130, words = 'Drain Soul',        exhaustion = 18000, premium = false, type = 'Instant', icon = 'shadowbolts',          mana = 200,        level = 100, soul = 0,            group = {[1] = 1000},     parameter = false, vocations = {7}, description = 'drain the soul of all surrounding enemies healing for each enemy afected'},
-    ['Void Slumber'] =                 {id = 131, words = 'Void Slumber',        exhaustion = 10000, premium = false, type = 'Instant', icon = 'ghost',        mana = 125,        level = 70, soul = 0,             group = {[1] = 1000},     parameter = false, vocations = {7}, description = 'gather all nearby souls from dead enemies and summon them as soul voids the fight by your side.'},
+    -- Templar
+    ['Divine Punishment'] = {id = 20, words = 'divine punishment', icon_id = 20, description = 'call down judgement to a enemy dealing high amounts of holy damage.', exhaustion = 2000, premium = false, type = 'Instant', icon = 20, mana = 200, level = 100, soul = 0, group = {[1] = 2000}, vocations = {2}},
+    ['Penitence'] = {id = 21, words = 'penitence', icon_id = 21, description = 'send a holy shield wich deals holy damage and taunts all enemies.', exhaustion = 2000, premium = false, type = 'Instant', icon = 21, mana = 60, level = 25, soul = 0, group = {[1] = 2000}, vocations = {2}},
+    ['Holy Ground'] = {id = 22, words = 'holy ground', icon_id = 22, description = 'create a holy ground at your casted position wich will deal damage to enemies who stand inside its radius.', exhaustion = 2000, premium = false, type = 'Instant', icon = 22, mana = 75, level = 50, soul = 0, group = {[1] = 2000}, vocations = {2}},
+    ['Sacred Ground'] = {id = 23, words = 'sacred Ground', icon_id = 23, description = 'create a sacred ground at your casted position wich will heal allies who stand inside its radius.', exhaustion = 2000, premium = false, type = 'Instant', icon = 23, mana = 100, level = 40, soul = 0, group = {[2] = 2000}, vocations = {2}},
+    ['Crusader Strike'] = {id = 24, words = 'crusader strike', icon_id = 24, description = 'after a short delay strike your target with a holy sentence.', exhaustion = 2000, premium = false, type = 'Instant', icon = 24, mana = 50, level = 18, soul = 0, group = {[1] = 2000}, vocations = {2}},
+    ['Divine Storm'] = {id = 25, words = 'divine storm', icon_id = 25, description = 'create a holy storm wich deals damage and heals you and your nearby allies.', exhaustion = 2000, premium = false, type = 'Instant', icon = 25, mana = 150, level = 70, soul = 0, group = {[1] = 2000}, vocations = {2}},
+    ['Exorcism'] = {id = 26, words = 'exorcism', icon_id = 26, description = 'call faith around you several times dealing damage to nearby enemies.', exhaustion = 2000, premium = false, type = 'Instant', icon = 26, mana = 125, level = 999, soul = 0, group = {[1] = 2000}, vocations = {2}},
+    ['Smite'] = {id = 27, words = 'smite', icon_id = 27, description = 'smite your target dealing physical damage after a short delay', exhaustion = 2000, premium = false, type = 'Instant', icon = 27, mana = 20, level = 8, soul = 0, group = {[1] = 2000}, vocations = {2}},
+    ['Light Beam'] = {id = 28, words = 'light beam', icon_id = 28, description = 'create a holy wave wich deals damage based on your direction.', exhaustion = 2000, premium = false, type = 'Instant', icon = 28, mana = 130, level = 30, soul = 0, group = {[1] = 2000}, vocations = {2}},
+    ['Summon Guardian of Light'] = {id = 29, words = 'summon guardian', icon_id = 29, description = 'summon the guardian of light to aid you, healing you and nearby allies while it is active.', exhaustion = 2000, premium = false, type = 'Instant', icon = 29, mana = 250, level = 90, soul = 0, group = {[3] = 2000}, vocations = {2}},
+    ['Kings Blessing'] = {id = 30, words = 'Kings Blessing', icon_id = 30, description = 'increase all party members combat stats by 10% for 20 minutes.', exhaustion = 2000, premium = false, type = 'Instant', icon = 30, mana = 50, level = 60, soul = 0, group = {[3] = 2000}, vocations = {2}},
+    ['Angelic Form'] = {id = 31, words = 'angelic form', icon_id = 31, description = 'gain the blessing of angels transforming you into a angel, while this form is active you and all your nearby allies will be constantly healed.', exhaustion = 2000, premium = false, type = 'Instant', icon = 31, mana = 500, level = 90, soul = 0, group = {[3] = 2000}, vocations = {2}},
+    ['Judgement'] = {id = 32, words = 'judgement', icon_id = 32, description = 'trhow a holy hammer dealing holy damage to your target.', exhaustion = 2000, premium = false, type = 'Instant', icon = 32, mana = 30, level = 15, soul = 0, group = {[1] = 2000}, vocations = {2}},
+   
+    --Magician
+    ['Energy Blast'] = {id = 41, words = 'energy blast', icon_id = 41, description = 'cast a energy blast wich restore mana on impact and deals energy damage to your target.', exhaustion = 2000, premium = false, type = 'Instant', icon = 41, mana = 0, level = 10, soul = 0, group = {[1] = 2000}, vocations = {1}},
+    ['Fire Blast'] = {id = 42, words = 'fire blast', icon_id = 42, description = 'cast a fire blast wich deals fire damage in a small radius.', exhaustion = 2000, premium = false, type = 'Instant', icon = 42, mana = 25, level = 8, soul = 0, group = {[1] = 2000}, vocations = {1}},
+    ['Ice Nova'] = {id = 44, words = 'ice nova', icon_id = 44, description = 'create a ice nova wich extends from your current position slowing all enemies in its radius.', exhaustion = 2000, premium = false, type = 'Instant', icon = 44, mana = 180, level = 20, soul = 0, group = {[1] = 2000}, vocations = {1}},
+    ['Mana Distortion'] = {id = 46, words = 'mana distortion', icon_id = 46, description = 'creates a distortion field wich restore mana to allies who stand inside its radius.', exhaustion = 2000, premium = false, type = 'Instant', icon = 46, mana = 0, level = 80, soul = 0, group = {[3] = 2000}, vocations = {1}},
+    ['Mana Flow'] = {id = 47, words = 'mana flow', icon_id = 47, description = 'restores a percentage of your max mana every second for 8 seconds.', exhaustion = 2000, premium = false, type = 'Instant', icon = 47, mana = 0, level = 40, soul = 0, group = {[2] = 2000}, vocations = {1}},
+    ['Hand of God'] = {id = 48, words = 'hand of god', icon_id = 48, description = 'slam the ground creating a fire explosion dealing damage to all enemies in its radius.', exhaustion = 2000, premium = false, type = 'Instant', icon = 48, mana = 120, level = 18, soul = 0, group = {[1] = 2000}, vocations = {1}},
+    ['Frost Wave'] = {id = 49, words = 'frost wave', icon_id = 49, description = 'send a frozen wave into your faced direction wich stuns and freeze in aplce all enemies reached.', exhaustion = 2000, premium = false, type = 'Instant', icon = 49, mana = 200, level = 70, soul = 0, group = {[1] = 2000}, vocations = {1}},
+    ['Arcane Missiles'] = {id = 51, words = 'arcane missiles', icon_id = 51, description = 'shoot a group of missiles wich deals energy damage to your target.', exhaustion = 2000, premium = false, type = 'Instant', icon = 51, mana = 80, level = 18, soul = 0, group = {[1] = 2000}, vocations = {1}},
+    ['Teleport'] = {id = 52, words = 'teleport', icon_id = 52, description = 'insstantly teleport yourself forwards, this effect can affected by objects', exhaustion = 2000, premium = false, type = 'Instant', icon = 52, mana = 150, level = 60, soul = 0, group = {[3] = 2000}, vocations = {1}},
+    ['Blizzard'] = {id = 53, words = 'blizzard', icon_id = 53, description = 'create a blizzard storm into your target position dealing ice damage while it is active.', exhaustion = 2000, premium = false, type = 'Instant', icon = 53, mana = 200, level = 50, soul = 0, group = {[1] = 2000}, vocations = {1}},
+    ['Hells Core'] = {id = 54, words = 'hells core', icon_id = 54, description = 'a meteor fall at your target position dealing massive fire damage.', exhaustion = 2000, premium = false, type = 'Instant', icon = 54, mana = 400, level = 100, soul = 0, group = {[1] = 2000}, vocations = {1}},
+    ['Ice Barrage'] = {id = 55, words = 'ice barrage', icon_id = 55, description = 'shoot a group of icicles wich deals ice damage to your target.', exhaustion = 2000, premium = false, type = 'Instant', icon = 55, mana = 75, level = 30, soul = 0, group = {[1] = 2000}, vocations = {0}},
+    ['Ice Wall'] = {id = 56, words = 'ice wall', icon_id = 56, description = 'create a ice wall wich extends horizontally 2 tilesfrom your current position.', exhaustion = 2000, premium = false, type = 'Instant', icon = 56, mana = 115, level = 42, soul = 0, group = {[1] = 2000}, vocations = {0}},
+    ['Ice Clones'] = {id = 57, words = 'ice clones', icon_id = 57, description = 'create a 4 clones of yourself wich will follow you and deal ice damage to enemies.', exhaustion = 2000, premium = false, type = 'Instant', icon = 57, mana = 115, level = 42, soul = 0, group = {[1] = 2000}, vocations = {0}},
+    ['Ice Tomb'] = {id = 58, words = 'ice tomb', icon_id = 58, description = 'surround your target with ice pillars trapping it in place.', exhaustion = 2000, premium = false, type = 'Instant', icon = 58, mana = 10, level = 10, soul = 0, group = {[1] = 2000}, vocations = {0}},
+    ['Glacial Steps'] = {id = 59, words = 'glacial steps', icon_id = 59, description = 'leave a trail of ice traps while walking wich slow down enemies on contact.', exhaustion = 25000, premium = false, type = 'Instant', icon = 59, mana = 115, level = 42, soul = 0, group = {[1] = 2000}, vocations = {0}},
     
+    --Warlock
+    ['Zombie Wall'] = {id = 61, words = 'zombie wall', icon_id = 61, description = 'create a zombie wall wich extends horizontally 2 tiles from your current position.', exhaustion = 2000, premium = false, type = 'Instant', icon = 61, mana = 50, level = 40, soul = 0, group = {[3] = 2000}, vocations = {5}},
+    ['Curse'] = {id = 62, words = 'curse', icon_id = 62, description = 'curse your target dealing death damage for 6 seconds.', exhaustion = 2000, premium = false, type = 'Instant', icon = 62, mana = 35, level = 8, soul = 0, group = {[1] = 2000}, vocations = {5}},
+    ['Fear'] = {id = 63, words = 'fear', icon_id = 63, description = 'fear your target for 6 seconds wich makes it unable to control itself.', exhaustion = 2000, premium = false, type = 'Instant', icon = 63, mana = 150, level = 60, soul = 0, group = {[3] = 2000}, vocations = {5}},
+    ['Shadow Strike'] = {id = 64, words = 'shadow strike', icon_id = 64, description = 'send a shadow bolt to your target dealing shadow damage.', exhaustion = 2000, premium = false, type = 'Instant', icon = 64, mana = 110, level = 30, soul = 0, group = {[1] = 2000}, vocations = {5}},
+    ['Summon Void Mender'] = {id = 65, words = 'summon void mender', icon_id = 65, description = 'summon a void mender wich heals injured allies or summons.', exhaustion = 2000, premium = false, type = 'Instant', icon = 65, mana = 300, level = 70, soul = 0, group = {[3] = 2000}, vocations = {5}},
+    ['Blood Pact'] = {id = 66, words = 'blood pact', icon_id = 66, description = 'exchage a percentage of your max health for mana.', exhaustion = 2000, premium = false, type = 'Instant', icon = 66, mana = 0, level = 40, soul = 0, group = {[2] = 2000}, vocations = {5}},
+    ['Party Vitality'] = {id = 67, words = 'Party Vitality', icon_id = 67, description = 'increase the max health of your party members for 20 minutes.', exhaustion = 2000, premium = false, type = 'Instant', icon = 67, mana = 100, level = 60, soul = 0, group = {[3] = 2000}, vocations = {5}},
+    ['Summon Void Guard'] = {id = 68, words = 'summon void guard', icon_id = 68, description = 'summon a void guard taunts nearby enemies and has a larger health pool.', exhaustion = 2000, premium = false, type = 'Instant', icon = 68, mana = 480, level = 100, soul = 0, group = {[3] = 2000}, vocations = {5}},
+    ['Summon Void Sentinel'] = {id = 69, words = 'summon void sentinel', icon_id = 69, description = 'summon a void sentinel wich damages enemies from the distance.', exhaustion = 2000, premium = false, type = 'Instant', icon = 69, mana = 150, level = 30, soul = 0, group = {[3] = 2000}, vocations = {5}},
+    ['Blood Wall'] = {id = 70, words = 'blood Wall', icon_id = 70, description = 'increase your defence stat and max hitpoints for 15 seconds.', exhaustion = 2000, premium = false, type = 'Instant', icon = 70, mana = 0, level = 90, soul = 0, group = {[3] = 2000}, vocations = {5}},
+    ['Dark Plague'] = {id = 71, words = 'dark plague', icon_id = 71, description = 'curse all enemies nearby your target position dealing death damage over 10 seconds.', exhaustion = 2000, premium = false, type = 'Instant', icon = 71, mana = 300, level = 100, soul = 0, group = {[1] = 2000}, vocations = {5}},
+    ['Soul Rain'] = {id = 74, words = 'soul rain', icon_id = 74, description = 'cast a rain of death over your target position dealing death damage over 8 seconds.', exhaustion = 2000, premium = false, type = 'Instant', icon = 74, mana = 200, level = 50, soul = 0, group = {[1] = 2000}, vocations = {5}},
+    ['Drain Soul'] = {id = 75, words = 'drain soul', icon_id = 75, description = 'drain the souls of nearby enemies healing yourself and dealing death damage.', exhaustion = 2000, premium = false, type = 'Instant', icon = 75, mana = 150, level = 100, soul = 0, group = {[1] = 2000}, vocations = {5}},
+    ['Malediction'] = {id = 76, words = 'malediction', icon_id = 76, description = 'cast a strong plague to your target that deals death damage on impact.', exhaustion = 2000, premium = false, type = 'Instant', icon = 76, mana = 150, level = 1, soul = 0, group = {[1] = 2000}, vocations = {5}},
+    ['Haunt'] = {id = 77, words = 'haunt', icon_id = 77, description = 'haunts the target and apply a curse to it and nearby enemies after impact.', exhaustion = 2000, premium = false, type = 'Instant', icon = 77, mana = 250, level = 1, soul = 0, group = {[1] = 2000}, vocations = {5}},
+    ['Dark Aura'] = {id = 78, words = 'dark aura', icon_id = 78, description = 'infuse yourself with a dark aura that reduce all damage taken by 25%.', exhaustion = 2000, premium = false, type = 'Instant', icon = 78, mana = 0, level = 1, soul = 0, group = {[3] = 2000}, vocations = {5}},
+   
+    --Nightblade
+    ['Stealth'] = {id = 80, words = 'stealth', icon_id = 80, description = 'enter stealth mode for 60 seconds wich makes you invisible to enemies and damage.', exhaustion = 60000, premium = false, type = 'Instant', icon = 80, mana = 110, level = 40, soul = 0, group = {[1] = 5000}, vocations = {3}},
+    ['Mutilate'] = {id = 81, words = 'mutilate', icon_id = 81, description = 'mutilate your target 4 times in a row dealing physical damage.', exhaustion = 3000, premium = false, type = 'Instant', icon = 81, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {3}},
+    ['Shadow Hunt'] = {id = 82, words = 'shadow hunt', icon_id = 82, description = 'cast a hunting blade over your target that deals shadow damage 4 times in a row.', exhaustion = 6000, premium = false, type = 'Instant', icon = 82, mana = 60, level = 18, soul = 0, group = {[1] = 1900}, vocations = {3}},
+    ['Shadowstep'] = {id = 83, words = 'shadowstep', icon_id = 83, description = 'shadow step before your target appearing behind it and stuning it for a small duration.', exhaustion = 15000, premium = false, type = 'Instant', icon = 83, mana = 125, level = 90, soul = 0, group = {[3] = 1900}, vocations = {3}},
+    ['Backstab'] = {id = 84, words = 'backstab', icon_id = 84, description = 'backstab your target dealing physical damage wich stuns it for 2 seconds.', exhaustion = 7000, premium = false, type = 'Instant', icon = 84, mana = 60, level = 15, soul = 0, group = {[1] = 0}, vocations = {3}},
+    ['Assassination'] = {id = 85, words = 'assassination', icon_id = 85, description = 'assassinate all nearby enemies teleporting you into them for a breaf period of time making you untargetable.', exhaustion = 22000, premium = false, type = 'Instant', icon = 85, mana = 250, level = 70, soul = 0, group = {[1] = 1900}, vocations = {3}},
+    ['Fan of Knives'] = {id = 86, words = 'fan of knives', icon_id = 86, description = 'sprays knives at all enemies around your dealing physical damage and applie a poison effect.', exhaustion = 5000, premium = false, type = 'Instant', icon = 86, mana = 100, level = 50, soul = 0, group = {[1] = 1900}, vocations = {3}},
+    ['Shadow Form'] = {id = 87, words = 'shadow form', icon_id = 87, description = 'enter a shadow state that heals you for the duration.', exhaustion = 2000, premium = false, type = 'Instant', icon = 87, mana = 0, level = 1, soul = 0, group = {[1] = 1900}, vocations = {3}},
+    ['Dark Rupture'] = {id = 88, words = 'dark rupture', icon_id = 88, description = 'create a rupture into your target wich deals physical damage, if the target is stunned it will apply a bleeding effect.', exhaustion = 6000, premium = false, type = 'Instant', icon = 88, mana = 45, level = 30, soul = 0, group = {[1] = 1900}, vocations = {3}},
+    ['Void Execution'] = {id = 89, words = 'void execution', icon_id = 89, description = 'executes all nearby enemies while their health is below 30%, this effect is changed to 20% for players.', exhaustion = 22000, premium = false, type = 'Instant', icon = 89, mana = 200, level = 1, soul = 0, group = {[1] = 1900}, vocations = {3}},
+    ['Blood Blades'] = {id = 90, words = 'blood blades', icon_id = 90, description = 'enter a bloody state wich heals you everytime you land a melee hit.', exhaustion = 25000, premium = false, type = 'Instant', icon = 90, mana = 0, level = 35, soul = 0, group = {[3] = 1900}, vocations = {3}},
+    ['Lethal Dagger'] = {id = 91, words = 'lethal dagger', icon_id = 91, description = 'throw a lethal dagger at your target dealing physical damage.', exhaustion = 2000, premium = false, type = 'Instant', icon = 91, mana = 50, level = 15, soul = 0, group = {[1] = 0}, vocations = {3}},
+    ['Blackout'] = {id = 92, words = 'blackout', icon_id = 92, description = 'hit your target with a dark force stunnin it for 4 seconds.', exhaustion = 16000, premium = false, type = 'Instant', icon = 92, mana = 60, level = 1, soul = 0, group = {[1] = 0}, vocations = {3}},
+   
+   --Stellar
+    ['Cosmic Force'] = {id = 100, words = 'cosmic force', icon_id = 100, description = 'after a short delay send a force ball at your target dealing energy damage.', exhaustion = 3000, premium = false, type = 'Instant', icon = 100, mana = 30, level = 8, soul = 0, group = {[1] = 1900}, vocations = {6}},
+    ['Aery Wrath'] = {id = 102, words = 'aery wrath', icon_id = 102, description = 'send aery into combat making her travel through your target and all enemies around it dealing holy damage.', exhaustion = 10000, premium = false, type = 'Instant', icon = 102, mana = 45, level = 18, soul = 0, group = {[1] = 1900}, vocations = {6}},
+    ['Starfall'] = {id = 103, words = 'starfall', icon_id = 103, description = 'call a starfall over your target position dealing energy damage and restoring mana.', exhaustion = 7000, premium = false, type = 'Instant', icon = 103, mana = 0, level = 50, soul = 0, group = {[1] = 0}, vocations = {6}},
+    ['Falling Star'] = {id = 104, words = 'falling star', icon_id = 104, description = 'call down a falling star over your target dealing damage and stunning it for 3 seconds..', exhaustion = 7000, premium = false, type = 'Instant', icon = 104, mana = 95, level = 30, soul = 0, group = {[1] = 1900}, vocations = {6}},
+    ['Rain fall'] = {id = 105, words = 'rain fall', icon_id = 105, description = 'create a safe zone where rain falls and heals all allies who stand in it.', exhaustion = 20000, premium = false, type = 'Instant', icon = 105, mana = 100, level = 25, soul = 0, group = {[2] = 1900}, vocations = {6}},
+    ['Grow'] = {id = 107, words = 'grow', icon_id = 107, description = 'create a sequence of magic walls based on the direction you are facing, each consecutive wall will be placed based on the direction you are facing at that momemnt.', exhaustion = 25000, premium = false, type = 'Instant', icon = 107, mana = 100, level = 60, soul = 0, group = {[3] = 1900}, vocations = {6,8}},
+    ['Lunar Beam'] = {id = 108, words = 'lunar beam', icon_id = 108, description = 'xxxxxxx', exhaustion = 13000, premium = false, type = 'Instant', icon = 108, mana = 185, level = 60, soul = 0, group = {[1] = 1900}, vocations = {6}},
+    ['Aery Strikes'] = {id = 109, words = 'aery strikes', icon_id = 109, description = 'xxxxxxx', exhaustion = 8000, premium = false, type = 'Instant', icon = 109, mana = 135, level = 70, soul = 0, group = {[1] = 1900}, vocations = {6}},
+    ['Full Moon'] = {id = 111, words = 'full moon', icon_id = 111, description = 'xxxxxxx', exhaustion = 45000, premium = false, type = 'Instant', icon = 111, mana = 300, level = 100, soul = 0, group = {[2] = 1900}, vocations = {6}},
+    ['Moonlight'] = {id = 112, words = 'moonlight', icon_id = 112, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 112, mana = 80, level = 27, soul = 0, group = {[2] = 1900}, vocations = {6}},
+    ['Holy Flare'] = {id = 113, words = 'holy flare', icon_id = 113, description = 'xxxxxxx', exhaustion = 10000, premium = false, type = 'Instant', icon = 113, mana = 140, level = 1, soul = 0, group = {[2] = 1900}, vocations = {6}},
+    ['Solar Blessing'] = {id = 114, words = 'solar blessing', icon_id = 114, description = 'xxxxxxx', exhaustion = 10000, parameter = true, premium = false, type = 'Instant', icon = 114, mana = 140, level = 1, soul = 0, group = {[2] = 1900}, vocations = {6}},
+
+
+    --Monk
+    ['Lotus Kick'] = {id = 127, words = 'lotus kick', icon_id = 127, description = 'xxxxxxx', exhaustion = 7000, premium = false, type = 'Instant', icon = 127, mana = 30, level = 40, soul = 0, group = {[3] = 0}, vocations = {7}},
+    ['Adaptive Punch'] = {id = 128, words = 'adaptive punch', icon_id = 128, description = 'xxxxxxx', exhaustion = 10000, premium = false, type = 'Instant', icon = 128, mana = 80, level = 15, soul = 0, group = {[3] = 2000}, vocations = {7}},
+    ['Fire Punch'] = {id = 129, words = 'fire punch', icon_id = 129, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 129, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Ice Punch'] = {id = 130, words = 'ice punch', icon_id = 130, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 130, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Life Punch'] = {id = 131, words = 'life punch', icon_id = 131, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 131, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Fist of Fire'] = {id = 132, words = 'fist of fire', icon_id = 132, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 132, mana = 115, level = 42, soul = 0, group = {[1] = 3000}, vocations = {7}},
+    ['Volcanic Dash'] = {id = 133, words = 'volcanic dash', icon_id = 133, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 133, mana = 115, level = 42, soul = 0, group = {[1] = 3000}, vocations = {7}},
+    ['Stormfist'] = {id = 134, words = 'stormfist', icon_id = 134, description = 'xxxxxxx', exhaustion = 20000, premium = false, type = 'Instant', icon = 134, mana = 350, level = 1, soul = 0, group = {[1] = 0}, vocations = {7}},
+    ['Mountain Stance'] = {id = 135, words = 'mountain stance', icon_id = 135, description = 'xxxxxxx', exhaustion = 50000, premium = false, type = 'Instant', icon = 135, mana = 650, level = 1, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Zen Barrier'] = {id = 136, words = 'zen barrier', icon_id = 136, description = 'xxxxxxx', exhaustion = 45000, parameter = true, premium = false, type = 'Instant', icon = 136, mana = 500, level = 1, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Mystic Fist'] = {id = 137, words = 'mystic fist', icon_id = 137, description = 'xxxxxxx', exhaustion = 8000, premium = false, type = 'Instant', icon = 137, mana = 150, level = 50, soul = 0, group = {[1] = 1900}, vocations = {7}},
+ 
     --Druid
-    ['Terra Strike'] =              {id = 140, words = 'Terra Strike',        exhaustion = 3000, premium = false, type = 'Instant', icon = 'earthattack2',         mana = 30,        level = 8, soul = 0,           group = {[1] = 1000},     parameter = false, vocations = {8}, description = 'shoots an earth strike to the target. [MAGIC LEVEL]'},
-    ['Living Seeds'] =              {id = 141, words = 'Living Seeds',        exhaustion = 35000, premium = false, type = 'Instant', icon = 'greenwind',           mana = 150,        level = 46, soul = 0,             group = {[3] = 1000},     parameter = false, vocations = {8}, description = 'creates 2 living seeds in your inventory. these seeds can be place in the ground as summons. [MAGIC LEVEL]'},
-    ['Life Bloom'] =                {id = 142, words = 'Life Bloom',        exhaustion = 6000, premium = false, type = 'Instant', icon = 'icehand',        mana = 70,        level = 25, soul = 0,          group = {[2] = 1000},     parameter = false, vocations = {8}, description = 'restore casters and all party members health every second. [Target MxHP, MAGIC LEVEL]'},
-    ['Rejuvenation'] =              {id = 143, words = 'Rejuvenation',        exhaustion = 11000, premium = false, type = 'Instant', icon = 'healhand',        mana = 85,        level = 40, soul = 0,          group = {[2] = 1000},     parameter = false, vocations = {8}, description = 'Strong Self heal. [MAGIC LEVEL]'},
-    ['Seed Germination'] =          {id = 144, words = 'Seed Germination',        exhaustion = 15000, premium = false, type = 'Instant', icon = 'icehand2',        mana = 75,        level = 18, soul = 0,          group = {[1] = 1000},     parameter = false, vocations = {8}, description = 'place a corrupted seed into the target that spreads over time dealing earth damage. [MAGIC LEVEL]'},
-    ['Travel Form'] =               {id = 145, words = 'Travel Form',        exhaustion = 2000, premium = false, type = 'Instant', icon = 'haste',         mana = 60,        level = 25, soul = 0,          group = {[3] = 2000},     parameter = false, vocations = {8}, description = 'turn yourself into your travel form increasing dramatically your movement speed, while in this form you are unable to cast any spells.'},
-    ['Carnivorous Vile'] =          {id = 146, words = 'Carnivorous Vile',        exhaustion = 5500, premium = false, type = 'Instant', icon = 'plant2',           mana = 85,        level = 30, soul = 0,          group = {[1] = 1000},     parameter = false, vocations = {8}, description = 'cast a carnivorous plant into the target dealing earth damage, damage is increased if the target is poisoned. [MAGIC LEVEL]'},
-    ['living ground'] =             {id = 147, words = 'living ground',        exhaustion = 10000, premium = false, type = 'Instant', icon = 'energythunder2',         mana = 110,        level = 60, soul = 0,             group = {[2] = 1000},     parameter = false, vocations = {8}, description = 'creates a restoring ground that heals all players affected. [Target MxHP]'},
-    ['Thorns'] =                    {id = 148, words = 'Thorns',        exhaustion = 2000, premium = false, type = 'Instant', icon = 'nature',         mana = 50,        level = 60, soul = 0,          group = {[3] = 1000},     parameter = false, vocations = {8}, description = 'place thorns in all party members increasing physical damage reflection by: 5% for 20 minutes.'},
-    ['Peircing Wave'] =             {id = 149, words = 'Peircing Wave',        exhaustion = 12000, premium = false, type = 'Instant', icon = 'earthattack',        mana = 115,        level = 42, soul = 0,             group = {[1] = 1000},     parameter = false, vocations = {8}, description = 'pierce trough enemies with a thorns wave stunning and bleeding all enemies affected. [MAGIC LEVEL]'},
-    ['Bear Form'] =                {id = 150, words = 'Bear Form',        exhaustion = 20000, premium = false, type = 'Instant', icon = 'roar',        mana = 60,        level = 45, soul = 0,          group = {[3] = 1000},     parameter = false, vocations = {8}, description = 'turn yourself into your bear form increasing dramatically your max health but reducing your speed, while in this form you are only able to cast healing spells .'},
-    ['Bless of the Forest'] =       {id = 151, words = 'Bless of the Forest',        exhaustion = 2000, premium = false, type = 'Instant', icon = 'flower',        mana = 100,        level = 60, soul = 0,             group = {[3] = 1000},     parameter = false, vocations = {8}, description = 'bless all your party members by increasing Health and mana restoration: 1% every 2 seconds for 20 minutes.'},
-    ['Wrath of Nature'] =           {id = 152, words = 'Wrath of Nature',        exhaustion = 18000, premium = false, type = 'Instant', icon = 'naturewrath',          mana = 350,        level = 70, soul = 0,             group = {[1] = 1000},     parameter = false, vocations = {8}, description = 'Call the wrath of nature into all enemies around your target dealing energy damage. [MAGIC LEVEL]'},
-    ['Soul Form'] =                 {id = 153, words = 'Soul Form',        exhaustion = 120000, premium = false, type = 'Instant', icon = 'nightwolf',         mana = 250,        level = 100, soul = 0,            group = {[3] = 1000},     parameter = false, vocations = {8}, description = 'enter your soul form increasing your magic level by 20% and increasing drastically your hp and mana regeneration.'},
-    ['Earth Dance'] =               {id = 110, words = 'Earth Dance',         exhaustion = 16000, premium = false, type = 'Instant', icon = 'plant2',    mana = 225,      level = 125, soul = 0, group = {[1] = 1000},                parameter = false, vocations = {8}, description = 'Call the earth spirits to create an avalanche of rocks that collides into enemy targets. [MAGIC LEVEL]'},
-    
-    --Light Dancer
-    ['Charged Strike'] =            {id = 160, words = 'Charged Strike',        exhaustion = 4000, premium = false, type = 'Instant', icon = 'swordslash',         mana = 25,        level = 8, soul = 0,           group = {[1] = 1000},     parameter = false, vocations = {9}, description = 'strike the target with an electric slash dealing energy damage, if the target is affected by static charge this effect will be powered twice. [Weapon Damage, Melee Skill]'},
-    ['Static Charge'] =             {id = 161, words = 'Static Charge',        exhaustion = 2200, premium = false, type = 'Instant', icon = 'electrticity',        mana = 0,        level = 15, soul = 0,           group = {[1] = 1000},     parameter = false, vocations = {9}, description = 'apply static charge into the target. [LVL]'},
-    ['Light Dash'] =                {id = 162, words = 'Light Dash',        exhaustion = 6000, premium = false, type = 'Instant', icon = 'travel',         mana = 65,        level = 18, soul = 0,          group = {[1] = 1000},     parameter = false, vocations = {9}, description = 'dash into the targeted enemy dealing energy damage, if the target if affected by static charge this effect will be powered and also stun the target by 1.8 seconds. [Melee Skill]'},
-    ['Lightning Orb'] =             {id = 163, words = 'Lightning Orb',        exhaustion = 10000, premium = false, type = 'Instant', icon = 'energyball',         mana = 155,        level = 100, soul = 0,            group = {[1] = 1000},     parameter = false, vocations = {9}, description = 'summon a lighting orb that deals energy damage around the target. [MAGIC LEVEL]'},
-    ['Fission Break'] =             {id = 164, words = 'Fission Break',        exhaustion = 15000, premium = false, type = 'Instant', icon = 'swordstance',        mana = 250,        level = 70, soul = 0,             group = {[1] = 1000},     parameter = false, vocations = {9}, description = 'expels high amounts of energy from the caster wich deals energy damage (this effect can also apply on hit effects)[Weapon Damage, Melee Skill, MAGIC LEVEL].'},
-    ['Aereal Shock'] =              {id = 165, words = 'Aereal Shock',        exhaustion = 5000, premium = false, type = 'Instant', icon = 'intensehealing',           mana = 100,        level = 46, soul = 0,             group = {[1] = 1000},     parameter = false, vocations = {9}, description = 'Shocks all surrounding enemies that are affected by static shock dealing energy damage. [Target MxHP, MAGIC LEVEL]'},
-    ['Lightning Spear'] =           {id = 166, words = 'Lightning Spear',        exhaustion = 12000, premium = false, type = 'Instant', icon = 'frostmissile',         mana = 85,        level = 50, soul = 0,          group = {[1] = 1000},     parameter = false, vocations = {9}, description = 'throws a energy spear into the target dealing high energy damage and applying static charge. [MAGIC LEVEL]'},
-    ['Overcharge'] =                {id = 167, words = 'Overcharge',        exhaustion = 30000, premium = false, type = 'Instant', icon = 'energythunder',         mana = 115,        level = 45, soul = 0,             group = {[3] = 1000},     parameter = false, vocations = {9}, description = 'enter overcharge mode wich increases all your offensive skills by 20% but reciving damage for the duration.'},
-    ['Magnetic Field'] =            {id = 168, words = 'Magnetic Field',        exhaustion = 35000, premium = false, type = 'Instant', icon = 'energyattack',          mana = 175,        level = 90, soul = 0,             group = {[3] = 1000},     parameter = false, vocations = {9}, description = 'place a magnetic field in the ground wich makes all enemies unable to walk normally.'},
-    ['Thunderstorm'] =              {id = 169, words = 'Thunderstorm',        exhaustion = 25000, premium = false, type = 'Instant', icon = 'thunders',        mana = 250,        level = 125, soul = 0,            group = {[1] = 1000},     parameter = false, vocations = {9}, description = 'create a thunderstorm in the target location that will damage all nearvy enemies.(this will not affect players) [MAGIC LEVEL]'},
-    
+    ['Terra Strike'] = {id = 150, words = 'terra strike', icon_id = 150, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 150, mana = 30, level = 8, soul = 0, group = {[1] = 1900}, vocations = {8}},
+    ['Life Bloom'] = {id = 152, words = 'life bloom', icon_id = 152, description = 'xxxxxxx', exhaustion = 6000, premium = false, type = 'Instant', icon = 152, mana = 0, level = 1, soul = 0, group = {[2] = 1900}, vocations = {8}},
+    ['Rejuvenation'] = {id = 153, words = 'rejuvenation', icon_id = 153, description = 'xxxxxxx', exhaustion = 5000, premium = false, type = 'Instant', icon = 153, mana = 100, level = 40, soul = 0, group = {[2] = 1900}, vocations = {8}},
+    ['Insect Swarm'] = {id = 154, words = 'insect swarm', icon_id = 154, description = 'xxxxxxx', exhaustion = 15000, premium = false, type = 'Instant', icon = 154, mana = 75, level = 1, soul = 0, group = {[1] = 1900}, vocations = {8}},
+    ['Travel Form'] = {id = 155, words = 'travel form', icon_id = 155, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 155, mana = 60, level = 25, soul = 0, group = {[3] = 2000}, vocations = {8}},
+    ['Carnivorous Vile'] = {id = 156, words = 'carnivorous vile', icon_id = 156, description = 'xxxxxxx', exhaustion = 5500, premium = false, type = 'Instant', icon = 156, mana = 85, level = 30, soul = 0, group = {[1] = 1900}, vocations = {8}},
+    ['living ground'] = {id = 157, words = 'living ground', icon_id = 157, description = 'xxxxxxx', exhaustion = 10000, premium = false, type = 'Instant', icon = 157, mana = 200, level = 1, soul = 0, group = {[2] = 1900}, vocations = {8}},
+    ['Thorns'] = {id = 158, words = 'thorns', icon_id = 158, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 158, mana = 50, level = 60, soul = 0, group = {[2] = 1900}, vocations = {8}},
+    ['Piercing Wave'] = {id = 159, words = 'piercing wave', icon_id = 159, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 159, mana = 115, level = 42, soul = 0, group = {[1] = 1900}, vocations = {8}},
+    ['Bear Form'] = {id = 160, words = 'bear form', icon_id = 160, description = 'xxxxxxx', exhaustion = 20000, premium = false, type = 'Instant', icon = 160, mana = 60, level = 45, soul = 0, group = {[3] = 2000}, vocations = {8}},
+    ['Bless of the Forest'] = {id = 161, words = 'bless of the forest', icon_id = 161, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 161, mana = 50, level = 20, soul = 0, group = {[3] = 2000}, vocations = {8}},
+    ['Wrath of Nature'] = {id = 162, words = 'wrath of nature', icon_id = 162, description = 'xxxxxxx', exhaustion = 30000, premium = false, type = 'Instant', icon = 162, mana = 420, level = 100, soul = 0, group = {[1] = 1900}, vocations = {8}},
+    ['Focus Healing'] = {id = 165, words = 'focus healing', icon_id = 165, description = 'xxxxxxx', exhaustion = 1000, parameter = true, premium = false, type = 'Instant', icon = 165, mana = 140, level = 20, soul = 0, group = {[2] = 1900}, vocations = {8}},
+    ['Ice Shatter'] = {id = 166, words = 'ice shatter', icon_id = 166, description = 'xxxxxxx', exhaustion = 5500, premium = false, type = 'Instant', icon = 166, mana = 85, level = 30, soul = 0, group = {[1] = 1900}, vocations = {8}},
+    ['Frost Armor'] = {id = 168, words = 'frost armor', icon_id = 168, description = 'xxxxxxx', exhaustion = 5500, premium = false, type = 'Instant', icon = 168, mana = 85, level = 30, soul = 0, group = {[1] = 1900}, vocations = {8}},
+
+    --light dancer
+    ['Charged Strike'] = {id = 170, words = 'charged strike', icon_id = 170, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 170, mana = 25, level = 8, soul = 0, group = {[1] = 1900}, vocations = {9}},
+    ['Static Charge'] = {id = 171, words = 'static charge', icon_id = 171, description = 'xxxxxxx', exhaustion = 2200, premium = false, type = 'Instant', icon = 171, mana = 0, level = 15, soul = 0, group = {[1] = 0}, vocations = {9}},
+    ['Light Dash'] = {id = 172, words = 'light dash', icon_id = 172, description = 'xxxxxxx', exhaustion = 6000, premium = false, type = 'Instant', icon = 172, mana = 65, level = 18, soul = 0, group = {[1] = 0}, vocations = {9}},
+    ['Veil of Swords'] = {id = 174, words = 'veil of swords', icon_id = 174, description = 'xxxxxxx', exhaustion = 15000, premium = false, type = 'Instant', icon = 174, mana = 0, level = 1, soul = 0, group = {[1] = 1900}, vocations = {9}},
+    ['Magnetic Shield'] = {id = 175, words = 'magnetic shield', icon_id = 175, description = 'xxxxxxx', exhaustion = 45000, premium = false, type = 'Instant', icon = 175, mana = 115, level = 1, soul = 0, group = {[1] = 0}, vocations = {9}},
+    ['Lightning Spear'] = {id = 176, words = 'lightning spear', icon_id = 176, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 176, mana = 85, level = 30, soul = 0, group = {[1] = 1900}, vocations = {9}},
+    ['Overcharge'] = {id = 177, words = 'overcharge', icon_id = 177, description = 'xxxxxxx', exhaustion = 30000, premium = false, type = 'Instant', icon = 177, mana = 115, level = 45, soul = 0, group = {[1] = 0}, vocations = {9}},
+    ['Elusive Blade'] = {id = 178, words = 'elusive blade', icon_id = 178, description = 'xxxxxxx', exhaustion = 35000, premium = false, type = 'Instant', icon = 178, mana = 175, level = 90, soul = 0, group = {[1] = 1900}, vocations = {9}},
+    ['Magnetic Orb'] = {id = 179, words = 'magnetic orb', icon_id = 179, description = 'xxxxxxx', exhaustion = 26000, premium = false, type = 'Instant', icon = 179, mana = 190, level = 100, soul = 0, group = {[1] = 1900}, vocations = {9}},
+    ['Tempest Coin'] = {id = 180, words = 'tempest coin', icon_id = 180, description = 'xxxxxxx', exhaustion = 22000, premium = false, type = 'Instant', icon = 180, mana = 115, level = 1, soul = 0, group = {[1] = 0}, vocations = {9}},
+
     --Archer
-    ['Flaming Shot'] =              {id = 180, words = 'Flaming Shot', exhaustion = 3000, premium = false, type = 'Instant', icon = 'fireshot', mana = 30, level = 8, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoot a flaming shot to the target dealing fire damage and burning the target (based on your ml), if the target is affected by beer barrel this spell will be powered and deal target max health damage. [Weapon Damage, DISTANCE, MAGIC LEVEL] & [Target MxHP]'},
-    ['Beer Barrel'] =               {id = 181, words = 'Beer Barrel', exhaustion = 2000, premium = false, type = 'Instant', icon = 'barrel', mana = 25, level = 15, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'throws a beer barrel to the enemy target that spreads to all nearby enemies.'},
-    ['Explosive Barrel'] =          {id = 182, words = 'Explosive Barrel', exhaustion = 15000, premium = false, type = 'Instant', icon = 'barrel', mana = 150, level = 1, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'throws an explosive barrel that explodes after a short time duration, dealing area damage.'},
-    ['Explosive Shot'] =            {id = 183, words = 'Explosive Shot', exhaustion = 15000, premium = false, type = 'Instant', icon = 'arrowshot1', mana = 90, level = 1, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoot 4 rounds of explosive shots dealing aoe damage to the target location, if the target is affected by beer barrel this spell will be powered and deal target max health damage. [Weapon Damage, DISTANCE]'},
-    ['Wind Barrel'] =               {id = 184, words = 'Wind Barrel', exhaustion = 5000, premium = false, type = 'Instant', icon = 'deathattack', mana = 40, level = 40, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'creates a wind barrel that explodes after a short time duration increasing your movement speed drastically.'},
-    ['Condemn Shot'] =              {id = 185, words = 'Condemn Shot', exhaustion = 25000, premium = false, type = 'Instant', icon = 'arrowbreak', mana = 60, level = 28, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'repels your target away from the caster. [Weapon Damage, DISTANCE]'},
-    ['Healing Barrel'] =            {id = 186, words = 'Healing Barrel', exhaustion = 8000, premium = false, type = 'Instant', icon = 'icicle', mana = 120, level = 60, soul = 0, group = {[2] = 1000}, parameter = false, vocations = {10}, description = 'creates a healing barrel that explodes after a short time duration healing all players in the area.'},
-    ['Arrow rain'] =                {id = 187, words = 'Arrow rain', exhaustion = 15000, premium = false, type = 'Instant', icon = 'arrowbarrage', mana = 130, level = 50, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'cast a arrow rain into the target dealing physical damage to all enemies in the area.[Weapon Damage, DISTANCE]'},
-    ['Frost Barrel'] =              {id = 188, words = 'Frost Barrel', exhaustion = 15000, premium = false, type = 'Instant', icon = 'firearrow', mana = 150, level = 70, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'creates a frost barrel that explodes after a short time duration freezing all enemies in the area.'},
-    ['Phantom Shot'] =              {id = 190, words = 'Phantom Shot', exhaustion = 22000, premium = false, type = 'Instant', icon = 'phantomshot', mana = 250, level = 1, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoots a phantom shot at the target, dealing high damage. [Weapon Damage, DISTANCE]'},
-    ['Arrow Barrage'] =             {id = 191, words = 'Arrow Barrage', exhaustion = 22000, premium = false, type = 'Instant', icon = 'arrowshots', mana = 250, level = 50, soul = 0, group = {[1] = 1000, [1] = 2000}, parameter = false, vocations = {10}, description = 'shoot multiple dark shots into all nearby enemies dealing physical damage. [Weapon Damage, DISTANCE]'},
-    ['Rapid Fire'] =                {id = 192, words = 'Rapid Fire', exhaustion = 6000, premium = false, type = 'Instant', icon = 'rapidfire', mana = 75, level = 30, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoots a rapid succession of arrows at the target. [Weapon Damage, DISTANCE]'},
-    ['Ice Arrow'] =                 {id = 193, words = 'Ice Arrow', exhaustion = 3000, premium = false, type = 'Instant', icon = 'icearrow', mana = 30, level = 8, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoots an ice arrow at the target, dealing ice damage and slowing the target. [Weapon Damage, DISTANCE]'},
-    ['Falcon Shot'] =               {id = 194, words = 'Falcon Shot', exhaustion = 3000, premium = false, type = 'Instant', icon = 'falconshot', mana = 120, level = 1, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoots a falcon shot at the target, dealing high damage. [Weapon Damage, DISTANCE]'},
+    ['Flaming Shot'] =              {id = 181, icon_id = 181, words = 'Flaming Shot', exhaustion = 3000, premium = false, type = 'Instant', icon = 181, mana = 30, level = 8, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoot a flaming shot to the target dealing fire damage and burning the target (based on your ml), if the target is affected by beer barrel this spell will be powered and deal target max health damage. [Weapon Damage, DISTANCE, MAGIC LEVEL] & [Target MxHP]'},
+    ['Explosive Barrel'] =          {id = 182, icon_id = 182,words = 'Explosive Barrel', exhaustion = 15000, premium = false, type = 'Instant', icon = 182, mana = 150, level = 1, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'throws an explosive barrel that explodes after a short time duration, dealing area damage.'},
+    ['Explosive Shot'] =            {id = 183, icon_id = 183, words = 'Explosive Shot', exhaustion = 15000, premium = false, type = 'Instant', icon = 183, mana = 90, level = 1, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoot 4 rounds of explosive shots dealing aoe damage to the target location, if the target is affected by beer barrel this spell will be powered and deal target max health damage. [Weapon Damage, DISTANCE]'},
+    ['Wind Barrel'] =               {id = 184, icon_id = 184, words = 'Wind Barrel', exhaustion = 5000, premium = false, type = 'Instant', icon = 184, mana = 40, level = 40, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'creates a wind barrel that explodes after a short time duration increasing your movement speed drastically.'},
+    ['Condemn Shot'] =              {id = 185, icon_id = 185, words = 'Condemn Shot', exhaustion = 25000, premium = false, type = 'Instant', icon = 185, mana = 60, level = 28, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'repels your target away from the caster. [Weapon Damage, DISTANCE]'},
+    ['Healing Barrel'] =            {id = 187, icon_id = 187, words = 'Healing Barrel', exhaustion = 8000, premium = false, type = 'Instant', icon = 187, mana = 120, level = 60, soul = 0, group = {[2] = 1000}, parameter = false, vocations = {10}, description = 'creates a healing barrel that explodes after a short time duration healing all players in the area.'},
+    ['Arrow rain'] =                {id = 188, icon_id = 188, words = 'Arrow rain', exhaustion = 15000, premium = false, type = 'Instant', icon = 188, mana = 130, level = 50, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'cast a arrow rain into the target dealing physical damage to all enemies in the area.[Weapon Damage, DISTANCE]'},
+    ['Frost Barrel'] =              {id = 189, icon_id = 189,words = 'Frost Barrel', exhaustion = 15000, premium = false, type = 'Instant', icon = 189, mana = 150, level = 70, soul = 0, group = {[3] = 1000}, parameter = false, vocations = {10}, description = 'creates a frost barrel that explodes after a short time duration freezing all enemies in the area.'},
+    ['Phantom Shot'] =              {id = 190, icon_id = 190, words = 'Phantom Shot', exhaustion = 22000, premium = false, type = 'Instant', icon = 190, mana = 250, level = 1, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoots a phantom shot at the target, dealing high damage. [Weapon Damage, DISTANCE]'},
+    ['Arrow Barrage'] =             {id = 191, icon_id = 191, words = 'Arrow Barrage', exhaustion = 22000, premium = false, type = 'Instant', icon = 191, mana = 250, level = 50, soul = 0, group = {[1] = 1000, [1] = 2000}, parameter = false, vocations = {10}, description = 'shoot multiple dark shots into all nearby enemies dealing physical damage. [Weapon Damage, DISTANCE]'},
+    ['Rapid Fire'] =                {id = 192, icon_id = 192, words = 'Rapid Fire', exhaustion = 6000, premium = false, type = 'Instant', icon = 192, mana = 75, level = 30, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoots a rapid succession of arrows at the target. [Weapon Damage, DISTANCE]'},
+    ['Ice Arrow'] =                 {id = 193, icon_id = 193, words = 'Ice Arrow', exhaustion = 3000, premium = false, type = 'Instant', icon = 193, mana = 30, level = 8, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoots an ice arrow at the target, dealing ice damage and slowing the target. [Weapon Damage, DISTANCE]'},
+    ['Falcon Shot'] =               {id = 194, icon_id = 194, words = 'Falcon Shot', exhaustion = 3000, premium = false, type = 'Instant', icon = 194, mana = 120, level = 1, soul = 0, group = {[1] = 1000}, parameter = false, vocations = {10}, description = 'shoots a falcon shot at the target, dealing high damage. [Weapon Damage, DISTANCE]'},
     
+    --others
+    ['Minor Heal'] = {id = 200, words = 'minor heal', icon_id = 200, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 200, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Strong Heal'] = {id = 201, words = 'strong heal', icon_id = 201, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 201, mana = 65, level = 25, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Great Heal'] = {id = 202, words = 'great heal', icon_id = 202, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 202, mana = 120, level = 50, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
 
-
-
-    ['Minor Heal'] =               {id = 200, words = 'Minor Heal',            exhaustion = 1500, premium = false, type = 'Instant', icon = 'ultimatehealing',     mana = 20,      level = 1,  soul = 0, group = {[2] = 1000},                parameter = false, vocations = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, description = 'Basic healing spell, heals the caster for an small amount. [Target MxHP, MAGIC LEVEL]'},
-    ['Strong Heal'] =              {id = 201, words = 'Strong Heal',           exhaustion = 1700, premium = false, type = 'Instant', icon = 'ultimatehealing',     mana = 65,      level = 40,  soul = 0, group = {[2] = 1000},                parameter = false, vocations = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, description = 'Basic healing spell, heals the caster for an moderate amount. [Target MxHP, MAGIC LEVEL]'},
-    ['Great Heal'] =               {id = 202, words = 'Great Heal',            exhaustion = 2300, premium = false, type = 'Instant', icon = 'ultimatehealing',     mana = 140,      level = 90,  soul = 0, group = {[2] = 1000},                parameter = false, vocations = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, description = 'Basic healing spell, heals the caster for an moderate amount. [Target MxHP, MAGIC LEVEL]'},
+    ['Magic Shield'] = {id = 208, words = 'Magic Shield', icon_id = 208, description = 'Creates a protective barrier that absorbs damage.', exhaustion = 2000, premium = false, type = 'Instant', icon = 208, mana = 0, level = 1, soul = 0, group = {[2] = 2000}, vocations = {1,5,8,6}},
+    ['Find Person'] = {id = 209, words = 'exiva', icon_id = 209, description = 'Reveals the location of a player.', exhaustion = 1000, premium = false, type = 'Instant', icon = 209, mana = 20, level = 8, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Food'] = {id = 210, words = 'exevo pan', icon_id = 210, description = 'Creates food to restore hunger.', exhaustion = 2000, premium = false, type = 'Instant', icon = 210, mana = 15, level = 8, soul = 1, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Haste'] = {id = 211, words = 'utani hur', icon_id = 211, description = 'Increases movement speed for a short duration.', exhaustion = 2000, premium = false, type = 'Instant', icon = 211, mana = 60, level = 14, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Levitate'] = {id = 212, words = 'exani hur', icon_id = 212, description = 'Allows the caster to move up or down floors.', exhaustion = 2000, premium = false, type = 'Instant', icon = 212, mana = 50, level = 12, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Light'] = {id = 213, words = 'utevo lux', icon_id = 213, description = 'Creates a light source around the caster.', exhaustion = 2000, premium = false, type = 'Instant', icon = 213, mana = 20, level = 8, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10}},
     
-    --MASTERY
-    ['Taunt'] =                    {id = 324,  words = 'taunt',        exhaustion = 2000, premium = false, type = 'Instant', icon = 'roar',    mana = 75,     level = 22, soul = 0,                              group = {[3] = 1000},                parameter = false, vocations = {11}, description = 'taunt all enemies around the caster. unlocked at defence 30.'},      
-    ['Shield Wall'] =              {id = 300, words = 'shield wall',           exhaustion = 15000, premium = false, type = 'Instant', icon = 'shield2',     mana = 0,      level = 27,  soul = 0, group = {[3] = 1000},                parameter = false, vocations = {11}, description = 'Increases your max health and defence for a short period of time.'},
-    ['Protection'] =               {id = 301,  words = 'protection',            exhaustion = 50000, premium = false, type = 'Instant', icon = 'shield',       mana = 50,     level = 50,  soul = 0, group = {[3] = 1000},                parameter = false, vocations = {11}, description = 'inmune to all damage for 3 seconds.'},
-    ['Shield Bash'] =              {id = 302, words = 'shield bash',       exhaustion = 15000, premium = false, type = 'Instant', icon = 'kick',      mana = 65,     level = 25, soul = 0,          group = {[3] = 1000},   parameter = false, vocations = {11}, description = 'Stuns your target, this skill requires a shield. unlocked at defence 22.'}, 
-    ['Hells Core'] =               {id = 304, words = 'Hells Core',         exhaustion = 2000, premium = false, type = 'Instant', icon = 'meteor',   mana = 650,     level = 85,    soul = 0,       group = {[1] = 1000},     parameter = false, vocations = {11}, description = 'unlocked at magic 55 and intelligence 105.'}, 
-    ['Quick Chains'] =             {id = 305, words = 'Quick Chains',       exhaustion = 2000, premium = false, type = 'Instant', icon = 'chains',   mana = 250,     level = 47,    soul = 0,       group = {[3] = 1000},      parameter = false, vocations = {11}, description = 'unlocked at dexterity 65.'},  
-    ['Blood Rage'] =               {id = 306, words = 'Blood Rage',    exhaustion = 30000, premium = false, type = 'Instant', icon = 'firestance',   mana = 85,      level = 30, soul = 0,          group = {[1] = 1000},      parameter = false, vocations = {11}, description = 'unlocked at strenght 27.'}, 
-    ['Magic Shield'] =             {id = 307, words = 'Magic Shield',  exhaustion = 2000, premium = false, type = 'Instant', icon = 'manashield',    mana = 0,       level = 17, soul = 0,          group = {[3] = 1000},      parameter = false, vocations = {11}, description = 'unlocked at intelligence 25.'},  
-    ['Find Person'] =              {id = 308,  words = 'exiva',        exhaustion = 2000, premium = false, type = 'Instant', icon = 'other',       mana = 20,     level = 8, soul = 0, group = {[3] = 1000},                parameter = true, vocations = {11}},    
-    ['Food'] =                     {id = 309,  words = 'exevo pan',        exhaustion = 2000, premium = false, type = 'Instant', icon = 'other',   mana = 15,     level = 10, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {11}, description = 'unlocked at Faith 10.'},      
-   
-    ['Haste'] =                    {id = 311,  words = 'utani hur',        exhaustion = 2000, premium = false, type = 'Instant', icon = 'haste',   mana = 60,     level = 14, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {11}},      
-    ['Heal Friend'] =              {id = 312,  words = 'exura sio',            exhaustion = 2000, premium = false, type = 'Instant', icon = 'ultimatehealing',        strenght = 8, dexterity = 8, intelligence = 8,   faith = 8,     mana = 140,         level = 18, soul = 0,                 group = {[2] = 1000},                parameter = true, vocations = {11}, description = 'unlocked at faith 20 and intelligence 24.'},     
-    ['Invisibility'] =             {id = 313,  words = 'Invisibility',             exhaustion = 2000, premium = false, type = 'Instant', icon = 'other',          strenght = 8, dexterity = 8, intelligence = 8,   faith = 8,     mana = 440,             level = 35,   soul = 0,               group = {[3] = 1000},                parameter = false, vocations = {11}, description = 'unlocked at faith 50.'},     
-    ['Levitate'] =                 {id = 314,  words = 'exani hur',        exhaustion = 2000, premium = false, type = 'Instant', icon = 'other',   mana = 50,     level = 15, soul = 0, group = {[3] = 1000},                parameter = true, vocations = {11}},      
-    ['Light'] =                    {id = 315,  words = 'utevo lux',        exhaustion = 2000, premium = false, type = 'Instant', icon = 'other',   mana = 20,     level = 8, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {11}},     
-    
-    ['Magic Rope'] =               {id = 317,  words = 'exani tera',        exhaustion = 2000, premium = false, type = 'Instant', icon = 'other',  mana = 20,     level = 8, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {11}},      
-    ['Mass Healing'] =             {id = 318,  words = 'exura gran mas res',               exhaustion = 2000, premium = false, type = 'Instant', icon = 'ultimatehealing',        strenght = 8, dexterity = 8, intelligence = 8, faith = 8, mana = 150,    level = 36, soul = 0,    group = {[4] = 2000},                parameter = false, vocations = {11}, description = 'unlocked at faith 60.'},     
-    ['Protect Party'] =            {id = 319,  words = 'utamo mas sio',            exhaustion = 2000, premium = false, type = 'Instant', icon = 'partyshield',        strenght = 8, dexterity = 70, intelligence = 8,   faith = 8,     mana = 90,        level = 32,    soul = 0,           group = {[4] = 2000},                parameter = false, vocations = {11}, description = 'unlocked at faith 55.'},   
-    ['Strong Haste'] =             {id = 322,  words = 'utani gran hur', exhaustion = 2000, premium = false, type = 'Instant', icon = 'haste',     mana = 100,     level = 40, soul = 0, group = {[3] = 1000},                parameter = false, vocations = {11}, description = 'unlocked at Faith 20'},     
-    ['Kings Call'] =               {id = 325,  words = 'kings call',        exhaustion = 3600000, premium = false, type = 'Instant', icon = 'holycross',    mana = 0,     level = 8, soul = 0,                              group = {[3] = 1000},                parameter = false, vocations = {11}, description = 'Summoned by your kings command, Kings Call instantly teleports you to your hometown. A spell of royal privilege, granted to those bearing the Kings Scroll.'},      
-    
-    
+  
   }
 }
 
 -- ['const_name'] =       {client_id, TFS_id}
 -- Conversion from TFS icon id to the id used by client (icons.png order)
 SpellIcons = {
-  ['bluehand']           = {13, 160},
-  ['healingdot']                  = {14, 159},
-  ['potionheal']     = {6,  158},
-  ['strongpotionheal']       = {7, 157},
-  ['partyshield']         = {8, 156},
-  ['partyaura']      = {9, 155},
-  ['greenwind']       = {10, 154},
-  ['pending']         = {11, 153},
-  ['execution']           = {12, 152},
-  ['auraclock']        = {15, 151},
-  ['auraclock2']         = {16, 150},
-  ['hearths']                 = {17, 149},
-  ['energymissiles']            = {18, 148},
-  ['frostmissile']                 = {19, 147},
-  ['frostaura']      = {20, 146},
-  ['energybeam1']               = {21, 145},
-  ['frostice']              = {22, 144},
-  ['meteor']                 = {23, 143},
-  ['fireshot']                   = {24, 142},
-  ['elementalblast']              = {25, 141},
-  ['thunderhammer']                 = {26, 140},
-  ['electrticity']                     = {27, 139},
-  ['ignite']                    = {28, 138},
-  -- [[ 136 / 137 Unknown ]]
-  ['energyball']              = {29, 135},
-  ['travel']                 = {30, 134},
-  ['energyattack']                 = {31,  133},
-  ['firefist']                 = {32, 132},
-  ['tornado']                    = {33,  131},
-  ['strongfrost']               = {34,  130},
-  ['earthattack']              = {35, 129},
-  ['earthattack2']                 = {36, 128},
-  ['elf']              = {37, 127},
-  ['deathattack']                = {38, 126},
-  ['energyball1']             = {41,   125},
-  ['divinecaldera']             = {40,  124},
-  ['energyrush']            = {42,   123},
-  ['divinemissile']             = {39,  122},
-  ['energyrush2']                   = {43,  121},
-  ['eternalfire']                 = {44,  120},
-  ['icehand']            = {45,  119},
-  ['icehand2']             = {46,  118},
-  ['plant1']              = {47,  117},
-  ['plant2']               = {48,  116},
-  ['firearrow']                 = {49,  115},
-  ['icicle']                    = {50,  114},
-  ['energythunder']               = {51,  113},
-  ['energythunder2']               = {52,  162},
-  ['holyhand']                 = {53,  112},
-  ['deathhand']             = {54,  111},
-  ['firehand']              = {55, 110},
-  ['energyhand']              = {56, 109},
-  ['bloodhand']               = {57, 108},
-  ['poisonhand']            = {58,  107},
-  ['icearrow']              = {59,  106},
-  ['holycross']             = {60,  105},
-  -- [[ 96 - 104 Unknown ]]
-  ['dragonshrine']                 = {61, 95},
-  ['firebolt']                = {62,  94},
-  ['firetornado']                 = {63,  93},
-  ['dragonbreath']              = {64, 92},
-  ['dragonstance']                = {65,  91},
-  ['fireearth']        = {66,  90},
-  ['bloodaxe']               = {67,  89},
-  ['charge']              = {68,  88},
-  ['firesoul']              = {69,  161},
-  ['firestance']               = {70,  87},
-  ['swordstance']                 = {71,  86},
-  ['nightwolf']                = {72,   84},
-  ['holyarea']               = {73,  83},
-  ['holysword']               = {74,   82},
-  ['divineclock']                  = {75, 81},
-  ['sacredarea']                   = {76,  80},
-  ['penitence']               = {77, 79},
-  ['holysmite']              = {78,  78},
-  ['holyshot']                = {79,  77},
-  ['markofdeath']                 = {80, 76},
-  ['holyslash']             = {81, 75},
-  -- [[ 71 - 64 TFS House Commands ]]
-  -- [[ 63 - 70 Unknown ]]
-  ['smite']              = {82,  62},
-  ['shadowblade']              = {83,  61},
-  -- [[ 60 Unknown ]]
-  ['arrowbarrage']                = {84,  59},
-  -- [[ 58 Unknown ]]
-  ['barrel']       = {85,  57},
-  ['daggers']             = {86,  56},
-  ['arrowshots']                = {87,  55},
-  ['partyshield']                  = {88,  54},
-  --  [[ 53 Unknown ]]
-  --  [[ 52 TFS Retrieve Friend ]]
-  ['firedagger']              = {89, 51},
-  ['backstab']                  = {90,  50},
-  ['arrowbreak']            = {91, 49},
-  ['poisonshot']             = {92, 48},
-  -- [[ 46 / 47 Unknown ]]
-  ['stealth']                 = {93,  45},
-  ['jump']               = {94, 44},
-  ['arrowshot1']             = {95,  43},
-  ['shadowexplode']                      = {96,  42},
-  -- [[ 40 / 41 Unknown ]]
-  ['zombiewall']               = {97, 39},
-  ['shadowbarrage']          = {98, 38},
-  -- [[ 37 TFS Move ]]
-  ['minion']                 = {99,  36},
-  -- [[ 34 / 35 Unknown ]]
-  ['shadoweye']                = {100,  33},
-  ['fear']                = {101,  32},
-  ['bats']                  = {103,  31},
-  ['bloodpact']              = {104,  30},
-  ['shadowskull']                = {105,  29},
-  ['ghost']                  = {106,  28},
-  ['bloodmush']               = {107,  27},
-  ['shadowbolts']               = {108,  26},
-  ['nature']                 = {109,  25},
-  ['flower']                 = {110,  24},
-  ['chains']           = {111,  23},
-  ['naturefist']                = {112,  22},
-  ['frog']               = {113,  21},
-  ['spikes']                = {114, 20},
-  ['healhand']                  = {115,  19},
-  ['moon']                 = {116,  18},
-  ['thunders']                  = {117,  17},
-  ['roar']             = {118,  16},
-  ['void']                  = {119,  15},
-  ['firestom']                 = {120,  14},
-  ['swordslash']                = {121,  13},
-  ['hunterstance']          = {122,  12},
-  ['kick']                = {123, 11},
-  ['shield2']                     = {124, 10},
-  ['naturewrath']            = {125, 9},
-  ['other']         = {126,  8},
-  ['lightmagicmissile']         = {126,  7},
-  ['haste']                     = {102, 6},
-  ['manashield']                = {3,  5},
-  ['shield']                    = {2,  4},
-  ['ultimatehealing']           = {1,   3},
-  ['intensehealing']            = {5,   2},
-  ['lighthealing']              = {4,   1}
+
 }
 
 VocationNames = {
-  [1] = 'Magician',
-  [2] = 'Templar',
-  [3] = 'Nightblade',
-  [4] = 'Dragon Knight',
-  [5] = 'Warlock',
-  [6] = 'Stellar',
-  [7] = 'Soul Weaver',
-  [8] = 'Druid',
-  [9] = 'Light Dancer',
-  [10] = 'Archer',
-  [11] = 'No specific vocation required',
-
+    [0] = 'None',
+    [1] = 'Magician',
+    [2] = 'Templar',
+    [3] = 'Nightblade',
+    [4] = 'Dragon Knight',
+    [5] = 'Warlock',
+    [6] = 'Stellar',
+    [7] = 'Monk',
+    [8] = 'Druid',
+    [9] = 'Light Dancer',
+    [10] = 'Archer',
 }
 
 SpellGroups = {
-  [1] = 'Attack',
-  [2] = 'Healing',
-  [3] = 'Support',
-  [4] = 'Mastery'
+    [1] = 'Attack',
+    [2] = 'Healing',
+    [3] = 'Support',
+    [4] = 'Special',
+    [5] = 'Crippling',
+    [6] = 'Focus',
+    [7] = 'Ultimate Strikes',
+    [8] = 'Great Beams',
+    [9] = 'Bursts of Nature'
 }
 
 Spells = {}
 
 function Spells.getClientId(spellName)
-  local profile = Spells.getSpellProfileByName(spellName)
+    local profile = Spells.getSpellProfileByName(spellName)
 
-  local id = SpellInfo[profile][spellName].icon
-  if not tonumber(id) and SpellIcons[id] then
-    return SpellIcons[id][1]
-  end
-  return tonumber(id)
+    local id = SpellInfo[profile][spellName].icon
+    if not tonumber(id) and SpellIcons[id] then
+        return SpellIcons[id][1]
+    end
+    return tonumber(id)
+end
+
+function Spells.getSpellByClientId(id)
+    for profile, data in pairs(SpellInfo) do
+        for k, spell in pairs(data) do
+            if spell.id == id then
+                return spell, profile, k
+            end
+        end
+    end
+    return nil
 end
 
 function Spells.getServerId(spellName)
-  local profile = Spells.getSpellProfileByName(spellName)
+    local profile = Spells.getSpellProfileByName(spellName)
 
-  local id = SpellInfo[profile][spellName].icon
-  if not tonumber(id) and SpellIcons[id] then
-    return SpellIcons[id][2]
-  end
-  return tonumber(id)
+    local id = SpellInfo[profile][spellName].icon
+    if not tonumber(id) and SpellIcons[id] then
+        return SpellIcons[id][2]
+    end
+    return tonumber(id)
 end
 
 function Spells.getSpellByName(name)
-  return SpellInfo[Spells.getSpellProfileByName(name)][name]
+    return SpellInfo[Spells.getSpellProfileByName(name)][name]
 end
 
 function Spells.getSpellByWords(words)
-  local words = words:lower():trim()
-  for profile,data in pairs(SpellInfo) do
-    for k,spell in pairs(data) do
-      if spell.words == words then
-        return spell, profile, k
-      end
+    local words = words:lower():trim()
+    for profile, data in pairs(SpellInfo) do
+        for k, spell in pairs(data) do
+            if spell.words == words then
+                return spell, profile, k
+            end
+        end
     end
-  end
-  return nil
+    return nil
 end
 
 function Spells.getSpellByIcon(iconId)
-  for profile,data in pairs(SpellInfo) do
-    for k,spell in pairs(data) do
-      if spell.id == iconId then
-        return spell, profile, k
-      end
+    for profile, data in pairs(SpellInfo) do
+        for k, spell in pairs(data) do
+            if spell.id == iconId then
+                return spell, profile, k
+            end
+        end
     end
-  end
-  return nil
+    return nil
 end
 
 function Spells.getSpellIconIds()
-  local ids = {}
-  for profile,data in pairs(SpellInfo) do
-    for k,spell in pairs(data) do
-      table.insert(ids, spell.id)
+    local ids = {}
+    for profile, data in pairs(SpellInfo) do
+        for k, spell in pairs(data) do
+            table.insert(ids, spell.id)
+        end
     end
-  end
-  return ids
+    return ids
 end
 
 function Spells.getSpellProfileById(id)
-  for profile,data in pairs(SpellInfo) do
-    for k,spell in pairs(data) do
-      if spell.id == id then
-        return profile
-      end
+    for profile, data in pairs(SpellInfo) do
+        for k, spell in pairs(data) do
+            if spell.id == id then
+                return profile
+            end
+        end
     end
-  end
-  return nil
+    return nil
 end
 
 function Spells.getSpellProfileByWords(words)
-  for profile,data in pairs(SpellInfo) do
-    for k,spell in pairs(data) do
-      if spell.words == words then
-        return profile
-      end
+    for profile, data in pairs(SpellInfo) do
+        for k, spell in pairs(data) do
+            if spell.words == words then
+                return profile
+            end
+        end
     end
-  end
-  return nil
+    return nil
 end
 
 function Spells.getSpellProfileByName(spellName)
-  for profile,data in pairs(SpellInfo) do
-    if table.findbykey(data, spellName:trim(), true) then
-      return profile
+    for profile, data in pairs(SpellInfo) do
+        if table.findbykey(data, spellName:trim(), true) then
+            return profile
+        end
     end
-  end
-  return nil
+    return nil
 end
 
 function Spells.getSpellsByVocationId(vocId)
-  local spells = {}
-  for profile,data in pairs(SpellInfo) do
-    for k,spell in pairs(data) do
-      if table.contains(spell.vocations, vocId) then
-        table.insert(spells, spell)
-      end
+    local spells = {}
+    for profile, data in pairs(SpellInfo) do
+        for k, spell in pairs(data) do
+            if table.contains(spell.vocations, vocId) then
+                table.insert(spells, spell)
+            end
+        end
     end
-  end
-  return spells
+    return spells
 end
 
 function Spells.filterSpellsByGroups(spells, groups)
-  local filtered = {}
-  for v,spell in pairs(spells) do
-    local spellGroups = Spells.getGroupIds(spell)
-    if table.equals(spellGroups, groups) then
-      table.insert(filtered, spell)
+    local filtered = {}
+    for v, spell in pairs(spells) do
+        local spellGroups = Spells.getGroupIds(spell)
+        if table.equals(spellGroups, groups) then
+            table.insert(filtered, spell)
+        end
     end
-  end
-  return filtered
+    return filtered
 end
 
 function Spells.getGroupIds(spell)
-  local groups = {}
-  for k,_ in pairs(spell.group) do
-    table.insert(groups, k)
-  end
-  return groups
-end
-
-function Spells.getImageClip(id, profile)
-  return (((id-1)%12)*SpelllistSettings[profile].iconSize.width) .. ' ' 
-    .. ((math.ceil(id/12)-1)*SpelllistSettings[profile].iconSize.height) .. ' ' 
-    .. SpelllistSettings[profile].iconSize.width .. ' ' 
-    .. SpelllistSettings[profile].iconSize.height
-end
-
-function Spells.getSpellNameByWords(spellWords)
-  local profile = Spells.getSpellProfileByWords(spellWords)
-  for profile,data in pairs(SpellInfo) do
-    for k,spell in pairs(data) do
-      if spell.words == spellWords then
-        return k
-      end
+    local groups = {}
+    for k, _ in pairs(spell.group) do
+        table.insert(groups, k)
     end
-  end
-  return nil
+    return groups
 end
 
-function Spells.getSpellByClientId(clientId)
-  for profile,data in pairs(SpellInfo) do
-    for k,spell in pairs(data) do
-      if spell.clientId and spell.clientId == clientId then
-        return spell, profile, k
-      end
+function Spells.getIconId(iconid, profile)
+    --use iconid as SpellInfo[profile].id to finde SpellInfo[profile].iconid
+    --print(iconid)
+    for k, v in pairs(SpellInfo[profile]) do
+        if v.id == iconid then
+            return SpelllistSettings[profile].iconFile .. '/' .. tostring(v.icon_id) .. '.png'
+        end
     end
-  end
-  return nil
+end
+
+function Spells.getIconFileByProfile(profile)
+    return SpelllistSettings[profile]['iconFile']
 end

@@ -52,11 +52,11 @@ MainWindow
   UIWidget
     id: professionIcon
     image-source: /data/images/game/profession/blacksmith
-    image-size: 80 80
-    size: 80 80
+    image-size: 120 120
+    size: 120 120
     anchors.top: parent.top
     anchors.right: parent.right
-    margin-right: 5
+    margin-right: 0
 
   Button
     id: craftButton
@@ -196,7 +196,7 @@ MainWindow
 
     Item
       image-source: /data/images/ui/list1fade
-      image-size: 180 40
+      image-size: 240 50
         margin-right: -34
         margin-top: -20
       id: recipeItem
@@ -204,7 +204,7 @@ MainWindow
       anchors.horizontalCenter: parent.horizontalCenter
       anchors.top: prev.top
       padding-left: 7
-      padding-top: 5
+      padding-top: 10
 
     Label
       id: recipeLabel
@@ -212,7 +212,7 @@ MainWindow
       anchors.left: recipeItem.right
       anchors.top: recipeItem.top
       margin-left: 15
-      margin-top: 12
+      margin-top: 15
 
     Label
       !text: tr('Ingredients')

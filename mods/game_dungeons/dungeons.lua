@@ -39,26 +39,31 @@ Dungeons.attributeIcons = {
 
 Dungeons.vocationalIcons = {
 	[0] = 64,
-	[1] = 31, -- Sorcerer
-	[2] = 34, -- Druid
-	[3] = 9, -- Paladin
-	[4] = 1, -- Knight
-	[5] = 35, -- Master Sorcerer
-	[6] = 41, -- Elder Druid
-	[7] = 22, -- Royal Paladin
-	[8] = 4, -- Elite Knight
+	[1] = 32, -- Sorcerer
+	[2] = 16, -- Templar
+	[3] = 11, -- Nightblade
+	[4] = 19, -- Dragon Knight
+	[5] = 35, -- Warlock
+	[6] = 50, -- Stellar
+	[7] = 28, -- Monk
+	[8] = 34, -- Druid
+	[9] = 31, -- Light Dancer
+	[10] = 9, -- Archer
 }
 
 Dungeons.vocationNames = {
 	[0] = "None",
-	[1] = "Sorcerer",
-	[2] = "Druid",
-	[3] = "Paladin",
-	[4] = "Knight",
-	[5] = "Master Sorcerer",
-	[6] = "Elder Druid",
-	[7] = "Royal Paladin",
-	[8] = "Elite Knight"
+	[1] = "Magician",
+	[2] = "Templar",
+	[3] = "Nightblade",
+	[4] = "Dragon Knight",
+	[5] = "Warlock",
+	[6] = "Stellar",
+	[7] = "Monk",
+	[8] = "Druid",
+	[9] = "Light Dancer",
+	[10] = "Archer",
+
 }
 
 Dungeons.IconsConfig = {
@@ -490,7 +495,7 @@ end
 function Dungeons.onDungeonBaseData(data)
 	Dungeons.UI:recursiveGetChildById("levelRequirement"):setText(data.req.level .. "+")
 	Dungeons.UI:recursiveGetChildById("partyRequirement"):setText(data.req.party)
-	Dungeons.UI:recursiveGetChildById("goldRequirement"):setText(Dungeons.comma_value(data.req.gold))
+	Dungeons.UI:recursiveGetChildById("goldRequirement"):setText("0")
 
 	if not data.req.quests then
 		Dungeons.UI:recursiveGetChildById("noQuestsPanel"):setVisible(true)

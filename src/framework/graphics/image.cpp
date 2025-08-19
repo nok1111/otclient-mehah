@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,11 @@
 #include <framework/core/resourcemanager.h>
 #include <framework/graphics/apngloader.h>
 
-#include "framework/stdext/math.h"
 #include "framework/stdext/qrcodegen.h"
 
 using namespace qrcodegen;
 
-Image::Image(const Size& size, int bpp, uint8_t* pixels) : m_size(size), m_bpp(bpp)
+Image::Image(const Size& size, const int bpp, const uint8_t* pixels) : m_size(size), m_bpp(bpp)
 {
     m_pixels.resize(size.area() * bpp, 0);
     if (pixels)
@@ -49,10 +48,9 @@ ImagePtr Image::load(const std::string& file)
     return nullptr;
 }
 
-ImagePtr Image::loadPNG(const std::string& file)
+ImagePtr Image::loadPNG(const char* data, const size_t size)
 {
-    std::stringstream fin;
-    g_resources.readFileStream(file, fin);
+    std::stringstream fin(std::string{ data, size });
     ImagePtr image;
     if (apng_data apng; load_apng(fin, &apng) == 0) {
         image = std::make_shared<Image>(Size(apng.width, apng.height), apng.bpp, apng.pdata);
@@ -68,6 +66,16 @@ ImagePtr Image::loadPNG(const std::string& file)
     }
 
     return image;
+}
+
+ImagePtr Image::loadPNG(const std::string& file)
+{
+    std::stringstream fin;
+    g_resources.readFileStream(file, fin);
+
+    const std::string buffer{ fin.str() };
+
+    return loadPNG(buffer.data(), buffer.size());
 }
 
 void Image::savePNG(const std::string& fileName)
@@ -247,10 +255,10 @@ void Image::reverseChannels()
     }
 }
 
-ImagePtr Image::fromQRCode(const std::string& code, int border)
+ImagePtr Image::fromQRCode(const std::string& code, const int border)
 {
     try {
-        QrCode qrCode = QrCode::encodeText(code.c_str(), QrCode::Ecc::MEDIUM);
+        const QrCode qrCode = QrCode::encodeText(code.c_str(), QrCode::Ecc::MEDIUM);
 
         const auto size = qrCode.getSize();
         ImagePtr image(new Image(Size(size + border * 2, size + border * 2)));

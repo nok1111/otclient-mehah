@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2022 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@ void Logger::log(Fw::LogLevel level, const std::string_view message)
     if (s_ignoreLogs)
         return;
 
-    if (g_eventThreadId > -1 && g_eventThreadId != EventDispatcher::getThreadId()) {
+    if (g_eventThreadId > -1 && g_eventThreadId != stdext::getThreadId()) {
         g_dispatcher.addEvent([this, level, msg = std::string{ message }] {
             log(level, msg);
         });
@@ -107,7 +107,7 @@ void Logger::log(Fw::LogLevel level, const std::string_view message)
 
 void Logger::logFunc(Fw::LogLevel level, const std::string_view message, const std::string_view prettyFunction)
 {
-    if (g_eventThreadId > -1 && g_eventThreadId != EventDispatcher::getThreadId()) {
+    if (g_eventThreadId > -1 && g_eventThreadId != stdext::getThreadId()) {
         g_dispatcher.addEvent([this, level, msg = std::string{ message }, prettyFunction = std::string{ prettyFunction }] {
             logFunc(level, msg, prettyFunction);
         });

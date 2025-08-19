@@ -139,6 +139,7 @@ function copySlot(fromSlotId, toSlotId, visible)
     tmpslot.text = fromSlot.text
     tmpslot.parameter = fromSlot.parameter
     tmpslot.useType = fromSlot.useType
+    tmpslot.getTier = fromSlot.getTier
     tmpslot:getChildById('text'):setText(fromSlot:getChildById('text'):getText())
     tmpslot:setTooltip(fromSlot:getTooltip())
 end
@@ -188,6 +189,7 @@ function setupActionBar()
         slot.words = nil
         slot.text = nil
         slot.useType = nil
+        slot.getTier = nil
         g_mouse.bindPress(slot, function()
             slotToEdit = 'slot' .. i .. ''
         end, MouseLeftButton)
@@ -282,8 +284,8 @@ function initializeSpelllist()
                 tmpLabel:setHeight(SpelllistSettings[spellProfile].iconSize.height + 4)
                 tmpLabel:setTextOffset(topoint((SpelllistSettings[spellProfile].iconSize.width + 10) .. ' ' ..
                                                    (SpelllistSettings[spellProfile].iconSize.height - 32) / 2 + 3))
-                tmpLabel:setImageSource(SpelllistSettings[spellProfile].iconFile)
-                tmpLabel:setImageClip(Spells.getImageClip(iconId, spellProfile))
+                --tmpLabel:setImageSource(SpelllistSettings[spellProfile].iconFile)
+                tmpLabel:setImageSource(Spells.getIconId(iconId, spellProfile))
                 tmpLabel:setImageSize(tosize(SpelllistSettings[spellProfile].iconSize.width .. ' ' ..
                                                  SpelllistSettings[spellProfile].iconSize.height))
             end
@@ -308,13 +310,11 @@ function initializeSpelllist()
 end
 
 function updatePreviewSpell(focusedChild)
-    print("preview")
     local spellName = focusedChild:getId()
     iconId = tonumber(Spells.getClientId(spellName))
     local spell = Spells.getSpellByName(spellName)
     local profile = Spells.getSpellProfileByName(spellName)
-    spellsPanel:getParent():getChildById('previewSpell'):setImageSource(SpelllistSettings[profile].iconFile)
-    spellsPanel:getParent():getChildById('previewSpell'):setImageClip(Spells.getImageClip(iconId, profile))
+    spellsPanel:getParent():getChildById('previewSpell'):setImageSource(Spells.getIconId(iconId, profile))
     spellsPanel:getParent():getChildById('previewSpellName'):setText(spellName)
     spellsPanel:getParent():getChildById('previewSpellWords'):setText('\'' .. spell.words .. '\'')
     if spell.parameter then
@@ -326,7 +326,6 @@ end
 
 function spellAssignAccept()
     clearSlot()
-    print("spellAssignAccept")
     local focusedChild = spellsPanel:getFocusedChild()
     if not focusedChild then
         return
@@ -336,8 +335,8 @@ function spellAssignAccept()
     local spell = Spells.getSpellByName(spellName)
     local profile = Spells.getSpellProfileByName(spellName)
     local slot = actionBarPanel:getChildById(slotToEdit)
-    slot:setImageSource('/images/game/spells/defaultspells')
-    slot:setImageClip(Spells.getImageClip(iconId, profile))
+    --slot:setImageSource(Spells.getIconFileByProfile(profile))
+    slot:setImageSource(Spells.getIconId(iconId, profile))
     slot.words = spell.words
     slot.itemId = 469
     slot:setItemId(469)
@@ -361,6 +360,8 @@ function clearSlot()
     slot.words = nil
     slot.text = nil
     slot.useType = nil
+    slot.getTier = nil
+    slot:getChildById('tier'):setVisible(false)
     slot:getChildById('text'):setText('')
     slot:setTooltip('')
 end
@@ -376,6 +377,8 @@ function clearSlotById(slotId)
     slot.words = nil
     slot.text = nil
     slot.useType = nil
+    slot.getTier = nil
+    slot:getChildById('tier'):setVisible(false)
     slot:getChildById('text'):setText('')
     slot:setTooltip('')
 end
@@ -419,7 +422,7 @@ function textAssignAccept()
     if spellName then
         iconId = tonumber(Spells.getClientId(spellName))
         clearSlot()
-        slot:setImageSource('/images/game/spells/defaultspells')
+        slot:setImageSource(Spells.getIconFileByProfile(profile))
         slot:setImageClip(Spells.getImageClip(iconId, profile))
         slot.words = spell.words
         slot.itemId = 469
@@ -488,6 +491,8 @@ function objectAssignAccept()
     slot:setImageSource('/images/game/actionbar/item-background')
     slot:setBorderWidth(0)
     slot.itemId = item:getId()
+    slot.getTier = objectAssignWindow:getChildById('previewItem').auxTier
+    ItemsDatabase.setTier(slot, slot.getTier)
     if item:isFluidContainer() then
         slot.subType = item:getSubType()
     end
@@ -519,6 +524,9 @@ function onChooseItemMouseRelease(self, mousePosition, mouseButton)
 
     if item and item:getPosition().x == 65535 and slotToEdit then
         objectAssignWindow:getChildById('previewItem'):setItemId(item:getId())
+        local tier = item:getTier()
+        ItemsDatabase.setTier(objectAssignWindow:getChildById('previewItem'), tier)
+        objectAssignWindow:getChildById('previewItem').auxTier = tier
         objectAssignWindow:getChildById('previewItem'):setItemCount(1)
         objectAssignWindow:getChildById('equipCheckbox'):setEnabled(false)
         objectAssignWindow:getChildById('useCheckbox'):setEnabled(false)
@@ -564,6 +572,9 @@ function onChooseItemByDrag(self, mousePosition, item)
     if item and item:getPosition().x == 65535 and slotToEdit then
         openObjectAssignWindow()
         objectAssignWindow:getChildById('previewItem'):setItemId(item:getId())
+        local tier = item:getTier()
+        ItemsDatabase.setTier(objectAssignWindow:getChildById('previewItem'), tier)
+        objectAssignWindow:getChildById('previewItem').auxTier = tier
         objectAssignWindow:getChildById('previewItem'):setItemCount(1)
         objectAssignWindow:getChildById('equipCheckbox'):setEnabled(false)
         objectAssignWindow:getChildById('useCheckbox'):setEnabled(false)
@@ -666,8 +677,9 @@ function setupHotkeys()
                 elseif slot.useType == 'useOnSelf' then
                     modules.game_hotkeys.executeHotkeyItem(HOTKEY_USEONSELF, slot.itemId, slot.subType)
                 elseif slot.useType == 'equip' then
-                    local item = g_game.findPlayerItem(slot.itemId, -1)
+                    local item = Item.create(slot.itemId)
                     if item then
+                        item:setTier(slot.getTier)
                         g_game.equipItem(item)
                     end
                 end
@@ -679,7 +691,11 @@ function setupHotkeys()
                 end
             elseif slot.text then
                 if slot.autoSend then
-                    g_game.talk(slot.text)
+                    if not modules.game_console.isChatEnabled() then
+                        g_game.talk(slot.text)
+                    else
+                        modules.game_console.sendMessage(slot.text)
+                    end
                 else
                     if not modules.game_console.isChatEnabled() then
                         modules.game_console.switchChatOnCall()
@@ -709,8 +725,9 @@ function setupHotkeys()
                     elseif slot.useType == 'useOnSelf' then
                         modules.game_hotkeys.executeHotkeyItem(HOTKEY_USEONSELF, slot.itemId, slot.subType)
                     elseif slot.useType == 'equip' then
-                        local item = g_game.findPlayerItem(slot.itemId, -1)
+                        local item = Item.create(slot.itemId)
                         if item then
+                            item:setTier(slot.getTier)
                             g_game.equipItem(item)
                         end
                     end
@@ -821,7 +838,8 @@ function saveActionBar()
             useType = slot.useType,
             text = slot.text,
             words = slot.words,
-            parameter = slot.parameter
+            parameter = slot.parameter,
+            getTier = slot.getTier
         }
     end
 
@@ -830,12 +848,11 @@ function saveActionBar()
 end
 
 function loadSpell(slot)
-    local spellName = Spells.getSpellNameByWords(slot.words)
+    local spell, profile, spellName = Spells.getSpellByWords(slot.words)
+    print("slot.words spell name: " .. slot.words)
     iconId = tonumber(Spells.getClientId(spellName))
-    local spell = Spells.getSpellByName(spellName)
-    local profile = Spells.getSpellProfileByName(spellName)
-    slot:setImageSource('/images/game/spells/defaultspells')
-    slot:setImageClip(Spells.getImageClip(iconId, profile))
+   -- slot:setImageSource(Spells.getIconFileByProfile(profile))
+    slot:setImageSource(Spells.getIconId(iconId, profile))
     slot:getChildById('text'):setText('')
     slot:setBorderWidth(0)
     setupHotkeys()
@@ -847,6 +864,7 @@ function loadObject(slot)
     slot:setImageClip('0 0 0 0')
     slot:getChildById('text'):setText('')
     slot:setBorderWidth(0)
+    ItemsDatabase.setTier(slot, slot.getTier)
     setupHotkeys()
 end
 
@@ -886,6 +904,8 @@ function loadActionBar()
                 slot.useType = setting.useType
                 slot.autoSend = setting.autoSend
                 slot.parameter = setting.parameter
+                slot.getTier = setting.getTier
+                ItemsDatabase.setTier(slot, slot.getTier)
                 if slot.hotkey then
                     local text = slot.hotkey
                     if type(text) == 'string' then
@@ -911,8 +931,8 @@ end
 
 function setActionBarVisible(visible)
     if visible then
-        actionBar:setHeight(34)
-        actionBar:show(true)
+        actionBar:setHeight(38)
+        actionBar:show()
     else
         actionBar:setHeight(0)
         actionBar:hide()
@@ -938,7 +958,10 @@ function updateCooldown(progressRect, duration, spellId, count)
         end, 100)
     else
         cooldown[spellId] = nil
-        progressRect:destroy()
+        if progressRect and not progressRect:isDestroyed() then
+            progressRect:destroy()
+            progressRect = nil
+        end
     end
 end
 
@@ -956,7 +979,10 @@ function updateGroupCooldown(progressRect, duration, groupId)
         end, 100)
     else
         groupCooldown[groupId] = nil
-        progressRect:destroy()
+        if progressRect and not progressRect:isDestroyed() then
+            progressRect:destroy()
+            progressRect = nil
+        end
     end
 end
 

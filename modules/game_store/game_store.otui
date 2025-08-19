@@ -59,30 +59,24 @@ RowStore < StoreLightFlatPanel
     margin: 8 0 0 8
     text-auto-resize: true
     text-wrap: true
-  Label
-    id: count
-    anchors.bottom: parent.bottom
+  Panel
+    id: StackOffers
+    margin-left: 31
+    height: 80
+    margin-top: 12
+    anchors.top: prev.bottom
     anchors.left: image.right
-    margin: 0 5 5 0
-    margin-left:22
-    text-align: center
-
-  StoreFlatPanel
-    id: lblPrice
-    size: 104 20
-    anchors.bottom: parent.bottom
     anchors.right: parent.right
-    margin: 0 5 5 0
-    text-align: center
-    text-offset: 15 0
-    image-color: #1111118c
-    icon: images/tibiaCoin
-    icon-align: right
-    icon-offset: -2 0
+    layout:
+      type: grid
+      cell-size: 145 20
+      cell-spacing: 5
+      flow: true
+      fit-children: true
 
 MenuCategoryStore < UIWidget
   height: 22
-  image-source: images/barra
+  image-source: images/longButton
   image-border: 5
   margin: 3
   image-clip: 0 0 166 22
@@ -124,19 +118,63 @@ StoreWindow
     font: cipsoftFont
     @onClick: modules.game_store.toggleTransferHistory()
 
-  StoreFlatPanel
+  Panel
     id: lblCoins
     size: 260 20
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     margin-bottom: 2
-    text-align: left
-    text-offset: 20 0
     image-color: #1111118c
-    text: 0
-    icon: images/tibiaCoin
-    icon-align: left
-    icon-offset: 5 0
+    focusable: false
+    phantom: true
+    image-source: /game_store/images/panel
+    image-border: 3
+    Label
+      id: lblTibiaCoins
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      focusable: false
+      margin-left:22
+      margin-bottom: 3
+      text-auto-resize: true
+      phantom: true
+
+    UIWidget
+      id: icono
+      anchors.bottom: parent.bottom
+      anchors.left: prev.right
+      margin-left: 5
+      margin-bottom: 3
+      image-source: /images/ui/tibiaCoin
+      focusable: false
+      phantom: true
+
+    Label
+      id: lblTibiaTransfer
+      anchors.bottom: parent.bottom
+      anchors.left: prev.right
+      text-auto-resize: true
+      margin-left:5
+      margin-bottom: 3 
+      phantom: true
+
+    UIWidget
+      id: iconodos
+      anchors.bottom: parent.bottom
+      anchors.left: prev.right
+      focusable: false
+      phantom: true
+      margin-left:5
+      margin-bottom: 3
+      image-source: images/icon-tibiacointransferable
+    Label
+      anchors.bottom: parent.bottom
+      anchors.left: prev.right
+      !text: tr(")")
+      focusable: false
+      phantom: true
+      margin-left:5
+      margin-bottom: 3 
 
   StoreButton
     id: btnCoins
@@ -145,12 +183,12 @@ StoreWindow
     anchors.left: prev.right
     margin-left: 5
     margin-bottom: 2
-    !tooltip: tr('get Tibia Coins')
+    !tooltip: tr('Get Tibia Coins')
     image-color: green
-    icon: images/tibiaCoin
+    icon: /images/ui/tibiaCoin
     icon-align: center
     icon-offset: 10 -1
-    text-offset: -18 0
+    text-offset: -10 0
     !text: tr('Get')
     font: cipsoftFont
     @onClick: modules.game_store.getCoinsWebsite()
@@ -168,10 +206,8 @@ StoreWindow
     icon-align: center
     icon-source: images/iconTransfer
     size: 64 20
-    @onClick: print("no yet")
 
   StoreButton
-    id: wtfisthis
     anchors.top: transferPoints.top
     !tooltip: tr('Setup up an auction to sell you currents characters.')
     anchors.left: transferPoints.right
@@ -179,7 +215,6 @@ StoreWindow
     icon-align: center
     icon-source: images/icon-trade
     size: 64 20
-    @onClick: print("no yet")
 
   HorizontalSeparator
     anchors.bottom: prev.top
@@ -199,6 +234,34 @@ StoreWindow
     layout: verticalBox
     margin-bottom: 8
     padding: 5
+
+  TextEdit
+    id: SearchEdit
+    anchors.bottom: listCategory.bottom
+    anchors.left: parent.left
+    margin-left: 5
+    margin-bottom: 10
+    height: 17
+    width: 180
+    placeholder: Type to search
+    placeholder-color: #6E706F
+
+  UIWidget
+    id: SearchClearButton
+    anchors.right: SearchEdit.right
+    anchors.top: SearchEdit.top
+    margin-top: 1
+    margin-right: 2
+    image-source: /game_cyclopedia/images/button_clear_search
+    image-color: white
+    opacity: 0.8
+    @onClick: modules.game_store.search()
+    $hover:
+      opacity: 1.0
+      image-color: white
+    $pressed:
+      opacity: 1.0
+      image-color: gray
 
   StoreLightFlatPanel
     id: panelItem
@@ -271,31 +334,18 @@ StoreWindow
       anchors.left: scrollList.right
       margin: 8 0 0 8
 
-
-    StoreButton
-      id: btnBuy
+    Panel
+      id: StackOffers
       anchors.top: prev.top
       anchors.left: prev.right
       anchors.right: parent.right
-      margin-left: 5
-      !text: tr('Buy')
-      font: cipsoftFont
-      image-color: #75bfff
-
-    StoreFlatPanel
-      id: lblPrice
-      size: 104 20
-      anchors.top: prev.bottom
-      anchors.left: prev.left
-      anchors.right: prev.right
-      margin: 3 1 0 1
-      text-align: center
-      text-offset: -18 0
-      image-color: #1111118c
-      text: 8900
-      icon: images/tibiaCoin
-      icon-align: center
-      icon-offset: 10 0
+      margin-left: 10
+      layout:
+        type: grid
+        cell-size: 145 50
+        cell-spacing: 3
+        flow: true
+        fit-children: true
 
     StoreFlatLabel
       id: lblDescription
@@ -308,13 +358,48 @@ StoreWindow
       text-auto-resize: true
       text-wrap: true
 
-  UIWidget
+  QtPanel
     id: transferHistory
-    image-source: images/history_container
     anchors.top: parent.top
+    anchors.left: listCategory.right
     anchors.right: parent.right
+    anchors.bottom: listCategory.bottom
+    margin-left:10
     visible: false
 
+    Panel
+      id: historyPanel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-bottom: 22
+      background-color: #363636
+      border: 1 black
+      layout:
+        type: verticalBox
+
+    Button
+      id: btnNextPage
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      margin-bottom:-5
+      !text: tr('Next Page')
+      @onClick: modules.game_store.requestTransactionHistory(self)
+
+    Label
+      id: lblPage
+      anchors.bottom: parent.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      !text: tr('Page 1 / 4')
+
+    Button
+      id: btnPrevPage
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      margin-bottom:-5
+      !text: tr('Prev Page')
+      @onClick: modules.game_store.requestTransactionHistory(self)
 
   StoreLightFlatPanel
     id: HomePanel
@@ -324,7 +409,6 @@ StoreWindow
     anchors.bottom: listCategory.bottom
     margin-left: 8
     padding: 6
-    visible: false
     UIWidget
       id: HomeImagen
       height: 20
@@ -332,9 +416,33 @@ StoreWindow
       anchors.top: parent.top
       anchors.left: parent.left
       anchors.right: parent.right
-      layout: horizontalBox
       margin-right:10
- 
+    UIButton
+      id: prevImagen
+      anchors.verticalCenter: prev.verticalCenter
+      anchors.left: prev.left
+      size: 16 29
+      image-source: images/button-featured-offers-left
+      margin-left: 15
+      @onClick: modules.game_store.changeImagenHome(self:getId())
+      $pressed :
+        image-source: images/button-featured-offers-left-highlight
+      $hover:
+        image-source: images/button-featured-offers-left-highlight
+
+
+    UIButton
+      id: nextImagen
+      anchors.verticalCenter: prev.verticalCenter
+      anchors.right: HomeImagen.right
+      size: 16 29
+      margin-right: 15
+      image-source: images/button-featured-offers-right
+      @onClick: modules.game_store.changeImagenHome(self:getId())
+      $pressed:
+        image-source: images/button-featured-offers-right-highlight
+      $hover:
+        image-source: images/button-featured-offers-right-highlight
 
     MiniPanel
       id:HomeRecentlyAdded

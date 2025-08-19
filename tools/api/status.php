@@ -81,7 +81,7 @@ if ($requestType === 'cacheinfo') {
     $response = array(
         "playersonline" => "$playersOnline",
         "discord_online" => $online_discord,
-        "discord_link" => "https://discord.gg/HZN8yJJSyC",
+        "discord_link" => "https://discord.gg/tUjTBZzMCy",
         "youtube_link" => "https://www.youtube.com/watch?v=6_2zizoJKxQ",
         "gamingyoutubestreams" => "0",
         "gamingyoutubeviewer" => "0",
@@ -136,7 +136,7 @@ elseif ($requestType === 'showoff') {
     echo json_encode($response);
 
     //  EnterGame.postShowCreatureBoost()
-} elseif ($requestType === 'Creatureboost') {
+} elseif ($requestType === 'boostedcreature') {
 
 
     $response = array(

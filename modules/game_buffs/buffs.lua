@@ -14,6 +14,8 @@ lastPlayer = nil
 cooldown = {}
 groupCooldown = {}
 
+gameLeftPanel = modules.game_interface.getLeftPanel()
+
 BuffsBackgrounds = {
   {image = "/images/game/buffs/0"},
   {image = "/images/game/buffs/itemCommon"},
@@ -23,7 +25,7 @@ BuffsBackgrounds = {
   {image = "/images/game/buffs/tower"}
 }
 
-BuffsDebuffsSettings = {iconFile = '/images/game/buffs/buffs', iconSize = {width = 32, height = 32}}
+BuffsDebuffsSettings = {iconFile = '/images/game/buffs/buffs', iconSize = {width = 42, height = 42}}
 
 BuffsDebuffs = {}
 function BuffsDebuffs.getImageClip(id)
@@ -49,7 +51,7 @@ function init()
   -- Binding Ctrl + B shortcut
   --g_keyboard.bindKeyDown('Ctrl+H', show)
 
-  cooldownTopButton = modules.client_topmenu.addRightGameToggleButton('cooldownTopButton', tr('Show Buffs'), '/images/options/button_buffs', show)
+  cooldownTopButton = modules.client_topmenu.addRightGameToggleButton('cooldownTopButton', tr('Show Buffs'), '/images/options/button_prey', show)
   cooldownTopButton:setOn(true)
 
   if g_game.isOnline() then
@@ -134,8 +136,7 @@ function loadIcon(iconId)
   end
   local spellSettings = BuffsDebuffsSettings
   if spellSettings then
-    icon:getChildById('icon'):setImageSource(spellSettings.iconFile)
-    icon:getChildById('icon'):setImageClip(BuffsDebuffs.getImageClip(iconId))
+    icon:getChildById('icon'):setImageSource('/images/game/buffs/' .. BuffsDebuffs.getImageClip(iconId))
   else
     icon = nil
   end
@@ -154,12 +155,20 @@ end
 
 function online()
   if buffsWindow and not buffsWindow:isVisible() then
-    buffsWindow:breakAnchors()
-buffsWindow:addAnchor(AnchorTop, "gameTopPanel", AnchorBottom)
-buffsWindow:addAnchor(AnchorHorizontalCenter, "gameTopPanel", AnchorHorizontalCenter)
-buffsWindow:setMarginTop(50) -- or your preferred spacing
-buffsWindow:show()
-
+    local defaultPos = { x = modules.game_interface.gameMapPanel:getMapRect().x,
+                         y = modules.game_interface.gameMapPanel:getMapRect().y}
+    local pos = defaultPos
+    local offsetX = 25
+    if gameLeftPanel then
+      -- Anchor to the right of the left panel
+      local leftPanelRect = gameLeftPanel:getRect()
+      pos.x = leftPanelRect.x + leftPanelRect.width + offsetX -- 10px gap
+    else
+      pos.x = math.max(pos.x + offsetX, 0)
+        end
+    pos.y = math.max(pos.y, 0)
+    buffsWindow:setX(pos.x)
+    buffsWindow:setY(pos.y)
     buffsWindow:setPhantom(g_settings.getBoolean('phantomBuffs'))
     local childs = buffsWindow:recursiveGetChildren()
     for _, child in ipairs(childs) do
@@ -167,11 +176,21 @@ buffsWindow:show()
     end
     buffsWindow:show()
   elseif buffsWindow and buffsWindow:isVisible() then
-    buffsWindow:breakAnchors()
-buffsWindow:addAnchor(AnchorTop, "gameTopPanel", AnchorBottom)
-buffsWindow:addAnchor(AnchorHorizontalCenter, "gameTopPanel", AnchorHorizontalCenter)
-buffsWindow:setMarginTop(50) -- or your preferred spacing
-buffsWindow:show()
+    local defaultPos = { x = modules.game_interface.gameMapPanel:getMapRect().x,
+                         y = modules.game_interface.gameMapPanel:getMapRect().y}
+    local pos = defaultPos
+    local offsetX = 25
+    if gameLeftPanel then
+      -- Anchor to the right of the left panel
+      local leftPanelRect = gameLeftPanel:getRect()
+      pos.x = leftPanelRect.x + leftPanelRect.width + offsetX -- 10px gap
+    else
+      pos.x = math.max(pos.x + offsetX, 0)
+    end
+    pos.y = math.max(pos.y, 0)
+    buffsWindow:setX(pos.x)
+    buffsWindow:setY(pos.y)
+    
   end
   if not lastPlayer or lastPlayer ~= g_game.getCharacterName() then
     refresh()
@@ -281,6 +300,8 @@ function onBuffCooldown(iconId, duration, spellName, bgId, count)
     return
   end
 
+  print('count: ', count)
+
   icon:setImageSource(BuffsBackgrounds[bgId].image)
   icon:setParent(buffsPanel)
   if duration == 4294967295000 then -- -1 nie dziala xd
@@ -296,8 +317,8 @@ function onBuffCooldown(iconId, duration, spellName, bgId, count)
     progressRect = g_ui.createWidget('BuffProgressRect', icon)
     progressRect:setId(iconId)
     progressRect.icon = icon
-    progressRect:setHeight(34)
-    progressRect:setWidth(34)
+    progressRect:setHeight(44)
+    progressRect:setWidth(44)
     progressRect:setPadding(2) --removed by nok
     progressRect:fill('icon')
     --progressRect:addAnchor(AnchorHorizontalCenter, 'parent', AnchorHorizontalCenter)
@@ -310,21 +331,23 @@ function onBuffCooldown(iconId, duration, spellName, bgId, count)
 
     local counterLabel = g_ui.createWidget('Label', icon)
 	  counterLabel:setId('counterLabel' .. iconId)
-    counterLabel:setSize({width = 34, height = 12})
+    counterLabel:setSize({width = 44, height = 24})
     counterLabel:addAnchor(AnchorHorizontalCenter, 'parent', AnchorHorizontalCenter)
     counterLabel:addAnchor(AnchorBottom, 'parent', AnchorBottom)
     counterLabel:setTextAlign(AlignTopCenter)
     counterLabel:setFont('verdana-11px-rounded')
 
-    if count > 1 then
-		icon:recursiveGetChildById('count'):setText(count)
-	else
-		icon:recursiveGetChildById('count'):setText("")
-	end
-
-  else
-    progressRect:setPercent(0)
+    print('DEBUG count value:', count, 'type:', type(count))
   end
+
+  -- Always update the count label, regardless of widget creation
+  if count > 1 and count < 10 then
+    icon:recursiveGetChildById('count'):setText(count)
+  else
+    icon:recursiveGetChildById('count'):setText("")
+  end
+
+  progressRect:setPercent(0)
   progressRect:setTooltip(spellName)
 
   local updateFunc = function()
@@ -357,13 +380,13 @@ end
 
 function resizeWindow()
   if visibleIcons == 1 then
-    buffsWindow:setWidth(52) -- default size, when empty , 50 default
+    buffsWindow:setWidth(62) -- default size, when empty , 50 default
   end
   if visibleIcons < 1 then
-    buffsWindow:setWidth(52) -- default size, when empty , 50 default
+    buffsWindow:setWidth(62) -- default size, when empty , 50 default
   end
   if visibleIcons > 1 then
-    buffsWindow:setWidth( (((visibleIcons-1)%visibleIcons+1)*50) )
+    buffsWindow:setWidth( (((visibleIcons-1)%visibleIcons+1)*62) )
   end
   return true
 end

@@ -17,12 +17,11 @@ GameServerOpcodes = {
     -- otclient ONLY
     GameServerExtendedOpcode = 50,
 
+    -- NOTE: add any custom opcodes in this range
+    -- 51 - 99
     GameServerOpenCrafting  = 57, --54
     GameServerJobs  = 60,
     GameServerUpdateFame  = 61,
-
-    -- NOTE: add any custom opcodes in this range
-    -- 51 - 99
 
     -- original tibia ONLY
     GameServerPassiveCooldown = 94,
@@ -129,9 +128,7 @@ ClientOpcodes = {
 
     -- NOTE: add any custom opcodes in this range
     -- 51 - 99
-
-     -- NOTE: add any custom opcodes in this range
-     ClientSelectTask                   = 52,
+    ClientSelectTask                   = 52,
     ClientSelectReward                  = 53,
     ClientGetTaskList                   = 54,
     ClientCraftRecipe                   = 58,
