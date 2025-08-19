@@ -99,7 +99,7 @@ function online()
     if g_game.getFeature(GameUnjustifiedPoints) and not unjustifiedPointsButton then
         unjustifiedPointsWindow:setupOnStart() -- load character window configuration
         unjustifiedPointsButton = modules.game_mainpanel.addToggleButton('unjustifiedPointsButton',
-            tr('Unjustified Points'), '/images/options/button_frags', toggle)
+            tr('Unjustified Points'), '/images/options/button_frags', toggle, false, 13)
         unjustifiedPointsButton:setOn(false)
     end
 

@@ -271,7 +271,7 @@ function show()
             gameMapPanel:setMaxZoomOut(513)
             gameMapPanel:setLimitVisibleRange(false)
         else
-            gameMapPanel:setMaxZoomOut(11)
+            gameMapPanel:setMaxZoomOut(12)
             gameMapPanel:setLimitVisibleRange(true)
         end
     end)
@@ -1217,6 +1217,7 @@ function setupViewMode(mode)
     end
 
     if currentViewMode == 2 then
+        print("currentViewMode == 2")
 
         gameMapPanel:addAnchor(AnchorLeft, 'gameLeftPanel', AnchorRight)
         gameMapPanel:addAnchor(AnchorRight, 'gameRightPanel', AnchorLeft)
@@ -1242,10 +1243,11 @@ function setupViewMode(mode)
     end
 
     if mode == 0 then
+        print("Mode 0")
 
         gameMapPanel:setKeepAspectRatio(true)
-        gameMapPanel:setLimitVisibleRange(false)
-        gameMapPanel:setZoom(11)
+        gameMapPanel:setLimitVisibleRange(limit)
+        gameMapPanel:setZoom(12)
         gameMapPanel:setVisibleDimension({
             width = 15,
             height = 11
@@ -1255,10 +1257,11 @@ function setupViewMode(mode)
             gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
         end
     elseif mode == 1 then
+        print("Mode 1")
 
-        gameMapPanel:setKeepAspectRatio(false)
-        gameMapPanel:setLimitVisibleRange(true)
-        gameMapPanel:setZoom(11)
+        gameMapPanel:setKeepAspectRatio(true)
+        gameMapPanel:setLimitVisibleRange(limit)
+        gameMapPanel:setZoom(12)
         gameMapPanel:setVisibleDimension({
             width = 15,
             height = 11
@@ -1268,10 +1271,11 @@ function setupViewMode(mode)
             gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
         end
     elseif mode == 2 then
+        print("Mode 2")
 
         local limit = limitedZoom and not g_game.isGM()
         gameMapPanel:setLimitVisibleRange(limit)
-        gameMapPanel:setZoom(11)
+        gameMapPanel:setZoom(12)
         gameMapPanel:setVisibleDimension({
             width = 15,
             height = 11

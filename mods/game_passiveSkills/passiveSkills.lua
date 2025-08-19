@@ -32,7 +32,8 @@ function PassiveSkills.onGameStart()
 	PassiveSkills.UI:hide()
 
 	if not PassiveSkills.Button then
-		PassiveSkills.Button = modules.game_mainpanel.addStoreButton("PassiveSkills", tr("Talent Tree"), "/images/options/large_stats", PassiveSkills.toggle, false, 9)
+		PassiveSkills.Button = modules.game_mainpanel.addToggleButton('PassiveSkills',
+		tr("Talent Tree"), '/images/options/button_frags', toggle, false, 6)
 		PassiveSkills.Button:setOn(false)
 	end
 

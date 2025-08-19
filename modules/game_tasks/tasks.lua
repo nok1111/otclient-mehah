@@ -62,9 +62,9 @@ function create()
     return
   end             
   
-openTasksButton = modules.game_mainpanel.addStoreButton('openTasksButton', tr('Task Window'), '/images/options/task_large', toggleTasksPanel, false, 9)
+openTasksButton = modules.game_mainpanel.addToggleButton('openTasksButton', tr('Task Window'), '/images/options/ButtonBossSlot', toggleTasksPanel, false, 7)
 openTasksButton:setOn(false)
-trackerButton = modules.game_mainpanel.addToggleButton("trackerButton", tr("Tasks Tracker"), "/images/options/ButtonBossSlot", toggleTracker, false, 3)
+trackerButton = modules.game_mainpanel.addToggleButton("trackerButton", tr("Tasks Tracker"), "/images/options/ButtonBossSlot", toggleTracker, false, 8)
 trackerButton:setOn(true)
 trackerWindow = g_ui.loadUI("tasks_tracker", modules.game_interface.getRightPanel())
 trackerWindow.miniwindowScrollBar:mergeStyle({["$!on"] = {}})

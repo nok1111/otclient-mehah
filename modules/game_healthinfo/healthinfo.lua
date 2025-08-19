@@ -37,8 +37,8 @@ end
 function extendedView(extendedView)
     if extendedView then
         if not iconTopMenu then
-            iconTopMenu = modules.client_topmenu.addTopRightToggleButton('healthMana', tr('Show health'),
-                '/images/topbuttons/healthinfo', toggle)
+            iconTopMenu = modules.game_mainpanel.addToggleButton('healthMana', tr('Show health'),
+                '/images/topbuttons/healthinfo', toggle, false, 5)
             iconTopMenu:setOn(healthManaController.ui:isVisible())
             healthManaController.ui:setBorderColor('black')
             healthManaController.ui:setBorderWidth(2)

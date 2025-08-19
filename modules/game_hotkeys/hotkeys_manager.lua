@@ -73,7 +73,7 @@ function init()
     })
     hotkeysWindow = g_ui.displayUI('hotkeys_manager')
     hotkeysWindow:setVisible(false)
-    hotkeysWindowButton = modules.client_topmenu.addRightGameToggleButton('hotkeysWindowButton', tr('Hotkeys'), '/images/options/hotkeys', toggle)
+    hotkeysWindowButton = modules.game_mainpanel.addToggleButton('hotkeysWindowButton', tr('Hotkeys'), '/images/options/hotkeys', toggle, false, 9)
 
     currentHotkeys = hotkeysWindow:getChildById('currentHotkeys')
     currentItemPreview = hotkeysWindow:getChildById('itemPreview')
