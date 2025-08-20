@@ -19,7 +19,7 @@ countWindow = nil
 logoutWindow = nil
 exitWindow = nil
 bottomSplitter = nil
-limitedZoom = false
+limitedZoom = true
 currentViewMode = 0
 leftIncreaseSidePanels = nil
 leftDecreaseSidePanels = nil
@@ -255,7 +255,7 @@ function show()
     updateStretchShrink()
     logoutButton:setTooltip(tr('Logout'))
 
-    setupViewMode(0)
+    testExtendedView(0)
 
     if g_platform.isMobile() then
         mobileConfig.mobileWidthJoystick = modules.game_joystick.getPanel():getWidth()
@@ -1273,7 +1273,7 @@ function setupViewMode(mode)
     elseif mode == 2 then
         print("Mode 2")
 
-        local limit = limitedZoom and not g_game.isGM()
+        gameMapPanel:setKeepAspectRatio(true)
         gameMapPanel:setLimitVisibleRange(limit)
         gameMapPanel:setZoom(12)
         gameMapPanel:setVisibleDimension({
@@ -1406,9 +1406,10 @@ function checkAndOpenLeftPanel()
 end
 
 function testExtendedView(mode)
-    local extendedView = mode == 2
+    local extendedView = mode == 0
     modules.game_console.setExtendedView(extendedView)
     if extendedView then
+        print("Extended view")
         local topMenuHeight = modules.client_topmenu.getTopMenu():getHeight()
 
         local buttons = {leftIncreaseSidePanels, rightIncreaseSidePanels, rightDecreaseSidePanels,
@@ -1420,7 +1421,7 @@ function testExtendedView(mode)
         if not g_platform.isMobile() then
             gameBottomPanel:breakAnchors()
             gameBottomPanel:bindRectToParent()
-            gameBottomPanel:setDraggable(true)
+           -- gameBottomPanel:setDraggable(true)
         else
             gameBottomPanel:setWidth(g_window.getWidth() - mobileConfig.mobileWidthJoystick - mobileConfig.mobileWidthShortcuts)
             gameBottomPanel:setPosition({
@@ -1433,8 +1434,8 @@ function testExtendedView(mode)
         gameBottomPanel:getChildById('rightResizeBorder'):enable()
         bottomSplitter:setVisible(false)
 
-        gameMainRightPanel:setHeight(0)
-        gameMainRightPanel:setImageColor('alpha')
+       -- gameMainRightPanel:setHeight(0)
+       -- gameMainRightPanel:setImageColor('alpha')
 
     else
         -- Reset to normal view
