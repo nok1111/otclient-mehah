@@ -1,0 +1,130 @@
+MiniWindow
+  id: partyWindow
+  !text: tr('Party Members')
+  icon: /images/topbuttons/viplist
+  &save: true
+  @onOpen: onMiniWindowOpen()
+  @onClose: onMiniWindowClose()
+
+  MiniWindowContents
+    layout: verticalBox
+    spacing: 3
+    padding-left: 5
+    padding-right: 5
+    padding-bottom: 2
+
+    ScrollablePanel
+      id: membersPanel
+      layout: verticalBox
+      fit-children: true
+      auto-scroll: true
+
+    Panel
+      id: membersPanel
+      layout: verticalBox
+      spacing: 2
+      fit-children: true
+      height: 8
+
+
+PartyListLabel < GameLabel
+  font: verdana-11px-monochrome
+  phantom: false
+  height: 14
+  color: white
+  text-offset: 16 0
+  margin-top: 2
+  image-rect: 0 0 12 12
+  image-clip: 0 0 12 12
+  image-source: /images/game/viplist/icons
+
+PartyMemberPanel < Panel
+  layout: verticalBox
+  size: 220 56
+  width: 220
+  height: 56
+  max-height: 56
+  padding: 4
+  margin-bottom: 4
+  background-color: #282828dd
+  border: 1 #444444
+  radius: 4
+  shadow: 1
+  visible: true
+
+  Label
+    id: memberNameLabel
+    text: "Name"
+    font: verdana-11px-rounded
+    color: white
+    height: 14
+    text-align: center
+    margin-bottom: 2
+
+  UIWidget
+    id: healthBar
+    height: 16
+    layout: anchor
+
+    UIWidget
+      id: icon
+      image-source: /images/healthmana/hitpoints_symbol
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      size: 12 11
+
+    UIWidget
+      id: total
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      height: 11
+      margin-left: 14
+      margin-right: 2
+      image-source: /images/healthmana/hitpoints_manapoints_bar_border
+      image-border-left: 6
+      image-border-right: 6
+
+    UIWidget
+      id: current
+      anchors.left: total.left
+      anchors.top: total.top
+      anchors.bottom: total.bottom
+      image-source: /images/healthmana/hitpoints_bar_filled
+      image-border-left: 5
+      image-border-right: 7
+      width: 30
+
+  UIWidget
+    id: manaBar
+    height: 16
+    layout: anchor
+
+    UIWidget
+      id: icon
+      image-source: /images/healthmana/mana_symbol
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      size: 12 11
+
+    UIWidget
+      id: total
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      height: 11
+      margin-left: 14
+      margin-right: 2
+      image-source: /images/healthmana/hitpoints_manapoints_bar_border
+      image-border-left: 6
+      image-border-right: 6
+
+    UIWidget
+      id: current
+      anchors.left: total.left
+      anchors.top: total.top
+      anchors.bottom: total.bottom
+      image-source: /images/healthmana/mana_bar_filled
+      image-border-left: 5
+      image-border-right: 7
+      width: 30

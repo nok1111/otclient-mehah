@@ -1,0 +1,11 @@
+Module
+  name: party_status
+  description: Party Status
+  author: Sorky
+  version: 1.0
+  autoload: true
+  autoload-priority: 1000
+  dependencies: [game_interface]
+  scripts: [ party_status ]
+  @onLoad: init()
+  @onUnload: terminate()
