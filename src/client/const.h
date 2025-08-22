@@ -562,7 +562,7 @@ namespace Otc
         GameColorizedLootValue = 121,
         GameAllowPreWalk = 122,
         GamePlayerFamiliars = 123,
-        GameLatencyAdaptiveCamera = 124,
+        // = 124,
         GameMapCache = 125,
         LastGameFeature
     };

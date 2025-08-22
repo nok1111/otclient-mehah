@@ -13,7 +13,6 @@ controller:registerEvents(g_game, {
         
 
         -- For Walk
-        g_game.enableFeature(GameLatencyAdaptiveCamera)
         g_game.enableFeature(GameAllowPreWalk)
         g_game.enableFeature(GameMapCache)
         g_game.enableFeature(GameMagicEffectU16)
