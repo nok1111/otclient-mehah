@@ -36,6 +36,7 @@ SpelllistSettings = {
       'Judgement',
 
       --Magician
+      'Frost Blast',
       'Energy Blast',
       'Fire Blast',
       'Ice Nova',
@@ -213,6 +214,7 @@ SpellInfo = {
     ['Judgement'] = {id = 32, words = 'judgement', icon_id = 32, description = 'trhow a holy hammer dealing holy damage to your target.', exhaustion = 2000, premium = false, type = 'Instant', icon = 32, mana = 30, level = 15, soul = 0, group = {[1] = 2000}, vocations = {2}},
    
     --Magician
+    ['Frost Blast'] = {id = 40, words = 'frost blast', icon_id = 40, description = 'shoot 2 frost shots that deal frost damage to your target and reduce its movement speed.', exhaustion = 2000, premium = false, type = 'Instant', icon = 40, mana = 35, level = 8, soul = 0, group = {[1] = 2000}, vocations = {1}},
     ['Energy Blast'] = {id = 41, words = 'energy blast', icon_id = 41, description = 'cast a energy blast wich restore mana on impact and deals energy damage to your target.', exhaustion = 2000, premium = false, type = 'Instant', icon = 41, mana = 0, level = 10, soul = 0, group = {[1] = 2000}, vocations = {1}},
     ['Fire Blast'] = {id = 42, words = 'fire blast', icon_id = 42, description = 'cast a fire blast wich deals fire damage in a small radius.', exhaustion = 2000, premium = false, type = 'Instant', icon = 42, mana = 25, level = 8, soul = 0, group = {[1] = 2000}, vocations = {1}},
     ['Ice Nova'] = {id = 44, words = 'ice nova', icon_id = 44, description = 'create a ice nova wich extends from your current position slowing all enemies in its radius.', exhaustion = 2000, premium = false, type = 'Instant', icon = 44, mana = 180, level = 20, soul = 0, group = {[1] = 2000}, vocations = {1}},

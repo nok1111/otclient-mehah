@@ -90,7 +90,7 @@ function parseAddCooldown(protocol, opcode, buffer)
   end
 
 	if tonumber(json_data.timeSeconds) == -1 then
-		onBuffCooldown    (json_data.buffId, -1, json_data.tooltipText, json_data.bgId)
+		onBuffCooldown    (json_data.buffId, -1, json_data.tooltipText, json_data.bgId, json_data.count)
 	else
 		onBuffCooldown    (json_data.buffId, json_data.timeSeconds * 1000, json_data.tooltipText, json_data.bgId, json_data.count)
 	end
@@ -341,7 +341,7 @@ function onBuffCooldown(iconId, duration, spellName, bgId, count)
   end
 
   -- Always update the count label, regardless of widget creation
-  if count > 1 and count < 10 then
+  if count > 0 and count < 10 then
     icon:recursiveGetChildById('count'):setText(count)
   else
     icon:recursiveGetChildById('count'):setText("")
