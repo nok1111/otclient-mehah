@@ -20,7 +20,6 @@ NodeEntryBorder < Panel
 
 NodeEntryLevel < FlatPanel
   margin-top: -27
-  margin-left: -0
   text-auto-resize: true
   padding: 4
 

@@ -8,7 +8,7 @@ SpelllistSettings = {
       --Dragon Knight
       'Rend',
       'Brutal Swing',
-      'Challenging Spear',
+      'Ripping Slash',
       'Fire Within',
       'Charge',
       'whirlwind',
@@ -51,7 +51,7 @@ SpelllistSettings = {
       'Ice Barrage',
       'Ice Wall',
       'Ice Clones',
-      'Ice Tomb',
+      'Eruption',
       'Glacial Steps',
 
       --warlock
@@ -100,6 +100,7 @@ SpelllistSettings = {
       'Moonlight',
       'Holy Flare',
       'Solar Blessing',
+      'Astral Infusion',
 
 
         --monk
@@ -114,6 +115,9 @@ SpelllistSettings = {
       'Mountain Stance',
       'Zen Barrier',
       'Mystic Fist',
+      'Crane Stance',
+      'Fist of Ice',
+      'Fist of Life',
 
       --druid
       'Terra Strike',
@@ -123,7 +127,6 @@ SpelllistSettings = {
       'Travel Form',
       'Carnivorous Vile',
       'living ground',
-      'Thorns',
       'Piercing Wave',
       'Bear Form',
       'Bless of the Forest',
@@ -186,7 +189,7 @@ SpellInfo = {
     -- Dragon Knight
     ['Rend'] = {id = 1, words = 'rend', icon_id = 1, description = 'rend the target dealing physical damage and reaching nearby enemies. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 1, mana = 20, level = 8, soul = 0, group = {[1] = 2000}, vocations = {4}},
     ['Brutal Swing'] = {id = 2, words = 'brutal swing', icon_id = 2, description = 'smash the target dealing high ammounts of physical damage the reached area can vary based on one handed or two handed weapon. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 2, mana = 55, level = 18, soul = 0, group = {[1] = 2000}, vocations = {4}},
-    ['Challenging Spear'] = {id = 3, words = 'Challenging Spear', icon_id = 3, description = 'shoot a spear wich taunts the target and deals physical damage. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 3, mana = 30, level = 20, soul = 0, group = {[3] = 2000}, vocations = {4}},
+    ['Ripping Slash'] = {id = 3, words = 'ripping slash', icon_id = 3, description = 'slash your way through enemies dealing physical damage in a small cone area. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 3, mana = 30, level = 20, soul = 0, group = {[3] = 2000}, vocations = {4}},
     ['Fire Within'] = {id = 4, words = 'fire within', icon_id = 4, description = 'ignite yourself into fire to deal fire damage to your nearest enemy and spread it to nearby enemies. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 4, mana = 75, level = 70, soul = 0, group = {[1] = 2000}, vocations = {4}},
     ['Charge'] = {id = 5, words = 'charge', icon_id = 5, description = 'charge into your target from the distance and stun it for 1 second. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 5, mana = 70, level = 40, soul = 0, group = {[3] = 2000}, vocations = {4}},
     ['whirlwind'] = {id = 6, words = 'whirlwind', icon_id = 6, description = 'slash your surroundings dealing fire damage and igniting all enemies in the area. [skill+attack]', exhaustion = 2000, premium = false, type = 'Instant', icon = 6, mana = 85, level = 30, soul = 0, group = {[1] = 2000}, vocations = {4}},
@@ -229,7 +232,7 @@ SpellInfo = {
     ['Ice Barrage'] = {id = 55, words = 'ice barrage', icon_id = 55, description = 'shoot a group of icicles wich deals ice damage to your target.', exhaustion = 2000, premium = false, type = 'Instant', icon = 55, mana = 75, level = 30, soul = 0, group = {[1] = 2000}, vocations = {0}},
     ['Ice Wall'] = {id = 56, words = 'ice wall', icon_id = 56, description = 'create a ice wall wich extends horizontally 2 tilesfrom your current position.', exhaustion = 2000, premium = false, type = 'Instant', icon = 56, mana = 115, level = 42, soul = 0, group = {[1] = 2000}, vocations = {0}},
     ['Ice Clones'] = {id = 57, words = 'ice clones', icon_id = 57, description = 'create a 4 clones of yourself wich will follow you and deal ice damage to enemies.', exhaustion = 2000, premium = false, type = 'Instant', icon = 57, mana = 115, level = 42, soul = 0, group = {[1] = 2000}, vocations = {0}},
-    ['Ice Tomb'] = {id = 58, words = 'ice tomb', icon_id = 58, description = 'surround your target with ice pillars trapping it in place.', exhaustion = 2000, premium = false, type = 'Instant', icon = 58, mana = 10, level = 10, soul = 0, group = {[1] = 2000}, vocations = {0}},
+    ['Eruption'] = {id = 58, words = 'eruption', icon_id = 58, description = 'prepare a area for eruption, wich explodes after a quick delay dealing fire damage to all enemies reached.', exhaustion = 2000, premium = false, type = 'Instant', icon = 58, mana = 10, level = 10, soul = 0, group = {[1] = 2000}, vocations = {0}},
     ['Glacial Steps'] = {id = 59, words = 'glacial steps', icon_id = 59, description = 'leave a trail of ice traps while walking wich slow down enemies on contact.', exhaustion = 25000, premium = false, type = 'Instant', icon = 59, mana = 115, level = 42, soul = 0, group = {[1] = 2000}, vocations = {0}},
     
     --Warlock
@@ -278,21 +281,25 @@ SpellInfo = {
     ['Moonlight'] = {id = 112, words = 'moonlight', icon_id = 112, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 112, mana = 80, level = 27, soul = 0, group = {[2] = 1900}, vocations = {6}},
     ['Holy Flare'] = {id = 113, words = 'holy flare', icon_id = 113, description = 'xxxxxxx', exhaustion = 10000, premium = false, type = 'Instant', icon = 113, mana = 140, level = 1, soul = 0, group = {[2] = 1900}, vocations = {6}},
     ['Solar Blessing'] = {id = 114, words = 'solar blessing', icon_id = 114, description = 'xxxxxxx', exhaustion = 10000, parameter = true, premium = false, type = 'Instant', icon = 114, mana = 140, level = 1, soul = 0, group = {[2] = 1900}, vocations = {6}},
-
+    ['Astral Infusion'] = {id = 115, words = 'astral infusion', icon_id = 115, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 115, mana = 50, level = 60, soul = 0, group = {[2] = 1900}, vocations = {6}},
+    
 
     --Monk
     ['Lotus Kick'] = {id = 127, words = 'lotus kick', icon_id = 127, description = 'xxxxxxx', exhaustion = 7000, premium = false, type = 'Instant', icon = 127, mana = 30, level = 40, soul = 0, group = {[3] = 0}, vocations = {7}},
     ['Adaptive Punch'] = {id = 128, words = 'adaptive punch', icon_id = 128, description = 'xxxxxxx', exhaustion = 10000, premium = false, type = 'Instant', icon = 128, mana = 80, level = 15, soul = 0, group = {[3] = 2000}, vocations = {7}},
     ['Fire Punch'] = {id = 129, words = 'fire punch', icon_id = 129, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 129, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {7}},
     ['Ice Punch'] = {id = 130, words = 'ice punch', icon_id = 130, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 130, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {7}},
-    ['Life Punch'] = {id = 131, words = 'life punch', icon_id = 131, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 131, mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Life Punch'] = {id = 131, words = 'life punch', icon_id = 131, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 131, mana = 35, level = 8, soul = 0, group = {[2] = 1900}, vocations = {7}},
     ['Fist of Fire'] = {id = 132, words = 'fist of fire', icon_id = 132, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 132, mana = 115, level = 42, soul = 0, group = {[1] = 3000}, vocations = {7}},
     ['Volcanic Dash'] = {id = 133, words = 'volcanic dash', icon_id = 133, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 133, mana = 115, level = 42, soul = 0, group = {[1] = 3000}, vocations = {7}},
     ['Stormfist'] = {id = 134, words = 'stormfist', icon_id = 134, description = 'xxxxxxx', exhaustion = 20000, premium = false, type = 'Instant', icon = 134, mana = 350, level = 1, soul = 0, group = {[1] = 0}, vocations = {7}},
     ['Mountain Stance'] = {id = 135, words = 'mountain stance', icon_id = 135, description = 'xxxxxxx', exhaustion = 50000, premium = false, type = 'Instant', icon = 135, mana = 650, level = 1, soul = 0, group = {[1] = 1900}, vocations = {7}},
     ['Zen Barrier'] = {id = 136, words = 'zen barrier', icon_id = 136, description = 'xxxxxxx', exhaustion = 45000, parameter = true, premium = false, type = 'Instant', icon = 136, mana = 500, level = 1, soul = 0, group = {[1] = 1900}, vocations = {7}},
     ['Mystic Fist'] = {id = 137, words = 'mystic fist', icon_id = 137, description = 'xxxxxxx', exhaustion = 8000, premium = false, type = 'Instant', icon = 137, mana = 150, level = 50, soul = 0, group = {[1] = 1900}, vocations = {7}},
- 
+    ['Crane Stance'] = {id = 138, words = 'crane stance', icon_id = 138, description = 'xxxxxxx', exhaustion = 20000, premium = false, type = 'Instant', icon = 138, mana = 650, level = 1, soul = 0, group = {[1] = 1900}, vocations = {7}},
+    ['Fist of Ice'] = {id = 139, words = 'fist of ice', icon_id = 139, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 139, mana = 115, level = 42, soul = 0, group = {[1] = 3000}, vocations = {7}},
+    ['Fist of Life'] = {id = 140, words = 'fist of life', icon_id = 140, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 140, mana = 115, level = 42, soul = 0, group = {[2] = 3000}, vocations = {7}},
+    
     --Druid
     ['Terra Strike'] = {id = 150, words = 'terra strike', icon_id = 150, description = 'xxxxxxx', exhaustion = 3000, premium = false, type = 'Instant', icon = 150, mana = 30, level = 8, soul = 0, group = {[1] = 1900}, vocations = {8}},
     ['Life Bloom'] = {id = 152, words = 'life bloom', icon_id = 152, description = 'xxxxxxx', exhaustion = 6000, premium = false, type = 'Instant', icon = 152, mana = 0, level = 1, soul = 0, group = {[2] = 1900}, vocations = {8}},
@@ -301,7 +308,6 @@ SpellInfo = {
     ['Travel Form'] = {id = 155, words = 'travel form', icon_id = 155, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 155, mana = 60, level = 25, soul = 0, group = {[3] = 2000}, vocations = {8}},
     ['Carnivorous Vile'] = {id = 156, words = 'carnivorous vile', icon_id = 156, description = 'xxxxxxx', exhaustion = 5500, premium = false, type = 'Instant', icon = 156, mana = 85, level = 30, soul = 0, group = {[1] = 1900}, vocations = {8}},
     ['living ground'] = {id = 157, words = 'living ground', icon_id = 157, description = 'xxxxxxx', exhaustion = 10000, premium = false, type = 'Instant', icon = 157, mana = 200, level = 1, soul = 0, group = {[2] = 1900}, vocations = {8}},
-    ['Thorns'] = {id = 158, words = 'thorns', icon_id = 158, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 158, mana = 50, level = 60, soul = 0, group = {[2] = 1900}, vocations = {8}},
     ['Piercing Wave'] = {id = 159, words = 'piercing wave', icon_id = 159, description = 'xxxxxxx', exhaustion = 12000, premium = false, type = 'Instant', icon = 159, mana = 115, level = 42, soul = 0, group = {[1] = 1900}, vocations = {8}},
     ['Bear Form'] = {id = 160, words = 'bear form', icon_id = 160, description = 'xxxxxxx', exhaustion = 20000, premium = false, type = 'Instant', icon = 160, mana = 60, level = 45, soul = 0, group = {[3] = 2000}, vocations = {8}},
     ['Bless of the Forest'] = {id = 161, words = 'bless of the forest', icon_id = 161, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 161, mana = 50, level = 20, soul = 0, group = {[3] = 2000}, vocations = {8}},

@@ -255,13 +255,6 @@ function PassiveSkills.createBranch(treeId, branchIndex, branchData, branchProgr
 		nodeEntryBorder:setImageSource('images/borders/' .. branchData.border)
 		nodeEntryBorder:setImageColor(branchData.color)
 
-		local nodeLevel = g_ui.createWidget("NodeEntryLevel", PassiveSkills.UI.internalPanel)
-		nodeLevel:addAnchor(AnchorLeft, nodeId, AnchorLeft)
-		nodeLevel:addAnchor(AnchorTop, nodeId, AnchorTop)
-
-		local currentLevel = branchProgress[nodeIndex] or 0
-		nodeLevel:setText(currentLevel .. "/" .. (nodeData.maxLevel or 1))
-
 		if prevButton then
 			node:addAnchor(AnchorTop, prevButton:getId(), AnchorBottom)
 			node:setMarginTop(PassiveSkills.marginBetweenNodes)
@@ -274,9 +267,25 @@ function PassiveSkills.createBranch(treeId, branchIndex, branchData, branchProgr
 			separator:addAnchor(AnchorHorizontalCenter, node:getId(), AnchorHorizontalCenter)
 			separator:setWidth(2)
 			separator:setMarginBottom(4)
+
+			local nodeLevel = g_ui.createWidget("NodeEntryLevel", PassiveSkills.UI.internalPanel)
+			nodeLevel:addAnchor(AnchorLeft, nodeId, AnchorLeft)
+			nodeLevel:addAnchor(AnchorTop, nodeId, AnchorTop)
+			nodeLevel:addAnchor(AnchorHorizontalCenter, nodeId, AnchorHorizontalCenter)
+
+			local currentLevel = branchProgress[nodeIndex] or 0
+			nodeLevel:setText(currentLevel .. "/" .. (nodeData.maxLevel or 1))
 		else
 			node:addAnchor(AnchorTop, 'parent', AnchorTop)
 			node:setMarginTop(PassiveSkills.marginBetweenNodes)
+
+			local nodeLevel = g_ui.createWidget("NodeEntryLevel", PassiveSkills.UI.internalPanel)
+			nodeLevel:addAnchor(AnchorLeft, nodeId, AnchorLeft)
+			nodeLevel:addAnchor(AnchorTop, nodeId, AnchorTop)
+			nodeLevel:addAnchor(AnchorHorizontalCenter, nodeId, AnchorHorizontalCenter)
+
+			local currentLevel = branchProgress[nodeIndex] or 0
+			nodeLevel:setText(currentLevel .. "/" .. (nodeData.maxLevel or 1))
 		end
 
 		local button = g_ui.createWidget("NodeButton", PassiveSkills.UI.internalPanel)

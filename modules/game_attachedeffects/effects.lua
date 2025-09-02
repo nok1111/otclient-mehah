@@ -572,12 +572,12 @@ AttachedEffectManager.register(62, 'stuned cyclone', 32, ThingCategoryEffect, {
 
 AttachedEffectManager.register(63, 'blood wall', 266, ThingCategoryEffect, {
     loop = 1,
-    offset = { 0, 0 }
+    offset = { 0, 0, true }
 })
 
 AttachedEffectManager.register(64, 'fear', 170, ThingCategoryEffect, {
     loop = 1,
-    offset = { 0, 0 }
+    offset = { 0, 0, true }
 })
 
 AttachedEffectManager.register(65, 'magic echo', 598, ThingCategoryEffect, {
@@ -823,7 +823,7 @@ AttachedEffectManager.register(91, 'cosmic force', 0, 0, {
 
 AttachedEffectManager.register(92, 'fire fist', 2895, ThingCategoryCreature, {
     speed = 1.5,
-    duration = 3000,
+    duration = 4000,
     disableWalkAnimation = false,
     --shader = 'Outfit - Rainbow',
     dirOffset = {
@@ -836,7 +836,7 @@ AttachedEffectManager.register(92, 'fire fist', 2895, ThingCategoryCreature, {
 
 AttachedEffectManager.register(93, 'life fist', 2896, ThingCategoryCreature, {
     speed = 1.5,
-    duration = 5000,
+    duration = 4000,
     disableWalkAnimation = false,
     --shader = 'Outfit - Rainbow',
     dirOffset = {
@@ -849,7 +849,7 @@ AttachedEffectManager.register(93, 'life fist', 2896, ThingCategoryCreature, {
 
 AttachedEffectManager.register(94, 'ice fist', 2897, ThingCategoryCreature, {
     speed = 1.5,
-    duration = 5000,
+    duration = 4000,
     disableWalkAnimation = false,
     --shader = 'Outfit - Rainbow',
     dirOffset = {
@@ -1863,7 +1863,7 @@ AttachedEffectManager.register(214, 'ice clones', 0, 0, {
 
 AttachedEffectManager.register(215, 'frostbloom', 1171, ThingCategoryEffect, {
     opacity = 1,
-    duration = 8000,
+    duration = 5000,
     speed = 1,
     offset = { -19, -15, true},
     shader = 'frost armor',
@@ -1920,4 +1920,130 @@ AttachedEffectManager.register(221, 'blood pact', 977, ThingCategoryEffect, {
     loop = 1,
     speed = 1.8,
     offset = { -20, -5, true }
+})
+
+AttachedEffectManager.register(222, 'lotus kick 1', 1075, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.0,
+    offset = { -40, -40, false }
+})
+
+AttachedEffectManager.register(223, 'lotus kick 2', 1078, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.0,
+    offset = { -40, -40, true }
+})
+
+AttachedEffectManager.register(224, 'lotus kick 3', 1079, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.0,
+    offset = { -40, -40, true }
+})
+
+
+AttachedEffectManager.register(225, 'slash left', '/images/game/effects/slash1', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    size = { 130, 130 },
+    offset = { 90, 60, true }
+})
+
+AttachedEffectManager.register(226, 'slash north', '/images/game/effects/slash2', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    size = { 130, 130 },
+    offset = { 65, 90, true }
+})
+
+AttachedEffectManager.register(227, 'slash right', '/images/game/effects/slash3', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    size = { 130, 130 },
+    offset = { 20, 60, true }
+})
+
+AttachedEffectManager.register(228, 'slash south', '/images/game/effects/slash4', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    size = { 130, 130 },
+    offset = { 60, 20, true }
+})
+
+AttachedEffectManager.register(229, 'bless of the forest', 364, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.5,
+    offset = { -32, -32, false }
+})
+
+AttachedEffectManager.register(230, 'party kings', 877, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.0,
+    offset = { -24, -50, true }
+})
+
+AttachedEffectManager.register(231, 'astral infusion', 953, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.0,
+    offset = { -25, -10, true },
+
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(12)
+        owner:getTile():addThing(e)
+
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(12)
+        if oldOwner and oldOwner:getTile() then
+        oldOwner:getTile():addThing(e)
+        end
+    end
+})
+
+AttachedEffectManager.register(232, 'crane stance', 1158, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.0,
+    offset = { -20, -15, false }
+})
+
+AttachedEffectManager.register(233, 'exorcism left', '/images/game/effects/exorcismleft', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    size = { 270, 160 },
+    offset = { 215, 70, false }
+})
+
+AttachedEffectManager.register(234, 'exorcism north', '/images/game/effects/exorcismnorth', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    size = { 160, 270 },
+    offset = { 65, 215, false }
+})
+
+AttachedEffectManager.register(235, 'exorcism right', '/images/game/effects/exorcismright', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    size = { 270, 160 },
+    offset = { 30, 60, false }
+})
+
+AttachedEffectManager.register(236, 'exorcism south', '/images/game/effects/exorcismsouth', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    size = { 160, 270 },
+    offset = { 70, 30, false }
+})
+
+AttachedEffectManager.register(237, 'party vitality', 875, ThingCategoryEffect, {
+    loop = 2,
+    speed = 0.7,
+    offset = { -32, -32, false }
+})
+
+AttachedEffectManager.register(238, 'assasination effect', 864, ThingCategoryEffect, {
+    duration = 3100,
+    hideOwner = true,
+    speed = 0.75,
+    offset = { -55, -50, true },
 })
