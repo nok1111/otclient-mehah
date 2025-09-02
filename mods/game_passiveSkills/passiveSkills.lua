@@ -157,7 +157,8 @@ function PassiveSkills.onNodeButtonClick(branchId, nodeId)
 		PassiveSkills.sendOpcode({
 			topic = "node-levelup-request",
 			branchId = branchId,
-			nodeId = nodeId
+			nodeId = nodeId,
+			_noSuccessPopup = true -- custom flag to suppress popup
 		})
 	else
 		PassiveSkills.setupConfirmMessage(
@@ -486,6 +487,7 @@ function PassiveSkills.onExtendedOpcode(protocol, opcode, buffer)
 		PassiveSkills.setupTreeUI()
 		PassiveSkills.setupPoints()
 		PassiveSkills.displayTotalBuffs()
+		--PassiveSkills.setupMessage("Success", string.format("%s in branch %d has been leveled up.", data.nodeName or "Node", branchId))
 	elseif data.topic == "points-update" then
 		PassiveSkills.cachedAvailablePoints = data.availablePoints
 		PassiveSkills.cachedTotalPoints = data.totalPoints
