@@ -136,7 +136,8 @@ private:
     void walk(const Position& oldPos, const Position& newPos) override;
     void terminateWalk() override;
     void cancelWalk(Otc::Direction direction = Otc::InvalidDirection);
-    void cancelAjustInvalidPosEvent();
+    void cancelAdjustInvalidPosEvent();
+    void registerAdjustInvalidPosEvent();
 
     bool retryAutoWalk();
 
@@ -145,7 +146,7 @@ private:
     Position m_autoWalkDestination;
     std::deque<Position> m_preWalks;
 
-    ScheduledEventPtr m_ajustInvalidPosEvent;
+    ScheduledEventPtr m_adjustInvalidPosEvent;
     ScheduledEventPtr m_autoWalkContinueEvent;
     ticks_t m_walkLockExpiration{ 0 };
 
@@ -187,4 +188,5 @@ private:
     uint16_t m_offlineTrainingTime{ 0 };
 
     friend class Game;
+    friend class Creature;
 };
