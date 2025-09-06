@@ -1420,24 +1420,24 @@ function testExtendedView(mode)
 
         if not g_platform.isMobile() then
             gameBottomPanel:breakAnchors()
-            gameBottomPanel:bindRectToParent()
-           -- gameBottomPanel:setDraggable(true)
-        else
-            gameBottomPanel:setWidth(g_window.getWidth() - mobileConfig.mobileWidthJoystick - mobileConfig.mobileWidthShortcuts)
-            gameBottomPanel:setPosition({
-                x = mobileConfig.mobileWidthJoystick,
-                y = gameBottomPanel:getY()
-            })
+            gameBottomPanel:addAnchor(AnchorLeft, 'gameLeftExtraPanel', AnchorRight)
+            gameBottomPanel:addAnchor(AnchorRight, 'gameRightExtraPanel', AnchorLeft)
+            gameBottomPanel:addAnchor(AnchorTop, 'gameBottomStatsBarPanel', AnchorBottom)
+            gameBottomPanel:addAnchor(AnchorBottom, 'parent', AnchorBottom)
         end
-        gameBottomPanel:getChildById('rightResizeBorder'):setMaximum(gameBottomPanel:getWidth())
-        gameBottomPanel:getChildById('bottomResizeBorder'):enable()
-        gameBottomPanel:getChildById('rightResizeBorder'):enable()
-        bottomSplitter:setVisible(false)
+        gameBottomPanel:getChildById('bottomResizeBorder'):disable()
+        gameBottomPanel:getChildById('rightResizeBorder'):disable()
 
-       -- gameMainRightPanel:setHeight(0)
-       -- gameMainRightPanel:setImageColor('alpha')
+        -- Move children back to gameMainRightPanel
+        local children = gameRightPanel:getChildren()
+        for _, child in ipairs(children) do
+            if child.moveOnlyToMain then
+                child:setParent(gameMainRightPanel)
+            end
+        end
 
     else
+        print("Normal view")
         -- Reset to normal view
         gameMainRightPanel:setHeight(200)
         gameMainRightPanel:setMarginTop(0)
