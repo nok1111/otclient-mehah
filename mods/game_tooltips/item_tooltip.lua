@@ -95,11 +95,11 @@ local implicits = {
 
   
   ["fist"] = "Fist Fighting",
-  ["axe"] = "Axe Fighting",
-  ["sword"] = "Sword Fighting",
-  ["club"] = "Club Fighting",
-  ["dist"] = "Distance Fighting",
-  ["shield"] = "Shielding",
+  ["axe"] = "Arcana",
+  ["sword"] = "Melee",
+  ["club"] = "Focus",
+  ["dist"] = "Distance",
+  ["shield"] = "Defense",
   ["fish"] = "Fishing",
   
   ["mag"] = "Magic Level",
