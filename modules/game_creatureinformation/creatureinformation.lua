@@ -10,6 +10,9 @@ local playerTitles = {
     ["Alchemist Hanna"] = {title = "[Alchemy Shop]", color = "#677ef5"}, --addlight blue code
     ["Blacksmith Sam"] = {title = "[Blacksmith Shop]", color = "#677ef5"}, --addlight blue code
     ["Lucy"] = {title = "[Products Buyer]", color = "#677ef5"},
+    ["Berthel"] = {title = "[Fame Vendor]", color = "#FF6700"}, --ORANGE
+    ["Priest Baltone"] = {title = "[Blesser]", color = "#677ef5"},
+    ["Frodo"] = {title = "[Food Vendor]", color = "#677ef5"}, --ORANGE
     --extras
     ["Sage Liora"] = {title = "[Valuable Pouches]", color = "#677ef5" , marginBottom = 65}, 
     ["Arcanist Veyron"] = {title = "[Valuable Pouches]", color = "#677ef5"}, 
