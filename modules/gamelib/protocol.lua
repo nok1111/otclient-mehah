@@ -19,9 +19,11 @@ GameServerOpcodes = {
 
     -- NOTE: add any custom opcodes in this range
     -- 51 - 99
+    
     GameServerOpenCrafting  = 57, --54
     GameServerJobs  = 60,
     GameServerUpdateFame  = 61,
+    GameServerOpenFameShop  = 55,
 
     -- original tibia ONLY
     GameServerPassiveCooldown = 94,
@@ -134,6 +136,7 @@ ClientOpcodes = {
     ClientCraftRecipe                   = 58,
     ClientDeleteTask                    = 56,
     ClientStartDungeon                  = 60,
+    ClientFameShopBuy                   = 61,
 
     -- original tibia ONLY
     ClientAutoWalk = 100,

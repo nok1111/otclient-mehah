@@ -55,5 +55,6 @@ Module
     - game_crafting
     - game_buffs
     - game_creatureinformation
+    - game_famenpcshop
   @onLoad: init()
   @onUnload: terminate()
