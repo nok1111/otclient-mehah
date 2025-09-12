@@ -13,7 +13,6 @@ local playerTitles = {
     ["Berthel"] = {title = "[Fame Vendor]", color = "#FF6700"}, --ORANGE
     ["Priest Baltone"] = {title = "[Blesser]", color = "#677ef5"},
     ["Frodo"] = {title = "[Food Vendor]", color = "#677ef5"}, --ORANGE
-    ["Benjamin"] = {title = "[Parcels]", color = "#677ef5"},
     --extras
     ["Sage Liora"] = {title = "[Valuable Pouches]", color = "#677ef5" , marginBottom = 65}, 
     ["Arcanist Veyron"] = {title = "[Valuable Pouches]", color = "#677ef5"}, 
