@@ -5,6 +5,7 @@ NpcIconChat = 1
 NpcIconTrade = 2
 NpcIconQuest = 3
 NpcIconTradeQuest = 4
+NpcIconCosmetic = 5
 
 CreatureTypePlayer = 0
 CreatureTypeMonster = 1
@@ -107,6 +108,8 @@ function getIconImagePath(iconId)
         path = '/images/game/npcicons/icon_quest'
     elseif iconId == NpcIconTradeQuest then
         path = '/images/game/npcicons/icon_tradequest'
+    elseif iconId == NpcIconCosmetic then
+        path = '/images/game/npcicons/icon_cosmetic'
     end
     return path
 end

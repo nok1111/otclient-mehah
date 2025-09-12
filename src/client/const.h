@@ -268,7 +268,8 @@ namespace Otc
         NpcIconChat,
         NpcIconTrade,
         NpcIconQuest,
-        NpcIconTradeQuest
+        NpcIconTradeQuest,
+        NpcIconCosmetic
     };
 
     enum PlayerStates : uint32_t
