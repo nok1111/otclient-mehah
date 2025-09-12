@@ -165,7 +165,8 @@ SpelllistSettings = {
 
 
 
-
+      'Shield Wall',
+      'Taunt',
       'Minor Heal',
       'Strong Heal',
       'Great Heal',
@@ -176,6 +177,8 @@ SpelllistSettings = {
       'Haste',
       'Levitate',
       'Light',
+
+      
 
      
      
@@ -344,9 +347,13 @@ SpellInfo = {
     ['Falcon Shot'] =               {id = 194, icon_id = 194, words = 'Falcon Shot', exhaustion = 13000, premium = false, type = 'Instant', icon = 194, mana = 120, level = 1, soul = 0, group = {[1] = 1900}, parameter = false, vocations = {10}, description = 'shoots a falcon shot at the target, dealing high damage. [Weapon Damage, DISTANCE]'},
     
     --others
-    ['Minor Heal'] = {id = 200, words = 'minor heal', icon_id = 200, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 200, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
-    ['Strong Heal'] = {id = 201, words = 'strong heal', icon_id = 201, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 201, mana = 65, level = 25, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
-    ['Great Heal'] = {id = 202, words = 'great heal', icon_id = 202, description = 'xxxxxxx', exhaustion = 2000, premium = false, type = 'Instant', icon = 202, mana = 120, level = 50, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Shield Wall'] = {id = 204, words = 'Shield Wall', icon_id = 204, description = 'Increase your defense skill by 30%, requires a shield or offhand to be equiped.', exhaustion = 2000, premium = false, type = 'Instant', icon = 204, mana = 0, level = 1, soul = 0, group = {[2] = 2000}, vocations = {1,5,8,6}},
+    ['Taunt'] = {id = 220, words = 'taunt', icon_id = 220, description = 'Taunt all nearby enemies forcing them to attack you.', exhaustion = 2000, premium = false, type = 'Instant', icon = 220, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+
+
+    ['Minor Heal'] = {id = 200, words = 'minor heal', icon_id = 200, description = 'personal minor heal', exhaustion = 2000, premium = false, type = 'Instant', icon = 200, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Strong Heal'] = {id = 201, words = 'strong heal', icon_id = 201, description = 'personal strong heal', exhaustion = 2000, premium = false, type = 'Instant', icon = 201, mana = 65, level = 25, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Great Heal'] = {id = 202, words = 'great heal', icon_id = 202, description = 'personal great heal', exhaustion = 2000, premium = false, type = 'Instant', icon = 202, mana = 120, level = 50, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
 
     ['Magic Shield'] = {id = 208, words = 'Magic Shield', icon_id = 208, description = 'Creates a protective barrier that absorbs damage.', exhaustion = 2000, premium = false, type = 'Instant', icon = 208, mana = 0, level = 1, soul = 0, group = {[2] = 2000}, vocations = {1,5,8,6}},
     ['Find Person'] = {id = 209, words = 'exiva', icon_id = 209, description = 'Reveals the location of a player.', exhaustion = 1000, premium = false, type = 'Instant', icon = 209, mana = 20, level = 8, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
