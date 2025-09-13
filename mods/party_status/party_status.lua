@@ -207,7 +207,7 @@ function onPartyData(protocol, opcode, buffer)
 end
 
 function init()
-  partyButton = modules.game_mainpanel.addToggleButton('partyStatusButton', 'Party Status', '/images/ui/tibiaCoin.png', toggle, false, 5)
+  partyButton = modules.game_mainpanel.addToggleButton('partyStatusButton', 'Party Status', '/images/options/button_partyshow', toggle, false, 5)
   partyButton:setOn(false)
 
   ProtocolGame.registerExtendedOpcode(PARTY_OPCODE, onPartyData)

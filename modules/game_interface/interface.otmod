@@ -17,7 +17,6 @@ Module
     - game_imbuing
     - game_imbuementtracker
     - game_hotkeys
-    - game_questlog
     - game_textmessage
     - game_console
     - game_actionbar

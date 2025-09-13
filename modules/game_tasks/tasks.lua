@@ -60,19 +60,24 @@ end
 function create()
   if tasksWindow then
     return
-  end             
+  end 
   
-openTasksButton = modules.game_mainpanel.addToggleButton('openTasksButton', tr('Task Window'), '/images/options/ButtonBossSlot', toggleTasksPanel, false, 7)
-openTasksButton:setOn(false)
-trackerButton = modules.game_mainpanel.addToggleButton("trackerButton", tr("Tasks Tracker"), "/images/options/ButtonBossSlot", toggleTracker, false, 8)
-trackerButton:setOn(true)
-trackerWindow = g_ui.loadUI("tasks_tracker", modules.game_interface.getRightPanel())
-trackerWindow.miniwindowScrollBar:mergeStyle({["$!on"] = {}})
+  if not openTasksButton then
+    openTasksButton = modules.game_mainpanel.addStoreButton('openTasksButton', tr('Task Window'), '/images/options/task_large', toggleTasksPanel, false, 3)
+    openTasksButton:setOn(false)
+  end
+
+    trackerButton = modules.game_mainpanel.addToggleButton("trackerButton", tr("Tasks Tracker"), "/images/options/ButtonBossSlot", toggleTracker, false, 8)
+    trackerButton:setOn(false)
+
+  trackerWindow = g_ui.loadUI("tasks_tracker", modules.game_interface.getRightPanel())
+  trackerWindow.miniwindowScrollBar:mergeStyle({["$!on"] = {}})
   trackerWindow:setContentMinimumHeight(120)
   trackerWindow:setup()
 
   tasksWindow = g_ui.displayUI("tasks")
   tasksWindow:hide()
+  
 end
 
 function toggleTasksPanel()
@@ -93,6 +98,8 @@ function destroy()
 
     tasksWindow:destroy()
     tasksWindow = nil
+    openTasksButton:destroy()
+    openTasksButton = nil
   end
 
   config = {}

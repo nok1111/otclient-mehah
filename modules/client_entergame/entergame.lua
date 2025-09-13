@@ -571,7 +571,7 @@ function EnterGame.tryHttpLogin(clientVersion, httpLogin)
             loadBox = nil
         end
 
-        local errorBox = displayErrorBox(tr("Login Error"), string.format("Things are not loaded, please put assets in things/%d/<assets>.", clientVersion))
+        local errorBox = displayErrorBox(tr("Login Error"), string.format("Please restart the client to load changes"))
         connect(errorBox, {
             onOk = EnterGame.show
         })
@@ -745,7 +745,7 @@ function EnterGame.doLogin()
                 loadBox = nil
             end
 
-            local errorBox = displayErrorBox(tr("Login Error"), string.format("Things are not loaded, please put spr and dat in things/%d/<here>.", clientVersion))
+            local errorBox = displayErrorBox(tr("Login Error"), string.format("Please restart the client to load changes"))
             connect(errorBox, {
                onOk = EnterGame.show
             })

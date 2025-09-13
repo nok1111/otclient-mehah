@@ -3,6 +3,18 @@ local focusedMob = 0
 
 local monstrosIncluidos = {
     "Lucella",
+    "Saranor",
+    "Vael the Betrayer",
+    "Malrith, the Hungering Shade",
+    "Garnak the Warlord",
+    "Bloomheart",
+    "Fungal Sentinel",
+    "Saranel",
+    "Glorgg the Shell Tyrant",
+    "Gor'mhaz the Old",
+    "Gruma Stormash",
+    "Sarandel, The Old Ash",
+    "Fire Watcher",
     "Azure [2]",
     "Azure [3]",
 }

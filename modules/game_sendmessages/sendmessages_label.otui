@@ -1,0 +1,10 @@
+sendMessagesLabel < Label
+  size: 600 80
+  color: white
+  background-color: #000000a0
+  font: verdana-14px
+  text-align: center
+  text-wrap: true
+  focusable: false
+  phantom: true
+  modal: false

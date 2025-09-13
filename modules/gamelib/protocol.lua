@@ -23,7 +23,7 @@ GameServerOpcodes = {
     GameServerOpenCrafting  = 57, --54
     GameServerJobs  = 60,
     GameServerUpdateFame  = 61,
-    GameServerOpenFameShop  = 55,
+    GameServerOpenFameShop  = 88,
 
     -- original tibia ONLY
     GameServerPassiveCooldown = 94,

@@ -1,8 +1,23 @@
+sendMessagesLabel < Label
+  padding: 10
+  max-width: 600
+  color: white
+  background-color: #000000a0
+  font: verdana-14px
+  text-align: center
+  text-wrap: true
+  text-auto-resize: true
+  focusable: false
+  phantom: true
+  modal: false
+
 HeadlessWindow
   id: sendMessages
   size: 600 300
   padding: 3
   image-source: /images/ui/miniwindow
+  focusable: false
+  draggable: false
   --@onClick: modules.game_sendmessages.closeWindow()
 
   Button

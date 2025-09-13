@@ -65,6 +65,7 @@ function terminate()
     })
     if spellAssignWindow then
         closeSpellAssignWindow()
+        
     end
     if objectAssignWindow then
         closeObjectAssignWindow()
@@ -74,6 +75,7 @@ function terminate()
     end
     if editHotkeyWindow then
         closeEditHotkeyWindow()
+        
     end
     if spellsPanel then
         disconnect(spellsPanel, {
@@ -210,6 +212,10 @@ function setupActionBar()
     end
 end
 
+function focusRootPanel()
+    modules.game_interface.getRootPanel():focus()
+end
+
 function createMenu(slotId)
     local menu = g_ui.createWidget('PopupMenu')
     slotToEdit = slotId
@@ -225,12 +231,14 @@ function createMenu(slotId)
     end)
     menu:addOption('Edit Hotkey', function()
         openEditHotkeyWindow()
+        
     end)
     local actionSlot = actionBarPanel:recursiveGetChildById(slotToEdit)
     if actionSlot.itemId or actionSlot.words or actionSlot.text or actionSlot.useType or actionSlot.hotkey then
         menu:addOption('Clear Slot', function()
             clearSlot()
             clearHotkey()
+            focusRootPanel()
         end)
     end
     menu:display()
@@ -347,6 +355,7 @@ function spellAssignAccept()
     end
     closeSpellAssignWindow()
     setupHotkeys()
+    focusRootPanel()
 end
 
 function clearSlot()
@@ -422,8 +431,17 @@ function textAssignAccept()
     if spellName then
         iconId = tonumber(Spells.getClientId(spellName))
         clearSlot()
-        slot:setImageSource(Spells.getIconFileByProfile(profile))
-        slot:setImageClip(Spells.getImageClip(iconId, profile))
+        slot:setImageSource(Spells.getIconId(iconId, profile))
+
+
+     
+
+    
+        
+
+
+
+        
         slot.words = spell.words
         slot.itemId = 469
         slot:setItemId(469)
@@ -449,6 +467,7 @@ function textAssignAccept()
         setupHotkeys()
     end
     closeTextAssignWindow()
+    focusRootPanel()
 end
 
 function openObjectAssignWindow()
@@ -509,6 +528,7 @@ function objectAssignAccept()
     end
     setupHotkeys()
     closeObjectAssignWindow()
+    focusRootPanel()
 end
 
 function onChooseItemMouseRelease(self, mousePosition, mouseButton)
@@ -812,6 +832,7 @@ function hotkeyCaptureOk(assignWindow, keyCombo)
     setupHotkeys()
     if assignWindow == editHotkeyWindow then
         closeEditHotkeyWindow()
+        focusRootPanel()
         return
     end
     assignWindow:destroy()

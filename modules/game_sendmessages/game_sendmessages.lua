@@ -21,6 +21,7 @@ function init()
     -- LOAD THE UI's
     messageWindow = g_ui.displayUI('game_sendmessages')
     centerMessage = g_ui.displayUI('game_centermessage')
+    
     -- HIDE THE UI's
     messageWindow:hide()
     messageWindow:setVisible(false)
@@ -32,6 +33,8 @@ function init()
 	centerMessage:setParent( modules.game_interface.gameMapPanel)
 	centerMessage:addAnchor(AnchorHorizontalCenter, 'parent', AnchorHorizontalCenter)
 	centerMessage:addAnchor(AnchorTop, 'parent', AnchorTop)
+
+
     -- define our HOTKEY to SHOW/HIDE
     --g_keyboard.bindKeyPress('Ctrl+J', toggle)
     g_keyboard.bindKeyPress('Ctrl+H', toggle2)    
@@ -86,12 +89,23 @@ end
 
 function sendCentreMessage(protocol, opcode, buffer)
     buffer = tostring(buffer)
-    local function removeMessage()
-        g_effects.fadeOut(centerMessage, 1500)
+    showLabelMessage(buffer)
+end
+
+function showLabelMessage(str)
+    if not sendMessagesLabel then
+        sendMessagesLabel = g_ui.createWidget('sendMessagesLabel', modules.game_interface.getRootPanel())
+        sendMessagesLabel:hide()
     end
-    addslowmotionitemevent = scheduleEvent(removeMessage, 5000)
-    sendMessageNow(buffer)    
-    g_effects.fadeIn(centerMessage, 1500)
+
+    sendMessagesLabel:setParent( modules.game_interface.gameMapPanel)
+    sendMessagesLabel:addAnchor(AnchorHorizontalCenter, 'parent', AnchorHorizontalCenter)
+    sendMessagesLabel:addAnchor(AnchorTop, 'parent', AnchorTop)
+    sendMessagesLabel:setText(str)
+    sendMessagesLabel:show()
+    scheduleEvent(function()
+        sendMessagesLabel:hide()
+    end, 4000)
 end
 
 function sendMessageWindows(protocol, opcode, buffer)
@@ -120,8 +134,9 @@ function sendWindowNow(str)
     local msg_picture = messageWindow:recursiveGetChildById('messagePicture')    
     msg_picture:setImageSource(cfg[3])  
     messageWindow:show()
-	messageWindow:focus()
+	--messageWindow:focus()
 	--messageWindow:grabMouse()
+    
 end
 
 function closeWindow()
