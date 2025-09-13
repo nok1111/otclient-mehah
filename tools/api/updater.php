@@ -1,15 +1,15 @@
 <?php
 // CONFIG
-$files_dir = "C:/UniServerZ/www/files"; // Directory where the files are located
-$files_url = "http://localhost/files"; // Url where the client will download the files
+$files_dir = "/var/www/html/files"; // Directory where the files are located
+$files_url = "http://23.191.72.22/files"; // Url where the client will download the files
 $files_and_dirs = array("init.lua", "data", "modules", "mods");
 $checksum_file = "checksums.txt";
 $checksum_update_interval = 60; // seconds
 $binaries = array(
-    "WIN32-WGL" => "otclient_x64.exe",
-    "WIN32-EGL" => "otclient_x64.exe",
-    "WIN32-WGL-GCC" => "otclient_x64.exe",
-    "WIN32-EGL-GCC" => "otclient_x64.exe",
+    "WIN32-WGL" => "otclient_dx_x64.exe",
+    "WIN32-EGL" => "otclient_dx_x64.exe",
+    "WIN32-WGL-GCC" => "otclient_dx_x64.exe",
+    "WIN32-EGL-GCC" => "otclient_dx_x64.exe",
     "X11-GLX" => "otclient_linux",
     "X11-EGL" => "otclient_linux",
     "ANDROID-EGL" => "", // we can't update android binary
