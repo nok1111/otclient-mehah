@@ -3,10 +3,10 @@
 
 -- updater
 Services = {
-    updater = "http://23.191.72.22/api/updater.php", --./updater
-    status = "http://23.191.72.22/login.php", --./client_entergame | ./client_topmenu
-    websites = "http://23.191.72.22/?subtopic=accountmanagement", --./client_entergame "Forgot password and/or email"
-    createAccount = "http://23.191.72.22/clientcreateaccount.php", --./client_entergame -- createAccount.lua
+   -- updater = "http://23.191.72.22/api/updater.php", --./updater
+    --status = "http://23.191.72.22/login.php", --./client_entergame | ./client_topmenu
+   --websites = "http://23.191.72.22/?subtopic=accountmanagement", --./client_entergame "Forgot password and/or email"
+   -- createAccount = "http://23.191.72.22/clientcreateaccount.php", --./client_entergame -- createAccount.lua
 }
 
 --[[
