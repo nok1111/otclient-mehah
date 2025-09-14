@@ -7,7 +7,7 @@ MapTravel.devMode = false
 
 MapTravel.mapScale = 0.65 -- because original map image is too large (this scale also scales labels and where they should be placed)
 MapTravel.mapDirectory = "images/worldmap"
-MapTravel.mapFilledDirectory = "images/worldmapFilled" -- can be used in devMode to refrence where nodes should be placed  (to display already label filled map underneath non labeled map)
+MapTravel.mapFilledDirectory = "images/worldmap" -- can be used in devMode to refrence where nodes should be placed  (to display already label filled map underneath non labeled map)
 
 
 MapTravel_OPCODE = 214
@@ -60,8 +60,8 @@ MapTravel.mapNodesConfig = {
 		displayName = "Galestra City",
 		nameId = "galestra",
 		discoverable = false,
-		modulePos = {marginTop = 410, marginLeft = 5},
-		serverPos = {124, 776, 0},
+		modulePos = {marginTop = 620, marginLeft = 100},
+		serverPos = {227, 703, 6},
 		premium = false,
 		cost = {
 			gold = 0,
@@ -71,8 +71,8 @@ MapTravel.mapNodesConfig = {
 		displayName = "Garona",
 		nameId = "garona",
 		discoverable = false,
-		modulePos = {marginTop = 575, marginLeft = 95.5},
-		serverPos = {31921, 32072, 6},
+		modulePos = {marginTop = 665, marginLeft = 160},
+		serverPos = {302, 746, 7},
 		premium = false,
 		cost = {
 			gold = 300,
@@ -82,7 +82,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Vendel Pass",
 		nameId = "vendel",
 		discoverable = false,
-		modulePos = {marginTop = 700, marginLeft = 190},
+		modulePos = {marginTop = 750, marginLeft = 300},
 		serverPos = {442, 858, 7},
 		premium = false,
 		cost = {
@@ -93,7 +93,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Greith Keep",
 		nameId = "greith",
 		discoverable = false,
-		modulePos = {marginTop = 625, marginLeft = 530.5},
+		modulePos = {marginTop = 698, marginLeft = 665.5},
 		serverPos = {813, 795, 7},
 		premium = false,
 		cost = {
@@ -104,7 +104,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Ziill Keep",
 		nameId = "ziill",
 		discoverable = false,
-		modulePos = {marginTop = 802.5, marginLeft = 510.5},
+		modulePos = {marginTop = 840.5, marginLeft = 552.5},
 		serverPos = {692, 924, 7},
 		premium = false,
 		cost = {
