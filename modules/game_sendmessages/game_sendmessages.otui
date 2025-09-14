@@ -1,6 +1,7 @@
 sendMessagesLabel < Label
   padding: 10
-  max-width: 600
+  width: 600
+  height: 150
   color: white
   background-color: #000000a0
   font: verdana-14px

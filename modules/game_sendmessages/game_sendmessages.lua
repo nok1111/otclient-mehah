@@ -105,7 +105,7 @@ function showLabelMessage(str)
     sendMessagesLabel:show()
     scheduleEvent(function()
         sendMessagesLabel:hide()
-    end, 4000)
+    end, 10000)
 end
 
 function sendMessageWindows(protocol, opcode, buffer)
