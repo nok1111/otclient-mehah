@@ -40,7 +40,6 @@ function init()
     if g_game.isOnline() then
 
         addEvent(function()
-            online()
             setupActionBar()
             loadActionBar()
         end)

@@ -187,8 +187,6 @@ protected:
         std::function<void()> action{ nullptr };
         Color color{ Color::white };
         TexturePtr texture;
-        uint32_t textureId{ 0 };
-        uint16_t textureMatrixId{ 0 };
         size_t hash{ 0 };
 
         bool operator==(const PoolState& s2) const { return hash == s2.hash; }
@@ -303,27 +301,18 @@ private:
         m_objectsDraw.clear();
 
         if (flush) {
-            if (!m_objectsFlushed.empty()) {
-                if (m_objectsDraw.size() < m_objectsFlushed.size())
-                    m_objectsDraw.swap(m_objectsFlushed);
-
-                if (!m_objectsFlushed.empty())
-                    m_objectsDraw.insert(m_objectsDraw.end(), make_move_iterator(m_objectsFlushed.begin()), make_move_iterator(m_objectsFlushed.end()));
-            }
+            if (!m_objectsFlushed.empty())
+                m_objectsDraw.insert(m_objectsDraw.end(), make_move_iterator(m_objectsFlushed.begin()), make_move_iterator(m_objectsFlushed.end()));
 
             for (auto& objs : m_objects) {
-                if (m_objectsDraw.size() < objs.size())
-                    m_objectsDraw.swap(objs);
-
-                if (!objs.empty()) {
-                    m_objectsDraw.insert(m_objectsDraw.end(), make_move_iterator(objs.begin()), make_move_iterator(objs.end()));
-                    objs.clear();
-                }
+                m_objectsDraw.insert(m_objectsDraw.end(), make_move_iterator(objs.begin()), make_move_iterator(objs.end()));
+                objs.clear();
             }
         }
-
         m_objectsFlushed.clear();
-        std::swap(m_coordsCache[0], m_coordsCache[1]);
+
+        std::swap(m_coordsCache[0].coords, m_coordsCache[1].coords);
+        m_coordsCache[1].last = m_coordsCache[0].last;
     }
 
     void resetOnlyOnceParameters() {

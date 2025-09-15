@@ -22,33 +22,32 @@
 
 #pragma once
 
-#include "texture.h"
-#include <framework/core/declarations.h>
+#include "declarations.h"
 
-class TextureManager
+class HardwareBuffer
 {
 public:
-    void init();
-    void terminate();
-    void poll();
+    enum class Type
+    {
+        VERTEX_BUFFER = GL_ARRAY_BUFFER,
+        INDEX_BUFFER = GL_ELEMENT_ARRAY_BUFFER
+    };
 
-    void clearCache();
-    void liveReload();
+    enum class UsagePattern
+    {
+        STREAM_DRAW = GL_STREAM_DRAW,
+        STATIC_DRAW = GL_STATIC_DRAW,
+        DYNAMIC_DRAW = GL_DYNAMIC_DRAW
+    };
 
-    void preload(const std::string& fileName, const bool smooth = true) { getTexture(fileName, smooth); }
-    TexturePtr getTexture(const std::string& fileName, bool smooth = true);
-    const TexturePtr& getEmptyTexture() { return m_emptyTexture; }
-    TexturePtr loadTexture(std::stringstream& file);
-    void loadTextureTransparentPixels(const std::string& fileName);
+    HardwareBuffer(Type type);
+    ~HardwareBuffer();
+
+    void bind() const { glBindBuffer(static_cast<GLenum>(m_type), m_id); }
+    static void unbind(Type type) { glBindBuffer(static_cast<GLenum>(type), 0); }
+    void write(const void* data, const int count, UsagePattern usage) const { glBufferData(static_cast<GLenum>(m_type), count, data, static_cast<GLenum>(usage)); }
 
 private:
-    std::unordered_map<std::string, TexturePtr> m_textures;
-    std::vector<AnimatedTexturePtr> m_animatedTextures;
-    TexturePtr m_emptyTexture;
-    ScheduledEventPtr m_liveReloadEvent;
-    std::shared_mutex m_mutex;
-
-    friend class GarbageCollection;
+    Type m_type;
+    uint32_t m_id;
 };
-
-extern TextureManager g_textures;

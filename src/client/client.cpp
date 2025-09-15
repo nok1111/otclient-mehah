@@ -70,12 +70,8 @@ void Client::terminate()
 
 void Client::preLoad() {
     if (m_mapWidget) {
-        if (m_mapWidget->isDestroyed())
-            m_mapWidget = nullptr;
-        else {
-            m_mapWidget->updateMapRect();
-            m_mapWidget->getMapView()->preLoad();
-        }
+        m_mapWidget->updateMapRect();
+        m_mapWidget->getMapView()->preLoad();
     }
 }
 
@@ -85,8 +81,7 @@ void Client::draw(const DrawPoolType type)
         m_mapWidget = nullptr;
         return;
     }
-    if (m_mapWidget && m_mapWidget->isDestroyed())
-        m_mapWidget = nullptr;
+
     if (type == DrawPoolType::MAP && !m_mapWidget)
         m_mapWidget = g_ui.getRootWidget()->recursiveGetChildById("gameMapPanel")->static_self_cast<UIMap>();
 

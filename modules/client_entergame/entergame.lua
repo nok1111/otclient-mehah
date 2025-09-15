@@ -318,19 +318,17 @@ function EnterGame.postCacheInfo()
             return
         end
 
-        local jsonString = message:match("{.*}")
-        if not jsonString then
-            reportRequestWarning(requestType, "Invalid JSON response format")
+        local _, bodyStart = message:find('{')
+        local _, bodyEnd = message:find('.*}')
+        if not bodyStart or not bodyEnd then
+            -- onError(nil, 'Bad Request.Game_entergame postCacheInfo2', 400)
+            reportRequestWarning(requestType, "Bad Request.Game_entergame postCacheInfo2")
             return
         end
 
-        local success, response = pcall(function() return json.decode(jsonString) end)
-        if not success or not response then
-            reportRequestWarning(requestType, "Failed to parse JSON response")
-            return
-        end
-
+        local response = json.decode(message:sub(bodyStart, bodyEnd))
         if response.errorMessage then
+            -- onError(nil, response.errorMessage, response.errorCode)
             reportRequestWarning(requestType, response.errorMessage, response.errorCode)
             return
         end
@@ -357,18 +355,12 @@ function EnterGame.postEventScheduler()
             return
         end
 
-        local jsonString = message:match("{.*}")
-        if not jsonString then
-            reportRequestWarning(requestType, "Invalid JSON response format")
-            return
-        end
+        local bodyStart, _ = message:find('{')
+        local _, bodyEnd = message:find('%}%b{}')
 
-        local success, response = pcall(function() return json.decode(jsonString) end)
-        if not success or not response then
-            reportRequestWarning(requestType, "Failed to parse JSON response")
-            return
-        end
+        local jsonString = message:sub(bodyStart, bodyEnd)
 
+        local response = json.decode(jsonString)
         if response.errorMessage then
             reportRequestWarning(requestType, response.errorMessage, response.errorCode)
             return
@@ -390,18 +382,14 @@ function EnterGame.postShowOff()
             return
         end
 
-        local jsonString = message:match("{.*}")
-        if not jsonString then
-            reportRequestWarning(requestType, "Invalid JSON response format")
+        local _, bodyStart = message:find('{')
+        local _, bodyEnd = message:find('.*}')
+        if not bodyStart or not bodyEnd then
+            reportRequestWarning(requestType, "Bad Request.Game_entergame postShowOff")
             return
         end
 
-        local success, response = pcall(function() return json.decode(jsonString) end)
-        if not success or not response then
-            reportRequestWarning(requestType, "Failed to parse JSON response")
-            return
-        end
-
+        local response = json.decode(message:sub(bodyStart, bodyEnd))
         if response.errorMessage then
             reportRequestWarning(requestType, response.errorMessage, response.errorCode)
             return
@@ -424,19 +412,17 @@ function EnterGame.postShowCreatureBoost()
             return
         end
 
-        local jsonString = message:match("{.*}")
-        if not jsonString then
-            reportRequestWarning(requestType, "Invalid JSON response format")
+        local _, bodyStart = message:find('{')
+        local _, bodyEnd = message:find('.*}')
+        if not bodyStart or not bodyEnd then
+            -- onError(nil, 'Bad Request. 2 Game_entergame postShowCreatureBoost', 400)
+            reportRequestWarning(requestType, "Bad Request.Game_entergame postShowCreatureBoost2")
             return
         end
 
-        local success, response = pcall(function() return json.decode(jsonString) end)
-        if not success or not response then
-            reportRequestWarning(requestType, "Failed to parse JSON response")
-            return
-        end
-
+        local response = json.decode(message:sub(bodyStart, bodyEnd))
         if response.errorMessage then
+            -- onError(nil, response.errorMessage, response.errorCode)
             reportRequestWarning(requestType, response.errorMessage, response.errorCode)
             return
         end

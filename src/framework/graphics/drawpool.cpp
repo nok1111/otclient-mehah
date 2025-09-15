@@ -177,16 +177,9 @@ bool DrawPool::updateHash(const DrawMethod& method, const TexturePtr& texture, c
 DrawPool::PoolState DrawPool::getState(const TexturePtr& texture, const Color& color)
 {
     PoolState copy = getCurrentState();
-    if (copy.color != color) copy.color = color;
-    if (texture) {
-        if (texture->isEmpty()) {
-            copy.texture = texture;
-        } else {
-            copy.textureId = texture->getId();
-            copy.textureMatrixId = texture->getTransformMatrixId();
-        }
-    }
-
+    copy.texture = texture;
+    if (copy.color != color)
+        copy.color = color;
     return copy;
 }
 
@@ -329,11 +322,8 @@ void DrawPool::PoolState::execute() const {
     g_painter->setShaderProgram(shaderProgram);
     g_painter->setTransformMatrix(transformMatrix);
     if (action) action();
-    if (texture) {
-        texture->create();
-        g_painter->setTexture(texture->getId(), texture->getTransformMatrixId());
-    } else
-        g_painter->setTexture(textureId, textureMatrixId);
+    if (texture)
+        g_painter->setTexture(texture->create());
 }
 
 void DrawPool::setFramebuffer(const Size& size) {

@@ -747,7 +747,8 @@ void UIWidget::updateLayout()
     if (isDestroyed())
         return;
 
-    deferLayoutUpdate();
+    if (m_layout)
+        m_layout->update();
 
     // children can affect the parent layout
     if (const auto& parent = getParent()) {
@@ -1016,7 +1017,8 @@ void UIWidget::setLayout(const UILayoutPtr& layout)
     if (!layout)
         throw Exception("attempt to set a nil layout to a widget");
 
-    deferLayoutUpdate();
+    if (m_layout)
+        m_layout->disableUpdates();
 
     layout->setParent(static_self_cast<UIWidget>());
     layout->disableUpdates();
@@ -1028,7 +1030,9 @@ void UIWidget::setLayout(const UILayoutPtr& layout)
     }
 
     if (m_layout) {
+        m_layout->enableUpdates();
         m_layout->setParent(nullptr);
+        m_layout->update();
     }
 
     layout->enableUpdates();
@@ -1206,7 +1210,8 @@ void UIWidget::setAutoFocusPolicy(const Fw::AutoFocusPolicy policy)
 void UIWidget::setVirtualOffset(const Point& offset)
 {
     m_virtualOffset = offset;
-    deferLayoutUpdate();
+    if (m_layout)
+        m_layout->update();
 }
 
 bool UIWidget::isAnchored()
@@ -1285,40 +1290,6 @@ UIAnchorLayoutPtr UIWidget::getAnchoredLayout()
         return layout->static_self_cast<UIAnchorLayout>();
 
     return nullptr;
-}
-
-UIAnchorList UIWidget::getAnchorsGroup() {
-    if (const auto& layout = getAnchoredLayout()) {
-        const auto& self = static_self_cast<UIWidget>();
-        if (layout->hasAnchors(self)) {
-            const auto& anchors = layout->getAnchorsGroup()[self]->getAnchors();
-            return anchors;
-        }
-    }
-
-    return {};
-}
-
-std::vector<Fw::AnchorEdge> UIWidget::getAnchors() {
-    const auto& anchors = getAnchorsGroup();
-    std::vector<Fw::AnchorEdge> anchorsVec;
-    anchorsVec.reserve(anchors.size());
-    for (const auto& anchor : anchors) {
-        anchorsVec.emplace_back(anchor->getAnchoredEdge());
-    }
-
-    return anchorsVec;
-}
-
-Fw::AnchorEdge UIWidget::getAnchorType(Fw::AnchorEdge anchorType) {
-    const auto& anchors = getAnchorsGroup();
-    for (const auto& anchor : anchors) {
-        if (anchor->getAnchoredEdge() == anchorType) {
-            return anchor->getHookedEdge();
-        }
-    }
-
-    return Fw::AnchorNone;
 }
 
 UIWidgetPtr UIWidget::getRootParent()
@@ -2047,18 +2018,18 @@ void UIWidget::setShader(const std::string_view name) {
 
 void UIWidget::repaint() { g_drawPool.repaint(DrawPoolType::FOREGROUND); }
 
-void UIWidget::deferLayoutUpdate() {
-    if (hasProp(PropDeferLayoutUpdate) || !m_layout)
+void UIWidget::disableUpdateTemporarily() {
+    if (hasProp(PropDisableUpdateTemporarily) || !m_layout)
         return;
 
-    setProp(PropDeferLayoutUpdate, true);
+    setProp(PropDisableUpdateTemporarily, true);
     m_layout->disableUpdates();
     g_dispatcher.deferEvent([self = static_self_cast<UIWidget>()] {
         if (self->m_layout) {
             self->m_layout->enableUpdates();
             self->m_layout->update();
         }
-        self->setProp(PropDeferLayoutUpdate, false);
+        self->setProp(PropDisableUpdateTemporarily, false);
     });
 }
 void UIWidget::addOnDestroyCallback(const std::string& id, const std::function<void()>&& callback)

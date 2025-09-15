@@ -20,35 +20,26 @@
  * THE SOFTWARE.
  */
 
-#pragma once
+#include "hardwarebuffer.h"
+#include "graphics.h"
 
-#include "texture.h"
-#include <framework/core/declarations.h>
+#include <framework/core/application.h>
+#include <framework/core/logger.h>
 
-class TextureManager
+#include "framework/core/graphicalapplication.h"
+
+HardwareBuffer::HardwareBuffer(const Type type) :m_type(type)
 {
-public:
-    void init();
-    void terminate();
-    void poll();
+    glGenBuffers(1, &m_id);
+    if (!m_id)
+        g_logger.fatal("Unable to create hardware buffer.");
+}
 
-    void clearCache();
-    void liveReload();
-
-    void preload(const std::string& fileName, const bool smooth = true) { getTexture(fileName, smooth); }
-    TexturePtr getTexture(const std::string& fileName, bool smooth = true);
-    const TexturePtr& getEmptyTexture() { return m_emptyTexture; }
-    TexturePtr loadTexture(std::stringstream& file);
-    void loadTextureTransparentPixels(const std::string& fileName);
-
-private:
-    std::unordered_map<std::string, TexturePtr> m_textures;
-    std::vector<AnimatedTexturePtr> m_animatedTextures;
-    TexturePtr m_emptyTexture;
-    ScheduledEventPtr m_liveReloadEvent;
-    std::shared_mutex m_mutex;
-
-    friend class GarbageCollection;
-};
-
-extern TextureManager g_textures;
+HardwareBuffer::~HardwareBuffer()
+{
+#ifndef NDEBUG
+    assert(!g_app.isTerminated());
+#endif
+    if (g_graphics.ok())
+        glDeleteBuffers(1, &m_id);
+}

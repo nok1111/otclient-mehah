@@ -374,6 +374,7 @@ if (TOGGLE_FRAMEWORK_GRAPHICS)
 		framework/graphics/fontmanager.cpp
 		framework/graphics/framebuffer.cpp
 		framework/graphics/graphics.cpp
+		framework/graphics/hardwarebuffer.cpp
 		framework/graphics/image.cpp
 		framework/graphics/painter.cpp
 		framework/graphics/paintershaderprogram.cpp

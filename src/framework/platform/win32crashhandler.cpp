@@ -157,7 +157,7 @@ LONG CALLBACK ExceptionHandler(const LPEXCEPTION_POINTERS e)
         reinterpret_cast<std::uintptr_t>(e->ExceptionRecord->ExceptionAddress)
     );
 
-    std::stringstream oss;
+    std::ostringstream oss;
     oss << crashReport;
     Stacktrace(e, oss);
     oss << "\n";
