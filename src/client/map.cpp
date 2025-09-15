@@ -1244,7 +1244,6 @@ void Map::updateAttachedWidgets(const MapViewPtr& mapView)
         const auto& widgetRect = widget->getRect();
         const auto& newWidgetRect = Rect(p, widgetRect.width(), widgetRect.height());
 
-        widget->disableUpdateTemporarily();
         widget->setRect(newWidgetRect);
     }
 }
@@ -1429,7 +1428,7 @@ std::vector<CreaturePtr> Map::getSpectatorsByPattern(const Position& centerPos, 
                 if (width == 0)
                     width = lineLength;
                 if (width != lineLength) {
-                    g_logger.error(stdext::format("Invalid pattern for getSpectatorsByPattern: %s", pattern));
+                    g_logger.error("Invalid pattern for getSpectatorsByPattern: {}", pattern);
                     return creatures;
                 }
                 height += 1;
@@ -1441,13 +1440,13 @@ std::vector<CreaturePtr> Map::getSpectatorsByPattern(const Position& centerPos, 
         if (width == 0)
             width = lineLength;
         if (width != lineLength) {
-            g_logger.error(stdext::format("Invalid pattern for getSpectatorsByPattern: %s", pattern));
+            g_logger.error("Invalid pattern for getSpectatorsByPattern: {}", pattern);
             return creatures;
         }
         height += 1;
     }
     if (width % 2 != 1 || height % 2 != 1) {
-        g_logger.error(stdext::format("Invalid pattern for getSpectatorsByPattern, width and height should be odd (height: %i width: %i)", height, width));
+        g_logger.error("Invalid pattern for getSpectatorsByPattern, width and height should be odd (height: %i width: %i)", height, width);
         return creatures;
     }
 
