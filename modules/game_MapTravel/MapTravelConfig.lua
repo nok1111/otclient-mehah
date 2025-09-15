@@ -31,7 +31,7 @@ MapTravel.mapNodesConfig = {
 		serverPos = {432, 335, 7},
 		premium = true,
 		cost = {
-			gold = 300,
+			gold = 20,
 		},
 	},
 	[2] = {
@@ -42,7 +42,7 @@ MapTravel.mapNodesConfig = {
 		serverPos = {908, 456, 5},
 		premium = false,
 		cost = {
-			gold = 300,
+			gold = 20,
 		},
 	},
 	[3] = {
@@ -53,7 +53,7 @@ MapTravel.mapNodesConfig = {
 		serverPos = {1106, 419, 7},
 		premium = true,
 		cost = {
-			gold = 300,
+			gold = 20,
 		},
 	},
 	[4] = {
@@ -75,7 +75,7 @@ MapTravel.mapNodesConfig = {
 		serverPos = {302, 746, 7},
 		premium = false,
 		cost = {
-			gold = 300,
+			gold = 20,
 		},
 	},
 	[6] = {
@@ -86,7 +86,7 @@ MapTravel.mapNodesConfig = {
 		serverPos = {442, 858, 7},
 		premium = false,
 		cost = {
-			gold = 300,
+			gold = 20,
 		},
 	},
 	[7] = {
@@ -97,7 +97,7 @@ MapTravel.mapNodesConfig = {
 		serverPos = {813, 795, 7},
 		premium = false,
 		cost = {
-			gold = 300,
+			gold = 20,
 		},
 	},
 	[8] = {
@@ -108,7 +108,7 @@ MapTravel.mapNodesConfig = {
 		serverPos = {692, 924, 7},
 		premium = false,
 		cost = {
-			gold = 300,
+			gold = 20,
 		},
 	},
 	[9] = {
@@ -119,7 +119,7 @@ MapTravel.mapNodesConfig = {
 		serverPos = {33177, 31764, 6},
 		premium = false,
 		cost = {
-			gold = 300,
+			gold = 20,
 		},
 	},
 	[10] = {
@@ -131,7 +131,7 @@ MapTravel.mapNodesConfig = {
 		premium = false,
 		--storagesReqs = {{id = 50002, value = 1, name = "Path to Garona"}},
 		cost = {
-			gold = 300,
+			gold = 20,
 		},
 	},
 	[11] = {
@@ -142,7 +142,7 @@ MapTravel.mapNodesConfig = {
 		serverPos = {959, 1198, 6},
 		premium = true,
 		cost = {
-			gold = 300,
+			gold = 20,
 		},
 	},
 	[12] = {
@@ -153,7 +153,7 @@ MapTravel.mapNodesConfig = {
 		serverPos = {32008, 32443, 6},
 		premium = true,
 		cost = {
-			gold = 300,
+			gold = 20,
 		},
 	},
 
