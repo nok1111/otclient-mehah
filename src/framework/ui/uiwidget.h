@@ -72,7 +72,7 @@ enum FlagProp : uint32_t
     PropImageAutoResize = 1 << 22,
     PropImageIndividualAnimation = 1 << 23,
     PropUpdateChildrenIndexStates = 1 << 24,
-    PropDisableUpdateTemporarily = 1 << 25,
+    PropDeferLayoutUpdate = 1 << 25,
     PropOnHTML = 1 << 26
 };
 
@@ -189,6 +189,9 @@ public:
     Rect getMarginRect();
     Rect getChildrenRect();
     UIAnchorLayoutPtr getAnchoredLayout();
+    UIAnchorList getAnchorsGroup();
+    std::vector<Fw::AnchorEdge> getAnchors();
+    Fw::AnchorEdge getAnchorType(Fw::AnchorEdge anchorType);
     bool hasAnchoredLayout() { return getAnchoredLayout() != nullptr; }
     UIWidgetPtr getRootParent();
     UIWidgetPtr getNextWidget() {
@@ -223,7 +226,6 @@ public:
     void setProp(FlagProp prop, bool v, bool callEvent = false);
     bool hasProp(const FlagProp prop) { return (m_flagsProp & prop); }
 
-    void disableUpdateTemporarily();
     void addOnDestroyCallback(const std::string& id, const std::function<void()>&& callback);
     void removeOnDestroyCallback(const std::string&);
 
@@ -234,6 +236,8 @@ public:
     void setBorderDrawOrder(const uint8_t order) { m_borderDrawConductor.order = std::min<uint8_t>(order, LAST - 1); }
 
 private:
+    void deferLayoutUpdate();
+
     uint32_t m_flagsProp{ 0 };
     PainterShaderProgramPtr m_shader;
 
