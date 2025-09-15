@@ -2075,3 +2075,28 @@ void UIWidget::removeOnDestroyCallback(const std::string& id)
     if (it != m_onDestroyCallbacks.end())
         m_onDestroyCallbacks.erase(it);
 }
+
+void UIWidget::setPixelTesting(bool pixelTest)
+{
+    if (m_pixelTest == pixelTest)
+        return;
+
+    m_pixelTest = pixelTest;
+}
+
+bool UIWidget::isPixelTransparent(const Point& mousePos)
+{
+    if (!m_imageTexture || m_imageTexture->isEmpty()) {
+        return true;
+    }
+
+    if (!m_imageTexture->hasTransparentPixels()) {
+        g_textures.loadTextureTransparentPixels(m_imageSource);
+    }
+
+    int x = mousePos.x - m_rect.x();
+    int y = mousePos.y - m_rect.y();
+
+    uint32_t index = (y * m_imageTexture->getWidth() + x);
+    return m_imageTexture->isPixelTransparent(index);
+}
