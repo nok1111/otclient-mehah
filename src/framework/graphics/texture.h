@@ -33,7 +33,7 @@ public:
     Texture(const ImagePtr& image, bool buildMipmaps = false, bool compress = false);
     virtual ~Texture();
 
-    virtual void create();
+    virtual Texture* create();
     void uploadPixels(const ImagePtr& image, bool buildMipmaps = false, bool compress = false);
     void updateImage(const ImagePtr& image);
     void updatePixels(uint8_t* pixels, int level = 0, int channels = 4, bool compress = false);
@@ -46,7 +46,7 @@ public:
     void setTime(const ticks_t time) { m_time = time; }
 
     const Size& getSize() const { return m_size; }
-    auto getTransformMatrixId() const { return m_transformMatrixId; }
+    const Matrix3& getTransformMatrix() const { return m_transformMatrix; }
 
     ticks_t getTime() const { return m_time; }
     uint32_t getId() const { return m_id; }
@@ -88,7 +88,7 @@ protected:
     Size m_size;
     Timer m_lastTimeUsage;
 
-    uint16_t m_transformMatrixId{ 0 };
+    Matrix3 m_transformMatrix = DEFAULT_MATRIX3;
 
     ImagePtr m_image;
     std::vector<char> m_transparentPixels; // vector of chars is better than vector of bools, silly C++
@@ -106,6 +106,12 @@ protected:
     uint16_t m_props{ 0 };
     void setProp(const Prop prop, const bool v) { if (v) m_props |= prop; else m_props &= ~prop; }
     bool getProp(const Prop prop) const { return m_props & prop; };
+
+    static const Matrix3 toMatrix(const Size& size) {
+        return { 1.0f / size.width(), 0.0f, 0.0f,
+            0.0f, 1.0f / size.height(), 0.0f,
+            0.0f, 0.0f, 1.0f };
+    }
 
     friend class GarbageCollection;
     friend class TextureManager;

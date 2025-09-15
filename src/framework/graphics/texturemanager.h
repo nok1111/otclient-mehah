@@ -41,21 +41,12 @@ public:
     TexturePtr loadTexture(std::stringstream& file);
     void loadTextureTransparentPixels(const std::string& fileName);
 
-    const Matrix3* getMatrixById(uint16_t id);
-    uint16_t getMatrixId(const Size& size, bool upsidedown);
-
 private:
     std::unordered_map<std::string, TexturePtr> m_textures;
     std::vector<AnimatedTexturePtr> m_animatedTextures;
     TexturePtr m_emptyTexture;
     ScheduledEventPtr m_liveReloadEvent;
     std::shared_mutex m_mutex;
-
-    struct
-    {
-        std::unordered_map<size_t, uint16_t> indexMap;
-        std::vector<std::unique_ptr<Matrix3>> objects;
-    } m_matrixCache;
 
     friend class GarbageCollection;
 };

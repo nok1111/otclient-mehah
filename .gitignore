@@ -54,7 +54,6 @@ vc17/
 *.scc
 *.exp
 *.lib
-*.bak
 
 # Protobuf generated files
 *.pb.cc

@@ -296,7 +296,7 @@ void Item::setId(uint32_t id)
 }
 
 ThingType* Item::getThingType() const {
-    return g_things.getRawThingType(m_clientId, ThingCategoryItem);
+    return g_things.getThingType(m_clientId, ThingCategoryItem).get();
 }
 
 #ifdef FRAMEWORK_EDITOR
@@ -388,11 +388,11 @@ void Item::unserializeItem(const BinaryTreePtr& in)
                     m_attribs.set(attrib, in->getString());
                     break;
                 default:
-                    throw Exception("invalid item attribute {}", attrib);
+                    throw Exception("invalid item attribute %d", attrib);
             }
         }
     } catch (const stdext::exception& e) {
-        g_logger.error("Failed to unserialize OTBM item: {}", e.what());
+        g_logger.error(stdext::format("Failed to unserialize OTBM item: %s", e.what()));
     }
 }
 

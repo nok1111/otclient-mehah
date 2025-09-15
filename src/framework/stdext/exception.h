@@ -22,10 +22,9 @@
 
 #pragma once
 
+#include "format.h"
 #include <exception>
 #include <string>
-
-#include <fmt/format.h>
 
 namespace stdext
 {
@@ -37,7 +36,7 @@ namespace stdext
         exception(const std::string_view what) : m_what(std::string(what)) {}
 
         template<typename... Args>
-        exception(fmt::format_string<Args...> fmtStr, Args&&... args) : m_what(fmt::format(fmtStr, std::forward<Args>(args)...)) {}
+        exception(std::string_view what, const Args&... args) : m_what(stdext::format({ what }, args...)) {}
 
         ~exception() noexcept override = default;
         const char* what() const noexcept override { return m_what.data(); }

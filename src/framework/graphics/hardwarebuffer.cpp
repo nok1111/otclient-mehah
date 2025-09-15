@@ -20,23 +20,26 @@
  * THE SOFTWARE.
  */
 
-#pragma once
+#include "hardwarebuffer.h"
+#include "graphics.h"
 
-#include <cmath>
-#include <cstring>
-#include <ctime>
+#include <framework/core/application.h>
+#include <framework/core/logger.h>
 
-#include "types.h"
+#include "framework/core/graphicalapplication.h"
 
-#include "boolean.h"
-#include "cast.h"
-#include "compiler.h"
-#include "demangle.h"
-#include "format.h"
-#include "hash.h"
-#include "math.h"
-#include "qrcodegen.h"
-#include "storage.h"
-#include "string.h"
-#include "thread.h"
-#include "time.h"
+HardwareBuffer::HardwareBuffer(const Type type) :m_type(type)
+{
+    glGenBuffers(1, &m_id);
+    if (!m_id)
+        g_logger.fatal("Unable to create hardware buffer.");
+}
+
+HardwareBuffer::~HardwareBuffer()
+{
+#ifndef NDEBUG
+    assert(!g_app.isTerminated());
+#endif
+    if (g_graphics.ok())
+        glDeleteBuffers(1, &m_id);
+}

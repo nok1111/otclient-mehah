@@ -22,21 +22,32 @@
 
 #pragma once
 
-#include <cmath>
-#include <cstring>
-#include <ctime>
+#include "declarations.h"
 
-#include "types.h"
+class HardwareBuffer
+{
+public:
+    enum class Type
+    {
+        VERTEX_BUFFER = GL_ARRAY_BUFFER,
+        INDEX_BUFFER = GL_ELEMENT_ARRAY_BUFFER
+    };
 
-#include "boolean.h"
-#include "cast.h"
-#include "compiler.h"
-#include "demangle.h"
-#include "format.h"
-#include "hash.h"
-#include "math.h"
-#include "qrcodegen.h"
-#include "storage.h"
-#include "string.h"
-#include "thread.h"
-#include "time.h"
+    enum class UsagePattern
+    {
+        STREAM_DRAW = GL_STREAM_DRAW,
+        STATIC_DRAW = GL_STATIC_DRAW,
+        DYNAMIC_DRAW = GL_DYNAMIC_DRAW
+    };
+
+    HardwareBuffer(Type type);
+    ~HardwareBuffer();
+
+    void bind() const { glBindBuffer(static_cast<GLenum>(m_type), m_id); }
+    static void unbind(Type type) { glBindBuffer(static_cast<GLenum>(type), 0); }
+    void write(const void* data, const int count, UsagePattern usage) const { glBufferData(static_cast<GLenum>(m_type), count, data, static_cast<GLenum>(usage)); }
+
+private:
+    Type m_type;
+    uint32_t m_id;
+};

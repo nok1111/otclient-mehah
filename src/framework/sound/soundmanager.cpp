@@ -23,7 +23,6 @@
 #include "soundmanager.h"
 #include "soundbuffer.h"
 #include "soundeffect.h"
-#include "soundchannel.h"
 #include "soundfile.h"
 #include "streamsoundsource.h"
 #include "combinedsoundsource.h"
@@ -32,9 +31,10 @@
 #include <framework/core/asyncdispatcher.h>
 #include <framework/core/clock.h>
 #include <framework/core/resourcemanager.h>
-#include <framework/core/garbagecollection.h>
 #include <nlohmann/json.hpp>
 #include <sounds.pb.h>
+
+#include "soundchannel.h"
 
 using namespace otclient::protobuf;
 
@@ -53,7 +53,6 @@ void SoundManager::init()
     // The alcOpenDevice call needs to be executed on Android main thread
     g_androidManager.attachToAppMainThread();
 #endif
-
     m_device = alcOpenDevice(nullptr);
     if (!m_device) {
         g_logger.error("unable to open audio device");
@@ -62,12 +61,12 @@ void SoundManager::init()
 
     m_context = alcCreateContext(m_device, nullptr);
     if (!m_context) {
-        g_logger.error(fmt::format("unable to create audio context: {}", alcGetString(m_device, alcGetError(m_device))));
+        g_logger.error(stdext::format("unable to create audio context: %s", alcGetString(m_device, alcGetError(m_device))));
         return;
     }
 
     if (alcMakeContextCurrent(m_context) != ALC_TRUE) {
-        g_logger.error(fmt::format("unable to make context current: {}", alcGetString(m_device, alcGetError(m_device))));
+        g_logger.error(stdext::format("unable to make context current: %s", alcGetString(m_device, alcGetError(m_device))));
     }
 }
 
@@ -154,7 +153,7 @@ void SoundManager::poll()
     // temp fix for memory leak
     if (soundsErased > 25) {
         soundsErased = 0;
-        GarbageCollection::lua();
+        g_lua.collectGarbage();
     }
 }
 
@@ -208,7 +207,7 @@ SoundSourcePtr SoundManager::play(const std::string& fn, const float fadetime, f
     const std::string& filename = resolveSoundFile(fn);
     const auto& soundSource = createSoundSource(filename);
     if (!soundSource) {
-        g_logger.error("unable to play '{}'", filename);
+        g_logger.error(stdext::format("unable to play '%s'", filename));
         return nullptr;
     }
 
@@ -309,7 +308,7 @@ SoundSourcePtr SoundManager::createSoundSource(const std::string& name)
 #endif
         }
     } catch (std::exception& e) {
-        g_logger.error("failed to load sound source: '{}'", e.what());
+        g_logger.error(stdext::format("failed to load sound source: '%s'", e.what()));
         return nullptr;
     }
 
@@ -417,7 +416,7 @@ bool SoundManager::loadFromProtobuf(const std::string& directory, const std::str
     // create the sound bank from protobuf file
     try {
         std::stringstream fileInputStream;
-        g_resources.readFileStream(g_resources.resolvePath(fmt::format("{}{}", directory, fileName)), fileInputStream);
+        g_resources.readFileStream(g_resources.resolvePath(stdext::format("%s%s", directory, fileName)), fileInputStream);
 
         // read the soundbank
         auto protobufSounds = sounds::Sounds();
@@ -459,7 +458,7 @@ bool SoundManager::loadFromProtobuf(const std::string& directory, const std::str
             uint32_t effectId = protobufLocationAmbient.id();
             DelayedSoundEffects effects = {};
             for (const auto& delayedEffect : protobufLocationAmbient.delayed_effects()) {
-                effects.push_back({ delayedEffect.numeric_sound_effect_id(), delayedEffect.delay_seconds() });
+                effects.push_back({delayedEffect.numeric_sound_effect_id(), delayedEffect.delay_seconds()});
             }
 
             m_clientAmbientEffects.emplace(effectId, ClientLocationAmbient{
@@ -471,14 +470,14 @@ bool SoundManager::loadFromProtobuf(const std::string& directory, const std::str
 
         // deserialize item ambients
         for (const auto& protobufItemAmbient : protobufSounds.ambience_object_stream()) {
-            std::vector<uint32_t> itemClientIds = {};
+            std::vector<uint32_t> itemClientIds = {};            
             for (const auto& itemId : protobufItemAmbient.counted_appearance_types()) {
                 itemClientIds.push_back(itemId);
             }
 
             ItemCountSoundEffects soundEffects = {};
             for (const auto& soundEffect : protobufItemAmbient.sound_effects()) {
-                soundEffects.push_back({ soundEffect.looping_sound_id(), soundEffect.count() });
+                soundEffects.push_back({soundEffect.looping_sound_id(), soundEffect.count()});
             }
 
             uint32_t effectId = protobufItemAmbient.id();
@@ -501,7 +500,7 @@ bool SoundManager::loadFromProtobuf(const std::string& directory, const std::str
 
         return true;
     } catch (const std::exception& e) {
-        g_logger.error("Failed to load soundbank '{}': {}", fileName, e.what());
+        g_logger.error(stdext::format("Failed to load soundbank '%s': %s", fileName, e.what()));
         return false;
     }
 }
@@ -522,7 +521,7 @@ bool SoundManager::loadClientFiles(const std::string& directory)
         return true;
     } catch (const std::exception& e) {
         if (g_game.getClientVersion() >= 1300) {
-            g_logger.warning("Failed to load '{}' (Sounds): {}", directory, e.what());
+            g_logger.warning(stdext::format("Failed to load '%s' (Sounds): %s", directory, e.what()));
         }
 
         return false;

@@ -20,7 +20,6 @@
     "stduuid",
     "zlib",
     "bshoshany-thread-pool",
-    "fmt",
     {
       "name": "luajit",
       "platform": "!android & !wasm32"

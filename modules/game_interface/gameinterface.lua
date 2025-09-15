@@ -1475,12 +1475,12 @@ function testExtendedView(mode)
             end
         end
     end
-    addEvent(function()
-        modules.game_console.setExtendedView(extendedView)
-        modules.game_minimap.extendedView(extendedView)
-        modules.game_healthinfo.extendedView(extendedView)
-        modules.game_inventory.extendedView(extendedView)
+    -- create icons or destroy , depending on the view
+    modules.game_minimap.extendedView(extendedView)
+    modules.game_healthinfo.extendedView(extendedView)
+    modules.game_inventory.extendedView(extendedView)
+    scheduleEvent(function()
         modules.client_topmenu.extendedView(extendedView)
         modules.game_mainpanel.toggleExtendedViewButtons(extendedView)
-    end)
+    end, 100)
 end

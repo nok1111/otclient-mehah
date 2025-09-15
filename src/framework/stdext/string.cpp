@@ -26,6 +26,7 @@
 #include <charconv>
 
 #include "exception.h"
+#include "format.h"
 #include "types.h"
 
 #ifdef _MSC_VER
@@ -190,13 +191,12 @@ namespace stdext
 
     [[nodiscard]] std::vector<std::string> split(std::string_view str, std::string_view separators) {
         std::vector<std::string> result;
-        for (auto&& part : std::views::split(str, separators)) {
-            auto begin = part.begin();
-            auto end = part.end();
-            if (begin != end)
-                result.emplace_back(begin, end);
+        auto split_view = std::views::split(str, separators);
+        result.reserve(std::distance(split_view.begin(), split_view.end()));
+        for (auto&& part : split_view) {
+            std::string_view sv(&*part.begin(), std::ranges::distance(part));
+            result.emplace_back(sv);
         }
-
         return result;
     }
 }

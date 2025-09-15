@@ -81,8 +81,6 @@ public:
 
     bool isUIAnchorLayout() override { return true; }
 
-    auto getAnchorsGroup() const { return m_anchorsGroups; }
-
 protected:
     bool internalUpdate() override;
     virtual bool updateWidget(const UIWidgetPtr& widget, const UIAnchorGroupPtr& anchorGroup, UIWidgetPtr first = nullptr);

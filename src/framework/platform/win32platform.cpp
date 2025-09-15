@@ -56,7 +56,7 @@ bool Platform::spawnProcess(std::string process, const std::vector<std::string>&
 {
     std::string commandLine;
     for (const auto& arg : args)
-        commandLine += fmt::format(" \"{}\"", arg);
+        commandLine += stdext::format(" \"%s\"", arg);
 
     stdext::replace_all(process, "/", "\\");
     if (!process.ends_with(".exe"))
@@ -429,7 +429,7 @@ std::string Platform::getOSName()
             }
         }
 
-        ret += fmt::format(" (build {})", osvi.dwBuildNumber);
+        ret += stdext::format(" (build %d)", osvi.dwBuildNumber);
 
         if (osvi.dwMajorVersion >= 6) {
             if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64)
