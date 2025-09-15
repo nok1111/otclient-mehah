@@ -210,9 +210,7 @@ void DrawPoolManager::drawPool(const DrawPoolType type) {
             pool->m_framebuffer->release();
         }
 
-        // Let's clean this up so that the cleaning is not done in another thread,
-        // and thus the CPU consumption will be partitioned.
-        pool->m_objectsDraw.clear();
+        
 
         g_painter->resetState();
 
