@@ -201,7 +201,7 @@ void TextureManager::loadTextureTransparentPixels(const std::string& fileName)
         Size imageSize(apng.width, apng.height);
         ImagePtr image = ImagePtr(new Image(imageSize, apng.bpp, apng.pdata));
         if (!image) {
-            g_logger.error(stdext::format("Can't load texture: %s", filePath));
+            g_logger.error("Can't load texture: %s", filePath);
         } else {
             texture->loadTransparentPixels(image);
             image = nullptr;
