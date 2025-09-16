@@ -57,24 +57,6 @@ void EventDispatcher::poll()
     executeEvents();
     executeScheduledEvents();
     executeDeferEvents();
-    executeAsyncEvents();
-}
-
-void EventDispatcher::startEvent(const ScheduledEventPtr& event)
-{
-    if (m_disabled)
-        return;
-
-    if (!event) {
-        g_logger.error("EventDispatcher::startEvent called with null event");
-        return;
-    }
-
-    const auto& thread = getThreadTask();
-    thread->waitWhileStateIs(ThreadTaskEventState::MERGING);
-    thread->setState(ThreadTaskEventState::ADDING);
-    thread->scheduledEventList.emplace_back(event);
-    thread->setState(ThreadTaskEventState::ADDED);
 }
 
 ScheduledEventPtr EventDispatcher::scheduleEvent(const std::function<void()>& callback, int delay)
@@ -87,12 +69,6 @@ ScheduledEventPtr EventDispatcher::scheduleEvent(const std::function<void()>& ca
     return pushThreadTask<ScheduledEventPtr>([&](const std::unique_ptr<ThreadTask>& thread) {
         return thread->scheduledEventList.emplace_back(std::make_shared<ScheduledEvent>(callback, delay, 1));
     });
-    const auto& thread = getThreadTask();
-    thread->waitWhileStateIs(ThreadTaskEventState::MERGING);
-    thread->setState(ThreadTaskEventState::ADDING);
-    auto e = thread->scheduledEventList.emplace_back(std::make_shared<ScheduledEvent>(callback, delay, 1));
-    thread->setState(ThreadTaskEventState::ADDED);
-    return e;
 }
 
 ScheduledEventPtr EventDispatcher::cycleEvent(const std::function<void()>& callback, int delay)
@@ -105,12 +81,7 @@ ScheduledEventPtr EventDispatcher::cycleEvent(const std::function<void()>& callb
     return pushThreadTask<ScheduledEventPtr>([&](const std::unique_ptr<ThreadTask>& thread) {
         return thread->scheduledEventList.emplace_back(std::make_shared<ScheduledEvent>(callback, delay, 0));
     });
-    const auto& thread = getThreadTask();
-    thread->waitWhileStateIs(ThreadTaskEventState::MERGING);
-    thread->setState(ThreadTaskEventState::ADDING);
-    auto e = thread->scheduledEventList.emplace_back(std::make_shared<ScheduledEvent>(callback, delay, 0));
-    thread->setState(ThreadTaskEventState::ADDED);
-    return e;
+    
 }
 
 EventPtr EventDispatcher::addEvent(const std::function<void()>& callback)
@@ -126,23 +97,9 @@ EventPtr EventDispatcher::addEvent(const std::function<void()>& callback)
     return pushThreadTask<EventPtr>([&](const std::unique_ptr<ThreadTask>& thread) {
         return thread->events.emplace_back(std::make_shared<Event>(callback));
     });
-    const auto& thread = getThreadTask();
-    thread->waitWhileStateIs(ThreadTaskEventState::MERGING);
-    thread->setState(ThreadTaskEventState::ADDING);
-    auto e = thread->events.emplace_back(std::make_shared<Event>(callback));
-    thread->setState(ThreadTaskEventState::ADDED);
-    return e;
+   
 }
 
-void EventDispatcher::asyncEvent(std::function<void()>&& callback) {
-    if (m_disabled)
-        return;
-
-    const auto& thread = getThreadTask();
-    thread->waitWhileStateIs(ThreadTaskEventState::MERGING);
-    thread->setState(ThreadTaskEventState::ADDING);
-    thread->asyncEvents.emplace_back(std::move(callback));
-}
 
 void EventDispatcher::deferEvent(const std::function<void()>& callback) {
     if (m_disabled)
@@ -151,11 +108,6 @@ void EventDispatcher::deferEvent(const std::function<void()>& callback) {
     pushThreadTask([&](const std::unique_ptr<ThreadTask>& thread) {
         thread->deferEvents.emplace_back(callback);
     });
-    const auto& thread = getThreadTask();
-    thread->waitWhileStateIs(ThreadTaskEventState::MERGING);
-    thread->setState(ThreadTaskEventState::ADDING);
-    thread->deferEvents.emplace_back(callback);
-    thread->setState(ThreadTaskEventState::ADDED);
 }
 
 void EventDispatcher::executeEvents() {

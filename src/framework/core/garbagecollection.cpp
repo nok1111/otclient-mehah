@@ -98,14 +98,4 @@ void GarbageCollection::thingType() {
         index = 0;
         ++category;
     }
-
-<<<<<<< HEAD
-=======
-    if (!thingTypesToUnload.empty()) {
-        for (auto& thingType : thingTypesToUnload) {
-            thingType->unload();
-        }
-        thingTypesToUnload.clear();
-    }
->>>>>>> 5ef4b7e99 (perf: replaced Mutex with Spinlock in Dispatcher and Draw Pipeline (#1238))
 }
