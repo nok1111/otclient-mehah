@@ -102,11 +102,4 @@ void GarbageCollection::thingType() {
         ++category;
     }
 
-    if (!thingTypesToUnload.empty()) {
-        std::scoped_lock l(g_drawPool.get(DrawPoolType::MAP)->getMutex(), g_drawPool.get(DrawPoolType::FOREGROUND)->getMutex());
-        for (auto& thingType : thingTypesToUnload) {
-            thingType->unload();
-        }
-        thingTypesToUnload.clear();
-    }
 }
