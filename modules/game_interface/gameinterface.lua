@@ -1407,7 +1407,10 @@ end
 
 function testExtendedView(mode)
     local extendedView = mode == 0
+    --modules.game_console.setExtendedView(extendedView)
     if extendedView then
+        print("Extended view mode 0")
+      --  local topMenuHeight = modules.client_topmenu.getTopMenu():getHeight()
         local buttons = {leftIncreaseSidePanels, rightIncreaseSidePanels, rightDecreaseSidePanels,
                          leftDecreaseSidePanels}
         for _, button in ipairs(buttons) do
