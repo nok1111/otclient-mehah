@@ -183,7 +183,7 @@ function show()
     topMenu:show()
     topMenu:raise()
     topMenu:focus()
-    if modules.game_interface.currentViewMode == 2 then
+    if modules.game_interface.currentViewMode == 0 then
         modules.game_interface.getRootPanel():addAnchor(AnchorTop, 'topMenu', AnchorBottom)
     end
 end
@@ -192,7 +192,7 @@ function online()
     showGameButtons()
 
     addEvent(function()
-        if modules.game_interface.currentViewMode ~= 2 and g_game.isOnline() then
+        if modules.game_interface.currentViewMode ~= 0 and g_game.isOnline() then
             hide()
         end
         local showPing = modules.client_options.getOption('showPing')
