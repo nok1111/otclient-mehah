@@ -123,10 +123,10 @@ MapTravel.mapNodesConfig = {
 		},
 	},
 	[10] = {
-		displayName = "Thar’Neskar",
+		displayName = "Thar'Neskar",
 		nameId = "tharneskar",
 		discoverable = false,
-		modulePos = {marginTop = 950, marginLeft = 508},
+		modulePos = {marginTop = 990, marginLeft = 580},
 		serverPos = {732, 1088, 5},
 		premium = false,
 		--storagesReqs = {{id = 50002, value = 1, name = "Path to Garona"}},
