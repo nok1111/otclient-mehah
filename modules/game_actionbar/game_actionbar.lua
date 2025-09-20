@@ -273,10 +273,12 @@ function initializeSpelllist()
     end, spellsPanel:getParent())
 
     for spellProfile, _ in pairs(SpelllistSettings) do
+        local localPlayer = g_game.getLocalPlayer()
+        local playerVocation = localPlayer and localPlayer:getVocation() or nil
         for i = 1, #SpelllistSettings[spellProfile].spellOrder do
             local spell = SpelllistSettings[spellProfile].spellOrder[i]
             local info = SpellInfo[spellProfile][spell]
-            if info then
+            if info and playerVocation and table.find(info.vocations, playerVocation) then
                 local tmpLabel = g_ui.createWidget('SpellListLabel', spellsPanel)
                 tmpLabel:setId(spell)
                 tmpLabel:setText(spell .. '\n\'' .. info.words .. '\'')
@@ -290,13 +292,17 @@ function initializeSpelllist()
                     iconId = SpellIcons[info.icon][1]
                 end
 
+                if not (iconId) then
+                    perror('Spell icon ' .. tostring(info.icon) .. ' not found.')
+                end
+
                 tmpLabel:setHeight(SpelllistSettings[spellProfile].iconSize.height + 4)
                 tmpLabel:setTextOffset(topoint((SpelllistSettings[spellProfile].iconSize.width + 10) .. ' ' ..
-                                                   (SpelllistSettings[spellProfile].iconSize.height - 32) / 2 + 3))
+                                               (SpelllistSettings[spellProfile].iconSize.height - 32) / 2 + 3))
                 --tmpLabel:setImageSource(SpelllistSettings[spellProfile].iconFile)
                 tmpLabel:setImageSource(Spells.getIconId(iconId, spellProfile))
                 tmpLabel:setImageSize(tosize(SpelllistSettings[spellProfile].iconSize.width .. ' ' ..
-                                                 SpelllistSettings[spellProfile].iconSize.height))
+                                             SpelllistSettings[spellProfile].iconSize.height))
             end
         end
     end
