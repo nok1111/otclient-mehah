@@ -56,6 +56,16 @@ local outfitOffsets = {
     [2661] = {x = 32, y = 32},    -- Example: outfit ID 111
     [2664] = {x = 32, y = 32},
     [2624] = {x = 32, y = 32},
+    [2717] = {x = 32, y = 32},
+    [2718] = {x = 13, y = 15},
+
+    --ogres
+    [2427] = {x = 32, y = 32},
+    [2428] = {x = 32, y = 32},
+    [2429] = {x = 32, y = 32},
+    [2430] = {x = 32, y = 32},
+    [2431] = {x = 32, y = 32},
+    [2432] = {x = 32, y = 32},
 
     -- Add all your outfit IDs and their offsets here
 }
