@@ -161,7 +161,17 @@ function onTasksList(data)
     widget:setId(taskId)
     local outfit = task.outfits[1]
     widget.preview:setOutfit(outfit)
+ 
+    local thingType = g_things.getThingType(outfit.type, ThingCategoryCreature)
+ -- Add proper sizing for the 64x64 UICreature
+    widget.preview:setPadding(-30)
+    widget.preview:setMarginLeft(8)
+    widget.preview:setMarginTop(8)
+    widget.preview:setSize("48 48")
     widget.preview:setCenter(true)
+    widget.preview:setCreatureSize(thingType:getRealSize() + 148)
+
+
     widget.info.title:setText(task.name)
     widget.info.level:setText("Level " .. task.lvl)
 	------------------------------------------
@@ -188,7 +198,18 @@ function onTasksActive(data)
     widget:setId(active.taskId)
     local outfit = task.outfits[1]
     widget.creature:setOutfit(outfit)
-    widget.creature:setCenter(true)
+   -- widget.creature:setCenter(true)
+
+    local thingType = g_things.getThingType(outfit.type, ThingCategoryCreature)
+     -- Add proper sizing for the 64x64 UICreature
+     widget.creature:setPadding(-30)
+     widget.creature:setMarginLeft(8)
+     widget.creature:setMarginTop(8)
+     widget.creature:setSize("48 48")
+     widget.creature:setCenter(true)
+     widget.creature:setCreatureSize(thingType:getRealSize() + 148)
+
+
     if task.name:len() > 12 then
       widget.label:setText(task.name:sub(1, 9) .. "...")
     else
@@ -211,7 +232,18 @@ function onTaskUpdate(data)
       widget:setId(data.taskId)
       local outfit = task.outfits[1]
       widget.creature:setOutfit(outfit)
-      widget.creature:setCenter(true)
+      --widget.creature:setCenter(true)
+
+      local thingType = g_things.getThingType(outfit.type, ThingCategoryCreature)
+       -- Add proper sizing for the 64x64 UICreature
+     widget.creature:setPadding(-30)
+     widget.creature:setMarginLeft(8)
+     widget.creature:setMarginTop(8)
+     widget.creature:setSize("48 48")
+     widget.creature:setCenter(true)
+     widget.creature:setCreatureSize(thingType:getRealSize() + 148)
+
+      
       if task.name:len() > 12 then
         widget.label:setText(task.name:sub(1, 9) .. "...")
       else
@@ -382,6 +414,17 @@ function onTaskSelected(parent, child, reason)
 		local outfit = task.outfits[id]
 		widget.monster:setOutfit(outfit)
 		widget.monster:setCenter(true)
+
+
+    local thingType = g_things.getThingType(outfit.type, ThingCategoryCreature)
+     -- Add proper sizing for the 64x64 UICreature
+     widget.monster:setPadding(-30)
+     widget.monster:setMarginLeft(8)
+     widget.monster:setMarginTop(8)
+     widget.monster:setSize("48 48")
+     widget.monster:setCenter(true)
+     widget.monster:setCreatureSize(thingType:getRealSize() + 148)
+
 		widget:setPhantom(false)
 		widget.name:setText(monster)
 	end
