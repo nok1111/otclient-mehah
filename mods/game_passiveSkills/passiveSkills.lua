@@ -130,7 +130,7 @@ end
 function PassiveSkills.applyTooltip(nodeData)
 	PassiveSkills.moveToolTip()
 	PassiveSkills.Tooltip:setText(nodeData.name)
-	print(nodeData.description )
+	--print(nodeData.description )
 	PassiveSkills.Tooltip.description:setText(nodeData.description)
 	PassiveSkills.Tooltip.maxLevel:setText("Max Level: " .. (nodeData.maxLevel or 1))
 	local totalHeight = PassiveSkills.Tooltip.description:getHeight() +  PassiveSkills.Tooltip.maxLevel:getHeight() + 80  -- Adjust as needed
