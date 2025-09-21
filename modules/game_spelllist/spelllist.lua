@@ -104,6 +104,7 @@ function online()
     else
         spelllistWindow:getChildById('buttonFilterVocation'):setVisible(false)
     end
+    
 end
 
 function offline()
@@ -193,6 +194,7 @@ function init()
     end, spelllistWindow)
 
     initializeSpelllist()
+    
     resizeWindow()
 
     if g_game.isOnline() then
@@ -225,6 +227,7 @@ function terminate()
 end
 
 function initializeSpelllist()
+    print("initializeSpelllist")
     for i = 1, #SpelllistSettings[SpelllistProfile].spellOrder do
         local spell = SpelllistSettings[SpelllistProfile].spellOrder[i]
         local info = SpellInfo[SpelllistProfile][spell]
@@ -261,6 +264,8 @@ function initializeSpelllist()
             updateSpellInformation(focusedChild)
         end
     })
+
+    
 end
 
 function changeSpelllistProfile(oldProfile)
@@ -274,6 +279,7 @@ function changeSpelllistProfile(oldProfile)
 
     -- Create new spelllist and ajust window
     initializeSpelllist()
+    
     resizeWindow()
     resetWindow()
 end
@@ -285,12 +291,8 @@ function updateSpelllist()
         local tmpLabel = spellList:getChildById(spell)
 
         local localPlayer = g_game.getLocalPlayer()
-        if (not (filters.level) or info.level <= localPlayer:getLevel()) and
-            (not (filters.vocation) or table.find(info.vocations, localPlayer:getVocation())) and
-            (filters.vocationId == FILTER_VOCATION_ANY or table.find(info.vocations, filters.vocationId)) and
-            (filters.groupId == FILTER_GROUP_ANY or info.group[filters.groupId]) and
-            (filters.premium == FILTER_PREMIUM_ANY or (info.premium and filters.premium == FILTER_PREMIUM_YES) or
-                (not (info.premium) and filters.premium == FILTER_PREMIUM_NO)) then
+        local playerVocation = localPlayer and localPlayer:getVocation() or nil
+        if info and playerVocation and table.contains(info.vocations, playerVocation) then
             tmpLabel:setVisible(true)
         else
             tmpLabel:setVisible(false)
@@ -299,6 +301,7 @@ function updateSpelllist()
 end
 
 function updateSpellInformation(widget)
+    print("updateSpellInformation")
     local spell = widget:getId()
 
     local name = ''
@@ -353,6 +356,7 @@ function updateSpellInformation(widget)
 end
 
 function toggle()
+    print("toggle")
     if spelllistButton:isOn() then
         spelllistButton:setOn(false)
         spelllistWindow:hide()
@@ -361,66 +365,11 @@ function toggle()
         spelllistWindow:show()
         spelllistWindow:raise()
         spelllistWindow:focus()
+        updateSpelllist()
     end
 end
 
 function toggleFilter(widget, selectedWidget)
-    if widget == vocationRadioGroup then
-        local boxId = selectedWidget:getId()
-        if boxId == 'vocationBoxAny' then
-            filters.vocationId = FILTER_VOCATION_ANY
-        elseif boxId == 'vocationBoxMagician' then
-            filters.vocationId = FILTER_VOCATION_MAGICIAN
-        elseif boxId == 'vocationBoxTemplar' then
-            filters.vocationId = FILTER_VOCATION_TEMPLAR
-        elseif boxId == 'vocationBoxNightblade' then
-            filters.vocationId = FILTER_VOCATION_NIGHTBLADE
-        elseif boxId == 'vocationBoxDragonKnight' then
-            filters.vocationId = FILTER_VOCATION_DRAGONKNIGHT
-        elseif boxId == 'vocationBoxWarlock' then
-            filters.vocationId = FILTER_VOCATION_WARLOCK
-        elseif boxId == 'vocationBoxStellar' then
-            filters.vocationId = FILTER_VOCATION_STELLAR
-        elseif boxId == 'vocationBoxMonk' then
-            filters.vocationId = FILTER_VOCATION_MONK
-        elseif boxId == 'vocationBoxDruid' then
-            filters.vocationId = FILTER_VOCATION_DRUID
-        elseif boxId == 'vocationBoxLightDancer' then
-            filters.vocationId = FILTER_VOCATION_LIGHTDANCER
-        elseif boxId == 'vocationBoxArcher' then
-            filters.vocationId = FILTER_VOCATION_ARCHER
-        end
-    elseif widget == groupRadioGroup then
-        local boxId = selectedWidget:getId()
-        if boxId == 'groupBoxAny' then
-            filters.groupId = FILTER_GROUP_ANY
-        elseif boxId == 'groupBoxAttack' then
-            filters.groupId = FILTER_GROUP_ATTACK
-        elseif boxId == 'groupBoxHealing' then
-            filters.groupId = FILTER_GROUP_HEALING
-        elseif boxId == 'groupBoxSupport' then
-            filters.groupId = FILTER_GROUP_SUPPORT
-        end
-    elseif widget == premiumRadioGroup then
-        local boxId = selectedWidget:getId()
-        if boxId == 'premiumBoxAny' then
-            filters.premium = FILTER_PREMIUM_ANY
-        elseif boxId == 'premiumBoxNo' then
-            filters.premium = FILTER_PREMIUM_NO
-        elseif boxId == 'premiumBoxYes' then
-            filters.premium = FILTER_PREMIUM_YES
-        end
-    else
-        local id = widget:getId()
-        if id == 'buttonFilterLevel' then
-            filters.level = not (filters.level)
-            widget:setOn(filters.level)
-        elseif id == 'buttonFilterVocation' then
-            filters.vocation = not (filters.vocation)
-            widget:setOn(filters.vocation)
-        end
-    end
-
     updateSpelllist()
 end
 
