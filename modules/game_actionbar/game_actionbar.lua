@@ -272,20 +272,35 @@ function initializeSpelllist()
         spellsPanel:focusPreviousChild(KeyboardFocusReason)
     end, spellsPanel:getParent())
 
+    local learnedSpells = getLearnedSpells and getLearnedSpells() or {}
     for spellProfile, _ in pairs(SpelllistSettings) do
         local localPlayer = g_game.getLocalPlayer()
         local playerVocation = localPlayer and localPlayer:getVocation() or nil
         for i = 1, #SpelllistSettings[spellProfile].spellOrder do
             local spell = SpelllistSettings[spellProfile].spellOrder[i]
             local info = SpellInfo[spellProfile][spell]
-            if info and playerVocation and table.find(info.vocations, playerVocation) then
+            local show = false
+            if info and playerVocation and table.find(info.vocations, playerVocation) and not info.needLearn then
+                show = true
+            elseif info and info.needLearn and (learnedSpells[spell] or learnedSpells[info.words]) then
+                show = true
+            end
+            if show then
                 local tmpLabel = g_ui.createWidget('SpellListLabel', spellsPanel)
                 tmpLabel:setId(spell)
-                tmpLabel:setText(spell .. '\n\'' .. info.words .. '\'')
+                local spellText = spell .. " (Lv. " .. tostring(info.level or "?") .. ")"
+                local formulaText = "'" .. info.words .. "'"
+                local localPlayerLevel = localPlayer and localPlayer:getLevel() or 0
+                if info.level and localPlayerLevel >= info.level then
+                    tmpLabel:setColoredText("{" .. spellText .. ", #00F000}\n" .. formulaText)
+                else
+                    tmpLabel:setColoredText("{" .. spellText .. ", #FF0000}\n" .. formulaText)
+                end
                 tmpLabel:setPhantom(false)
                 tmpLabel.defaultHeight = tmpLabel:getHeight()
                 tmpLabel.words = info.words:lower()
                 tmpLabel.name = spell:lower()
+
 
                 local iconId = tonumber(info.icon)
                 if not iconId and SpellIcons[info.icon] then

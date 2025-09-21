@@ -75,76 +75,40 @@ MainWindow
     anchors.top: spellList.top
     !text: tr('Name') .. ':'
 
-  Label
-    anchors.left: parent.left
-    anchors.top: spellList.bottom
-    !text: tr('Filters') .. ':'
-    margin-top: 8
-
-  FilterButton
-    id: buttonFilterLevel
-    !text: tr('Level')
-    !tooltip: tr('Hide spells for higher exp. levels')
-
-  FilterButton
-    id: buttonFilterVocation
-    !text: tr('Vocation')
-    !tooltip: tr('Hide spells for other vocations')
-
   SpellInfoLabel
     id: labelFormula
     anchors.left: spellList.right
     anchors.top: labelName.bottom
     !text: tr('Formula') .. ':'
-
-
-  SpellInfoLabel
-    id: labelVocation
-    anchors.left: spellList.right
-    anchors.top: labelFormula.bottom
-    !text: tr('Vocation') .. ':'
-
-  SpellInfoLabel
-    id: labelGroup
-    anchors.left: spellList.right
-    anchors.top: labelVocation.bottom
-    !text: tr('Group') .. ':'
-
-  SpellInfoLabel
-    id: labelType
-    anchors.left: spellList.right
-    anchors.top: labelGroup.bottom
-    !text: tr('Type') .. ':'
+    margin-top: 8
 
   SpellInfoLabel
     id: labelCooldown
     anchors.left: spellList.right
-    anchors.top: labelType.bottom
+    anchors.top: labelFormula.bottom
     !text: tr('Cooldown') .. ':'
+    margin-top: 8
 
   SpellInfoLabel
     id: labelLevel
     anchors.left: spellList.right
     anchors.top: labelCooldown.bottom
     !text: tr('Level') .. ':'
+    margin-top: 8
 
   SpellInfoLabel
     id: labelMana
     anchors.left: spellList.right
     anchors.top: labelLevel.bottom
     !text: tr('Mana') .. ' / ' .. tr('Soul') .. ':'
-
-  SpellInfoLabel
-    id: labelPremium
-    anchors.left: spellList.right
-    anchors.top: labelMana.bottom
-    !text: tr('Premium') .. ':'
+    margin-top: 8
 
   SpellInfoLabel
     id: labelDescription
     anchors.left: spellList.right
-    anchors.top: labelPremium.bottom
+    anchors.top: labelMana.bottom
     !text: tr('Description') .. ':'
+    margin-top: 8
 
   SpellInfoValueLabel
     id: labelNameValue
@@ -155,228 +119,37 @@ MainWindow
     id: labelFormulaValue
     anchors.left: labelFormula.right
     anchors.top: labelNameValue.bottom
-
-  SpellInfoValueLabel
-    id: labelVocationValue
-    anchors.left: labelVocation.right
-    anchors.top: labelFormulaValue.bottom
-
-  SpellInfoValueLabel
-    id: labelGroupValue
-    anchors.left: labelGroup.right
-    anchors.top: labelVocationValue.bottom
-
-  SpellInfoValueLabel
-    id: labelTypeValue
-    anchors.left: labelType.right
-    anchors.top: labelGroupValue.bottom
+    margin-top: 8
 
   SpellInfoValueLabel
     id: labelCooldownValue
     anchors.left: labelCooldown.right
-    anchors.top: labelTypeValue.bottom
+    anchors.top: labelFormulaValue.bottom
+    margin-top: 8
 
   SpellInfoValueLabel
     id: labelLevelValue
     anchors.left: labelLevel.right
     anchors.top: labelCooldownValue.bottom
+    margin-top: 8
 
   SpellInfoValueLabel
     id: labelManaValue
     anchors.left: labelMana.right
     anchors.top: labelLevelValue.bottom
+    margin-top: 8
 
-  SpellInfoValueLabel
-    id: labelPremiumValue
-    anchors.left: labelPremium.right
-    anchors.top: labelManaValue.bottom
 
   SpellInfoValueLabel
     id: labelDescriptionValue
     anchors.left: labelDescription.right
-    anchors.top: labelPremiumValue.bottom
+    anchors.top: labelManaValue.bottom
     border: 1 #343434
     padding: 3
-    margin-top: 2
+    margin-top: 10
     padding-right: 0
     margin-right: 10
     margin-left: 8
     text-wrap: true
     text-auto-resize:true
 
-  Label
-    id: labelVocationFilter
-    anchors.top: labelPremium.bottom
-    anchors.left: spellList.right
-    width: 70
-    font: verdana-11px-monochrome
-    !text: tr('Vocation')
-    margin-top: 60
-    margin-left: 20
-
-  CheckBox
-    id: vocationBoxAny
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    margin-left: 3
-    !text: tr('Any')
-    width: 75
-
-  CheckBox
-    id: vocationBoxMagician
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Magician')
-    width: 75
-
-  CheckBox
-    id: vocationBoxTemplar
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Templar')
-    width: 75
-
-  CheckBox
-    id: vocationBoxNightblade
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Nightblade')
-    width: 75
-
-  CheckBox
-    id: vocationBoxDragonKnight
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Dragon Knight')
-    width: 75
-
-  CheckBox
-    id: vocationBoxWarlock
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Warlock')
-    width: 75
-
-  CheckBox
-    id: vocationBoxStellar
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Stellar')
-    width: 75
-
-  CheckBox
-    id: vocationBoxMonk
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Monk')
-    width: 75
-
-  CheckBox
-    id: vocationBoxDruid
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Druid')
-    width: 75
-
-  CheckBox
-    id: vocationBoxLightDancer
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Light Dancer')
-    width: 75
-
-  CheckBox
-    id: vocationBoxArcher
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Archer')
-    width: 75
-
-  Label
-    id: labelGroupFilter
-    anchors.top: labelPremium.bottom
-    anchors.left: labelVocationFilter.right
-    width: 70
-    font: verdana-11px-monochrome
-    !text: tr('Group')
-    margin-top: 60
-    margin-left: 20
-
-  CheckBox
-    id: groupBoxAny
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    margin-left: 3
-    !text: tr('Any')
-    width: 75
-
-  CheckBox
-    id: groupBoxAttack
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Attack')
-    width: 75
-
-  CheckBox
-    id: groupBoxHealing
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Healing')
-    width: 75
-
-  CheckBox
-    id: groupBoxSupport
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Support')
-    width: 75
-
-  Label
-    id: labelPremiumFilter
-    anchors.top: labelPremium.bottom
-    anchors.left: labelGroupFilter.right
-    width: 70
-    font: verdana-11px-monochrome
-    !text: tr('Premium')
-    margin-top: 60
-    margin-left: 20
-
-  CheckBox
-    id: premiumBoxAny
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    margin-left: 3
-    !text: tr('Any')
-    width: 75
-
-  CheckBox
-    id: premiumBoxNo
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('No')
-    width: 75
-
-  CheckBox
-    id: premiumBoxYes
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 3
-    !text: tr('Yes')
-    width: 75

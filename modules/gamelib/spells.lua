@@ -186,6 +186,77 @@ SpelllistSettings = {
   }
 }
 
+
+local learnedSpells = {}
+
+local function printLearnedSpells()
+  print('Learned spells received from server:')
+  for k, v in pairs(learnedSpells) do
+    print('  ', k)
+  end
+end
+
+local function onLearnedSpellsOpcode(protocol, opcode, buffer)
+  if opcode == 89 then
+    print('Raw buffer received:', buffer)
+    local data = json.decode(buffer)
+    if type(data) ~= 'table' then
+      print('ERROR: Decoded data is not a table, got:', type(data), data)
+      return
+    end
+    if data.topic == 'learned-spells' and type(data.spells) == 'table' then
+      learnedSpells = {}
+      for k, v in pairs(data.spells) do
+        print('  spells[', k, '] = ', v)
+      end
+      for _, spell in ipairs(data.spells) do
+        print('Adding learned spell:', spell)
+        learnedSpells[spell] = true
+      end
+      printLearnedSpells()
+    else
+      print('No valid learned-spells topic or spells field in received data.')
+    end
+  end
+end
+
+ProtocolGame.registerExtendedOpcode(89, onLearnedSpellsOpcode)
+
+function getLearnedSpells()
+  return learnedSpells
+end
+
+function getSpellsForVocation(vocId, learnedSpellsOverride)
+  local spells = {}
+  for profile, data in pairs(SpellInfo) do
+    for name, spell in pairs(data) do
+      if table.contains(spell.vocations, vocId) then
+        if not spell.needLearn or (learnedSpellsOverride or learnedSpells)[name] then
+          table.insert(spells, spell)
+        end
+      end
+    end
+  end
+  return spells
+end
+
+function getAllSpellsForVocation(vocId)
+  local spells = {}
+  for profile, data in pairs(SpellInfo) do
+    for name, spell in pairs(data) do
+      if table.contains(spell.vocations, vocId) then
+        table.insert(spells, spell)
+      end
+    end
+  end
+  return spells
+end
+
+function isSpellLearned(spell, learnedSpellsOverride)
+  if not spell.needLearn then return true end
+  return (learnedSpellsOverride or learnedSpells)[spell.words] or false
+end
+
 SpellInfo = {
   ['Custom'] = {
 
@@ -193,30 +264,30 @@ SpellInfo = {
     ['Rend'] = {id = 1, words = 'rend', icon_id = 1, description = 'rend the target dealing physical damage and reaching nearby enemies.', exhaustion = 3000, premium = false, type = 'Instant', icon = 1, mana = 15, level = 8, soul = 0, group = {[1] = 1900}, vocations = {4}},
     ['Brutal Swing'] = {id = 2, words = 'brutal swing', icon_id = 2, description = 'smash the target dealing high ammounts of physical damage, the targeted area can vary based on one handed or two handed weapon.', exhaustion = 7000, premium = false, type = 'Instant', icon = 2, mana = 60, level = 38, soul = 0, group = {[1] = 1900}, vocations = {4}},
     ['Ripping Slash'] = {id = 3, words = 'ripping slash', icon_id = 3, description = 'slash your way through enemies dealing physical damage in a small cone area.', exhaustion = 5000, premium = false, type = 'Instant', icon = 3, mana = 30, level = 45, soul = 0, group = {[3] = 1900}, vocations = {4}},
-    ['Fire Within'] = {id = 4, words = 'fire within', icon_id = 4, description = 'ignite yourself into fire to deal fire damage to your nearest enemy and spread it to nearby enemies.', exhaustion = 20000, premium = false, type = 'Instant', icon = 4, mana = 80, level = 1, soul = 0, group = {[1] = 1900}, vocations = {4}},
+    ['Fire Within'] = {id = 4, words = 'fire within', icon_id = 4, description = 'ignite yourself into fire to deal fire damage to your nearest enemy and spread it to nearby enemies.', exhaustion = 20000, premium = false, type = 'Instant', icon = 4, mana = 80, level = 1, soul = 0, group = {[1] = 1900}, vocations = {4}, needLearn = true},
     ['Charge'] = {id = 5, words = 'charge', icon_id = 5, description = 'charge into your target from the distance and stun it for 1 second.', exhaustion = 15000, premium = false, type = 'Instant', icon = 5, mana = 20, level = 60, soul = 0, group = {[3] = 1900}, vocations = {4}},
     ['whirlwind'] = {id = 6, words = 'whirlwind', icon_id = 6, description = 'slash your surroundings dealing fire damage and igniting all enemies in the area.', exhaustion = 10000, premium = false, type = 'Instant', icon = 6, mana = 110, level = 70, soul = 0, group = {[1] = 1900}, vocations = {4}},
-    ['Phoenix Wrath'] = {id = 8, words = 'phoenix wrath', icon_id = 8, description = 'command a phoenix to attack in a straight line dealing fire damage to all enemies in that direction. [skill+attack]', exhaustion = 17000, premium = false, type = 'Instant', icon = 8, mana = 115, level = 1, soul = 0, group = {[1] = 1900}, vocations = {4}},
+    ['Phoenix Wrath'] = {id = 8, words = 'phoenix wrath', icon_id = 8, description = 'command a phoenix to attack in a straight line dealing fire damage to all enemies in that direction. [skill+attack]', exhaustion = 17000, premium = false, type = 'Instant', icon = 8, mana = 115, level = 1, soul = 0, group = {[1] = 1900}, vocations = {4}, needLearn = true},
     ['Dragon Aura'] = {id = 9, words = 'dragon aura', icon_id = 9, description = 'create a dragon aura that deals fire damage to enemies around you.', exhaustion = 35000, premium = false, type = 'Instant', icon = 9, mana = 70, level = 53, soul = 0, group = {[1] = 1900}, vocations = {4}},
     ['Dragons Call'] = {id = 10, words = 'dragons call', icon_id = 10, description = 'strike your target high a powerfull blow dealing high amounts of fire damage.', exhaustion = 45000, premium = false, type = 'Instant', icon = 10, mana = 180, level = 80, soul = 0, group = {[1] = 1900}, vocations = {4}},
-    ['Draconic Chains'] = {id = 11, words = 'draconic chains', icon_id = 11, description = 'unleash your dragon chains pullin all enemies into you dealing physical damage to all enemies. [magic]', exhaustion = 18000, premium = false, type = 'Instant', icon = 11, mana = 300, level = 1, soul = 0, group = {[3] = 1900}, vocations = {4}},
-    ['Shockwave'] = {id = 12, words = 'shockwave', icon_id = 12, description = 'stomp the floor creating a shockwave and stunning all enemies in the area for 2 seconds. [skill+attack+magic]', exhaustion = 10000, premium = false, type = 'Instant', icon = 12, mana = 40, level = 1, soul = 0, group = {[1] = 1900}, vocations = {4}},
-    ['Bloodlust'] = {id = 13, words = 'bloodlust', icon_id = 13, description = 'for the next 8 seconds enter a frenzy state increasing your melee skill, attack speed and critical hit chance by 50%.', exhaustion = 30000, premium = false, type = 'Instant', icon = 13, mana = 85, level = 1, soul = 0, group = {[3] = 1100}, vocations = {4}},
-    ['Dragon Soul'] = {id = 14, words = 'dragon soul', icon_id = 14, description = 'restore high amounts of max health scaled by your max health percent and magic.', exhaustion = 2000, premium = false, type = 'Instant', icon = 14, mana = 20, level = 1, soul = 0, group = {[2] = 1100}, vocations = {4}},
+    ['Draconic Chains'] = {id = 11, words = 'draconic chains', icon_id = 11, description = 'unleash your dragon chains pullin all enemies into you dealing physical damage to all enemies. [magic]', exhaustion = 18000, premium = false, type = 'Instant', icon = 11, mana = 300, level = 1, soul = 0, group = {[3] = 1900}, vocations = {4}, needLearn = true},
+    ['Shockwave'] = {id = 12, words = 'shockwave', icon_id = 12, description = 'stomp the floor creating a shockwave and stunning all enemies in the area for 2 seconds. [skill+attack+magic]', exhaustion = 10000, premium = false, type = 'Instant', icon = 12, mana = 40, level = 1, soul = 0, group = {[1] = 1900}, vocations = {4}, needLearn = true},
+    ['Bloodlust'] = {id = 13, words = 'bloodlust', icon_id = 13, description = 'for the next 8 seconds enter a frenzy state increasing your melee skill, attack speed and critical hit chance by 50%.', exhaustion = 30000, premium = false, type = 'Instant', icon = 13, mana = 85, level = 1, soul = 0, group = {[3] = 1100}, vocations = {4}, needLearn = true},
+    ['Dragon Soul'] = {id = 14, words = 'dragon soul', icon_id = 14, description = 'restore high amounts of max health scaled by your max health percent and magic.', exhaustion = 2000, premium = false, type = 'Instant', icon = 14, mana = 20, level = 1, soul = 0, group = {[2] = 1100}, vocations = {4}, needLearn = true},
     
     -- Templar
-    ['Divine Punishment'] = {id = 20, words = 'divine punishment', icon_id = 20, description = 'call down judgement to a enemy dealing high amounts of holy damage after a shot delay', exhaustion = 60000, premium = false, type = 'Instant', icon = 20, mana = 320, level = 1, soul = 0, group = {[1] = 1900}, vocations = {2}},
+    ['Divine Punishment'] = {id = 20, words = 'divine punishment', icon_id = 20, description = 'call down judgement to a enemy dealing high amounts of holy damage after a shot delay', exhaustion = 60000, premium = false, type = 'Instant', icon = 20, mana = 320, level = 1, soul = 0, group = {[1] = 1900}, vocations = {2}, needLearn = true},
     ['Penitence'] = {id = 21, words = 'penitence', icon_id = 21, description = 'send a holy shield wich deals holy damage and taunts all enemies. player will be healed based on the damage dealt per every creature hit', exhaustion = 15000, premium = false, type = 'Instant', icon = 21, mana = 100, level = 60, soul = 0, group = {[1] = 1900}, vocations = {2}},
     ['Holy Ground'] = {id = 22, words = 'holy ground', icon_id = 22, description = 'create a holy ground at your casted position wich will deal damage to enemies who stand inside its radius.', exhaustion = 15000, premium = false, type = 'Instant', icon = 22, mana = 90, level = 53, soul = 0, group = {[1] = 1900}, vocations = {2}},
-    ['Sacred Ground'] = {id = 23, words = 'sacred Ground', icon_id = 23, description = 'create a sacred ground at your casted position wich will heal allies who stand inside its radius.', exhaustion = 30000, premium = false, type = 'Instant', icon = 23, mana = 100, level = 1, soul = 0, group = {[2] = 1900}, vocations = {2}},
+    ['Sacred Ground'] = {id = 23, words = 'sacred Ground', icon_id = 23, description = 'create a sacred ground at your casted position wich will heal allies who stand inside its radius.', exhaustion = 30000, premium = false, type = 'Instant', icon = 23, mana = 100, level = 1, soul = 0, group = {[2] = 1900}, vocations = {2}, needLearn = true},
     ['Holy Strike'] = {id = 24, words = 'holy strike', icon_id = 24, description = 'after a short delay strike your target with a holy sentence.', exhaustion = 8000, premium = false, type = 'Instant', icon = 24, mana = 80, level = 45, soul = 0, group = {[1] = 1900}, vocations = {2}},
     ['Divine Storm'] = {id = 25, words = 'divine storm', icon_id = 25, description = 'create a holy storm wich deals damage in a radius and heals you and your nearby allies.', exhaustion = 15000, premium = false, type = 'Instant', icon = 25, mana = 130, level = 70, soul = 0, group = {[1] = 1900}, vocations = {2}},
     ['Exorcism'] = {id = 26, words = 'exorcism', icon_id = 26, description = 'call faith around you several times dealing damage to nearby enemies.', exhaustion = 40000, premium = false, type = 'Instant', icon = 26, mana = 185, level = 80, soul = 0, group = {[1] = 1900}, vocations = {2}},
     ['Smite'] = {id = 27, words = 'smite', icon_id = 27, description = 'smite your target dealing physical damage after a short delay', exhaustion = 3000, premium = false, type = 'Instant', icon = 27, mana = 20, level = 8, soul = 0, group = {[1] = 1900}, vocations = {2}},
     ['Light Beam'] = {id = 28, words = 'light beam', icon_id = 28, description = 'create a holy wave wich deals damage based on your direction.', exhaustion = 12000, premium = false, type = 'Instant', icon = 28, mana = 130, level = 50, soul = 0, group = {[1] = 1900}, vocations = {2}},
-    ['Summon Guardian of Light'] = {id = 29, words = 'summon guardian', icon_id = 29, description = 'summon the guardian of light to aid you, healing you and nearby allies while it is active.', exhaustion = 100000, premium = false, type = 'Instant', icon = 29, mana = 250, level = 1, soul = 0, group = {[3] = 1900}, vocations = {2}},
-    ['Kings Blessing'] = {id = 30, words = 'Kings Blessing', icon_id = 30, description = 'bless you and all party members increasing their combat stats by 8% for 20 minutes.', exhaustion = 1000, premium = false, type = 'Instant', icon = 30, mana = 50, level = 1, soul = 0, group = {[3] = 1900}, vocations = {2}},
-    ['Angelic Form'] = {id = 31, words = 'angelic form', icon_id = 31, description = 'gain the blessing of angels transforming you into a angel, while this form is active you and all your nearby allies will be constantly healed.', exhaustion = 100000, premium = false, type = 'Instant', icon = 31, mana = 500, level = 1, soul = 0, group = {[3] = 1900}, vocations = {2}},
+    ['Summon Guardian of Light'] = {id = 29, words = 'summon guardian', icon_id = 29, description = 'summon the guardian of light to aid you, healing you and nearby allies while it is active.', exhaustion = 100000, premium = false, type = 'Instant', icon = 29, mana = 250, level = 1, soul = 0, group = {[3] = 1900}, vocations = {2}, needLearn = true},
+    ['Kings Blessing'] = {id = 30, words = 'Kings Blessing', icon_id = 30, description = 'bless you and all party members increasing their combat stats by 8% for 20 minutes.', exhaustion = 1000, premium = false, type = 'Instant', icon = 30, mana = 50, level = 1, soul = 0, group = {[3] = 1900}, vocations = {2}, needLearn = true},
+    ['Angelic Form'] = {id = 31, words = 'angelic form', icon_id = 31, description = 'gain the blessing of angels transforming you into a angel, while this form is active you and all your nearby allies will be constantly healed.', exhaustion = 100000, premium = false, type = 'Instant', icon = 31, mana = 500, level = 1, soul = 0, group = {[3] = 1900}, vocations = {2}, needLearn = true},
     ['Judgement'] = {id = 32, words = 'judgement', icon_id = 32, description = 'throw a holy hammer to your target wich deals holy damage.', exhaustion = 3800, premium = false, type = 'Instant', icon = 32, mana = 40, level = 38, soul = 0, group = {[1] = 1900}, vocations = {2}},
    
     --Magician
@@ -226,15 +297,15 @@ SpellInfo = {
     ['Ice Nova'] = {id = 44, words = 'ice nova', icon_id = 44, description = 'create a ice nova wich extends from your current position slowing all enemies in its radius.', exhaustion = 25000, premium = false, type = 'Instant', icon = 44, mana = 115, level = 40, soul = 0, group = {[1] = 1900}, vocations = {1}},
     ['Mana Distortion'] = {id = 46, words = 'mana distortion', icon_id = 46, description = 'creates a distortion field wich restore mana to allies who stand inside its radius.', exhaustion = 120000, premium = false, type = 'Instant', icon = 46, mana = 0, level = 100, soul = 0, group = {[3] = 1900}, vocations = {1}},
     ['Mana Flow'] = {id = 47, words = 'mana flow', icon_id = 47, description = 'restores a percentage of your max mana every second for 8 seconds.', exhaustion = 33000, premium = false, type = 'Instant', icon = 47, mana = 0, level = 53, soul = 0, group = {[2] = 1900}, vocations = {1}},
-    ['Hand of God'] = {id = 48, words = 'hand of god', icon_id = 48, description = 'slam the ground creating a fire explosion dealing damage to all enemies in its radius.', exhaustion = 7000, premium = false, type = 'Instant', icon = 48, mana = 130, level = 38, soul = 0, group = {[1] = 1900}, vocations = {1}},
-    ['Frost Wave'] = {id = 49, words = 'frost wave', icon_id = 49, description = 'send a frozen wave into your faced direction wich stuns and freeze in aplce all enemies reached.', exhaustion = 15000, premium = false, type = 'Instant', icon = 49, mana = 230, level = 1, soul = 0, group = {[1] = 1900}, vocations = {1}},
-    ['Arcane Missiles'] = {id = 51, words = 'arcane missiles', icon_id = 51, description = 'shoot a group of missiles wich deals energy damage to your target.', exhaustion = 7000, premium = false, type = 'Instant', icon = 51, mana = 130, level = 38, soul = 0, group = {[1] = 1900}, vocations = {1}},
+    ['Hand of God'] = {id = 48, words = 'hand of god', icon_id = 48, description = 'slam the ground creating a fire explosion dealing damage to all enemies in its radius.', exhaustion = 7000, premium = false, type = 'Instant', icon = 48, mana = 130, level = 38, soul = 0, group = {[1] = 1900}, vocations = {1}, needLearn = true},
+    ['Frost Wave'] = {id = 49, words = 'frost wave', icon_id = 49, description = 'send a frozen wave into your faced direction wich stuns and freeze in aplce all enemies reached.', exhaustion = 15000, premium = false, type = 'Instant', icon = 49, mana = 230, level = 1, soul = 0, group = {[1] = 1900}, vocations = {1}, needLearn = true},
+    ['Arcane Missiles'] = {id = 51, words = 'arcane missiles', icon_id = 51, description = 'shoot a group of missiles wich deals energy damage to your target.', exhaustion = 7000, premium = false, type = 'Instant', icon = 51, mana = 130, level = 38, soul = 0, group = {[1] = 1900}, vocations = {1}, needLearn = true},
     ['Teleport'] = {id = 52, words = 'teleport', icon_id = 52, description = 'insstantly teleport yourself forwards, this effect can affected by objects', exhaustion = 12000, premium = false, type = 'Instant', icon = 52, mana = 150, level = 60, soul = 0, group = {[3] = 1900}, vocations = {1}},
     ['Blizzard'] = {id = 53, words = 'blizzard', icon_id = 53, description = 'create a blizzard storm into your target position dealing ice damage while it is active.', exhaustion = 15000, premium = false, type = 'Instant', icon = 53, mana = 300, level = 45, soul = 0, group = {[1] = 1900}, vocations = {1}},
-    ['Hells Core'] = {id = 54, words = 'hells core', icon_id = 54, description = 'a meteor fall at your target position dealing massive fire damage.', exhaustion = 55000, premium = false, type = 'Instant', icon = 54, mana = 400, level = 1, soul = 0, group = {[1] = 1900}, vocations = {1}},
+    ['Hells Core'] = {id = 54, words = 'hells core', icon_id = 54, description = 'a meteor fall at your target position dealing massive fire damage.', exhaustion = 55000, premium = false, type = 'Instant', icon = 54, mana = 400, level = 1, soul = 0, group = {[1] = 1900}, vocations = {1}, needLearn = true},
     ['Ice Barrage'] = {id = 55, words = 'ice barrage', icon_id = 55, description = 'shoot a group of icicles wich deals ice damage to your target.', exhaustion = 9000, premium = false, type = 'Instant', icon = 55, mana = 130, level = 38, soul = 0, group = {[1] = 1900}, vocations = {1}},
     ['Ice Wall'] = {id = 56, words = 'ice wall', icon_id = 56, description = 'create a ice wall wich extends horizontally blocking paths and enemies.', exhaustion = 12000, premium = false, type = 'Instant', icon = 56, mana = 200, level = 70, soul = 0, group = {[1] = 1900}, vocations = {1}},
-    ['Ice Clones'] = {id = 57, words = 'ice clones', icon_id = 57, description = 'create a 4 clones of yourself wich will follow you and deal ice damage to enemies.', exhaustion = 70000, premium = false, type = 'Instant', icon = 57, mana = 350, level = 1, soul = 0, group = {[1] = 1900}, vocations = {1}},
+    ['Ice Clones'] = {id = 57, words = 'ice clones', icon_id = 57, description = 'create a 4 clones of yourself wich will follow you and deal ice damage to enemies.', exhaustion = 70000, premium = false, type = 'Instant', icon = 57, mana = 350, level = 1, soul = 0, group = {[1] = 1900}, vocations = {1}, needLearn = true},
     ['Eruption'] = {id = 58, words = 'eruption', icon_id = 58, description = 'prepare a area for eruption, wich explodes after a quick delay dealing fire damage to all enemies reached.', exhaustion = 2000, premium = false, type = 'Instant', icon = 58, mana = 10, level = 60, soul = 0, group = {[1] = 2000}, vocations = {1}},
     ['Glacial Steps'] = {id = 59, words = 'glacial steps', icon_id = 59, description = 'leave a trail of ice traps while walking wich slow down enemies on contact.', exhaustion = 50000, premium = false, type = 'Instant', icon = 59, mana = 115, level = 42, soul = 0, group = {[1] = 2000}, vocations = {1}},
     
@@ -348,7 +419,7 @@ SpellInfo = {
     
     --others
     ['Shield Wall'] = {id = 204, words = 'Shield Wall', icon_id = 204, description = 'Increase your defense skill by 30%, requires a shield or offhand to be equiped.', exhaustion = 2000, premium = false, type = 'Instant', icon = 204, mana = 0, level = 1, soul = 0, group = {[2] = 2000}, vocations = {2,4,7,8}},
-    ['Taunt'] = {id = 220, words = 'taunt', icon_id = 220, description = 'Taunt all nearby enemies forcing them to attack you.', exhaustion = 2000, premium = false, type = 'Instant', icon = 220, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Taunt'] = {id = 220, words = 'taunt', icon_id = 220, description = 'Taunt all nearby enemies forcing them to attack you.', exhaustion = 2000, premium = false, type = 'Instant', icon = 220, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {2,4,7,8}},
 
 
     ['Minor Heal'] = {id = 200, words = 'minor heal', icon_id = 200, description = 'personal minor heal', exhaustion = 2000, premium = false, type = 'Instant', icon = 200, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
