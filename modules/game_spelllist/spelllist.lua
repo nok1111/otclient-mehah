@@ -285,6 +285,9 @@ function changeSpelllistProfile(oldProfile)
 end
 
 function updateSpelllist()
+    local learnedSpells = getLearnedSpells() or {}
+    print('DEBUG learnedSpells:', table.tostring and table.tostring(learnedSpells) or learnedSpells)
+    for k,v in pairs(learnedSpells) do print('learned:', k, v) end
     for i = 1, #SpelllistSettings[SpelllistProfile].spellOrder do
         local spell = SpelllistSettings[SpelllistProfile].spellOrder[i]
         local info = SpellInfo[SpelllistProfile][spell]
@@ -292,11 +295,13 @@ function updateSpelllist()
 
         local localPlayer = g_game.getLocalPlayer()
         local playerVocation = localPlayer and localPlayer:getVocation() or nil
-        if info and playerVocation and table.contains(info.vocations, playerVocation) then
-            tmpLabel:setVisible(true)
-        else
-            tmpLabel:setVisible(false)
+        local show = false
+        if info and playerVocation and table.contains(info.vocations, playerVocation) and not info.needLearn then
+            show = true
+        elseif info and info.needLearn and (learnedSpells[spell] or learnedSpells[info.words]) then
+            show = true
         end
+        tmpLabel:setVisible(show)
     end
 end
 
