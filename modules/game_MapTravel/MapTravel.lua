@@ -12,6 +12,22 @@ function MapTravel.init()
 	)
 	ProtocolGame.registerExtendedOpcode(MapTravel_OPCODE, MapTravel.onExtendedOpcode)
 
+	-- Bind hotkey to open in view-only mode (no teleport interactions)
+	if g_keyboard and g_keyboard.bindKeyDown then
+		MapTravel.hotkeyBinding = g_keyboard.bindKeyDown('Ctrl+M', function()
+			if MapTravel.UI and MapTravel.UI:isVisible() then
+				MapTravel.hide()
+				return
+			end
+			MapTravel.viewOnly = true
+			-- ensure UI exists and map is up to date
+			if g_game.isOnline() then
+				MapTravel.updateMap()
+				MapTravel.show()
+			end
+		end)
+	end
+
 	if g_game.isOnline() then
 		MapTravel.onGameStart()
 	end
@@ -26,6 +42,11 @@ function MapTravel.terminate()
 		}
 	)
 	ProtocolGame.unregisterExtendedOpcode(MapTravel_OPCODE)
+	-- Unbind hotkey
+	if MapTravel.hotkeyBinding and g_keyboard and g_keyboard.unbindKeyDown then
+		g_keyboard.unbindKeyDown(MapTravel.hotkeyBinding)
+		MapTravel.hotkeyBinding = nil
+	end
 	MapTravel.onGameEnd()
 end
 
@@ -170,7 +191,7 @@ function MapTravel.updateMap()
 		nodeWidget:setWidth(MapTravel.originalNodeWidgetWidth * MapTravel.mapScale)
 		nodeWidget:setHeight(MapTravel.originalNodeWidgetHeight * MapTravel.mapScale)
 
-		if nodeEnabled then
+		if nodeEnabled and not MapTravel.viewOnly then
 			nodeWidget.onClick = function()
 				MapTravel.requestTravel(nodeIndex, MapTravel.currentNodeNameId)
 			end
@@ -349,6 +370,8 @@ function MapTravel.onExtendedOpcode(protocol, opcode, buffer)
 end
 
 function MapTravel.handleLaunchMapTravel(data)
+	-- Launched by server -> interactive mode
+	MapTravel.viewOnly = false
 	MapTravel.currentNodeNameId = data.currentNode
 	MapTravel.updateMap()
 	MapTravel.show()
