@@ -47,8 +47,27 @@ function M.init()
   local function loop()
     ensureEvent = nil
     if g_game.isOnline() then
+      local lp = g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
+      local playerPos = lp and lp:getPosition() or nil
+      local playerZ = playerPos and playerPos.z or nil
       for key, entry in pairs(desired) do
-        M.ensureLabelAttached(entry.pos, entry.text, entry.opts)
+        if playerZ and entry.pos and entry.pos.z then
+          if entry.pos.z ~= playerZ then
+            -- Different floor: ensure it's not present
+            local w = registry[key]
+            if w then
+              destroyWidget(w)
+              registry[key] = nil
+            end
+            -- skip creation on other floors
+          else
+            -- Same floor: ensure attached
+            M.ensureLabelAttached(entry.pos, entry.text, entry.opts)
+          end
+        else
+          -- Fallback if we can't read player Z
+          M.ensureLabelAttached(entry.pos, entry.text, entry.opts)
+        end
       end
     end
     ensureEvent = scheduleEvent(loop, ENSURE_INTERVAL_MS)
@@ -87,6 +106,17 @@ end
 function M.ensureLabelAttached(pos, text, opts)
   local key = posKey(pos)
   local tile = g_map.getTile(pos)
+  -- Respect floor: only attach on same Z as player
+  local lp = g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
+  local playerPos = lp and lp:getPosition() or nil
+  if playerPos and pos and pos.z and playerPos.z and pos.z ~= playerPos.z then
+    local existing = registry[key]
+    if existing then
+      destroyWidget(existing)
+      registry[key] = nil
+    end
+    return
+  end
   if not tile then
     -- will be retried by the ensure loop later
     return
@@ -157,6 +187,12 @@ function M.addLabel(pos, text, opts)
     p = { x = p.x, y = p.y, z = p.z }
   end
   desired[key] = { pos = p, text = text, opts = opts }
+  -- Only attach immediately if on the same floor; otherwise wait for ensure loop
+  local lp = g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
+  local playerPos = lp and lp:getPosition() or nil
+  if playerPos and p and p.z and playerPos.z and p.z ~= playerPos.z then
+    return nil
+  end
   return attachWhenReady(pos, create)
 end
 
