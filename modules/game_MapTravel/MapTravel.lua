@@ -179,10 +179,12 @@ function MapTravel.updateMap()
 		end
 	end
 
-	-- Render Zone Nodes (non-interactive markers with creature looktype icons)
+	-- Render Zone Nodes (non-interactive markers)
 	if MapTravel.zonesConfig and #MapTravel.zonesConfig > 0 then
 		for _, zone in ipairs(MapTravel.zonesConfig) do
-			local zoneWidget = g_ui.createWidget("MapTravelZoneNode", mapPanel)
+			local isImageNode = (zone.image ~= nil and zone.image ~= '') and (zone.outfit == nil)
+			local widgetType = isImageNode and "MapTravelZoneImageNode" or "MapTravelZoneNode"
+			local zoneWidget = g_ui.createWidget(widgetType, mapPanel)
 			zoneWidget:addAnchor(AnchorTop, "parent", AnchorTop)
 			zoneWidget:addAnchor(AnchorLeft, "parent", AnchorLeft)
 
@@ -197,22 +199,64 @@ function MapTravel.updateMap()
 			zoneWidget:setWidth(baseW * MapTravel.mapScale)
 			zoneWidget:setHeight(baseH * MapTravel.mapScale)
 
-			-- Outfit (creature looktype)
-			if zone.outfit then
+			-- Outfit (creature looktype) or Image icon
+			if not isImageNode and zone.outfit then
 				zoneWidget:setOutfit(zone.outfit)
 				if zoneWidget.setCenter then
 					zoneWidget:setCenter(true)
+				end
+				-- Try to keep large outfits centered/fitting in the node
+				local baseW = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.width or zoneWidget:getWidth()
+				local baseH = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.height or zoneWidget:getHeight()
+				-- Ensure widget size matches configured node size (already set above, but reaffirm)
+				if zoneWidget.setSize then
+					zoneWidget:setSize(string.format("%d %d", math.floor(baseW * MapTravel.mapScale), math.floor(baseH * MapTravel.mapScale)))
+				end
+				if zoneWidget.setPadding then
+					zoneWidget:setPadding(zone.padding or -math.floor((baseW + baseH) / 16))
+				end
+				if zoneWidget.setMarginLeft then
+					zoneWidget:setMarginLeft(mLeft + (zone.marginLeftOffset or 0))
+				end
+				if zoneWidget.setMarginTop then
+					zoneWidget:setMarginTop(mTop + (zone.marginTopOffset or 0))
+				end
+				-- Adjust creature render size based on thing real size
+				if g_things and g_things.getThingType and zone.outfit.type and zoneWidget.setCreatureSize then
+					local thingType = g_things.getThingType(zone.outfit.type, ThingCategoryCreature)
+					if thingType and thingType.getRealSize then
+						local real = thingType:getRealSize() or 64
+						local base = math.floor((baseW + baseH) / 2)
+						local extra = zone.creatureSizeExtra or 148
+						zoneWidget:setCreatureSize(real + extra)
+					end
 				end
 				-- Attach visual effect to the UICreature icon if possible
 				if zoneWidget.getCreature then
 					local creatureObj = zoneWidget:getCreature()
 					if creatureObj and creatureObj.attachEffect and g_attachedEffects and g_attachedEffects.getById then
-						local chosenEffectId = (zone.effectId ~= nil) and zone.effectId or MapTravel.zoneEffectId
+						local chosenEffectId = zone.effectId
 						local effect = chosenEffectId and g_attachedEffects.getById(chosenEffectId) or nil
 						if effect then
 							creatureObj:attachEffect(effect)
 						end
 					end
+				end
+			elseif isImageNode then
+				-- Static image icon
+				if zoneWidget.setImageSource then
+					zoneWidget:setImageSource(zone.image)
+				end
+				-- Allow per-zone scaling via zone.imageScale (default 1)
+				local imageScale = zone.imageScale or 1
+				zoneWidget:setWidth((baseW * MapTravel.mapScale) * imageScale)
+				zoneWidget:setHeight((baseH * MapTravel.mapScale) * imageScale)
+				-- Optional offsets
+				if zone.imageMarginLeftOffset then
+					zoneWidget:setMarginLeft(mLeft + zone.imageMarginLeftOffset)
+				end
+				if zone.imageMarginTopOffset then
+					zoneWidget:setMarginTop(mTop + zone.imageMarginTopOffset)
 				end
 			end
 
@@ -462,10 +506,45 @@ function MapTravel.applyZoneTooltip(zone)
 
     -- Create header with creature and texts
     local header = g_ui.createWidget("MapTravelZoneHeader", MapTravel.UI.NodesTooltip)
+    -- Choose icon type: outfit (creature) or static image
     if zone.outfit then
-        header.icon:setOutfit(zone.outfit)
-        if header.icon.setCenter then
-            header.icon:setCenter(true)
+        -- Show creature icon, hide image icon
+        if header.imageIcon and header.imageIcon.setVisible then
+            header.imageIcon:setVisible(false)
+        end
+        if header.creatureIcon then
+            header.creatureIcon:setVisible(true)
+            header.creatureIcon:setOutfit(zone.outfit)
+            if header.creatureIcon.setCenter then
+                header.creatureIcon:setCenter(true)
+            end
+        end
+        -- Ensure info is anchored to creature icon
+        if header.info and header.info.breakAnchors and header.info.addAnchor then
+            header.info:breakAnchors()
+            header.info:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
+            header.info:addAnchor(AnchorLeft, "creatureIcon", AnchorRight)
+            header.info:addAnchor(AnchorRight, "parent", AnchorRight)
+            header.info:setMarginLeft(8)
+        end
+    elseif zone.image then
+        -- Show image icon, hide creature icon
+        if header.creatureIcon and header.creatureIcon.setVisible then
+            header.creatureIcon:setVisible(false)
+        end
+        if header.imageIcon then
+            header.imageIcon:setVisible(true)
+            if header.imageIcon.setImageSource then
+                header.imageIcon:setImageSource(zone.image)
+            end
+        end
+        -- Anchor info to the image icon's right
+        if header.info and header.info.breakAnchors and header.info.addAnchor then
+            header.info:breakAnchors()
+            header.info:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
+            header.info:addAnchor(AnchorLeft, "imageIcon", AnchorRight)
+            header.info:addAnchor(AnchorRight, "parent", AnchorRight)
+            header.info:setMarginLeft(8)
         end
     end
     local zoneName = zone.name or "Unknown Zone"

@@ -7,6 +7,11 @@ MapTravelNode < UIWidget
 MapTravelZoneNode < UICreature
   phantom: false
 
+MapTravelZoneImageNode < UIWidget
+  phantom: false
+  image-auto-resize: true
+  image-smooth: true
+
 Mapimage < UIWidget
   phantom: false
   image-smooth: true

@@ -164,21 +164,32 @@ MapTravel.mapNodesConfig = {
 -- outfit.type is the lookType ID to render; name is the zone name; recommendedLevel is a number/string.
 -- modulePos uses the same coordinate system as mapNodesConfig and will be scaled by MapTravel.mapScale.
 MapTravel.zoneNodeSize = { width = 64, height = 64 }
--- Default attached effect id for zone icons (UICreature). Can be overridden per zone with `effectId`.
-MapTravel.zoneEffectId = 8
+-- zonesConfig now supports two icon types per entry:
+-- 1) Creature icon: provide `outfit = { type = <lookTypeId> }`
+-- 2) Static image icon: provide `image = "/images/..."` (omit `outfit`)
+-- Optional per-entry fields:
+--   effectId (number)            -> attaches an effect to creature icons only
+--   creatureSizeExtra (number)   -> extra size added to thing real size for better fit
+--   marginLeftOffset / marginTopOffset (numbers) -> fine tune position for creature icons
+--   imageScale (number, default 1)               -> scale factor for image icons
+--   imageMarginLeftOffset / imageMarginTopOffset -> fine tune position for image icons
 MapTravel.zonesConfig = {
-  -- Example entries; update positions to your map needs
+  -- Example: creature looktype node with per-node effect
   {
     outfit = { type = 12 }, -- lookType ID (example)
     name = "Bandit Camp",
     recommendedLevel = 20,
     modulePos = { marginTop = 720, marginLeft = 420 },
+    effectId = 8,
+    creatureSizeExtra = 148,
   },
+  -- Example: static image node (no creature effect applied)
   {
-    outfit = { type = 22 },
-    name = "Rotworm Tunnels",
-    recommendedLevel = 40,
+    image = "/images/icons/dungeon.png",
+    name = "Cursed Moors",
+    recommendedLevel = 60,
     modulePos = { marginTop = 880, marginLeft = 610 },
+    imageScale = 1.0,
   },
   -- Add more zone entries as needed
 }

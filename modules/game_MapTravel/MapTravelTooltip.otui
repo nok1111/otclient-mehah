@@ -22,15 +22,24 @@ MapTravelZoneHeader < UIWidget
   phantom: false
 
   UICreature
-    id: icon
+    id: creatureIcon
     anchors.verticalCenter: parent.verticalCenter
     anchors.left: parent.left
     size: 38 38
 
   UIWidget
+    id: imageIcon
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent.left
+    size: 38 38
+    image-auto-resize: true
+    image-smooth: true
+    visible: false
+
+  UIWidget
     id: info
     anchors.verticalCenter: parent.verticalCenter
-    anchors.left: icon.right
+    anchors.left: creatureIcon.right
     anchors.right: parent.right
     margin-left: 8
     layout:
