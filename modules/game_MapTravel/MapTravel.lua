@@ -15,17 +15,20 @@ function MapTravel.init()
 	-- Bind hotkey to open in view-only mode (no teleport interactions)
 	if g_keyboard and g_keyboard.bindKeyDown then
 		MapTravel.hotkeyBinding = g_keyboard.bindKeyDown('Ctrl+M', function()
-			if MapTravel.UI and MapTravel.UI:isVisible() then
-				MapTravel.hide()
-				return
-			end
-			MapTravel.viewOnly = true
-			-- ensure UI exists and map is up to date
-			if g_game.isOnline() then
-				MapTravel.updateMap()
-				MapTravel.show()
-			end
-		end)
+            if MapTravel.UI and MapTravel.UI:isVisible() then
+                MapTravel.hide()
+                return
+            end
+            MapTravel.viewOnly = true
+            -- ensure UI exists and map is up to date
+            if g_game.isOnline() then
+                MapTravel.updateMap()
+                if MapTravel.UI and MapTravel.UI.viewOnlyBadge then
+                    MapTravel.UI.viewOnlyBadge:setVisible(true)
+                end
+                MapTravel.show()
+            end
+        end)
 	end
 
 	if g_game.isOnline() then
@@ -370,11 +373,14 @@ function MapTravel.onExtendedOpcode(protocol, opcode, buffer)
 end
 
 function MapTravel.handleLaunchMapTravel(data)
-	-- Launched by server -> interactive mode
-	MapTravel.viewOnly = false
-	MapTravel.currentNodeNameId = data.currentNode
-	MapTravel.updateMap()
-	MapTravel.show()
+    -- Launched by server -> interactive mode
+    MapTravel.viewOnly = false
+    MapTravel.currentNodeNameId = data.currentNode
+    if MapTravel.UI and MapTravel.UI.viewOnlyBadge then
+        MapTravel.UI.viewOnlyBadge:setVisible(false)
+    end
+    MapTravel.updateMap()
+    MapTravel.show()
 end
 
 function MapTravel.buildDiscoveredData(discoveredNodes)

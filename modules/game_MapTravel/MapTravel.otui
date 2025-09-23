@@ -29,6 +29,22 @@ UIWidget
     image-auto-resize: true
     draggable: true
 
+    FlatPanel
+      id: viewOnlyBadge
+      text: VIEW ONLY
+      anchors.top: parent.top
+      anchors.right: parent.right
+      margin-top: 8
+      margin-right: 8
+      padding: 4
+      text-auto-resize: true
+      text-align: center
+      background-color: #1a1a1acc
+      color: #ffd966
+      border-width: 1
+      border-color: #666666
+      visible: false
+
     UIWidget
       id: mapImageDev
       anchors.fill: parent
