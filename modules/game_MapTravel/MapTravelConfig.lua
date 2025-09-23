@@ -163,7 +163,9 @@ MapTravel.mapNodesConfig = {
 -- and shows a tooltip with the creature and recommended level.
 -- outfit.type is the lookType ID to render; name is the zone name; recommendedLevel is a number/string.
 -- modulePos uses the same coordinate system as mapNodesConfig and will be scaled by MapTravel.mapScale.
-MapTravel.zoneNodeSize = { width = 36, height = 36 }
+MapTravel.zoneNodeSize = { width = 64, height = 64 }
+-- Default attached effect id for zone icons (UICreature). Can be overridden per zone with `effectId`.
+MapTravel.zoneEffectId = 8
 MapTravel.zonesConfig = {
   -- Example entries; update positions to your map needs
   {

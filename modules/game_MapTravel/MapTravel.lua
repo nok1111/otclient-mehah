@@ -203,6 +203,17 @@ function MapTravel.updateMap()
 				if zoneWidget.setCenter then
 					zoneWidget:setCenter(true)
 				end
+				-- Attach visual effect to the UICreature icon if possible
+				if zoneWidget.getCreature then
+					local creatureObj = zoneWidget:getCreature()
+					if creatureObj and creatureObj.attachEffect and g_attachedEffects and g_attachedEffects.getById then
+						local chosenEffectId = (zone.effectId ~= nil) and zone.effectId or MapTravel.zoneEffectId
+						local effect = chosenEffectId and g_attachedEffects.getById(chosenEffectId) or nil
+						if effect then
+							creatureObj:attachEffect(effect)
+						end
+					end
+				end
 			end
 
 			-- Hover tooltip
