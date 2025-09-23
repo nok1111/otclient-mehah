@@ -178,6 +178,39 @@ function MapTravel.updateMap()
 			nodeWidget.onClick = nil
 		end
 	end
+
+	-- Render Zone Nodes (non-interactive markers with creature looktype icons)
+	if MapTravel.zonesConfig and #MapTravel.zonesConfig > 0 then
+		for _, zone in ipairs(MapTravel.zonesConfig) do
+			local zoneWidget = g_ui.createWidget("MapTravelZoneNode", mapPanel)
+			zoneWidget:addAnchor(AnchorTop, "parent", AnchorTop)
+			zoneWidget:addAnchor(AnchorLeft, "parent", AnchorLeft)
+
+			local mTop = (zone.modulePos.marginTop or 0) * MapTravel.mapScale
+			local mLeft = (zone.modulePos.marginLeft or 0) * MapTravel.mapScale
+			zoneWidget:setMarginTop(mTop)
+			zoneWidget:setMarginLeft(mLeft)
+
+			-- Size
+			local baseW = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.width or 36
+			local baseH = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.height or 36
+			zoneWidget:setWidth(baseW * MapTravel.mapScale)
+			zoneWidget:setHeight(baseH * MapTravel.mapScale)
+
+			-- Outfit (creature looktype)
+			if zone.outfit then
+				zoneWidget:setOutfit(zone.outfit)
+				if zoneWidget.setCenter then
+					zoneWidget:setCenter(true)
+				end
+			end
+
+			-- Hover tooltip
+			zoneWidget.onHoverChange = function(w, hovered)
+				MapTravel.onZoneHoverChange(w, hovered, zone)
+			end
+		end
+	end
 	MapTravel.makeWidgetDraggable(mapPanel, true)
 end
 
@@ -396,6 +429,58 @@ function MapTravel.moveNodeToolTip()
 
 	MapTravel.UI.NodesTooltip:setPosition(pos)
 	MapTravel.UI.NodesTooltip:raise()
+end
+
+-- Zone nodes: only tooltip on hover; no click travel
+function MapTravel.onZoneHoverChange(widget, hovered, zone)
+    if not MapTravel.UI then
+        return
+    end
+
+    if hovered then
+        MapTravel.applyZoneTooltip(zone)
+        connect(rootWidget, {onMouseMove = MapTravel.moveNodeToolTip})
+    else
+        MapTravel.UI.NodesTooltip:hide()
+        disconnect(rootWidget, {onMouseMove = MapTravel.moveNodeToolTip})
+    end
+end
+
+function MapTravel.applyZoneTooltip(zone)
+    MapTravel.UI.NodesTooltip:destroyChildren()
+
+    -- Create header with creature and texts
+    local header = g_ui.createWidget("MapTravelZoneHeader", MapTravel.UI.NodesTooltip)
+    if zone.outfit then
+        header.icon:setOutfit(zone.outfit)
+        if header.icon.setCenter then
+            header.icon:setCenter(true)
+        end
+    end
+    local zoneName = zone.name or "Unknown Zone"
+    header.info.name:setText(zoneName)
+    if header.info.name.setTextAlign then
+        header.info.name:setTextAlign(AlignLeft)
+    end
+    -- do not set panel title; zone header will carry its own texts
+    -- ensure visible color (some skins may override defaults)
+    if header.info.name.setColor then
+        header.info.name:setColor('#dfdfdf')
+    end
+    if zone.recommendedLevel then
+        header.info.level:setText("Recommended Lv. " .. tostring(zone.recommendedLevel))
+    else
+        header.info.level:setText("")
+    end
+    if header.info.level.setColor then
+        header.info.level:setColor('#cccccc')
+    end
+    if header.info.level.setTextAlign then
+        header.info.level:setTextAlign(AlignLeft)
+    end
+
+    MapTravel.UI.NodesTooltip:show()
+    MapTravel.moveNodeToolTip()
 end
 
 

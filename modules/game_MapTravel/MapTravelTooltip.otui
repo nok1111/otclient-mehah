@@ -17,6 +17,35 @@ MapTravelCostEntry < UIWidget
     margin-left: 5
     text-auto-resize: true
 
+MapTravelZoneHeader < UIWidget
+  height: 50
+  phantom: false
+
+  UICreature
+    id: icon
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent.left
+    size: 38 38
+
+  UIWidget
+    id: info
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: icon.right
+    anchors.right: parent.right
+    margin-left: 8
+    layout:
+      type: verticalBox
+      fit-children: true
+
+    Label
+      id: name
+      color: #dfdfdf
+      text-auto-resize: true
+
+    Label
+      id: level
+      text-auto-resize: true
+
 Panel
   text-offset: 5 2
   text-align: top
