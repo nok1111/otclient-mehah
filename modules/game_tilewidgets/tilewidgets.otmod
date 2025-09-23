@@ -1,0 +1,10 @@
+Module
+  name: game_tilewidgets
+  description: Tile widgets manager (labels/icons attached to map tiles)
+  author: Cascade
+  website: https://github.com/otclient
+  sandboxed: true
+  scripts: [ tilewidgets, tilewidgets_config ]
+
+  @onLoad: modules.game_tilewidgets.init()
+  @onUnload: modules.game_tilewidgets.terminate()
