@@ -178,6 +178,39 @@ function MapTravel.updateMap()
 			nodeWidget.onClick = nil
 		end
 	end
+
+	-- Render Zone Nodes (non-interactive markers with creature looktype icons)
+	if MapTravel.zonesConfig and #MapTravel.zonesConfig > 0 then
+		for _, zone in ipairs(MapTravel.zonesConfig) do
+			local zoneWidget = g_ui.createWidget("MapTravelZoneNode", mapPanel)
+			zoneWidget:addAnchor(AnchorTop, "parent", AnchorTop)
+			zoneWidget:addAnchor(AnchorLeft, "parent", AnchorLeft)
+
+			local mTop = (zone.modulePos.marginTop or 0) * MapTravel.mapScale
+			local mLeft = (zone.modulePos.marginLeft or 0) * MapTravel.mapScale
+			zoneWidget:setMarginTop(mTop)
+			zoneWidget:setMarginLeft(mLeft)
+
+			-- Size
+			local baseW = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.width or 36
+			local baseH = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.height or 36
+			zoneWidget:setWidth(baseW * MapTravel.mapScale)
+			zoneWidget:setHeight(baseH * MapTravel.mapScale)
+
+			-- Outfit (creature looktype)
+			if zone.outfit then
+				zoneWidget:setOutfit(zone.outfit)
+				if zoneWidget.setCenter then
+					zoneWidget:setCenter(true)
+				end
+			end
+
+			-- Hover tooltip
+			zoneWidget.onHoverChange = function(w, hovered)
+				MapTravel.onZoneHoverChange(w, hovered, zone)
+			end
+		end
+	end
 	MapTravel.makeWidgetDraggable(mapPanel, true)
 end
 

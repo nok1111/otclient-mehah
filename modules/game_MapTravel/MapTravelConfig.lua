@@ -158,3 +158,25 @@ MapTravel.mapNodesConfig = {
 	},
 
 }
+
+-- Zone nodes (no teleport/discover). Each entry renders a creature looktype as the node icon
+-- and shows a tooltip with the creature and recommended level.
+-- outfit.type is the lookType ID to render; name is the zone name; recommendedLevel is a number/string.
+-- modulePos uses the same coordinate system as mapNodesConfig and will be scaled by MapTravel.mapScale.
+MapTravel.zoneNodeSize = { width = 36, height = 36 }
+MapTravel.zonesConfig = {
+    -- Example entries; update positions to your map needs
+    {
+        outfit = { type = 12 }, -- lookType ID (example)
+        name = "Bandit Camp",
+        recommendedLevel = 20,
+        modulePos = { marginTop = 720, marginLeft = 420 },
+    },
+    {
+        outfit = { type = 22 },
+        name = "Rotworm Tunnels",
+        recommendedLevel = 40,
+        modulePos = { marginTop = 880, marginLeft = 610 },
+    },
+    -- Add more zone entries as needed
+}
