@@ -7,8 +7,8 @@ TileWidgetsConfig = {
   labels = {
     -- Example label
     {
-      pos = { x = 229, y = 701, z = 6 },
-      text = "OTC Redemption",
+      pos = { x = 208, y = 703, z = 5 },
+      text = "Refinery Table",
       opts = {
         width = 100, height = 22,
         font = "terminus-10px",
@@ -16,17 +16,54 @@ TileWidgetsConfig = {
         marginBottom = 40
       }
     },
-  },
-
-  images = {
-    -- Example image icon
     {
-      pos = { x = 233, y = 700, z = 6 },
-      image = "/images/icons/dungeon.png",
+      pos = { x = 208, y = 707, z = 5 },
+      text = "Alchemy Table",
       opts = {
-        width = 24, height = 24,
-        marginBottom = 32
+        width = 100, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40
       }
     },
-  }
+
+    {
+      pos = { x = 205, y = 703, z = 5 },
+      text = "Enchanting Table",
+      opts = {
+        width = 100, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40
+      }
+    },
+    {
+      pos = { x = 201, y = 705, z = 5 },
+      text = "Blacksmith Table",
+      opts = {
+        width = 100, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40
+      }
+    },
+
+    {
+      pos = { x = 227, y = 703, z = 6 },
+      text = "Waypoint",
+      opts = {
+        width = 100, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40
+      }
+    },
+
+
+
+
+
+
+
+  }, 
 }

@@ -176,6 +176,7 @@ MapTravel.zoneNodeSize = { width = 64, height = 64 }
 MapTravel.zonesConfig = {
   -- Example: creature looktype node with per-node effect
   {
+	displayName = "Monster Camp",
     outfit = { type = 12 }, -- lookType ID (example)
     name = "Bandit Camp",
     recommendedLevel = 20,
@@ -185,10 +186,11 @@ MapTravel.zonesConfig = {
   },
   -- Example: static image node (no creature effect applied)
   {
+    displayName = "Dungeon",
     image = "/images/icons/dungeon.png",
-    name = "Cursed Moors",
+    name = "Lucela's Dungeon",
     recommendedLevel = 60,
-    modulePos = { marginTop = 880, marginLeft = 610 },
+    modulePos = { marginTop = 635, marginLeft = 610 },
     imageScale = 1.0,
   },
   -- Add more zone entries as needed
