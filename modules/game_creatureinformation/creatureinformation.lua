@@ -67,6 +67,9 @@ local outfitOffsets = {
     [2431] = {x = 32, y = 32},
     [2432] = {x = 32, y = 32},
 
+    --the old widow
+    [2806] = {x = 25, y = 1},
+
     -- Add all your outfit IDs and their offsets here
 }
 
