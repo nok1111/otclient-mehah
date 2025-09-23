@@ -3,12 +3,20 @@ local SpelllistProfile = 'Custom'
 spelllistWindow = nil
 spelllistButton = nil
 spellList = nil
-nameValueLabel = nil
+-- New UI elements only
+searchEdit = nil
+spellTitle = nil
+chipFormula = nil
+chipCooldown = nil
+chipLevel = nil
+chipMana = nil
+descriptionValueLabel = nil
+-- Labeled value fields on right pane
 formulaValueLabel = nil
 cooldownValueLabel = nil
 levelValueLabel = nil
 manaValueLabel = nil
-descriptionValueLabel = nil
+spellIcon = nil
 
 
 function getSpelllistProfile()
@@ -50,16 +58,27 @@ function init()
     spelllistWindow = g_ui.displayUI('spelllist', modules.game_interface.getRightPanel())
     spelllistWindow:hide()
 
-    nameValueLabel = spelllistWindow:getChildById('labelNameValue')
-    formulaValueLabel = spelllistWindow:getChildById('labelFormulaValue')
-    cooldownValueLabel = spelllistWindow:getChildById('labelCooldownValue')
-    levelValueLabel = spelllistWindow:getChildById('labelLevelValue')
-    manaValueLabel = spelllistWindow:getChildById('labelManaValue')
-    descriptionValueLabel = spelllistWindow:getChildById('labelDescriptionValue')
+    descriptionValueLabel = spelllistWindow:recursiveGetChildById('labelDescriptionValue')
+
+    -- New UI references (safe even if absent)
+    searchEdit   = spelllistWindow:recursiveGetChildById('searchEdit')
+    spellTitle   = spelllistWindow:recursiveGetChildById('spellTitle')
+    chipFormula  = spelllistWindow:recursiveGetChildById('chipFormula')
+    chipCooldown = spelllistWindow:recursiveGetChildById('chipCooldown')
+    chipLevel    = spelllistWindow:recursiveGetChildById('chipLevel')
+    chipMana     = spelllistWindow:recursiveGetChildById('chipMana')
+    spellIcon    = spelllistWindow:recursiveGetChildById('spellIcon')
+
+    -- Right pane labeled values
+    formulaValueLabel  = spelllistWindow:recursiveGetChildById('labelFormulaValue')
+    cooldownValueLabel = spelllistWindow:recursiveGetChildById('labelCooldownValue')
+    levelValueLabel    = spelllistWindow:recursiveGetChildById('labelLevelValue')
+    manaValueLabel     = spelllistWindow:recursiveGetChildById('labelManaValue')
 
    
 
-    spellList = spelllistWindow:getChildById('spellList')
+    spellList = spelllistWindow:recursiveGetChildById('spellList')
+    print('[SpellList] spellList widget:', spellList and spellList:getClassName() or 'nil')
 
     g_keyboard.bindKeyPress('Down', function()
         spellList:focusNextChild(KeyboardFocusReason)
@@ -69,8 +88,25 @@ function init()
     end, spelllistWindow)
 
     initializeSpelllist()
+
+    -- Hook search to filter list (set after spellList exists)
+    if searchEdit then
+        searchEdit.onTextChange = function(widget, text)
+            local query = (text or ''):lower()
+            for i = 1, #SpelllistSettings[SpelllistProfile].spellOrder do
+                local sid = SpelllistSettings[SpelllistProfile].spellOrder[i]
+                local info = SpellInfo[SpelllistProfile][sid]
+                local label = spellList and spellList:getChildById(sid)
+                if label then
+                    local hay = (sid .. ' ' .. (info.words or '')):lower()
+                    local match = query == '' or string.find(hay, query, 1, true) ~= nil
+                    label:setVisible(match)
+                end
+            end
+        end
+    end
     
-    resizeWindow()
+    --resizeWindow()
 
     if g_game.isOnline() then
         online()
@@ -101,6 +137,15 @@ end
 
 function initializeSpelllist()
     print("initializeSpelllist")
+    if not SpelllistSettings or not SpelllistSettings[SpelllistProfile] then
+        print('[SpellList] ERROR: SpelllistSettings or profile missing:', SpelllistProfile)
+        return
+    end
+    if not SpelllistSettings[SpelllistProfile].spellOrder then
+        print('[SpellList] ERROR: spellOrder missing for profile:', SpelllistProfile)
+        return
+    end
+    print('[SpellList] Building', #SpelllistSettings[SpelllistProfile].spellOrder, 'entries for profile', SpelllistProfile)
     for i = 1, #SpelllistSettings[SpelllistProfile].spellOrder do
         local spell = SpelllistSettings[SpelllistProfile].spellOrder[i]
         local info = SpellInfo[SpelllistProfile][spell]
@@ -138,7 +183,33 @@ function initializeSpelllist()
         end
     })
 
-    
+    -- Debug: count children created
+    do
+      local count = 0
+      for i = 1, #SpelllistSettings[SpelllistProfile].spellOrder do
+        local sid = SpelllistSettings[SpelllistProfile].spellOrder[i]
+        if spellList:getChildById(sid) then count = count + 1 end
+      end
+      print('[SpellList] Created children:', count)
+    end
+
+    -- Select first visible spell to populate the right pane
+    addEvent(function()
+        if not spellList then return end
+        local first = nil
+        for i = 1, #SpelllistSettings[SpelllistProfile].spellOrder do
+            local sid = SpelllistSettings[SpelllistProfile].spellOrder[i]
+            local label = spellList:getChildById(sid)
+            if label and label:isVisible() then
+                first = label
+                break
+            end
+        end
+        if first then
+            spellList:focusChild(first, KeyboardFocusReason)
+            updateSpellInformation(first)
+        end
+    end)
 end
 
 function changeSpelllistProfile(oldProfile)
@@ -153,29 +224,34 @@ function changeSpelllistProfile(oldProfile)
     -- Create new spelllist and ajust window
     initializeSpelllist()
     
-    resizeWindow()
+   -- resizeWindow()
     resetWindow()
 end
 
 function updateSpelllist()
-    local learnedSpells = getLearnedSpells() or {}
-    print('DEBUG learnedSpells:', table.tostring and table.tostring(learnedSpells) or learnedSpells)
-    for k,v in pairs(learnedSpells) do print('learned:', k, v) end
+    if not spellList then return end
+    local learnedSpells = getLearnedSpells and (getLearnedSpells() or {}) or {}
+    local visibleCount = 0
     for i = 1, #SpelllistSettings[SpelllistProfile].spellOrder do
-        local spell = SpelllistSettings[SpelllistProfile].spellOrder[i]
-        local info = SpellInfo[SpelllistProfile][spell]
-        local tmpLabel = spellList:getChildById(spell)
-
-        local localPlayer = g_game.getLocalPlayer()
-        local playerVocation = localPlayer and localPlayer:getVocation() or nil
-        local show = false
-        if info and playerVocation and table.contains(info.vocations, playerVocation) and not info.needLearn then
-            show = true
-        elseif info and info.needLearn and (learnedSpells[spell] or learnedSpells[info.words]) then
-            show = true
+        local sid = SpelllistSettings[SpelllistProfile].spellOrder[i]
+        local info = SpellInfo[SpelllistProfile][sid]
+        local label = spellList:getChildById(sid)
+        if label then
+            local localPlayer = g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
+            local playerVocation = localPlayer and localPlayer:getVocation() or nil
+            local show = true -- default to show to avoid empty list
+            if info then
+                if info.needLearn then
+                    show = (learnedSpells[sid] or learnedSpells[info.words]) and true or false
+                elseif info.vocations and playerVocation then
+                    show = table.contains(info.vocations, playerVocation)
+                end
+            end
+            label:setVisible(show)
+            if show then visibleCount = visibleCount + 1 end
         end
-        tmpLabel:setVisible(show)
     end
+    print('[SpellList] Visible after filter:', visibleCount)
 end
 
 function updateSpellInformation(widget)
@@ -190,7 +266,6 @@ function updateSpellInformation(widget)
     local cooldown = ''
     local level = ''
     local mana = ''
-    local premium = ''
     local description = ''
 
     if SpellInfo[SpelllistProfile][spell] then
@@ -210,14 +285,43 @@ function updateSpellInformation(widget)
         level = info.level
         mana = info.mana .. ' / ' .. info.soul
         description = info.description or '-'
+
+        -- Update icon (if available)
+        if spellIcon then
+            local iconId = tonumber(info.icon)
+            if not iconId and SpellIcons[info.icon] then
+                iconId = SpellIcons[info.icon][1]
+            end
+            if iconId then
+                spellIcon:setImageSource(Spells.getIconId(iconId, SpelllistProfile))
+            else
+                spellIcon:setImageSource("")
+            end
+        end
+    else
+        -- Clear icon when no info
+        if spellIcon then spellIcon:setImageSource("") end
     end
 
-    nameValueLabel:setText(name)
-    formulaValueLabel:setText(formula)
-    cooldownValueLabel:setText(cooldown)
-    levelValueLabel:setText(level)
-    manaValueLabel:setText(mana)
-    descriptionValueLabel:setText(description)
+    -- New UI only
+    if descriptionValueLabel then
+        descriptionValueLabel:setText(description)
+    else
+        print('[SpellList] WARN: descriptionValueLabel not found')
+    end
+
+    -- New UI: title and chips
+    if spellTitle then spellTitle:setText(name) else print('[SpellList] WARN: spellTitle missing') end
+    if chipFormula then chipFormula:setText(formula ~= '' and ('/' .. formula) or '') else print('[SpellList] WARN: chipFormula missing') end
+    if chipCooldown then chipCooldown:setText(cooldown) else print('[SpellList] WARN: chipCooldown missing') end
+    if chipLevel then chipLevel:setText(level ~= '' and ('Lv. ' .. level) or '') else print('[SpellList] WARN: chipLevel missing') end
+    if chipMana then chipMana:setText(mana) else print('[SpellList] WARN: chipMana missing') end
+
+    -- Also fill labeled value rows
+    if formulaValueLabel then formulaValueLabel:setText(formula) end
+    if cooldownValueLabel then cooldownValueLabel:setText(cooldown) end
+    if levelValueLabel then levelValueLabel:setText(level) end
+    if manaValueLabel then manaValueLabel:setText(mana) end
 end
 
 function toggle()

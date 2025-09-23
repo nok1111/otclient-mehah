@@ -1,30 +1,41 @@
 SpellListLabel < Label
   font: verdana-11px-monochrome
-  background-color: alpha
-  text-offset: 42 3
+  background-color: #1e1e1e
+  color: #dcdcdc
+  text-offset: 46 4
   focusable: true
-  height: 36
+  height: 40
+  border-width: 1
+  border-color: #2b2b2b
+  margin-bottom: 6
+  radius: 6
   image-clip: 0 0 32 32
   image-size: 32 32
-  image-offset: 2 2
+  image-offset: 6 4
   image-source: /images/game/spells/defaultspells
 
+  $hover:
+    background-color: #262626
+
   $focus:
-    background-color: #ffffff22
+    background-color: #2f2f2f
+    border-color: #4c8cff
     color: #ffffff
 
 SpellInfoLabel < Label
-  width: 70
+  width: 110
   font: verdana-11px-monochrome
-  text-align: right
+  text-align: left
   margin-left: 10
   margin-top: 5
+  text-auto-resize: false
 
 SpellInfoValueLabel < Label
   text-align: left
   width: 400
-  margin-left: 10
+  margin-left: 6
   margin-top: 5
+  color: #eeeeee
 
 FilterButton < Button
   width: 64
@@ -39,117 +50,249 @@ FilterButton < Button
 MainWindow
   id: spelllistWindow
   !text: tr('Spell List')
-  size: 700 500
+  size: 760 520
   @onEscape: toggle()
+  padding: 8
+  background-color: #0f0f10
+  border-color: #2a2a2a
+  border-width: 1
+  radius: 8
 
-  TextList
-    id: spellList
-    vertical-scrollbar: spellsScrollBar
+  FlatPanel
+    id: headerBar
     anchors.top: parent.top
     anchors.left: parent.left
-    anchors.bottom: next.top
-    margin-bottom: 10
-    padding: 1
-    width: 210
-    focusable: false
+    anchors.right: parent.right
+    height: 36
+    background-color: #141416
+    border-width: 0
+    border-bottom: 1 #232323
 
-  Button
-    id: buttonCancel
-    !text: tr('Close')
-    width: 64
+    Label
+      id: headerTitle
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 10
+      text: Spell List
+      font: verdana-11px-monochrome
+      color: #d8d8d8
+
+    Button
+      id: headerClose
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 6
+      width: 64
+      text: Close
+      @onClick: toggle()
+
+  FlatPanel
+    id: content
+    anchors.top: headerBar.bottom
+    anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: parent.bottom
-    @onClick: toggle()
+    padding: 10
 
-  VerticalScrollBar
-    id: spellsScrollBar
-    anchors.top: spellList.top
-    anchors.bottom: spellList.bottom
-    anchors.right: spellList.right
-    step: 50
-    pixels-scroll: true
+    FlatPanel
+      id: leftPane
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      width: 260
+      padding: 8
+      background-color: #121214
+      border-width: 1
+      border-color: #242424
+      radius: 6
 
-  SpellInfoLabel
-    id: labelName
-    anchors.left: spellList.right
-    anchors.top: spellList.top
-    !text: tr('Name') .. ':'
+      TextEdit
+        id: searchEdit
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 26
+        margin-bottom: 8
+        placeholder: Search...
 
-  SpellInfoLabel
-    id: labelFormula
-    anchors.left: spellList.right
-    anchors.top: labelName.bottom
-    !text: tr('Formula') .. ':'
-    margin-top: 8
+      TextList
+        id: spellList
+        vertical-scrollbar: spellsScrollBar
+        anchors.top: searchEdit.bottom
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        margin-top: 6
+        padding: 2
+        focusable: false
 
-  SpellInfoLabel
-    id: labelCooldown
-    anchors.left: spellList.right
-    anchors.top: labelFormula.bottom
-    !text: tr('Cooldown') .. ':'
-    margin-top: 8
+      VerticalScrollBar
+        id: spellsScrollBar
+        anchors.top: spellList.top
+        anchors.bottom: spellList.bottom
+        anchors.right: spellList.right
+        step: 50
+        pixels-scroll: true
 
-  SpellInfoLabel
-    id: labelLevel
-    anchors.left: spellList.right
-    anchors.top: labelCooldown.bottom
-    !text: tr('Level') .. ':'
-    margin-top: 8
+    FlatPanel
+      id: rightPane
+      anchors.top: parent.top
+      anchors.left: leftPane.right
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-left: 10
+      padding: 12
+      background-color: #121214
+      border-width: 1
+      border-color: #242424
+      radius: 6
 
-  SpellInfoLabel
-    id: labelMana
-    anchors.left: spellList.right
-    anchors.top: labelLevel.bottom
-    !text: tr('Mana') .. ' / ' .. tr('Soul') .. ':'
-    margin-top: 8
+      Label
+        id: spellTitle
+        anchors.top: parent.top
+        anchors.left: parent.left
+        text: ""
+        font: verdana-11px-monochrome
+        color: #ffffff
+        margin-bottom: 6
 
-  SpellInfoLabel
-    id: labelDescription
-    anchors.left: spellList.right
-    anchors.top: labelMana.bottom
-    !text: tr('Description') .. ':'
-    margin-top: 8
+      UIWidget
+        id: spellIcon
+        anchors.top: spellTitle.bottom
+        anchors.horizontalCenter: infoRowGuide.horizontalCenter
+        size: 36 36
+        image-auto-resize: true
+        image-smooth: true
+        margin-bottom: 6
+        
 
-  SpellInfoValueLabel
-    id: labelNameValue
-    anchors.left: labelName.right
-    anchors.top: spellList.top
+      # Alignment guide for info rows
+      UIWidget
+        id: infoLeft
+        anchors.top: spellTitle.bottom
+        anchors.left: parent.left
+        margin-left: 120
+        margin-top: 44
+        width: 0
 
-  SpellInfoValueLabel
-    id: labelFormulaValue
-    anchors.left: labelFormula.right
-    anchors.top: labelNameValue.bottom
-    margin-top: 8
+      
 
-  SpellInfoValueLabel
-    id: labelCooldownValue
-    anchors.left: labelCooldown.right
-    anchors.top: labelFormulaValue.bottom
-    margin-top: 8
+      # Labeled rows for clarity
+      # Row: Formula
+      Item
+        id: iconFormula
+        anchors.top: infoLeft.top
+        anchors.left: infoLeft.right
+        size: 16 16
+        margin-top: 8
+        image-source: /images/icons/wow_loot
 
-  SpellInfoValueLabel
-    id: labelLevelValue
-    anchors.left: labelLevel.right
-    anchors.top: labelCooldownValue.bottom
-    margin-top: 8
+      SpellInfoLabel
+        id: labelFormula
+        anchors.left: iconFormula.right
+        anchors.verticalCenter: iconFormula.verticalCenter
+        text: Formula:
 
-  SpellInfoValueLabel
-    id: labelManaValue
-    anchors.left: labelMana.right
-    anchors.top: labelLevelValue.bottom
-    margin-top: 8
+      SpellInfoValueLabel
+        id: labelFormulaValue
+        anchors.left: labelFormula.right
+        anchors.verticalCenter: labelFormula.verticalCenter
 
+      # Invisible center guide for the info columns (used to center the top spell icon)
+      UIWidget
+        id: infoRowGuide
+        anchors.left: infoLeft.right
+        anchors.right: parent.right
+        anchors.top: spellTitle.bottom
+        height: 1
+        visible: false
 
-  SpellInfoValueLabel
-    id: labelDescriptionValue
-    anchors.left: labelDescription.right
-    anchors.top: labelManaValue.bottom
-    border: 1 #343434
-    padding: 3
-    margin-top: 10
-    padding-right: 0
-    margin-right: 10
-    margin-left: 8
-    text-wrap: true
-    text-auto-resize:true
+      # Row: Cooldown
+      Item
+        id: iconCooldown
+        anchors.top: iconFormula.bottom
+        anchors.left: infoLeft.right
+        size: 16 16
+        margin-top: 8
+        image-source: /images/icons/wow_loot
+
+      SpellInfoLabel
+        id: labelCooldown
+        anchors.left: iconCooldown.right
+        anchors.verticalCenter: iconCooldown.verticalCenter
+        text: Cooldown:
+
+      SpellInfoValueLabel
+        id: labelCooldownValue
+        anchors.left: labelCooldown.right
+        anchors.verticalCenter: labelCooldown.verticalCenter
+
+      # Row: Level
+      Item
+        id: iconLevel
+        anchors.top: iconCooldown.bottom
+        anchors.left: infoLeft.right
+        size: 16 16
+        margin-top: 8
+        image-source: /images/icons/wow_loot
+
+      SpellInfoLabel
+        id: labelLevel
+        anchors.left: iconLevel.right
+        anchors.verticalCenter: iconLevel.verticalCenter
+        text: Level:
+
+      SpellInfoValueLabel
+        id: labelLevelValue
+        anchors.left: labelLevel.right
+        anchors.verticalCenter: labelLevel.verticalCenter
+
+      # Row: Mana
+      Item
+        id: iconMana
+        anchors.top: iconLevel.bottom
+        anchors.left: infoLeft.right
+        size: 16 16
+        margin-top: 8
+        image-source: /images/icons/wow_loot
+
+      SpellInfoLabel
+        id: labelMana
+        anchors.left: iconMana.right
+        anchors.verticalCenter: iconMana.verticalCenter
+        text: Mana / Soul:
+
+      SpellInfoValueLabel
+        id: labelManaValue
+        anchors.left: labelMana.right
+        anchors.verticalCenter: labelMana.verticalCenter
+
+      # Row: Description
+      Item
+        id: iconDescription
+        anchors.top: iconMana.bottom
+        anchors.left: infoLeft.right
+        size: 16 16
+        margin-top: 8
+        image-source: /images/icons/wow_loot
+
+      Label
+        id: labelDescription
+        anchors.left: iconDescription.right
+        anchors.verticalCenter: iconDescription.verticalCenter
+        text: Description
+        color: #bdbdbd
+
+      SpellInfoValueLabel
+        id: labelDescriptionValue
+        anchors.top: iconDescription.bottom
+        anchors.left: iconDescription.right
+        anchors.right: parent.right
+        border: 1 #343434
+        padding: 6
+        margin-top: 6
+        text-wrap: true
+        text-auto-resize: true
+
+      
 
