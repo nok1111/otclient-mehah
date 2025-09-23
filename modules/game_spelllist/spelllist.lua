@@ -93,14 +93,33 @@ function init()
     if searchEdit then
         searchEdit.onTextChange = function(widget, text)
             local query = (text or ''):lower()
+            -- If query is empty, apply the standard vocation/learned filter
+            if query == '' then
+                updateSpelllist()
+                return
+            end
+
+            -- Build-time data for filter
+            local learnedSpells = getLearnedSpells and (getLearnedSpells() or {}) or {}
+            local localPlayer = g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
+            local playerVocation = localPlayer and localPlayer:getVocation() or nil
             for i = 1, #SpelllistSettings[SpelllistProfile].spellOrder do
                 local sid = SpelllistSettings[SpelllistProfile].spellOrder[i]
                 local info = SpellInfo[SpelllistProfile][sid]
                 local label = spellList and spellList:getChildById(sid)
                 if label then
                     local hay = (sid .. ' ' .. (info.words or '')):lower()
-                    local match = query == '' or string.find(hay, query, 1, true) ~= nil
-                    label:setVisible(match)
+                    local match = string.find(hay, query, 1, true) ~= nil
+                    -- Apply the same base filter as updateSpelllist()
+                    local show = true
+                    if info then
+                        if info.needLearn then
+                            show = (learnedSpells[sid] or learnedSpells[info.words]) and true or false
+                        elseif info.vocations and playerVocation then
+                            show = table.contains(info.vocations, playerVocation)
+                        end
+                    end
+                    label:setVisible(show and match)
                 end
             end
         end

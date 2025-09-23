@@ -50,7 +50,7 @@ FilterButton < Button
 MainWindow
   id: spelllistWindow
   !text: tr('Spell List')
-  size: 760 520
+  size: 620 520
   @onEscape: toggle()
   padding: 8
   background-color: #0f0f10
@@ -147,31 +147,44 @@ MainWindow
       border-color: #242424
       radius: 6
 
-      Label
-        id: spellTitle
+
+
+      UIWidget
+        id: titleGuide
         anchors.top: parent.top
         anchors.left: parent.left
-        text: ""
-        font: verdana-11px-monochrome
-        color: #ffffff
-        margin-bottom: 6
+        height: 16
+        width: 0
+        visible: false
 
       UIWidget
         id: spellIcon
-        anchors.top: spellTitle.bottom
+        anchors.top: titleGuide.bottom
         anchors.horizontalCenter: infoRowGuide.horizontalCenter
-        size: 36 36
-        image-auto-resize: true
+        margin-left: -50
+        size: 58 58
         image-smooth: true
         margin-bottom: 6
-        
+        border: 2 #000000
 
+      Label
+        id: spellTitle
+        anchors.bottom: spellIcon.top
+        anchors.horizontalCenter: spellIcon.horizontalCenter
+        text: ""
+        font: verdana-11px-monochrome
+        color: #ffffff
+        text-auto-resize: true
+        text-wrap: false
+        margin-bottom: 6
+        text-align: center
+        
       # Alignment guide for info rows
       UIWidget
         id: infoLeft
-        anchors.top: spellTitle.bottom
-        anchors.left: parent.left
-        margin-left: 120
+        anchors.top: titleGuide.bottom
+        anchors.horizontalCenter: infoRowGuide.horizontalCenter
+        margin-left: -150
         margin-top: 44
         width: 0
 
@@ -184,7 +197,7 @@ MainWindow
         anchors.top: infoLeft.top
         anchors.left: infoLeft.right
         size: 16 16
-        margin-top: 8
+        margin-top: 20
         image-source: /images/icons/wow_loot
 
       SpellInfoLabel
@@ -201,9 +214,9 @@ MainWindow
       # Invisible center guide for the info columns (used to center the top spell icon)
       UIWidget
         id: infoRowGuide
-        anchors.left: infoLeft.right
+        anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: spellTitle.bottom
+        anchors.top: titleGuide.bottom
         height: 1
         visible: false
 
@@ -280,8 +293,8 @@ MainWindow
         id: labelDescription
         anchors.left: iconDescription.right
         anchors.verticalCenter: iconDescription.verticalCenter
-        text: Description
-        color: #bdbdbd
+        text: Description:
+        margin-left: 12
 
       SpellInfoValueLabel
         id: labelDescriptionValue
