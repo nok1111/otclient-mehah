@@ -503,6 +503,10 @@ end
 
 function MapTravel.applyZoneTooltip(zone)
     MapTravel.UI.NodesTooltip:destroyChildren()
+    -- Ensure no leftover title from travel nodes
+    if MapTravel.UI.NodesTooltip.setText then
+        MapTravel.UI.NodesTooltip:setText("")
+    end
 
     -- Create header with creature and texts
     local header = g_ui.createWidget("MapTravelZoneHeader", MapTravel.UI.NodesTooltip)
