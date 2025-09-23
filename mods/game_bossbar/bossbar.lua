@@ -15,6 +15,7 @@ local monstrosIncluidos = {
     "Gruma Stormash",
     "Sarandel, The Old Ash",
     "Fire Watcher",
+    "The Old Widow",
     "Azure [2]",
     "Azure [3]",
 }
