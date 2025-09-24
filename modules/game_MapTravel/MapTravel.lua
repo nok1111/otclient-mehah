@@ -599,11 +599,8 @@ function MapTravel.updateMap()
 
 		nodeWidget.onHoverChange = MapTravel.onNodeHoverChange
 
-        -- Ensure wheel zoom works when hovering nodes
-        nodeWidget.onMouseWheel = function(_, _, direction)
-            MapTravel.wheelZoom(direction)
-            return true
-        end
+        -- Disable wheel zoom on nodes
+        nodeWidget.onMouseWheel = nil
 
 		local isUnlocked = (not nodeConfig.discoverable) or MapTravel.unlockedNodes[nodeConfig.nameId]
 
@@ -829,11 +826,8 @@ function MapTravel.updateMap()
                 MapTravel.onZoneHoverChange(w, hovered, zone)
             end
 
-            -- Wheel zoom on zones too
-            zoneWidget.onMouseWheel = function(_, _, direction)
-                MapTravel.wheelZoom(direction)
-                return true
-            end
+            -- Disable wheel zoom on zones
+            zoneWidget.onMouseWheel = nil
         end
     end
     -- Drag and pan the canvas within mapPanel area (below top bar)
@@ -857,11 +851,9 @@ function MapTravel.updateMap()
     -- Scrollbars wiring and sync
     MapTravel.setupScrollbars(canvas, boundsWidget)
 
-    canvas.onMouseWheel = function(_, _, direction) MapTravel.wheelZoom(direction); return true end
-    -- Also proxy wheel from the container panel to ensure it always works
-    if mapPanel then
-        mapPanel.onMouseWheel = function(_, _, direction) MapTravel.wheelZoom(direction); return true end
-    end
+    -- Disable mouse wheel zoom on canvas and container
+    canvas.onMouseWheel = nil
+    if mapPanel then mapPanel.onMouseWheel = nil end
 end
 
 function MapTravel.makeWidgetDraggable(widget, bounds)
