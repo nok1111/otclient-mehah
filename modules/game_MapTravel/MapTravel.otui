@@ -67,58 +67,10 @@ UIWidget
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 6
 
-      # Right-side controls container to reserve width
-      FlatPanel
-        id: rightControls
-        width: 110
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        padding: 0
-        background-color: alpha
-
-        UIWidget
-          id: iconZones
-          anchors.left: parent.left
-          anchors.verticalCenter: parent.verticalCenter
-          size: 16 16
-          image-auto-resize: true
-          image-smooth: true
-          image-source: /images/topbuttons/options2
-          tooltip: Show monsters
-          z-index: 150
-
-        CheckBox
-          id: toggleZones
-          anchors.left: iconZones.right
-          anchors.verticalCenter: parent.verticalCenter
-          width: 18
-          text: ""
-          checked: true
-
-        UIWidget
-          id: iconLocked
-          anchors.left: toggleZones.right
-          anchors.verticalCenter: parent.verticalCenter
-          margin-left: 6
-          size: 16 16
-          image-auto-resize: true
-          image-smooth: true
-          image-source: /images/topbuttons/options2
-          tooltip: Show locked waypoints
-          z-index: 150
-
-        CheckBox
-          id: toggleLocked
-          anchors.left: iconLocked.right
-          anchors.verticalCenter: parent.verticalCenter
-          margin-left: 2
-          width: 18
-          text: ""
-
       TextEdit
         id: searchBox
         anchors.left: levelFilter.right
-        anchors.right: rightControls.left
+        anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 6
         margin-right: 8

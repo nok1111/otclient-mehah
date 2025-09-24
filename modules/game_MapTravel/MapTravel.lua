@@ -32,25 +32,54 @@ function MapTravel.ensureFilterUI()
     end
     -- Level filter options
     if C.levelFilter and C.levelFilter.clear and C.levelFilter.addOption then
-        -- Populate only once if empty (best-effort check)
-        local needPopulate = true
-        if C.levelFilter.getOptions and type(C.levelFilter:getOptions()) == 'table' then
-            needPopulate = (#C.levelFilter:getOptions() == 0)
-        end
-        if needPopulate then
+        -- Populate only once using a module flag to avoid flicker/reset
+        if not MapTravel._levelFilterPopulated then
             withSuppressed(function()
                 C.levelFilter:clear()
-                local ranges = {"All","1-50","51-100","101-150","151-200","201-250","251-300","301-350","350+"}
+                -- Include a special option to hide monsters from here
+                local ranges = {"All","Hide monsters","1-50","51-100","101-150","151-200","201-250","251-300","301-350","350+"}
                 for _, r in ipairs(ranges) do C.levelFilter:addOption(r) end
-                if C.levelFilter.setCurrentOptionByText then
-                    C.levelFilter:setCurrentOptionByText(MapTravel.filters and MapTravel.filters.levelRange or "All")
-                end
             end)
+            MapTravel._levelFilterPopulated = true
         end
+        -- Always reflect current state in the dropdown
+        withSuppressed(function()
+            local desired = (MapTravel.filters and MapTravel.filters.showZones == false) and 'Hide monsters'
+                            or (MapTravel.filters and MapTravel.filters.levelRange or 'All')
+            if C.levelFilter.setCurrentOptionByText then
+                C.levelFilter:setCurrentOptionByText(desired)
+            elseif C.levelFilter.setText then
+                C.levelFilter:setText(desired)
+            end
+        end)
+
         C.levelFilter.onOptionChange = function()
             if MapTravel._suppressFilterCallbacks then return end
-            local txt = C.levelFilter.getText and C.levelFilter:getText() or MapTravel.filters.levelRange
-            MapTravel.filters.levelRange = txt
+            local txt = C.levelFilter.getText and C.levelFilter:getText() or 'All'
+            if txt == 'Hide monsters' then
+                MapTravel.filters.showZones = false
+                -- do not change the remembered levelRange when hiding
+            else
+                MapTravel.filters.showZones = true
+                MapTravel.filters.levelRange = txt
+                if txt == 'All' then
+                    -- behave like reset for monsters: clear search so everything returns
+                    MapTravel.filters.search = ''
+                    local C2 = MapTravel.getFilterControls()
+                    if C2 and C2.searchBox and C2.searchBox.setText then
+                        withSuppressed(function() C2.searchBox:setText('') end)
+                    end
+                end
+            end
+            -- Immediately reflect the chosen option so the current selection shows
+            withSuppressed(function()
+                local desired = (MapTravel.filters.showZones == false) and 'Hide monsters' or MapTravel.filters.levelRange
+                if C.levelFilter.setCurrentOptionByText then
+                    C.levelFilter:setCurrentOptionByText(desired)
+                elseif C.levelFilter.setText then
+                    C.levelFilter:setText(desired)
+                end
+            end)
             MapTravel.applyFiltersAndRedraw()
         end
     end
