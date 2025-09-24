@@ -174,7 +174,7 @@ UIWidget
       margin-right: 4
       background-color: #2a2a2a
       border-width: 1
-      border-color: #444
+      border-color: #444444
       z-index: 120
 
       Button
@@ -186,7 +186,7 @@ UIWidget
         text: ""
         background-color: #585858
         border-width: 1
-        border-color: #777
+        border-color: #777777
 
 
     FlatPanel

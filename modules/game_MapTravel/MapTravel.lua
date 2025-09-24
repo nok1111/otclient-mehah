@@ -5,6 +5,34 @@ function MapTravel.applyScale(newScale)
     MapTravel.applyFiltersAndRedraw()
 end
 
+-- World-to-image transform config (adjust x0,y0 if your image doesn't start at 0,0)
+MapTravel.worldImageConfig = MapTravel.worldImageConfig or {
+    tilesW = 2048,
+    tilesH = 2048,
+    imgW   = 1347,
+    imgH   = 1371,
+    x0     = 50,     -- top-left world tile X of the image
+    y0     = -250,     -- top-left world tile Y of the image
+}
+
+local function worldToPixelXY(pos)
+    if not pos then return nil end
+    local cfg = MapTravel.worldImageConfig
+    local sx = cfg.imgW / cfg.tilesW
+    local sy = cfg.imgH / cfg.tilesH
+    local px = (pos.x - cfg.x0) * sx
+    local py = (pos.y - cfg.y0) * sy
+    -- clamp to image
+    if px < 0 or py < 0 or px > cfg.imgW or py > cfg.imgH then
+        -- outside image; still return clamped coords
+        if px < 0 then px = 0 end
+        if py < 0 then py = 0 end
+        if px > cfg.imgW then px = cfg.imgW end
+        if py > cfg.imgH then py = cfg.imgH end
+    end
+    return { x = px, y = py }
+end
+
 -- Shared mouse wheel zoom handler
 function MapTravel.wheelZoom(direction)
     -- Match buttons: scrolling forward (direction > 0) zooms IN, backward zooms OUT
@@ -111,6 +139,42 @@ function MapTravel.setupScrollbars(canvas, bounds)
                 canvas:breakAnchors(); canvas:setPosition({x = math.floor(targetX), y = cPos.y})
             end
             return true
+        end
+    end
+
+    -- View-only: place a one-time 'You are here' marker based on client player position
+    if MapTravel.viewOnly then
+        -- Snapshot player position once
+        if not MapTravel._playerPosPx then
+            local lp = g_game and g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
+            local lppos = lp and lp.getPosition and lp:getPosition() or nil
+            if lppos then
+                MapTravel._playerPosPx = worldToPixelXY(lppos)
+            end
+        end
+        -- Draw marker if we have pixel coords
+        if MapTravel._playerPosPx then
+            -- Destroy previous marker if any
+            if MapTravel._playerMarker and MapTravel._playerMarker.destroy then
+                MapTravel._playerMarker:destroy()
+                MapTravel._playerMarker = nil
+            end
+            -- Create marker
+            local m = g_ui.createWidget("UIWidget", canvas)
+            m:setPhantom(true)
+            m:setImageSource("images/icons/wow_source")
+            m:setImageAutoResize(true)
+            m:setSize({width = 64, height = 64})
+            m:setId("youAreHereMarker")
+            if m.setZIndex then m:setZIndex(180) end
+            -- Position considering current scale and center the icon
+            local mx = (MapTravel._playerPosPx.x * MapTravel.mapScale) - (m:getWidth() / 2)
+            local my = (MapTravel._playerPosPx.y * MapTravel.mapScale) - (m:getHeight() / 2)
+            m:addAnchor(AnchorTop, "parent", AnchorTop)
+            m:addAnchor(AnchorLeft, "parent", AnchorLeft)
+            m:setMarginLeft(math.floor(mx))
+            m:setMarginTop(math.floor(my))
+            MapTravel._playerMarker = m
         end
     end
 
