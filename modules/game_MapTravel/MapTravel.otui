@@ -22,14 +22,24 @@ UIWidget
   phantom: false
   background-color: #00000060
 
+  # Background frame
+  FlatPanel
+    id: mainFrame
+    anchors.fill: parent
+    image-source: /images/ui/panel_flat
+    image-border: 7
+    padding: 8
+    z-index: 0
+
   UIWidget
     id: mapPanel
-    anchors.centerIn: parent
+    anchors.fill: parent
     phantom: false
     image-auto-resize: true
-    draggable: true
+    draggable: false
     border-width: 1
     border-color: #3a3a3a
+    z-index: 50
 
     # Top filters bar
     FlatPanel
@@ -44,6 +54,7 @@ UIWidget
       padding: 3 6
       z-index: 100
 
+    # Topbar controls
       Label
         id: filtersLabel
         anchors.left: parent.left
@@ -60,12 +71,47 @@ UIWidget
         text: R
         tooltip: Reset filters
 
-      ComboBox
-        id: levelFilter
-        width: 120
+      Button
+        id: centerMap
         anchors.left: resetFilters.right
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 6
+        width: 24
+        text: C
+        tooltip: Center map
+
+      Button
+        id: zoomOut
+        anchors.left: centerMap.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 6
+        width: 24
+        text: -
+        tooltip: Zoom out
+
+      Button
+        id: zoomIn
+        anchors.left: zoomOut.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 4
+        width: 24
+        text: +
+        tooltip: Zoom in
+
+      ComboBox
+        id: levelFilter
+        width: 120
+        anchors.left: zoomIn.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 6
+
+      ComboBox
+        id: scrollSpeed
+        width: 90
+        anchors.left: levelFilter.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 6
+        tooltip: Scroll speed
 
       TextEdit
         id: searchBox
@@ -76,6 +122,64 @@ UIWidget
         margin-right: 8
         text: ""
         placeholder: Search...
+
+    # Draggable map content (world map image + nodes live here)
+    UIWidget
+      id: mapCanvas
+      anchors.top: topBar.bottom
+      anchors.left: parent.left
+      image-auto-resize: true
+      image-smooth: true
+      z-index: 10
+
+    # Horizontal Scrollbar
+    FlatPanel
+      id: hScroll
+      height: 12
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-bottom: 4
+      background-color: #2a2a2a
+      border-width: 1
+      border-color: #444444
+      z-index: 120
+
+      Button
+        id: hThumb
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        width: 60
+        height: 10
+        text: ""
+        background-color: #585858
+        border-width: 1
+        border-color: #777777
+
+    # Vertical Scrollbar
+    FlatPanel
+      id: vScroll
+      width: 12
+      anchors.top: topBar.bottom
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-right: 4
+      background-color: #2a2a2a
+      border-width: 1
+      border-color: #444
+      z-index: 120
+
+      Button
+        id: vThumb
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: 10
+        height: 60
+        text: ""
+        background-color: #585858
+        border-width: 1
+        border-color: #777
+
 
     FlatPanel
       id: viewOnlyBadge
@@ -92,6 +196,14 @@ UIWidget
       border-color: #666666
       visible: false
       z-index: 200
+
+    FlatPanel
+      id: mainFrame
+      anchors.centerIn: parent
+      image-source: /images/ui/panel_flat
+      image-border: 7
+      padding: 8
+      z-index: 40
 
     UIWidget
       id: mapImageDev

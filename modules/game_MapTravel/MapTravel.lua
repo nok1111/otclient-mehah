@@ -1,6 +1,138 @@
 -- Resolve UI controls inside the topBar safely
 function MapTravel.getFilterControls()
     if not MapTravel.UI or not MapTravel.UI.mapPanel then return {} end
+
+-- Resolve scrollbar widgets
+function MapTravel.getScrollWidgets()
+    if not MapTravel.UI or not MapTravel.UI.mapPanel then return {} end
+    local p = MapTravel.UI.mapPanel
+    return {
+        hScroll = p.hScroll or (p.recursiveGetChildById and p:recursiveGetChildById('hScroll')),
+        vScroll = p.vScroll or (p.recursiveGetChildById and p:recursiveGetChildById('vScroll')),
+        hThumb  = (p.hScroll and p.hScroll.hThumb) or (p.recursiveGetChildById and p:recursiveGetChildById('hThumb')),
+        vThumb  = (p.vScroll and p.vScroll.vThumb) or (p.recursiveGetChildById and p:recursiveGetChildById('vThumb')),
+    }
+end
+
+-- Sync thumbs based on current canvas position within bounds
+function MapTravel.syncScrollbars(canvas, bounds)
+    local S = MapTravel.getScrollWidgets()
+    if not canvas or not bounds or not S.hScroll or not S.vScroll then return end
+    if not (bounds.getPosition and bounds.getSize and canvas.getPosition and canvas.getSize) then return end
+
+    local bPos = bounds:getPosition(); local bSize = bounds:getSize(); local cPos = canvas:getPosition(); local cSize = canvas:getSize()
+    local topBarH = (MapTravel.UI and MapTravel.UI.mapPanel and MapTravel.UI.mapPanel.topBar and MapTravel.UI.mapPanel.topBar:getHeight()) or 0
+
+    -- Auto-hide if not needed
+    local needH = cSize.width > bSize.width
+    local needV = cSize.height > (bSize.height - topBarH)
+    if S.hScroll.setVisible then S.hScroll:setVisible(needH) end
+    if S.vScroll.setVisible then S.vScroll:setVisible(needV) end
+
+    -- Horizontal
+    local trackW = S.hScroll:getWidth()
+    local maxThumbW = math.max(30, math.floor(trackW * math.min(1, bSize.width / math.max(1, cSize.width))))
+    if S.hThumb.setWidth then S.hThumb:setWidth(maxThumbW) end
+    local minX = bPos.x
+    local maxX = bPos.x + bSize.width - cSize.width
+    local denomX = math.max(1, (maxX - minX))
+    local ratioX = (cPos.x - minX) / denomX
+    ratioX = math.max(0, math.min(1, ratioX))
+    local travelX = trackW - maxThumbW
+    local thumbX = S.hScroll:getPosition().x + math.floor(ratioX * travelX)
+    S.hThumb:breakAnchors(); S.hThumb:setPosition({x = thumbX, y = S.hScroll:getPosition().y + math.floor((S.hScroll:getHeight() - S.hThumb:getHeight())/2)})
+
+    -- Vertical
+    local trackH = S.vScroll:getHeight()
+    local maxThumbH = math.max(30, math.floor(trackH * math.min(1, (bSize.height - topBarH) / math.max(1, cSize.height))))
+    if S.vThumb.setHeight then S.vThumb:setHeight(maxThumbH) end
+    local minY = bPos.y + topBarH
+    local maxY = bPos.y + bSize.height - cSize.height
+    local denomY = math.max(1, (maxY - minY))
+    local ratioY = (cPos.y - minY) / denomY
+    ratioY = math.max(0, math.min(1, ratioY))
+    local travelY = trackH - maxThumbH
+    local thumbY = S.vScroll:getPosition().y + math.floor(ratioY * travelY)
+    S.vThumb:breakAnchors(); S.vThumb:setPosition({x = S.vScroll:getPosition().x + math.floor((S.vScroll:getWidth() - S.vThumb:getWidth())/2), y = thumbY})
+end
+
+-- Setup thumbs to drag and pan canvas
+function MapTravel.setupScrollbars(canvas, bounds)
+    local S = MapTravel.getScrollWidgets()
+    if not S.hScroll or not S.vScroll then return end
+
+    -- Horizontal thumb drag
+    if S.hThumb then
+        S.hThumb.dragging = false
+        S.hThumb.onMousePress = function(w, pos, button)
+            if button ~= MouseLeftButton then return false end
+            w.dragging = true
+            w._dragOffsetX = pos.x - w:getPosition().x
+            return true
+        end
+        S.hThumb.onMouseRelease = function(w)
+            if w.dragging then w.dragging = false return true end
+            return false
+        end
+        S.hThumb.onMouseMove = function(w, pos)
+            if not w.dragging then return false end
+            local trackPos = S.hScroll:getPosition(); local trackW = S.hScroll:getWidth()
+            local thumbW = w:getWidth()
+            local newX = pos.x - (w._dragOffsetX or 0)
+            local minX = trackPos.x; local maxX = trackPos.x + trackW - thumbW
+            if newX < minX then newX = minX end; if newX > maxX then newX = maxX end
+            w:breakAnchors(); w:setPosition({x = newX, y = w:getPosition().y})
+            -- Map to canvas x
+            if bounds and canvas then
+                local bPos = bounds:getPosition(); local bSize = bounds:getSize(); local cSize = canvas:getSize()
+                local minCanvasX = bPos.x; local maxCanvasX = bPos.x + bSize.width - cSize.width
+                local ratio = (newX - minX) / math.max(1, (maxX - minX))
+                local targetX = minCanvasX + ratio * (maxCanvasX - minCanvasX)
+                local cPos = canvas:getPosition()
+                canvas:breakAnchors(); canvas:setPosition({x = math.floor(targetX), y = cPos.y})
+            end
+            return true
+        end
+    end
+
+    -- Vertical thumb drag
+    if S.vThumb then
+        S.vThumb.dragging = false
+        S.vThumb.onMousePress = function(w, pos, button)
+            if button ~= MouseLeftButton then return false end
+            w.dragging = true
+            w._dragOffsetY = pos.y - w:getPosition().y
+            return true
+        end
+        S.vThumb.onMouseRelease = function(w)
+            if w.dragging then w.dragging = false return true end
+            return false
+        end
+        S.vThumb.onMouseMove = function(w, pos)
+            if not w.dragging then return false end
+            local trackPos = S.vScroll:getPosition(); local trackH = S.vScroll:getHeight()
+            local thumbH = w:getHeight()
+            local newY = pos.y - (w._dragOffsetY or 0)
+            local minY = trackPos.y; local maxY = trackPos.y + trackH - thumbH
+            if newY < minY then newY = minY end; if newY > maxY then newY = maxY end
+            w:breakAnchors(); w:setPosition({x = w:getPosition().x, y = newY})
+            -- Map to canvas y
+            if bounds and canvas then
+                local bPos = bounds:getPosition(); local bSize = bounds:getSize(); local cSize = canvas:getSize()
+                local topBarH = (MapTravel.UI and MapTravel.UI.mapPanel and MapTravel.UI.mapPanel.topBar and MapTravel.UI.mapPanel.topBar:getHeight()) or 0
+                local minCanvasY = bPos.y + topBarH
+                local maxCanvasY = bPos.y + bSize.height - cSize.height
+                local ratio = (newY - minY) / math.max(1, (maxY - minY))
+                local targetY = minCanvasY + ratio * (maxCanvasY - minCanvasY)
+                local cPos = canvas:getPosition()
+                canvas:breakAnchors(); canvas:setPosition({x = cPos.x, y = math.floor(targetY)})
+            end
+            return true
+        end
+    end
+    -- Initial sync
+    MapTravel.syncScrollbars(canvas, bounds)
+end
     local panel = MapTravel.UI.mapPanel
     local topBar = panel.topBar or (panel.recursiveGetChildById and panel:recursiveGetChildById('topBar'))
     local rightControls = topBar and (topBar.rightControls or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('rightControls'))) or nil
@@ -16,6 +148,10 @@ function MapTravel.getFilterControls()
         iconZones    = rightControls and (rightControls.iconZones    or (rightControls.recursiveGetChildById  and rightControls:recursiveGetChildById('iconZones'))),
         iconLocked   = rightControls and (rightControls.iconLocked   or (rightControls.recursiveGetChildById  and rightControls:recursiveGetChildById('iconLocked'))),
         resetFilters = topBar and (topBar.resetFilters or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('resetFilters'))),
+        centerMap   = topBar and (topBar.centerMap   or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('centerMap'))),
+        zoomIn      = topBar and (topBar.zoomIn      or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('zoomIn'))),
+        zoomOut     = topBar and (topBar.zoomOut     or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('zoomOut'))),
+        scrollSpeed = topBar and (topBar.scrollSpeed or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('scrollSpeed'))),
     }
 end
 
@@ -157,7 +293,65 @@ function MapTravel.ensureFilterUI()
             MapTravel.applyFiltersAndRedraw()
         end
     end
+
+    -- Center map button
+    if C.centerMap then
+        C.centerMap.onClick = function()
+            if not MapTravel.UI or not MapTravel.UI.mapPanel then return end
+            local mapPanel = MapTravel.UI.mapPanel
+            local canvas = (mapPanel.mapCanvas) or mapPanel
+            local root = mapPanel:getParent()
+            local bounds = root and root.recursiveGetChildById and root:recursiveGetChildById('mainFrame') or MapTravel.UI
+            if bounds and bounds.getPosition and bounds.getSize and canvas.getSize then
+                local bPos = bounds:getPosition(); local bSize = bounds:getSize(); local cSize = canvas:getSize()
+                local topBarH = (MapTravel.UI.mapPanel.topBar and MapTravel.UI.mapPanel.topBar:getHeight()) or 0
+                local cx = bPos.x + math.max(0, math.floor((bSize.width - cSize.width) / 2))
+                local cy = bPos.y + topBarH + math.max(0, math.floor((bSize.height - topBarH - cSize.height) / 2))
+                canvas:breakAnchors(); canvas:setPosition({x = cx, y = cy})
+                MapTravel.syncScrollbars(canvas, bounds)
+            end
+        end
+    end
+
+    -- Scroll speed control
+    if C.scrollSpeed and C.scrollSpeed.clear and C.scrollSpeed.addOption then
+        withSuppressed(function()
+            C.scrollSpeed:clear()
+            for _, opt in ipairs({'Slow','Normal','Fast'}) do C.scrollSpeed:addOption(opt) end
+            local current = (MapTravel.scrollStep == 40 and 'Slow') or (MapTravel.scrollStep == 60 and 'Normal') or (MapTravel.scrollStep == 90 and 'Fast') or 'Normal'
+            if C.scrollSpeed.setCurrentOptionByText then C.scrollSpeed:setCurrentOptionByText(current) end
+        end)
+        C.scrollSpeed.onOptionChange = function()
+            if MapTravel._suppressFilterCallbacks then return end
+            local txt = C.scrollSpeed.getText and C.scrollSpeed:getText() or 'Normal'
+            MapTravel.scrollStep = (txt == 'Slow' and 40) or (txt == 'Fast' and 90) or 60
+        end
+    end
+
+    -- Zoom buttons
+    local function applyScale(newScale)
+        MapTravel.mapScale = newScale
+        MapTravel._canvasPositioned = false
+        MapTravel.applyFiltersAndRedraw()
+    end
+    if C.zoomIn then
+        C.zoomIn.onClick = function()
+            local s = MapTravel.mapScale or 1.0
+            s = s * 1.2
+            if s > 4.0 then s = 4.0 end
+            applyScale(s)
+        end
+    end
+    if C.zoomOut then
+        C.zoomOut.onClick = function()
+            local s = MapTravel.mapScale or 1.0
+            s = s / 1.2
+            if s < 0.4 then s = 0.4 end
+            applyScale(s)
+        end
+    end
 end
+
 -- Helpers for filters
 function MapTravel.parseRecommendedLevel(v)
     if type(v) == 'number' then return v end
@@ -333,55 +527,32 @@ function MapTravel.updateMap()
     -- Always ensure filter controls are wired before redrawing
     MapTravel.ensureFilterUI()
 
-    -- Preserve static UI children (topBar, badges, dev widgets) and destroy only dynamic map children
-    if mapPanel.getChildren then
-        local keep = {
-            topBar = true,
-            viewOnlyBadge = true,
-            mapImageDev = true,
-            devModePanel = true,
-            nodesComboBox = true,
-        }
-        for _, child in ipairs(mapPanel:getChildren()) do
-            local id = child.getId and child:getId() or ""
-            if not keep[id] then
-                child:destroy()
-            end
-        end
+    -- Select canvas: dedicated map content holder to pan, fallback to mapPanel
+    local canvas = (mapPanel.mapCanvas) or mapPanel
+
+    -- Destroy only dynamic children inside the canvas; keep UI around mapPanel
+    if canvas.getChildren then
+        for _, child in ipairs(canvas:getChildren()) do child:destroy() end
     else
-        mapPanel:destroyChildren()
+        canvas:destroyChildren()
     end
 
-	mapPanel:setImageSource(MapTravel.mapDirectory)
-	MapTravel.originalWidth = mapPanel:getWidth()
-	MapTravel.originalHeight = mapPanel:getHeight()
-	mapPanel:setWidth(MapTravel.originalWidth * MapTravel.mapScale)
-	mapPanel:setHeight(MapTravel.originalHeight * MapTravel.mapScale)
+    -- Set world map image on canvas and scale
+    if canvas.setImageSource then canvas:setImageSource(MapTravel.mapDirectory) end
+    MapTravel.originalWidth = canvas:getWidth()
+    MapTravel.originalHeight = canvas:getHeight()
+    if canvas.setWidth then canvas:setWidth(MapTravel.originalWidth * MapTravel.mapScale) end
+    if canvas.setHeight then canvas:setHeight(MapTravel.originalHeight * MapTravel.mapScale) end
 
-	if MapTravel.devMode then
-		MapTravel.previewNode = g_ui.createWidget("UIWidget", mapPanel)
-		MapTravel.previewNode:setBorderWidth(1)
-		MapTravel.previewNode:show()
-		MapTravel.previewNode:setImageAutoResize(true)
-		MapTravel.previewNode:setPhantom(true)
-		MapTravel.UI.mapPanel:setBorderWidth(1)
-		MapTravel.UI.mapPanel:setBorderColor("red")
-		MapTravel.UI.mapPanel.mapImageDev:setImageSource(MapTravel.mapFilledDirectory or "")
-	end
+    -- Dev preview removed: no preview square or dev border indicators
 
-    -- Top offset to account for topBar height if present
-    local topBarHeight = 0
-    if MapTravel.UI and MapTravel.UI.mapPanel and MapTravel.UI.mapPanel.topBar then
-        topBarHeight = MapTravel.UI.mapPanel.topBar:getHeight() or 0
-    end
+    for nodeIndex, nodeConfig in ipairs(MapTravel.mapNodesConfig) do
+        local nodeWidget = g_ui.createWidget("MapTravelNode", canvas)
+        nodeWidget:addAnchor(AnchorTop, "parent", AnchorTop)
+        nodeWidget:addAnchor(AnchorLeft, "parent", AnchorLeft)
 
-	for nodeIndex, nodeConfig in ipairs(MapTravel.mapNodesConfig) do
-		local nodeWidget = g_ui.createWidget("MapTravelNode", mapPanel)
-		nodeWidget:addAnchor(AnchorTop, "parent", AnchorTop)
-		nodeWidget:addAnchor(AnchorLeft, "parent", AnchorLeft)
-
-		nodeWidget:setMarginTop((nodeConfig.modulePos.marginTop * MapTravel.mapScale) + topBarHeight)
-		nodeWidget:setMarginLeft(nodeConfig.modulePos.marginLeft * MapTravel.mapScale)
+        nodeWidget:setMarginTop((nodeConfig.modulePos.marginTop * MapTravel.mapScale))
+        nodeWidget:setMarginLeft(nodeConfig.modulePos.marginLeft * MapTravel.mapScale)
 
 		nodeWidget.nameId = nodeConfig.nameId
 		nodeWidget.nodeConfig = nodeConfig
@@ -455,11 +626,11 @@ function MapTravel.updateMap()
         for _, zone in ipairs(MapTravel.zonesConfig) do
             local isImageNode = (zone.image ~= nil and zone.image ~= '') and (zone.outfit == nil)
             local widgetType = isImageNode and "MapTravelZoneImageNode" or "MapTravelZoneNode"
-            local zoneWidget = g_ui.createWidget(widgetType, mapPanel)
+            local zoneWidget = g_ui.createWidget(widgetType, canvas)
             zoneWidget:addAnchor(AnchorTop, "parent", AnchorTop)
             zoneWidget:addAnchor(AnchorLeft, "parent", AnchorLeft)
 
-            local mTop = ((zone.modulePos.marginTop or 0) * MapTravel.mapScale) + topBarHeight
+            local mTop = ((zone.modulePos.marginTop or 0) * MapTravel.mapScale)
             local mLeft = (zone.modulePos.marginLeft or 0) * MapTravel.mapScale
             zoneWidget:setMarginTop(mTop)
             zoneWidget:setMarginLeft(mLeft)
@@ -617,65 +788,117 @@ function MapTravel.updateMap()
             end
         end
     end
-    MapTravel.makeWidgetDraggable(mapPanel, true)
+    -- Drag and pan the canvas within mapPanel area (below top bar)
+    local boundsWidget = mapPanel
+    MapTravel.makeWidgetDraggable(canvas, boundsWidget)
+
+    -- Center canvas initially inside bounds (only the first time or when scaled)
+    if not MapTravel._canvasPositioned then
+        if mapPanel and mapPanel.getSize and canvas.getSize then
+            local pSize = mapPanel:getSize()
+            local cSize = canvas:getSize()
+            local topBarH = (mapPanel.topBar and mapPanel.topBar:getHeight()) or 0
+            local cx = math.max(0, math.floor((pSize.width - cSize.width) / 2))
+            local cy = topBarH + math.max(0, math.floor((pSize.height - topBarH - cSize.height) / 2))
+            canvas:breakAnchors()
+            canvas:setPosition({x = cx, y = cy})
+        end
+        MapTravel._canvasPositioned = true
+    end
+
+    -- Scrollbars wiring and sync
+    MapTravel.setupScrollbars(canvas, boundsWidget)
+
+    canvas.onMouseWheel = function(w, mousePos, direction)
+        local step = MapTravel.scrollStep or 60
+        local dx, dy = 0, 0
+        if g_keyboard and g_keyboard.isShiftPressed and g_keyboard:isShiftPressed() then
+            dx = -direction * step
+        else
+            dy = -direction * step
+        end
+        local pos = w:getPosition()
+        local newX, newY = pos.x + dx, pos.y + dy
+        -- Clamp inside parent (mapPanel)
+        if mapPanel and mapPanel.getSize then
+            local pSize = mapPanel:getSize()
+            local wSize = w:getSize()
+            local topBarH = (mapPanel.topBar and mapPanel.topBar:getHeight()) or 0
+            local minX = 0
+            local maxX = pSize.width - wSize.width
+            local minY = topBarH
+            local maxY = pSize.height - wSize.height
+            if newX < minX then newX = minX end
+            if newX > maxX then newX = maxX end
+            if newY < minY then newY = minY end
+            if newY > maxY then newY = maxY end
+        end
+        w:breakAnchors()
+        w:setPosition({x = newX, y = newY})
+        MapTravel.syncScrollbars(w, mapPanel)
+        return true
+    end
 end
 
-function MapTravel.makeWidgetDraggable(widget, boundToScreen)
+function MapTravel.makeWidgetDraggable(widget, bounds)
     widget.dragging = false
     widget.dragOffset = {x = 0, y = 0}
-	widget.dragOffset = {x = 0, y = 0}
 
-	widget.onMousePress = function(w, mousePos, button)
-		if button ~= MouseLeftButton then
-			return false
-		end
-		w.dragging = true
-		local wPos = w:getPosition()
-		w.dragOffset.x = mousePos.x - wPos.x
-		w.dragOffset.y = mousePos.y - wPos.y
-		return true
-	end
+    widget.onMousePress = function(w, mousePos, button)
+        if button ~= MouseLeftButton then
+            return false
+        end
+        w.dragging = true
+        local wPos = w:getPosition()
+        w.dragOffset.x = mousePos.x - wPos.x
+        w.dragOffset.y = mousePos.y - wPos.y
+        return true
+    end
 
-	widget.onMouseRelease = function(w, mousePos, button)
-		if w.dragging then
-			w.dragging = false
-			return true
-		end
-		return false
-	end
+    widget.onMouseRelease = function(w, mousePos, button)
+        if w.dragging then
+            w.dragging = false
+            return true
+        end
+        return false
+    end
 
-	widget.onMouseMove = function(w, mousePos, mouseMoved)
-		if not w.dragging then
-			return false
-		end
+    widget.onMouseMove = function(w, mousePos, mouseMoved)
+        if not w.dragging then
+            return false
+        end
 
-		local newX = mousePos.x - w.dragOffset.x
-		local newY = mousePos.y - w.dragOffset.y
+        local newX = mousePos.x - w.dragOffset.x
+        local newY = mousePos.y - w.dragOffset.y
 
-		if boundToScreen then
-			local screenSize = g_window.getSize()
-			local widgetSize = w:getSize()
+        -- Clamp to bounds widget if provided, otherwise clamp to screen
+        local minX, minY, maxX, maxY
+        if bounds and bounds.getPosition and bounds.getSize then
+            local bPos = bounds:getPosition()
+            local bSize = bounds:getSize()
+            local wSize = w:getSize()
+            minX = bPos.x
+            minY = bPos.y
+            maxX = bPos.x + bSize.width - wSize.width
+            maxY = bPos.y + bSize.height - wSize.height
+        else
+            local screenSize = g_window.getSize()
+            local wSize = w:getSize()
+            minX = 0
+            minY = 0
+            maxX = screenSize.width - wSize.width
+            maxY = screenSize.height - wSize.height
+        end
 
-			local maxX = screenSize.width - widgetSize.width
-			if newX < 0 then
-				newX = 0
-			end
-			if newX > maxX then
-				newX = maxX
-			end
+        if newX < minX then newX = minX end
+        if newX > maxX then newX = maxX end
+        if newY < minY then newY = minY end
+        if newY > maxY then newY = maxY end
 
-			local maxY = screenSize.height - widgetSize.height
-			if newY < 0 then
-				newY = 0
-			end
-			if newY > maxY then
-				newY = maxY
-			end
-		end
-		w:breakAnchors()
-		w:setPosition({x = newX, y = newY})
-		return true
-	end
+        w:breakAnchors()
+        w:setPosition({x = newX, y = newY})
+        return true
+    end
 end
 
 
