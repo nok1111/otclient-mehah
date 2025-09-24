@@ -1,3 +1,20 @@
+-- Global scale applier used by buttons and wheel
+function MapTravel.applyScale(newScale)
+    MapTravel.mapScale = newScale
+    MapTravel._canvasPositioned = false
+    MapTravel.applyFiltersAndRedraw()
+end
+
+-- Shared mouse wheel zoom handler
+function MapTravel.wheelZoom(direction)
+    -- Match buttons: scrolling forward (direction > 0) zooms IN, backward zooms OUT
+    local factor = (direction > 0) and 1.2 or (1/1.2)
+    local s = (MapTravel.mapScale or 1.0) * factor
+    if s > 4.0 then s = 4.0 end
+    if s < 0.4 then s = 0.4 end
+    MapTravel.applyScale(s)
+end
+
 -- Resolve UI controls inside the topBar safely
 function MapTravel.getFilterControls()
     if not MapTravel.UI or not MapTravel.UI.mapPanel then return {} end
@@ -64,6 +81,8 @@ function MapTravel.setupScrollbars(canvas, bounds)
     -- Horizontal thumb drag
     if S.hThumb then
         S.hThumb.dragging = false
+        -- Do not consume mouse wheel on thumbs
+        S.hThumb.onMouseWheel = function() return false end
         S.hThumb.onMousePress = function(w, pos, button)
             if button ~= MouseLeftButton then return false end
             w.dragging = true
@@ -98,6 +117,8 @@ function MapTravel.setupScrollbars(canvas, bounds)
     -- Vertical thumb drag
     if S.vThumb then
         S.vThumb.dragging = false
+        -- Do not consume mouse wheel on thumbs
+        S.vThumb.onMouseWheel = function() return false end
         S.vThumb.onMousePress = function(w, pos, button)
             if button ~= MouseLeftButton then return false end
             w.dragging = true
@@ -130,6 +151,9 @@ function MapTravel.setupScrollbars(canvas, bounds)
             return true
         end
     end
+    -- Do not consume mouse wheel on scroll tracks either
+    if S.hScroll then S.hScroll.onMouseWheel = function() return false end end
+    if S.vScroll then S.vScroll.onMouseWheel = function() return false end end
     -- Initial sync
     MapTravel.syncScrollbars(canvas, bounds)
 end
@@ -152,6 +176,7 @@ end
         zoomIn      = topBar and (topBar.zoomIn      or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('zoomIn'))),
         zoomOut     = topBar and (topBar.zoomOut     or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('zoomOut'))),
         scrollSpeed = topBar and (topBar.scrollSpeed or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('scrollSpeed'))),
+        closeBtn    = topBar and (topBar.closeBtn    or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('closeBtn'))),
     }
 end
 
@@ -329,17 +354,12 @@ function MapTravel.ensureFilterUI()
     end
 
     -- Zoom buttons
-    local function applyScale(newScale)
-        MapTravel.mapScale = newScale
-        MapTravel._canvasPositioned = false
-        MapTravel.applyFiltersAndRedraw()
-    end
     if C.zoomIn then
         C.zoomIn.onClick = function()
             local s = MapTravel.mapScale or 1.0
             s = s * 1.2
             if s > 4.0 then s = 4.0 end
-            applyScale(s)
+            MapTravel.applyScale(s)
         end
     end
     if C.zoomOut then
@@ -347,7 +367,18 @@ function MapTravel.ensureFilterUI()
             local s = MapTravel.mapScale or 1.0
             s = s / 1.2
             if s < 0.4 then s = 0.4 end
-            applyScale(s)
+            MapTravel.applyScale(s)
+        end
+    end
+
+    -- Close button
+    if C.closeBtn then
+        C.closeBtn.onClick = function()
+            if MapTravel.hide then
+                MapTravel.hide()
+            elseif MapTravel.UI and MapTravel.UI.hide then
+                MapTravel.UI:hide()
+            end
         end
     end
 end
@@ -537,12 +568,17 @@ function MapTravel.updateMap()
         canvas:destroyChildren()
     end
 
-    -- Set world map image on canvas and scale
+    -- Set world map image on canvas and scale (always from base size)
     if canvas.setImageSource then canvas:setImageSource(MapTravel.mapDirectory) end
-    MapTravel.originalWidth = canvas:getWidth()
-    MapTravel.originalHeight = canvas:getHeight()
-    if canvas.setWidth then canvas:setWidth(MapTravel.originalWidth * MapTravel.mapScale) end
-    if canvas.setHeight then canvas:setHeight(MapTravel.originalHeight * MapTravel.mapScale) end
+    MapTravel.mapScale = MapTravel.mapScale or 1.0
+    -- Cache base size once from the image natural size
+    if not MapTravel._baseMapSize then
+        local w = canvas:getWidth()
+        local h = canvas:getHeight()
+        MapTravel._baseMapSize = { width = w, height = h }
+    end
+    if canvas.setWidth then canvas:setWidth(MapTravel._baseMapSize.width * MapTravel.mapScale) end
+    if canvas.setHeight then canvas:setHeight(MapTravel._baseMapSize.height * MapTravel.mapScale) end
 
     -- Dev preview removed: no preview square or dev border indicators
 
@@ -562,6 +598,12 @@ function MapTravel.updateMap()
 		}
 
 		nodeWidget.onHoverChange = MapTravel.onNodeHoverChange
+
+        -- Ensure wheel zoom works when hovering nodes
+        nodeWidget.onMouseWheel = function(_, _, direction)
+            MapTravel.wheelZoom(direction)
+            return true
+        end
 
 		local isUnlocked = (not nodeConfig.discoverable) or MapTravel.unlockedNodes[nodeConfig.nameId]
 
@@ -786,6 +828,12 @@ function MapTravel.updateMap()
             zoneWidget.onHoverChange = function(w, hovered)
                 MapTravel.onZoneHoverChange(w, hovered, zone)
             end
+
+            -- Wheel zoom on zones too
+            zoneWidget.onMouseWheel = function(_, _, direction)
+                MapTravel.wheelZoom(direction)
+                return true
+            end
         end
     end
     -- Drag and pan the canvas within mapPanel area (below top bar)
@@ -809,34 +857,10 @@ function MapTravel.updateMap()
     -- Scrollbars wiring and sync
     MapTravel.setupScrollbars(canvas, boundsWidget)
 
-    canvas.onMouseWheel = function(w, mousePos, direction)
-        local step = MapTravel.scrollStep or 60
-        local dx, dy = 0, 0
-        if g_keyboard and g_keyboard.isShiftPressed and g_keyboard:isShiftPressed() then
-            dx = -direction * step
-        else
-            dy = -direction * step
-        end
-        local pos = w:getPosition()
-        local newX, newY = pos.x + dx, pos.y + dy
-        -- Clamp inside parent (mapPanel)
-        if mapPanel and mapPanel.getSize then
-            local pSize = mapPanel:getSize()
-            local wSize = w:getSize()
-            local topBarH = (mapPanel.topBar and mapPanel.topBar:getHeight()) or 0
-            local minX = 0
-            local maxX = pSize.width - wSize.width
-            local minY = topBarH
-            local maxY = pSize.height - wSize.height
-            if newX < minX then newX = minX end
-            if newX > maxX then newX = maxX end
-            if newY < minY then newY = minY end
-            if newY > maxY then newY = maxY end
-        end
-        w:breakAnchors()
-        w:setPosition({x = newX, y = newY})
-        MapTravel.syncScrollbars(w, mapPanel)
-        return true
+    canvas.onMouseWheel = function(_, _, direction) MapTravel.wheelZoom(direction); return true end
+    -- Also proxy wheel from the container panel to ensure it always works
+    if mapPanel then
+        mapPanel.onMouseWheel = function(_, _, direction) MapTravel.wheelZoom(direction); return true end
     end
 end
 

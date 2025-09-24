@@ -116,12 +116,20 @@ UIWidget
       TextEdit
         id: searchBox
         anchors.left: levelFilter.right
-        anchors.right: parent.right
+        anchors.right: closeBtn.left
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 6
         margin-right: 8
         text: ""
         placeholder: Search...
+
+      Button
+        id: closeBtn
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        width: 24
+        text: X
+        tooltip: Close
 
     # Draggable map content (world map image + nodes live here)
     UIWidget
