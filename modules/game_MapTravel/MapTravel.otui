@@ -28,13 +28,108 @@ UIWidget
     phantom: false
     image-auto-resize: true
     draggable: true
+    border-width: 1
+    border-color: #3a3a3a
+
+    # Top filters bar
+    FlatPanel
+      id: topBar
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 28
+      background-color: #1c1c1ce6
+      border-width: 1
+      border-color: #333333
+      padding: 3 6
+      z-index: 100
+
+      Label
+        id: filtersLabel
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        text: Filters:
+        color: #cfcfcf
+
+      Button
+        id: resetFilters
+        anchors.left: filtersLabel.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 4
+        width: 22
+        text: R
+        tooltip: Reset filters
+
+      ComboBox
+        id: levelFilter
+        width: 120
+        anchors.left: resetFilters.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 6
+
+      # Right-side controls container to reserve width
+      FlatPanel
+        id: rightControls
+        width: 110
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        padding: 0
+        background-color: alpha
+
+        UIWidget
+          id: iconZones
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          size: 16 16
+          image-auto-resize: true
+          image-smooth: true
+          image-source: /images/topbuttons/options2
+          tooltip: Show monsters
+          z-index: 150
+
+        CheckBox
+          id: toggleZones
+          anchors.left: iconZones.right
+          anchors.verticalCenter: parent.verticalCenter
+          width: 18
+          text: ""
+          checked: true
+
+        UIWidget
+          id: iconLocked
+          anchors.left: toggleZones.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 6
+          size: 16 16
+          image-auto-resize: true
+          image-smooth: true
+          image-source: /images/topbuttons/options2
+          tooltip: Show locked waypoints
+          z-index: 150
+
+        CheckBox
+          id: toggleLocked
+          anchors.left: iconLocked.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 2
+          width: 18
+          text: ""
+
+      TextEdit
+        id: searchBox
+        anchors.left: levelFilter.right
+        anchors.right: rightControls.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 6
+        margin-right: 8
+        text: ""
+        placeholder: Search...
 
     FlatPanel
       id: viewOnlyBadge
       text: VIEW ONLY
-      anchors.top: parent.top
+      anchors.verticalCenter: topBar.verticalCenter
       anchors.right: parent.right
-      margin-top: 8
       margin-right: 8
       padding: 4
       text-auto-resize: true
@@ -44,10 +139,14 @@ UIWidget
       border-width: 1
       border-color: #666666
       visible: false
+      z-index: 200
 
     UIWidget
       id: mapImageDev
-      anchors.fill: parent
+      anchors.top: topBar.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
       visible: false
       phantom: false
 

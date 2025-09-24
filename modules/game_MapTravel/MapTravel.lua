@@ -1,3 +1,161 @@
+-- Resolve UI controls inside the topBar safely
+function MapTravel.getFilterControls()
+    if not MapTravel.UI or not MapTravel.UI.mapPanel then return {} end
+    local panel = MapTravel.UI.mapPanel
+    local topBar = panel.topBar or (panel.recursiveGetChildById and panel:recursiveGetChildById('topBar'))
+    local rightControls = topBar and (topBar.rightControls or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('rightControls'))) or nil
+    return {
+        levelFilter = (topBar and (topBar.levelFilter or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('levelFilter'))))
+                       or (panel.recursiveGetChildById and panel:recursiveGetChildById('levelFilter')),
+        searchBox   = (topBar and (topBar.searchBox   or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('searchBox'))))
+                       or (panel.recursiveGetChildById and panel:recursiveGetChildById('searchBox')),
+        toggleLocked = rightControls and (rightControls.toggleLocked or (rightControls.recursiveGetChildById and rightControls:recursiveGetChildById('toggleLocked')))
+                        or (panel.recursiveGetChildById and panel:recursiveGetChildById('toggleLocked')),
+        toggleZones  = rightControls and (rightControls.toggleZones  or (rightControls.recursiveGetChildById  and rightControls:recursiveGetChildById('toggleZones')))
+                        or (panel.recursiveGetChildById and panel:recursiveGetChildById('toggleZones')),
+        iconZones    = rightControls and (rightControls.iconZones    or (rightControls.recursiveGetChildById  and rightControls:recursiveGetChildById('iconZones'))),
+        iconLocked   = rightControls and (rightControls.iconLocked   or (rightControls.recursiveGetChildById  and rightControls:recursiveGetChildById('iconLocked'))),
+        resetFilters = topBar and (topBar.resetFilters or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('resetFilters'))),
+    }
+end
+
+-- Ensure controls are initialized and wired; safe to call multiple times
+function MapTravel.ensureFilterUI()
+    local C = MapTravel.getFilterControls()
+    if not C then return end
+    -- Utility to suppress callback-triggered redraw loops while syncing UI state
+    local function withSuppressed(fn)
+        MapTravel._suppressFilterCallbacks = true
+        local ok, err = pcall(fn)
+        MapTravel._suppressFilterCallbacks = false
+        if not ok then print('[MapTravel] ensureFilterUI error:', err) end
+    end
+    -- Level filter options
+    if C.levelFilter and C.levelFilter.clear and C.levelFilter.addOption then
+        -- Populate only once if empty (best-effort check)
+        local needPopulate = true
+        if C.levelFilter.getOptions and type(C.levelFilter:getOptions()) == 'table' then
+            needPopulate = (#C.levelFilter:getOptions() == 0)
+        end
+        if needPopulate then
+            withSuppressed(function()
+                C.levelFilter:clear()
+                local ranges = {"All","1-50","51-100","101-150","151-200","201-250","251-300","301-350","350+"}
+                for _, r in ipairs(ranges) do C.levelFilter:addOption(r) end
+                if C.levelFilter.setCurrentOptionByText then
+                    C.levelFilter:setCurrentOptionByText(MapTravel.filters and MapTravel.filters.levelRange or "All")
+                end
+            end)
+        end
+        C.levelFilter.onOptionChange = function()
+            if MapTravel._suppressFilterCallbacks then return end
+            local txt = C.levelFilter.getText and C.levelFilter:getText() or MapTravel.filters.levelRange
+            MapTravel.filters.levelRange = txt
+            MapTravel.applyFiltersAndRedraw()
+        end
+    end
+
+    -- Search box
+    if C.searchBox then
+        withSuppressed(function()
+            if C.searchBox.setText then C.searchBox:setText(MapTravel.filters and MapTravel.filters.search or "") end
+        end)
+        C.searchBox.onTextChange = function()
+            if MapTravel._suppressFilterCallbacks then return end
+            MapTravel.filters.search = (C.searchBox.getText and C.searchBox:getText()) or ""
+            MapTravel.applyFiltersAndRedraw()
+        end
+    end
+
+    -- Toggles
+    if C.toggleLocked then
+        withSuppressed(function()
+            if C.toggleLocked.setChecked then C.toggleLocked:setChecked(MapTravel.filters and MapTravel.filters.showLocked) end
+        end)
+        C.toggleLocked.onCheckChange = function(_, checked)
+            if MapTravel._suppressFilterCallbacks then return end
+            MapTravel.filters.showLocked = checked and true or false
+            MapTravel.applyFiltersAndRedraw()
+        end
+    end
+    if C.toggleZones then
+        withSuppressed(function()
+            if C.toggleZones.setChecked then C.toggleZones:setChecked(MapTravel.filters and MapTravel.filters.showZones) end
+        end)
+        C.toggleZones.onCheckChange = function(_, checked)
+            if MapTravel._suppressFilterCallbacks then return end
+            MapTravel.filters.showZones = checked and true or false
+            MapTravel.applyFiltersAndRedraw()
+        end
+    end
+
+    -- Make icons clickable to toggle corresponding checkbox
+    if C.iconZones and C.toggleZones then
+        C.iconZones.onClick = function()
+            if MapTravel._suppressFilterCallbacks then return end
+            if C.toggleZones.setChecked and C.toggleZones.isChecked then
+                C.toggleZones:setChecked(not C.toggleZones:isChecked())
+            end
+            MapTravel.filters.showZones = (C.toggleZones.isChecked and C.toggleZones:isChecked()) or false
+            MapTravel.applyFiltersAndRedraw()
+        end
+    end
+    if C.iconLocked and C.toggleLocked then
+        C.iconLocked.onClick = function()
+            if MapTravel._suppressFilterCallbacks then return end
+            if C.toggleLocked.setChecked and C.toggleLocked.isChecked then
+                C.toggleLocked:setChecked(not C.toggleLocked:isChecked())
+            end
+            MapTravel.filters.showLocked = (C.toggleLocked.isChecked and C.toggleLocked:isChecked()) or false
+            MapTravel.applyFiltersAndRedraw()
+        end
+    end
+
+    -- Reset filters button
+    if C.resetFilters then
+        C.resetFilters.onClick = function()
+            if MapTravel._suppressFilterCallbacks then return end
+            withSuppressed(function()
+                MapTravel.filters.levelRange = 'All'
+                MapTravel.filters.search = ''
+                MapTravel.filters.showLocked = true
+                MapTravel.filters.showZones = true
+                if C.levelFilter and C.levelFilter.setCurrentOptionByText then C.levelFilter:setCurrentOptionByText('All') end
+                if C.searchBox and C.searchBox.setText then C.searchBox:setText('') end
+                if C.toggleLocked and C.toggleLocked.setChecked then C.toggleLocked:setChecked(true) end
+                if C.toggleZones and C.toggleZones.setChecked then C.toggleZones:setChecked(true) end
+            end)
+            MapTravel.applyFiltersAndRedraw()
+        end
+    end
+end
+-- Helpers for filters
+function MapTravel.parseRecommendedLevel(v)
+    if type(v) == 'number' then return v end
+    if type(v) == 'string' then
+        local num = tonumber(v:match('%d+'))
+        return num or 0
+    end
+    return 0
+end
+
+function MapTravel.levelMatchesFilter(level, rangeText)
+    if not rangeText or rangeText == 'All' then return true end
+    local a,b = rangeText:match('^(%d+)%-(%d+)$')
+    if a and b then
+        a = tonumber(a); b = tonumber(b)
+        return level >= a and level <= b
+    end
+    local min = rangeText:match('^(%d+)%+$')
+    if min then
+        return level >= tonumber(min)
+    end
+    return true
+end
+
+function MapTravel.applyFiltersAndRedraw()
+    MapTravel.updateMap()
+end
 
 
 ------ Initialization and Termination
@@ -68,6 +226,20 @@ function MapTravel.onGameStart()
             return false
         end
 
+        -- Initialize filters defaults and wire up UI controls
+        MapTravel.filters = MapTravel.filters or {
+            levelRange = "All",
+            search = "",
+            showLocked = true,
+            showZones = true,
+        }
+
+        local panel = MapTravel.UI.mapPanel
+        if panel then
+            -- Resolve nested widgets inside topBar/rightControls
+            MapTravel.ensureFilterUI()
+        end
+
         if MapTravel.devMode then
             MapTravel.setupDevMode()
         end
@@ -129,7 +301,27 @@ function MapTravel.updateMap()
 		return
 	end
 
-	mapPanel:destroyChildren()
+    -- Always ensure filter controls are wired before redrawing
+    MapTravel.ensureFilterUI()
+
+    -- Preserve static UI children (topBar, badges, dev widgets) and destroy only dynamic map children
+    if mapPanel.getChildren then
+        local keep = {
+            topBar = true,
+            viewOnlyBadge = true,
+            mapImageDev = true,
+            devModePanel = true,
+            nodesComboBox = true,
+        }
+        for _, child in ipairs(mapPanel:getChildren()) do
+            local id = child.getId and child:getId() or ""
+            if not keep[id] then
+                child:destroy()
+            end
+        end
+    else
+        mapPanel:destroyChildren()
+    end
 
 	mapPanel:setImageSource(MapTravel.mapDirectory)
 	MapTravel.originalWidth = mapPanel:getWidth()
@@ -148,12 +340,18 @@ function MapTravel.updateMap()
 		MapTravel.UI.mapPanel.mapImageDev:setImageSource(MapTravel.mapFilledDirectory or "")
 	end
 
+    -- Top offset to account for topBar height if present
+    local topBarHeight = 0
+    if MapTravel.UI and MapTravel.UI.mapPanel and MapTravel.UI.mapPanel.topBar then
+        topBarHeight = MapTravel.UI.mapPanel.topBar:getHeight() or 0
+    end
+
 	for nodeIndex, nodeConfig in ipairs(MapTravel.mapNodesConfig) do
 		local nodeWidget = g_ui.createWidget("MapTravelNode", mapPanel)
 		nodeWidget:addAnchor(AnchorTop, "parent", AnchorTop)
 		nodeWidget:addAnchor(AnchorLeft, "parent", AnchorLeft)
 
-		nodeWidget:setMarginTop(nodeConfig.modulePos.marginTop * MapTravel.mapScale)
+		nodeWidget:setMarginTop((nodeConfig.modulePos.marginTop * MapTravel.mapScale) + topBarHeight)
 		nodeWidget:setMarginLeft(nodeConfig.modulePos.marginLeft * MapTravel.mapScale)
 
 		nodeWidget.nameId = nodeConfig.nameId
@@ -172,7 +370,8 @@ function MapTravel.updateMap()
 		local nodeVisible = true
 		if nodeConfig.discoverable and not isUnlocked then
 			nodeEnabled = false
-			nodeVisible = false
+			-- Respect filter: show or hide locked
+			nodeVisible = MapTravel.filters and MapTravel.filters.showLocked == true
 		else
 			if nodeConfig.nameId == MapTravel.currentNodeNameId then
 				nodeImage = "images/nodes/current/" .. nodeConfig.nameId
@@ -188,6 +387,25 @@ function MapTravel.updateMap()
 		nodeWidget:setImageSource(nodeImage)
 		nodeWidget:setEnabled(nodeEnabled)
 		nodeWidget:setVisible(nodeVisible)
+		-- If showing locked, dim the icon
+		if nodeConfig.discoverable and not isUnlocked then
+			if MapTravel.filters and MapTravel.filters.showLocked == true then
+				if nodeWidget.setOpacity then nodeWidget:setOpacity(0.45) end
+			end
+		else
+			if nodeWidget.setOpacity then nodeWidget:setOpacity(1.0) end
+		end
+
+		-- Apply search filter on waypoints (displayName or nameId)
+		if MapTravel.filters and MapTravel.filters.search and MapTravel.filters.search ~= "" then
+			local q = MapTravel.filters.search:lower()
+			local nameA = tostring(nodeConfig.displayName or ""):lower()
+			local nameB = tostring(nodeConfig.nameId or ""):lower()
+			local matches = (nameA:find(q, 1, true) ~= nil) or (nameB:find(q, 1, true) ~= nil)
+			if not matches then
+				nodeWidget:setVisible(false)
+			end
+		end
 
 		MapTravel.originalNodeWidgetWidth = nodeWidget:getWidth()
 		MapTravel.originalNodeWidgetHeight = nodeWidget:getHeight()
@@ -203,101 +421,179 @@ function MapTravel.updateMap()
 		end
 	end
 
-	-- Render Zone Nodes (non-interactive markers)
-	if MapTravel.zonesConfig and #MapTravel.zonesConfig > 0 then
-		for _, zone in ipairs(MapTravel.zonesConfig) do
-			local isImageNode = (zone.image ~= nil and zone.image ~= '') and (zone.outfit == nil)
-			local widgetType = isImageNode and "MapTravelZoneImageNode" or "MapTravelZoneNode"
-			local zoneWidget = g_ui.createWidget(widgetType, mapPanel)
-			zoneWidget:addAnchor(AnchorTop, "parent", AnchorTop)
-			zoneWidget:addAnchor(AnchorLeft, "parent", AnchorLeft)
+    -- Render Zone Nodes (non-interactive markers)
+    if MapTravel.zonesConfig and #MapTravel.zonesConfig > 0 then
+        for _, zone in ipairs(MapTravel.zonesConfig) do
+            local isImageNode = (zone.image ~= nil and zone.image ~= '') and (zone.outfit == nil)
+            local widgetType = isImageNode and "MapTravelZoneImageNode" or "MapTravelZoneNode"
+            local zoneWidget = g_ui.createWidget(widgetType, mapPanel)
+            zoneWidget:addAnchor(AnchorTop, "parent", AnchorTop)
+            zoneWidget:addAnchor(AnchorLeft, "parent", AnchorLeft)
 
-			local mTop = (zone.modulePos.marginTop or 0) * MapTravel.mapScale
-			local mLeft = (zone.modulePos.marginLeft or 0) * MapTravel.mapScale
-			zoneWidget:setMarginTop(mTop)
-			zoneWidget:setMarginLeft(mLeft)
+            local mTop = ((zone.modulePos.marginTop or 0) * MapTravel.mapScale) + topBarHeight
+            local mLeft = (zone.modulePos.marginLeft or 0) * MapTravel.mapScale
+            zoneWidget:setMarginTop(mTop)
+            zoneWidget:setMarginLeft(mLeft)
 
-			-- Size
-			local baseW = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.width or 36
-			local baseH = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.height or 36
-			zoneWidget:setWidth(baseW * MapTravel.mapScale)
-			zoneWidget:setHeight(baseH * MapTravel.mapScale)
+            -- Size
+            local baseW = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.width or 36
+            local baseH = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.height or 36
+            zoneWidget:setWidth(baseW * MapTravel.mapScale)
+            zoneWidget:setHeight(baseH * MapTravel.mapScale)
 
-			-- Outfit (creature looktype) or Image icon
-			if not isImageNode and zone.outfit then
-				zoneWidget:setOutfit(zone.outfit)
-				if zoneWidget.setCenter then
-					zoneWidget:setCenter(true)
-				end
-				-- Try to keep large outfits centered/fitting in the node
-				local baseW = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.width or zoneWidget:getWidth()
-				local baseH = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.height or zoneWidget:getHeight()
-				-- Ensure widget size matches configured node size (already set above, but reaffirm)
-				if zoneWidget.setSize then
-					zoneWidget:setSize(string.format("%d %d", math.floor(baseW * MapTravel.mapScale), math.floor(baseH * MapTravel.mapScale)))
-				end
-				if zoneWidget.setPadding then
-					zoneWidget:setPadding(zone.padding or -math.floor((baseW + baseH) / 16))
-				end
-				if zoneWidget.setMarginLeft then
-					zoneWidget:setMarginLeft(mLeft + (zone.marginLeftOffset or 0))
-				end
-				if zoneWidget.setMarginTop then
-					zoneWidget:setMarginTop(mTop + (zone.marginTopOffset or 0))
-				end
-				-- Adjust creature render size based on thing real size
-				if g_things and g_things.getThingType and zone.outfit.type and zoneWidget.setCreatureSize then
-					local thingType = g_things.getThingType(zone.outfit.type, ThingCategoryCreature)
-					if thingType and thingType.getRealSize then
-						local real = thingType:getRealSize() or 64
-						if zone.creatureFixSize then
-							real = zone.creatureFixSize
-						end
-						local base = math.floor((baseW + baseH) / 2)
-						local extra = zone.creatureSizeExtra or 148
-						zoneWidget:setCreatureSize(real + extra)
-					end
-				end
-				-- Attach visual effect to the UICreature icon if possible
-				if zoneWidget.getCreature then
-					local creatureObj = zoneWidget:getCreature()
-					if creatureObj and creatureObj.attachEffect and g_attachedEffects and g_attachedEffects.getById then
-						local chosenEffectId = zone.effectId
-						local effect = chosenEffectId and g_attachedEffects.getById(chosenEffectId) or nil
-						if effect then
-							creatureObj:attachEffect(effect)
-						end
-					end
-				end
-			elseif isImageNode then
-				-- Static image icon
-				if zoneWidget.setImageSource then
-					zoneWidget:setImageSource(zone.image)
-				end
-				-- Allow per-zone scaling via zone.imageScale (default 1)
-				local imageScale = zone.imageScale or 1
-				zoneWidget:setWidth((baseW * MapTravel.mapScale) * imageScale)
-				zoneWidget:setHeight((baseH * MapTravel.mapScale) * imageScale)
-				-- Optional offsets
-				if zone.imageMarginLeftOffset then
-					zoneWidget:setMarginLeft(mLeft + zone.imageMarginLeftOffset)
-				end
-				if zone.imageMarginTopOffset then
-					zoneWidget:setMarginTop(mTop + zone.imageMarginTopOffset)
-				end
-			end
+            -- Outfit (creature looktype) or Image icon
+            if not isImageNode and zone.outfit then
+                zoneWidget:setOutfit(zone.outfit)
+                if zoneWidget.setCenter then
+                    zoneWidget:setCenter(true)
+                end
+                -- Try to keep large outfits centered/fitting in the node
+                local baseW = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.width or zoneWidget:getWidth()
+                local baseH = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.height or zoneWidget:getHeight()
+                -- Ensure widget size matches configured node size (already set above, but reaffirm)
+                if zoneWidget.setSize then
+                    zoneWidget:setSize(string.format("%d %d", math.floor(baseW * MapTravel.mapScale), math.floor(baseH * MapTravel.mapScale)))
+                end
+                if zoneWidget.setPadding then
+                    zoneWidget:setPadding(zone.padding or -math.floor((baseW + baseH) / 16))
+                end
+                if zoneWidget.setMarginLeft then
+                    zoneWidget:setMarginLeft(mLeft + (zone.marginLeftOffset or 0))
+                end
+                if zoneWidget.setMarginTop then
+                    zoneWidget:setMarginTop(mTop + (zone.marginTopOffset or 0))
+                end
+                -- Adjust creature render size based on thing real size
+                if g_things and g_things.getThingType and zone.outfit.type and zoneWidget.setCreatureSize then
+                    local thingType = g_things.getThingType(zone.outfit.type, ThingCategoryCreature)
+                    if thingType and thingType.getRealSize then
+                        local real = thingType:getRealSize() or 64
+                        if zone.creatureFixSize then
+                            real = zone.creatureFixSize
+                        end
+                        local base = math.floor((baseW + baseH) / 2)
+                        local extra = zone.creatureSizeExtra or 148
+                        zoneWidget:setCreatureSize(real + extra)
+                    end
+                end
+                -- Attach visual effect to the UICreature icon if possible
+                if zoneWidget.getCreature then
+                    local creatureObj = zoneWidget:getCreature()
+                    if creatureObj and creatureObj.attachEffect and g_attachedEffects and g_attachedEffects.getById then
+                        local chosenEffectId = zone.effectId
+                        local effect = chosenEffectId and g_attachedEffects.getById(chosenEffectId) or nil
+                        if effect then
+                            creatureObj:attachEffect(effect)
+                        end
+                    end
+                end
+            elseif isImageNode then
+                -- Static image icon
+                if zoneWidget.setImageSource then
+                    zoneWidget:setImageSource(zone.image)
+                end
+                -- Allow per-zone scaling via zone.imageScale (default 1)
+                local imageScale = zone.imageScale or 1
+                zoneWidget:setWidth((baseW * MapTravel.mapScale) * imageScale)
+                zoneWidget:setHeight((baseH * MapTravel.mapScale) * imageScale)
+                -- Optional offsets
+                if zone.imageMarginLeftOffset then
+                    zoneWidget:setMarginLeft(mLeft + zone.imageMarginLeftOffset)
+                end
+                if zone.imageMarginTopOffset then
+                    zoneWidget:setMarginTop(mTop + zone.imageMarginTopOffset)
+                end
+            end
 
-			-- Hover tooltip
-			zoneWidget.onHoverChange = function(w, hovered)
-				MapTravel.onZoneHoverChange(w, hovered, zone)
-			end
-		end
-	end
-	MapTravel.makeWidgetDraggable(mapPanel, true)
+            -- Apply filters to zones: search and level range
+            local visible = true
+            local q = ""
+            if MapTravel.filters then
+                -- Hide monsters toggle first: hide only outfit (monster) nodes when OFF
+                if (MapTravel.filters.showZones == false) and (not isImageNode) and zone.outfit then
+                    visible = false
+                end
+                -- Search across display/name
+                q = (MapTravel.filters.search or ""):lower()
+                if q ~= "" then
+                    local zName = tostring(zone.name or zone.displayName or ""):lower()
+                    if not zName:find(q, 1, true) then
+                        visible = false
+                    end
+                end
+                -- Level filter never hard-hides; only dims below
+            end
+            zoneWidget:setVisible(visible)
+
+            -- Visual adjustments per filters
+            do
+                local lvl = MapTravel.parseRecommendedLevel(zone.recommendedLevel)
+                local inRange = MapTravel.levelMatchesFilter(lvl, MapTravel.filters and MapTravel.filters.levelRange or "All")
+                -- Dim out-of-range monsters to 80% transparency (opacity 0.2)
+                if zoneWidget.setOpacity then
+                    if inRange then
+                        zoneWidget:setOpacity(1.0)
+                    else
+                        zoneWidget:setOpacity(0.2)
+                    end
+                end
+
+                -- Highlight search matches: bigger size and shader Zomg on UICreature nodes
+                q = (MapTravel.filters and MapTravel.filters.search or ""):lower()
+                local isMatch = false
+                if q ~= "" then
+                    local zName = tostring(zone.name or zone.displayName or ""):lower()
+                    isMatch = zName:find(q, 1, true) ~= nil
+                end
+
+                -- Reset size first
+                local baseW2 = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.width or 36
+                local baseH2 = MapTravel.zoneNodeSize and MapTravel.zoneNodeSize.height or 36
+                local scaleBoost = (isMatch and 1.15 or 1.0)
+                local w = (baseW2 * MapTravel.mapScale) * (isImageNode and (zone.imageScale or 1) or 1)
+                local h = (baseH2 * MapTravel.mapScale) * (isImageNode and (zone.imageScale or 1) or 1)
+                zoneWidget:setWidth(math.floor(w * scaleBoost))
+                zoneWidget:setHeight(math.floor(h * scaleBoost))
+
+                -- Shader apply/remove
+                local function setCreatureShader(widget, shaderName)
+                    if widget.getCreature and g_shaders and g_shaders.getShader then
+                        local creatureObj = widget:getCreature()
+                        if creatureObj and creatureObj.setShader then
+                            if shaderName == false then
+                                -- Explicitly set to default outfit shader
+                                local def = g_shaders.getShader('Outfit - Default')
+                                creatureObj:setShader(def)
+                            else
+                                local shader = shaderName and g_shaders.getShader(shaderName) or nil
+                                creatureObj:setShader(shader)
+                            end
+                        end
+                    end
+                end
+
+                if not isImageNode and zone.outfit then
+                    if isMatch then
+                        setCreatureShader(zoneWidget, 'Zomg')
+                    else
+                        -- remove shader (default)
+                        setCreatureShader(zoneWidget, false)
+                    end
+                end
+            end
+
+            -- Hover tooltip
+            zoneWidget.onHoverChange = function(w, hovered)
+                MapTravel.onZoneHoverChange(w, hovered, zone)
+            end
+        end
+    end
+    MapTravel.makeWidgetDraggable(mapPanel, true)
 end
 
 function MapTravel.makeWidgetDraggable(widget, boundToScreen)
-	widget.dragging = false
+    widget.dragging = false
+    widget.dragOffset = {x = 0, y = 0}
 	widget.dragOffset = {x = 0, y = 0}
 
 	widget.onMousePress = function(w, mousePos, button)
