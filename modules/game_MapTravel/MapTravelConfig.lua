@@ -163,7 +163,7 @@ MapTravel.mapNodesConfig = {
 -- and shows a tooltip with the creature and recommended level.
 -- outfit.type is the lookType ID to render; name is the zone name; recommendedLevel is a number/string.
 -- modulePos uses the same coordinate system as mapNodesConfig and will be scaled by MapTravel.mapScale.
-MapTravel.zoneNodeSize = { width = 64, height = 64 }
+MapTravel.zoneNodeSize = { width = 70, height = 70 }
 -- zonesConfig now supports two icon types per entry:
 -- 1) Creature icon: provide `outfit = { type = <lookTypeId> }`
 -- 2) Static image icon: provide `image = "/images/..."` (omit `outfit`)
@@ -176,14 +176,267 @@ MapTravel.zoneNodeSize = { width = 64, height = 64 }
 MapTravel.zonesConfig = {
   -- Example: creature looktype node with per-node effect
   {
-	displayName = "Monster Camp",
-    outfit = { type = 12 }, -- lookType ID (example)
-    name = "Bandit Camp",
-    recommendedLevel = 20,
-    modulePos = { marginTop = 720, marginLeft = 420 },
-    effectId = 8,
-    creatureSizeExtra = 148,
+	displayName = "Bloody Tunnels",
+    outfit = { type = 1485 }, -- lookType ID (example)
+    name = "Bloody Tunnels",
+    recommendedLevel = "30+",
+    modulePos = { marginTop = 625, marginLeft = 150 },
+    effectId = 239,
+    creatureSizeExtra = 100,
   },
+  {
+	displayName = "Twigkin Forest",
+    outfit = { type = 2493 }, -- lookType ID (example)
+    name = "Twigkin Forest", 
+    recommendedLevel = "8+",
+    modulePos = { marginTop = 590, marginLeft = 150 },
+    effectId = 239,
+    creatureSizeExtra = 70,
+  },
+
+  {
+	displayName = "Ashen Grove",
+    outfit = { type = 1927 }, -- lookType ID (example)
+    name = "Ashen Grove", 
+    recommendedLevel = "18+",
+    modulePos = { marginTop = 535, marginLeft = 200 },
+    effectId = 239,
+    creatureSizeExtra = 85,
+  },
+
+  {
+    displayName = "Garona Forest",
+    outfit = { type = 2036 }, -- lookType ID (example)
+    name = "Garona Forest", 
+    recommendedLevel = "40+",
+    modulePos = { marginTop = 680, marginLeft = 250 },
+    effectId = 239,
+    creatureSizeExtra = 85,
+  },
+
+  {
+    displayName = "Mining excavation [north]",
+    outfit = { type = 2600 }, -- lookType ID (example)
+    name = "Mining excavation [north]", 
+    recommendedLevel = "40+",
+    modulePos = { marginTop = 650, marginLeft = 335 },
+    effectId = 239,
+    creatureSizeExtra = 40,
+  },
+  {
+    displayName = "Mining excavation [south]",
+    outfit = { type = 2600 }, -- lookType ID (example)
+    name = "Mining excavation [south]", 
+    recommendedLevel = "40+",
+    modulePos = { marginTop = 700, marginLeft = 345 },
+    effectId = 239,
+    creatureSizeExtra = 40,
+  },
+  {
+    outfit = { type = 1802 }, -- lookType ID (example)
+    name = "Bull's plain", 
+    recommendedLevel = "60+",
+    modulePos = { marginTop = 570, marginLeft = 350 },
+    effectId = 239,
+    creatureSizeExtra = 90,
+  },
+  {
+    outfit = { type = 2473 }, -- lookType ID (example)
+    name = "Verdant Grove", 
+    recommendedLevel = "70+", 
+    modulePos = { marginTop = 540, marginLeft = 442 },
+    effectId = 239,
+    creatureSizeExtra = 55,
+  },
+
+  {
+    outfit = { type = 2718 }, -- lookType ID (example)
+    name = "Thornback Swamp", 
+    recommendedLevel = "70+", 
+    modulePos = { marginTop = 630, marginLeft = 480 },
+    effectId = 239,
+    creatureSizeExtra = 70,
+  },
+  {
+    outfit = { type = 1702 }, -- lookType ID (example)
+    name = "Cursed Cementery", 
+    recommendedLevel = "90+", 
+    modulePos = { marginTop = 680, marginLeft = 570 },
+    effectId = 239,
+    creatureSizeExtra = 50,
+  },
+  {
+    outfit = { type = 1738 }, -- lookType ID (example)
+    name = "Shadow Hollow", 
+    recommendedLevel = "80+", 
+    modulePos = { marginTop = 645, marginLeft = 403 },
+    effectId = 239,
+    creatureSizeExtra = 70,
+  },
+  {
+    outfit = { type = 2594 }, -- lookType ID (example)
+    name = "Forgotten Library", 
+    recommendedLevel = "100+", 
+    modulePos = { marginTop = 645, marginLeft = 688 },
+    effectId = 239,
+    creatureSizeExtra = 70,
+  },
+
+  {
+    outfit = { type = 2689 }, -- lookType ID (example)
+    name = "Eldenmere Ruins", 
+    recommendedLevel = "65+", 
+    modulePos = { marginTop = 750, marginLeft = 645 },
+    effectId = 239,
+    creatureSizeExtra = 70,
+  },
+
+  {
+    outfit = { type = 2424 }, -- lookType ID (example)
+    name = "Chlorophyll Tunnels", 
+    recommendedLevel = "65+", 
+    modulePos = { marginTop = 892, marginLeft = 435 },
+    effectId = 239,
+    creatureSizeExtra = 50,
+  },
+
+  {
+    outfit = { type = 2450 }, -- lookType ID (example)
+    name = "Sporeveil Outskirts", 
+    recommendedLevel = "70+", 
+    modulePos = { marginTop = 808, marginLeft = 580 },
+    effectId = 239,
+    creatureSizeExtra = 80,
+  },
+  {
+    outfit = { type = 2450 }, -- lookType ID (example)
+    name = "Sporeveil Swamp", 
+    recommendedLevel = "70+", 
+    modulePos = { marginTop = 875, marginLeft = 615 },
+    effectId = 239,
+    creatureSizeExtra = 80,
+  },
+  {
+    outfit = { type = 2504 }, -- lookType ID (example)
+    name = "Tuskin Mountain", 
+    recommendedLevel = "125+", 
+    modulePos = { marginTop = 875, marginLeft = 710 },
+    effectId = 239,
+    creatureSizeExtra = 70,
+  },
+
+  {
+    outfit = { type = 2504 }, -- lookType ID (example)
+    name = "Tuskin West Mountain", 
+    recommendedLevel = "125+", 
+    modulePos = { marginTop = 925, marginLeft = 550 },
+    effectId = 239,
+    creatureSizeExtra = 70,
+  },
+
+  {
+    outfit = { type = 2720 }, -- lookType ID (example)
+    name = "Wyrmfang Mountain", 
+    recommendedLevel = "110+", 
+    modulePos = { marginTop = 1005, marginLeft = 645 },
+    effectId = 239,
+    creatureSizeExtra = 128,
+  },
+
+  {
+    outfit = { type = 1550 }, -- lookType ID (example)
+    name = "Troll Fortress", 
+    recommendedLevel = "125+", 
+    modulePos = { marginTop = 955, marginLeft = 750 },
+    effectId = 239,
+    creatureSizeExtra = 95,
+	},
+
+	{
+		outfit = { type = 2552 }, -- lookType ID (example)
+		name = "Burried Tombs", 
+		recommendedLevel = "230+", 
+		modulePos = { marginTop = 1032, marginLeft = 389 },
+		effectId = 239,
+		creatureSizeExtra = 45,
+	},
+	{
+		outfit = { type = 2672 }, -- lookType ID (example)
+		name = "Murloks Beach", 
+		recommendedLevel = "150+", 
+		modulePos = { marginTop = 1094, marginLeft = 340 },
+		effectId = 239,
+		creatureSizeExtra = 60,
+	},
+
+	{
+		outfit = { type = 1499 }, -- lookType ID (example)
+		name = "desert draptors mountain", 
+		recommendedLevel = "137+", 
+		modulePos = { marginTop = 1140, marginLeft = 465 },
+		effectId = 239,
+		creatureSizeExtra = 135,
+	},
+
+	{
+		name = "death mountain", 
+		outfit = { type = 1290 }, -- lookType ID (example)
+		recommendedLevel = "125+", 
+		modulePos = { marginTop = 1050, marginLeft = 685 },
+		effectId = 239,
+		creatureSizeExtra = 95,
+	},
+
+	{
+		name = "Ogre Foothills", 
+		outfit = { type = 2427 }, -- lookType ID (example)
+		recommendedLevel = "240+", 
+		modulePos = { marginTop = 1180, marginLeft = 700 },
+		effectId = 239,
+		creatureSizeExtra = 270,
+		creatureFixSize = 148,
+	},
+
+	{
+		name = "High Foothills", 
+		outfit = { type = 2626 }, -- lookType ID (example)
+		recommendedLevel = "180+", 
+		modulePos = { marginTop = 1020, marginLeft = 845 },
+		effectId = 239,
+		creatureSizeExtra = 270,
+		creatureFixSize = 148,
+	},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   -- Example: static image node (no creature effect applied)
   {
     displayName = "Dungeon",
@@ -191,7 +444,7 @@ MapTravel.zonesConfig = {
     name = "Lucela's Dungeon",
     recommendedLevel = 60,
     modulePos = { marginTop = 635, marginLeft = 610 },
-    imageScale = 1.0,
+    imageScale = 0.65,
   },
   -- Add more zone entries as needed
 }

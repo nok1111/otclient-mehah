@@ -2047,3 +2047,14 @@ AttachedEffectManager.register(238, 'assasination effect', 864, ThingCategoryEff
     speed = 0.75,
     offset = { -55, -50, true },
 })
+
+AttachedEffectManager.register(239, 'waypoints', 0, 0, {
+
+    onAttach = function(effect, owner)
+        owner:setShader('Test')
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setShader('Outfit - Default')
+    end
+
+})

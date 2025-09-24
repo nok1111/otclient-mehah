@@ -250,6 +250,9 @@ function MapTravel.updateMap()
 					local thingType = g_things.getThingType(zone.outfit.type, ThingCategoryCreature)
 					if thingType and thingType.getRealSize then
 						local real = thingType:getRealSize() or 64
+						if zone.creatureFixSize then
+							real = zone.creatureFixSize
+						end
 						local base = math.floor((baseW + baseH) / 2)
 						local extra = zone.creatureSizeExtra or 148
 						zoneWidget:setCreatureSize(real + extra)
