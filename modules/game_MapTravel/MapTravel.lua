@@ -195,6 +195,18 @@ function MapTravel.setupScrollbars(canvas, bounds)
                 effHost:setMarginTop(0)
 				print("creating player marker")
 
+                -- Ensure the UICreature has a valid outfit so getCreature() returns an object
+                --[[
+                if effHost.setOutfit then
+                    local lp2 = g_game and g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
+                    local outfit = lp2 and lp2.getOutfit and lp2:getOutfit() or nil
+                    if outfit then
+                        effHost:setOutfit(outfit)
+                    else
+                        effHost:setOutfit({ type = 10 }) -- fallback looktype
+                    end
+                end
+                ]]
                 local creatureObj = effHost.getCreature and effHost:getCreature() or nil
                 if creatureObj and creatureObj.attachEffect then
                     local effect = g_attachedEffects.getById(241)
