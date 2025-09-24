@@ -159,12 +159,17 @@ function MapTravel.setupScrollbars(canvas, bounds)
                 MapTravel._playerMarker:destroy()
                 MapTravel._playerMarker = nil
             end
+            -- Stop previous effect timer if running
+            if MapTravel._playerMarkerEffectTimer and removeEvent then
+                removeEvent(MapTravel._playerMarkerEffectTimer)
+                MapTravel._playerMarkerEffectTimer = nil
+            end
             -- Create marker
             local m = g_ui.createWidget("UIWidget", canvas)
             m:setPhantom(true)
-            m:setImageSource("images/icons/wow_source")
+            m:setImageSource("images/icons/imhere")
             m:setImageAutoResize(true)
-            m:setSize({width = 64, height = 64})
+            m:setSize({width = 48, height = 48})
             m:setId("youAreHereMarker")
             if m.setZIndex then m:setZIndex(180) end
             -- Position considering current scale and center the icon
@@ -175,6 +180,30 @@ function MapTravel.setupScrollbars(canvas, bounds)
             m:setMarginLeft(math.floor(mx))
             m:setMarginTop(math.floor(my))
             MapTravel._playerMarker = m
+
+            -- Attach an effect (like we do on zone creature icons) via a UICreature child
+            -- Effect id 240 is 'waypoints bounce' per effects.lua
+            if g_attachedEffects and g_attachedEffects.getById then
+                local effHost = g_ui.createWidget("UICreature", m)
+                effHost:setPhantom(true)
+                effHost:setId("youAreHereEffectHost")
+                if effHost.setZIndex then effHost:setZIndex(181) end
+                effHost:addAnchor(AnchorTop, "parent", AnchorTop)
+                effHost:addAnchor(AnchorLeft, "parent", AnchorLeft)
+                effHost:setSize(m:getSize())
+                effHost:setMarginLeft(0)
+                effHost:setMarginTop(0)
+				print("creating player marker")
+
+                local creatureObj = effHost.getCreature and effHost:getCreature() or nil
+                if creatureObj and creatureObj.attachEffect then
+                    local effect = g_attachedEffects.getById(241)
+                    if effect then
+                        print("attach effect")
+                        creatureObj:attachEffect(effect)
+                    end
+                end
+            end
         end
     end
 

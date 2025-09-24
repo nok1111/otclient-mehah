@@ -2058,3 +2058,17 @@ AttachedEffectManager.register(239, 'waypoints', 0, 0, {
     end
 
 })
+
+AttachedEffectManager.register(240, 'waypoints bounce', 0, 0, {
+    onAttach = function(effect, owner)
+        owner:setBounce(0, 10, 1000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setBounce(0, 0, 0)
+    end
+})
+
+AttachedEffectManager.register(241, 'www', '/images/game/effects/animated', ThingExternalTexture, {
+    size = { 400, 400 },
+    offset = { 50, 45 }
+})
