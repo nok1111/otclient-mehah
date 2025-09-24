@@ -11,24 +11,33 @@ MapTravel.worldImageConfig = MapTravel.worldImageConfig or {
     tilesH = 2048,
     imgW   = 1347,
     imgH   = 1371,
-    x0     = 50,     -- top-left world tile X of the image
-    y0     = -250,     -- top-left world tile Y of the image
+    x0     = 150,     -- top-left world tile X of the image
+    y0     = 128,     -- top-left world tile Y of the image
+    -- Optional extra scale multipliers to fine-tune pixels-per-tile mapping
+    -- Increase scaleX/scaleY to move points further right/down respectively.
+    -- Example: scaleY = 1.6 if the marker appears ~1.6x higher than expected.
+    scaleX = 1.53,
+    scaleY = 1.5
+    ,
 }
 
 local function worldToPixelXY(pos)
     if not pos then return nil end
     local cfg = MapTravel.worldImageConfig
-    local sx = cfg.imgW / cfg.tilesW
-    local sy = cfg.imgH / cfg.tilesH
+    -- Prefer the actual base image size if we have already cached it
+    local imgW = (MapTravel._baseMapSize and MapTravel._baseMapSize.width) or cfg.imgW
+    local imgH = (MapTravel._baseMapSize and MapTravel._baseMapSize.height) or cfg.imgH
+    local sx = (imgW / cfg.tilesW) * (cfg.scaleX or 1)
+    local sy = (imgH / cfg.tilesH) * (cfg.scaleY or 1)
     local px = (pos.x - cfg.x0) * sx
     local py = (pos.y - cfg.y0) * sy
     -- clamp to image
-    if px < 0 or py < 0 or px > cfg.imgW or py > cfg.imgH then
+    if px < 0 or py < 0 or px > imgW or py > imgH then
         -- outside image; still return clamped coords
         if px < 0 then px = 0 end
         if py < 0 then py = 0 end
-        if px > cfg.imgW then px = cfg.imgW end
-        if py > cfg.imgH then py = cfg.imgH end
+        if px > imgW then px = imgW end
+        if py > imgH then py = imgH end
     end
     return { x = px, y = py }
 end
@@ -143,7 +152,7 @@ function MapTravel.setupScrollbars(canvas, bounds)
     end
 
     -- View-only: place a one-time 'You are here' marker based on client player position
-    if MapTravel.viewOnly then
+   -- if MapTravel.viewOnly then
         -- Snapshot player position once
         if not MapTravel._playerPosPx then
             local lp = g_game and g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
@@ -217,7 +226,7 @@ function MapTravel.setupScrollbars(canvas, bounds)
                 end
             end
         end
-    end
+   -- end
 
     -- Vertical thumb drag
     if S.vThumb then
@@ -662,6 +671,17 @@ function MapTravel.updateMap()
 
     -- Always ensure filter controls are wired before redrawing
     MapTravel.ensureFilterUI()
+
+    -- Refresh player pixel position each redraw (ensures up-to-date 'You are here' marker)
+    do
+        local lp = g_game and g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
+        local lppos = lp and lp.getPosition and lp:getPosition() or nil
+        if lppos then
+            MapTravel._playerPosPx = worldToPixelXY(lppos)
+        else
+            MapTravel._playerPosPx = nil
+        end
+    end
 
     -- Select canvas: dedicated map content holder to pan, fallback to mapPanel
     local canvas = (mapPanel.mapCanvas) or mapPanel

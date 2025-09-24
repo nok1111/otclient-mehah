@@ -26,10 +26,11 @@ UIWidget
   FlatPanel
     id: mainFrame
     anchors.fill: parent
-    image-source: /images/ui/panel_flat
+    image-source: /images/ui/backdrop-dark-grey
     image-border: 7
     padding: 8
     z-index: 0
+
 
   UIWidget
     id: mapPanel
@@ -205,13 +206,6 @@ UIWidget
       visible: false
       z-index: 200
 
-    FlatPanel
-      id: mainFrame
-      anchors.centerIn: parent
-      image-source: /images/ui/panel_flat
-      image-border: 7
-      padding: 8
-      z-index: 40
 
     UIWidget
       id: mapImageDev
