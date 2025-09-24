@@ -7,6 +7,9 @@ local registry = {}
 local desired = {}
 local ensureEvent = nil
 local ENSURE_INTERVAL_MS = 500 -- interval for reattaching labels when tiles re-enter awareness
+local ENSURE_BATCH = 120       -- max items processed per tick (prevents long frames)
+local ensureIndex = 0          -- round-robin index into desired keys
+local onGameStartHandler = nil -- keep reference so we can disconnect properly
 -- no fade effects
 
 local function posKey(pos)
@@ -30,55 +33,83 @@ local function destroyWidget(w)
   end
 end
 
-function M.init()
-  registry = {}
-  desired = {}
-  -- Clear any attached tile widgets when the game session ends
-  connect(g_game, { onGameEnd = M.clearAll })
-  -- Attach configured widgets when game starts
-  connect(g_game, { onGameStart = function()
-    if TileWidgetsConfig then M.attachFromConfig(TileWidgetsConfig) end
-  end })
-  -- If already online (module reloaded), attach immediately
-  if g_game.isOnline() and TileWidgetsConfig then
-    M.attachFromConfig(TileWidgetsConfig)
-  end
-  -- Start periodic ensure loop (labels only)
+local function startEnsureLoop()
+  if ensureEvent then return end
   local function loop()
     ensureEvent = nil
-    if g_game.isOnline() then
-      local lp = g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
-      local playerPos = lp and lp:getPosition() or nil
-      local playerZ = playerPos and playerPos.z or nil
-      for key, entry in pairs(desired) do
-        if playerZ and entry.pos and entry.pos.z then
-          if entry.pos.z ~= playerZ then
-            -- Different floor: ensure it's not present
-            local w = registry[key]
-            if w then
-              destroyWidget(w)
-              registry[key] = nil
-            end
-            -- skip creation on other floors
-          else
-            -- Same floor: ensure attached
+    if not g_game.isOnline() then
+      -- stop loop while offline
+      return
+    end
+    local keys = {}
+    for k in pairs(desired) do keys[#keys+1] = k end
+    local total = #keys
+    if total == 0 then
+      -- nothing to do; stop until items are added again
+      return
+    end
+    -- round-robin process up to ENSURE_BATCH entries
+    ensureIndex = (ensureIndex % total) + 1
+    local processed = 0
+    local lp = g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
+    local playerPos = lp and lp:getPosition() or nil
+    local playerZ = playerPos and playerPos.z or nil
+    -- modest culling radius to avoid touching far tiles unnecessarily
+    local CULL_RADIUS = 30
+    while processed < ENSURE_BATCH and processed < total do
+      local idx = ((ensureIndex + processed - 1) % total) + 1
+      local key = keys[idx]
+      local entry = desired[key]
+      if entry then
+        local sameFloor = (playerZ == nil) or (entry.pos and entry.pos.z == playerZ)
+        if not sameFloor then
+          -- destroy if present on different floor
+          if registry[key] then destroyWidget(registry[key]); registry[key] = nil end
+        else
+          -- cull by distance if we know player pos
+          local within = true
+          if playerPos and entry.pos then
+            local dx = math.abs((entry.pos.x or 0) - playerPos.x)
+            local dy = math.abs((entry.pos.y or 0) - playerPos.y)
+            within = (dx <= CULL_RADIUS and dy <= CULL_RADIUS)
+          end
+          if within then
             M.ensureLabelAttached(entry.pos, entry.text, entry.opts)
           end
-        else
-          -- Fallback if we can't read player Z
-          M.ensureLabelAttached(entry.pos, entry.text, entry.opts)
         end
       end
+      processed = processed + 1
     end
     ensureEvent = scheduleEvent(loop, ENSURE_INTERVAL_MS)
   end
   ensureEvent = scheduleEvent(loop, ENSURE_INTERVAL_MS)
 end
 
+function M.init()
+  registry = {}
+  desired = {}
+  -- Clear any attached tile widgets when the game session ends
+  connect(g_game, { onGameEnd = M.clearAll })
+  -- Attach configured widgets when game starts (store handler to disconnect)
+  onGameStartHandler = function()
+    if TileWidgetsConfig then M.attachFromConfig(TileWidgetsConfig) end
+  end
+  connect(g_game, { onGameStart = onGameStartHandler })
+  -- If already online (module reloaded), attach immediately
+  if g_game.isOnline() and TileWidgetsConfig then
+    M.attachFromConfig(TileWidgetsConfig)
+  end
+  -- Start ensure only when there is work; it will stop itself when desired is empty
+  startEnsureLoop()
+end
+
 function M.terminate()
   -- Remove session hooks and clear widgets
   disconnect(g_game, { onGameEnd = M.clearAll })
-  disconnect(g_game, { onGameStart = function() end }) -- ensure disconnect of anonymous connect
+  if onGameStartHandler then
+    disconnect(g_game, { onGameStart = onGameStartHandler })
+    onGameStartHandler = nil
+  end
   if ensureEvent then
     removeEvent(ensureEvent)
     ensureEvent = nil
@@ -88,18 +119,11 @@ end
 
 -- Ensures tile exists; retries if not yet in awareness
 local function attachWhenReady(pos, createFn)
-  -- If not online yet, wait a bit and try again to avoid unnecessary g_map calls
-  if not g_game.isOnline() then
-    scheduleEvent(function() attachWhenReady(pos, createFn) end, 500)
-    return
-  end
+  -- Try once; if tile is missing, the ensure loop will handle it later.
+  if not g_game.isOnline() then return nil end
   local tile = g_map.getTile(pos)
-  if not tile then
-    scheduleEvent(function() attachWhenReady(pos, createFn) end, 500)
-    return
-  end
-  local w = createFn(tile)
-  return w
+  if not tile then return nil end
+  return createFn(tile)
 end
 
 -- Create label only if it's missing or detached; avoids flicker
@@ -187,6 +211,10 @@ function M.addLabel(pos, text, opts)
     p = { x = p.x, y = p.y, z = p.z }
   end
   desired[key] = { pos = p, text = text, opts = opts }
+  -- ensure loop might be stopped; restart if needed
+  if not ensureEvent then
+    startEnsureLoop()
+  end
   -- Only attach immediately if on the same floor; otherwise wait for ensure loop
   local lp = g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
   local playerPos = lp and lp:getPosition() or nil
