@@ -5,6 +5,24 @@ function MapTravel.applyScale(newScale)
     MapTravel.applyFiltersAndRedraw()
 end
 
+-- Best-effort: keep the client's native top menu above MapTravel window
+function MapTravel.raiseNativeTopMenu()
+    local root = rootWidget or (g_ui and g_ui.getRootWidget and g_ui:getRootWidget())
+    if not root or not root.recursiveGetChildById then return end
+    local candidates = { 'topMenu', 'topmenu', 'TopMenu', 'topMenuPanel', 'clientTopMenu', 'client_topmenu' }
+    for _, id in ipairs(candidates) do
+        local w = root:recursiveGetChildById(id)
+        if w and w.raise then
+            w:raise()
+            if w.setZIndex then
+                -- Give it a very high z-index so it stays on top
+                w:setZIndex(10000)
+            end
+            break
+        end
+    end
+end
+
 -- World-to-image transform config (adjust x0,y0 if your image doesn't start at 0,0)
 MapTravel.worldImageConfig = MapTravel.worldImageConfig or {
     tilesW = 2048,
@@ -584,6 +602,9 @@ function MapTravel.onGameStart()
         MapTravel.UI = g_ui.displayUI("MapTravel")
         MapTravel.UI:hide()
 
+        -- Keep MapTravel root below native top menu by default
+        if MapTravel.UI.setZIndex then MapTravel.UI:setZIndex(10) end
+
         MapTravel.UI.NodesTooltip = g_ui.displayUI("MapTravelTooltip")
         MapTravel.UI.NodesTooltip:hide()
 
@@ -638,18 +659,20 @@ function MapTravel.toggle()
 end
 
 function MapTravel.show()
-	if not MapTravel.UI then
-		return
-	end
-	if not MapTravel.UI:isVisible() then
-		MapTravel.UI:show()
-		MapTravel.UI:raise()
-		-- MapTravel.UI:focus() -- Allow walking while map is open
-		if MapTravel.UI.mapPanel then
-			MapTravel.UI.mapPanel:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
-			MapTravel.UI.mapPanel:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
-		end
-	end
+    if not MapTravel.UI then
+        return
+    end
+    if not MapTravel.UI:isVisible() then
+        MapTravel.UI:show()
+        MapTravel.UI:raise()
+        -- MapTravel.UI:focus() -- Allow walking while map is open
+        if MapTravel.UI.mapPanel then
+            MapTravel.UI.mapPanel:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
+            MapTravel.UI.mapPanel:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
+        end
+        -- Try to raise native top menu above us
+        if MapTravel.raiseNativeTopMenu then MapTravel.raiseNativeTopMenu() end
+    end
 end
 
 function MapTravel.hide()
@@ -898,7 +921,7 @@ function MapTravel.updateMap()
                     if inRange then
                         zoneWidget:setOpacity(1.0)
                     else
-                        zoneWidget:setOpacity(0.2)
+                        zoneWidget:setOpacity(0)
                     end
                 end
 
@@ -979,6 +1002,14 @@ function MapTravel.updateMap()
     -- Disable mouse wheel zoom on canvas and container
     canvas.onMouseWheel = nil
     if mapPanel then mapPanel.onMouseWheel = nil end
+
+    -- Keep the top bar visually above the canvas regardless of drag position
+    if mapPanel and mapPanel.topBar and mapPanel.topBar.raise then
+        mapPanel.topBar:raise()
+    end
+
+    -- Ensure native top menu remains above this module (best-effort)
+    if MapTravel.raiseNativeTopMenu then MapTravel.raiseNativeTopMenu() end
 end
 
 function MapTravel.makeWidgetDraggable(widget, bounds)
@@ -1018,23 +1049,33 @@ function MapTravel.makeWidgetDraggable(widget, bounds)
             local bPos = bounds:getPosition()
             local bSize = bounds:getSize()
             local wSize = w:getSize()
+            -- Horizontal limits
             minX = bPos.x
-            minY = bPos.y
             maxX = bPos.x + bSize.width - wSize.width
+            -- Vertical limits: account for topBar height so dragging never hides the bar
+            local topBarH = 0
+            if MapTravel and MapTravel.UI and MapTravel.UI.mapPanel and MapTravel.UI.mapPanel.topBar and MapTravel.UI.mapPanel.topBar.getHeight then
+                topBarH = MapTravel.UI.mapPanel.topBar:getHeight() or 0
+            end
+            minY = bPos.y + topBarH
             maxY = bPos.y + bSize.height - wSize.height
         else
             local screenSize = g_window.getSize()
             local wSize = w:getSize()
             minX = 0
-            minY = 0
             maxX = screenSize.width - wSize.width
+            minY = 0
             maxY = screenSize.height - wSize.height
         end
 
-        if newX < minX then newX = minX end
-        if newX > maxX then newX = maxX end
-        if newY < minY then newY = minY end
-        if newY > maxY then newY = maxY end
+        -- If content is larger than bounds, max may be less than min; normalize to [low, high]
+        local lowX, highX = math.min(minX, maxX), math.max(minX, maxX)
+        local lowY, highY = math.min(minY, maxY), math.max(minY, maxY)
+
+        if newX < lowX then newX = lowX end
+        if newX > highX then newX = highX end
+        if newY < lowY then newY = lowY end
+        if newY > highY then newY = highY end
 
         w:breakAnchors()
         w:setPosition({x = newX, y = newY})
