@@ -29,8 +29,8 @@ MapTravel.worldImageConfig = MapTravel.worldImageConfig or {
     tilesH = 2048,
     imgW   = 1347,
     imgH   = 1371,
-    x0     = 125,     -- top-left world tile X of the image
-    y0     = 90,     -- top-left world tile Y of the image
+    x0     = 120,     -- top-left world tile X of the image
+    y0     = 70,     -- top-left world tile Y of the image
     -- Optional extra scale multipliers to fine-tune pixels-per-tile mapping
     -- Increase scaleX/scaleY to move points further right/down respectively.
     -- Example: scaleY = 1.6 if the marker appears ~1.6x higher than expected.
@@ -196,12 +196,15 @@ function MapTravel.setupScrollbars(canvas, bounds)
             m:setPhantom(true)
             m:setImageSource("images/icons/imhere")
             m:setImageAutoResize(true)
-            m:setSize({width = 48, height = 48})
+            -- Scale marker with map zoom
+            local baseSize = 48
+            local scaledSize = math.max(16, math.floor(baseSize * (MapTravel.mapScale or 1)))
+            m:setSize({width = scaledSize, height = scaledSize})
             m:setId("youAreHereMarker")
             if m.setZIndex then m:setZIndex(180) end
             -- Position considering current scale and center the icon
-            local mx = (MapTravel._playerPosPx.x * MapTravel.mapScale) - (m:getWidth() / 2)
-            local my = (MapTravel._playerPosPx.y * MapTravel.mapScale) - (m:getHeight() / 2)
+            local mx = (MapTravel._playerPosPx.x * MapTravel.mapScale) - (scaledSize / 2)
+            local my = (MapTravel._playerPosPx.y * MapTravel.mapScale) - (scaledSize / 2)
             m:addAnchor(AnchorTop, "parent", AnchorTop)
             m:addAnchor(AnchorLeft, "parent", AnchorLeft)
             m:setMarginLeft(math.floor(mx))
