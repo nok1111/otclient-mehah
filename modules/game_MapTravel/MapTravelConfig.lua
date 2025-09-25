@@ -60,7 +60,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Galestra City",
 		nameId = "galestra",
 		discoverable = false,
-		modulePos = {marginTop = 620, marginLeft = 100},
+		modulePos = {marginTop = 610, marginLeft = 100},
 		serverPos = {227, 703, 6},
 		premium = false,
 		cost = {
@@ -71,7 +71,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Garona",
 		nameId = "garona",
 		discoverable = false,
-		modulePos = {marginTop = 665, marginLeft = 160},
+		modulePos = {marginTop = 655, marginLeft = 175},
 		serverPos = {302, 746, 7},
 		premium = false,
 		cost = {
@@ -82,7 +82,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Vendel Pass",
 		nameId = "vendel",
 		discoverable = false,
-		modulePos = {marginTop = 750, marginLeft = 300},
+		modulePos = {marginTop = 760, marginLeft = 308},
 		serverPos = {442, 858, 7},
 		premium = false,
 		cost = {
@@ -104,7 +104,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Ziill Keep",
 		nameId = "ziill",
 		discoverable = false,
-		modulePos = {marginTop = 840.5, marginLeft = 552.5},
+		modulePos = {marginTop = 830.5, marginLeft = 552.5},
 		serverPos = {692, 924, 7},
 		premium = false,
 		cost = {
@@ -126,7 +126,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Thar'Neskar",
 		nameId = "tharneskar",
 		discoverable = false,
-		modulePos = {marginTop = 990, marginLeft = 580},
+		modulePos = {marginTop = 990, marginLeft = 590},
 		serverPos = {732, 1088, 5},
 		premium = false,
 		--storagesReqs = {{id = 50002, value = 1, name = "Path to Garona"}},
@@ -268,7 +268,7 @@ MapTravel.zonesConfig = {
   {
     outfit = { type = 1738 }, -- lookType ID (example)
     name = "Shadow Hollow", 
-    recommendedLevel = "80+", 
+    recommendedLevel = "60+", 
     modulePos = { marginTop = 645, marginLeft = 403 },
     effectId = 239,
     creatureSizeExtra = 70,
