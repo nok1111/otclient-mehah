@@ -30,6 +30,7 @@ local skillIdToImage = {
 local craftingWindow = nil
 local messageWindow = nil
 --craftingButton = nil
+local selectedCategory = 'All'
 
 function init()
 --craftingButton = modules.client_topmenu.addRightGameToggleButton('craftingButton', tr('Crafting'), '/game_crafting/img/hammer', toggle)
@@ -129,7 +130,7 @@ function onRecipeSelected(w, child)
 		
 	
 	
-	craftingWindow:getChildById("balance"):setText(tostring(balance .. " Gold"))
+	craftingWindow:getChildById("balance"):setText(tostring(balance))
 
 	-- ingredients
 	local panel = craftingWindow:recursiveGetChildById("ingredientsPanel")
@@ -205,7 +206,7 @@ function craftItem(all)
 end
 
 function updateCraftingWindow(skill, recipes)
-	-- updates and shows crafting window
+    -- updates and shows crafting window
 	craftingWindow:getChildById("skillLabel"):setText(tostring(skill.level))
 	craftingWindow:getChildById("skillBar"):setPercent(tostring(skill.percentage))
 	craftingWindow:getChildById("professionIcon"):setImageSource(skillIdToImage[skill.profId])
@@ -214,66 +215,101 @@ function updateCraftingWindow(skill, recipes)
 	
 	craftingWindow:getChildById("balance"):setText(tostring(balance))
 
-	local recipeList = craftingWindow:recursiveGetChildById("recipeList")
-	recipeList:setImageSource("/images/ui/panel_map.png")
-	recipeList:destroyChildren()
+    -- Store recipes for re-render based on category changes
+    craftingWindow.recipes = recipes
 
-	for i, recipe in ipairs(recipes) do
-		
+    -- Build categories (ensure 'All' first)
+    local categoriesSet = { ['All'] = true }
+    for _, r in ipairs(recipes) do
+        if r.category and r.category ~= '' then
+            categoriesSet[r.category] = true
+        end
+    end
+    local categories = {}
+    for k, _ in pairs(categoriesSet) do
+        table.insert(categories, k)
+    end
+    table.sort(categories, function(a,b)
+        if a == 'All' then return true end
+        if b == 'All' then return false end
+        return a < b
+    end)
 
-		local widget = g_ui.createWidget('Recipe', recipeList)
-		widget:setImageSource("/images/ui/list1.png")
-		widget:setText(recipe.name)
+    -- Build / refresh category bar
+    local categoryBar = craftingWindow:recursiveGetChildById('categoryBar')
+    if categoryBar then
+        categoryBar:destroyChildren()
+        for _, cat in ipairs(categories) do
+            local btn = g_ui.createWidget('Button', categoryBar)
+            btn:setText(cat)
+            btn.onClick = function()
+                selectedCategory = cat
+                -- re-render recipe list with filter
+                renderRecipeList(skill, craftingWindow.recipes)
+            end
+            if cat == selectedCategory then
+                btn:setOn(true)
+            end
+        end
+    end
 
-		-- Create the UIItem as a child of 'widget'
-		local item = g_ui.createWidget('UIItem', widget)  -- Add item to 'widget', not 'recipeList'
-		item:setItemId(recipe.spriteId)  -- Set the sprite ID for the recipe
-		item:setVirtual(true)            -- Make it non-draggable
-		item:setSize({width = 32, height = 32}) -- Set the size of the item
-		item:setMarginLeft(5) 
+    -- initial render
+    renderRecipeList(skill, recipes)
 
-		-- Adjust position to overlap
-		item:setPosition({x = 5, y = 5})  -- Position the item relative to 'widget'
-		--item:setImageSource("/images/ui/item.png")  -- Optional background for the item
+    show()
+end
 
+-- Renders recipe list according to selectedCategory
+function renderRecipeList(skill, recipes)
+    local recipeList = craftingWindow:recursiveGetChildById("recipeList")
+    recipeList:setImageSource("/images/ui/panel_map.png")
+    recipeList:destroyChildren()
 
+    local index = 0
+    for i, recipe in ipairs(recipes) do
+        if selectedCategory == 'All' or (recipe.category and recipe.category == selectedCategory) then
+            index = index + 1
+            local widget = g_ui.createWidget('Recipe', recipeList)
+            widget:setImageSource("/images/ui/list1.png")
+            widget:setText(recipe.name)
 
-		
-		widget.recipe = recipe
-		widget.recipeId = i
+            local item = g_ui.createWidget('UIItem', widget)
+            item:setItemId(recipe.spriteId)
+            item:setVirtual(true)
+            item:setSize({width = 32, height = 32})
+            item:setMarginLeft(5)
+            item:setPosition({x = 5, y = 5})
 
-		local MIN_LEVEL = recipe.requiredSkill
-		local MAX_STORAGE_VALUE = 700
-		local NOT_LEARNED_YET = " ??? - Not Learned Yet"
-		local LEVEL_TOO_LOW = "??? - Level too low"
+            widget.recipe = recipe
+            widget.recipeId = i
 
-		if skill.level < MIN_LEVEL or (recipe.recipestorage >= MAX_STORAGE_VALUE and recipe.storagevalue ~= 1) then
-			-- disable recipe
-			widget:setEnabled(false)
-			--widget:hide()
-			if skill.level < MIN_LEVEL then
-				widget:setText(LEVEL_TOO_LOW)
-				widget:setImageSource("/images/ui/list2.png")
-			elseif skill.level < MIN_LEVEL and recipe.recipestorage >= MAX_STORAGE_VALUE and recipe.storagevalue ~= 1 then
-				widget:setText(widget:getText() .. LEVEL_TOO_LOW)
-				widget:setImageSource("/images/ui/list2.png")
-			elseif recipe.recipestorage >= MAX_STORAGE_VALUE and recipe.storagevalue ~= 1 then
-				widget:setText(NOT_LEARNED_YET)
-				widget:setImageSource("/images/ui/panel_flat - Copy.png")
-			elseif recipe.recipestorage >= MAX_STORAGE_VALUE and recipe.storagevalue >= 1 then
-				widget:setText(NOT_LEARNED_YET)
-				widget:setImageSource("/images/ui/list3.png")
-				--widget:setImageColor('#FFFFFF')
-			end
-		elseif recipe.upgraded == "true" then
-			--widget:setText(widget:getText() .. " (Upgraded)")
-			widget:setImageSource("/images/ui/list_upgrade.png")
-		end
-	end
+            local MIN_LEVEL = recipe.requiredSkill
+            local MAX_STORAGE_VALUE = 700
+            local NOT_LEARNED_YET = " ??? - Not Learned Yet"
+            local LEVEL_TOO_LOW = "??? - Level too low"
 
-	recipeList:focusChild(recipeList:getFirstChild())
+            if skill.level < MIN_LEVEL or (recipe.recipestorage >= MAX_STORAGE_VALUE and recipe.storagevalue ~= 1) then
+                widget:setEnabled(false)
+                if skill.level < MIN_LEVEL then
+                    widget:setText(LEVEL_TOO_LOW)
+                    widget:setImageSource("/images/ui/list2.png")
+                elseif skill.level < MIN_LEVEL and recipe.recipestorage >= MAX_STORAGE_VALUE and recipe.storagevalue ~= 1 then
+                    widget:setText(widget:getText() .. LEVEL_TOO_LOW)
+                    widget:setImageSource("/images/ui/list2.png")
+                elseif recipe.recipestorage >= MAX_STORAGE_VALUE and recipe.storagevalue ~= 1 then
+                    widget:setText(NOT_LEARNED_YET)
+                    widget:setImageSource("/images/ui/panel_flat - Copy.png")
+                elseif recipe.recipestorage >= MAX_STORAGE_VALUE and recipe.storagevalue >= 1 then
+                    widget:setText(NOT_LEARNED_YET)
+                    widget:setImageSource("/images/ui/list3.png")
+                end
+            elseif recipe.upgraded == "true" then
+                widget:setImageSource("/images/ui/list_upgrade.png")
+            end
+        end
+    end
 
-	show()
+    recipeList:focusChild(recipeList:getFirstChild())
 end
 
 function showMessageBox(success, err)
@@ -299,66 +335,67 @@ local function toInitialCaps(str)
 end
 -- protocol
 function parseServerInfo(protocol, msg)
-	local action = msg:getU8()
-	if action == SERVER_CRAFT_RESULT then
-		-- result of crafting
-		local success = msg:getU8() == 1
-		local err = ""
-		if not success then
-			err = msg:getString()
-		end
+    local action = msg:getU8()
+    if action == SERVER_CRAFT_RESULT then
+        -- result of crafting
+        local success = msg:getU8() == 1
+        local err = ""
+        if not success then
+            err = msg:getString()
+        end
 
-		showMessageBox(success, err)
-	elseif action == SERVER_CRAFTING_WINDOW then
-		-- parse crafting window
-		local skill = {}
-		skill.level = msg:getU16()
-		skill.percentage = msg:getU8()
-		skill.profId = msg:getU8()
+        showMessageBox(success, err)
+    elseif action == SERVER_CRAFTING_WINDOW then
+        -- parse crafting window
+        local skill = {}
+        skill.level = msg:getU16()
+        skill.percentage = msg:getU8()
+        skill.profId = msg:getU8()
 
-		local recipes = {}
-		local size = msg:getU8()
-		for i = 1, size do
-			local recipe = {ingredients = {}}
-			recipe.spriteId = msg:getU16() -- client id
-			recipe.count = msg:getU16() -- amount of crafted recipe
-			recipe.name = toInitialCaps(msg:getString())
-			recipe.tier = msg:getU8()
-			recipe.desc = msg:getString()
-			recipe.cost = msg:getU16()
-			recipe.recipestorage = msg:getU16()
-			recipe.upgraded = msg:getString()
-			recipe.storagevalue = msg:getU16()
-			recipe.requiredSkill = msg:getU16()
+        local recipes = {}
+        local size = msg:getU8()
+        for i = 1, size do
+            local recipe = {ingredients = {}}
+            recipe.spriteId = msg:getU16() -- client id
+            recipe.count = msg:getU16() -- amount of crafted recipe
+            recipe.name = toInitialCaps(msg:getString())
+            recipe.tier = msg:getU8()
+            recipe.desc = msg:getString()
+            recipe.cost = msg:getU16()
+            recipe.recipestorage = msg:getU16()
+            recipe.upgraded = msg:getString()
+            recipe.storagevalue = msg:getU16()
+            recipe.requiredSkill = msg:getU16()
+            recipe.category = msg:getString()
 
-			-- ingredients
-			local ingrSize = msg:getU8()
-			for i = 1, ingrSize do
-				local ingredient = {}
-				ingredient.name = msg:getString()
-				ingredient.spriteId = msg:getU16()
-				ingredient.count = msg:getU32() -- required count
-				ingredient.playerCount = msg:getU32() -- amount of player item
-				recipe.ingredients[i] = ingredient
-			end
-			recipes[i] = recipe
-		end
-		balance = msg:getU32()
-		--print(balance)
-		updateCraftingWindow(skill, recipes)
-	end
+            -- ingredients
+            local ingrSize = msg:getU8()
+            for i = 1, ingrSize do
+                local ingredient = {}
+                ingredient.name = msg:getString()
+                ingredient.spriteId = msg:getU16()
+                ingredient.count = msg:getU32() -- required count
+                ingredient.playerCount = msg:getU32() -- amount of player item
+                recipe.ingredients[i] = ingredient
+            end
+            recipes[i] = recipe
+        end
+        balance = msg:getU32()
+        --print(balance)
+        updateCraftingWindow(skill, recipes)
+    end
 end
 
 function sendCraftItem(recipeId, amount, profId)
-	local protocol = g_game.getProtocolGame()
-	if not protocol then
-		return
-	end
-	
-	local msg = OutputMessage.create()
-	msg:addU8(ClientOpcodes.ClientCraftRecipe)
-	msg:addU32(recipeId) -- recipe id
-	msg:addU16(amount) -- times of crafts
-	msg:addU8(profId)
-	protocol:send(msg)
+    local protocol = g_game.getProtocolGame()
+    if not protocol then
+        return
+    end
+
+    local msg = OutputMessage.create()
+    msg:addU8(ClientOpcodes.ClientCraftRecipe)
+    msg:addU32(recipeId) -- recipe id
+    msg:addU16(amount) -- times of crafts
+    msg:addU8(profId)
+    protocol:send(msg)
 end

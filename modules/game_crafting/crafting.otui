@@ -32,7 +32,7 @@ Labelcraft < UIWidget
 
 MainWindow
   !text: tr('Crafting')
-  size: 680 418
+  size: 680 520
 
   Bar
     id: skillBar
@@ -168,12 +168,25 @@ MainWindow
       anchors.top: parent.top
       anchors.left: parent.left
 
+    Panel
+      id: categoryBar
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      width: 180
+      height: 28
+      layout:
+        type: horizontalBox
+        fit-children: true
+        padding: 2
+        spacing: 4
+      margin-top: 4
+
     VerticalList
       id: recipeList
       width: 180
       anchors.left: parent.left
       anchors.bottom: parent.bottom
-      anchors.top: prev.bottom
+      anchors.top: categoryBar.bottom
       margin-right: 5
       margin-top: 5
       vertical-scrollbar: recipeListScrollBar
