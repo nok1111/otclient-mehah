@@ -29,13 +29,13 @@ MapTravel.worldImageConfig = MapTravel.worldImageConfig or {
     tilesH = 2048,
     imgW   = 1347,
     imgH   = 1371,
-    x0     = 150,     -- top-left world tile X of the image
-    y0     = 128,     -- top-left world tile Y of the image
+    x0     = 125,     -- top-left world tile X of the image
+    y0     = 90,     -- top-left world tile Y of the image
     -- Optional extra scale multipliers to fine-tune pixels-per-tile mapping
     -- Increase scaleX/scaleY to move points further right/down respectively.
     -- Example: scaleY = 1.6 if the marker appears ~1.6x higher than expected.
-    scaleX = 1.53,
-    scaleY = 1.5
+    scaleX = 1.485,
+    scaleY = 1.478
     ,
 }
 
@@ -672,6 +672,23 @@ function MapTravel.show()
         end
         -- Try to raise native top menu above us
         if MapTravel.raiseNativeTopMenu then MapTravel.raiseNativeTopMenu() end
+        -- Auto-center map on open using the same logic as the Center button
+        do
+            if MapTravel.UI and MapTravel.UI.mapPanel then
+                local mapPanel = MapTravel.UI.mapPanel
+                local canvas = (mapPanel.mapCanvas) or mapPanel
+                local root = mapPanel:getParent()
+                local bounds = root and root.recursiveGetChildById and root:recursiveGetChildById('mainFrame') or MapTravel.UI
+                if bounds and bounds.getPosition and bounds.getSize and canvas.getSize then
+                    local bPos = bounds:getPosition(); local bSize = bounds:getSize(); local cSize = canvas:getSize()
+                    local topBarH = (MapTravel.UI.mapPanel.topBar and MapTravel.UI.mapPanel.topBar:getHeight()) or 0
+                    local cx = bPos.x + math.max(0, math.floor((bSize.width - cSize.width) / 2))
+                    local cy = bPos.y + topBarH + math.max(0, math.floor((bSize.height - topBarH - cSize.height) / 2))
+                    canvas:breakAnchors(); canvas:setPosition({x = cx, y = cy})
+                    MapTravel.syncScrollbars(canvas, bounds)
+                end
+            end
+        end
     end
 end
 
