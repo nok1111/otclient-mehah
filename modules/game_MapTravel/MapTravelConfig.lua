@@ -60,7 +60,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Galestra City",
 		nameId = "galestra",
 		discoverable = false,
-		modulePos = {marginTop = 610, marginLeft = 100},
+		modulePos = {marginTop = 610, marginLeft = 90},
 		serverPos = {227, 703, 6},
 		premium = false,
 		cost = {
@@ -71,7 +71,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Garona",
 		nameId = "garona",
 		discoverable = false,
-		modulePos = {marginTop = 655, marginLeft = 175},
+		modulePos = {marginTop = 655, marginLeft = 165},
 		serverPos = {302, 746, 7},
 		premium = false,
 		cost = {
@@ -82,7 +82,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Vendel Pass",
 		nameId = "vendel",
 		discoverable = false,
-		modulePos = {marginTop = 760, marginLeft = 308},
+		modulePos = {marginTop = 760, marginLeft = 295},
 		serverPos = {442, 858, 7},
 		premium = false,
 		cost = {
@@ -93,7 +93,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Greith Keep",
 		nameId = "greith",
 		discoverable = false,
-		modulePos = {marginTop = 698, marginLeft = 665.5},
+		modulePos = {marginTop = 705, marginLeft = 662.5},
 		serverPos = {813, 795, 7},
 		premium = false,
 		cost = {
@@ -104,7 +104,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Ziill Keep",
 		nameId = "ziill",
 		discoverable = false,
-		modulePos = {marginTop = 830.5, marginLeft = 552.5},
+		modulePos = {marginTop = 830.5, marginLeft = 542.5},
 		serverPos = {692, 924, 7},
 		premium = false,
 		cost = {
@@ -126,7 +126,7 @@ MapTravel.mapNodesConfig = {
 		displayName = "Thar'Neskar",
 		nameId = "tharneskar",
 		discoverable = false,
-		modulePos = {marginTop = 990, marginLeft = 590},
+		modulePos = {marginTop = 990, marginLeft = 583},
 		serverPos = {732, 1088, 5},
 		premium = false,
 		--storagesReqs = {{id = 50002, value = 1, name = "Path to Garona"}},
@@ -138,8 +138,8 @@ MapTravel.mapNodesConfig = {
 		displayName = "Vhassim",
 		nameId = "vhassim",
 		discoverable = false,
-		modulePos = {marginTop = 1055, marginLeft = 737.5},
-		serverPos = {959, 1198, 6},
+		modulePos = {marginTop = 1068, marginLeft = 613},
+		serverPos = {762, 1162, 6},
 		premium = true,
 		cost = {
 			gold = 20,
@@ -147,7 +147,7 @@ MapTravel.mapNodesConfig = {
 	},
 	[12] = {
 		displayName = "Havenhold",
-		nameId = "Havenhold",
+		nameId = "havenhold",
 		discoverable = false,
 		modulePos = {marginTop = 1497.5, marginLeft = 100},
 		serverPos = {32008, 32443, 6},
@@ -156,6 +156,51 @@ MapTravel.mapNodesConfig = {
 			gold = 20,
 		},
 	},
+	[13] = {
+		displayName = "Crossroads",
+		nameId = "crossroads",
+		discoverable = false,
+		modulePos = {marginTop = 655, marginLeft = 360},
+		serverPos = {32008, 32443, 6},
+		premium = true,
+		cost = {
+			gold = 20,
+		},
+	},
+	[14] = {
+		displayName = "Funny Farm",
+		nameId = "funnyfarm",
+		discoverable = false,
+		modulePos = {marginTop = 922, marginLeft = 638},
+		serverPos = {32008, 32443, 6},
+		premium = true,
+		cost = {
+			gold = 20,
+		},
+	},
+	[15] = {
+		displayName = "Juldem",
+		nameId = "juldem",
+		discoverable = false,
+		modulePos = {marginTop = 1100, marginLeft = 415.5},
+		serverPos = {558, 1202, 7},
+		premium = true,
+		cost = {
+			gold = 35,
+		},
+	},
+	[16] = {
+		displayName = "Kaleda",
+		nameId = "kaleda",
+		discoverable = false,
+		modulePos = {marginTop = 1105, marginLeft = 804},
+		serverPos = {959, 1198, 6},
+		premium = true,
+		cost = {
+			gold = 35,
+		},
+	},
+
 
 }
 
@@ -219,18 +264,18 @@ MapTravel.zonesConfig = {
     outfit = { type = 2600 }, -- lookType ID (example)
     name = "Mining excavation [north]", 
     recommendedLevel = "40+",
-    modulePos = { marginTop = 650, marginLeft = 335 },
+    modulePos = { marginTop = 635, marginLeft = 320 },
     effectId = 239,
-    creatureSizeExtra = 40,
+    creatureSizeExtra = 50,
   },
   {
     displayName = "Mining excavation [south]",
     outfit = { type = 2600 }, -- lookType ID (example)
     name = "Mining excavation [south]", 
     recommendedLevel = "40+",
-    modulePos = { marginTop = 700, marginLeft = 345 },
+    modulePos = { marginTop = 715, marginLeft = 320 },
     effectId = 239,
-    creatureSizeExtra = 40,
+    creatureSizeExtra = 50,
   },
   {
     outfit = { type = 1802 }, -- lookType ID (example)
@@ -269,9 +314,9 @@ MapTravel.zonesConfig = {
     outfit = { type = 1738 }, -- lookType ID (example)
     name = "Shadow Hollow", 
     recommendedLevel = "60+", 
-    modulePos = { marginTop = 645, marginLeft = 403 },
+    modulePos = { marginTop = 645, marginLeft = 405 },
     effectId = 239,
-    creatureSizeExtra = 70,
+    creatureSizeExtra = 80,
   },
   {
     outfit = { type = 2594 }, -- lookType ID (example)
@@ -294,7 +339,7 @@ MapTravel.zonesConfig = {
   {
     outfit = { type = 2424 }, -- lookType ID (example)
     name = "Chlorophyll Tunnels", 
-    recommendedLevel = "65+", 
+    recommendedLevel = "90+", 
     modulePos = { marginTop = 892, marginLeft = 435 },
     effectId = 239,
     creatureSizeExtra = 50,
@@ -304,7 +349,7 @@ MapTravel.zonesConfig = {
     outfit = { type = 2450 }, -- lookType ID (example)
     name = "Sporeveil Outskirts", 
     recommendedLevel = "70+", 
-    modulePos = { marginTop = 808, marginLeft = 580 },
+    modulePos = { marginTop = 808, marginLeft = 598 },
     effectId = 239,
     creatureSizeExtra = 80,
   },
@@ -406,6 +451,17 @@ MapTravel.zonesConfig = {
 		creatureSizeExtra = 270,
 		creatureFixSize = 148,
 	},
+
+	{
+		name = "Troll's lair", 
+		outfit = { type = 1893 }, -- lookType ID (example)
+		recommendedLevel = "15+", 
+		modulePos = { marginTop = 592, marginLeft = 206 },
+		effectId = 239,
+		creatureSizeExtra = 270,
+		creatureFixSize = 148,
+	},
+	
 
 
 
