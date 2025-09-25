@@ -31,6 +31,7 @@ local craftingWindow = nil
 local messageWindow = nil
 --craftingButton = nil
 local selectedCategory = 'All'
+local searchText = ''
 
 function init()
 --craftingButton = modules.client_topmenu.addRightGameToggleButton('craftingButton', tr('Crafting'), '/game_crafting/img/hammer', toggle)
@@ -215,6 +216,10 @@ function updateCraftingWindow(skill, recipes)
 	
 	craftingWindow:getChildById("balance"):setText(tostring(balance))
 
+    -- Always default to showing all recipes when opening/refreshing the UI
+    selectedCategory = 'All'
+    searchText = ''
+
     -- Store recipes for re-render based on category changes
     craftingWindow.recipes = recipes
 
@@ -253,6 +258,15 @@ function updateCraftingWindow(skill, recipes)
         end
     end
 
+    -- Wire search box for live filtering
+    local searchBox = craftingWindow:recursiveGetChildById('searchBox')
+    if searchBox then
+        searchBox.onTextChange = function(widget, text)
+            searchText = text or ''
+            renderRecipeList(skill, craftingWindow.recipes)
+        end
+    end
+
     -- initial render
     renderRecipeList(skill, recipes)
 
@@ -267,7 +281,13 @@ function renderRecipeList(skill, recipes)
 
     local index = 0
     for i, recipe in ipairs(recipes) do
-        if selectedCategory == 'All' or (recipe.category and recipe.category == selectedCategory) then
+        local categoryOk = (selectedCategory == 'All' or (recipe.category and recipe.category == selectedCategory))
+        local searchOk = true
+        if searchText ~= '' then
+            local nameLower = (recipe.name or ''):lower()
+            searchOk = nameLower:find(searchText:lower(), 1, true) ~= nil
+        end
+        if categoryOk and searchOk then
             index = index + 1
             local widget = g_ui.createWidget('Recipe', recipeList)
             widget:setImageSource("/images/ui/list1.png")

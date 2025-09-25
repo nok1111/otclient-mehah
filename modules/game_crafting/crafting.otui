@@ -37,26 +37,32 @@ MainWindow
   Bar
     id: skillBar
     anchors.top: parent.top
-    anchors.horizontalCenter: parent.horizontalCenter
-    width: 200
-    margin-top: 2
+    anchors.left: parent.left
+    anchors.right: professionIcon.left
+    height: 18
+    margin-top: 10
+    margin-right: 10
+    margin-left: 10
 
   Label
     id: skillLabel
     !text: tr('0')
-    anchors.top: prev.top
-    anchors.left: prev.right
-    margin-left: 5
-    margin-top: -5
+    anchors.horizontalCenter: skillBar.horizontalCenter
+    anchors.verticalCenter: skillBar.verticalCenter
+    text-align: center
+    color: #FFFFFF
+    margin-left: 0
+    margin-top: 0
 
   UIWidget
     id: professionIcon
     image-source: /data/images/game/profession/blacksmith
-    image-size: 120 120
-    size: 120 120
+    image-size: 96 96
+    size: 96 96
     anchors.top: parent.top
     anchors.right: parent.right
     margin-right: 0
+    margin-top: 2
 
   Button
     id: craftButton
@@ -181,12 +187,24 @@ MainWindow
         spacing: 4
       margin-top: 4
 
+    TextEdit
+      id: searchBox
+      anchors.top: categoryBar.bottom
+      anchors.left: parent.left
+      width: 180
+      height: 22
+      margin-top: 4
+      placeholder: Search...
+      editable: true
+      focusable: true
+      selectable: true
+
     VerticalList
       id: recipeList
       width: 180
       anchors.left: parent.left
       anchors.bottom: parent.bottom
-      anchors.top: categoryBar.bottom
+      anchors.top: searchBox.bottom
       margin-right: 5
       margin-top: 5
       vertical-scrollbar: recipeListScrollBar
