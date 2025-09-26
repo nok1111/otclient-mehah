@@ -5,6 +5,10 @@ function MapTravel.applyScale(newScale)
     MapTravel.applyFiltersAndRedraw()
 end
 
+function focusRootPanel()
+    modules.game_interface.getRootPanel():focus()
+end
+
 -- Best-effort: keep the client's native top menu above MapTravel window
 function MapTravel.raiseNativeTopMenu()
     local root = rootWidget or (g_ui and g_ui.getRootWidget and g_ui:getRootWidget())
@@ -514,6 +518,7 @@ function MapTravel.ensureFilterUI()
             elseif MapTravel.UI and MapTravel.UI.hide then
                 MapTravel.UI:hide()
             end
+            focusRootPanel()
         end
     end
 end
@@ -692,6 +697,40 @@ function MapTravel.show()
                 end
             end
         end
+
+        -- Show non-view mode hint label on the top bar
+        do
+            local panel = MapTravel.UI and MapTravel.UI.mapPanel
+            local topBar = panel and (panel.topBar or (panel.recursiveGetChildById and panel:recursiveGetChildById('topBar')))
+            if topBar then
+                -- Only show when not in view mode (if a flag exists, respect it)
+                if not MapTravel.viewMode then
+                    local hint = topBar:recursiveGetChildById('nonViewHintLabel')
+                    if not hint then
+                        hint = g_ui.createWidget('UILabel', topBar)
+                        hint:setId('nonViewHintLabel')
+                        hint:setText('press CTRL + M to open view mode, while traveling')
+                        if hint.setFont then hint:setFont('verdana-11px-rounded') end
+                        if hint.setColor then hint:setColor('#ffffff') end
+                        hint:setHeight(20)
+                        if hint.setBackgroundColor then hint:setBackgroundColor('#00000088') end
+                        if hint.setAutoResizeToText then hint:setAutoResizeToText(true) end
+                        if hint.addAnchor then
+                            hint:addAnchor(AnchorTop, 'parent', AnchorTop)
+                            hint:addAnchor(AnchorHorizontalCenter, 'parent', AnchorHorizontalCenter)
+                            hint:setMarginTop(2) 
+                        end
+                        
+                        if hint.setZIndex then hint:setZIndex(1001) end
+                    else
+                        hint:show()
+                    end
+                else
+                    local hint = topBar:recursiveGetChildById('nonViewHintLabel')
+                    if hint then hint:hide() end
+                end
+            end
+        end
     end
 end
 
@@ -699,6 +738,13 @@ function MapTravel.hide()
 	if MapTravel.UI then
 		MapTravel.UI:hide()
 		MapTravel.UI.NodesTooltip:hide()
+		-- Clean up the non-view mode hint label if present
+		local panel = MapTravel.UI.mapPanel
+		local topBar = panel and (panel.topBar or (panel.recursiveGetChildById and panel:recursiveGetChildById('topBar')))
+		if topBar and topBar.recursiveGetChildById then
+			local hint = topBar:recursiveGetChildById('nonViewHintLabel')
+			if hint and hint.destroy then hint:destroy() end
+		end
 	end
 end
 
@@ -1122,6 +1168,7 @@ function MapTravel.onExtendedOpcode(protocol, opcode, buffer)
 		MapTravel.handleLaunchMapTravel(data)
 	elseif data.topic == "close-MapTravel" then
 		MapTravel.hide()
+		focusRootPanel()
 	end
 end
 
