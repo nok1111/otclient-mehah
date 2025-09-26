@@ -827,11 +827,11 @@ function MapTravel.updateMap()
 			nodeVisible = MapTravel.filters and MapTravel.filters.showLocked == true
 		else
 			if nodeConfig.nameId == MapTravel.currentNodeNameId then
-				nodeImage = "images/nodes/current/" .. nodeConfig.nameId
+				nodeImage = "images/nodes/current/" .. tostring(nodeConfig.nameId):lower()
 				nodeEnabled = true
 				nodeVisible = true
 			else
-				nodeImage = "images/nodes/normal/" .. nodeConfig.nameId
+				nodeImage = "images/nodes/normal/" .. tostring(nodeConfig.nameId):lower()
 				nodeEnabled = true
 				nodeVisible = true
 			end
@@ -1223,11 +1223,11 @@ function MapTravel.onNodeHoverChange(widget, hovered)
 	if hovered then
 		MapTravel.applyNodeTooltip(widget.nodeConfig)
 		connect(rootWidget, {onMouseMove = MapTravel.moveNodeToolTip})
-		widget:setImageSource("images/nodes/hover/" .. widget.nameId)
+		widget:setImageSource("images/nodes/hover/" .. tostring(widget.nameId):lower())
 	else
 		MapTravel.UI.NodesTooltip:hide()
 		disconnect(rootWidget, {onMouseMove = MapTravel.moveNodeToolTip})
-		widget:setImageSource("images/nodes/normal/" .. widget.nameId)
+		widget:setImageSource("images/nodes/normal/" .. tostring(widget.nameId):lower())
 	end
 
 	local originalWidth = widget:getWidth()
@@ -1437,7 +1437,7 @@ function MapTravel.setupDevMode()
 
 	mapPanel.nodesComboBox.onOptionChange = function()
 		if MapTravel.previewNode then
-			MapTravel.previewNode:setImageSource("images/nodes/normal/" .. mapPanel.nodesComboBox:getText())
+			MapTravel.previewNode:setImageSource("images/nodes/normal/" .. tostring(mapPanel.nodesComboBox:getText()):lower())
 			MapTravel.previewNode:setWidth(MapTravel.previewNode:getWidth() * MapTravel.mapScale)
 			MapTravel.previewNode:setHeight(MapTravel.previewNode:getHeight() * MapTravel.mapScale)
 		end
