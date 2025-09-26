@@ -197,7 +197,7 @@ local function printLearnedSpells()
 end
 
 local function onLearnedSpellsOpcode(protocol, opcode, buffer)
-  if opcode == 89 then
+  if opcode == 190 then
     print('Raw buffer received:', buffer)
     local data = json.decode(buffer)
     if type(data) ~= 'table' then
@@ -220,7 +220,7 @@ local function onLearnedSpellsOpcode(protocol, opcode, buffer)
   end
 end
 
-ProtocolGame.registerExtendedOpcode(89, onLearnedSpellsOpcode)
+ProtocolGame.registerExtendedOpcode(190, onLearnedSpellsOpcode)
 
 function getLearnedSpells()
   return learnedSpells
