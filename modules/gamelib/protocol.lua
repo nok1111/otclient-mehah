@@ -24,6 +24,8 @@ GameServerOpcodes = {
     GameServerJobs  = 60,
     GameServerUpdateFame  = 61,
     GameServerOpenFameShop  = 88,
+    GameServerAncestralTasks  = 89,
+
 
     -- original tibia ONLY
     GameServerPassiveCooldown = 94,
@@ -93,6 +95,7 @@ GameServerOpcodes = {
     GameServerVipAdd = 210,
     GameServerVipLogin = 211,
     GameServerVipLogout = 212,
+    GameServerLearnedSpells = 216,
     GameServerTutorialHint = 220,
     GameServerAutomapFlag = 221,
     GameServerCoinBalance = 223, -- 1080
