@@ -627,66 +627,6 @@ function parseUpdateFame(protocol, msg)
     onFameChange(points, level, pointsToAdvance, percentage)
 end
 
-local function updateExperienceRate(localPlayer)
-    local baseRate = ExpRating[ExperienceRate.BASE] or 100
-    local expRateTotal = baseRate
-
-    for type, value in pairs(ExpRating) do
-        if type ~= ExperienceRate.BASE and type ~= ExperienceRate.STAMINA_MULTIPLIER then
-            expRateTotal = expRateTotal + (value or 0)
-        end
-    end
-
-    local staminaMultiplier = ExpRating[ExperienceRate.STAMINA_MULTIPLIER] or 100
-    expRateTotal = expRateTotal * staminaMultiplier / 100
-
-    local xpgainrate = skillsWindow:recursiveGetChildById("xpGainRate")
-    if not xpgainrate then
-        return
-    end
-
-    local widget = xpgainrate:getChildById("value")
-    if not widget then
-        return
-    end
-
-    widget:setText(math.floor(expRateTotal) .. "%")
-
-    local tooltip = string.format("Your current XP gain rate amounts to %d%%.", math.floor(expRateTotal))
-    tooltip = tooltip .. string.format("\nYour XP gain rate is calculated as follows:\n- Base XP gain rate %d%%", baseRate)
-
-    if (ExpRating[ExperienceRate.VOUCHER] or 0) > 0 then
-        tooltip = tooltip .. string.format("\n- Voucher: %d%%", ExpRating[ExperienceRate.VOUCHER])
-    end
-
-    if (ExpRating[ExperienceRate.XP_BOOST] or 0) > 0 then
-        tooltip = tooltip .. string.format("\n- XP Boost: %d%% (%s h remaining)", ExpRating[ExperienceRate.XP_BOOST],
-            formatTimeBySeconds(localPlayer:getStoreExpBoostTime()))
-    end
-
-    if (ExpRating[ExperienceRate.LOW_LEVEL] or 0) > 0 then
-        tooltip = tooltip .. string.format("\n- Low Level Bonus: %d%%", ExpRating[ExperienceRate.LOW_LEVEL])
-    end
-
-    tooltip = tooltip .. string.format("\n- Stamina multiplier: x%.1f (%s h remaining)", staminaMultiplier / 100,
-        formatTimeByMinutes(localPlayer:getStamina() - 2340))
-
-    xpgainrate:setTooltip(tooltip)
-
-    local colors = {
-        [0] = "#ff4a4a",
-        ["greater"] = "#00cc00",
-        ["less"] = "#ff9429",
-        ["equal"] = "#ffffff"
-    }
-    
-    local colorKey = expRateTotal == 0 and 0 or 
-                     (expRateTotal > 100 and "greater" or 
-                      (expRateTotal < 100 and "less" or "equal"))
-    
-    widget:setColor(colors[colorKey])
-end
-
 function onFameChange(points, level, pointsToAdvance, percentage)
     local fame = skillsWindow:recursiveGetChildById('fame')
     local fame2 = skillsWindow:recursiveGetChildById('famePointslabel')

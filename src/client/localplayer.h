@@ -79,7 +79,6 @@ public:
     uint16_t getBlessings() { return m_blessings; }
     uint16_t getRegenerationTime() { return m_regenerationTime; }
     uint16_t getOfflineTrainingTime() { return m_offlineTrainingTime; }
-    uint16_t getStoreExpBoostTime() { return m_storeExpBoostTime; }
 
     uint32_t getStates() { return m_states; }
     uint32_t getMana() { return m_mana; }
@@ -188,7 +187,6 @@ private:
     uint16_t m_stamina{ 0 };
     uint16_t m_regenerationTime{ 0 };
     uint16_t m_offlineTrainingTime{ 0 };
-    uint16_t m_storeExpBoostTime{ 0 };
 
     friend class Game;
     friend class Creature;
