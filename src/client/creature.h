@@ -35,13 +35,7 @@ struct PreyMonster
     Outfit outfit;
 };
 
-struct DashData
-{
-    DashData(Point _offset, float _opacity) : offset(_offset), opacity(_opacity) {}
 
-    Point offset;
-    float opacity;
-};
 
 // @bindclass
 class Creature : public Thing
@@ -94,9 +88,7 @@ public:
     void setStaticWalking(uint16_t v);
     void setIconsTexture(const std::string& filename, const Rect& clip, const uint16_t count);
 
-    void drawDashEffect(Point& dest);
-    void setDash(bool enabled) { m_dash = enabled; }
-    bool isDash() const { return m_dash; }
+    
 
     void onStartAttachEffect(const AttachedEffectPtr& effect) override;
     void onDispatcherAttachEffect(const AttachedEffectPtr& effect) override;
@@ -353,7 +345,7 @@ private:
     // Mount Shader
     uint8_t m_mountShaderId{ 0 };
 
-    static std::map<Otc::Direction, std::vector<DashData>> m_outfitOffsets;
+    
 
     Otc::Direction m_walkTurnDirection{ Otc::InvalidDirection };
     Otc::Direction m_lastStepDirection{ Otc::InvalidDirection };
@@ -364,7 +356,7 @@ private:
     bool m_showTimedSquare{ false };
     bool m_showStaticSquare{ false };
     bool m_cameraFollowing{ false };
-    bool m_dash{ false };
+    
 
     bool m_removed{ true };
     bool m_drawOutfitColor{ true };

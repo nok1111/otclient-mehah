@@ -244,6 +244,7 @@ private:
     void parseItemClasses(const InputMessagePtr& msg);
     void parseCreatureMark(const InputMessagePtr& msg);
     void parseTrappers(const InputMessagePtr& msg);
+    void parseCreatureName(const InputMessagePtr& msg);
     void addCreatureIcon(const InputMessagePtr& msg, const uint32_t creatureId) const;
     void parseCloseForgeWindow(const InputMessagePtr& msg);
     void parseCreatureData(const InputMessagePtr& msg);
@@ -301,7 +302,7 @@ private:
     void parseExtendedOpcode(const InputMessagePtr& msg);
     void parseChangeMapAwareRange(const InputMessagePtr& msg);
     void parseCreaturesMark(const InputMessagePtr& msg);
-    void parseCreatureDash(const InputMessagePtr& msg);
+    
     // 12x
     void parseShowDescription(const InputMessagePtr& msg);
     void parseBestiaryTracker(const InputMessagePtr& msg);

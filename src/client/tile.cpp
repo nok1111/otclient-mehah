@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 OTClient <https://github.com/edubart/otclient>
+ * Copyright (c) 2010-2025 OTClient <https://github.com/edubart/otclient>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,17 +45,9 @@ void updateElevation(const ThingPtr& thing, uint8_t& drawElevation) {
         drawElevation = std::min<uint8_t>(drawElevation + thing->getElevation(), g_gameConfig.getTileMaxElevation());
 }
 
-void drawThing(const ThingPtr& thing, const Point& dest, std::vector<std::pair<CreaturePtr, Point>>* creatures, const int flags, uint8_t& drawElevation, const LightViewPtr& lightView = nullptr)
+void drawThing(const ThingPtr& thing, const Point& dest, const int flags, uint8_t& drawElevation, const LightViewPtr& lightView = nullptr)
 {
     const auto& newDest = dest - drawElevation * g_drawPool.getScaleFactor();
-
-    if (creatures && thing->isCreature()) {
-        CreaturePtr creature = thing->static_self_cast<Creature>();
-        if (creature->isDash()) {
-            // If the thing is a creature and it is dashing add the creature to the vector with its destination
-            creatures->push_back(std::make_pair(creature, newDest));
-        }
-    }
 
     if (flags == Otc::DrawLights)
         thing->drawLight(newDest, lightView);
@@ -76,7 +68,7 @@ void drawThing(const ThingPtr& thing, const Point& dest, std::vector<std::pair<C
     }
 }
 
-void Tile::draw(const Point& dest, std::vector<std::pair<CreaturePtr, Point>>* creatures, const int flags, const LightViewPtr& lightView)
+void Tile::draw(const Point& dest, const int flags, const LightViewPtr& lightView)
 {
     m_lastDrawDest = dest;
 
@@ -91,7 +83,7 @@ void Tile::draw(const Point& dest, std::vector<std::pair<CreaturePtr, Point>>* c
         if (!thing->isGround() && !thing->isGroundBorder() && !thing->isOnBottom())
             break;
 
-        drawThing(thing, dest, nullptr, flags, drawElevation); 
+        drawThing(thing, dest, flags, drawElevation);
     }
 
     drawAttachedEffect(dest, lightView, false);
@@ -99,19 +91,19 @@ void Tile::draw(const Point& dest, std::vector<std::pair<CreaturePtr, Point>>* c
     if (hasCommonItem()) {
         for (auto& item : std::ranges::reverse_view(m_things)) {
             if (!item->isCommon()) continue;
-            drawThing(item, dest, nullptr, flags, drawElevation);
+            drawThing(item, dest, flags, drawElevation);
         }
     }
 
     // after we render 2x2 lying corpses, we must redraw previous creatures/ontop above them
     if (m_tilesRedraw) {
         for (const auto& tile : *m_tilesRedraw) {
-            tile->drawCreature(tile->m_lastDrawDest, nullptr, flags, true, drawElevation);
+            tile->drawCreature(tile->m_lastDrawDest, flags, true, drawElevation);
             tile->drawTop(tile->m_lastDrawDest, flags, true, drawElevation);
         }
     }
 
-    drawCreature(dest, nullptr, flags, false, drawElevation);
+    drawCreature(dest, flags, false, drawElevation);
     drawTop(dest, flags, false, drawElevation);
     drawAttachedEffect(dest, lightView, true);
     drawAttachedParticlesEffect(dest);
@@ -127,7 +119,7 @@ void Tile::drawLight(const Point& dest, const LightViewPtr& lightView) {
         updateElevation(thing, drawElevation);
     }
 
-    drawCreature(dest, nullptr, Otc::DrawLights, true, drawElevation, lightView);
+    drawCreature(dest, Otc::DrawLights, true, drawElevation, lightView);
 
     if (m_effects) {
         for (const auto& effect : *m_effects)
@@ -137,7 +129,7 @@ void Tile::drawLight(const Point& dest, const LightViewPtr& lightView) {
     drawAttachedLightEffect(dest, lightView);
 }
 
-void Tile::drawCreature(const Point& dest, std::vector<std::pair<CreaturePtr, Point>>* creatures,const int flags, const bool forceDraw, uint8_t drawElevation, const LightViewPtr& lightView)
+void Tile::drawCreature(const Point& dest, const int flags, const bool forceDraw, uint8_t drawElevation, const LightViewPtr& lightView)
 {
     if (!forceDraw && !m_drawTopAndCreature)
         return;
@@ -154,7 +146,7 @@ void Tile::drawCreature(const Point& dest, std::vector<std::pair<CreaturePtr, Po
                 localPlayerDrawed = true;
             }
 
-            drawThing(thing, dest, creatures, flags, drawElevation, lightView);
+            drawThing(thing, dest, flags, drawElevation, lightView);
         }
     }
 
@@ -174,10 +166,7 @@ void Tile::drawCreature(const Point& dest, std::vector<std::pair<CreaturePtr, Po
 
     // draw the local character if he is on a virtual tile, that is, his visual position is not the same as the server.
     if (!localPlayerDrawed && g_game.getLocalPlayer() && !g_game.getLocalPlayer()->isWalking() && g_game.getLocalPlayer()->getPosition() == m_position) {
-        drawThing(g_game.getLocalPlayer(), dest, creatures, flags, drawElevation, lightView);
-        if (creatures && g_game.getLocalPlayer()->isDash()) {
-            creatures->push_back(std::make_pair(g_game.getLocalPlayer(), dest));
-        }
+        drawThing(g_game.getLocalPlayer(), dest, flags, drawElevation, lightView);
     }
 }
 
@@ -190,7 +179,7 @@ void Tile::drawTop(const Point& dest, const int flags, const bool forceDraw, uin
 
     if (m_effects) {
         for (const auto& effect : *m_effects)
-            drawThing(effect, dest, nullptr, flags & Otc::DrawThings, drawElevation);
+            drawThing(effect, dest, flags & Otc::DrawThings, drawElevation);
     }
 
     if (hasTopItem()) {

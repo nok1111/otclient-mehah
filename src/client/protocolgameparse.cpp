@@ -524,9 +524,7 @@ void ProtocolGame::parseMessage(const InputMessagePtr& msg)
                 case Proto::GameServerSendRewardHistory:
                     parseRewardHistory(msg);
                     break;
-                case Proto::GameServerDash:
-                    parseCreatureDash(msg);
-                    break;
+                
                 case Proto::GameServerSendPreyFreeRerolls: // || Proto::GameServerSendBosstiaryEntryChanged
                     if (g_game.getFeature(Otc::GameBosstiary)) {
                         parseBosstiaryEntryChanged(msg);
@@ -5495,16 +5493,7 @@ void ProtocolGame::parseMapShader(const InputMessagePtr& msg)
     }
 }
 
-void ProtocolGame::parseCreatureDash(const InputMessagePtr& msg)
-{
-    // Prase the information sent from the server that the creature is dashing or not
-    uint id = msg->getU32();
-    bool enabled = msg->getU8() == 1;
-    CreaturePtr creature = g_map.getCreatureById(id);
-    if (creature) {
-        creature->setDash(enabled);
-    }
-}
+
 
 void ProtocolGame::parseCreatureTyping(const InputMessagePtr& msg)
 {
