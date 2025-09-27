@@ -136,6 +136,22 @@ NpcTaskDescription < UIWidget
     color: #3396ff
     margin-left: 10
 
+  UIWidget
+    id: rewardMoneyIcon
+    size: 16 16
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-left: 10
+    image-source: /images/topbuttons/autoloot
+
+  Label
+    id: rewardMoney
+    size: 120 15
+    anchors.top: rewardMoneyIcon.top
+    anchors.left: rewardMoneyIcon.right
+    color: #e0c269
+    margin-left: 5
+
   Label
     id: rewardOutfit
     size: 90 15

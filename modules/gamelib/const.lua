@@ -359,8 +359,7 @@ ExtendedIds = {
     UpdateTask = 0x11,
     NpcTaskList = 0x12,
     NpcRewardList = 0x13,
-    DungeonWindow = 0x14,
-    NpcTaskWindowClose = 0x15,
+    NpcTaskWindowClose = 0x14,
 }
 
 PreviewState = {
