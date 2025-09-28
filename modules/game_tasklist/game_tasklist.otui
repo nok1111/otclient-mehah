@@ -44,7 +44,7 @@ RewardItem < UIWidget
     size: 25 34
     anchors.top: prev.top
     anchors.left: prev.right
-    margin-top: 10
+    margin-top: 4
     margin-left: 5
     color: white
 
@@ -57,10 +57,58 @@ RewardItem < UIWidget
     margin-left: 3
     color: white
 
+# Left-list style row for choice rewards (mirrors TaskRecord sizing/anchoring)
+ChoiceListItem < UIWidget
+  width: 256
+  height: 34
+  layout:
+    type: anchor
+  anchors.left: parent.left
+  anchors.right: parent.right
+  anchors.top: parent.top
+  background: #00000033
+  border-width: 1
+  border-color: #333333
+
+  Item
+    id: rewardItem
+    size: 28 28
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 4
+    margin-top: 3
+
+  Label
+    id: rewardItemCnt
+    size: 40 28
+    anchors.left: rewardItem.right
+    anchors.top: rewardItem.top
+    margin-left: 6
+    margin-top: 4
+    color: white
+
+  Label
+    id: rewardItemName
+    size: 170 28
+    anchors.left: rewardItemCnt.right
+    anchors.top: rewardItem.top
+    margin-left: 6
+    margin-top: 0
+    color: #dddddd
+
+# Wrapper used to stack each choice row (mirrors left list container behavior)
+ChoiceRowWrapper < Panel
+  height: 34
+  layout:
+    type: anchor
+  margin-top: 2
+
+  
+
 TaskRecord < UIWidget
   image-source: /images/taskList/task_item
   width: 256
-  height: 40
+  height: 54
   @onClick: modules.game_tasklist.onTaskClick(self)
 
   Label
@@ -74,20 +122,20 @@ TaskRecord < UIWidget
 
   Label
     id: taskLevel
-    size: 85 30
+    size: 85 40
     anchors.left: parent.left
     anchors.top: parent.top
     margin-left: 35
-    margin-top: 5
+    margin-top: 10
     text-align: left
 
   Label
     id: taskName
-    size: 150 30
+    size: 150 40
     anchors.left: taskLevel.right
     anchors.top: parent.top
     margin-left: 5
-    margin-top: 5
+    margin-top: 10
     text-align: left
 
   Label
@@ -121,7 +169,7 @@ TaskRecord < UIWidget
     height: 6
     margin-left: 34
     margin-right: 6
-    margin-bottom: 4
+    margin-bottom: 6
     background: #00000055
     border-width: 1
     border-color: #333333
@@ -147,12 +195,29 @@ ZoneHeader < UIWidget
   border-color: #202327
   @onClick: modules.game_tasklist.onZoneHeaderClick(self)
 
+  # subtle gradient polish via top/bottom shade lines
+  Panel
+    id: shadeTop
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 1
+    background: #ffffff22
+
+  Panel
+    id: shadeBottom
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 1
+    background: #00000055
+
   Label
     id: zoneCaret
     size: 12 12
     anchors.left: parent.left
     anchors.verticalCenter: parent.verticalCenter
-    text: '▼'
+    text: '+'
 
   Label
     id: zoneTitle
@@ -187,12 +252,18 @@ TaskRewardsPanel < Panel
     background: #00000066
     padding: 1
 
+    # Stacking box for list rows (safe verticalBox)
+    Panel
+      id: rewardItemsBox
+      layout:
+        type: verticalBox
+
   VerticalScrollBar
     id: rewardListScrollBar
     anchors.top: parent.top
+    anchors.bottom: parent.bottom
     anchors.right: parent.right
-    height: 185
-    step: 14
+    step: 34
     pixels-scroll: true
 
 TaskListPanel < Panel
@@ -222,7 +293,11 @@ TaskListPanel < Panel
 TaskDescription < UIWidget
   size: 330 420
   draggable: false
-  image-source: /images/ui/passive_tree_bg
+  image-source: /images/ui/tooltip-blue
+  image-repeated: false
+  image-fixed-ratio: false
+  border-width: 2
+  border-color: #000000
 
   Item
     id: descIcon
@@ -357,7 +432,7 @@ TaskDescription < UIWidget
     anchors.left: progressIcon.left
     width: 60
     visible: true
-    margin-top: 14
+    margin-top: 8
     margin-left: 20
 
   Label
@@ -460,13 +535,32 @@ TaskDescription < UIWidget
     margin-top: 10
     margin-left: 20
 
+  Button
+    id: rewardsToggle
+    width: 14
+    height: 14
+    anchors.left: prev.right
+    anchors.verticalCenter: prev.verticalCenter
+    margin-left: 6
+    text: '▼'
+    @onClick: modules.game_tasklist.toggleRewards()
+
+  UIWidget
+    id: rewardExpIcon
+    size: 16 16
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 2
+    margin-left: 5
+    image-source: /images/topbuttons/experience
+
   Label
     id: rewardExp
     size: 120 20
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    margin-top: 5
-    margin-left: 21
+    anchors.top: rewardExpIcon.top
+    anchors.left: rewardExpIcon.right
+    margin-top: 0
+    margin-left: 5
     color: #ffffff
     background: #1a1f2a
     border-width: 1
@@ -476,10 +570,10 @@ TaskDescription < UIWidget
   UIWidget
     id: rewardMoneyIcon
     size: 16 16
-    anchors.top: prev.bottom
+    anchors.top: rewardExp.bottom
     anchors.left: parent.left
     margin-top: 2
-    margin-left: 21
+    margin-left: 5
     image-source: /images/topbuttons/autoloot
 
   Label
@@ -514,10 +608,14 @@ TaskDescription < UIWidget
     color: #ffcc66
 
   TaskRewardsPanel
+    id: basicRewards
     anchors.top: prev.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     margin-top: 2
+    margin-left: 5
+    margin-right: 5
+    height: 98
 
   Label
     id: choiceRewardsTitle
@@ -534,20 +632,53 @@ TaskDescription < UIWidget
     anchors.left: parent.left
     anchors.right: parent.right
     margin-top: 2
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
     margin-left: 5
     margin-right: 5
-    min-width: 270
-    min-height: 185
+    height: 120
+
+# Choice reward entry with muted default and hover/selected emphasis
+ChoiceRewardItem < UIWidget
+  size: 218 34
+  anchors.left: parent.left
+  anchors.right: parent.right
+  height: 34
+  margin-top: 2
+  background: #00000033
+  border-width: 1
+  border-color: #333333
+
+  $hover:
+    background: #2a2f3a
+    border-color: #3e4655
+
+  Item
+    id: rewardItem
+    anchors.left: parent.left
+
+  Label
+    id: rewardItemCnt
+    size: 25 34
+    anchors.top: prev.top
+    anchors.left: prev.right
+    margin-top: 10
+    margin-left: 5
+    color: white
+
+  Label
+    id: rewardItemName
+    size: 150 34
+    anchors.top: prev.top
+    anchors.left: prev.right
+    margin-top: 0
+    margin-left: 3
+    color: #dddddd
 
 MainWindow
   id: taskListWindow
   !text: tr('Quest Log')
   image-source: /images/ui/miniwindow
-  width: 750
-  height: 600
+  width: 760
+  height: 680
   draggable: true
   @onEscape: hide()
 
@@ -570,20 +701,23 @@ MainWindow
     margin-top: 6
     margin-left: 6
     currentIndex: 0
-    @onOptionChange: modules.game_tasklist.onLevelFilterChange(self)
+    @onOptionChange: modules.game_tasklist.onStatusFilterChange(self)
 
   Label
     id: capPill
     anchors.top: parent.top
     anchors.left: levelFilter.right
+    anchors.right: collapseAllButton.left
     margin-top: 9
     margin-left: 8
+    margin-right: 8
     text: ''
     background: #223344
     color: #dde6ff
     border-width: 1
     border-color: #2a3344
     padding: 2 6 2 6
+    text-auto-resize: true
 
   Button
     id: collapseAllButton
@@ -593,7 +727,9 @@ MainWindow
     anchors.right: parent.right
     margin-top: 6
     margin-right: 6
-    image-source: /images/topbuttons/minus
+    image-source: /images/topbuttons/arrow_up
+    image-size: 16 16
+    image-fixed-ratio: false
     @onClick: modules.game_tasklist.collapseAllZones()
 
   Button
@@ -604,26 +740,29 @@ MainWindow
     anchors.right: collapseAllButton.left
     margin-top: 6
     margin-right: 6
-    image-source: /images/topbuttons/plus
+    image-source: /images/topbuttons/arrow_down
+    image-size: 16 16
+    image-fixed-ratio: false
     @onClick: modules.game_tasklist.expandAllZones()
 
   TaskListPanel
     id: taskList
     anchors.left: parent.left
-    anchors.top: parent.top
+    anchors.top: searchBox.bottom
     anchors.bottom: parent.bottom
     width: 350
-    margin-top: 34
+    margin-top: 6
     margin-left: 5
     margin-bottom: 40
+
 
   TaskDescription
     id: taskDescriptionWnd
     anchors.left: taskList.right
-    anchors.top: parent.top
+    anchors.top: searchBox.bottom
     anchors.bottom: parent.bottom
     anchors.right: parent.right
-    margin-top: 10
+    margin-top: 6
     margin-left: 10
     margin-right: 5
     margin-bottom: 40

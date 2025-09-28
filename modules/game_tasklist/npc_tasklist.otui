@@ -1,18 +1,24 @@
 RewardItem < UIWidget
   size: 218 34
+  # match main UI spacing (no extra padding)
 
-  Item
-    id: rewardItem
+  # Left spacer to keep selection border visible regardless of Item icon size
+  Panel
+    id: leftInset
     anchors.left: parent.left
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    width: 4
+    background: alpha
 
   Label
     id: rewardItemCnt
     size: 25 34
-    anchors.top: prev.top
-    anchors.left: prev.right
-    margin-top: 10
+    anchors.top: leftInset.top
+    anchors.left: leftInset.right
+    margin-top: 4
     margin-left: 5
-    color: #ff3333
+    color: white
 
   Label
     id: rewardItemName
@@ -21,7 +27,139 @@ RewardItem < UIWidget
     anchors.left: prev.right
     margin-top: 0
     margin-left: 3
-    color: #ff3333
+    color: white
+
+# Choice reward entry with same size as RewardItem
+ChoiceRewardItem < UIWidget
+  size: 218 34
+  anchors.left: parent.left
+  anchors.right: parent.right
+  height: 34
+  margin-top: 2
+  background: #00000033
+  border-width: 1
+  border-color: #333333
+  # match main UI spacing (no extra padding)
+
+  $hover:
+    background: #2a2f3a
+    border-color: #3e4655
+
+  # Left spacer to keep selection border visible regardless of Item icon size
+  Panel
+    id: leftInset
+    anchors.left: parent.left
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    width: 4
+    background: alpha
+
+  Item
+    id: rewardItem
+    anchors.left: leftInset.right
+    size: 28 28
+    anchors.top: parent.top
+    margin-left: 4
+    margin-top: 3
+
+  Label
+    id: rewardItemCnt
+    size: 25 34
+    anchors.top: leftInset.top
+    anchors.left: rewardItem.right
+    margin-top: 4
+    margin-left: 5
+    color: white
+
+  Label
+    id: rewardItemName
+    size: 150 34
+    anchors.top: rewardItemCnt.top
+    anchors.left: rewardItemCnt.right
+    margin-top: 0
+    margin-left: 3
+    color: white
+
+# Wrapper used to stack each choice row (mirrors left list container behavior)
+ChoiceRowWrapper < Panel
+  height: 34
+  layout:
+    type: anchor
+  margin-top: 2
+
+NpcTaskRecord < UIWidget
+  image-source: /images/taskList/task_item
+  width: 256
+  height: 54
+  layout:
+    type: anchor
+  @onClick: modules.game_tasklist.onNpcUnifiedRowClick(self)
+
+  Panel
+    id: selectedAccent
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    anchors.top: parent.top
+    width: 2
+    background: #32aaff
+    visible: false
+
+  UIWidget
+    id: taskState
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 6
+    margin-top: 6
+    size: 16 16
+
+  Label
+    id: taskButton
+    size: 180 20
+    anchors.left: taskState.right
+    anchors.top: parent.top
+    margin-left: 8
+    margin-top: 8
+    text-align: left
+    color: #ffffff
+
+  Label
+    id: taskLevel
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-right: 10
+    margin-top: 8
+    color: #aac3ff
+    text-align: right
+    text: ""
+
+  Label
+    id: taskBadge
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-right: 10
+    margin-bottom: 8
+    color: #ffc24a
+    text: ""
+
+  Panel
+    id: taskProgress
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    height: 8
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 6
+    background: #ffffff14
+    visible: false
+
+    Panel
+      id: taskProgressBar
+      anchors.left: parent.left
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      width: 0
+      background: #32aaff
 
 TaskButton < Button
   size: 116 34
@@ -70,12 +208,18 @@ TaskRewardsPanel < Panel
     background: #00000066
     padding: 1
 
+    # Stacking box for list rows (safe verticalBox like main UI)
+    Panel
+      id: rewardItemsBox
+      layout:
+        type: verticalBox
+
   VerticalScrollBar
     id: rewardListScrollBar
     anchors.top: parent.top
     anchors.bottom: parent.bottom
     anchors.right: parent.right
-    step: 14
+    step: 34
     pixels-scroll: true
 
 NpcTaskListPanel < Panel
@@ -99,68 +243,132 @@ NpcTaskListPanel < Panel
     anchors.top: parent.top
     anchors.bottom: parent.bottom
     anchors.right: parent.right
-    step: 36
+    step: 24
     pixels-scroll: true
 
 
 NpcTaskDescription < UIWidget
-  size: 240 350
-  background: #00000066
+  size: 330 380
+  draggable: false
+  image-source: /images/ui/tooltip-blue
+  image-repeated: false
+  image-fixed-ratio: false
+  border-width: 2
+  border-color: #000000
+
+  Item
+    id: descIcon
+    size: 16 16
+    image-source: /images/icons/icon_misc
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 5
+    margin-left: 5
 
   Label
     id: taskTitle
-    !text: tr('taskTitle:')
-    size: 256 15
+    anchors.left: descIcon.right
     anchors.top: parent.top
-    color: #FFFFFF
+    anchors.right: parent.right
+    height: 20
+    text-wrap: true
+    margin-left: 5
+    margin-top: 5
+    color: #ffdd88
 
   Label
     id: taskDescription
-    !text: tr('taskDescription:')
-    size: 256 30
-    anchors.top: prev.bottom
+    anchors.top: taskTitle.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
     color: #3396ff
     text-wrap: true
+    text-auto-resize: true
+    margin-left: 5
+    margin-top: 2
+    margin-bottom: 5
 
-  Label
-    !text: tr('Rewards:')
-    size: 55 15
-    anchors.top: prev.bottom
+  UIWidget
+    id: rewardExpIcon
+    size: 16 16
+    anchors.top: taskDescription.bottom
     anchors.left: parent.left
+    margin-top: 2
+    margin-left: 5
+    image-source: /images/topbuttons/experience
 
   Label
     id: rewardExp
-    size: 90 15
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    color: #3396ff
-    margin-left: 10
+    size: 120 20
+    anchors.top: rewardExpIcon.top
+    anchors.left: rewardExpIcon.right
+    margin-top: 0
+    margin-left: 5
+    color: #ffffff
+    background: #1a1f2a
+    border-width: 1
+    border-color: #2a3344
+    text-align: center
 
   UIWidget
     id: rewardMoneyIcon
     size: 16 16
-    anchors.top: prev.bottom
+    anchors.top: rewardExp.bottom
     anchors.left: parent.left
-    margin-left: 10
+    margin-top: 2
+    margin-left: 5
     image-source: /images/topbuttons/autoloot
 
   Label
     id: rewardMoney
-    size: 120 15
+    size: 120 20
     anchors.top: rewardMoneyIcon.top
     anchors.left: rewardMoneyIcon.right
-    color: #e0c269
+    margin-top: 0
     margin-left: 5
+    color: #e0c269
+    background: #1a1f2a
+    border-width: 1
+    border-color: #2a3344
+    text-align: center
 
   Label
     id: rewardOutfit
-    size: 90 15
+    size: 300 20
     anchors.top: prev.bottom
     anchors.left: parent.left
+    margin-top: 5
+    margin-left: 21
     color: #3396ff
 
   TaskRewardsPanel
+    id: basicRewards
     anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 2
+    margin-left: 5
+    margin-right: 5
+    height: 98
+
+  Label
+    id: choiceRewardsTitle
+    !text: tr('Choice Rewards:')
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 6
+    margin-left: 21
+    color: #ff6666
+
+  TaskRewardsPanel
+    id: choiceRewards
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 2
+    margin-left: 5
+    margin-right: 5
+    height: 120
 
 
 
@@ -168,22 +376,98 @@ NpcTaskListWidget < MainWindow
   id: npcTaskListWidget
   !text: tr('World Quests')
   image-source: /images/ui/miniwindow
-  width: 300
-  height: 500
+  width: 600
+  height: 485
 
-  NpcTaskListPanel
-    id: npcTaskList
+  # Left pane: NPC task lists (Available, Active, Completed)
+  Panel
+    id: leftRail
     anchors.top: parent.top
     anchors.left: parent.left
-    margin-top: -5
-    margin-left: 6
+    anchors.bottom: parent.bottom
+    margin-top: 8
+    margin-left: 8
+    margin-bottom: 10
+    width: 280
+    layout:
+      type: verticalBox
 
-  NpcTaskListPanel
+    UIWidget
+      id: availableHeader
+      height: 20
+      layout:
+        type: anchor
+      Label
+        id: availableTitle
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 2
+        color: #ffffff
+        text: 'Available (0)'
+
+    NpcTaskListPanel
+      id: npcTaskListAvailable
+      height: 120
+
+    UIWidget
+      id: inProgressHeader
+      height: 20
+      layout:
+        type: anchor
+      Label
+        id: inProgressTitle
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 2
+        color: #ffffff
+        text: 'In Progress (0)'
+      Label
+        id: inProgressCaret
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        text: '-'
+      @onClick: modules.game_tasklist.toggleStatusSection('inprogress')
+
+    NpcTaskListPanel
+      id: npcTaskListInProgress
+      height: 120
+
+    UIWidget
+      id: completedHeader
+      height: 20
+      layout:
+        type: anchor
+      Label
+        id: completedTitle
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 2
+        color: #ffffff
+        text: 'Completed (0)'
+      Label
+        id: completedCaret
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        text: '-'
+      @onClick: modules.game_tasklist.toggleStatusSection('completed')
+
+    NpcTaskListPanel
+      id: npcTaskListCompleted
+      height: 120
+
+  # Right pane: NPC task description/details
+  NpcTaskDescription
     id: npcTaskDescription
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    margin-top: 5
-    margin-left: 6
+    anchors.top: parent.top
+    anchors.left: leftRail.right
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 10
+    margin-right: 8
+    height: 370
 
   Button
     id: acceptButton
@@ -191,7 +475,7 @@ NpcTaskListWidget < MainWindow
     anchors.left: parent.left
     anchors.bottom: parent.bottom
     margin-left: 10
-    margin-bottom: -1
+    margin-bottom: 6
     @onClick: modules.game_tasklist.acceptNpcTask()
 
   Button
@@ -200,5 +484,5 @@ NpcTaskListWidget < MainWindow
     anchors.right: parent.right
     anchors.bottom: parent.bottom
     margin-right: 10
-    margin-bottom: -1
+    margin-bottom: 6
     @onClick: modules.game_tasklist.declineNpcTask()
