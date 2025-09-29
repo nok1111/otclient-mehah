@@ -351,6 +351,17 @@ TaskDescription < UIWidget
     margin-top: 2
     margin-bottom: 5
 
+  Panel
+    id: objectivesDivider
+    anchors.top: taskDescription.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 1
+    margin-top: 4
+    margin-left: 5
+    margin-right: 5
+    background: #ffffff22
+
   Item
     id: objectivesIcon
     size: 16 16
@@ -368,17 +379,6 @@ TaskDescription < UIWidget
     anchors.right: parent.right
     margin-left: 5
     text-wrap: true
-
-  Panel
-    id: objectivesDivider
-    anchors.top: taskObjectives.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    height: 1
-    margin-top: 4
-    margin-left: 5
-    margin-right: 5
-    background: #ffffff22
 
   Label
     id: monsterGoals
@@ -422,7 +422,7 @@ TaskDescription < UIWidget
     anchors.top: storageGoals.bottom
     image-source: /images/icons/wow_obj
     anchors.left: parent.left
-    margin-top: 10
+    margin-top: 4
     margin-left: 5
 
   Label
@@ -518,6 +518,17 @@ TaskDescription < UIWidget
     color: #f69f32
     text-wrap: true
     margin-left: 5
+
+  Panel
+    id: objectivesDivider2
+    anchors.top: taskSource.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 1
+    margin-top: 4
+    margin-left: 5
+    margin-right: 5
+    background: #ffffff22
 
   Item
     id: rewardsIcon

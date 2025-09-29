@@ -50,6 +50,29 @@ local function dbg(msg)
   pcall(function() print(s) end)
 end
 
+-- Progress bar helper: set width to parent's inner width times pct
+local function setProgressBar(p, pb, pct)
+  if not p or not pb then return end
+  p:setVisible(true)
+  local w = 0
+  pcall(function()
+    w = (p.getWidth and p:getWidth()) or 0
+    if w <= 0 and p.getSize then
+      local sz = p:getSize(); if sz and sz.width then w = sz.width end
+    end
+  end)
+  local clamped = math.max(0, math.min(1, pct or 0))
+  -- Use parent inner width (account for 1px border each side) so the fill reaches the inner right edge
+  local inner = math.max(0, (w or 0) - 2)
+  local target
+  if clamped >= 0.999 then
+    target = inner -- exactly fill inner width at 100%
+  else
+    target = math.floor(inner * clamped)
+  end
+  pcall(function() pb:setWidth(target) end)
+end
+
 -- Build/refresh unified NPC window UI from parsed lists
 function buildUnifiedNpcUI(parsed)
   -- Ensure expansion state exists even if this runs before the global is defined
@@ -88,7 +111,7 @@ function buildUnifiedNpcUI(parsed)
         local caret = header:getChildById('zoneCaret')
         local title = header:getChildById('zoneTitle')
         if title then title:setText(string.format('%s (%d)', titleText, count)) end
-        if caret then caret:setText(se[kind] ~= false and '+' or '►') end
+        if caret then caret:setText(se[kind] ~= false and '+' or '-') end
         header.onClick = function() toggleStatusSection(kind) end
         return header
       end
@@ -101,7 +124,7 @@ function buildUnifiedNpcUI(parsed)
         row:setId('npcAvail_'.. tostring(i))
         row:getChildById('taskButton'):setText(rec.taskName)
         local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 0)) end
-        local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('Lvl '.. tostring(rec.taskMinLvl or 0)) end
+        local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
         local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
         local p = row:getChildById('taskProgress') or row:getChildById('progressBg'); if p then p:setVisible(false) end
         row.onClick = modules.game_tasklist.onNpcUnifiedRowClick
@@ -115,21 +138,14 @@ function buildUnifiedNpcUI(parsed)
         row:setId('npcInProg_'.. tostring(i))
         row:getChildById('taskButton'):setText(rec.taskName)
         local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 1)) end
-        local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('Lvl '.. tostring(rec.taskMinLvl or 0)) end
+        local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
         local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
         local p = row:getChildById('taskProgress') or row:getChildById('progressBg')
         local pb = row:getChildById('taskProgressBar') or (p and p:getChildById('progressFill'))
         local cur = tonumber(rec.taskCurrentCnt or 0) or 0
         local goal = tonumber(rec.taskGoalCnt or 0) or 0
         local pct = (goal > 0) and math.max(0, math.min(1, cur / goal)) or 0
-        if p and pb then
-          p:setVisible(true)
-          pcall(function()
-            local w = p.getWidth and p:getWidth() or 0
-            if w <= 0 and p.getSize then w = p:getSize().width or 0 end
-            pb:setWidth(math.floor(w * pct))
-          end)
-        end
+        if p and pb then setProgressBar(p, pb, pct) end
         row.onClick = modules.game_tasklist.onNpcUnifiedRowClick
       end
 
@@ -141,7 +157,7 @@ function buildUnifiedNpcUI(parsed)
         row:setId('npcCompleted_'.. tostring(i))
         row:getChildById('taskButton'):setText(rec.taskName)
         local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 2)) end
-        local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('Lvl '.. tostring(rec.taskMinLvl or 0)) end
+        local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
         local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
         local p = row:getChildById('taskProgress'); if p then p:setVisible(false) end
         row.onClick = modules.game_tasklist.onNpcUnifiedRowClick
@@ -526,7 +542,7 @@ function buildGroupedTaskList()
     local persisted = g_settings.get(key)
     local expanded = (persisted == nil) and true or (tostring(persisted) == '1' or tostring(persisted) == 'true')
     content:setVisible(expanded)
-    header:getChildById('zoneCaret'):setText(expanded and '+' or '►')
+    header:getChildById('zoneCaret'):setText(expanded and '+' or '-')
 
     zoneSections[zone] = { header = header, content = content, expanded = true }
 
@@ -555,7 +571,7 @@ function buildGroupedTaskList()
         taskName:setText(localTaskList[idx].taskName)
       end
       if taskLevel then
-        local lvlTxt = 'Lvl ' .. tostring(localTaskList[idx].taskMinLvl)
+        local lvlTxt = 'level ' .. tostring(localTaskList[idx].taskMinLvl)
         taskLevel:setText(lvlTxt)
       end
       if taskState then
@@ -585,20 +601,16 @@ function buildGroupedTaskList()
         local acc = taskItem:getChildById('selectedAccent')
         if acc then acc:setVisible(false) end
       end
-      -- progress bar fill
+      -- progress bar fill (use shared helper for consistent sizing)
       local goal = tonumber(localTaskList[idx].taskGoalCnt) or 0
       local curr = tonumber(localTaskList[idx].taskCurrentCnt) or 0
       local progressBg = taskItem:getChildById('progressBg')
       local progressFill = progressBg and progressBg:getChildById('progressFill') or nil
       if progressBg and progressFill and goal and goal > 0 then
         local ratio = math.max(0, math.min(1, curr / goal))
-        -- delay width calc to next frame so layout sizes are valid
         addEvent(function()
           if progressBg and not progressBg:isDestroyed() and progressFill and not progressFill:isDestroyed() then
-            local w = progressBg:getWidth() - 2
-            if w < 0 then w = 0 end
-            progressFill:setWidth(math.floor(w * ratio))
-            progressBg:setVisible(true)
+            setProgressBar(progressBg, progressFill, ratio)
           end
         end)
       else
@@ -817,7 +829,7 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           local caret = header:getChildById('zoneCaret')
           local title = header:getChildById('zoneTitle')
           if title then title:setText(string.format('%s (%d)', titleText, count)) end
-          if caret then caret:setText(statusExpanded[kind] ~= false and '+' or '►') end
+          if caret then caret:setText(statusExpanded[kind] ~= false and '+' or '-') end
           header.onClick = function() toggleStatusSection(kind) end
           return header
         end
@@ -830,19 +842,12 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           row:setId('npcAvail_'.. tostring(i))
           row:getChildById('taskButton'):setText(rec.taskName)
           local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 0)) end
-          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('Lvl '.. tostring(rec.taskMinLvl or 0)) end
+          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
           local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
           -- Show full progress bar for completed
           local p = row:getChildById('taskProgress') or row:getChildById('progressBg')
           local pb = row:getChildById('taskProgressBar') or (p and p:getChildById('progressFill'))
-          if p and pb then
-            p:setVisible(true)
-            pcall(function()
-              local w = p.getWidth and p:getWidth() or 0
-              if w <= 0 and p.getSize then w = p:getSize().width or 0 end
-              pb:setWidth(w)
-            end)
-          end
+          if p and pb then setProgressBar(p, pb, 1) end
         end
 
         -- In Progress section
@@ -853,7 +858,7 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           row:setId('npcInProg_'.. tostring(i))
           row:getChildById('taskButton'):setText(rec.taskName)
           local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 1)) end
-          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('Lvl '.. tostring(rec.taskMinLvl or 0)) end
+          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
           local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
           -- Support both NPC row progress ids and main TaskRecord ids
           local p = row:getChildById('taskProgress') or row:getChildById('progressBg')
@@ -861,14 +866,7 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           local cur = tonumber(rec.taskCurrentCnt or 0) or 0
           local goal = tonumber(rec.taskGoalCnt or 0) or 0
           local pct = (goal > 0) and math.max(0, math.min(1, cur / goal)) or 0
-          if p and pb then
-            p:setVisible(true)
-            pcall(function()
-              local w = p.getWidth and p:getWidth() or 0
-              if w <= 0 and p.getSize then w = p:getSize().width or 0 end
-              pb:setWidth(math.floor(w * pct))
-            end)
-          end
+          if p and pb then setProgressBar(p, pb, pct) end
         end
 
         -- Completed section
@@ -879,7 +877,7 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           row:setId('npcCompleted_'.. tostring(i))
           row:getChildById('taskButton'):setText(rec.taskName)
           local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 2)) end
-          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('Lvl '.. tostring(rec.taskMinLvl or 0)) end
+          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
           local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
           local p = row:getChildById('taskProgress'); if p then p:setVisible(false) end
         end
@@ -1315,6 +1313,94 @@ function UpdateNpcTaskDescription()
     if moneyIcon then moneyIcon:setVisible(false) end
   end
 
+  -- Populate Objectives / Progress / Hints / Zone / Source (NPC description panel)
+  do
+    local goals = rec.taskGoals or {}
+
+    -- Monsters
+    local monLbl = npcTaskDescription:recursiveGetChildById('monsterGoals')
+    if monLbl then
+      if goals.monsters and #goals.monsters > 0 then
+        local names = {}
+        for i = 1, #goals.monsters do names[#names+1] = tostring(goals.monsters[i].name) end
+        monLbl:setText('You have to kill: ' .. table.concat(names, ', ') .. '.')
+        monLbl:setVisible(true)
+      else
+        monLbl:setText('')
+        monLbl:setVisible(false)
+      end
+    end
+
+    -- Items
+    local itemLbl = npcTaskDescription:recursiveGetChildById('itemGoals')
+    if itemLbl then
+      if goals.items and #goals.items > 0 then
+        local names = {}
+        for i = 1, #goals.items do names[#names+1] = tostring(goals.items[i].name) end
+        itemLbl:setText('You have to collect: ' .. table.concat(names, ', ') .. '.')
+        itemLbl:setVisible(true)
+      else
+        itemLbl:setText('')
+        itemLbl:setVisible(false)
+      end
+    end
+
+    -- Storages
+    local storLbl = npcTaskDescription:recursiveGetChildById('storageGoals')
+    if storLbl then
+      if goals.storages and #goals.storages > 0 then
+        local names = {}
+        for i = 1, #goals.storages do names[#names+1] = tostring(goals.storages[i].starageName) end
+        storLbl:setText('You have to do: ' .. table.concat(names, ', ') .. '.')
+        storLbl:setVisible(true)
+      else
+        storLbl:setText('')
+        storLbl:setVisible(false)
+      end
+    end
+
+    -- Objectives header + divider
+    local anyObj = (goals.monsters and #goals.monsters > 0) or (goals.items and #goals.items > 0) or (goals.storages and #goals.storages > 0)
+    local objTitle = npcTaskDescription:recursiveGetChildById('taskObjectives')
+    if objTitle then objTitle:setVisible(anyObj and true or false) end
+    local objDiv = npcTaskDescription:recursiveGetChildById('objectivesDivider')
+    if objDiv then objDiv:setVisible(anyObj and true or false) end
+
+    -- Progress label (current/goal)
+    local cntLbl = npcTaskDescription:recursiveGetChildById('itemCnt')
+    if cntLbl then
+      local cur = tonumber(rec.taskCurrentCnt or 0) or 0
+      local goal = tonumber(rec.taskGoalCnt or 0) or 0
+      if goal > 0 then
+        cntLbl:setText(string.format('%d/%d', cur, goal))
+        cntLbl:setVisible(true)
+      else
+        cntLbl:setText('')
+        cntLbl:setVisible(false)
+      end
+    end
+
+    -- Hints / Zone / Source
+    local hintLbl = npcTaskDescription:recursiveGetChildById('taskHint')
+    if hintLbl then
+      local hv = tostring(rec.taskHint or rec.taskHintNpc or '')
+      hintLbl:setText(hv)
+      hintLbl:setVisible(hv ~= '')
+    end
+    local zoneLbl = npcTaskDescription:recursiveGetChildById('taskZoneName')
+    if zoneLbl then
+      local zv = tostring(rec.taskZoneName or rec.taskZone or '')
+      zoneLbl:setText(zv)
+      zoneLbl:setVisible(zv ~= '')
+    end
+    local srcLbl = npcTaskDescription:recursiveGetChildById('taskSource')
+    if srcLbl then
+      local sv = tostring(rec.taskSource or rec.taskSourceNpc or '')
+      srcLbl:setText(sv)
+      srcLbl:setVisible(sv ~= '')
+    end
+  end
+
   -- Outfit
   local npcOutfitLbl = npcTaskDescription:getChildById('rewardOutfit')
   if npcOutfitLbl then
@@ -1437,8 +1523,8 @@ function acceptNpcTask()
         if hasChoices and sel <= 0 then showChoiceReminder(); return end
       end
       if tnum and tnum > 0 then
-        -- Optimistic client-side move: if accepting from Available, move the row to In Progress immediately
-        if npcUnifiedSelectedKind == 'available' and lastUnified and lastUnified.available and lastUnified.active then
+        -- Optimistic client-side move: if accepting from Available, move the row to In Progress or Completed immediately
+        if npcUnifiedSelectedKind == 'available' and lastUnified and lastUnified.available and lastUnified.active and lastUnified.completed then
           local selRec = list[npcSelectedTask]
           local moved = false
           if selRec and selRec.taskNumber then
@@ -1446,51 +1532,49 @@ function acceptNpcTask()
             for i = #lastUnified.available, 1, -1 do
               local r = lastUnified.available[i]
               if tostring(r.taskNumber) == selNum then
+                -- decide target based on immediate progress
+                local cur = tonumber(r.taskCurrentCnt or 0) or 0
+                local goal = tonumber(r.taskGoalCnt or 0) or 0
                 table.remove(lastUnified.available, i)
-                table.insert(lastUnified.active, r)
+                if goal > 0 and cur >= goal then
+                  r.taskState = 2 -- completed
+                  table.insert(lastUnified.completed, r)
+                  npcUnifiedSelectedKind = 'completed'
+                  npcSelectedTask = math.max(1, #lastUnified.completed)
+                else
+                  r.taskState = 1 -- in progress
+                  table.insert(lastUnified.active, r)
+                  npcUnifiedSelectedKind = 'active'
+                  npcSelectedTask = math.max(1, #lastUnified.active)
+                end
                 moved = true
                 break
               end
             end
-            if moved then
-              buildUnifiedNpcUI({ available = lastUnified.available, active = lastUnified.active, completed = lastUnified.completed })
-              -- Auto-select the next Available item (or fall back to first Active if none remain)
-              if #lastUnified.available > 0 then
-                npcUnifiedSelectedKind = 'available'
-                -- keep same index if possible, otherwise clamp to last
-                local nextIdx = math.min(npcSelectedTask, #lastUnified.available)
-                if nextIdx <= 0 then nextIdx = 1 end
-                npcSelectedTask = nextIdx
-                -- try to trigger row-click visuals
-                pcall(function()
-                  local host = npcTaskWidget:recursiveGetChildById('npcTaskListInProgress')
-                  local listW = host and (host:recursiveGetChildById('npcTaskListPanel') or host)
-                  local row = listW and listW:getChildById('npcAvail_'.. tostring(nextIdx)) or nil
-                  if row and modules.game_tasklist and modules.game_tasklist.onNpcUnifiedRowClick then
-                    modules.game_tasklist.onNpcUnifiedRowClick(row)
-                  else
-                    UpdateNpcTaskDescription()
-                  end
-                end)
+          end
+          if moved then
+            buildUnifiedNpcUI({ available = lastUnified.available, active = lastUnified.active, completed = lastUnified.completed })
+            -- auto-focus moved row in its new section
+            pcall(function()
+              local host = npcTaskWidget:recursiveGetChildById('npcTaskListInProgress')
+              local listW = host and (host:recursiveGetChildById('npcTaskListPanel') or host)
+              local rowId = (npcUnifiedSelectedKind == 'active') and ('npcInProg_'.. tostring(npcSelectedTask)) or ('npcCompleted_'.. tostring(npcSelectedTask))
+              local row = listW and listW:getChildById(rowId) or nil
+              if row and modules.game_tasklist and modules.game_tasklist.onNpcUnifiedRowClick then
+                modules.game_tasklist.onNpcUnifiedRowClick(row)
               else
-                -- no more available, select the first active row
-                npcUnifiedSelectedKind = 'active'
-                npcSelectedTask = math.max(1, #lastUnified.active)
-                pcall(function()
-                  local host = npcTaskWidget:recursiveGetChildById('npcTaskListInProgress')
-                  local listW = host and (host:recursiveGetChildById('npcTaskListPanel') or host)
-                  local row = listW and listW:getChildById('npcInProg_'.. tostring(npcSelectedTask)) or nil
-                  if row and modules.game_tasklist and modules.game_tasklist.onNpcUnifiedRowClick then
-                    modules.game_tasklist.onNpcUnifiedRowClick(row)
-                  else
-                    UpdateNpcTaskDescription()
-                  end
-                end)
+                UpdateNpcTaskDescription()
               end
-            end
+            end)
           end
         end
-        sendSelectTask(tnum)
+        -- Only send select-task to server when not in Completed context.
+        -- If moved to Completed (or currently viewing Completed), require explicit user Claim.
+        if npcUnifiedSelectedKind ~= 'completed' then
+          sendSelectTask(tnum)
+        else
+          dbg('Skipped auto-select for completed task; waiting for explicit Claim')
+        end
       else
         dbg("ERROR: could not parse a valid taskNumber from '" .. tostring(rawTaskNumber) .. "'")
         return
@@ -1664,7 +1748,7 @@ function updateTaskDescription(taskNumber)
   local tags = {}
   if localTaskList[taskNumber].taskRepeat then table.insert(tags, 'Repeatable') end
   if localTaskList[taskNumber].taskZone then table.insert(tags, localTaskList[taskNumber].taskZone) end
-  if localTaskList[taskNumber].taskMinLvl then table.insert(tags, 'Lvl '.. tostring(localTaskList[taskNumber].taskMinLvl)) end
+  if localTaskList[taskNumber].taskMinLvl then table.insert(tags, 'level '.. tostring(localTaskList[taskNumber].taskMinLvl)) end
   taskDescriptionWindow:getChildById('taskTags'):setText(table.concat(tags, ' • '))
   taskDescriptionWindow:getChildById('taskDescription'):setText(localTaskList[taskNumber].taskDesc)
   taskDescriptionWindow:getChildById('taskDescription'):setTextAutoResize(true)
