@@ -36,6 +36,7 @@ ChoiceRewardItem < UIWidget
   anchors.right: parent.right
   height: 34
   margin-top: 2
+  margin-left: 5
   background: #00000033
   border-width: 1
   border-color: #333333
@@ -59,7 +60,7 @@ ChoiceRewardItem < UIWidget
     anchors.left: leftInset.right
     size: 28 28
     anchors.top: parent.top
-    margin-left: 4
+    margin-left: 8
     margin-top: 3
 
   Label
@@ -86,6 +87,11 @@ ChoiceRowWrapper < Panel
   layout:
     type: anchor
   margin-top: 2
+  margin-left: 5
+  margin-right: 5
+  border-width: 1
+  border-color: #333333
+
 
 NpcTaskRecord < UIWidget
   image-source: /images/taskList/task_item
@@ -194,7 +200,7 @@ NpcTaskWidget < UIWidget
     @onClick: modules.game_tasklist.onNpcTaskSelectClick(self)
 
 TaskRewardsPanel < Panel
-  size: 270 350
+  size: 270 450
 
   ScrollablePanel
     id: rewardItemsPanel
@@ -224,7 +230,7 @@ TaskRewardsPanel < Panel
 
 NpcTaskListPanel < Panel
   width: 265
-  height: 200
+  height: 280
 
   ScrollablePanel
     id: npcTaskListPanel
@@ -248,7 +254,7 @@ NpcTaskListPanel < Panel
 
 
 NpcTaskDescription < UIWidget
-  size: 330 380
+  size: 420 380
   draggable: false
   image-source: /images/ui/tooltip-blue
   image-repeated: false
@@ -336,7 +342,7 @@ NpcTaskDescription < UIWidget
     id: itemGoals
     anchors.top: taskObjectives.bottom
     anchors.left: parent.left
-    size: 270 30
+    size: 200 30
     color: #3396ff
     visible: false
     text-wrap: true
@@ -348,7 +354,7 @@ NpcTaskDescription < UIWidget
     id: storageGoals
     anchors.top: taskObjectives.bottom
     anchors.left: parent.left
-    size: 270 30
+    size: 200 30
     color: #3396ff
     visible: false
     text-wrap: true
@@ -403,7 +409,7 @@ NpcTaskDescription < UIWidget
 
   Label
     id: taskHint
-    size: 270 30
+    size: 200 30
     anchors.top: prev.top
     anchors.left: prev.right
     color: #f69f32
@@ -433,7 +439,7 @@ NpcTaskDescription < UIWidget
 
   Label
     id: rewardExp
-    size: 120 20
+    size: 80 20
     anchors.top: rewardExpIcon.top
     anchors.left: rewardExpIcon.right
     margin-top: 0
@@ -447,15 +453,15 @@ NpcTaskDescription < UIWidget
   UIWidget
     id: rewardMoneyIcon
     size: 16 16
-    anchors.top: rewardExp.bottom
-    anchors.left: parent.left
+    anchors.top: rewardExp.top
+    anchors.left: rewardExp.right
     margin-top: 2
     margin-left: 5
     image-source: /images/topbuttons/autoloot
 
   Label
     id: rewardMoney
-    size: 120 20
+    size: 80 20
     anchors.top: rewardMoneyIcon.top
     anchors.left: rewardMoneyIcon.right
     margin-top: 0
@@ -469,7 +475,7 @@ NpcTaskDescription < UIWidget
 
   Label
     id: rewardOutfit
-    size: 300 20
+    size: 300 1
     anchors.top: prev.bottom
     anchors.left: parent.left
     margin-top: 5
@@ -484,6 +490,8 @@ NpcTaskDescription < UIWidget
     margin-top: 2
     margin-left: 5
     margin-right: 5
+    border-width: 2
+    border-color: #ffffff
     height: 98
 
   Label
@@ -503,7 +511,9 @@ NpcTaskDescription < UIWidget
     margin-top: 2
     margin-left: 5
     margin-right: 5
-    height: 120
+    border-width: 2
+    border-color: #ffffff
+    height: 140
 
 
 
@@ -512,7 +522,7 @@ NpcTaskListWidget < MainWindow
   !text: tr('World Quests')
   image-source: /images/ui/miniwindow
   width: 600
-  height: 485
+  height: 640
 
   # Left pane: NPC task lists (Available, Active, Completed)
   Panel
@@ -602,7 +612,7 @@ NpcTaskListWidget < MainWindow
     margin-top: 8
     margin-left: 10
     margin-right: 8
-    height: 370
+    height: 520
 
   Button
     id: acceptButton

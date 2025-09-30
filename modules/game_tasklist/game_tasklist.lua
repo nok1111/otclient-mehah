@@ -17,6 +17,8 @@ local npcSelectedTask = 0
 local currentSelectedTask = 0
 local npcTaskDescription = nil
 local npcTaskWidget = nil
+-- Track selection by taskNumber so we can remap the row if it moves between Active/Completed
+local npcSelectedTaskNumber = 0
 local npcTaskList = {}
 local npcRewardList = {}
 local npcUnifiedActiveList = {}
@@ -36,6 +38,10 @@ local REFRESH_PINGS_MS = { 0, 100, 200, 400 } -- when to ping ClientGetTaskList 
 local PROCESSING_LABEL = 'Processing...'
 -- Debounce/lock while sending accept/claim to server
 local actionInFlight = false
+-- After accepting from Available, focus the next available quest when UI refreshes
+local focusNextAvailableAfterAccept = false
+-- If server asks to close the NPC window, defer until we confirm there are no tasks left after refresh
+-- We no longer auto-close on server signal; user controls closing via the Close button
 local function setAcceptState(label, enabled)
   if not npcTaskWidget then return end
   local ab = npcTaskWidget:recursiveGetChildById('acceptButton')
@@ -77,10 +83,15 @@ end
 function buildUnifiedNpcUI(parsed)
   -- Ensure expansion state exists even if this runs before the global is defined
   statusExpanded = statusExpanded or { available = true, inprogress = true, completed = true }
-  if npcTaskWidget ~= nil then pcall(function() npcTaskWidget:destroy() end) end
-  npcTaskWidget = g_ui.createWidget('NpcTaskListWidget', modules.game_interface.getRootPanel())
-  npcTaskWidget:setText("World Quests")
-  npcTaskWidget:show(); npcTaskWidget:raise(); npcTaskWidget:focus()
+  if not npcTaskWidget or (npcTaskWidget.isDestroyed and npcTaskWidget:isDestroyed()) then
+    npcTaskWidget = g_ui.createWidget('NpcTaskListWidget', modules.game_interface.getRootPanel())
+    npcTaskWidget:setText("World Quests")
+    npcTaskWidget:show(); npcTaskWidget:raise(); npcTaskWidget:focus()
+  else
+    -- Reuse existing window to avoid close/flicker
+    npcTaskWidget:setText("World Quests")
+    npcTaskWidget:show(); npcTaskWidget:raise(); npcTaskWidget:focus()
+  end
   npcTaskDescription = npcTaskWidget:getChildById('npcTaskDescription')
   dbg('Bound npcTaskDescription: ' .. tostring(npcTaskDescription ~= nil))
   if npcTaskDescription and npcTaskDescription.hide then npcTaskDescription:hide() end
@@ -178,6 +189,24 @@ function buildUnifiedNpcUI(parsed)
   safeApply('completed')
   -- Clear in-flight (server responded / UI rebuilt)
   actionInFlight = false
+  -- Do not auto-close here; window remains unless user presses Close
+  -- If requested, auto-select next available quest after an Accept
+  if focusNextAvailableAfterAccept and parsed and parsed.available and #parsed.available > 0 then
+    focusNextAvailableAfterAccept = false
+    npcUnifiedSelectedKind = 'available'
+    npcSelectedTask = 1
+    pcall(function()
+      local host = npcTaskWidget:recursiveGetChildById('npcTaskListInProgress')
+      local listW = host and (host:recursiveGetChildById('npcTaskListPanel') or host)
+      local row = listW and listW:getChildById('npcAvail_1') or nil
+      if row and modules.game_tasklist and modules.game_tasklist.onNpcUnifiedRowClick then
+        modules.game_tasklist.onNpcUnifiedRowClick(row)
+      else
+        UpdateNpcTaskDescription()
+      end
+      setAcceptState('Accept', true)
+    end)
+  end
   -- Restore button state based on current selection
   local ab = npcTaskWidget and npcTaskWidget:recursiveGetChildById('acceptButton') or nil
   if ab then
@@ -707,7 +736,19 @@ function onExtendedUpdateTask(protocol, opcode, buffer)
     local state = tonumber(mainSplit[2])
     local cnt = tonumber(mainSplit[3])
 
-    -- intentionally not mutating localTaskList directly; server pushes full refreshes
+    -- When a task progress update arrives, request a unified refresh so the left list
+    -- and the right description reflect the latest state immediately.
+    local p = g_game.getProtocolGame()
+    if p then
+      -- small debounce to coalesce multiple updates
+      if scheduleEvent then
+        scheduleEvent(function()
+          local gp = g_game.getProtocolGame(); if gp then gp:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
+        end, 100)
+      else
+        p:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "")
+      end
+    end
 end
 
 -- Parse unified NPC payload sent by server (header VER1; then three sections)
@@ -800,6 +841,32 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
     lastUnified = { available = parsed.available, active = parsed.active, completed = parsed.completed }
 
     buildUnifiedNpcUI(parsed)
+
+  -- After a refresh, if a task was previously selected by index but moved sections
+  -- (e.g., items removed -> Completed -> Active), remap selection by taskNumber.
+  local function remapSelection()
+    if not npcSelectedTaskNumber or npcSelectedTaskNumber <= 0 then return end
+    local function findIn(list)
+      for i = 1, #list do
+        local tnum = tonumber(list[i].taskNumber) or 0
+        if tnum == npcSelectedTaskNumber then return i end
+      end
+      return 0
+    end
+    local idx = findIn(parsed.available or {})
+    if idx > 0 then npcUnifiedSelectedKind = 'available'; npcSelectedTask = idx; UpdateNpcTaskDescription(); return end
+    idx = findIn(parsed.active or {})
+    if idx > 0 then npcUnifiedSelectedKind = 'active'; npcSelectedTask = idx; UpdateNpcTaskDescription(); return end
+    idx = findIn(parsed.completed or {})
+    if idx > 0 then npcUnifiedSelectedKind = 'completed'; npcSelectedTask = idx; UpdateNpcTaskDescription(); return end
+    -- Fallback: ensure a sensible default focus
+    if (#(parsed.active or {}) > 0) then npcUnifiedSelectedKind = 'active'; npcSelectedTask = 1
+    elseif (#(parsed.available or {}) > 0) then npcUnifiedSelectedKind = 'available'; npcSelectedTask = 1
+    elseif (#(parsed.completed or {}) > 0) then npcUnifiedSelectedKind = 'completed'; npcSelectedTask = 1
+    else npcSelectedTask = 0 end
+    UpdateNpcTaskDescription()
+  end
+  remapSelection()
     
     -- Combined list host (we reuse npcTaskListInProgress panel as the single list container)
     local leftRail = npcTaskWidget:getChildById('leftRail')
@@ -930,44 +997,46 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
     npcTaskList = {}
     npcTaskList = parseIncomingTaskList(buffer)
 
-    -- If no tasks are available, hide the NPC Task Window
-    if #npcTaskList == 0 then
-        if npcTaskWidget then
-            npcTaskWidget:destroy()
-            npcTaskWidget = nil
-        end
-        return
-    end
+    -- If no tasks are available, keep the NPC Task Window open for reward/completed views
+    -- and subsequent updates; just proceed to (re)build the UI without closing.
+    -- This avoids unintended closes in legacy flows when only the available list is empty.
+    -- if #npcTaskList == 0 then
+    --     return
+    -- end
 
-    if npcTaskWidget ~= nil then
-        npcTaskWidget:destroy()
+    -- Reuse or create the NPC task window
+    if not npcTaskWidget or (npcTaskWidget.isDestroyed and npcTaskWidget:isDestroyed()) then
+      npcTaskWidget = g_ui.createWidget('NpcTaskListWidget', modules.game_interface.getRootPanel())
+      npcTaskWidget:setPosition({x = 600, y = 300})
     end
-
-    npcTaskWidget = g_ui.createWidget('NpcTaskListWidget', modules.game_interface.getRootPanel())
-    local posWidget = {x = 600, y = 300}
     npcTaskWidget:setText("Main Story Quests")
     npcTaskWidget:getChildById("acceptButton"):setText("Accept")
-    npcTaskWidget:setPosition(posWidget)
-    npcTaskWidget:show()
-    npcTaskWidget:raise()
-    npcTaskWidget:focus()
+    npcTaskWidget:show(); npcTaskWidget:raise(); npcTaskWidget:focus()
 
-    local npcTaskListPanel = npcTaskWidget:getChildById("npcTaskList"):recursiveGetChildById('npcTaskListPanel')
-    local npcTaskDescPanel = npcTaskWidget:getChildById('npcTaskDescription'):recursiveGetChildById('npcTaskListPanel')
+    -- Clear old list/description content using the unified list panel
+    local listHost = npcTaskWidget:recursiveGetChildById('npcTaskListInProgress') or npcTaskWidget
+    local npcTaskListPanel = listHost and (listHost:recursiveGetChildById('npcTaskListPanel') or listHost) or nil
+    if npcTaskListPanel and npcTaskListPanel.destroyChildren then npcTaskListPanel:destroyChildren() end
+    local descHost = npcTaskWidget:getChildById('npcTaskDescription')
+    local npcTaskDescPanel = descHost and descHost:recursiveGetChildById('npcTaskListPanel') or nil
+    if npcTaskDescPanel and npcTaskDescPanel.destroyChildren then npcTaskDescPanel:destroyChildren() end
     npcTaskDescription = g_ui.createWidget('NpcTaskDescription', npcTaskDescPanel)
-    for i = 1, #npcTaskList, 1 do
-      local taskButton = g_ui.createWidget('NpcTaskWidget', npcTaskListPanel)
-      taskButton:setId("npcTaskButton"..tostring(i))
-       taskButton:getChildById('taskButton'):setText(npcTaskList[i].taskName)
+    if npcTaskListPanel then
+      for i = 1, #npcTaskList, 1 do
+        local taskButton = g_ui.createWidget('NpcTaskWidget', npcTaskListPanel)
+        taskButton:setId("npcTaskButton"..tostring(i))
+        taskButton:getChildById('taskButton'):setText(npcTaskList[i].taskName)
+      end
     end
-    if #npcTaskList == 0 then
-      npcTaskWidget:getChildById("acceptButton"):hide()
-    else
+    do
       local ab = npcTaskWidget:getChildById("acceptButton")
-      ab:show()
-      ab:setEnabled(true)
-      -- default select first task so Accept works without clicking
-      npcSelectedTask = 1
+      if #npcTaskList == 0 then
+        if ab then ab:hide() end
+      else
+        if ab then ab:show(); ab:setEnabled(true) end
+        -- default select first task so Accept works without clicking
+        npcSelectedTask = 1
+      end
     end
     UpdateNpcTaskDescription()
 end
@@ -977,35 +1046,39 @@ function onExtendedNpcRewardList(protocol, opcode, buffer)
     npcRewardList = {}
     npcRewardList = parseIncomingTaskList(buffer)
 
-    if npcTaskWidget ~= nil then
-        npcTaskWidget:destroy()
+    -- Reuse or create the NPC task window
+    if not npcTaskWidget or (npcTaskWidget.isDestroyed and npcTaskWidget:isDestroyed()) then
+      npcTaskWidget = g_ui.createWidget('NpcTaskListWidget', modules.game_interface.getRootPanel())
+      npcTaskWidget:setPosition({x = 600, y = 300})
     end
-
-    npcTaskWidget = g_ui.createWidget('NpcTaskListWidget', modules.game_interface.getRootPanel())
-    local posWidget = {x = 600, y = 300}
     npcTaskWidget:setText("NPC claim reward")
     npcTaskWidget:getChildById("acceptButton"):setText("Claim")
-    npcTaskWidget:setPosition(posWidget)
-    npcTaskWidget:show()
-    npcTaskWidget:raise()
-    npcTaskWidget:focus()
+    npcTaskWidget:show(); npcTaskWidget:raise(); npcTaskWidget:focus()
 
-    local npcTaskListPanel = npcTaskWidget:getChildById("npcTaskList"):recursiveGetChildById('npcTaskListPanel')
-    local npcTaskDescPanel = npcTaskWidget:getChildById('npcTaskDescription'):recursiveGetChildById('npcTaskListPanel')
+    -- Clear old list/description content using the unified list panel
+    local listHost = npcTaskWidget:recursiveGetChildById('npcTaskListInProgress') or npcTaskWidget
+    local npcTaskListPanel = listHost and (listHost:recursiveGetChildById('npcTaskListPanel') or listHost) or nil
+    if npcTaskListPanel and npcTaskListPanel.destroyChildren then npcTaskListPanel:destroyChildren() end
+    local descHost = npcTaskWidget:getChildById('npcTaskDescription')
+    local npcTaskDescPanel = descHost and descHost:recursiveGetChildById('npcTaskListPanel') or nil
+    if npcTaskDescPanel and npcTaskDescPanel.destroyChildren then npcTaskDescPanel:destroyChildren() end
     npcTaskDescription = g_ui.createWidget('NpcTaskDescription', npcTaskDescPanel)
-    for i = 1, #npcRewardList, 1 do
-      local taskButton = g_ui.createWidget('NpcTaskWidget', npcTaskListPanel)
-      taskButton:setId("npcRewardButton"..tostring(i))
-      taskButton:getChildById('taskButton'):setText(npcRewardList[i].taskName)
+    if npcTaskListPanel then
+      for i = 1, #npcRewardList, 1 do
+        local taskButton = g_ui.createWidget('NpcTaskWidget', npcTaskListPanel)
+        taskButton:setId("npcRewardButton"..tostring(i))
+        taskButton:getChildById('taskButton'):setText(npcRewardList[i].taskName)
+      end
     end
-    if #npcRewardList == 0 then
-      npcTaskWidget:getChildById("acceptButton"):hide()
-    else
-     local ab = npcTaskWidget:getChildById("acceptButton")
-     ab:show()
-     ab:setEnabled(true)
-      -- default select first reward so Claim works without clicking
-      npcSelectedTask = 1
+    do
+      local ab = npcTaskWidget:getChildById("acceptButton")
+      if #npcRewardList == 0 then
+        if ab then ab:hide() end
+      else
+        if ab then ab:show(); ab:setEnabled(true) end
+        -- default select first reward so Claim works without clicking
+        npcSelectedTask = 1
+      end
     end
     UpdateNpcTaskDescription()
 end
@@ -1183,6 +1256,17 @@ function onNpcTaskSelectClick(widget)
     end
     npcSelectedTask = tonumber(taskId)
     g_game.talk("[Quest] Selected index " .. tostring(npcSelectedTask) .. " (opcode=".. tostring(lastOpcode) .. ")")
+    -- Persist the actual taskNumber so we can remap selection after server recompute
+    do
+      local list
+      if npcUnifiedSelectedKind == 'available' then list = npcTaskList
+      elseif npcUnifiedSelectedKind == 'active' then list = npcActiveList
+      elseif npcUnifiedSelectedKind == 'completed' then list = npcRewardList
+      end
+      if list and list[npcSelectedTask] then
+        npcSelectedTaskNumber = tonumber(list[npcSelectedTask].taskNumber) or 0
+      end
+    end
     UpdateNpcTaskDescription()
 	npcTaskWidget:getChildById("acceptButton"):show()
 end
@@ -1209,6 +1293,21 @@ function sendSelectTask(taskId)
             if choiceIdx and choiceIdx > 0 then payload = payload .. ':' .. tostring(choiceIdx) end
             protocol:sendExtendedOpcode(ClientOpcodes.ClientSelectReward, payload)
             g_game.talk("[Quest] Claiming reward for task " .. tostring(taskId))
+            -- proactively refresh unified NPC window so the completed task disappears after claim
+            pcall(function()
+              for _, delay in ipairs(REFRESH_PINGS_MS) do
+                if delay == 0 then
+                  protocol:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "")
+                elseif scheduleEvent then
+                  scheduleEvent(function()
+                    local p = g_game.getProtocolGame(); if p then p:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
+                  end, delay)
+                end
+              end
+              if scheduleEvent then
+                scheduleEvent(function() actionInFlight = false; setAcceptState('Claim', true) end, ACCEPT_LOCK_TIMEOUT_MS)
+              end
+            end)
             actionInFlight = true; setAcceptState(PROCESSING_LABEL, false)
         elseif lastOpcode == ExtendedIds.NpcTaskList then
             protocol:sendExtendedOpcode(ClientOpcodes.ClientSelectTask, tostring(taskId))
@@ -1256,15 +1355,9 @@ end
 
 -- server requested to close NPC task window (e.g., max tasks reached or flow end)
 function onExtendedNpcTaskWindowClose(protocol, opcode, buffer)
-  if npcTaskWidget then
-    npcTaskWidget:destroy()
-    npcTaskWidget = nil
-  end
-  -- refresh accepted quest list
+  -- Ignore auto-close; just refresh to reflect latest state and keep the window open
   local proto = g_game.getProtocolGame()
-  if proto then
-    proto:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "")
-  end
+  if proto then proto:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
 end
 
 
@@ -1298,6 +1391,16 @@ function UpdateNpcTaskDescription()
   local desc = npcTaskDescription:getChildById('taskDescription')
   if title then title:setText(rec.taskName) end
   if desc then desc:setText(rec.taskDesc); desc:setTextAutoResize(true) end
+
+  -- Debug: log the selected task's current/goal and state as received
+  do
+    local tnum = tonumber(rec.taskNumber) or 0
+    local st = tonumber(rec.taskState) or -1
+    local cur = tonumber(rec.taskCurrentCnt) or 0
+    local goal = tonumber(rec.taskGoalCnt) or 0
+    dbg(string.format('[Client][NPC:%s] Selected task #%d "%s" kind=%s state=%d cur=%d goal=%d',
+      tostring(rec.taskSourceNpc or ''), tnum, tostring(rec.taskName), tostring(npcUnifiedSelectedKind), st, cur, goal))
+  end
 
   -- Rewards basic (match main TaskDescription style)
   local expLbl = npcTaskDescription:getChildById('rewardExp')
@@ -1539,13 +1642,15 @@ function acceptNpcTask()
                 if goal > 0 and cur >= goal then
                   r.taskState = 2 -- completed
                   table.insert(lastUnified.completed, r)
-                  npcUnifiedSelectedKind = 'completed'
-                  npcSelectedTask = math.max(1, #lastUnified.completed)
+                  -- After accept, prefer focusing next available task, not the moved one
+                  npcUnifiedSelectedKind = 'available'
+                  focusNextAvailableAfterAccept = true
                 else
                   r.taskState = 1 -- in progress
                   table.insert(lastUnified.active, r)
-                  npcUnifiedSelectedKind = 'active'
-                  npcSelectedTask = math.max(1, #lastUnified.active)
+                  -- After accept, prefer focusing next available task, not the moved one
+                  npcUnifiedSelectedKind = 'available'
+                  focusNextAvailableAfterAccept = true
                 end
                 moved = true
                 break
@@ -1554,27 +1659,12 @@ function acceptNpcTask()
           end
           if moved then
             buildUnifiedNpcUI({ available = lastUnified.available, active = lastUnified.active, completed = lastUnified.completed })
-            -- auto-focus moved row in its new section
-            pcall(function()
-              local host = npcTaskWidget:recursiveGetChildById('npcTaskListInProgress')
-              local listW = host and (host:recursiveGetChildById('npcTaskListPanel') or host)
-              local rowId = (npcUnifiedSelectedKind == 'active') and ('npcInProg_'.. tostring(npcSelectedTask)) or ('npcCompleted_'.. tostring(npcSelectedTask))
-              local row = listW and listW:getChildById(rowId) or nil
-              if row and modules.game_tasklist and modules.game_tasklist.onNpcUnifiedRowClick then
-                modules.game_tasklist.onNpcUnifiedRowClick(row)
-              else
-                UpdateNpcTaskDescription()
-              end
-            end)
+            -- leave selection to focusNextAvailableAfterAccept handler in buildUnifiedNpcUI
           end
         end
-        -- Only send select-task to server when not in Completed context.
-        -- If moved to Completed (or currently viewing Completed), require explicit user Claim.
-        if npcUnifiedSelectedKind ~= 'completed' then
-          sendSelectTask(tnum)
-        else
-          dbg('Skipped auto-select for completed task; waiting for explicit Claim')
-        end
+        -- Always send the action to server. sendSelectTask() routes to Accept or Claim
+        -- and enforces reward choice selection for completed tasks.
+        sendSelectTask(tnum)
       else
         dbg("ERROR: could not parse a valid taskNumber from '" .. tostring(rawTaskNumber) .. "'")
         return
@@ -1631,7 +1721,7 @@ function acceptNpcTask()
           if protocol then protocol:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
       end
       if #taskListToShow == 0 and npcTaskWidget then
-          npcTaskWidget:destroy(); npcTaskWidget = nil
+          -- Do not close the window; just request a refresh so UI updates in-place
           local protocol = g_game.getProtocolGame()
           if protocol then protocol:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
       end

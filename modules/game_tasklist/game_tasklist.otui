@@ -581,8 +581,8 @@ TaskDescription < UIWidget
   UIWidget
     id: rewardMoneyIcon
     size: 16 16
-    anchors.top: rewardExp.bottom
-    anchors.left: parent.left
+    anchors.top: rewardExp.top
+    anchors.left: rewardExp.right
     margin-top: 2
     margin-left: 5
     image-source: /images/topbuttons/autoloot
@@ -602,7 +602,7 @@ TaskDescription < UIWidget
 
   Label
     id: rewardOutfit
-    size: 300 20
+    size: 300 1
     anchors.top: prev.bottom
     anchors.left: parent.left
     margin-top: 5
@@ -614,7 +614,7 @@ TaskDescription < UIWidget
     !text: tr('Basic Rewards:')
     anchors.top: prev.bottom
     anchors.left: parent.left
-    margin-top: 5
+    margin-top: 2
     margin-left: 21
     color: #ffcc66
 
@@ -689,7 +689,7 @@ MainWindow
   !text: tr('Quest Log')
   image-source: /images/ui/miniwindow
   width: 760
-  height: 680
+  height: 700
   draggable: true
   @onEscape: hide()
 
