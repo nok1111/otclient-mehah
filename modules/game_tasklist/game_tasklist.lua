@@ -1,4 +1,4 @@
-taskListsWindow = nil
+  taskListsWindow = nil
 taskDescriptionWindow = nil
 
 local askWidget = nil
@@ -24,7 +24,8 @@ local npcAutoRefreshEvent = nil
 local npcTaskList = {}
 local npcRewardList = {}
 local npcUnifiedActiveList = {}
-local npcUnifiedSelectedKind = nil -- 'available' | 'active' | 'completed'
+local npcUnifiedCooldownList = {}
+local npcUnifiedSelectedKind = nil -- 'available' | 'active' | 'completed' | 'cooldown'
 local deleteButton = nil
 local MaxTaskList = 15
 local zoneSections = {} -- zoneName -> { header=widget, content=widget, expanded=bool }
@@ -84,7 +85,9 @@ end
 -- Build/refresh unified NPC window UI from parsed lists
 function buildUnifiedNpcUI(parsed)
   -- Ensure expansion state exists even if this runs before the global is defined
-  statusExpanded = statusExpanded or { available = true, inprogress = true, completed = true }
+  statusExpanded = statusExpanded or { available = true, inprogress = true, completed = true, cooldown = true }
+  -- Reset cooldown ticker state on rebuild
+  stopNpcCooldownTicker(); npcCooldownLeftByRow = {}
   if not npcTaskWidget or (npcTaskWidget.isDestroyed and npcTaskWidget:isDestroyed()) then
     npcTaskWidget = g_ui.createWidget('NpcTaskListWidget', modules.game_interface.getRootPanel())
     npcTaskWidget:setText("World Quests")
@@ -149,6 +152,61 @@ function buildUnifiedNpcUI(parsed)
           elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
           else badge:setColor('#D4AF37') end
         end
+
+        -- Cooldown section (if any)
+        if parsed.cooldown and #parsed.cooldown > 0 then
+          addHeader('cooldown', 'On Cooldown', #parsed.cooldown)
+          local hasZero = false
+          for i = 1, #parsed.cooldown do
+            local rec = parsed.cooldown[i]
+            local row = g_ui.createWidget('NpcTaskRecord', list)
+            row:setId('npcCooldown_'.. tostring(i))
+            row:getChildById('taskButton'):setText(rec.taskName)
+            local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/0') end
+            -- write cooldown into its own label under the name
+            local cdLbl = row:getChildById('cooldownText')
+            if cdLbl then
+              local left = tonumber(rec.taskCooldownLeftSec or 0) or 0
+              local hrs = math.floor(left / 3600)
+              local mins = math.floor((left % 3600) / 60)
+              local secs = left % 60
+              local txt = (left <= 0) and 'Ready'
+                or (hrs > 0 and string.format('Available in %dh %dm', hrs, mins))
+                or (mins > 0 and string.format('Available in %dm', mins))
+                or string.format('Available in %ds', secs)
+              cdLbl:setText(txt)
+            end
+            -- show level top-right as usual
+            local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('Level ' .. tostring(rec.taskMinLvl or 0)) end
+            -- register per-row remaining seconds for ticker
+            npcCooldownLeftByRow[row:getId()] = tonumber(rec.taskCooldownLeftSec or 0) or 0
+            if (npcCooldownLeftByRow[row:getId()] or 0) <= 0 then hasZero = true end
+            local badge = row:getChildById('taskBadge')
+            if badge then
+              local tag = tostring(rec.taskBadge or 'Story')
+              badge:setText(tag)
+              local lc = tag:lower()
+              if lc == 'story' then badge:setColor('#D4AF37')
+              elseif lc == 'repeat' then badge:setColor('#66cc66')
+              elseif lc == 'daily' then badge:setColor('#66ccff')
+              elseif lc == 'quest' then badge:setColor('#ffffff')
+              elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+              else badge:setColor('#D4AF37') end
+            end
+            -- hide progress bar
+            local p = row:getChildById('taskProgress'); if p then p:setVisible(false) end
+            -- allow selecting to show description (Accept will be disabled)
+            row.onClick = modules.game_tasklist.onNpcUnifiedRowClick
+          end
+          -- start per-minute ticker if any cooldown has time remaining
+          local hasActive = false
+          for _, v in pairs(npcCooldownLeftByRow) do if (tonumber(v) or 0) > 0 then hasActive = true break end end
+          if hasActive and scheduleEvent then npcCooldownTickerEvent = scheduleEvent(tickNpcCooldownOnce, 60000) end
+          -- if any row already has zero, request an immediate refresh to move it into Available
+          if hasZero then
+            local p = g_game.getProtocolGame(); if p then p:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
+          end
+        end
         local p = row:getChildById('taskProgress') or row:getChildById('progressBg'); if p then p:setVisible(false) end
         row.onClick = modules.game_tasklist.onNpcUnifiedRowClick
       end
@@ -210,6 +268,7 @@ function buildUnifiedNpcUI(parsed)
   if (#(parsed.available or {}) > 0 and statusExpanded.available == false) then statusExpanded.available = true; pcall(function() g_settings.set('game_tasklist/npc/available_expanded', '1') end) end
   if (#(parsed.active or {}) > 0 and statusExpanded.inprogress == false) then statusExpanded.inprogress = true; pcall(function() g_settings.set('game_tasklist/npc/inprogress_expanded', '1') end) end
   if (#(parsed.completed or {}) > 0 and statusExpanded.completed == false) then statusExpanded.completed = true; pcall(function() g_settings.set('game_tasklist/npc/completed_expanded', '1') end) end
+  if (parsed.cooldown and #parsed.cooldown > 0 and statusExpanded.cooldown == false) then statusExpanded.cooldown = true; pcall(function() g_settings.set('game_tasklist/npc/cooldown_expanded', '1') end) end
   local function safeApply(kind)
     local f = _G.applyStatusVisibility or applyStatusVisibility
     if type(f) == 'function' then pcall(function() f(kind) end) end
@@ -326,6 +385,65 @@ local statusExpanded = {
   completed = true,
 }
 
+-- Cooldown ticker handle (per-minute UI updater)
+npcCooldownTickerEvent = npcCooldownTickerEvent or nil
+npcCooldownLeftByRow = npcCooldownLeftByRow or {}
+
+function stopNpcCooldownTicker()
+  if npcCooldownTickerEvent and removeEvent then
+    removeEvent(npcCooldownTickerEvent)
+  end
+  npcCooldownTickerEvent = nil
+end
+
+function tickNpcCooldownOnce()
+  if not npcTaskWidget then return end
+  local hostPanel = npcTaskWidget:recursiveGetChildById('npcTaskListInProgress')
+  if not hostPanel then return end
+  local list = hostPanel:recursiveGetChildById('npcTaskListPanel') or hostPanel
+  if not list then return end
+  local anyZero = false
+  for _, child in ipairs(list:getChildren()) do
+    local id = child:getId() or ''
+    if id:find('npcCooldown_', 1, true) then
+      local left = tonumber(npcCooldownLeftByRow[id] or 0) or 0
+      if left > 0 then
+        left = math.max(0, left - 60)
+        npcCooldownLeftByRow[id] = left
+        local lbl = child:getChildById('cooldownText')
+        if lbl then
+          local mins = math.floor(left / 60)
+          local hrs = math.floor(mins / 60)
+          mins = mins % 60
+          local txt
+          if hrs > 0 then
+            txt = string.format('Available in %dh %dm', hrs, mins)
+          else
+            if left > 0 and mins == 0 then txt = 'Available in <1m' else txt = string.format('Available in %dm', mins) end
+          end
+          lbl:setText(txt)
+        end
+        if left == 0 then anyZero = true end
+      end
+    end
+  end
+  if anyZero then
+    -- Ask server for a refresh; tasks may move from cooldown to available
+    local p = g_game.getProtocolGame()
+    if p then p:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
+    stopNpcCooldownTicker()
+    return
+  end
+  -- reschedule next tick if there are cooldown rows left with time
+  local hasActive = false
+  for _, v in pairs(npcCooldownLeftByRow) do if (tonumber(v) or 0) > 0 then hasActive = true break end end
+  if hasActive and scheduleEvent then
+    npcCooldownTickerEvent = scheduleEvent(tickNpcCooldownOnce, 60000)
+  else
+    stopNpcCooldownTicker()
+  end
+end
+
 local function applyStatusVisibility(kind)
   if not npcTaskWidget then return end
   local listHost = npcTaskWidget:recursiveGetChildById('npcTaskListInProgress')
@@ -335,9 +453,11 @@ local function applyStatusVisibility(kind)
   local headerId = (kind == 'available' and 'combinedAvailableHeader')
                  or (kind == 'inprogress' and 'combinedInProgHeader')
                  or (kind == 'completed' and 'combinedCompletedHeader')
-  local prefix  = (kind == 'available' and 'npcAvail_')
-                 or (kind == 'inprogress' and 'npcInProg_')
-                 or (kind == 'completed' and 'npcCompleted_')
+                 or (kind == 'cooldown' and 'combinedCooldownHeader')
+  local prefix = (kind == 'available' and 'npcAvail_')
+              or (kind == 'inprogress' and 'npcInProg_')
+              or (kind == 'completed' and 'npcCompleted_')
+              or (kind == 'cooldown' and 'npcCooldown_')
   for _, child in ipairs(listHost:getChildren()) do
     local id = child:getId() or ''
     if id:find(prefix, 1, true) then
@@ -812,16 +932,17 @@ function onExtendedUpdateTask(protocol, opcode, buffer)
     end
 end
 
--- Parse unified NPC payload sent by server (header VER1; then three sections)
+-- Parse unified NPC payload sent by server (header VER1; then three or four sections)
 local function parseUnifiedNpcPayload(buffer)
   -- Header: VER1;availCount:X;activeCount:Y;completedCount:Z;
   local headerEnd = buffer:find(';', 1, true) -- after VER1
   if not headerEnd then return nil end
   local afterVer = buffer:sub(headerEnd + 1)
-  local ac, act, cc = 0, 0, 0
+  local ac, act, cc, cd = 0, 0, 0, 0
   for key, val in afterVer:gmatch("(availCount):(%d+);") do ac = tonumber(val) or 0 end
   for key, val in afterVer:gmatch("(activeCount):(%d+);") do act = tonumber(val) or 0 end
   for key, val in afterVer:gmatch("(completedCount):(%d+);") do cc = tonumber(val) or 0 end
+  for key, val in afterVer:gmatch("(cooldownCount):(%d+);") do cd = tonumber(val) or 0 end
   -- find the start of sections (after the third value terminator ';')
   local startIdx = afterVer:find(';', 1, true)
   if startIdx then startIdx = afterVer:find(';', startIdx + 1, true) end
@@ -836,9 +957,20 @@ local function parseUnifiedNpcPayload(buffer)
     local list = {}
     for block in seg:gmatch("(.-)##") do
       if block and #block > 0 then
+        -- We may have an optional extra tail field cooldownLeftSec before final '|'
+        -- parseIncomingTaskList handles core fields; we parse cooldownLeftSec manually
         local pseudo = "1|" .. block
         local one = parseIncomingTaskList(pseudo)
-        if one and #one > 0 then table.insert(list, one[1]) end
+        if one and #one > 0 then
+          local rec = one[1]
+          -- Extract last ';' token from block (after Badge) if present
+          -- Server encodes cooldown rows as: ...;Badge;cooldownLeftSec;|
+          -- Capture the value before the final ';|'. If not found, fallback to old pattern.
+          local tail = block:match(";([^;]*);|$") or block:match(";([^;]*)|$")
+          local num = tonumber(tail or '0') or 0
+          if num and num > 0 then rec.taskCooldownLeftSec = num end
+          table.insert(list, rec)
+        end
       end
     end
     return list
@@ -846,7 +978,8 @@ local function parseUnifiedNpcPayload(buffer)
   local avail = parseSection(sections[1] or "")
   local active = parseSection(sections[2] or "")
   local completed = parseSection(sections[3] or "")
-  return {available = avail, active = active, completed = completed, counts = {ac, act, cc}}
+  local cooldown = parseSection(sections[4] or "")
+  return {available = avail, active = active, completed = completed, cooldown = cooldown, counts = {ac, act, cc, cd}}
 end
 
 function onExtendedNpcTaskList(protocol, opcode, buffer)
@@ -899,7 +1032,13 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
     dedupeLists(parsed)
     dbg(string.format('Sections: avail=%d active=%d completed=%d', #(parsed.available or {}), #(parsed.active or {}), #(parsed.completed or {})))
     -- cache for optimistic updates
-    lastUnified = { available = parsed.available, active = parsed.active, completed = parsed.completed }
+    lastUnified = { available = parsed.available, active = parsed.active, completed = parsed.completed, cooldown = parsed.cooldown }
+
+    -- expose parsed lists globally for selection handling
+    npcTaskList = parsed.available
+    npcUnifiedActiveList = parsed.active
+    npcRewardList = parsed.completed
+    npcUnifiedCooldownList = parsed.cooldown or {}
 
     buildUnifiedNpcUI(parsed)
 
@@ -953,7 +1092,11 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
 
         local function addHeader(kind, titleText, count)
           local header = g_ui.createWidget('ZoneHeader', list)
-          header:setId(kind == 'available' and 'combinedAvailableHeader' or (kind == 'inprogress' and 'combinedInProgHeader' or 'combinedCompletedHeader'))
+          header:setId(
+            kind == 'available' and 'combinedAvailableHeader' or
+            (kind == 'inprogress' and 'combinedInProgHeader' or
+            (kind == 'completed' and 'combinedCompletedHeader' or 'combinedCooldownHeader'))
+          )
           local caret = header:getChildById('zoneCaret')
           local title = header:getChildById('zoneTitle')
           if title then title:setText(string.format('%s (%d)', titleText, count)) end
@@ -1031,35 +1174,53 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
           local p = row:getChildById('taskProgress'); if p then p:setVisible(false) end
         end
+
+        -- Cooldown section
+        addHeader('cooldown', 'Cooldown', #parsed.cooldown)
+        local hasZero2 = false
+        for i = 1, #parsed.cooldown do
+          local rec = parsed.cooldown[i]
+          local row = g_ui.createWidget('NpcTaskRecord', list)
+          row:setId('npcCooldown_'.. tostring(i))
+          row:getChildById('taskButton'):setText(rec.taskName)
+          local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/0') end
+          local cdLbl = row:getChildById('cooldownText')
+          if cdLbl then
+            local left = tonumber(rec.taskCooldownLeftSec or 0) or 0
+            local hrs = math.floor(left / 3600)
+            local mins = math.floor((left % 3600) / 60)
+            local secs = left % 60
+            local txt = (left <= 0) and 'Ready'
+              or (hrs > 0 and string.format('Available in %dh %dm', hrs, mins))
+              or (mins > 0 and string.format('Available in %dm', mins))
+              or string.format('Available in %ds', secs)
+            cdLbl:setText(txt)
+          end
+          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('Level '.. tostring(rec.taskMinLvl or 0)) end
+          -- track for ticker
+          npcCooldownLeftByRow[row:getId()] = tonumber(rec.taskCooldownLeftSec or 0) or 0
+          if (npcCooldownLeftByRow[row:getId()] or 0) <= 0 then hasZero2 = true end
+          local badge = row:getChildById('taskBadge');
+          if badge then
+            local tag = tostring(rec.taskBadge or 'Story')
+            badge:setText(tag)
+            local lc = tag:lower()
+            if lc == 'story' then badge:setColor('#D4AF37')
+            elseif lc == 'repeat' then badge:setColor('#66cc66')
+            elseif lc == 'daily' then badge:setColor('#66ccff')
+            elseif lc == 'quest' then badge:setColor('#ffffff')
+            elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+            else badge:setColor('#D4AF37') end
+          end
+          -- hide progress bar
+          local p = row:getChildById('taskProgress'); if p then p:setVisible(false) end
+          -- allow selection to show description; Accept will be disabled
+          row.onClick = modules.game_tasklist.onNpcUnifiedRowClick
+        end
+        if hasZero2 then
+          local p = g_game.getProtocolGame(); if p then p:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
+        end
       end
-    end
-
-    -- Default selection: if any available, prep Accept; else if completed, prep Claim
-    local ab = npcTaskWidget:getChildById('acceptButton')
-    if ab then
-      if #parsed.available > 0 then ab:setText('Accept') else ab:setText('Claim') end
-      ab:show(); ab:setEnabled(false)
-      dbg('Accept button shown disabled')
-    end
-
-    -- Store lists in existing globals for reuse by existing handlers
-    npcTaskList = parsed.available
-    npcUnifiedActiveList = parsed.active
-    npcRewardList = parsed.completed
-    npcSelectedTask = 0
-    dbg('Stored lists. avail='.. tostring(#npcTaskList) ..' active='.. tostring(#npcUnifiedActiveList) ..' completed='.. tostring(#npcRewardList))
-
-    -- Restore persisted expansion states
-    local ip = g_settings.get('game_tasklist/npc/inprogress_expanded')
-    local cp = g_settings.get('game_tasklist/npc/completed_expanded')
-    local av = g_settings.get('game_tasklist/npc/available_expanded')
-    statusExpanded.available  = (av == nil) and true or (tostring(av) == '1' or tostring(av) == 'true')
-    statusExpanded.inprogress = (ip == nil) and true or (tostring(ip) == '1' or tostring(ip) == 'true')
-    statusExpanded.completed  = (cp == nil) and true or (tostring(cp) == '1' or tostring(cp) == 'true')
-    -- If there are items, prefer expanding by default to avoid confusion, but only override if user hasn't explicitly expanded in this session
-    if (#parsed.available or 0) > 0 and statusExpanded.available == false then
-      statusExpanded.available = true
-      pcall(function() g_settings.set('game_tasklist/npc/available_expanded', '1') end)
     end
     if (#parsed.active or 0) > 0 and statusExpanded.inprogress == false then
       statusExpanded.inprogress = true
@@ -1463,9 +1624,13 @@ function UpdateNpcTaskDescription()
     list = npcUnifiedActiveList
   elseif npcUnifiedSelectedKind == 'completed' then
     list = npcRewardList
+  elseif npcUnifiedSelectedKind == 'cooldown' then
+    list = npcUnifiedCooldownList
+  else
+    if npcTaskDescription.hide then npcTaskDescription:hide() end
+    dbg('UpdateNpcTaskDescription no matching list for kind='.. tostring(npcUnifiedSelectedKind))
+    return
   end
-
-  if type(list) ~= 'table' or #list == 0 then dbg('UpdateNpcTaskDescription abort: list invalid/empty'); return end
   if not npcSelectedTask or npcSelectedTask < 1 or npcSelectedTask > #list then npcSelectedTask = 1 end
 
   local rec = list[npcSelectedTask]
@@ -1821,6 +1986,8 @@ function declineNpcTask()
     -- Stop auto-refresh when NPC window hidden
     if npcAutoRefreshEvent and removeEvent then removeEvent(npcAutoRefreshEvent) end
     npcAutoRefreshEvent = nil
+    -- Stop cooldown ticker when window closes
+    stopNpcCooldownTicker(); npcCooldownLeftByRow = {}
 end
 
 -- Unified row click (left rail)
@@ -1855,6 +2022,8 @@ function onNpcUnifiedRowClick(self)
     npcUnifiedSelectedKind = 'active'
   elseif id:find('npcCompleted_', 1, true) then
     npcUnifiedSelectedKind = 'completed'
+  elseif id:find('npcCooldown_', 1, true) then
+    npcUnifiedSelectedKind = 'cooldown'
   end
   npcSelectedTask = idx
 
@@ -1866,6 +2035,8 @@ function onNpcUnifiedRowClick(self)
       ab:setText('Claim'); ab:setEnabled(true)
     elseif npcUnifiedSelectedKind == 'active' then
       ab:setText('In Progress'); ab:setEnabled(false)
+    elseif npcUnifiedSelectedKind == 'cooldown' then
+      ab:setText('On Cooldown'); ab:setEnabled(false)
     else
       ab:setText('Accept'); ab:setEnabled(true)
     end

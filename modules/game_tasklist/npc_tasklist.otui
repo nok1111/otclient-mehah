@@ -96,7 +96,7 @@ ChoiceRowWrapper < Panel
 NpcTaskRecord < UIWidget
   image-source: /images/taskList/task_item
   width: 256
-  height: 54
+  height: 64
   layout:
     type: anchor
   @onClick: modules.game_tasklist.onNpcUnifiedRowClick(self)
@@ -127,6 +127,17 @@ NpcTaskRecord < UIWidget
     margin-top: 8
     text-align: left
     color: #ffffff
+
+  # Cooldown text (appears under task name for cooldown entries only)
+  Label
+    id: cooldownText
+    anchors.left: taskState.right
+    anchors.bottom: parent.bottom
+    margin-left: 8
+    margin-bottom: 8
+    color: #aac3ff
+    text-align: left
+    text: ""
 
   Label
     id: taskLevel
