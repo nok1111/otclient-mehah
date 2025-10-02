@@ -663,7 +663,7 @@ function buildGroupedTaskList()
       -- badge
       local badge = taskItem:getChildById('taskBadge')
       if badge then
-        local tag = tostring(localTaskList[idx].taskBadge or (localTaskList[idx].taskRepeat and 'Repeat' or 'Story'))
+        local tag = tostring(localTaskList[idx].taskBadge or 'Story')
         badge:setText(tag)
         local lc = tag:lower()
         if lc == 'story' then badge:setColor('#D4AF37')
@@ -973,7 +973,7 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
           local badge = row:getChildById('taskBadge');
           if badge then
-            local tag = tostring(rec.taskBadge or (rec.taskRepeat and 'Repeat' or 'Story'))
+            local tag = tostring(rec.taskBadge or 'Story')
             badge:setText(tag)
             local lc = tag:lower()
             if lc == 'story' then badge:setColor('#D4AF37')
@@ -1924,7 +1924,7 @@ function updateTaskDescription(taskNumber)
   end
   taskDescriptionWindow:getChildById('taskTitle'):setText(localTaskList[taskNumber].taskName)
   local tags = {}
-  if localTaskList[taskNumber].taskRepeat then table.insert(tags, 'Repeatable') end
+  -- removed repeatable tag: taskRepeat deprecated
   if localTaskList[taskNumber].taskZone then table.insert(tags, localTaskList[taskNumber].taskZone) end
   if localTaskList[taskNumber].taskMinLvl then table.insert(tags, 'level '.. tostring(localTaskList[taskNumber].taskMinLvl)) end
   taskDescriptionWindow:getChildById('taskTags'):setText(table.concat(tags, ' - '))
