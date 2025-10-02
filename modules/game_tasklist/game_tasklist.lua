@@ -71,15 +71,22 @@ local function setProgressBar(p, pb, pct)
     end
   end)
   local clamped = math.max(0, math.min(1, pct or 0))
-  -- Use parent inner width (account for 1px border each side) so the fill reaches the inner right edge
+  -- Account for 1px border on each side so fill aligns with inner edge
   local inner = math.max(0, (w or 0) - 2)
-  local target
-  if clamped >= 0.999 then
-    target = inner -- exactly fill inner width at 100%
-  else
-    target = math.floor(inner * clamped)
-  end
+  local target = (clamped >= 0.999) and inner or math.floor(inner * clamped)
   pcall(function() pb:setWidth(target) end)
+  -- If width was not final yet (layout not settled), reapply at next frame for 100%
+  if clamped >= 0.999 and addEvent then
+    addEvent(function()
+      local ww = 0
+      pcall(function()
+        ww = (p.getWidth and p:getWidth()) or 0
+        if ww <= 0 and p.getSize then local sz = p:getSize(); if sz and sz.width then ww = sz.width end end
+      end)
+      local i2 = math.max(0, (ww or 0) - 2)
+      pcall(function() pb:setWidth(i2) end)
+    end)
+  end
 end
 
 -- Build/refresh unified NPC window UI from parsed lists
