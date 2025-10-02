@@ -19,6 +19,8 @@ local npcTaskDescription = nil
 local npcTaskWidget = nil
 -- Track selection by taskNumber so we can remap the row if it moves between Active/Completed
 local npcSelectedTaskNumber = 0
+-- Auto-refresh handle for NPC window
+local npcAutoRefreshEvent = nil
 local npcTaskList = {}
 local npcRewardList = {}
 local npcUnifiedActiveList = {}
@@ -136,7 +138,17 @@ function buildUnifiedNpcUI(parsed)
         row:getChildById('taskButton'):setText(rec.taskName)
         local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 0)) end
         local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
-        local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
+        local badge = row:getChildById('taskBadge'); if badge then
+          local tag = tostring(rec.taskBadge or (rec.taskRepeat and 'Repeat' or 'Story'))
+          badge:setText(tag)
+          local lc = tag:lower()
+          if lc == 'story' then badge:setColor('#D4AF37')
+          elseif lc == 'repeat' then badge:setColor('#66cc66')
+          elseif lc == 'daily' then badge:setColor('#66ccff')
+          elseif lc == 'quest' then badge:setColor('#ffffff')
+          elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+          else badge:setColor('#D4AF37') end
+        end
         local p = row:getChildById('taskProgress') or row:getChildById('progressBg'); if p then p:setVisible(false) end
         row.onClick = modules.game_tasklist.onNpcUnifiedRowClick
       end
@@ -150,7 +162,16 @@ function buildUnifiedNpcUI(parsed)
         row:getChildById('taskButton'):setText(rec.taskName)
         local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 1)) end
         local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
-        local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
+        local badge = row:getChildById('taskBadge'); if badge then
+          local tag = tostring(rec.taskBadge or (rec.taskRepeat and 'Repeat' or 'Story'))
+          badge:setText(tag)
+          local lc = tag:lower()
+          if lc == 'story' then badge:setColor('#D4AF37')
+          elseif lc == 'repeat' then badge:setColor('#66cc66')
+          elseif lc == 'daily' then badge:setColor('#66ccff')
+          elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+          else badge:setColor('#D4AF37') end
+        end
         local p = row:getChildById('taskProgress') or row:getChildById('progressBg')
         local pb = row:getChildById('taskProgressBar') or (p and p:getChildById('progressFill'))
         local cur = tonumber(rec.taskCurrentCnt or 0) or 0
@@ -169,7 +190,16 @@ function buildUnifiedNpcUI(parsed)
         row:getChildById('taskButton'):setText(rec.taskName)
         local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 2)) end
         local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
-        local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
+        local badge = row:getChildById('taskBadge'); if badge then
+          local tag = tostring(rec.taskBadge or (rec.taskRepeat and 'Repeat' or 'Story'))
+          badge:setText(tag)
+          local lc = tag:lower()
+          if lc == 'story' then badge:setColor('#D4AF37')
+          elseif lc == 'repeat' then badge:setColor('#66cc66')
+          elseif lc == 'daily' then badge:setColor('#66ccff')
+          elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+          else badge:setColor('#D4AF37') end
+        end
         local p = row:getChildById('taskProgress'); if p then p:setVisible(false) end
         row.onClick = modules.game_tasklist.onNpcUnifiedRowClick
       end
@@ -203,6 +233,29 @@ function buildUnifiedNpcUI(parsed)
         modules.game_tasklist.onNpcUnifiedRowClick(row)
       else
         UpdateNpcTaskDescription()
+
+    -- Start auto-refresh while NPC window is visible
+    local function stopNpcAutoRefresh()
+      if npcAutoRefreshEvent and removeEvent then
+        removeEvent(npcAutoRefreshEvent)
+      end
+      npcAutoRefreshEvent = nil
+    end
+    local function startNpcAutoRefresh()
+      stopNpcAutoRefresh()
+      if not scheduleEvent then return end
+      local function tick()
+        -- if widget disappeared, stop
+        if not npcTaskWidget or (npcTaskWidget.isDestroyed and npcTaskWidget:isDestroyed()) or (npcTaskWidget.isVisible and not npcTaskWidget:isVisible()) then
+          stopNpcAutoRefresh(); return
+        end
+        local p = g_game.getProtocolGame()
+        if p then p:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
+        npcAutoRefreshEvent = scheduleEvent(tick, 1000)
+      end
+      npcAutoRefreshEvent = scheduleEvent(tick, 1000)
+    end
+    startNpcAutoRefresh()
       end
       setAcceptState('Accept', true)
     end)
@@ -419,7 +472,8 @@ function parseIncomingTaskList(buffer)
         table.insert(parseTaskList, {taskNumber = taskSplit[11], taskName = taskSplit[1], taskDesc = taskSplit[2], taskGoals = targetList,
                                      taskGoalCnt = tonumber(taskSplit[4]), taskMinLvl = tonumber(taskSplit[5]), taskMaxLvl = tonumber(taskSplit[6]),
                                      taskRepeat = toboolean(taskSplit[7]), taskState = tonumber(taskSplit[8]), taskCurrentCnt = tonumber(taskSplit[9]),
-                                     taskRewards = rewardList, taskZone = taskSplit[12], taskSourceNpc = taskSplit[13], taskHintNpc = taskSplit[14]})
+                                     taskRewards = rewardList, taskZone = taskSplit[12], taskSourceNpc = taskSplit[13], taskHintNpc = taskSplit[14],
+                                     taskBadge = (taskSplit[15] and #taskSplit[15] > 0) and taskSplit[15] or 'Story'})
     end
     return parseTaskList
 end
@@ -460,13 +514,13 @@ function applyFilters(t)
   -- status filter: 0=All, 1=Active(In Progress), 2=Completed
   -- Note: in this data model taskState=2 -> In Progress, taskState=1 -> Completed
   if levelFilterMode == 1  then
-    print("levelFilterMode: 1")
+    --print("levelFilterMode: 1")
     if tonumber(t.taskState) == 0  or tonumber(t.taskState) == 1 or tonumber(t.taskState) == 2 then return true end
   elseif levelFilterMode == 2 then
-    print("levelFilterMode: 2")
+    --print("levelFilterMode: 2")
     if tonumber(t.taskState) ~= 1 then return false end
   elseif levelFilterMode == 3 then
-    print("levelFilterMode: 3")
+    --print("levelFilterMode: 3")
     if tonumber(t.taskState) ~= 2 then return false end
   end
   return true
@@ -609,8 +663,15 @@ function buildGroupedTaskList()
       -- badge
       local badge = taskItem:getChildById('taskBadge')
       if badge then
-        local txt = localTaskList[idx].taskRepeat and 'Repeat' or 'Story'
-        badge:setText(txt)
+        local tag = tostring(localTaskList[idx].taskBadge or (localTaskList[idx].taskRepeat and 'Repeat' or 'Story'))
+        badge:setText(tag)
+        local lc = tag:lower()
+        if lc == 'story' then badge:setColor('#D4AF37')
+        elseif lc == 'repeat' then badge:setColor('#66cc66')
+        elseif lc == 'daily' then badge:setColor('#66ccff')
+        elseif lc == 'quest' then badge:setColor('#ffffff')
+        elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+        else badge:setColor('#D4AF37') end
       end
       -- selection highlight (subtle)
       if selectedListIndex == idx then
@@ -910,7 +971,18 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           row:getChildById('taskButton'):setText(rec.taskName)
           local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 0)) end
           local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
-          local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
+          local badge = row:getChildById('taskBadge');
+          if badge then
+            local tag = tostring(rec.taskBadge or (rec.taskRepeat and 'Repeat' or 'Story'))
+            badge:setText(tag)
+            local lc = tag:lower()
+            if lc == 'story' then badge:setColor('#D4AF37')
+            elseif lc == 'repeat' then badge:setColor('#66cc66')
+            elseif lc == 'daily' then badge:setColor('#66ccff')
+            elseif lc == 'quest' then badge:setColor('#ffffff')
+            elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+            else badge:setColor('#D4AF37') end
+          end
           -- Show full progress bar for completed
           local p = row:getChildById('taskProgress') or row:getChildById('progressBg')
           local pb = row:getChildById('taskProgressBar') or (p and p:getChildById('progressFill'))
@@ -926,7 +998,18 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           row:getChildById('taskButton'):setText(rec.taskName)
           local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 1)) end
           local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
-          local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
+          local badge = row:getChildById('taskBadge');
+          if badge then
+            local tag = tostring(rec.taskBadge or (rec.taskRepeat and 'Repeat' or 'Story'))
+            badge:setText(tag)
+            local lc = tag:lower()
+            if lc == 'story' then badge:setColor('#D4AF37')
+            elseif lc == 'repeat' then badge:setColor('#66cc66')
+            elseif lc == 'daily' then badge:setColor('#66ccff')
+            elseif lc == 'quest' then badge:setColor('#ffffff')
+            elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+            else badge:setColor('#D4AF37') end
+          end
           -- Support both NPC row progress ids and main TaskRecord ids
           local p = row:getChildById('taskProgress') or row:getChildById('progressBg')
           local pb = row:getChildById('taskProgressBar') or (p and p:getChildById('progressFill'))
@@ -1143,6 +1226,8 @@ function terminate()
       taskListPanel = nil
       deleteButton = nil
     end
+    if npcAutoRefreshEvent and removeEvent then removeEvent(npcAutoRefreshEvent) end
+    npcAutoRefreshEvent = nil
 end
 
 function toggle()
@@ -1732,7 +1817,10 @@ end
 function declineNpcTask()
     lastOpcode = 0
     npcSelectedTask = 0
-    npcTaskWidget:hide()
+    if npcTaskWidget then npcTaskWidget:hide() end
+    -- Stop auto-refresh when NPC window hidden
+    if npcAutoRefreshEvent and removeEvent then removeEvent(npcAutoRefreshEvent) end
+    npcAutoRefreshEvent = nil
 end
 
 -- Unified row click (left rail)
@@ -1839,7 +1927,7 @@ function updateTaskDescription(taskNumber)
   if localTaskList[taskNumber].taskRepeat then table.insert(tags, 'Repeatable') end
   if localTaskList[taskNumber].taskZone then table.insert(tags, localTaskList[taskNumber].taskZone) end
   if localTaskList[taskNumber].taskMinLvl then table.insert(tags, 'level '.. tostring(localTaskList[taskNumber].taskMinLvl)) end
-  taskDescriptionWindow:getChildById('taskTags'):setText(table.concat(tags, ' • '))
+  taskDescriptionWindow:getChildById('taskTags'):setText(table.concat(tags, ' - '))
   taskDescriptionWindow:getChildById('taskDescription'):setText(localTaskList[taskNumber].taskDesc)
   taskDescriptionWindow:getChildById('taskDescription'):setTextAutoResize(true)
   taskDescriptionWindow:getChildById('taskZoneName'):setText(localTaskList[taskNumber].taskZone)
