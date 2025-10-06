@@ -126,18 +126,7 @@ function init()
         managerAccountsButton = modules.client_topmenu.addTopRightRegularButton('hotkeysButton', tr('Manage Account'),
             nil, openManagerAccounts)
     end
-    if g_platform.isMobile() then
-        zoomInButton = modules.client_topmenu.addLeftToggleButton('zoomInButton', 'Zoom In',
-            '/images/topbuttons/zoomin', function()
-                setZoom(zoomLevel + 0.5)
-            end)
-
-        zoomOutButton = modules.client_topmenu.addLeftToggleButton('zoomOutButton', 'Zoom Out',
-            '/images/topbuttons/zoomout', function()
-                setZoom(zoomLevel - 0.5)
-            end)
-        updateZoomButtons()
-    end
+    -- Desktop-only: removed mobile zoom buttons
     if g_game.isOnline() then
         online()
     end
@@ -162,16 +151,7 @@ function terminate()
         managerAccountsButton:destroy()
         managerAccountsButton = nil
     end
-    if g_platform.isMobile() then
-        if zoomInButton and not zoomOutButton:isDestroyed() then
-            zoomInButton:destroy()
-            zoomInButton= nil
-        end
-        if zoomOutButton and not zoomOutButton:isDestroyed() then
-            zoomOutButton:destroy()
-            zoomOutButton= nil
-        end
-    end
+    -- Desktop-only: no mobile zoom buttons to destroy
 
     Keybind.delete("UI", "Toggle Top Menu")
 end
@@ -186,7 +166,7 @@ function show()
     topMenu:raise()
     topMenu:focus()
     if modules.game_interface.currentViewMode == 0 then
-        modules.game_interface.getRootPanel():addAnchor(AnchorTop, 'topMenu', AnchorBottom)
+       -- modules.game_interface.getRootPanel():addAnchor(AnchorTop, 'topMenu', AnchorBottom)
     end
 end
 
