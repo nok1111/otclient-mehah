@@ -36,9 +36,11 @@ local managerAccountsButton = nil
 local function addButton(id, description, icon, callback, panel, toggle, front)
     local class
     if toggle then
-        class = 'MainToggleButton'
+        -- Use topmenu-specific toggle button style so size follows top bar height
+        class = 'TopToggleButton'
     else
-        class = 'Button'
+        -- Use topmenu-specific button style so size follows top bar height
+        class = 'TopButton'
     end
 
     local button = panel:getChildById(id)
@@ -190,6 +192,10 @@ end
 
 function online()
     showGameButtons()
+    -- Set exactly 50% transparency when in-game
+    if topMenu then
+        topMenu:setImageColor('#ffffff80')
+    end
 
     addEvent(function()
         if modules.game_interface.currentViewMode ~= 0 and g_game.isOnline() then
@@ -235,6 +241,10 @@ end
 
 function offline()
     hideGameButtons()
+    -- Restore full opacity when offline
+    if topMenu then
+        topMenu:setImageColor('white')
+    end
     pingLabel:hide()
     if pingPanel then
         pingPanel:hide()
