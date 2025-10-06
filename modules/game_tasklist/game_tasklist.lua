@@ -55,7 +55,7 @@ end
 
 local function dbg(msg)
   local s = '[QuestUI] ' .. tostring(msg)
-  pcall(function() g_game.talk(s) end)
+  -- Print to client console only; do NOT send chat to server to avoid packet spam
   pcall(function() print(s) end)
 end
 
@@ -159,61 +159,6 @@ function buildUnifiedNpcUI(parsed)
           elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
           else badge:setColor('#D4AF37') end
         end
-
-        -- Cooldown section (if any)
-        if parsed.cooldown and #parsed.cooldown > 0 then
-          addHeader('cooldown', 'On Cooldown', #parsed.cooldown)
-          local hasZero = false
-          for i = 1, #parsed.cooldown do
-            local rec = parsed.cooldown[i]
-            local row = g_ui.createWidget('NpcTaskRecord', list)
-            row:setId('npcCooldown_'.. tostring(i))
-            row:getChildById('taskButton'):setText(rec.taskName)
-            local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/0') end
-            -- write cooldown into its own label under the name
-            local cdLbl = row:getChildById('cooldownText')
-            if cdLbl then
-              local left = tonumber(rec.taskCooldownLeftSec or 0) or 0
-              local hrs = math.floor(left / 3600)
-              local mins = math.floor((left % 3600) / 60)
-              local secs = left % 60
-              local txt = (left <= 0) and 'Ready'
-                or (hrs > 0 and string.format('Available in %dh %dm', hrs, mins))
-                or (mins > 0 and string.format('Available in %dm', mins))
-                or string.format('Available in %ds', secs)
-              cdLbl:setText(txt)
-            end
-            -- show level top-right as usual
-            local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('Level ' .. tostring(rec.taskMinLvl or 0)) end
-            -- register per-row remaining seconds for ticker
-            npcCooldownLeftByRow[row:getId()] = tonumber(rec.taskCooldownLeftSec or 0) or 0
-            if (npcCooldownLeftByRow[row:getId()] or 0) <= 0 then hasZero = true end
-            local badge = row:getChildById('taskBadge')
-            if badge then
-              local tag = tostring(rec.taskBadge or 'Story')
-              badge:setText(tag)
-              local lc = tag:lower()
-              if lc == 'story' then badge:setColor('#D4AF37')
-              elseif lc == 'repeat' then badge:setColor('#66cc66')
-              elseif lc == 'daily' then badge:setColor('#66ccff')
-              elseif lc == 'quest' then badge:setColor('#ffffff')
-              elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
-              else badge:setColor('#D4AF37') end
-            end
-            -- hide progress bar
-            local p = row:getChildById('taskProgress'); if p then p:setVisible(false) end
-            -- allow selecting to show description (Accept will be disabled)
-            row.onClick = modules.game_tasklist.onNpcUnifiedRowClick
-          end
-          -- start per-minute ticker if any cooldown has time remaining
-          local hasActive = false
-          for _, v in pairs(npcCooldownLeftByRow) do if (tonumber(v) or 0) > 0 then hasActive = true break end end
-          if hasActive and scheduleEvent then npcCooldownTickerEvent = scheduleEvent(tickNpcCooldownOnce, 60000) end
-          -- if any row already has zero, request an immediate refresh to move it into Available
-          if hasZero then
-            local p = g_game.getProtocolGame(); if p then p:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
-          end
-        end
         local p = row:getChildById('taskProgress') or row:getChildById('progressBg'); if p then p:setVisible(false) end
         row.onClick = modules.game_tasklist.onNpcUnifiedRowClick
       end
@@ -268,6 +213,61 @@ function buildUnifiedNpcUI(parsed)
         local p = row:getChildById('taskProgress'); if p then p:setVisible(false) end
         row.onClick = modules.game_tasklist.onNpcUnifiedRowClick
       end
+
+      -- Cooldown section (render once, after Completed)
+      if parsed.cooldown and #parsed.cooldown > 0 then
+        addHeader('cooldown', 'On Cooldown', #parsed.cooldown)
+        local hasZero = false
+        for i = 1, #parsed.cooldown do
+          local rec = parsed.cooldown[i]
+          local row = g_ui.createWidget('NpcTaskRecord', list)
+          row:setId('npcCooldown_'.. tostring(i))
+          row:getChildById('taskButton'):setText(rec.taskName)
+          local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/0') end
+          -- write cooldown into its own label under the name
+          local cdLbl = row:getChildById('cooldownText')
+          if cdLbl then
+            local left = tonumber(rec.taskCooldownLeftSec or 0) or 0
+            local hrs = math.floor(left / 3600)
+            local mins = math.floor((left % 3600) / 60)
+            local secs = left % 60
+            local txt = (left <= 0) and 'Ready'
+              or (hrs > 0 and string.format('Available in %dh %dm', hrs, mins))
+              or (mins > 0 and string.format('Available in %dm', mins))
+              or string.format('Available in %ds', secs)
+            cdLbl:setText(txt)
+          end
+          -- show level top-right as usual
+          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('Level ' .. tostring(rec.taskMinLvl or 0)) end
+          -- register per-row remaining seconds for ticker
+          npcCooldownLeftByRow[row:getId()] = tonumber(rec.taskCooldownLeftSec or 0) or 0
+          if (npcCooldownLeftByRow[row:getId()] or 0) <= 0 then hasZero = true end
+          local badge = row:getChildById('taskBadge')
+          if badge then
+            local tag = tostring(rec.taskBadge or 'Story')
+            badge:setText(tag)
+            local lc = tag:lower()
+            if lc == 'story' then badge:setColor('#D4AF37')
+            elseif lc == 'repeat' then badge:setColor('#66cc66')
+            elseif lc == 'daily' then badge:setColor('#66ccff')
+            elseif lc == 'quest' then badge:setColor('#ffffff')
+            elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+            else badge:setColor('#D4AF37') end
+          end
+          -- hide progress bar
+          local p = row:getChildById('taskProgress'); if p then p:setVisible(false) end
+          -- allow selecting to show description (Accept will be disabled)
+          row.onClick = modules.game_tasklist.onNpcUnifiedRowClick
+        end
+        -- start per-minute ticker if any cooldown has time remaining
+        local hasActive = false
+        for _, v in pairs(npcCooldownLeftByRow) do if (tonumber(v) or 0) > 0 then hasActive = true break end end
+        if hasActive and scheduleEvent then npcCooldownTickerEvent = scheduleEvent(tickNpcCooldownOnce, 60000) end
+        -- if any row already has zero, request an immediate refresh to move it into Available
+        if hasZero then
+          local p = g_game.getProtocolGame(); if p then p:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
+        end
+      end
     end
   end
 
@@ -300,7 +300,7 @@ function buildUnifiedNpcUI(parsed)
       else
         UpdateNpcTaskDescription()
 
-    -- Start auto-refresh while NPC window is visible
+    -- Auto-refresh helpers (disabled by default to avoid flooding server)
     local function stopNpcAutoRefresh()
       if npcAutoRefreshEvent and removeEvent then
         removeEvent(npcAutoRefreshEvent)
@@ -315,13 +315,20 @@ function buildUnifiedNpcUI(parsed)
         if not npcTaskWidget or (npcTaskWidget.isDestroyed and npcTaskWidget:isDestroyed()) or (npcTaskWidget.isVisible and not npcTaskWidget:isVisible()) then
           stopNpcAutoRefresh(); return
         end
+        -- Do not poll while an action is in flight
+        if actionInFlight then
+          npcAutoRefreshEvent = scheduleEvent(tick, 2000)
+          return
+        end
         local p = g_game.getProtocolGame()
         if p then p:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
-        npcAutoRefreshEvent = scheduleEvent(tick, 1000)
+        -- Poll at a gentler cadence to avoid flooding
+        npcAutoRefreshEvent = scheduleEvent(tick, 5000)
       end
-      npcAutoRefreshEvent = scheduleEvent(tick, 1000)
+      npcAutoRefreshEvent = scheduleEvent(tick, 5000)
     end
-    startNpcAutoRefresh()
+    -- Disabled by default; uncomment to enable gentle polling if needed
+    -- startNpcAutoRefresh()
       end
       setAcceptState('Accept', true)
     end)
@@ -502,6 +509,9 @@ function parseIncomingTaskList(buffer)
     end
 
     local cnt = tonumber(mainSplit[1])
+    -- Entry diagnostic: ensure function is being hit and show task row count
+    pcall(function() print(string.format('[Quest Parser] parseIncomingTaskList cnt=%s', tostring(cnt))) end)
+    -- removed chat log to avoid server-bound spam
     for i = 1 , cnt do
         -----------------------------------------------------------------------------------------------------------------------------------------------
         local targetList = nil
@@ -513,6 +523,12 @@ function parseIncomingTaskList(buffer)
         for split in string.gmatch(mainSplit[i+1], "(.-);") do
             table.insert(taskSplit, split)
         end
+        -- Per-row diagnostic: peek raw row prefix and basic fields
+        do
+          local rawRowDbg = tostring(mainSplit[i+1] or '')
+          pcall(function() print(string.format('[Quest Parser] Row %d raw prefix: %s', i, rawRowDbg:sub(1, 120))) end)
+          -- removed chat log to avoid server-bound spam
+        end
         -----------------------------------------------------------------------------------------------------------------------------------------------
         local goalSplit = {}
         local rewardSplit = {}
@@ -522,8 +538,31 @@ function parseIncomingTaskList(buffer)
         for split in string.gmatch(taskSplit[3], "(.-):") do
             table.insert(goalSplit, split)
         end
+        -- Debug: detect and log missing rewards segment for this task row
+        local rawRow = mainSplit[i+1] or ''
+        local seg10 = taskSplit[10]
+        if not seg10 or seg10 == '' then
+            local tname = tostring(taskSplit[1] or '<nil>')
+            local tnum  = tostring(taskSplit[11] or '<nil>')
+            local msg = string.format(
+              "[Quest Parser] Missing rewards segment (taskSplit[10]) for task #%s \"%s\" at row %d.\nRaw row: %s",
+              tnum, tname, i, rawRow
+            )
+            pcall(function() print(msg) end)
+            -- removed chat log to avoid server-bound spam
+            -- Skip this malformed row to avoid crash
+            goto continue_task
+        end
         for split in string.gmatch(taskSplit[10], "(.-)!") do
             table.insert(rewardSplit, split)
+        end
+        -- Guard: empty/malformed rewards header
+        if not rewardSplit[1] or rewardSplit[1] == '' then
+            local msg = string.format('[Quest Parser] Empty rewards header for task #%s "%s" at row %d (seg10="%s")',
+              tostring(taskSplit[11] or '<nil>'), tostring(taskSplit[1] or '<nil>'), i, tostring(taskSplit[10]))
+            pcall(function() print(msg) end)
+            -- removed chat log to avoid server-bound spam
+            goto continue_task
         end
         for split in string.gmatch(rewardSplit[1], "(.-):") do
             table.insert(basicRewardSplit, split)
@@ -601,6 +640,7 @@ function parseIncomingTaskList(buffer)
                                      taskRepeat = toboolean(taskSplit[7]), taskState = tonumber(taskSplit[8]), taskCurrentCnt = tonumber(taskSplit[9]),
                                      taskRewards = rewardList, taskZone = taskSplit[12], taskSourceNpc = taskSplit[13], taskHintNpc = taskSplit[14],
                                      taskBadge = (taskSplit[15] and #taskSplit[15] > 0) and taskSplit[15] or 'Story'})
+::continue_task::
     end
     return parseTaskList
 end
@@ -690,7 +730,10 @@ function onExtendedTaskList(protocol, opcode, buffer)
       taskDescriptionWindow:show()
       deleteButton:show()
       updateTaskDescription(selectedListIndex)
-      currentSelectedTask = tonumber(localTaskList[selectedListIndex].taskNumber) or 0
+      do
+        local raw = tostring(localTaskList[selectedListIndex].taskNumber)
+        currentSelectedTask = tonumber(raw) or tonumber(raw:match("(%d+)")) or 0
+      end
     end
     local widgetTitle = "Adventure Log ("
     widgetTitle = widgetTitle .. tostring(#localTaskList) .. "/" .. MaxTaskList .. ")"
@@ -950,13 +993,23 @@ local function parseUnifiedNpcPayload(buffer)
   for key, val in afterVer:gmatch("(activeCount):(%d+);") do act = tonumber(val) or 0 end
   for key, val in afterVer:gmatch("(completedCount):(%d+);") do cc = tonumber(val) or 0 end
   for key, val in afterVer:gmatch("(cooldownCount):(%d+);") do cd = tonumber(val) or 0 end
-  -- find the start of sections (after the third value terminator ';')
-  local startIdx = afterVer:find(';', 1, true)
-  if startIdx then startIdx = afterVer:find(';', startIdx + 1, true) end
-  if startIdx then startIdx = afterVer:find(';', startIdx + 1, true) end
-  if not startIdx then return nil end
+  -- find the start of sections (after the FOURth value terminator ';')
+  -- Header format: availCount:X;activeCount:Y;completedCount:Z;cooldownCount:W;
+  local posAfterHeader = afterVer:match("^availCount:%d+;activeCount:%d+;completedCount:%d+;cooldownCount:%d+;()")
+  local payload
+  if posAfterHeader then
+    payload = afterVer:sub(posAfterHeader)
+  else
+    -- Fallback: manually skip four semicolons to be tolerant of reordering as long as delimiters remain
+    local idx = 0
+    for _ = 1, 4 do
+      local nextSemi = afterVer:find(';', idx + 1, true)
+      if not nextSemi then return nil end
+      idx = nextSemi
+    end
+    payload = afterVer:sub(idx + 1)
+  end
   local sections = {}
-  local payload = afterVer:sub(startIdx + 1)
   for seg in payload:gmatch("(.-)%|%|") do
     sections[#sections+1] = seg
   end
@@ -996,8 +1049,10 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
     lastOpcode = opcode
     local parsed = parseUnifiedNpcPayload(buffer)
     if not parsed then dbg('parseUnifiedNpcPayload returned nil'); return end
-    -- Deduplicate: if a task appears in Completed, ensure it is not in Active; and never in Available if present elsewhere
+    -- Deduplicate with precedence: Cooldown > Active > Completed > Available
+    -- If a task appears in Cooldown, it must be removed from Active, Completed, and Available
     local function dedupeLists(p)
+      local seenCooldown = {}
       local seenCompleted = {}
       local seenActive = {}
       local function numOf(t)
@@ -1005,33 +1060,46 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
         local n = tonumber(raw) or tonumber(raw:match('(%d+)')) or raw
         return n
       end
-      -- build completed set
-      local uniqCompleted, tmp = {}, {}
-      for _, t in ipairs(p.completed or {}) do
+      -- Build cooldown set and unique list
+      local uniqCooldown = {}
+      for _, t in ipairs(p.cooldown or {}) do
         local k = numOf(t)
-        if not seenCompleted[k] then
-          table.insert(uniqCompleted, t)
-          seenCompleted[k] = true
+        if not seenCooldown[k] then
+          table.insert(uniqCooldown, t)
+          seenCooldown[k] = true
         end
       end
-      p.completed = uniqCompleted
-      -- filter active against completed and self-dup
+      p.cooldown = uniqCooldown
+
+      -- Build active set, excluding cooldown
       local uniqActive = {}
       for _, t in ipairs(p.active or {}) do
         local k = numOf(t)
-        if not seenCompleted[k] and not seenActive[k] then
+        if not seenCooldown[k] and not seenActive[k] then
           table.insert(uniqActive, t)
           seenActive[k] = true
         end
       end
       p.active = uniqActive
-      -- filter available against both
-      local uniqAvail = {}
+
+      -- Build completed set, excluding any that are in cooldown or active
+      local uniqCompleted = {}
+      for _, t in ipairs(p.completed or {}) do
+        local k = numOf(t)
+        if not seenCooldown[k] and not seenActive[k] and not seenCompleted[k] then
+          table.insert(uniqCompleted, t)
+          seenCompleted[k] = true
+        end
+      end
+      p.completed = uniqCompleted
+
+      -- Build available set, excluding any that appear in higher-precedence lists
+      local uniqAvail, seenAvail = {}, {}
       for _, t in ipairs(p.available or {}) do
         local k = numOf(t)
-        if not seenCompleted[k] and not seenActive[k] then
-          -- also avoid duplicate within available
-          if not tmp[k] then table.insert(uniqAvail, t); tmp[k] = true end
+        if not seenCooldown[k] and not seenCompleted[k] and not seenActive[k] and not seenAvail[k] then
+          table.insert(uniqAvail, t)
+          seenAvail[k] = true
         end
       end
       p.available = uniqAvail
@@ -1459,8 +1527,9 @@ function yes()
     end
     -- print("selected task do delete:"..tostring(currentSelectedTask))
     local protocol = g_game.getProtocolGame()
-    if protocol and ((tonumber(currentSelectedTask) or 0) > 0) then
-      protocol:sendExtendedOpcode(ClientOpcodes.ClientDeleteTask, tostring(currentSelectedTask))
+    local tnum = tonumber(currentSelectedTask) or tonumber(tostring(currentSelectedTask):match("(%d+)")) or 0
+    if protocol and tnum > 0 then
+      protocol:sendExtendedOpcode(ClientOpcodes.ClientDeleteTask, tostring(tnum))
     end
     deleteButton:hide()
     currentSelectedTask = 0
@@ -1476,7 +1545,19 @@ function yes()
     for taskNum, widgets in pairs(choiceWidgetsByTask) do
       choiceWidgetsByTask[taskNum] = nil
     end
+    -- Optimistically remove the task from the local list so it disappears immediately
+    if tnum > 0 then
+      local newList = {}
+      for _, t in ipairs(localTaskList or {}) do
+        local raw = tostring(t.taskNumber or '')
+        local n = tonumber(raw) or tonumber(raw:match('(%d+)'))
+        if not (n and n == tnum) then table.insert(newList, t) end
+      end
+      localTaskList = newList
+    end
     taskDescriptionWindow:hide()
+    -- Rebuild the main list UI to reflect removal immediately
+    buildGroupedTaskList()
     if protocol then
       protocol:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "")
     end
@@ -1508,7 +1589,7 @@ function onNpcTaskSelectClick(widget)
         taskId = string.sub(wdgId, 16)
     end
     npcSelectedTask = tonumber(taskId)
-    g_game.talk("[Quest] Selected index " .. tostring(npcSelectedTask) .. " (opcode=".. tostring(lastOpcode) .. ")")
+    -- selection debug removed to avoid server chat spam
     -- Persist the actual taskNumber so we can remap selection after server recompute
     do
       local list
@@ -1545,7 +1626,7 @@ function sendSelectTask(taskId)
             local payload = tostring(taskId)
             if choiceIdx and choiceIdx > 0 then payload = payload .. ':' .. tostring(choiceIdx) end
             protocol:sendExtendedOpcode(ClientOpcodes.ClientSelectReward, payload)
-            g_game.talk("[Quest] Claiming reward for task " .. tostring(taskId))
+            -- removed chat log to avoid server-bound spam
             -- proactively refresh unified NPC window so the completed task disappears after claim
             pcall(function()
               for _, delay in ipairs(REFRESH_PINGS_MS) do
@@ -1564,25 +1645,22 @@ function sendSelectTask(taskId)
             actionInFlight = true; setAcceptState(PROCESSING_LABEL, false)
         elseif lastOpcode == ExtendedIds.NpcTaskList then
             protocol:sendExtendedOpcode(ClientOpcodes.ClientSelectTask, tostring(taskId))
-            g_game.talk("[Quest] Accepting task " .. tostring(taskId))
+            -- accept debug removed to avoid server chat spam
             -- proactively refresh unified NPC window so the task moves to In Progress without closing
             pcall(function()
-              -- fire refresh pings according to schedule
-              for _, delay in ipairs(REFRESH_PINGS_MS) do
-                if delay == 0 then
-                  protocol:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "")
-                elseif scheduleEvent then
-                  scheduleEvent(function()
-                    local p = g_game.getProtocolGame(); if p then p:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
-                  end, delay)
-                end
-              end
+          -- Single immediate refresh and one gentle follow-up to avoid spam
+          if not actionInFlight then
+            protocol:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "")
+            if scheduleEvent then
+              scheduleEvent(function()
+                local p2 = g_game.getProtocolGame(); if p2 then p2:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
+              end, 300)
               -- safety: clear lock after timeout if server never answers
-              if scheduleEvent then
-                scheduleEvent(function() actionInFlight = false; setAcceptState('Accept', true) end, ACCEPT_LOCK_TIMEOUT_MS)
-              end
-            end)
-            actionInFlight = true; setAcceptState(PROCESSING_LABEL, false)
+              scheduleEvent(function() actionInFlight = false; setAcceptState('Accept', true) end, ACCEPT_LOCK_TIMEOUT_MS)
+            end
+          end
+        end)
+        actionInFlight = true; setAcceptState(PROCESSING_LABEL, false)
         elseif lastOpcode == ExtendedIds.NpcRewardList then
             -- append selected choice index if any, format: taskId:choiceIdx
             local choiceIdx = selectedChoiceByTask and selectedChoiceByTask[tonumber(taskId)] or 0
@@ -1600,7 +1678,7 @@ function sendSelectTask(taskId)
             local payload = tostring(taskId)
             if choiceIdx and choiceIdx > 0 then payload = payload .. ':' .. tostring(choiceIdx) end
             protocol:sendExtendedOpcode(ClientOpcodes.ClientSelectReward, payload)
-            g_game.talk("[Quest] Claiming reward for task " .. tostring(taskId))
+         --   g_game.talk("[Quest] Claiming reward for task " .. tostring(taskId))
             actionInFlight = true; setAcceptState('Processing...', false)
         end
     end
@@ -1955,11 +2033,11 @@ function acceptNpcTask()
       if taskListToShow and taskListToShow[npcSelectedTask] then
           local rawTaskNumber = tostring(taskListToShow[npcSelectedTask].taskNumber)
           local tnum = tonumber(rawTaskNumber) or tonumber(rawTaskNumber:match("(%d+)"))
-          g_game.talk("[Quest] Parsed taskNumber raw='" .. rawTaskNumber .. "' -> num=" .. tostring(tnum))
+          -- removed chat log to avoid server-bound spam
           if tnum and tnum > 0 then
             sendSelectTask(tnum)
           else
-            g_game.talk("[Quest] ERROR: could not parse a valid taskNumber from '" .. rawTaskNumber .. "'")
+            -- removed chat log to avoid server-bound spam
             return
           end
           table.remove(taskListToShow, npcSelectedTask)
@@ -2064,7 +2142,10 @@ function onTaskClick(widget)
   taskDescriptionWindow:show()
   deleteButton:show()
   updateTaskDescription(taskNumber)
-  currentSelectedTask = tonumber(localTaskList[taskNumber].taskNumber)
+  do
+    local raw = tostring(localTaskList[taskNumber].taskNumber)
+    currentSelectedTask = tonumber(raw) or tonumber(raw:match("(%d+)")) or 0
+  end
   -- persist selected task by taskNumber
   if currentSelectedTask and currentSelectedTask > 0 then
     g_settings.set('game_tasklist/selected_task', tostring(currentSelectedTask))
@@ -2175,9 +2256,7 @@ function updateTaskDescription(taskNumber)
     if choicePanel.destroyChildren then choicePanel:destroyChildren() end
     local choices = (localTaskList[taskNumber].taskRewards and localTaskList[taskNumber].taskRewards.choice) or {}
     -- debug: report choice count for current task
-    pcall(function()
-      g_game.talk(string.format('[QuestUI] Task #%s choice count = %d', tostring(localTaskList[taskNumber].taskNumber), tonumber(#choices or 0)))
-    end)
+    -- removed chat log to avoid server-bound spam
     if choices and #choices > 0 then
       if choiceTitle then
         choiceTitle:setVisible(true)
@@ -2230,9 +2309,7 @@ function updateTaskDescription(taskNumber)
       end
       -- let layout engine position wrappers
       -- debug: verify rows created
-      pcall(function()
-        g_game.talk(string.format('[QuestUI] Choice rows created = %d', tonumber(choicePanel:getChildCount() or 0)))
-      end)
+      -- removed chat log to avoid server-bound spam
     else
       if choiceTitle then
         choiceTitle:setVisible(true)
