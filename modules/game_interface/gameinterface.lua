@@ -229,7 +229,7 @@ function show()
     updateStretchShrink()
     logoutButton:setTooltip(tr('Logout'))
 
-    testExtendedView(0)
+    --testExtendedView(0)
 
     -- Single view mode configuration (desktop only)
     setupViewMode(0)
@@ -1157,11 +1157,13 @@ function setupViewMode(mode)
      gameLeftExtraPanel:setVisible(false)
      gameMapPanel:setOn(true)
      gameBottomPanel:setImageColor('#ffffff88')
+     gameBottomPanel:setOn(true)
+     gameBottomPanel:setVisible(true)
 
 
 
 
-     testExtendedView(0)
+     --testExtendedView(0)
  
 end
 
