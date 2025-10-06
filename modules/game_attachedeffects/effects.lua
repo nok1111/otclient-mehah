@@ -2072,3 +2072,23 @@ AttachedEffectManager.register(241, 'www', '/images/game/effects/animated', Thin
     size = { 400, 400 },
     offset = { 50, 45 }
 })
+
+AttachedEffectManager.register(242, 'npc area blue', 667, ThingCategoryEffect, {
+    speed = 0.75,
+    offset = { -96, -96, true },
+})
+
+AttachedEffectManager.register(243, 'npc area green', 667, ThingCategoryEffect, {
+    speed = 0.75,
+    offset = { -96, -96, true },
+})
+
+AttachedEffectManager.register(244, 'npc area red', 1182, ThingCategoryEffect, {
+    speed = 0.75,
+    offset = { -96, -96, true },
+})
+
+AttachedEffectManager.register(245, 'npc area inactive', 665, ThingCategoryEffect, {
+    speed = 0.75,
+    offset = { -96, -96, true },
+})
