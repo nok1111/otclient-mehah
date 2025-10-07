@@ -5,6 +5,8 @@ gameRightPanel = nil
 gameRightExtraPanel = nil
 gameLeftPanel = nil
 gameLeftExtraPanel = nil
+bottomRightPanel1 = nil
+bottomRightPanel2 = nil
 gameSelectedPanel = nil
 panelsList = {}
 panelsRadioGroup = nil
@@ -99,6 +101,8 @@ end
     gameMapPanel = gameRootPanel:getChildById('gameMapPanel')
     gameMainRightPanel = gameRootPanel:getChildById('gameMainRightPanel')
     gameRightPanel = gameRootPanel:getChildById('gameRightPanel')
+    bottomRightPanel1 = gameRootPanel:getChildById('bottomRightPanel1')
+    bottomRightPanel2 = gameRootPanel:getChildById('bottomRightPanel2')
     gameRightExtraPanel = gameRootPanel:getChildById('gameRightExtraPanel')
     gameLeftExtraPanel = gameRootPanel:getChildById('gameLeftExtraPanel')
     gameLeftPanel = gameRootPanel:getChildById('gameLeftPanel')
@@ -1084,6 +1088,14 @@ function getMainRightPanel()
     return gameMainRightPanel
 end
 
+function getBottomRightPanel1()
+    return bottomRightPanel1
+end
+
+function getBottomRightPanel2()
+    return bottomRightPanel2
+end
+
 function getLeftPanel()
     return gameLeftPanel
 end
@@ -1312,13 +1324,17 @@ function testExtendedView(mode)
        -- gameBottomPanel:getChildById('rightResizeBorder'):enable()
         bottomSplitter:setVisible(false)
 
-        gameMainRightPanel:setHeight(0)
-        gameMainRightPanel:setImageColor('alpha')
+        -- Do not collapse the panel; keep it visible and let anchors define its height
+        gameMainRightPanel:setOn(true)
+        gameMainRightPanel:setVisible(true)
+        --gameMainRightPanel:setImageSource('/images/ui/2pixel_up_frame_borderimage')
+        gameMainRightPanel:setImageBorder(4)
+        gameMainRightPanel:setHeight(250)
 
     else
         print("Normal view")
         -- Reset to normal view
-        gameMainRightPanel:setHeight(200)
+        -- Let anchors drive height; no fixed height required
         gameMainRightPanel:setMarginTop(0)
         gameMainRightPanel:setImageColor('white')
 

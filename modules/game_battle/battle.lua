@@ -76,10 +76,26 @@ end
 
 function init() -- Initiating the module (load)
     g_ui.importStyle('battlebutton')
-    battleButton = modules.game_mainpanel.addToggleButton('battleButton', tr('Battle') .. ' (Ctrl+B)',
-        '/images/options/button_battlelist', toggle, false, 2)
-    battleButton:setOn(true)
+    -- Load UI first
     battleWindow = g_ui.loadUI('battle')
+    -- Create 48x48 toggle button in bottomRightPanel2 grid
+    battleButton = modules.client_topmenu.addBottomRightPanelToggleButton(
+        'battleButton',
+        tr('Battle') .. ' (Ctrl+B)',
+        '/images/options/button_battlelist',
+        function(btn)
+            toggle()
+            -- keep checked state in sync with window visibility
+            if battleWindow then
+                btn:setChecked(battleWindow:isVisible())
+            end
+        end,
+        true
+    )
+    -- Initialize checked state after window creation
+    if battleWindow and battleButton then
+        battleButton:setChecked(battleWindow:isVisible())
+    end
 
     -- Binding Ctrl + B shortcut
     Keybind.new("Windows", "Show/hide battle list", "Ctrl+B", "")

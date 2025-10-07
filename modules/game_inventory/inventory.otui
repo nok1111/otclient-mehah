@@ -33,7 +33,7 @@ PhantomMiniWindow
   id: maininventorypanel
   draggable: true
   phantom: false
-  height: 400
+  height: 250
   &panelHeight: 250
   on: true
 

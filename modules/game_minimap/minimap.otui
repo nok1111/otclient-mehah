@@ -2,12 +2,14 @@ PhantomMiniWindow
   id: mainmappanel
   draggable: true
   phantom: false
-  &panelHeight: 116
-  height: 116
+  &panelHeight: 200
+  height: 200
 
   UIWidget
     id: minimapBorder
     anchors.top: parent.top
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
     anchors.left: parent.left
     margin-top: 5
     margin-left: 8

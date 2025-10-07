@@ -259,7 +259,7 @@ function onSetChaseMode(self, selectedChaseModeButton)
 end
 
 inventoryController = Controller:new()
-inventoryController:setUI('inventory', modules.game_interface.getMainRightPanel())
+inventoryController:setUI('inventory', modules.game_interface.getBottomRightPanel1())
 
 function inventoryController:onInit()
     refreshInventory_panel()
@@ -508,7 +508,7 @@ function extendedView(extendedView)
         end
         inventoryController.ui:setBorderColor('alpha')
         inventoryController.ui:setBorderWidth(0)
-        local mainRightPanel = modules.game_interface.getMainRightPanel()
+        local mainRightPanel = modules.game_interface.getBottomRightPanel1()
         if not mainRightPanel:hasChild(inventoryController.ui) then
             mainRightPanel:insertChild(3, inventoryController.ui)
         end

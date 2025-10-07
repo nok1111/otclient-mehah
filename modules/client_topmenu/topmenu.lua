@@ -444,6 +444,97 @@ function addTopRightToggleButton(id, description, icon, callback, front)
     return addButton(id, description, icon, callback, topLeftTogglesPanel, true, front)
 end
 
+-- Bottom-right panel grid buttons (inside bottomRightPanel2)
+local bottomRightButtonsContainer = nil
+local function ensureBottomRightButtonsContainer()
+  if not bottomRightButtonsContainer then
+    local panel2 = modules.game_interface.getBottomRightPanel2()
+    if panel2 then
+      bottomRightButtonsContainer = panel2:getChildById('bottomRightPanel2Buttons') or panel2
+      bottomRightButtonsContainer.onGeometryChange = function()
+        scheduleEvent(function() layoutBottomRightButtons() end, 1)
+      end
+    end
+  end
+  return bottomRightButtonsContainer
+end
+
+function layoutBottomRightButtons()
+  local container = ensureBottomRightButtonsContainer()
+  if not container then return end
+  local btnSize = 48
+  local spacing = 6
+  local columns = 4
+  local x0, y0 = 0, 0
+  local col, row = 0, 0
+  for _, child in ipairs(container:getChildren()) do
+    if child:isVisible() then
+      child:setWidth(btnSize)
+      child:setHeight(btnSize)
+      local x = x0 + col * (btnSize + spacing)
+      local y = y0 + row * (btnSize + spacing)
+      child:setPosition({x = x, y = y})
+      col = col + 1
+      if col >= columns then
+        col = 0
+        row = row + 1
+      end
+    end
+  end
+end
+
+function addBottomRightPanelButton(id, description, icon, callback, front)
+  local container = ensureBottomRightButtonsContainer()
+  if not container then return nil end
+  if id and container:recursiveGetChildById(id) then
+    return container:recursiveGetChildById(id)
+  end
+  local btn = g_ui.createWidget('UIButton', container)
+  if id then btn:setId(id) end
+  btn:setTooltip(description or '')
+  if icon then btn:setIcon(icon) end
+  btn:setFocusable(false)
+  btn.onClick = function(self)
+    if callback then callback(self) end
+  end
+  -- Optional front placement
+  if front then
+    container:moveChildToIndex(btn, 1)
+  end
+  layoutBottomRightButtons()
+  return btn
+end
+
+-- Toggle variant that mirrors top menu toggle buttons but sits in the bottom-right grid
+function addBottomRightPanelToggleButton(id, description, icon, callback, front)
+  local container = ensureBottomRightButtonsContainer()
+  if not container then return nil end
+  local existing = id and container:recursiveGetChildById(id) or nil
+  if existing then return existing end
+  local btn = g_ui.createWidget('UIButton', container)
+  if id then btn:setId(id) end
+  btn:setTooltip(description or '')
+  if icon then btn:setIcon(icon) end
+  btn:setFocusable(false)
+  -- Provide custom toggle state helpers since UIButton may not support checkable
+  btn._checked = false
+  function btn:isChecked() return self._checked end
+  function btn:setChecked(v)
+    self._checked = v and true or false
+    -- Optional: visual feedback when checked
+    -- self:setImageColor(v and '#ffffffff' or '#e0e0e0ff')
+  end
+  btn.onClick = function(self)
+    self:setChecked(not self:isChecked())
+    if callback then callback(self) end
+  end
+  if front then
+    container:moveChildToIndex(btn, 1)
+  end
+  layoutBottomRightButtons()
+  return btn
+end
+
 function showGameButtons()
 
     rightGameButtonsPanel:show()

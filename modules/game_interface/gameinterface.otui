@@ -61,6 +61,13 @@ UIWidget
   anchors.fill: parent
   anchors.top: parent.top
 
+  UIWidget
+    id: mainBackground
+    anchors.fill: parent
+    image-source: /images/ui/background_dark
+    image-repeated: true
+    focusable: false
+
   GameMapPanel
     id: gameMapPanel
     anchors.left: gameLeftExtraPanel.right
@@ -80,8 +87,8 @@ UIWidget
 
   GameBottomPanel
     id: gameBottomPanel
-    anchors.left: parent.left
-    anchors.right: parent.right
+    anchors.left: gameMainRightPanel.right
+    anchors.right: bottomRightPanel1.left
     anchors.top: gameBottomStatsBarPanel.bottom
     anchors.bottom: parent.bottom
 
@@ -112,18 +119,69 @@ UIWidget
 
   GameSidePanel
     id: gameMainRightPanel
-    anchors.right: parent.right
-    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.top: gameBottomStatsBarPanel.bottom
+    anchors.bottom: parent.bottom
+    width: 220
+    minimum-width: 160
     &ignoreFillAll: true
     &onlyPhantomDrop: true
-    height: 200
+    // let anchors define height within the bottom band
     focusable: false
     on: true
+    visible: true
+    image-source: /images/ui/2pixel_up_frame_borderimage
+    image-border: 4
+    image-color: #ffffffff
+
+  GameSidePanel
+    id: bottomRightPanel2
+    anchors.right: parent.right
+    anchors.top: gameBottomStatsBarPanel.bottom
+    anchors.bottom: parent.bottom
+    width: 220
+    minimum-width: 160
+    layout:
+      type: anchor
+    &ignoreFillAll: true
+    &onlyPhantomDrop: true
+    focusable: false
+    on: true
+    visible: true
+    image-source: /images/ui/2pixel_up_frame_borderimage
+    image-border: 4
+    image-color: #ffffffff
+
+
+    UIWidget
+      id: bottomRightPanel2Buttons
+      anchors.fill: parent
+      margin-top: 8
+      margin-left: 8
+      margin-right: 8
+      margin-bottom: 8
+      focusable: false
+
+  GameSidePanel
+    id: bottomRightPanel1
+    anchors.right: bottomRightPanel2.left
+    anchors.top: gameBottomStatsBarPanel.bottom
+    anchors.bottom: parent.bottom
+    width: 220
+    minimum-width: 160
+    &ignoreFillAll: true
+    &onlyPhantomDrop: true
+    focusable: false
+    on: true
+    visible: true
+    image-source: /images/ui/2pixel_up_frame_borderimage
+    image-border: 4
+    image-color: #ffffffff
 
   GameSidePanel
     id: gameRightPanel
     anchors.right: parent.right
-    anchors.top: gameMainRightPanel.bottom
+    anchors.top: parent.top
     anchors.bottom: bottomSplitter.bottom
     focusable: false
     on: true
@@ -167,7 +225,7 @@ UIWidget
     anchors.right: parent.right
     anchors.bottom: parent.bottom
     relative-margin: bottom
-    margin-bottom: 172
+    margin-bottom: 250
     image-source: /images/ui/divider_horizontal
     height: 5
     @canUpdateMargin: function(self, newMargin) if modules.client_options.getOption('dontStretchShrink') then return self:getMarginBottom() end return math.max(math.min(newMargin, self:getParent():getHeight() - 300), 160) end
