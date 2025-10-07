@@ -51,6 +51,38 @@ function init()
         })
     end
 
+-- Helper: re-anchor side panels to bottom panel at runtime
+function anchorSidePanelsToBottom()
+    -- Ensure widgets exist before touching anchors
+    if not gameBottomPanel then return end
+
+    local function reanchorBottom(widget)
+        if not widget or widget:isDestroyed() then return end
+        -- Remove any existing bottom anchor, then set it to bottom panel top
+        widget:removeAnchor(AnchorBottom)
+        widget:addAnchor(AnchorBottom, 'gameBottomPanel', AnchorTop)
+    end
+
+    reanchorBottom(gameLeftPanel)
+    reanchorBottom(gameLeftExtraPanel)
+    reanchorBottom(gameRightPanel)
+    reanchorBottom(gameRightExtraPanel)
+end
+
+-- Helper: restore side panels to anchor bottoms back to the window parent
+function restoreSidePanelsBottomToParent()
+    local function reanchorBottomParent(widget)
+        if not widget or widget:isDestroyed() then return end
+        widget:removeAnchor(AnchorBottom)
+        widget:addAnchor(AnchorBottom, 'parent', AnchorBottom)
+    end
+
+    reanchorBottomParent(gameLeftPanel)
+    reanchorBottomParent(gameLeftExtraPanel)
+    reanchorBottomParent(gameRightPanel)
+    reanchorBottomParent(gameRightExtraPanel)
+end
+
     connect(g_app, {
         onExit = save
     })
@@ -214,6 +246,8 @@ function onGameStart()
 end
 
 function onGameEnd()
+    -- Restore anchors before hiding to keep a clean base layout
+    restoreSidePanelsBottomToParent()
     hide()
 end
 
@@ -243,6 +277,7 @@ function show()
             gameMapPanel:setLimitVisibleRange(true)
         end
     end)
+
 end
 
 function hide()
@@ -1143,6 +1178,10 @@ function setupViewMode(mode)
      --gameMapPanel:setZoom(10)
      --gameMapPanel:setVisibleDimension({ width = 19, height = 13 })
 
+     gameBottomPanel:setImageColor('#ffffffff')
+    gameBottomPanel:setOn(true)
+    gameBottomPanel:setVisible(true)
+
     -- Panels: transparency/visibility
      gameLeftPanel:setImageColor('alpha')
      gameRightPanel:setImageColor('alpha')
@@ -1156,9 +1195,7 @@ function setupViewMode(mode)
      gameLeftExtraPanel:setOn(false)
      gameLeftExtraPanel:setVisible(false)
      gameMapPanel:setOn(true)
-    gameBottomPanel:setImageColor('#ffffffff')
-    gameBottomPanel:setOn(true)
-    gameBottomPanel:setVisible(true)
+    
 
 
 
