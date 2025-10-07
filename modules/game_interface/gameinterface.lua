@@ -1130,10 +1130,10 @@ function setupViewMode(mode)
     -- Map: fill entire parent (cinematic style)
     local limit = limitedZoom and not g_game.isGM()
         gameMapPanel:setLimitVisibleRange(limit)
-        gameMapPanel:setZoom(11)
+        gameMapPanel:setZoom(12)
         gameMapPanel:setVisibleDimension({
-            width = 19,
-            height = 13
+            width = 15,
+            height = 11
         })
     -- Map: fill entire parent (cinematic style)
      gameMapPanel:fill('parent')
@@ -1156,14 +1156,14 @@ function setupViewMode(mode)
      gameLeftExtraPanel:setOn(false)
      gameLeftExtraPanel:setVisible(false)
      gameMapPanel:setOn(true)
-     gameBottomPanel:setImageColor('#ffffff88')
-     gameBottomPanel:setOn(true)
-     gameBottomPanel:setVisible(true)
+    gameBottomPanel:setImageColor('#ffffffff')
+    gameBottomPanel:setOn(true)
+    gameBottomPanel:setVisible(true)
 
 
 
 
-     --testExtendedView(0)
+     testExtendedView(0)
  
 end
 
@@ -1266,13 +1266,13 @@ function testExtendedView(mode)
         end
 
 
-        gameBottomPanel:breakAnchors()
-        gameBottomPanel:bindRectToParent()
-        gameBottomPanel:setDraggable(true)
+       -- gameBottomPanel:breakAnchors()
+       -- gameBottomPanel:bindRectToParent()
+       -- gameBottomPanel:setDraggable(true)
 
-        gameBottomPanel:getChildById('rightResizeBorder'):setMaximum(gameBottomPanel:getWidth())
-        gameBottomPanel:getChildById('bottomResizeBorder'):enable()
-        gameBottomPanel:getChildById('rightResizeBorder'):enable()
+       -- gameBottomPanel:getChildById('rightResizeBorder'):setMaximum(gameBottomPanel:getWidth())
+       -- gameBottomPanel:getChildById('bottomResizeBorder'):enable()
+       -- gameBottomPanel:getChildById('rightResizeBorder'):enable()
         bottomSplitter:setVisible(false)
 
         gameMainRightPanel:setHeight(0)

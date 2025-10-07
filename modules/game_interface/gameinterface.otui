@@ -13,8 +13,8 @@ SelectColumnButton < CheckBox
     opacity: 1
 
 GameBottomPanel < UIWindow
-  image-source: /images/ui/background_dark
-  image-repeated: true
+  image-source: /images/ui/2pixel_up_frame_borderimage
+  image-border: 4
   padding-top: 6
   draggable:false
 
