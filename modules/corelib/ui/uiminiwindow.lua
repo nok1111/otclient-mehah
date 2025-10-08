@@ -248,8 +248,18 @@ function UIMiniWindow:onDragLeave(droppedWidget, mousePos)
         if not (droppedWidget) or (self.moveOnlyToMain and not (droppedWidget.onlyPhantomDrop)) or
             (not (self.moveOnlyToMain) and droppedWidget.onlyPhantomDrop) then
             local virtualParent = self:getParent()
-            virtualParent:removeChild(self)
-            self.oldParentDrag:insertChild(self.oldParentDragIndex, self)
+            -- Guard against cases where onDragEnter didn't record oldParentDrag (e.g., non-container parents)
+            if virtualParent then
+                virtualParent:removeChild(self)
+            end
+            if self.oldParentDrag and self.oldParentDragIndex then
+                self.oldParentDrag:insertChild(self.oldParentDragIndex, self)
+            else
+                -- Fallback: if no old container recorded, reattach to current parent safely
+                if virtualParent then
+                    virtualParent:addChild(self)
+                end
+            end
             self.movedWidget = nil
         end
     end
