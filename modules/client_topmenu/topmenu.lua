@@ -446,6 +446,15 @@ end
 
 -- Bottom-right panel grid buttons (inside bottomRightPanel2)
 local bottomRightButtonsContainer = nil
+local function retry(delay, tries, fn)
+  if tries <= 0 then return end
+  scheduleEvent(function()
+    local ok = fn()
+    if not ok then
+      retry(delay, tries - 1, fn)
+    end
+  end, delay)
+end
 local function ensureBottomRightButtonsContainer()
   if not bottomRightButtonsContainer then
     local panel2 = modules.game_interface.getBottomRightPanel2()
@@ -485,7 +494,16 @@ end
 
 function addBottomRightPanelButton(id, description, icon, callback, front)
   local container = ensureBottomRightButtonsContainer()
-  if not container then return nil end
+  if not container then
+    -- Interface may not be ready yet; retry up to 10 times
+    retry(150, 10, function()
+      local c = ensureBottomRightButtonsContainer()
+      if not c then return false end
+      addBottomRightPanelButton(id, description, icon, callback, front)
+      return true
+    end)
+    return nil
+  end
   if id and container:recursiveGetChildById(id) then
     return container:recursiveGetChildById(id)
   end
@@ -508,7 +526,15 @@ end
 -- Toggle variant that mirrors top menu toggle buttons but sits in the bottom-right grid
 function addBottomRightPanelToggleButton(id, description, icon, callback, front)
   local container = ensureBottomRightButtonsContainer()
-  if not container then return nil end
+  if not container then
+    retry(150, 10, function()
+      local c = ensureBottomRightButtonsContainer()
+      if not c then return false end
+      addBottomRightPanelToggleButton(id, description, icon, callback, front)
+      return true
+    end)
+    return nil
+  end
   local existing = id and container:recursiveGetChildById(id) or nil
   if existing then return existing end
   local btn = g_ui.createWidget('UIButton', container)

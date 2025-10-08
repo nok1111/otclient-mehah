@@ -1,3 +1,11 @@
+-- Helper: fetch existing bottom-right toggle button if created by brmenu
+local function ensureBattleToggle()
+    if not battleButton then
+        local btn = rootWidget and rootWidget:recursiveGetChildById('battleButton') or nil
+        if btn then battleButton = btn end
+    end
+    return battleButton
+end
 -- Global Tables
 local binaryTree = {}    -- BST
 local battleButtons = {} -- map of creature id
@@ -78,24 +86,31 @@ function init() -- Initiating the module (load)
     g_ui.importStyle('battlebutton')
     -- Load UI first
     battleWindow = g_ui.loadUI('battle')
-    -- Create 48x48 toggle button in bottomRightPanel2 grid
-    battleButton = modules.client_topmenu.addBottomRightPanelToggleButton(
-        'battleButton',
-        tr('Battle') .. ' (Ctrl+B)',
-        '/images/options/button_battlelist',
-        function(btn)
-            toggle()
-            -- keep checked state in sync with window visibility
-            if battleWindow then
-                btn:setChecked(battleWindow:isVisible())
-            end
-        end,
-        true
-    )
-    -- Initialize checked state after window creation
-    if battleWindow and battleButton then
-        battleButton:setChecked(battleWindow:isVisible())
-    end
+    -- Create the toggle button when the game actually starts, ensuring UI is ready
+    connect(g_game, {
+        onGameStart = function()
+            addEvent(function()
+                battleButton = modules.client_brmenu.addToggleButton(
+                    'battleButton',
+                    tr('Battle') .. ' (Ctrl+B)',
+                    '/images/options/button_battlelist',
+                    function(btn)
+                        toggle()
+                        if battleWindow and btn.setOn then
+                            btn:setOn(battleWindow:isVisible())
+                        end
+                    end,
+                    true
+                )
+                if battleWindow and battleButton and battleButton.setOn then
+                    battleButton:setOn(battleWindow:isVisible())
+                end
+                print('[battle] created battleButton in BR menu onGameStart')
+            end, 300)
+        end
+    })
+
+    -- Initialize checked state handled inside onGameStart creation
 
     -- Binding Ctrl + B shortcut
     Keybind.new("Windows", "Show/hide battle list", "Ctrl+B", "")
@@ -1070,27 +1085,37 @@ function onBattleButtonHoverChange(battleButton, hovered) -- Interaction with mo
 end
 
 function onOpen()
-    battleButton:setOn(true)
+    local btn = ensureBattleToggle()
+    if btn then btn:setOn(true) end
     connecting()
 end
 
 function onClose()
-    battleButton:setOn(false)
+    local btn = ensureBattleToggle()
+    if btn then btn:setOn(false) end
     disconnecting()
 end
 
 function toggle() -- Close/Open the battle window or Pressing Ctrl + B
-    if battleButton:isOn() then
+    local btn = ensureBattleToggle()
+    print('[battle] toggle clicked, btnOn=', btn and btn:isOn())
+    if btn and btn:isOn() then
         battleWindow:close()
     else
         if not battleWindow:getParent() then
             local panel = modules.game_interface
                 .findContentPanelAvailable(battleWindow, battleWindow:getMinimumHeight())
             if not panel then
+                -- Fallback to main right panel
+                panel = modules.game_interface.getMainRightPanel()
+                print('[battle] no suitable content panel, using main right panel')
+            end
+            if panel then
+                panel:addChild(battleWindow)
+            else
+                print('[battle] ERROR: could not find any panel to host battleWindow')
                 return
             end
-
-            panel:addChild(battleWindow)
         end
         battleWindow:open()
     end

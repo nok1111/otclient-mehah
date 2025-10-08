@@ -27,6 +27,108 @@ leftIncreaseSidePanels = nil
 leftDecreaseSidePanels = nil
 rightIncreaseSidePanels = nil
 rightDecreaseSidePanels = nil
+
+-- BottomRightPanel2 grid (buttons 48x48, 4 columns, 6px spacing)
+local br2Container = nil
+local function getBR2Container()
+    if not br2Container then
+        local p2 = bottomRightPanel2
+        if not p2 then return nil end
+        br2Container = p2:getChildById('bottomRightPanel2Buttons')
+        if not br2Container then
+            -- Create the container dynamically if it wasn't declared in OTUI
+            br2Container = g_ui.createWidget('UIWidget', p2)
+            br2Container:setId('bottomRightPanel2Buttons')
+            br2Container:breakAnchors()
+            br2Container:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+            br2Container:addAnchor(AnchorRight, 'parent', AnchorRight)
+            br2Container:addAnchor(AnchorTop, 'parent', AnchorTop)
+            br2Container:addAnchor(AnchorBottom, 'parent', AnchorBottom)
+            br2Container:setMarginTop(8)
+            br2Container:setMarginLeft(8)
+            br2Container:setMarginRight(8)
+            br2Container:setMarginBottom(8)
+            br2Container:setVisible(true)
+            print('[interface] Created bottomRightPanel2Buttons container dynamically')
+        end
+        if br2Container and not br2Container._hooked then
+            br2Container.onGeometryChange = function()
+                scheduleEvent(function()
+                    layoutBR2()
+                end, 1)
+            end
+            br2Container._hooked = true
+        end
+    end
+    return br2Container
+end
+
+function layoutBR2()
+    local c = getBR2Container()
+    if not c then return end
+    c:setVisible(true)
+    c:raise()
+    local btnSize, spacing, cols = 48, 6, 4
+    local col, row = 0, 0
+    for _, child in ipairs(c:getChildren()) do
+        if child:isVisible() then
+            child:setWidth(btnSize)
+            child:setHeight(btnSize)
+            child:setPosition({ x = col * (btnSize + spacing), y = row * (btnSize + spacing) })
+            col = col + 1
+            if col >= cols then
+                col = 0
+                row = row + 1
+            end
+        end
+    end
+end
+
+function addBottomRightPanel2Button(id, description, icon, onClick, front, togglable, retries)
+    retries = retries or 20
+    local c = getBR2Container()
+    if not c then
+        if retries > 0 then
+            scheduleEvent(function()
+                addBottomRightPanel2Button(id, description, icon, onClick, front, togglable, retries - 1)
+            end, 150)
+        end
+        return nil
+    end
+    local existing = id and c:recursiveGetChildById(id) or nil
+    if existing then return existing end
+
+    local btn = g_ui.createWidget('UIButton', c)
+    if id then btn:setId(id) end
+    if description then btn:setTooltip(description) end
+    if icon then
+        -- Some UIButton styles ignore setIcon; ensure we set a visual source
+        pcall(function() btn:setIcon(icon) end)
+        pcall(function() btn:setImageSource(icon) end)
+        pcall(function() btn:setImageColor('#ffffffff') end)
+    end
+    btn:setFocusable(false)
+    btn:setVisible(true)
+
+    if togglable then
+        btn._checked = false
+        function btn:isChecked() return self._checked end
+        function btn:setChecked(v) self._checked = v and true or false end
+        btn.onClick = function(self)
+            self:setChecked(not self:isChecked())
+            if onClick then onClick(self) end
+        end
+    else
+        btn.onClick = function(self)
+            if onClick then onClick(self) end
+        end
+    end
+
+    if front then c:moveChildToIndex(btn, 1) end
+    layoutBR2()
+    print(string.format('[interface] Added BR2 button id=%s tooltip=%s', tostring(id), tostring(description)))
+    return btn
+end
 hookedMenuOptions = {}
 local lastStopAction = 0
 
@@ -247,6 +349,15 @@ function onGameStart()
     leftDecreaseSidePanels:setEnabled(true)
     rightIncreaseSidePanels:setEnabled(not modules.client_options.getOption('showRightExtraPanel'))
     rightDecreaseSidePanels:setEnabled(modules.client_options.getOption('showRightExtraPanel'))
+
+    -- Ensure bottom-right button grid performs an initial layout
+    addEvent(function()
+        if bottomRightPanel2 then
+            bottomRightPanel2:setVisible(true)
+            bottomRightPanel2:raise()
+        end
+        layoutBR2()
+    end, 100)
 end
 
 function onGameEnd()

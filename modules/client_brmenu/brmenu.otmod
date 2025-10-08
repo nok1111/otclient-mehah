@@ -1,0 +1,9 @@
+Module
+  name: client_brmenu
+  description: Bottom-right panel grid menu (48x48 buttons, 4 per row)
+  author: Cascade
+  website: https://
+  sandboxed: true
+  scripts: [ brmenu ]
+  @onLoad: init()
+  @onUnload: terminate()

@@ -156,10 +156,15 @@ UIWidget
     UIWidget
       id: bottomRightPanel2Buttons
       anchors.fill: parent
+      layout:
+        type: anchor
       margin-top: 8
       margin-left: 8
       margin-right: 8
       margin-bottom: 8
+      image-source: /images/ui/windows/mainwindow
+      image-border: 5
+      image-color: #ffffffff
       focusable: false
 
   GameSidePanel
