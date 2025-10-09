@@ -65,9 +65,31 @@ function refreshContainerItems(container)
 end
 
 function toggleContainerPages(containerWindow, pages)
-    containerWindow:getChildById('miniwindowScrollBar'):setMarginTop(pages and 42 or 22)
-    containerWindow:getChildById('contentsPanel'):setMarginTop(pages and 42 or 22)
-    containerWindow:getChildById('pagePanel'):setVisible(pages)
+    -- Compute a dynamic top offset so contents sit just below the header (and page panel if visible)
+    local topBar = containerWindow:recursiveGetChildById('miniwindowTopBar')
+    local pagePanel = containerWindow:recursiveGetChildById('pagePanel')
+
+    local headerHeight = 0
+    if topBar and topBar:isVisible() then
+        -- Include top bar height plus its top margin to respect your skin
+        headerHeight = (topBar:getHeight() or 0) + (topBar:getMarginTop() or 0)
+    end
+
+    local pageHeight = 0
+    if pages and pagePanel then
+        pageHeight = (pagePanel:getHeight() or 0) + (pagePanel:getMarginTop() or 0)
+    end
+
+    -- Small extra padding to avoid tight overlap
+    local padding = 2
+    local topOffset = headerHeight + pageHeight + padding
+
+    local scrollBar = containerWindow:getChildById('miniwindowScrollBar')
+    local contents = containerWindow:getChildById('contentsPanel')
+    if scrollBar then scrollBar:setMarginTop(topOffset) end
+    if contents then contents:setMarginTop(topOffset) end
+
+    if pagePanel then pagePanel:setVisible(pages) end
 end
 
 function refreshContainerPages(container)
@@ -136,6 +158,7 @@ function onContainerOpen(container, previousContainer)
 
     containerItemWidget:setItem(container:getContainerItem())
     containerItemWidget:setPhantom(true)
+    
 
     containerPanel:destroyChildren()
     for slot = 0, container:getCapacity() - 1 do

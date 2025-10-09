@@ -254,8 +254,9 @@ function show()
 
     updateStretchShrink()
     logoutButton:setTooltip(tr('Logout'))
-
+    setupViewMode(1)
     testExtendedView(0)
+    --testExtendedView(0)
 
     if g_platform.isMobile() then
         mobileConfig.mobileWidthJoystick = modules.game_joystick.getPanel():getWidth()
@@ -1404,37 +1405,12 @@ end
 
 function testExtendedView(mode)
     local extendedView = mode == 0
-    if extendedView then
-        local buttons = {leftIncreaseSidePanels, rightIncreaseSidePanels, rightDecreaseSidePanels,
-                         leftDecreaseSidePanels}
-        for _, button in ipairs(buttons) do
-            button:hide()
-        end
-
-        if not g_platform.isMobile() then
-            gameBottomPanel:breakAnchors()
-            gameBottomPanel:addAnchor(AnchorLeft, 'gameLeftExtraPanel', AnchorRight)
-            gameBottomPanel:addAnchor(AnchorRight, 'gameRightExtraPanel', AnchorLeft)
-            gameBottomPanel:addAnchor(AnchorTop, 'gameBottomStatsBarPanel', AnchorBottom)
-            gameBottomPanel:addAnchor(AnchorBottom, 'parent', AnchorBottom)
-        end
-        gameBottomPanel:getChildById('bottomResizeBorder'):disable()
-        gameBottomPanel:getChildById('rightResizeBorder'):disable()
-
-        -- Move children back to gameMainRightPanel
-        local children = gameRightPanel:getChildren()
-        for _, child in ipairs(children) do
-            if child.moveOnlyToMain then
-                child:setParent(gameMainRightPanel)
-            end
-        end
-
-    else
+    
         print("Normal view")
         -- Reset to normal view
-        gameMainRightPanel:setHeight(200)
+        gameMainRightPanel:setHeight(0)
         gameMainRightPanel:setMarginTop(0)
-        gameMainRightPanel:setImageColor('white')
+       -- gameMainRightPanel:setImageColor('white')
 
         local buttons = {leftIncreaseSidePanels, rightIncreaseSidePanels, rightDecreaseSidePanels,
                          leftDecreaseSidePanels}
@@ -1459,15 +1435,22 @@ function testExtendedView(mode)
         end
         gameBottomPanel:getChildById('bottomResizeBorder'):disable()
         gameBottomPanel:getChildById('rightResizeBorder'):disable()
-
-        -- Move children back to gameMainRightPanel
-        local children = gameRightPanel:getChildren()
-        for _, child in ipairs(children) do
-            if child.moveOnlyToMain then
-                child:setParent(gameMainRightPanel)
+        
+            -- Move children back to gameMainRightPanel
+            local children = gameMainRightPanel:getChildren()
+            for _, child in ipairs(children) do
+                    child:setParent(gameMainRightPanel)
             end
-        end
-    end
+
+         -- Move children back to gameMainRightPanel
+         local children = gameRightPanel:getChildren()
+         for _, child in ipairs(children) do
+                 child:setParent(gameRightPanel)
+         end
+
+      
+
+
     addEvent(function()
         modules.game_console.setExtendedView(extendedView)
         modules.game_minimap.extendedView(extendedView)

@@ -4,12 +4,14 @@ PageButton < Button
 
 
 ContainerWindow < MiniWindow
+  margin-top: 32
   height: 150
+
 
   UIItem
     id: containerItemWidget
     virtual: true
-    size: 16 16
+    size: 22 22
     anchors.top: parent.top
     anchors.left: parent.left
     margin-top: 4
@@ -60,14 +62,15 @@ ContainerWindow < MiniWindow
       anchors.right: parent.right
 
   MiniWindowContents
-    padding-left: 6
-    padding-top: 6
-    padding-right: 6
-    padding-bottom: 6
+    margin-top: 10
+    padding-left: 3
+    padding-top: 3
+    padding-right: 3
+    padding-bottom: 3
     layout:
       type: grid
-      cell-size: 34 34
-      cell-spacing: 3
+      cell-size: 32 32
+      cell-spacing: 6
       flow: true
 
   UIWidget

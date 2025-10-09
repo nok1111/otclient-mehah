@@ -3,7 +3,7 @@ MiniWindow < UIMiniWindow
   icon-rect: 4 4 22 22
   icon-size: 22 22
   width: 192
-  height: 200
+  height: 210
   text-offset: 30 10
   text-align: topCenter
   image-source: /images/ui/windows/mainwindow
@@ -25,15 +25,15 @@ MiniWindow < UIMiniWindow
     anchors.left: parent.left
     margin-right: 3
     margin-left: 3
-    margin-top: 3
-    size: 258 18
+    margin-top: 6
+    size: 258 32
     phantom: true
 
   UIButton
     id: closeButton
     anchors.top: parent.top
     anchors.right: parent.right
-    margin-top: 5
+    margin-top: 8
     margin-right: 5
     size: 14 14
     image-source: /images/ui/miniwindow_buttons

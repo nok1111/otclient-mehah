@@ -506,7 +506,7 @@ function extendedView(extendedView)
             iconTopMenu:destroy()
             iconTopMenu = nil
         end
-        inventoryController.ui:setBorderColor('alpha')
+        --inventoryController.ui:setBorderColor('alpha')
         inventoryController.ui:setBorderWidth(0)
         local mainRightPanel = modules.game_interface.getMainRightPanel()
         if not mainRightPanel:hasChild(inventoryController.ui) then

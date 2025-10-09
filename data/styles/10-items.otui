@@ -39,7 +39,6 @@ Item < UIItem
     
 MainInventoryItem < UIWidget
   image-source: /images/inventory/containerslot
-  image-border: 3
   phantom: false
   size: 34 34
 
