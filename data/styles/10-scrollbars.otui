@@ -1,14 +1,19 @@
 ScrollBarSlider < UIButton
   id: sliderButton
   anchors.centerIn: parent
-  size: 13 32
   image-source: /images/ui/scrollbar/scrollbar_vertical
-  image-border: 0
+  image-border-top: 6
+  image-border-bottom: 6
+  image-border-left: 2
+  image-border-right: 2
   image-repeated: false
   image-color: #ffffffff
   $pressed:
     image-source: /images/ui/scrollbar/scrollbar_vertical_clicked
-    image-border: 0
+    image-border-top: 6
+    image-border-bottom: 6
+    image-border-left: 2
+    image-border-right: 2
     image-repeated: false
   $disabled:
     image-color: #ffffff66
@@ -23,7 +28,7 @@ VerticalScrollBar < UIScrollBar
   orientation: vertical
   width: 13
   height: 20
-  image-source: /images/ui/scrollbar/scrollbar_vertical
+  image-source: /images/ui/scrollbar/scrollbar_horizontal_middle
   image-border: 1
   image-repeated: false
   pixels-scroll: true
