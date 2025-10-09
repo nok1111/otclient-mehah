@@ -1,20 +1,22 @@
 MiniWindow < UIMiniWindow
   font: verdana-11px-antialised
-  icon-rect: 4 4 16 16
+  icon-rect: 4 4 22 22
+  icon-size: 22 22
   width: 192
   height: 200
-  text-offset: 24 5
-  text-align: topLeft
-  image-source: /images/ui/miniwindow
+  text-offset: 30 10
+  text-align: topCenter
+  image-source: /images/ui/windows/mainwindow
   image-border: 4
-  image-border-top: 23
-  image-border-bottom: 4
+  image-border-top: 32
+  image-border-bottom: 12
   focusable: false
   &minimizedHeight: 24
   color: #909090
   
+  
   $on:
-    image-border-bottom: 2
+    image-border-bottom: 12
 
   UIWidget
     id: miniwindowTopBar
@@ -98,7 +100,7 @@ MiniWindow < UIMiniWindow
     anchors.bottom: parent.bottom
     anchors.right: parent.right
     step: 14
-    margin-top: 22
+    margin-top: 34
     margin-right: 3
     margin-bottom: 3
     pixels-scroll: true
@@ -121,11 +123,14 @@ MiniWindowContents < ScrollablePanel
   id: contentsPanel
   anchors.fill: parent
   anchors.right: miniwindowScrollBar.left
-  margin-left: 3
-  margin-bottom: 3
-  margin-top: 22
-  margin-right: 1
+  margin-left: 6
+  margin-bottom: 6
+  margin-top: 32
+  margin-right: 3
   vertical-scrollbar: miniwindowScrollBar
+  image-source: /images/ui/windows/main_dark_bg
+  image-repeated: true
+  opacity: 0.95
 
 BorderlessGameWindow < UIWindow
   focusable: false

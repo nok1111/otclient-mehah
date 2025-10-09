@@ -1,15 +1,15 @@
 ScrollBarSlider < UIButton
   id: sliderButton
   anchors.centerIn: parent
-  size: 13 17
-  image-source: /images/ui/scrollbar
-  image-clip: 0 26 13 13
-  image-border: 2
+  size: 13 32
+  image-source: /images/ui/scrollbar/scrollbar_vertical
+  image-border: 0
+  image-repeated: false
   image-color: #ffffffff
-  $hover:
-    image-clip: 13 26 13 13
   $pressed:
-    image-clip: 26 26 13 13
+    image-source: /images/ui/scrollbar/scrollbar_vertical_clicked
+    image-border: 0
+    image-repeated: false
   $disabled:
     image-color: #ffffff66
 
@@ -22,24 +22,21 @@ ScrollBarValueLabel < Label
 VerticalScrollBar < UIScrollBar
   orientation: vertical
   width: 13
-  height: 39
-  image-source: /images/ui/scrollbar
-  image-clip: 39 0 13 65
+  height: 20
+  image-source: /images/ui/scrollbar/scrollbar_vertical
   image-border: 1
+  image-repeated: false
   pixels-scroll: true
 
   UIButton
     id: decrementButton
     anchors.top: parent.top
     anchors.left: parent.left
-    image-source: /images/ui/scrollbar
-    image-clip: 0 0 13 13
+    image-source: /images/ui/scrollbar/scrollbar_arrow_up
     image-color: #ffffffff
     size: 13 13
-    $hover:
-      image-clip: 13 0 13 13
     $pressed:
-      image-clip: 26 0 13 13
+      image-source: /images/ui/scrollbar/scrollbar_arrow_up_clicked
     $disabled:
       image-color: #ffffff66
 
@@ -48,13 +45,10 @@ VerticalScrollBar < UIScrollBar
     anchors.bottom: parent.bottom
     anchors.right: parent.right
     size: 13 13
-    image-source: /images/ui/scrollbar
-    image-clip: 0 13 13 13
+    image-source: /images/ui/scrollbar/scrollbar_arrow_down
     image-color: #ffffffff
-    $hover:
-      image-clip: 13 13 13 13
     $pressed:
-      image-clip: 26 13 13 13
+      image-source: /images/ui/scrollbar/scrollbar_arrow_down_clicked
     $disabled:
       image-color: #ffffff66
 
@@ -66,8 +60,7 @@ HorizontalScrollBar < UIScrollBar
   orientation: horizontal
   height: 13
   width: 39
-  image-source: /images/ui/scrollbar
-  image-clip: 0 65 52 13
+  image-source: /images/ui/scrollbar/scrollbar_horizontal
   image-border: 1
 
   $disabled:
@@ -77,14 +70,11 @@ HorizontalScrollBar < UIScrollBar
     id: decrementButton
     anchors.top: parent.top
     anchors.left: parent.left
-    image-source: /images/ui/scrollbar
-    image-clip: 0 39 13 13
+    image-source: /images/ui/scrollbar/scrollbar_arrow_left
     image-color: #ffffffff
     size: 13 13
-    $hover:
-      image-clip: 13 39 13 13
     $pressed:
-      image-clip: 26 39 13 13
+      image-source: /images/ui/scrollbar/scrollbar_arrow_left_clicked
     $disabled:
       image-color: #ffffff66
 
@@ -93,13 +83,10 @@ HorizontalScrollBar < UIScrollBar
     anchors.bottom: parent.bottom
     anchors.right: parent.right
     size: 13 13
-    image-source: /images/ui/scrollbar
-    image-clip: 0 52 13 13
+    image-source: /images/ui/scrollbar/scrollbar_arrow_right
     image-color: #ffffffff
-    $hover:
-      image-clip: 13 52 13 13
     $pressed:
-      image-clip: 26 52 13 13
+      image-source: /images/ui/scrollbar/scrollbar_arrow_right_clicked
     $disabled:
       image-color: #ffffff66
 

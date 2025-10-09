@@ -48,7 +48,7 @@ MiniWindow
 
   Panel
     id: filterPanel
-    margin-top: 26
+    margin-top: 38
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: miniwindowScrollBar.left

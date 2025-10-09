@@ -1,13 +1,14 @@
 PhantomMiniWindow
   id: mainoptionspanel
-  height: 28
-  &panelHeight: 28
+  height: 130
+  &panelHeight: 130
+  image-source: /images/ui/windows/mainwindow
   on: true
 
   UIWidget
     id: offPanel
     anchors.fill: parent
-    margin-top: 8
+    margin-top: 50
     phantom: true
 
     UIWidget
@@ -41,7 +42,7 @@ PhantomMiniWindow
   UIWidget
     id: onPanel
     anchors.fill: parent
-    margin-top: 8
+    margin-top: 20
     phantom: true
 
     UIWidget
@@ -93,7 +94,6 @@ PhantomMiniWindow
         flow: true
 
     UIWidget
-      image-source: /images/ui/vertical_line_bright
       anchors.top: options.top
       anchors.bottom: options.bottom
       anchors.left: store.right
