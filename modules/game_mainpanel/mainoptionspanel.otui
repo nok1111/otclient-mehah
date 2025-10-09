@@ -1,4 +1,4 @@
-PhantomMiniWindow
+MiniWindow
   id: mainoptionspanel
   height: 130
   &panelHeight: 130
