@@ -254,8 +254,7 @@ function show()
 
     updateStretchShrink()
     logoutButton:setTooltip(tr('Logout'))
-    setupViewMode(1)
-    testExtendedView(0)
+    
     --testExtendedView(0)
 
     if g_platform.isMobile() then
@@ -271,9 +270,11 @@ function show()
         if not limitedZoom or g_game.isGM() then
             gameMapPanel:setMaxZoomOut(513)
             gameMapPanel:setLimitVisibleRange(false)
+            setupViewMode(1)
         else
-            gameMapPanel:setMaxZoomOut(12)
+            gameMapPanel:setMaxZoomOut(13)
             gameMapPanel:setLimitVisibleRange(true)
+            setupViewMode(1)
         end
     end)
 end
@@ -1196,9 +1197,7 @@ function nextViewMode()
 end
 
 function setupViewMode(mode)
-    if mode == currentViewMode then
-        return
-    end
+
 
     leftIncreaseSidePanels:setEnabled(not modules.client_options.getOption('showLeftExtraPanel'))
     if g_platform.isMobile() then
@@ -1209,105 +1208,21 @@ function setupViewMode(mode)
     rightIncreaseSidePanels:setEnabled(not modules.client_options.getOption('showRightExtraPanel'))
     rightDecreaseSidePanels:setEnabled(modules.client_options.getOption('showRightExtraPanel'))
 
-    if g_platform.isMobile() then
-        gameRightPanel:setMarginBottom(mobileConfig.mobileHeightShortcuts)
-        gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
-    end
+ 
 
-    if currentViewMode == 2 then
-        print("currentViewMode == 2")
-
-        gameMapPanel:addAnchor(AnchorLeft, 'gameLeftPanel', AnchorRight)
-        gameMapPanel:addAnchor(AnchorRight, 'gameRightPanel', AnchorLeft)
-        gameMapPanel:addAnchor(AnchorRight, 'gameRightExtraPanel', AnchorLeft)
-        gameMapPanel:addAnchor(AnchorBottom, 'gameBottomPanel', AnchorTop)
-        gameRootPanel:addAnchor(AnchorTop, 'parent', AnchorTop)
-        gameLeftPanel:setOn(modules.client_options.getOption('showLeftPanel'))
-        gameRightExtraPanel:setOn(modules.client_options.getOption('showRightExtraPanel'))
-        gameLeftExtraPanel:setOn(modules.client_options.getOption('showLeftExtraPanel'))
-        gameLeftPanel:setImageColor('white')
-        gameRightPanel:setImageColor('white')
-        gameRightExtraPanel:setImageColor('white')
-        gameLeftExtraPanel:setImageColor('white')
-        gameLeftPanel:setMarginTop(0)
-        gameRightPanel:setMarginTop(0)
-        gameRightExtraPanel:setMarginTop(0)
-        gameLeftExtraPanel:setMarginTop(0)
-        gameBottomPanel:setImageColor('white')
-        if g_platform.isMobile() then
-            gameRightPanel:setMarginBottom(mobileConfig.mobileHeightShortcuts)
-            gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
-        end
-    end
-
-    if mode == 0 then
-        print("Mode 0")
-
-        gameMapPanel:setKeepAspectRatio(true)
-        gameMapPanel:setLimitVisibleRange(limit)
-        gameMapPanel:setZoom(12)
-        gameMapPanel:setVisibleDimension({
-            width = 15,
-            height = 11
-        })
-        if g_platform.isMobile() then
-            gameRightPanel:setMarginBottom(mobileConfig.mobileHeightShortcuts)
-            gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
-        end
-    elseif mode == 1 then
+    
         print("Mode 1")
 
         gameMapPanel:setKeepAspectRatio(true)
         gameMapPanel:setLimitVisibleRange(limit)
-        gameMapPanel:setZoom(12)
+        gameMapPanel:setZoom(13)
         gameMapPanel:setVisibleDimension({
             width = 15,
             height = 11
-        })
-        if g_platform.isMobile() then
-            gameRightPanel:setMarginBottom(mobileConfig.mobileHeightShortcuts)
-            gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
-        end
-    elseif mode == 2 then
-        print("Mode 2")
+        })     
 
-        gameMapPanel:setKeepAspectRatio(true)
-        gameMapPanel:setLimitVisibleRange(limit)
-        gameMapPanel:setZoom(12)
-        gameMapPanel:setVisibleDimension({
-            width = 15,
-            height = 11
-        })
-        gameMapPanel:fill('parent')
-        gameRootPanel:fill('parent')
-        gameLeftPanel:setImageColor('alpha')
-        gameRightPanel:setImageColor('alpha')
-        gameRightExtraPanel:setImageColor('alpha')
-        gameLeftExtraPanel:setImageColor('alpha')
-        gameLeftPanel:setOn(true)
-        gameLeftPanel:setVisible(true)
-
-
-
-
-
-        gameRightPanel:setOn(true)
-        gameRightExtraPanel:setOn(false)
-        gameRightExtraPanel:setVisible(false)
-        gameLeftExtraPanel:setOn(false)
-        gameLeftExtraPanel:setVisible(false)
-        gameMapPanel:setOn(true)
-        gameBottomPanel:setImageColor('#ffffff88')
-
-
-        if g_platform.isMobile() then
-            gameRightPanel:setMarginBottom(mobileConfig.mobileHeightShortcuts)
-            gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
-        end
-    end
-
-    currentViewMode = mode
-    testExtendedView(mode)
+    currentViewMode = 1
+    testExtendedView(1)
 end
 
 function limitZoom()
@@ -1435,6 +1350,7 @@ function testExtendedView(mode)
         end
         gameBottomPanel:getChildById('bottomResizeBorder'):disable()
         gameBottomPanel:getChildById('rightResizeBorder'):disable()
+        gameMapPanel:setZoom(13)
         
             -- Move children back to gameMainRightPanel
             local children = gameMainRightPanel:getChildren()

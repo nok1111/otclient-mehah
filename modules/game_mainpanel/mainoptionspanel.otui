@@ -5,44 +5,11 @@ MiniWindow
   image-source: /images/ui/windows/mainwindow
   on: true
 
-  UIWidget
-    id: offPanel
-    anchors.fill: parent
-    margin-top: 50
-    phantom: true
-
-    UIWidget
-      id: store
-
-      image-clip: 0 0 108 20
-      anchors.top: parent.top
-      anchors.left: parent.left
-
-      size: 108 20
-      layout:
-        type: verticalBox
-        cell-size: 108 20
-        cell-spacing: 2
-        flow: true
-      $pressed !disabled:
-        image-clip: 0 20 108 20
-
-    Button
-      size: 44 20
-      image-source: /images/options/button_enlarge
-      image-clip: 0 0 44 20
-      anchors.top: parent.top
-      anchors.right: parent.right
-      margin-right: 8
-      @onClick: changeOptionsSize()
-
-      $pressed !disabled:
-        image-clip: 0 20 44 20
 
   UIWidget
     id: onPanel
     anchors.fill: parent
-    margin-top: 20
+    margin-top: 38
     phantom: true
 
     UIWidget

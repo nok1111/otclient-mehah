@@ -24,6 +24,12 @@ HeadlessWindow < UIWindow
   image-border: 5
   padding: 5
 
+InventoryWindow < UIMiniWindow
+  image-source: /images/ui/window_headless
+  image-border: 5
+  padding: 5
+  draggable: true
+
 MainWindow < Window
   anchors.centerIn: parent
   

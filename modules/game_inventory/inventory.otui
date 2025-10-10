@@ -29,7 +29,7 @@ ConditionWidget < UIWidget
   $!first:
     margin-left: 2
 
-HeadlessWindow
+InventoryWindow
   id: maininventorypanel
   draggable: true
   phantom: false
