@@ -32,38 +32,66 @@ InventoryWindow
 
     Button
       id: floorDownBtn
-      text: '-'
       size: 20 20
       anchors.left: parent.left
       anchors.top: parent.top
+      image-source: /images/ui/buttons/arrowtopdown
+      image-clip: 0 0 20 20
       @onClick: downLayer()
+
+      $hover !disabled:
+        image-clip: 0 20 20 20
+
+      $pressed !disabled:
+        image-clip: 0 40 20 20
 
     Button
       id: floorUpBtn
-      text: '+'
       size: 20 20
       anchors.left: floorDownBtn.right
       anchors.top: parent.top
       margin-left: 2
+      image-source: /images/ui/buttons/arrowtopdown
+      image-clip: 20 0 20 20
       @onClick: upLayer()
+
+      $hover !disabled:
+        image-clip: 20 20 20 20
+
+      $pressed !disabled:
+        image-clip: 20 40 20 20
 
     Button
       id: zoomOutBtn
-      text: '-'
       size: 20 20
       anchors.left: floorUpBtn.right
       anchors.top: parent.top
-      margin-left: 2
+      margin-left: 10
+      image-source: /images/ui/buttons/plusandminus
+      image-clip: 0 0 20 20
       @onClick: zoomOut()
+
+      $hover !disabled:
+        image-clip: 0 20 20 20
+
+      $pressed !disabled:
+        image-clip: 0 40 20 20
 
     Button
       id: zoomInBtn
-      text: '+'
       size: 20 20
       anchors.left: zoomOutBtn.right
       anchors.top: parent.top
       margin-left: 2
+      image-source: /images/ui/buttons/plusandminus
+      image-clip: 20 0 20 20
       @onClick: zoomIn()
+
+      $hover !disabled:
+        image-clip: 20 20 20 20
+
+      $pressed !disabled:
+        image-clip: 20 40 20 20
 
     Button
       id: mapButton
