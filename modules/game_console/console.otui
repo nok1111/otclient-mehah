@@ -24,7 +24,7 @@ ConsolePhantomLabel < UILabel
   selection-background-color: #999999
 
 ConsoleTabBar < MoveableTabBar
-  height: 28
+  height: 34
 
 ConsoleTabBarPanel < MoveableTabBarPanel
   id: consoleTab
@@ -57,23 +57,28 @@ ConsoleTabBarPanel < MoveableTabBarPanel
     margin-bottom: 4
 
 ConsoleTabBarButton < UIButton
-  size: 96 18
-  image-source: /images/ui/console_button
-  image-clip: 0 18 96 18
+  size: 96 34
+  image-source: /images/ui/buttons/tabbar_button
+  image-clip: 0 0 116 34
+  image-border: 12
   color: #7f7f7fff
   font: verdana-11px-rounded
   &ignoreTextResize: true
   anchors.top: parent.top
   anchors.left: parent.left
-  padding: 5
+  padding: 6
   tab-spacing: 0
 
   $checked:
-    image-clip: 0 0 96 18
+    image-clip: 0 68 116 34
+    color: #dfdfdfff
+
+  $hover !checked:
+    image-clip: 0 34 116 34
     color: #dfdfdfff
 
   $on !checked:
-    image-clip: 0 18 96 18
+    image-clip: 0 0 116 34
     color: #7f7f7fff
 
 Panel
@@ -84,7 +89,7 @@ Panel
     image-source: /images/ui/2pixel_up_frame_borderimage
     image-border: 3
     anchors.fill: parent
-    margin-top: 16
+    margin-top: 36
     focusable: false
   Panel
     id: consoleContentPanel
@@ -95,7 +100,7 @@ Panel
     margin-left: 3
     margin-right: 2
     margin-bottom: 4
-    margin-top: 20
+    margin-top: 36
     padding: 1
     focusable: false
 
@@ -108,7 +113,7 @@ Panel
     margin-left: 2
     margin-right: 6
     margin-bottom: 4
-    margin-top: 20
+    margin-top: 36
     padding: 1
     focusable: false
     ScrollablePanel
@@ -144,7 +149,7 @@ Panel
     anchors.right: closeChannelButton.left
     margin-right: 20
     margin-left: 18
-    margin-bottom: -7
+    margin-bottom: 0
     tab-spacing: 2
     movable: true
 
@@ -292,23 +297,24 @@ Panel
     id: readOnlyButton
     text: ""
     anchors.right: parent.right
-    anchors.top: parent.top
+    anchors.bottom: consoleContentPanel.top
     margin-right: 5
-    size: 96 18
-    image-clip: 0 0 96 18
+    margin-bottom: 5
+    size: 96 34
+    image-clip: 0 0 116 34
     icon: /images/game/console/readOnly
     color: #dfdfdfff
     font: verdana-11px-rounded
-    padding: 5
+    padding: 6
     tab-spacing: 0
     &ignoreTextResize: true
     text-auto-resize: false
     $checked:
-      image-clip: 0 0 96 18
+      image-clip: 0 68 116 34
       color: #dfdfdfff
 
     $on !checked:
-      image-clip: 0 0 96 18
+      image-clip: 0 0 116 34
       color: #dfdfdfff
 
   UIButton

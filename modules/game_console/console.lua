@@ -2422,7 +2422,10 @@ function toggleReadOnlyMode()
         readOnlyPanel:addAnchor(AnchorRight, "parent", AnchorRight)
         readOnlyButton:removeAnchor(AnchorLeft)
         readOnlyButton:setIcon("")
-        readOnlyButton:setImageSource("/images/ui/console_button")
+        -- Use same spritesheet as MainPanelGridButton for consistent tab look
+        readOnlyButton:setImageSource("/images/ui/buttons/tabbar_button")
+        if readOnlyButton.setImageClip then readOnlyButton:setImageClip({0, 0, 116, 34}) end
+        if readOnlyButton.setImageBorder then readOnlyButton:setImageBorder(12) end
     end
     readOnlyModeEnabled = not readOnlyModeEnabled
 end
