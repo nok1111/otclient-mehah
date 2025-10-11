@@ -15,10 +15,10 @@ local COLORS = {
 }
 
 function reloadMainPanelSizes()
-    local main = modules.game_interface.getMainRightPanel()
-    local rightPanel = modules.game_interface.getRightPanel()
+    -- Only size widgets that live in the RightPanel; do not change MainRightPanel height
+    local container = modules.game_interface.getRightPanel()
 
-    if not main or not rightPanel then
+    if not container then
         return
     end
     
@@ -28,7 +28,7 @@ function reloadMainPanelSizes()
         return (rows * icon_size) + (rows * 3)
     end
 
-    for _, panel in ipairs(main:getChildren()) do
+    for _, panel in ipairs(container:getChildren()) do
         if panel.panelHeight ~= nil then
             if panel:isVisible() then
                 panel:setHeight(panel.panelHeight)
@@ -74,8 +74,8 @@ function reloadMainPanelSizes()
         end
     end
 
-    main:setHeight(height)
-    rightPanel:fitAll()
+    -- Do not alter MainRightPanel height anymore; just refit RightPanel
+    container:fitAll()
 end
 
 -- @ Options
@@ -168,7 +168,8 @@ local function createButton(id, description, image, callback, special, front, in
 end
 
 optionsController = Controller:new()
-optionsController:setUI('mainoptionspanel', modules.game_interface.getMainRightPanel())
+-- Place mainoptionspanel inside the RightPanel (not MainRightPanel)
+optionsController:setUI('mainoptionspanel', modules.game_interface.getRightPanel())
 
 function optionsController:onInit()
     createButton_large('Store shop', tr('Store shop'), '', toggleStore,
@@ -296,10 +297,10 @@ function toggleExtendedViewButtons(extended)
             end
         end
         optionsController.ui:show()
-        optionsController.ui:setHeight(28)
-        local mainRightPanel = modules.game_interface.getMainRightPanel()
-        if mainRightPanel:hasChild(optionsController.ui) then
-            mainRightPanel:moveChildToIndex(optionsController.ui, 4)
+        -- No need to manipulate MainRightPanel; ensure widget is in RightPanel near the top
+        local rightPanel = modules.game_interface.getRightPanel()
+        if rightPanel:hasChild(optionsController.ui) then
+            rightPanel:moveChildToIndex(optionsController.ui, 4)
         end
     end
     refreshOptionsSizes()
