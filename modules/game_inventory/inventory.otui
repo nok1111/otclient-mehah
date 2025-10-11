@@ -34,7 +34,7 @@ InventoryWindow
   draggable: true
   phantom: false
   image-source: /images/ui/windows/panel_border
-  height: 400
+  height: 250
   margin-top: 2
   &panelHeight: 250
   on: true

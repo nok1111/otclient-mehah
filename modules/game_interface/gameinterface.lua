@@ -1323,7 +1323,7 @@ function testExtendedView(mode)
     
         print("Normal view")
         -- Reset to normal view
-        gameMainRightPanel:setHeight(0)
+        gameMainRightPanel:setHeight(400)
         gameMainRightPanel:setMarginTop(0)
        -- gameMainRightPanel:setImageColor('white')
 
