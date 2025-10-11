@@ -493,15 +493,8 @@ function reloadInventory()
 end
 
 function extendedView(extendedView)
-    if extendedView then
-        if not iconTopMenu then
-            iconTopMenu = modules.client_topmenu.addTopRightToggleButton('inventory', tr('Show inventory'),
-                '/images/topbuttons/inventory', toggle)
-            iconTopMenu:setOn(inventoryController.ui:isVisible())
-            inventoryController.ui:setBorderColor('black')
-            inventoryController.ui:setBorderWidth(2)
-        end
-    else
+
+        print("not extendedView inventory")
         if iconTopMenu then
             iconTopMenu:destroy()
             iconTopMenu = nil
@@ -513,7 +506,7 @@ function extendedView(extendedView)
             mainRightPanel:insertChild(3, inventoryController.ui)
         end
         inventoryController.ui:show()
-    end
+
     inventoryController.ui.moveOnlyToMain = not extendedView
 
 end
