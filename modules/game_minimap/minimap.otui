@@ -3,8 +3,8 @@ InventoryWindow
   draggable: true
   phantom: false
   image-source: /images/ui/windows/mainwindow
-  &panelHeight: 200
-  height: 200
+  &panelHeight: 186
+  height: 186
 
   Label
     id: titleLabel
@@ -37,7 +37,7 @@ InventoryWindow
     anchors.left: minimapBorder.left
     anchors.right: minimapBorder.right
     anchors.top: minimapBorder.bottom
-    margin-top: 4
+    margin-top: 6
     height: 20
 
     Button
