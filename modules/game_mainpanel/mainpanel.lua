@@ -111,13 +111,15 @@ local function createButton_large(id, description, image, callback, special, fro
         -- If the button already existed from a previous session, it may carry a custom image.
         -- Reapply style and clear custom image/clip to use the styled background (tabbar_button).
         if button.setStyle then button:setStyle('MainPanelLargeButton') end
-        if button.setImageSource then button:setImageSource('') end
+        -- Ensure the proper sprite is used (avoid legacy /images/options/store_large)
+        if button.setImageSource then button:setImageSource('/images/ui/buttons/tabbar_button') end
         if button.setImageClip then button:setImageClip('') end
     end
     button:setId(id)
     button:setTooltip(description)
     button:setText(description)
-    -- Use the style's background (tabbar_button); do not override with an image
+    -- Ensure the proper sprite is used (avoid legacy /images/options/store_large)
+    if button.setImageSource then button:setImageSource('/images/ui/buttons/tabbar_button') end
     button.onMouseRelease = function(widget, mousePos, mouseButton)
         if widget:containsPoint(mousePos) and mouseButton ~= MouseMidButton then
             callback()
