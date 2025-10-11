@@ -33,7 +33,7 @@ ConsoleTabBarPanel < MoveableTabBarPanel
     id: consoleBuffer
     anchors.fill: parent
     image-source: /images/ui/3pixel_frame_borderimage
-    image-border: 4
+    image-border: 5
     padding: 1
     padding-right: 12
     padding-left: 4
