@@ -1,15 +1,16 @@
-MiniWindow
+InventoryWindow
   id: mainoptionspanel
-  height: 130
-  &panelHeight: 130
-  image-source: /images/ui/windows/mainwindow
+  height: 195
+  &panelHeight: 195
+  image-source: /images/ui/windows/panel_border
+  margin-top: 2
   on: true
 
 
   UIWidget
     id: onPanel
     anchors.fill: parent
-    margin-top: 38
+    margin-top: 10
     phantom: true
 
     UIWidget
@@ -63,6 +64,6 @@ MiniWindow
       phantom: true
       layout:
         type: grid
-        cell-size: 52 20
+        cell-size: 68 20
         cell-spacing: 4
         flow: true

@@ -67,7 +67,7 @@ function create()
     openTasksButton:setOn(false)
   end
 
-    trackerButton = modules.game_mainpanel.addToggleButton("trackerButton", tr("Tasks Tracker"), "/images/options/ButtonBossSlot", toggleTracker, false, 8)
+    trackerButton = modules.game_mainpanel.addToggleButton("trackerButton", tr("Tracker"), "/images/options/ButtonBossSlot", toggleTracker, false, 8)
     trackerButton:setOn(false)
 
   trackerWindow = g_ui.loadUI("tasks_tracker", modules.game_interface.getRightPanel())

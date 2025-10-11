@@ -113,7 +113,6 @@ local function createButton_large(id, description, image, callback, special, fro
         if button.setStyle then button:setStyle('MainPanelLargeButton') end
         -- Ensure the proper sprite is used (avoid legacy /images/options/store_large)
         if button.setImageSource then button:setImageSource('/images/ui/buttons/tabbar_button') end
-        if button.setImageClip then button:setImageClip('') end
     end
     button:setId(id)
     button:setTooltip(description)
@@ -142,7 +141,7 @@ local function createButton(id, description, image, callback, special, front, in
 
     local button = panel:getChildById(id)
     if not button then
-        button = g_ui.createWidget('ActionGridButton')
+        button = g_ui.createWidget('MainPanelGridButton')
         if front then
             panel:insertChild(1, button)
         else
@@ -152,9 +151,8 @@ local function createButton(id, description, image, callback, special, front, in
 
     button:setId(id)
     button:setTooltip(description)
-    -- size comes from ActionGridButton style (52x20), do not override
-    button:setImageSource(image)
-    button:setImageClip('0 0 20 20')
+    -- Use styled background via style; do not override here
+    if button.setText then button:setText(description) end
     button.onMouseRelease = function(widget, mousePos, mouseButton)
         if widget:containsPoint(mousePos) and mouseButton ~= MouseMidButton then
             callback()
