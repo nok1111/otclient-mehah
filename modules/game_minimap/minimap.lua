@@ -41,7 +41,7 @@ local function onPositionChange()
 end
 mapController = Controller:new()
 -- Mount minimap under RightPanel (consistent with main panel)
-mapController:setUI('minimap', modules.game_interface.getRightPanel())
+mapController:setUI('minimap', modules.game_interface.getMainRightPanel())
 
 function onChangeWorldTime(hour, minute)
     -- Day/night UI removed; keep stub to avoid nil references
@@ -200,6 +200,65 @@ end
 
 function getMiniMapUi()
     return mapController.ui.minimapBorder.minimap
+end
+
+-- Open the MapTravel UI in view-only mode (waypoints view)
+function openWaypointsView()
+    print('[Minimap] Map button clicked -> openWaypointsView')
+    -- Ensure MapTravel module/table exists; try lazy-load if missing
+    if not MapTravel or type(MapTravel) ~= 'table' then
+        if type(ensureModuleLoaded) == 'function' then
+            print('[Minimap] Attempting to load module: game_MapTravel')
+            pcall(ensureModuleLoaded, 'game_MapTravel')
+        end
+    end
+
+    -- Resolve module reference (global or namespaced)
+    local MT = MapTravel
+    if (not MT or type(MT) ~= 'table') and modules and modules.game_MapTravel then
+        MT = modules.game_MapTravel
+        -- propagate for legacy callers
+        MapTravel = MapTravel or MT
+    end
+
+    if not MT or type(MT) ~= 'table' then
+            print('[Minimap] MapTravel module not found')
+            return
+    end
+
+    -- Initialize if not already
+    if (not MT.UI) and MT.init then
+        print('[Minimap] Initializing MapTravel module')
+        pcall(MT.init)
+    end
+    if (not MT.UI) and MT.onGameStart and g_game.isOnline() then
+        print('[Minimap] Calling MapTravel.onGameStart to build UI')
+        pcall(MT.onGameStart)
+    end
+
+    -- Re-resolve MT after init in case the module exported itself under modules.game_MapTravel
+    if modules and modules.game_MapTravel then
+        MT = modules.game_MapTravel
+        MapTravel = MapTravel or MT
+    end
+
+    -- Do not toggle/close; always ensure it is shown in view-only mode
+
+    MT.viewOnly = true
+    if g_game.isOnline() then
+        if MT.updateMap then MT.updateMap() else print('[Minimap] MapTravel.updateMap missing') end
+        if MT.UI and MT.UI.viewOnlyBadge and MT.UI.viewOnlyBadge.setVisible then
+            MT.UI.viewOnlyBadge:setVisible(true)
+        end
+        if MT.show then
+            print('[Minimap] Calling MapTravel.show()')
+            MT.show()
+        else
+            print('[Minimap] MapTravel.show missing')
+        end
+    else
+        print('[Minimap] Not online; skipping open')
+    end
 end
 
 function extendedView(extendedView)

@@ -109,6 +109,6 @@ InventoryWindow
       size: 48 20
       anchors.right: parent.right
       anchors.top: parent.top
-      @onClick: return true
+      @onClick: openWaypointsView()
 
   

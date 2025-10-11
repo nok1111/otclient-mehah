@@ -16,7 +16,7 @@ local COLORS = {
 
 function reloadMainPanelSizes()
     -- Only size widgets that live in the RightPanel; do not change MainRightPanel height
-    local container = modules.game_interface.getRightPanel()
+    local container = modules.game_interface.getLeftPanel()
 
     if not container then
         return
@@ -169,7 +169,7 @@ end
 
 optionsController = Controller:new()
 -- Place mainoptionspanel inside the RightPanel (not MainRightPanel)
-optionsController:setUI('mainoptionspanel', modules.game_interface.getRightPanel())
+optionsController:setUI('mainoptionspanel', modules.game_interface.getLeftPanel())
 
 function optionsController:onInit()
     createButton_large('Store shop', tr('Store shop'), '', toggleStore,
@@ -298,9 +298,9 @@ function toggleExtendedViewButtons(extended)
         end
         optionsController.ui:show()
         -- No need to manipulate MainRightPanel; ensure widget is in RightPanel near the top
-        local rightPanel = modules.game_interface.getRightPanel()
-        if rightPanel:hasChild(optionsController.ui) then
-            rightPanel:moveChildToIndex(optionsController.ui, 4)
+        local leftPanel = modules.game_interface.getLeftPanel()
+        if leftPanel:hasChild(optionsController.ui) then
+            leftPanel:moveChildToIndex(optionsController.ui, 1)
         end
     end
     refreshOptionsSizes()

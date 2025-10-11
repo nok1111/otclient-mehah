@@ -33,7 +33,7 @@ InventoryWindow
   id: maininventorypanel
   draggable: true
   phantom: false
-  image-source: /images/ui/windows/panel_border
+  image-source: /images/ui/windows/window_header
   height: 250
   margin-top: 2
   &panelHeight: 250

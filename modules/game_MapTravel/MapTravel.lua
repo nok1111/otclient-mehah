@@ -586,6 +586,11 @@ function MapTravel.init()
 	if g_game.isOnline() then
 		MapTravel.onGameStart()
 	end
+
+    -- Expose this module table for external callers (e.g., minimap) even when sandboxed
+    if modules then
+        modules.game_MapTravel = MapTravel
+    end
 end
 
 function MapTravel.terminate()
