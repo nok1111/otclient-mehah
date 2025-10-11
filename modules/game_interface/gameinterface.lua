@@ -1369,7 +1369,9 @@ function testExtendedView(mode)
 
     addEvent(function()
         modules.game_console.setExtendedView(extendedView)
-        modules.game_minimap.extendedView(extendedView)
+
+         modules.game_minimap.extendedView(extendedView)
+
         modules.game_healthinfo.extendedView(extendedView)
         modules.game_inventory.extendedView(extendedView)
         modules.client_topmenu.extendedView(extendedView)
