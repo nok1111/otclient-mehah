@@ -79,17 +79,17 @@ function reloadMainPanelSizes()
 end
 
 -- @ Options
-local optionsShrink = false
+local optionsShrink = false -- deprecated, keep for compatibility
 local function refreshOptionsSizes()
-    if optionsShrink then
-        optionsController.ui:setOn(false)
-        optionsController.ui.onPanel:hide()
-        optionsController.ui.offPanel:show()
-    else
-        optionsController.ui:setOn(true)
-        optionsController.ui.onPanel:show()
-        optionsController.ui.offPanel:hide()
-    end
+    local ui = optionsController and optionsController.ui
+    if not ui then return end
+
+    local onPanel = ui.onPanel
+    local offPanel = ui.offPanel -- may not exist in current OTUI
+    -- Always show all buttons; ignore shrink state
+    ui:setOn(true)
+    if onPanel then onPanel:show() end
+    if offPanel then offPanel:hide() end
     reloadMainPanelSizes()
 end
 
@@ -101,17 +101,23 @@ local function createButton_large(id, description, image, callback, special, fro
 
     local button = panel:getChildById(id)
     if not button then
-        button = g_ui.createWidget('largeToggleButton')
+        button = g_ui.createWidget('MainPanelLargeButton')
         if front then
             panel:insertChild(1, button)
         else
             panel:addChild(button)
         end
+    else
+        -- If the button already existed from a previous session, it may carry a custom image.
+        -- Reapply style and clear custom image/clip to use the styled background (tabbar_button).
+        if button.setStyle then button:setStyle('MainPanelLargeButton') end
+        if button.setImageSource then button:setImageSource('') end
+        if button.setImageClip then button:setImageClip('') end
     end
     button:setId(id)
     button:setTooltip(description)
-    button:setImageSource(image)
-    button:setImageClip('0 0 108 20')
+    button:setText(description)
+    -- Use the style's background (tabbar_button); do not override with an image
     button.onMouseRelease = function(widget, mousePos, mouseButton)
         if widget:containsPoint(mousePos) and mouseButton ~= MouseMidButton then
             callback()
@@ -134,7 +140,7 @@ local function createButton(id, description, image, callback, special, front, in
 
     local button = panel:getChildById(id)
     if not button then
-        button = g_ui.createWidget('MainToggleButton')
+        button = g_ui.createWidget('ActionGridButton')
         if front then
             panel:insertChild(1, button)
         else
@@ -144,7 +150,7 @@ local function createButton(id, description, image, callback, special, front, in
 
     button:setId(id)
     button:setTooltip(description)
-    button:setSize('20 20')
+    -- size comes from ActionGridButton style (52x20), do not override
     button:setImageSource(image)
     button:setImageClip('0 0 20 20')
     button.onMouseRelease = function(widget, mousePos, mouseButton)
@@ -165,7 +171,7 @@ optionsController = Controller:new()
 optionsController:setUI('mainoptionspanel', modules.game_interface.getMainRightPanel())
 
 function optionsController:onInit()
-    createButton_large('Store shop', tr('Store shop'), '/images/options/store_large', toggleStore,
+    createButton_large('Store shop', tr('Store shop'), '', toggleStore,
     false, 8)
 
     if not optionPanel then

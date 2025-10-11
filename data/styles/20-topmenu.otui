@@ -36,16 +36,16 @@ TopToggleButton < UIButton
     icon-offset: 1 1
 
 largeToggleButton < UIButton
-  size: 108 20
+  size: 116 20
   image-source: /images/options/store_large
-  image-clip: 0 0 108 20
+  image-clip: 0 0 116 20
   image-border: 3
 
   $pressed:
-    image-clip: 0 20 108 20
+    image-clip: 0 20 116 20
 
   $on:
-    image-clip: 0 20 108 20
+    image-clip: 0 20 116 20
 	
 MainToggleButton < UIButton
   size: 20 20
