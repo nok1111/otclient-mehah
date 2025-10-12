@@ -45,7 +45,7 @@ ConsoleTabBarPanel < MoveableTabBarPanel
       align-bottom: true
     inverted-scroll: true
 
-  VerticalQtScrollBar
+  VerticalScrollBar
     id: consoleScrollBar
     anchors.top: parent.top
     anchors.bottom: parent.bottom
@@ -131,7 +131,7 @@ Panel
       layout:
         type: verticalBox
         align-bottom: true
-    VerticalQtScrollBar
+    VerticalScrollBar
       id: consoleScrollBarReadOnlyPanel
       anchors.top: parent.top
       anchors.bottom: parent.bottom

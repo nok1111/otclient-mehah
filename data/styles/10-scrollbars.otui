@@ -65,8 +65,12 @@ HorizontalScrollBar < UIScrollBar
   orientation: horizontal
   height: 13
   width: 39
-  image-source: /images/ui/scrollbar/scrollbar_horizontal
-  image-border: 1
+  image-source: /images/ui/scrollbar/scrollbar_horizontal_middle
+  image-border-left: 6
+  image-border-right: 6
+  image-border-top: 2
+  image-border-bottom: 2
+  image-repeated: false
 
   $disabled:
     color: #bbbbbb88
@@ -95,9 +99,30 @@ HorizontalScrollBar < UIScrollBar
     $disabled:
       image-color: #ffffff66
 
-  ScrollBarSlider
+  HorizontalScrollBarSlider
 
   ScrollBarValueLabel
+
+HorizontalScrollBarSlider < UIButton
+  id: sliderButton
+  anchors.centerIn: parent
+  size: 39 13
+  image-source: /images/ui/scrollbar/scrollbar_horizontal
+  image-border-top: 2
+  image-border-bottom: 2
+  image-border-left: 6
+  image-border-right: 6
+  image-repeated: false
+  image-color: #ffffffff
+  $pressed:
+    image-source: /images/ui/scrollbar/scrollbar_horizontal_clicked
+    image-border-top: 2
+    image-border-bottom: 2
+    image-border-left: 6
+    image-border-right: 6
+    image-repeated: false
+  $disabled:
+    image-color: #ffffff66
 
 VerticalScrollBarQtSlider < UIButton
   id: sliderButton

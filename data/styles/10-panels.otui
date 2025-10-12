@@ -10,6 +10,10 @@ FlatPanel < Panel
   image-source: /images/ui/panel_flat
   image-border: 1
 
+FlatPanelSpellist < Panel
+  image-source: /images/ui/panel_side
+  image-border: 1
+
 ScrollableFlatPanel < ScrollablePanel
   image-source: /images/ui/panel_flat
   image-border: 1
