@@ -369,9 +369,24 @@ function showSpellTooltip(slot)
         -- Fallback: approximate height by stacking children
         local h = 10
         h = math.max(h, 40) -- at least to show icon
-        h = h + (nameLbl.getTextSize and nameLbl:getTextSize().height or 16)
-        h = h + 2 + (statsLbl.getTextSize and statsLbl:getTextSize().height or 14)
-        h = h + 6 + (descLbl.getTextSize and descLbl:getTextSize().height or 14)
+        local nameH = 16
+        if nameLbl and nameLbl.getTextSize then
+            local ts = nameLbl:getTextSize()
+            if ts and ts.height then nameH = ts.height end
+        end
+        local statsH = 14
+        if statsLbl and statsLbl.getTextSize then
+            local ts = statsLbl:getTextSize()
+            if ts and ts.height then statsH = ts.height end
+        end
+        local descH = 14
+        if descLbl and descLbl.getTextSize then
+            local ts = descLbl:getTextSize()
+            if ts and ts.height then descH = ts.height end
+        end
+        h = h + nameH
+        h = h + 2 + statsH
+        h = h + 6 + descH
         spellTooltipWnd:setHeight(math.max(h, 60))
     end
     local mousePos = g_window.getMousePosition()
