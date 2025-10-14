@@ -23,6 +23,9 @@ lastHotkeyTime = 0
 cooldown = {}
 groupCooldown = {}
 
+-- Spell tooltip window (lazy-loaded)
+local spellTooltipWnd = nil
+
 local ProgressCallback = {
     update = 1,
     finish = 2
@@ -53,6 +56,7 @@ function init()
         onSpellCooldown = onSpellCooldown
     })
 
+    -- Prepare spell tooltip UI (loaded on first use)
 end
 
 function terminate()
@@ -87,6 +91,11 @@ function terminate()
                 updatePreviewSpell(focusedChild)
             end
         })
+    end
+
+    if spellTooltipWnd then
+        spellTooltipWnd:destroy()
+        spellTooltipWnd = nil
     end
 
 end
@@ -210,6 +219,183 @@ function setupActionBar()
         if i == 1 then
             slot:addAnchor(AnchorLeft, 'parent', AnchorLeft)
         end
+
+        -- Hover tooltip for spells assigned to slots
+        slot.onHoverChange = function(w, hovered)
+            if hovered then
+                if w.words then
+                    showSpellTooltip(w)
+                end
+            else
+                hideSpellTooltip()
+            end
+        end
+    end
+end
+
+-- Resolve spell data from an actionbar slot (by words or by itemId/client icon)
+local function resolveSlotSpell(w)
+    if not w then return nil end
+    local spell, profile, spellName
+    if w.words then
+        spell, profile, spellName = Spells.getSpellByWords(w.words)
+    elseif w.itemId and w.itemId > 0 then
+        spell, profile, spellName = Spells.getSpellByClientId(w.itemId)
+    end
+    if not spell then return nil end
+    local iconId = tonumber(Spells.getClientId(spellName))
+    local iconPath = iconId and Spells.getIconId(iconId, profile) or nil
+    return spell, profile, spellName, iconPath
+end
+
+local function ensureSpellTooltip()
+    if not spellTooltipWnd then
+        -- Try module-relative name first
+        spellTooltipWnd = g_ui.loadUI('spell_tooltip', modules.game_interface.getRootPanel())
+        if not spellTooltipWnd then
+            -- Fallback to explicit path
+            spellTooltipWnd = g_ui.loadUI('game_actionbar/spell_tooltip', modules.game_interface.getRootPanel())
+        end
+        if spellTooltipWnd then
+            spellTooltipWnd:hide()
+        else
+            g_logger.error('[actionbar] Failed to load UI spell_tooltip (both relative and module-qualified); creating programmatically')
+            -- Build a minimal tooltip programmatically
+            local root = modules.game_interface.getRootPanel()
+            local wnd = g_ui.createWidget('UIWidget', root)
+            wnd:setId('spellTooltip')
+            wnd:setSize({width = 300, height = 10})
+            wnd:setImageSource('/images/ui/tooltip-blue')
+            wnd:setImageBorder(2)
+            wnd:setPadding(6)
+            wnd:setVisible(false)
+            wnd:setPhantom(true)
+            wnd:setFocusable(false)
+
+            local icon = g_ui.createWidget('UIWidget', wnd)
+            icon:setId('icon')
+            icon:setSize({width = 34, height = 34})
+            icon:addAnchor(AnchorTop, 'parent', AnchorTop)
+            icon:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+
+            local name = g_ui.createWidget('Label', wnd)
+            name:setId('name')
+            name:addAnchor(AnchorTop, 'parent', AnchorTop)
+            name:addAnchor(AnchorLeft, 'icon', AnchorRight)
+            name:addAnchor(AnchorRight, 'parent', AnchorRight)
+            name:setMarginLeft(8)
+            name:setColor('#ffffff')
+            name:setTextAutoResize(true)
+
+            local stats = g_ui.createWidget('Label', wnd)
+            stats:setId('stats')
+            stats:addAnchor(AnchorTop, 'name', AnchorBottom)
+            stats:addAnchor(AnchorLeft, 'icon', AnchorRight)
+            stats:addAnchor(AnchorRight, 'parent', AnchorRight)
+            stats:setMarginTop(2)
+            stats:setMarginLeft(8)
+            stats:setColor('#abface')
+            stats:setTextAutoResize(true)
+
+            local desc = g_ui.createWidget('Label', wnd)
+            desc:setId('desc')
+            desc:addAnchor(AnchorTop, 'stats', AnchorBottom)
+            desc:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+            desc:addAnchor(AnchorRight, 'parent', AnchorRight)
+            desc:setMarginTop(6)
+            desc:setColor('#ccccff')
+            desc:setTextWrap(true)
+            desc:setTextAutoResize(true)
+
+            spellTooltipWnd = wnd
+        end
+    end
+end
+
+function showSpellTooltip(slot)
+    local spell, profile, spellName, iconPath = resolveSlotSpell(slot)
+    if not spell then return end
+    ensureSpellTooltip()
+    if not spellTooltipWnd then return end
+
+    local nameLbl = spellTooltipWnd:getChildById('name')
+    local iconW = spellTooltipWnd:getChildById('icon')
+    local statsLbl = spellTooltipWnd:getChildById('stats')
+    local descLbl = spellTooltipWnd:getChildById('desc')
+
+    -- Ensure auto-resize in case UI came from .otui without these flags
+    if nameLbl.setTextAutoResize then nameLbl:setTextAutoResize(true) end
+    if statsLbl.setTextAutoResize then statsLbl:setTextAutoResize(true) end
+    if descLbl.setTextAutoResize then descLbl:setTextAutoResize(true) end
+
+    nameLbl:setText(spellName or 'Unknown')
+    if iconPath then
+        iconW:setImageSource(iconPath)
+        iconW:setImageSize({ width = 34, height = 34 })
+    else
+        iconW:setImageSource('')
+    end
+
+    local mana = spell.mana or 0
+    local level = spell.level or 0
+    local baseCdMs = 0
+    if type(spell.exhaustion) == 'number' then baseCdMs = spell.exhaustion end
+
+    -- Remaining cooldown: module stores remaining ms in cooldown[spell.id]
+    local remainingMs = 0
+    if cooldown and spell.id and cooldown[spell.id] then
+        if type(cooldown[spell.id]) == 'number' then
+            remainingMs = math.max(0, cooldown[spell.id])
+        end
+    end
+
+    local cdText
+    if remainingMs > 0 then
+        cdText = string.format('Cooldown: %.1fs', remainingMs / 1000)
+    elseif baseCdMs > 0 then
+        cdText = string.format('Cooldown: %.1fs', baseCdMs / 1000)
+    else
+        cdText = 'Cooldown: —'
+    end
+
+    statsLbl:setText(string.format('Mana: %s    Level: %s    %s', tostring(mana), tostring(level), cdText))
+    descLbl:setText(spell.description or '')
+
+    -- Size/position
+    spellTooltipWnd:setWidth(300)
+    if spellTooltipWnd.resizeToContents then
+        spellTooltipWnd:resizeToContents()
+    else
+        -- Fallback: approximate height by stacking children
+        local h = 10
+        h = math.max(h, 40) -- at least to show icon
+        h = h + (nameLbl.getTextSize and nameLbl:getTextSize().height or 16)
+        h = h + 2 + (statsLbl.getTextSize and statsLbl:getTextSize().height or 14)
+        h = h + 6 + (descLbl.getTextSize and descLbl:getTextSize().height or 14)
+        spellTooltipWnd:setHeight(math.max(h, 60))
+    end
+    local mousePos = g_window.getMousePosition()
+    local winSize = g_window.getSize()
+    local w = spellTooltipWnd:getWidth()
+    local h = spellTooltipWnd:getHeight()
+    local posX
+    if mousePos.x > winSize.width / 2 then
+        posX = mousePos.x - (w + 8)
+    else
+        posX = mousePos.x + 8
+    end
+    local posY = mousePos.y + 10
+    if (posY + h) > winSize.height then
+        posY = mousePos.y - h - 10
+    end
+    spellTooltipWnd:move(posX, posY)
+    spellTooltipWnd:show()
+    spellTooltipWnd:raise()
+end
+
+function hideSpellTooltip()
+    if spellTooltipWnd then
+        spellTooltipWnd:hide()
     end
 end
 

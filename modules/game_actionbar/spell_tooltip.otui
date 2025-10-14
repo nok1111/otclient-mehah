@@ -1,0 +1,44 @@
+SpellTooltipWindow < UIWidget
+  id: spellTooltip
+  size: 280 10
+  image-source: /images/ui/tooltip-blue
+  image-border: 2
+  padding: 6
+  visible: false
+  phantom: true
+  focusable: false
+
+  UIWidget
+    id: icon
+    size: 34 34
+    anchors.top: parent.top
+    anchors.left: parent.left
+
+  Label
+    id: name
+    anchors.top: parent.top
+    anchors.left: icon.right
+    anchors.right: parent.right
+    margin-left: 8
+    color: #ffffff
+    text-auto-resize: true
+
+  Label
+    id: stats
+    anchors.top: name.bottom
+    anchors.left: icon.right
+    anchors.right: parent.right
+    margin-top: 2
+    margin-left: 8
+    color: #abface
+    text-auto-resize: true
+
+  Label
+    id: desc
+    anchors.top: stats.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 6
+    color: #ccccff
+    text-wrap: true
+    text-auto-resize: true
