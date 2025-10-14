@@ -17,6 +17,7 @@ local tooltipHeight = BASE_HEIGHT
 local longestString = 0
 
 local cachedItems = {}
+local cachedByClientId = {}
 
 local Colors = {
   Default = "#ffffff",
@@ -155,6 +156,23 @@ function init()
   itemSprite = tooltipWindow:getChildById("itemSprite")
 end
 
+-- Show tooltip using cached clientId-based payload (for virtual UIItems)
+function showTooltipByClientId(clientId)
+  local cachedItem = cachedByClientId[clientId]
+  if not cachedItem then return end
+
+  -- Fill runtime fields
+  cachedItem.id = clientId
+  if hoveredItem then
+    cachedItem.count = hoveredItem:getCount()
+  else
+    cachedItem.count = 1
+  end
+
+  g_logger.info(string.format("[tooltips] showTooltipByClientId clientId=%d name='%s' count=%d", tonumber(clientId) or -1, tostring(cachedItem.name), tonumber(cachedItem.count) or 0))
+  buildItemTooltip(cachedItem)
+end
+
 function terminate()
   disconnect(UIItem, {onHoverChange = onHoverChange})
   disconnect(g_game, {onGameEnd = resetData})
@@ -194,7 +212,8 @@ function onExtendedOpcode(protocol, code, buffer)
   if not action or not data then
     return
   end
-  if action == "new" then
+  if action == "new" or action == "newByClientId" then
+    g_logger.info(string.format("[tooltips] onExtendedOpcode action='%s'", tostring(action)))
     newTooltip(data)
   end
 end
@@ -260,8 +279,33 @@ function newTooltip(data)
     weight = _weight
   }
 
+  -- Also cache by clientId for virtual widgets to reuse
+  cachedByClientId[_itemId] = {
+    last = os.time(),
+    name = _itemName,
+    desc = _itemDesc,
+    iLvl = _itemLevel,
+    imp = _imp,
+    unidentified = _unidentified,
+    mirrored = _mirrored,
+    uLvl = _upgradeLvel,
+    uniqueName = _uniqueName,
+    rarity = _itemRarity,
+    maxAttributes = _itemMaxAttributes,
+    attributes = _itemAttributes,
+    stackable = _isStackable,
+    type = _itemType,
+    equipType = _equipType,
+    first = _firstStat,
+    second = _secondStat,
+    third = _thirdStat,
+    weight = _weight
+  }
+
   if hoveredItem and _itemId == hoveredItem:getId() then
-    showTooltip(_itemUId)
+    -- Prefer showing by clientId for virtual items
+    g_logger.info(string.format("[tooltips] caching by clientId=%d name='%s' rarity=%s", tonumber(_itemId) or -1, tostring(_itemName), tostring(_itemRarity)))
+    showTooltipByClientId(_itemId)
   end
 end
 
@@ -284,7 +328,7 @@ function onHoverChange(widget, hovered)
     end
     return
   end
-  if not item or widget:getId() == "containerItemWidget" or widget:isVirtual() or widget:getId() == 'actionBarPanel' then
+  if not item or widget:getId() == "containerItemWidget" or widget:getId() == 'actionBarPanel' then
     return
   end
 
@@ -300,12 +344,29 @@ function onHoverChange(widget, hovered)
     local itemUId = item:getActionId()
     hoveredItem = item
 
+    -- If this is a virtual widget, request by clientId and show like real items
+    if widget:isVirtual() then
+      local clientId = item:getId()
+      g_logger.info(string.format("[tooltips] hover virtual item: clientId=%d", tonumber(clientId) or -1))
+      if cachedByClientId[clientId] then
+        g_logger.info("[tooltips] cache hit by clientId; showing tooltip")
+        showTooltipByClientId(clientId)
+      else
+        if protocolGame then
+          local payload = { action = "requestByClientId", data = { clientId = clientId } }
+          g_logger.info(string.format("[tooltips] cache miss; sending opcode %d payload=%s", CODE_TOOLTIPS, tostring(json.encode(payload))))
+          protocolGame:sendExtendedOpcode(CODE_TOOLTIPS, json.encode(payload))
+        end
+      end
+      return
+    end
+
     if not cachedItems[itemUId] or itemUId == 0 then
       if protocolGame then
         local pos = item:getPosition()
-		if pos then
-        protocolGame:sendExtendedOpcode(CODE_TOOLTIPS, json.encode({pos.x, pos.y, pos.z, item:getStackPos()}))
-		end
+        if pos then
+          protocolGame:sendExtendedOpcode(CODE_TOOLTIPS, json.encode({pos.x, pos.y, pos.z, item:getStackPos()}))
+        end
       end
     else
       showTooltip(itemUId)
