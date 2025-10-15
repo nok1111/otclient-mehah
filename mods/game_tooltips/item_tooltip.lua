@@ -243,7 +243,7 @@ function newTooltip(data)
   local _uniqueName = data.uniqueName
   local _itemRarity = data.rarityId or 0
   local _itemMaxAttributes = data.maxAttr or 0
-  local _itemAttributes = data.attr
+  local _itemAttributes = data.attr or {}
   if _itemRarity ~= 0 then
     for i = _itemMaxAttributes, 1, -1 do
       _itemAttributes[i] = _itemAttributes[i]:gsub("%%%%", "%%")
@@ -257,50 +257,60 @@ function newTooltip(data)
   local _secondStat = data.hitChance or data.defense or 0
   local _thirdStat = data.shootRange or data.extraDefense or 0
   local _weight = data.weight
-  cachedItems[_itemUId] = {
-    last = os.time(),
-    name = _itemName,
-    desc = _itemDesc,
-    iLvl = _itemLevel,
-    imp = _imp,
-    unidentified = _unidentified,
-    mirrored = _mirrored,
-    uLvl = _upgradeLvel,
-    uniqueName = _uniqueName,
-    rarity = _itemRarity,
-    maxAttributes = _itemMaxAttributes,
-    attributes = _itemAttributes,
-    stackable = _isStackable,
-    type = _itemType,
-    equipType = _equipType,
-    first = _firstStat,
-    second = _secondStat,
-    third = _thirdStat,
-    weight = _weight
-  }
+  g_logger.info(string.format("[tooltips] newTooltip: uid=%s clientId=%s name='%s'", tostring(_itemUId), tostring(_itemId), tostring(_itemName)))
+  -- Cache by real item UID only if available (server 'new' path). Virtual items ('newByClientId') have no uid.
+  if type(_itemUId) == 'number' and _itemUId > 0 then
+    cachedItems[_itemUId] = {
+      last = os.time(),
+      name = _itemName,
+      desc = _itemDesc,
+      iLvl = _itemLevel,
+      imp = _imp,
+      unidentified = _unidentified,
+      mirrored = _mirrored,
+      uLvl = _upgradeLvel,
+      uniqueName = _uniqueName,
+      rarity = _itemRarity,
+      maxAttributes = _itemMaxAttributes,
+      attributes = _itemAttributes,
+      stackable = _isStackable,
+      type = _itemType,
+      equipType = _equipType,
+      first = _firstStat,
+      second = _secondStat,
+      third = _thirdStat,
+      weight = _weight
+    }
+  else
+    g_logger.info("[tooltips] skip uid cache (virtual item; no uid)")
+  end
 
   -- Also cache by clientId for virtual widgets to reuse
-  cachedByClientId[_itemId] = {
-    last = os.time(),
-    name = _itemName,
-    desc = _itemDesc,
-    iLvl = _itemLevel,
-    imp = _imp,
-    unidentified = _unidentified,
-    mirrored = _mirrored,
-    uLvl = _upgradeLvel,
-    uniqueName = _uniqueName,
-    rarity = _itemRarity,
-    maxAttributes = _itemMaxAttributes,
-    attributes = _itemAttributes,
-    stackable = _isStackable,
-    type = _itemType,
-    equipType = _equipType,
-    first = _firstStat,
-    second = _secondStat,
-    third = _thirdStat,
-    weight = _weight
-  }
+  if type(_itemId) == 'number' and _itemId > 0 then
+    cachedByClientId[_itemId] = {
+      last = os.time(),
+      name = _itemName,
+      desc = _itemDesc,
+      iLvl = _itemLevel,
+      imp = _imp,
+      unidentified = _unidentified,
+      mirrored = _mirrored,
+      uLvl = _upgradeLvel,
+      uniqueName = _uniqueName,
+      rarity = _itemRarity,
+      maxAttributes = _itemMaxAttributes,
+      attributes = _itemAttributes,
+      stackable = _isStackable,
+      type = _itemType,
+      equipType = _equipType,
+      first = _firstStat,
+      second = _secondStat,
+      third = _thirdStat,
+      weight = _weight
+    }
+  else
+    g_logger.warning(string.format("[tooltips] skip clientId cache: invalid clientId=%s", tostring(_itemId)))
+  end
 
   if hoveredItem and _itemId == hoveredItem:getId() then
     -- Prefer showing by clientId for virtual items
@@ -485,13 +495,27 @@ function buildItemTooltip(item)
 
   end
 
-  if type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" then
+  -- Extra-Defense text for melee weapons (one-handed and two-handed)
+  if (type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Axe") and third ~= 0 then
     thirdText = "Extra-Defense: " .. third
   elseif type == "Distance" or type == "Axe" then
     secondText = "Shoot Range: " .. third
   end
 
-  if (firstText and (type == "Shield" or type == "Ring" or type == "Necklace")) or (first ~= 0 and second == 0 and third == 0) then
+  -- Render primary stats. Handle cases with 1, 2 or 3 values.
+  if first ~= 0 and second ~= 0 and third ~= 0 then
+    addSeparator()
+    addEmpty(5)
+    addString(firstText, Colors.Default)
+    addString(secondText, Colors.Default)
+    addString(thirdText, Colors.Default)
+  elseif first ~= 0 and second == 0 and third ~= 0 then
+    -- E.g. one-handed melee with Extra-Defense only
+    addSeparator()
+    addEmpty(5)
+    addString(firstText, Colors.Default)
+    addString(thirdText, Colors.Default)
+  elseif (firstText and (type == "Shield" or type == "Ring" or type == "Necklace")) or (first ~= 0 and second == 0 and third == 0) then
     addSeparator()
     addEmpty(5)
     addString(firstText, Colors.Default)
