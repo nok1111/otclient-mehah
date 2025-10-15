@@ -75,6 +75,7 @@ local implicits = {
   ["attackspeed"] = "Attack Speed",
   ["wkn"] = "Weakness",
   ["eh"] = "Extra Healing",
+  ["cap"] = "Slots",
 
 
   ["maxhitpoints"] = "Increased Health",
