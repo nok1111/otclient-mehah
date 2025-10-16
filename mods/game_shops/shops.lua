@@ -1,4 +1,4 @@
-local EditShopWindow, SelectItemWindow
+﻿local EditShopWindow, SelectItemWindow
 MainWindow = {}
 
 local Config = {
@@ -537,7 +537,20 @@ local function parseShopOpen(data)
         panel.offerItem:show()
         panel.itemName:show()
         panel.priceLabel:show()
-        panel.weight:show()
+        
+        -- Request server-built tooltip once when hovering the item
+        do
+          local prevHoverHandler = panel.offerItem.onHoverChange
+          panel._tooltipRequested = false
+          panel.offerItem.onHoverChange = function(w, hovered)
+            if prevHoverHandler then prevHoverHandler(w, hovered) end
+            if hovered and not panel._tooltipRequested then
+              panel._tooltipRequested = true
+              local payload = { e = 'SHOP_TOOLTIP', d = { offer = offerId } }
+              g_game.getProtocolGame():sendExtendedOpcode(Config.opcode, json.encode(payload))
+            end
+          end
+        end
       end
 
       if not isOwnShop()then
@@ -772,6 +785,20 @@ local function parseShop(protocol, opcode, buffer)
     end
     menu:setGameMenu(true)
     menu:display(g_window.getMousePosition())
+    
+  elseif evt == 'SHOP_TOOLTIP' then
+    local offerId = data.offer
+    local text = data.text or ""
+    if not offerId then return end
+    -- Apply tooltip to the matching panel
+    for i=1,6 do
+      local p = MainWindow:getChildById('offer'..i)
+      if p and p.offerData and p.offerData.id == offerId then
+        p.offerItem:setTooltip(text)
+        p:setTooltip(text)
+        break
+      end
+    end
   end
 end
 
