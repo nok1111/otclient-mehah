@@ -1,0 +1,11 @@
+Module
+  name: game_auction
+  description: Auction House client UI
+  author: Nokturno
+  website: None
+  sandboxed: true
+  autoload: true
+  scripts: [ game_auction ]
+  @onLoad: Auction.init()
+  @onUnload: Auction.terminate()
+

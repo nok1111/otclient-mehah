@@ -2,7 +2,17 @@ AuctionWindow < MainWindow
   id: auctionWindow
   !text: tr("Auction House")
   size: 640 420
-  @onEscape: window:hide()
+  visible: false
+  @onEscape: self:hide()
+
+  Button
+    id: closeButton
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 6
+    margin-right: 6
+    text: X
+    @onClick: self:getParent():hide()
 
   Button
     id: openButton
@@ -11,7 +21,7 @@ AuctionWindow < MainWindow
     margin-top: 8
     margin-left: 8
     text: Open
-    @onClick: onOpen()
+    @onClick: Auction.onOpen()
 
   TextEdit
     id: searchEdit
@@ -28,7 +38,7 @@ AuctionWindow < MainWindow
     margin-left: 6
     margin-top: 8
     text: Search
-    @onClick: onSearch()
+    @onClick: Auction.onSearch()
 
   Panel
     id: leftPane
@@ -48,17 +58,32 @@ AuctionWindow < MainWindow
     UIScrollArea
       id: browseScroll
       anchors.left: parent.left
-      anchors.right: parent.right
+      anchors.right: browseVBar.left
       anchors.top: prev.bottom
       anchors.bottom: parent.bottom
       margin-top: 4
+      margin-right: 2
+      background-color: #1f1f1fcc
+      border: 1 #555555
+      vertical-scrollbar: browseVBar
 
       Panel
         id: browseList
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
         layout:
           type: verticalBox
           fit-children: true
           fit-children-last: true
+
+    VerticalScrollBar
+      id: browseVBar
+      anchors.right: parent.right
+      anchors.top: browseScroll.top
+      anchors.bottom: browseScroll.bottom
+      step: 20
+      on: true
 
   Panel
     id: rightPane
@@ -79,17 +104,32 @@ AuctionWindow < MainWindow
     UIScrollArea
       id: myScroll
       anchors.left: parent.left
-      anchors.right: parent.right
+      anchors.right: myVBar.left
       anchors.top: prev.bottom
       margin-top: 4
-      height: 160
+      margin-right: 2
+      height: 260
+      background-color: #1f1f1fcc
+      border: 1 #555555
+      vertical-scrollbar: myVBar
 
       Panel
         id: myList
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
         layout:
           type: verticalBox
           fit-children: true
           fit-children-last: true
+
+    VerticalScrollBar
+      id: myVBar
+      anchors.right: parent.right
+      anchors.top: myScroll.top
+      anchors.bottom: myScroll.bottom
+      step: 20
+      on: true
 
     HorizontalSeparator
       anchors.top: prev.bottom
@@ -111,11 +151,23 @@ AuctionWindow < MainWindow
       height: 38
       margin-top: 4
 
-      UIItem
+      FlatPanel
+        id: listItemBg
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        size: 38 38
+        background-color: #2a2a2acc
+        border: 1 #666666
+        phantom: true
+
+      Item
         id: listItemSlot
         anchors.left: parent.left
         size: 36 36
         virtual: true
+        &selectable: true
+        &editable: true
+        accept-drop: true
         item-id: 0
         item-count: 0
         draggable: false
@@ -141,7 +193,7 @@ AuctionWindow < MainWindow
         anchors.top: parent.top
         margin-left: 8
 
-      ScrollBar
+      HorizontalScrollBar
         id: countSpin
         anchors.left: prev.right
         anchors.top: parent.top
@@ -156,7 +208,7 @@ AuctionWindow < MainWindow
         anchors.right: parent.right
         anchors.top: parent.top
         text: List
-        @onClick: onList()
+        @onClick: Auction.onList()
 
     Panel
       id: actionsRow
@@ -170,42 +222,51 @@ AuctionWindow < MainWindow
         id: buyButton
         anchors.left: parent.left
         text: Buy Selected
-        @onClick: onBuy()
+        @onClick: Auction.onBuy()
 
       Button
         id: cancelButton
         anchors.left: buyButton.right
         margin-left: 8
         text: Cancel My Selected
-        @onClick: onCancel()
+        @onClick: Auction.onCancel()
 
 
 AuctionRow < Panel
   height: 32
+  minimum-width: 260
+  width: 280
   layout:
-    type: horizontalBox
-    fit-children: false
-  anchors.left: parent.left
-  anchors.right: parent.right
+    type: anchor
+  background-color: #222222ff
+  border: 1 #444444
+  margin-top: 2
+  margin-left: 4
+  margin-right: 4
+  
 
-  UIItem
+  Item
     id: icon
     size: 32 32
     virtual: true
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
 
   Label
     id: name
     anchors.left: icon.right
     anchors.verticalCenter: parent.verticalCenter
+    anchors.right: price.left
     margin-left: 6
     text: Item Name
-    width: 180
+    color: white
     text-auto-resize: false
     wrap: false
 
   Label
     id: price
     anchors.right: parent.right
+    margin-right: 6
     anchors.verticalCenter: parent.verticalCenter
     text: 0
     color: yellow
