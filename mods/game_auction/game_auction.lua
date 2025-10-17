@@ -44,6 +44,13 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
   elseif e == 'AH_SEARCH_DATA' then
     print(string.format('[Auction][Client] AH_SEARCH_DATA count=%d', type(d)=='table' and #d or -1))
     if not Auction.browseList then return end
+    -- reset selection and disable buy until user selects again
+    if Auction.selectedBrowseRow then
+      pcall(function() local o = Auction.selectedBrowseRow:getChildById('sel'); if o then o:setVisible(false) end end)
+    end
+    Auction.selectedListingId = nil
+    Auction.selectedBrowseRow = nil
+    if Auction.buyButton and Auction.buyButton.setEnabled then Auction.buyButton:setEnabled(false) end
     Auction.browseList:destroyChildren()
     for i = 1, #d do
       local w = g_ui.createWidget('AuctionRow', Auction.browseList)
@@ -64,21 +71,35 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       if browseScroll and browseScroll.getWidth then
         print(string.format('[Auction][Client] browseScroll size w=%d h=%d', browseScroll:getWidth(), browseScroll:getHeight()))
       end
-      w.onClick = function()
-        print(string.format('[Auction][Client] Selected listing id=%s', tostring(w.listingId)))
+      w:setFocusable(true)
+      local function selectBrowse()
+        if Auction.selectedBrowseRow and Auction.selectedBrowseRow ~= w then
+          pcall(function() local o = Auction.selectedBrowseRow:getChildById('sel'); if o then o:setVisible(false) end end)
+        end
+        local overlay = w:getChildById('sel'); if overlay then overlay:setVisible(true) end
+        Auction.selectedBrowseRow = w
         Auction.selectedListingId = w.listingId
+        if Auction.buyButton and Auction.buyButton.setEnabled then Auction.buyButton:setEnabled(true) end
+        print(string.format('[Auction][Client] Selected listing id=%s', tostring(w.listingId)))
+      end
+      w.onClick = function()
+        selectBrowse()
+      end
+      w.onMousePress = function(self, mousePos, mouseButton)
+        selectBrowse()
+        return true
       end
     end
   elseif e == 'AH_MY_DATA' then
     print(string.format('[Auction][Client] AH_MY_DATA count=%d', type(d)=='table' and #d or -1))
     if not Auction.myList then return end
+    if Auction.selectedMyRow then
+      pcall(function() local o = Auction.selectedMyRow:getChildById('sel'); if o then o:setVisible(false) end end)
+    end
+    Auction.selectedMyId = nil
+    Auction.selectedMyRow = nil
+    if Auction.cancelButton and Auction.cancelButton.setEnabled then Auction.cancelButton:setEnabled(false) end
     Auction.myList:destroyChildren()
-    -- Insert a visible test label to ensure the container paints
-    local test = g_ui.createWidget('Label', Auction.myList)
-    test:setText('TEST ROW')
-    test:setColor('white')
-    if test.setTextAutoResize then test:setTextAutoResize(true) end
-    print('[Auction][Client] inserted TEST label; myList child count:', Auction.myList:getChildCount())
     for i = 1, #d do
       local w = g_ui.createWidget('AuctionRow', Auction.myList)
       w:getChildById('name'):setText(d[i].name .. ' x'..d[i].count)
@@ -98,9 +119,23 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       if myScroll and myScroll.getWidth then
         print(string.format('[Auction][Client] myScroll size w=%d h=%d', myScroll:getWidth(), myScroll:getHeight()))
       end
-      w.onClick = function()
-        print(string.format('[Auction][Client] Selected my listing id=%s', tostring(w.listingId)))
+      w:setFocusable(true)
+      local function selectMy()
+        if Auction.selectedMyRow and Auction.selectedMyRow ~= w then
+          pcall(function() local o = Auction.selectedMyRow:getChildById('sel'); if o then o:setVisible(false) end end)
+        end
+        local overlay = w:getChildById('sel'); if overlay then overlay:setVisible(true) end
+        Auction.selectedMyRow = w
         Auction.selectedMyId = w.listingId
+        if Auction.cancelButton and Auction.cancelButton.setEnabled then Auction.cancelButton:setEnabled(true) end
+        print(string.format('[Auction][Client] Selected my listing id=%s', tostring(w.listingId)))
+      end
+      w.onClick = function()
+        selectMy()
+      end
+      w.onMousePress = function(self, mousePos, mouseButton)
+        selectMy()
+        return true
       end
     end
   elseif e == 'AH_LIST_ACK' then
@@ -136,17 +171,17 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
   end
 end
 
-function Auction.onDropToListSlot(self, mousePos, draggedWidget)
-  print('[Auction][Client] onDropToListSlot triggered')
+function Auction.onDropToListSlot(self, draggedWidget, mousePos)
+  print('[Auction][Client] onDropToListSlot triggered (OTUI)')
   if not draggedWidget then return false end
   -- prefer direct item; fallback to currentDragThing
-  local itemWidgetItem = draggedWidget.item
+  local itemWidgetItem = draggedWidget.getItem and draggedWidget:getItem() or draggedWidget.item
   local dragThing = draggedWidget.currentDragThing
   if not itemWidgetItem and not dragThing then return false end
-  if itemWidgetItem then
+  if itemWidgetItem and Auction.listItemSlot and Auction.listItemSlot.setItem then
     Auction.listItemSlot:setItem(itemWidgetItem)
   end
-  local draggedItem = draggedWidget.currentDragThing
+  local draggedItem = dragThing
   if draggedItem and draggedItem.getPosition then
     Auction.listFromPos = draggedItem:getPosition()
     print(string.format('[Auction][Client] Captured pos x=%s y=%s z=%s', tostring(Auction.listFromPos.x), tostring(Auction.listFromPos.y), tostring(Auction.listFromPos.z)))
@@ -231,6 +266,11 @@ function Auction.onGameStart()
   if listButton   then listButton.onClick   = Auction.onList   end
   if buyButton    then buyButton.onClick    = Auction.onBuy    end
   if cancelButton then cancelButton.onClick = Auction.onCancel end
+  -- store buttons for selection enable/disable logic
+  Auction.buyButton = buyButton
+  Auction.cancelButton = cancelButton
+  if Auction.buyButton and Auction.buyButton.setEnabled then Auction.buyButton:setEnabled(false) end
+  if Auction.cancelButton and Auction.cancelButton.setEnabled then Auction.cancelButton:setEnabled(false) end
 
   -- If server already told us to open before UI existed, open now
   if Auction.pendingOpen then
@@ -295,6 +335,12 @@ function Auction.onOpen()
   Auction.send('AH_OPEN', {})
 end
 
+function Auction.onRefresh()
+  print('[Auction][Client] onRefresh: reloading lists')
+  Auction.send('AH_SEARCH', { limit = 25, offset = 0 })
+  Auction.send('AH_MY', {})
+end
+
 function Auction.onSearch()
   print(string.format('[Auction][Client] onSearch: name=%s', tostring(Auction.searchEdit:getText())))
   local name = Auction.searchEdit:getText()
@@ -339,6 +385,7 @@ function Auction.onList()
     return
   end
   local cid = item:getId()
-  print(string.format('[Auction][Client] Sending AH_LIST pos=(%s,%s,%s) cid=%s count=%s', tostring(pos.x), tostring(pos.y), tostring(pos.z), tostring(cid), tostring(count)))
+  if item.getClientId then cid = item:getClientId() end
+  print(string.format('[Auction][Client] Sending AH_LIST pos=(%s,%s,%s) clientCid=%s count=%s', tostring(pos.x), tostring(pos.y), tostring(pos.z), tostring(cid), tostring(count)))
   Auction.send('AH_LIST', { pos = { x = pos.x, y = pos.y, z = pos.z }, cid = cid, count = count, price = price })
 end

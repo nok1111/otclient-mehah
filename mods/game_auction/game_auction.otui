@@ -1,7 +1,7 @@
 AuctionWindow < MainWindow
   id: auctionWindow
   !text: tr("Auction House")
-  size: 640 420
+  size: 640 500
   visible: false
   @onEscape: self:hide()
 
@@ -20,8 +20,8 @@ AuctionWindow < MainWindow
     anchors.left: parent.left
     margin-top: 8
     margin-left: 8
-    text: Open
-    @onClick: Auction.onOpen()
+    text: Refresh
+    @onClick: Auction.onRefresh()
 
   TextEdit
     id: searchEdit
@@ -58,11 +58,10 @@ AuctionWindow < MainWindow
     UIScrollArea
       id: browseScroll
       anchors.left: parent.left
-      anchors.right: browseVBar.left
+      anchors.right: parent.right
       anchors.top: prev.bottom
       anchors.bottom: parent.bottom
       margin-top: 4
-      margin-right: 2
       background-color: #1f1f1fcc
       border: 1 #555555
       vertical-scrollbar: browseVBar
@@ -72,6 +71,7 @@ AuctionWindow < MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
+        margin-right: 14
         layout:
           type: verticalBox
           fit-children: true
@@ -104,10 +104,9 @@ AuctionWindow < MainWindow
     UIScrollArea
       id: myScroll
       anchors.left: parent.left
-      anchors.right: myVBar.left
+      anchors.right: parent.right
       anchors.top: prev.bottom
       margin-top: 4
-      margin-right: 2
       height: 260
       background-color: #1f1f1fcc
       border: 1 #555555
@@ -118,6 +117,7 @@ AuctionWindow < MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
+        margin-right: 14
         layout:
           type: verticalBox
           fit-children: true
@@ -155,7 +155,7 @@ AuctionWindow < MainWindow
         id: listItemBg
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        size: 38 38
+        size: 34 34
         background-color: #2a2a2acc
         border: 1 #666666
         phantom: true
@@ -163,11 +163,14 @@ AuctionWindow < MainWindow
       Item
         id: listItemSlot
         anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
         size: 36 36
         virtual: true
         &selectable: true
         &editable: true
         accept-drop: true
+        focusable: true
+        z-index: 3
         item-id: 0
         item-count: 0
         draggable: false
@@ -233,7 +236,7 @@ AuctionWindow < MainWindow
 
 
 AuctionRow < Panel
-  height: 32
+  height: 36
   minimum-width: 260
   width: 280
   layout:
@@ -243,7 +246,16 @@ AuctionRow < Panel
   margin-top: 2
   margin-left: 4
   margin-right: 4
+  focusable: true
   
+  Panel
+    id: sel
+    anchors.fill: parent
+    background-color: #33557766
+    border: 1 #88aaff
+    visible: false
+    phantom: true
+    z-index: 1
 
   Item
     id: icon
@@ -251,6 +263,8 @@ AuctionRow < Panel
     virtual: true
     anchors.left: parent.left
     anchors.verticalCenter: parent.verticalCenter
+    z-index: 2
+    margin-left: 2
 
   Label
     id: name
@@ -262,6 +276,7 @@ AuctionRow < Panel
     color: white
     text-auto-resize: false
     wrap: false
+    phantom: true
 
   Label
     id: price
@@ -270,3 +285,5 @@ AuctionRow < Panel
     anchors.verticalCenter: parent.verticalCenter
     text: 0
     color: yellow
+    phantom: true
+    phantom: true
