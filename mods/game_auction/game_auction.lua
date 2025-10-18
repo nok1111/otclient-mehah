@@ -105,6 +105,7 @@ Auction.tabAuction = nil
 Auction.tabMy = nil
 Auction.createLabel = nil
 Auction.createRowPanel = nil
+Auction.countValue = nil
 
 -- Lazy UI creator to avoid crashing during login if OTUI has issues
 function Auction.ensureWindow()
@@ -132,6 +133,14 @@ function Auction.ensureWindow()
   Auction.createRowPanel = Auction.window:recursiveGetChildById('createRow')
   Auction.tabAuction   = Auction.window:recursiveGetChildById('tabAuction')
   Auction.tabMy        = Auction.window:recursiveGetChildById('tabMy')
+  Auction.countValue   = Auction.window:recursiveGetChildById('countValue')
+
+  local function updateCountValue()
+    if Auction.countValue and Auction.countSpin and Auction.countSpin.getValue then
+      local v = tonumber(Auction.countSpin:getValue()) or 1
+      Auction.countValue:setText(tostring(v))
+    end
+  end
 
   if Auction.listItemSlot then
     Auction.listItemSlot.onItemChange = function(widget)
@@ -140,8 +149,10 @@ function Auction.ensureWindow()
       if item and Auction.countSpin and Auction.countSpin.setValue then
         local cnt = (item.getCount and item:getCount()) or 1
         if Auction.countSpin.setMaximum then Auction.countSpin:setMaximum(math.max(1, cnt)) end
-        Auction.countSpin:setValue(math.max(1, cnt))
+        local cur = tonumber(Auction.countSpin:getValue()) or 1
+        Auction.countSpin:setValue(math.min(math.max(1, cur), math.max(1, cnt)))
       end
+      updateCountValue()
     end
     Auction.listItemSlot.onDrop = function(self, draggedWidget, mousePos)
       local srcItem = draggedWidget and draggedWidget.currentDragThing or nil
@@ -158,8 +169,10 @@ function Auction.ensureWindow()
           if Auction.countSpin and Auction.countSpin.setValue then
             local cnt = (it.getCount and it:getCount()) or 1
             if Auction.countSpin.setMaximum then Auction.countSpin:setMaximum(math.max(1, cnt)) end
-            Auction.countSpin:setValue(math.max(1, cnt))
+            local cur = tonumber(Auction.countSpin:getValue()) or 1
+            Auction.countSpin:setValue(math.min(math.max(1, cur), math.max(1, cnt)))
           end
+          updateCountValue()
         end
       end
       return true
@@ -178,8 +191,10 @@ function Auction.ensureWindow()
           if Auction.countSpin and Auction.countSpin.setValue then
             local cnt = (item.getCount and item:getCount()) or 1
             if Auction.countSpin.setMaximum then Auction.countSpin:setMaximum(math.max(1, cnt)) end
-            Auction.countSpin:setValue(math.max(1, cnt))
+            local cur = tonumber(Auction.countSpin:getValue()) or 1
+            Auction.countSpin:setValue(math.min(math.max(1, cur), math.max(1, cnt)))
           end
+          updateCountValue()
           return true
         end
       end
@@ -206,6 +221,13 @@ function Auction.ensureWindow()
   Auction.cancelButton = cancelButton
   if Auction.buyButton and Auction.buyButton.setEnabled then Auction.buyButton:setEnabled(false) end
   if Auction.cancelButton and Auction.cancelButton.setEnabled then Auction.cancelButton:setEnabled(false) end
+
+  if Auction.countSpin then
+    Auction.countSpin.onValueChange = function(self, value)
+      updateCountValue()
+    end
+    updateCountValue()
+  end
 
   -- initialize tab visuals (default auction)
   Auction.setTab('auction')
@@ -530,10 +552,13 @@ function Auction.onList()
     displayInfoBox('Auction', 'Drag an item into the slot.')
     return
   end
-  local price = tonumber(Auction.priceEdit:getText()) or 0
+  local unitPrice = tonumber(Auction.priceEdit:getText()) or 0
   local count = tonumber(Auction.countSpin:getValue()) or 1
-  print(string.format('[Auction][Client] onList price=%s count=%s', tostring(price), tostring(count)))
-  if price < 1 then
+  if count < 1 then count = 1 end
+  -- total price is per-unit * count
+  local totalPrice = math.floor((unitPrice or 0) * count)
+  print(string.format('[Auction][Client] onList unitPrice=%s count=%s totalPrice=%s', tostring(unitPrice), tostring(count), tostring(totalPrice)))
+  if unitPrice < 1 then
     displayInfoBox('Auction', 'Enter a valid price.')
     return
   end
@@ -544,6 +569,6 @@ function Auction.onList()
   end
   local cid = item:getId()
   if item.getClientId then cid = item:getClientId() end
-  print(string.format('[Auction][Client] Sending AH_LIST pos=(%s,%s,%s) clientCid=%s count=%s', tostring(pos.x), tostring(pos.y), tostring(pos.z), tostring(cid), tostring(count)))
-  Auction.send('AH_LIST', { pos = { x = pos.x, y = pos.y, z = pos.z }, cid = cid, count = count, price = price })
+  print(string.format('[Auction][Client] Sending AH_LIST pos=(%s,%s,%s) clientCid=%s count=%s totalPrice=%s', tostring(pos.x), tostring(pos.y), tostring(pos.z), tostring(cid), tostring(count), tostring(totalPrice)))
+  Auction.send('AH_LIST', { pos = { x = pos.x, y = pos.y, z = pos.z }, cid = cid, count = count, price = totalPrice })
 end
