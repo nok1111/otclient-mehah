@@ -32,6 +32,7 @@ local function applyIconCount(icon, count)
     if lbl.setOutlineColor then lbl:setOutlineColor('#000000') end
     if lbl.setOutlineWidth then lbl:setOutlineWidth(1) end
     if lbl.setFont then lbl:setFont('verdana-11px-rounded') end
+    if lbl.applyStyle then pcall(function() lbl:applyStyle('auctionCountBadge') end) end
   end
   if tonumber(count) and count > 1 then
     lbl:setText('x'..tostring(count))
@@ -39,6 +40,27 @@ local function applyIconCount(icon, count)
   else
     lbl:setVisible(false)
   end
+end
+
+-- helper: price formatting with thousands separators
+local function formatPrice(n)
+  if type(n) ~= 'number' then return tostring(n) end
+  local s = tostring(math.floor(n))
+  local k
+  while true do
+    s, k = s:gsub('^(%-?%d+)(%d%d%d)', '%1,%2')
+    if k == 0 then break end
+  end
+  return s
+end
+
+-- helper: build price text, include unit price when count>1
+local function buildPriceText(total, count)
+  if tonumber(count) and count > 1 then
+    local per = math.floor(total / count)
+    return string.format('%s (%s ea)', formatPrice(total), formatPrice(per))
+  end
+  return formatPrice(total)
 end
 Auction = Auction or {}
 Auction.opCode = 102
@@ -94,10 +116,18 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     Auction.selectedBrowseRow = nil
     if Auction.buyButton and Auction.buyButton.setEnabled then Auction.buyButton:setEnabled(false) end
     Auction.browseList:destroyChildren()
+    if #d == 0 then
+      local empty = g_ui.createWidget('UILabel', Auction.browseList)
+      empty:setText('No results.')
+      empty:setPhantom(true)
+      empty:setColor('#bbbbbb')
+      empty:addAnchor(AnchorHorizontalCenter, '50%')
+      empty:addAnchor(AnchorVerticalCenter, '50%')
+    end
     for i = 1, #d do
       local w = g_ui.createWidget('AuctionRow', Auction.browseList)
       w:getChildById('name'):setText(d[i].name)
-      w:getChildById('price'):setText(d[i].price)
+      w:getChildById('price'):setText(buildPriceText(tonumber(d[i].price) or 0, tonumber(d[i].count) or 1))
       local item = w:getChildById('icon')
       print(string.format('[Auction][Client] SEARCH row i=%d id=%s name=%s price=%s cid=%s count=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count)))
       item:setItemId(d[i].cid)
@@ -145,11 +175,19 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     Auction.selectedMyRow = nil
     if Auction.cancelButton and Auction.cancelButton.setEnabled then Auction.cancelButton:setEnabled(false) end
     Auction.myList:destroyChildren()
+    if #d == 0 then
+      local empty = g_ui.createWidget('UILabel', Auction.myList)
+      empty:setText('You have no active listings.')
+      empty:setPhantom(true)
+      empty:setColor('#bbbbbb')
+      empty:addAnchor(AnchorHorizontalCenter, '50%')
+      empty:addAnchor(AnchorVerticalCenter, '50%')
+    end
     for i = 1, #d do
       local w = g_ui.createWidget('AuctionRow', Auction.myList)
       -- Show count only on the icon overlay, not in the name label
       w:getChildById('name'):setText(d[i].name)
-      w:getChildById('price'):setText(d[i].price)
+      w:getChildById('price'):setText(buildPriceText(tonumber(d[i].price) or 0, tonumber(d[i].count) or 1))
       local item = w:getChildById('icon')
       print(string.format('[Auction][Client] MY row i=%d id=%s name=%s price=%s cid=%s count=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count)))
       item:setItemId(d[i].cid)
@@ -411,6 +449,12 @@ function Auction.onSearch()
   print(string.format('[Auction][Client] onSearch: name=%s', tostring(Auction.searchEdit:getText())))
   local name = Auction.searchEdit:getText()
   Auction.send('AH_SEARCH', { name = name, limit = 25, offset = 0 })
+end
+
+function Auction.onClearSearch()
+  if not Auction.searchEdit then return end
+  Auction.searchEdit:setText('')
+  Auction.onSearch()
 end
 
 function Auction.onBuy()
