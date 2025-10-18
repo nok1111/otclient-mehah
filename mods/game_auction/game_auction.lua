@@ -14,6 +14,32 @@ local function applyIconShader(icon, name)
     icon:setShader(shaderName)
   end
 end
+
+-- helper: show count overlay on the icon (e.g., x37)
+local function applyIconCount(icon, count)
+  if not icon then return end
+  local lbl = icon:recursiveGetChildById('countLabel')
+  if not lbl then
+    lbl = g_ui.createWidget('UILabel', icon)
+    lbl:setId('countLabel')
+    lbl:setPhantom(true)
+    lbl:setTextAlign(AlignRight)
+    lbl:addAnchor(AnchorBottom, '100%')
+    lbl:addAnchor(AnchorRight, '100%')
+    lbl:setMarginRight(2)
+    lbl:setMarginBottom(1)
+    lbl:setColor('#ffffff')
+    if lbl.setOutlineColor then lbl:setOutlineColor('#000000') end
+    if lbl.setOutlineWidth then lbl:setOutlineWidth(1) end
+    if lbl.setFont then lbl:setFont('verdana-11px-rounded') end
+  end
+  if tonumber(count) and count > 1 then
+    lbl:setText('x'..tostring(count))
+    lbl:setVisible(true)
+  else
+    lbl:setVisible(false)
+  end
+end
 Auction = Auction or {}
 Auction.opCode = 102
 
@@ -76,6 +102,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       print(string.format('[Auction][Client] SEARCH row i=%d id=%s name=%s price=%s cid=%s count=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count)))
       item:setItemId(d[i].cid)
       applyIconShader(item, d[i].name)
+      applyIconCount(item, d[i].count)
       w.listingId = d[i].id
       print(string.format('[Auction][Client] added search row id=%s name=%s', tostring(d[i].id), tostring(d[i].name)))
       print('[Auction][Client] browseList child count:', Auction.browseList:getChildCount())
@@ -120,12 +147,14 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     Auction.myList:destroyChildren()
     for i = 1, #d do
       local w = g_ui.createWidget('AuctionRow', Auction.myList)
-      w:getChildById('name'):setText(d[i].name .. ' x'..d[i].count)
+      -- Show count only on the icon overlay, not in the name label
+      w:getChildById('name'):setText(d[i].name)
       w:getChildById('price'):setText(d[i].price)
       local item = w:getChildById('icon')
       print(string.format('[Auction][Client] MY row i=%d id=%s name=%s price=%s cid=%s count=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count)))
       item:setItemId(d[i].cid)
       applyIconShader(item, d[i].name)
+      applyIconCount(item, d[i].count)
       w.listingId = d[i].id
       print(string.format('[Auction][Client] added my row id=%s name=%s', tostring(d[i].id), tostring(d[i].name)))
       print('[Auction][Client] myList child count:', Auction.myList:getChildCount())
@@ -238,6 +267,11 @@ function Auction.onGameStart()
     Auction.listItemSlot.onItemChange = function(widget)
       local item = widget:getItem()
       print(string.format('[Auction][Client] listItemSlot.onItemChange item=%s', tostring(item and item:getId() or nil)))
+      if item and Auction.countSpin and Auction.countSpin.setValue then
+        local cnt = (item.getCount and item:getCount()) or 1
+        if Auction.countSpin.setMaximum then Auction.countSpin:setMaximum(math.max(1, cnt)) end
+        Auction.countSpin:setValue(math.max(1, cnt))
+      end
       -- Visual is already handled by the Item widget
     end
     -- Capture precise inventory position when dropping (preferred path)
@@ -252,7 +286,14 @@ function Auction.onGameStart()
       -- also set the visual if needed
       if draggedWidget and draggedWidget.getItem then
         local it = draggedWidget:getItem()
-        if it then self:setItem(it) end
+        if it then
+          self:setItem(it)
+          if Auction.countSpin and Auction.countSpin.setValue then
+            local cnt = (it.getCount and it:getCount()) or 1
+            if Auction.countSpin.setMaximum then Auction.countSpin:setMaximum(math.max(1, cnt)) end
+            Auction.countSpin:setValue(math.max(1, cnt))
+          end
+        end
       end
       return true
     end
@@ -268,6 +309,11 @@ function Auction.onGameStart()
           self:setItem(item)
           Auction.listFromPos = item:getPosition()
           print(string.format('[Auction][Client] onMouseRelease picked inventory item id=%s', tostring(item:getId())))
+          if Auction.countSpin and Auction.countSpin.setValue then
+            local cnt = (item.getCount and item:getCount()) or 1
+            if Auction.countSpin.setMaximum then Auction.countSpin:setMaximum(math.max(1, cnt)) end
+            Auction.countSpin:setValue(math.max(1, cnt))
+          end
           return true
         end
       end
