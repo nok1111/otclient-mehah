@@ -106,6 +106,7 @@ Auction.tabMy = nil
 Auction.createLabel = nil
 Auction.createRowPanel = nil
 Auction.countValue = nil
+Auction.searchDebounceEvent = nil
 
 -- Lazy UI creator to avoid crashing during login if OTUI has issues
 function Auction.ensureWindow()
@@ -212,6 +213,12 @@ function Auction.ensureWindow()
   local cancelButton = Auction.window:recursiveGetChildById('cancelButton')
   if openButton   then openButton.onClick   = Auction.onOpen   end
   if searchButton then searchButton.onClick = Auction.onSearch end
+  if Auction.searchEdit then
+    Auction.searchEdit.onTextChange = function(widget, text)
+      local term = text or (widget and widget.getText and widget:getText()) or ''
+      Auction.onSearchChange(term)
+    end
+  end
   if listButton   then listButton.onClick   = Auction.onList   end
   if buyButton    then buyButton.onClick    = Auction.onBuy    end
   if cancelButton then cancelButton.onClick = Auction.onCancel end
@@ -519,6 +526,24 @@ function Auction.onSearch()
   print(string.format('[Auction][Client] onSearch: name=%s', tostring(Auction.searchEdit:getText())))
   local name = Auction.searchEdit:getText()
   Auction.send('AH_SEARCH', { name = name, limit = 25, offset = 0 })
+end
+
+-- Debounced live search from TextEdit.onTextChange
+function Auction.onSearchChange(text)
+  -- Only search on Auction tab
+  if Auction.activeTab ~= 'auction' then return end
+  if Auction.searchDebounceEvent and removeEvent then
+    pcall(function() removeEvent(Auction.searchDebounceEvent) end)
+    Auction.searchDebounceEvent = nil
+  end
+  Auction.searchDebounceEvent = scheduleEvent(function()
+    Auction.searchDebounceEvent = nil
+    local term = text
+    -- double-check current text
+    if Auction.searchEdit and Auction.searchEdit.getText then term = Auction.searchEdit:getText() end
+    print(string.format('[Auction][Client] onSearchChange debounced term=%s', tostring(term)))
+    Auction.send('AH_SEARCH', { name = term, limit = 25, offset = 0 })
+  end, 200)
 end
 
 function Auction.onClearSearch()

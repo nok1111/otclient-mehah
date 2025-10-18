@@ -40,14 +40,6 @@ AuctionWindow < MainWindow
     text: Search
     @onClick: Auction.onSearch()
 
-  Button
-    id: clearSearchButton
-    anchors.left: searchButton.right
-    anchors.top: parent.top
-    margin-left: 6
-    margin-top: 8
-    text: Clear
-    @onClick: Auction.onClearSearch()
 
   Panel
     id: contentPane
@@ -175,7 +167,7 @@ AuctionWindow < MainWindow
         tooltip: Drag item here from inventory
 
       Label
-        text: Price:
+        text: Unit Price:
         anchors.left: listItemSlot.right
         anchors.top: parent.top
         margin-left: 8
