@@ -1,3 +1,19 @@
+-- helper: apply shader to icon based on item name
+local function applyIconShader(icon, name)
+  if not icon or not name then return end
+  local lname = name:lower()
+  local shaderName
+  if lname:find('orbital', 1, true) then
+    shaderName = 'Orbital'
+  elseif lname:find('forged', 1, true) then
+    shaderName = 'Forged'
+  elseif lname:find('[corrupted]', 1, true) then
+    shaderName = 'Corrupted'
+  end
+  if icon.setShader then
+    icon:setShader(shaderName)
+  end
+end
 Auction = Auction or {}
 Auction.opCode = 102
 
@@ -57,7 +73,9 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       w:getChildById('name'):setText(d[i].name)
       w:getChildById('price'):setText(d[i].price)
       local item = w:getChildById('icon')
+      print(string.format('[Auction][Client] SEARCH row i=%d id=%s name=%s price=%s cid=%s count=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count)))
       item:setItemId(d[i].cid)
+      applyIconShader(item, d[i].name)
       w.listingId = d[i].id
       print(string.format('[Auction][Client] added search row id=%s name=%s', tostring(d[i].id), tostring(d[i].name)))
       print('[Auction][Client] browseList child count:', Auction.browseList:getChildCount())
@@ -105,7 +123,9 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       w:getChildById('name'):setText(d[i].name .. ' x'..d[i].count)
       w:getChildById('price'):setText(d[i].price)
       local item = w:getChildById('icon')
+      print(string.format('[Auction][Client] MY row i=%d id=%s name=%s price=%s cid=%s count=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count)))
       item:setItemId(d[i].cid)
+      applyIconShader(item, d[i].name)
       w.listingId = d[i].id
       print(string.format('[Auction][Client] added my row id=%s name=%s', tostring(d[i].id), tostring(d[i].name)))
       print('[Auction][Client] myList child count:', Auction.myList:getChildCount())
