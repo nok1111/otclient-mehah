@@ -47,7 +47,7 @@ AuctionWindow < MainWindow
     anchors.left: parent.left
     margin-top: 8
     margin-left: 8
-    size: 590 400
+    size: 590 450
 
     Panel
       id: tabsRow
@@ -66,7 +66,7 @@ AuctionWindow < MainWindow
 
       Button
         id: tabMy
-        text: My Listings
+        text: My Offers
         anchors.left: tabAuction.right
         margin-left: 6
         anchors.verticalCenter: parent.verticalCenter
@@ -95,6 +95,15 @@ AuctionWindow < MainWindow
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         margin-right: 16
+        color: #cccccc
+        phantom: true
+
+      Label
+        id: sellerHeader
+        text: Seller
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-right: 242
         color: #cccccc
         phantom: true
 
@@ -140,7 +149,7 @@ AuctionWindow < MainWindow
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
-      height: 38
+      height: 64
       margin-top: 4
 
       FlatPanel
@@ -169,46 +178,75 @@ AuctionWindow < MainWindow
       Label
         text: Unit Price:
         anchors.left: listItemSlot.right
-        anchors.top: parent.top
+        anchors.verticalCenter: parent.verticalCenter
         margin-left: 8
 
       TextEdit
         id: priceEdit
         anchors.left: prev.right
-        anchors.top: parent.top
+        anchors.verticalCenter: parent.verticalCenter
         margin-left: 4
-        size: 80 18
+        size: 100 18
         numbers-only: true
 
       Label
+        id: counterLabel
         text: Count:
-        anchors.left: priceEdit.right
-        anchors.top: parent.top
+        anchors.left: listItemSlot.right
+        anchors.top: priceEdit.bottom
         margin-left: 8
+        margin-top: 4
 
-      HorizontalScrollBar
+      SpinBox
         id: countSpin
         anchors.left: prev.right
-        anchors.top: parent.top
+        anchors.top: prev.top
         margin-left: 4
-        size: 100 18
+        size: 80 18
         minimum: 1
-        maximum: 100
-        orientation: horizontal
+        maximum: 1
+        focusable: true
+        read-only: false
+        buttons: true
+        mouse-scroll: true
 
       Label
-        id: countValue
-        anchors.left: countSpin.right
-        anchors.top: parent.top
-        margin-left: 6
-        text: 1
-        width: 40
+        id: createCostLabel
+        anchors.left: listItemSlot.right
+        anchors.top: counterLabel.bottom
+        margin-left: 8
+        margin-top: 4
+        text: Total Price:
+        color: #dddddd
+        z-index: 2
+        phantom: false
+
+      Label
+        id: createCostValue
+        anchors.left: createCostLabel.right
+        anchors.top: createCostLabel.top
+        margin-left: 2
+        width: 50
         text-align: right
+        text: 0
+        color: #dddddd
+        z-index: 2
+        phantom: false
+
+      Label
+        id: createCostSuffix
+        anchors.left: createCostValue.right
+        anchors.top: createCostValue.top
+        margin-left: 6
+        text:  gold
+        color: #dddddd
+        z-index: 2
+        phantom: false
 
       Button
         id: listButton
         anchors.right: parent.right
-        anchors.top: parent.top
+        anchors.verticalCenter: parent.verticalCenter
         text: List
         @onClick: Auction.onList()
 
@@ -220,18 +258,52 @@ AuctionWindow < MainWindow
       height: 32
       margin-top: 8
 
+      Label
+        id: buyAmountLabel
+        text: Amount:
+        anchors.left: parent.left
+        anchors.top: parent.top
+        visible: false
+
+      SpinBox
+        id: buyCountSpin
+        anchors.left: prev.right
+        anchors.top: parent.top
+        margin-left: 4
+        size: 80 18
+        minimum: 1
+        maximum: 1
+
+      Label
+        id: buyCostLabel
+        anchors.left: buyCountSpin.right
+        anchors.top: parent.top
+        margin-left: 12
+        text: Cost:
+
+      Label
+        id: buyCostValue
+        anchors.left: buyCostLabel.right
+        anchors.top: parent.top
+        margin-left: 4
+        width: 80
+        text-align: right
+        text: 0
+
+      Label
+        id: buyCostSuffix
+        anchors.left: buyCostValue.right
+        anchors.top: parent.top
+        margin-left: 4
+        text:  gold
+
       Button
         id: buyButton
-        anchors.left: parent.left
+        anchors.left: buyCostSuffix.right
+        margin-left: 12
         text: Buy Selected
         @onClick: Auction.onBuy()
 
-      Button
-        id: cancelButton
-        anchors.left: buyButton.right
-        margin-left: 8
-        text: Cancel My Selected
-        @onClick: Auction.onCancel()
 
 
 AuctionRow < Panel
@@ -269,12 +341,23 @@ AuctionRow < Panel
     id: name
     anchors.left: icon.right
     anchors.verticalCenter: parent.verticalCenter
-    anchors.right: price.left
+    anchors.right: seller.left
     margin-left: 6
     text: Item Name
     color: white
     text-auto-resize: false
     wrap: false
+    phantom: true
+
+  Label
+    id: seller
+    anchors.left: icon.right
+    margin-left: 200
+    anchors.verticalCenter: parent.verticalCenter
+    width: 120
+    text: ""
+    color: #cccccc
+    text-align: right
     phantom: true
 
   Label
@@ -286,5 +369,14 @@ AuctionRow < Panel
     text: 0
     color: yellow
     phantom: true
+
+  Button
+    id: rowCancel
+    anchors.right: price.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 8
+    text: Remove
+    visible: false
+    phantom: false
 
 

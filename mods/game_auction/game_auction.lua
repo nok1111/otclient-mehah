@@ -28,6 +28,15 @@ function Auction.setTab(tab)
   if Auction.createRowPanel and Auction.createRowPanel.setVisible then Auction.createRowPanel:setVisible(showCreate) end
   if Auction.buyButton and Auction.buyButton.setVisible then Auction.buyButton:setVisible(tab == 'auction') end
   if Auction.cancelButton and Auction.cancelButton.setVisible then Auction.cancelButton:setVisible(tab == 'my') end
+  if Auction.buyCountSpin and Auction.buyCountSpin.setVisible then Auction.buyCountSpin:setVisible(tab == 'auction') end
+  -- buyCountValue label was removed; no visibility toggle needed
+  if Auction.buyCostValue and Auction.buyCostValue.setVisible then Auction.buyCostValue:setVisible(tab == 'auction') end
+  local costLbl = Auction.window and Auction.window:recursiveGetChildById('buyCostLabel') or nil
+  if costLbl and costLbl.setVisible then costLbl:setVisible(tab == 'auction') end
+  local costSuf = Auction.window and Auction.window:recursiveGetChildById('buyCostSuffix') or nil
+  if costSuf and costSuf.setVisible then costSuf:setVisible(tab == 'auction') end
+  local amountLbl = Auction.window and Auction.window:recursiveGetChildById('buyAmountLabel') or nil
+  if amountLbl and amountLbl.setVisible then amountLbl:setVisible(tab == 'auction') end
   -- clear current list
   if Auction.browseList then Auction.browseList:destroyChildren() end
   -- request data
@@ -81,7 +90,7 @@ end
 local function buildPriceText(total, count)
   if tonumber(count) and count > 1 then
     local per = math.floor(total / count)
-    return string.format('%s (%s ea)', formatPrice(total), formatPrice(per))
+    return string.format('%s (%s)', formatPrice(total), formatPrice(per))
   end
   return formatPrice(total)
 end
@@ -107,6 +116,27 @@ Auction.createLabel = nil
 Auction.createRowPanel = nil
 Auction.countValue = nil
 Auction.searchDebounceEvent = nil
+Auction.buyCountSpin = nil
+Auction.buyCountValue = nil
+Auction.buyCostValue = nil
+Auction.currentSelected = { id = nil, count = 1, price = 0 }
+
+-- Update partial-buy controls from currentSelected
+function Auction.updateBuyControls(curOverride)
+  if not (Auction.buyCountSpin and Auction.buyCostValue) then return end
+  local maxc = tonumber(Auction.currentSelected.count) or 1
+  local total = tonumber(Auction.currentSelected.price) or 0
+  if maxc < 1 then maxc = 1 end
+  if Auction.buyCountSpin.setMaximum then Auction.buyCountSpin:setMaximum(maxc) end
+  local cur = tonumber(curOverride) or tonumber((Auction.buyCountSpin.getValue and Auction.buyCountSpin:getValue()) or 1) or 1
+  if cur < 1 then cur = 1 end
+  if cur > maxc then cur = maxc end
+  if curOverride and Auction.buyCountSpin.setValue then Auction.buyCountSpin:setValue(cur) end
+  if Auction.buyCountValue and Auction.buyCountValue.setText then Auction.buyCountValue:setText(tostring(cur)) end
+  local part = math.floor((total > 0 and (total * (cur / maxc))) or 0)
+  if Auction.buyCostValue.setText then Auction.buyCostValue:setText(buildPriceText(part, 1)) end
+  print(string.format('[Auction][Client] updateBuyControls cur=%s max=%s total=%s part=%s', tostring(cur), tostring(maxc), tostring(total), tostring(part)))
+end
 
 -- Lazy UI creator to avoid crashing during login if OTUI has issues
 function Auction.ensureWindow()
@@ -130,17 +160,30 @@ function Auction.ensureWindow()
   Auction.priceEdit    = Auction.window:recursiveGetChildById('priceEdit')
   Auction.countSpin    = Auction.window:recursiveGetChildById('countSpin')
   Auction.listItemSlot = Auction.window:recursiveGetChildById('listItemSlot')
+  Auction.createCostValue = Auction.window:recursiveGetChildById('createCostValue')
   Auction.createLabel  = Auction.window:recursiveGetChildById('createLabel')
   Auction.createRowPanel = Auction.window:recursiveGetChildById('createRow')
   Auction.tabAuction   = Auction.window:recursiveGetChildById('tabAuction')
   Auction.tabMy        = Auction.window:recursiveGetChildById('tabMy')
   Auction.countValue   = Auction.window:recursiveGetChildById('countValue')
+  Auction.buyCountSpin = Auction.window:recursiveGetChildById('buyCountSpin')
+  Auction.buyCountValue= Auction.window:recursiveGetChildById('buyCountValue')
+  Auction.buyCostValue = Auction.window:recursiveGetChildById('buyCostValue')
 
   local function updateCountValue()
     if Auction.countValue and Auction.countSpin and Auction.countSpin.getValue then
       local v = tonumber(Auction.countSpin:getValue()) or 1
       Auction.countValue:setText(tostring(v))
     end
+  end
+
+  local function updateCreateTotal()
+    if not Auction.createCostValue then return end
+    local unit = tonumber(Auction.priceEdit and Auction.priceEdit:getText() or 0) or 0
+    local cnt = tonumber(Auction.countSpin and Auction.countSpin:getValue() or 1) or 1
+    if cnt < 1 then cnt = 1 end
+    local total = math.floor(unit * cnt)
+    Auction.createCostValue:setText(tostring(total))
   end
 
   if Auction.listItemSlot then
@@ -154,6 +197,7 @@ function Auction.ensureWindow()
         Auction.countSpin:setValue(math.min(math.max(1, cur), math.max(1, cnt)))
       end
       updateCountValue()
+      updateCreateTotal()
     end
     Auction.listItemSlot.onDrop = function(self, draggedWidget, mousePos)
       local srcItem = draggedWidget and draggedWidget.currentDragThing or nil
@@ -174,6 +218,7 @@ function Auction.ensureWindow()
             Auction.countSpin:setValue(math.min(math.max(1, cur), math.max(1, cnt)))
           end
           updateCountValue()
+          updateCreateTotal()
         end
       end
       return true
@@ -229,11 +274,27 @@ function Auction.ensureWindow()
   if Auction.buyButton and Auction.buyButton.setEnabled then Auction.buyButton:setEnabled(false) end
   if Auction.cancelButton and Auction.cancelButton.setEnabled then Auction.cancelButton:setEnabled(false) end
 
+  -- Bind buy amount SpinBox change
+  if Auction.buyCountSpin and Auction.buyCountSpin.onValueChange ~= nil then
+    Auction.buyCountSpin.onValueChange = function(self, value)
+      local v = value or (self and self.getValue and self:getValue()) or 1
+      Auction.updateBuyControls(v)
+    end
+  end
+
   if Auction.countSpin then
     Auction.countSpin.onValueChange = function(self, value)
       updateCountValue()
+      updateCreateTotal()
     end
     updateCountValue()
+    updateCreateTotal()
+  end
+
+  if Auction.priceEdit then
+    Auction.priceEdit.onTextChange = function(self, text)
+      updateCreateTotal()
+    end
   end
 
   -- initialize tab visuals (default auction)
@@ -302,14 +363,24 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     end
     for i = 1, #d do
       local w = g_ui.createWidget('AuctionRow', Auction.browseList)
-      w:getChildById('name'):setText(d[i].name)
-      w:getChildById('price'):setText(buildPriceText(tonumber(d[i].price) or 0, tonumber(d[i].count) or 1))
+      local cnt = tonumber(d[i].count) or 1
+      local baseName = tostring(d[i].name or ''):gsub('^%s*[xX]%s*%d+%s+', '')
+      w:getChildById('name'):setText(baseName)
+      w:getChildById('price'):setText(  buildPriceText(tonumber(d[i].price) or 0, cnt) .. ' gold')
       local item = w:getChildById('icon')
       print(string.format('[Auction][Client] SEARCH row i=%d id=%s name=%s price=%s cid=%s count=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count)))
       item:setItemId(d[i].cid)
       applyIconShader(item, d[i].name)
-      applyIconCount(item, d[i].count)
+      applyIconCount(item, cnt)
       w.listingId = d[i].id
+      w.stackCount = cnt
+      w.totalPrice = tonumber(d[i].price) or 0
+      -- set seller label for Auction tab
+      local sellerLbl = w:getChildById('seller')
+      if sellerLbl then sellerLbl:setText(tostring(d[i].sellerName or '')) end
+      -- ensure per-row cancel is hidden on Auction tab rows
+      local rowCancel = w:recursiveGetChildById('rowCancel')
+      if rowCancel then rowCancel:setVisible(false) end
       print(string.format('[Auction][Client] added search row id=%s name=%s', tostring(d[i].id), tostring(d[i].name)))
       print('[Auction][Client] browseList child count:', Auction.browseList:getChildCount())
       if w.getWidth and w.getHeight then
@@ -331,6 +402,17 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
         Auction.selectedBrowseRow = w
         Auction.selectedId = w.listingId
         if Auction.buyButton and Auction.buyButton.setEnabled then Auction.buyButton:setEnabled(true) end
+        -- update partial-buy selection data
+        Auction.currentSelected.id = w.listingId
+        Auction.currentSelected.count = w.stackCount
+        Auction.currentSelected.price = w.totalPrice
+        -- initialize slider range/value for this stack
+        if Auction.buyCountSpin then
+          if Auction.buyCountSpin.setMinimum then Auction.buyCountSpin:setMinimum(1) end
+          if Auction.buyCountSpin.setMaximum then Auction.buyCountSpin:setMaximum(w.stackCount) end
+          if Auction.buyCountSpin.setValue then Auction.buyCountSpin:setValue(1) end
+        end
+        if Auction.updateBuyControls then Auction.updateBuyControls(1) end
         print(string.format('[Auction][Client] Selected listing id=%s', tostring(w.listingId)))
       end
       w.onClick = function()
@@ -361,15 +443,27 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     end
     for i = 1, #d do
       local w = g_ui.createWidget('AuctionRow', Auction.browseList)
-      -- Show count only on the icon overlay, not in the name label
-      w:getChildById('name'):setText(d[i].name)
-      w:getChildById('price'):setText(buildPriceText(tonumber(d[i].price) or 0, tonumber(d[i].count) or 1))
+      local cnt = tonumber(d[i].count) or 1
+      local baseName = tostring(d[i].name or ''):gsub('^%s*[xX]%s*%d+%s+', '')
+      w:getChildById('name'):setText(baseName)
+      w:getChildById('price'):setText(buildPriceText(tonumber(d[i].price) or 0, cnt))
       local item = w:getChildById('icon')
       print(string.format('[Auction][Client] MY row i=%d id=%s name=%s price=%s cid=%s count=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count)))
       item:setItemId(d[i].cid)
       applyIconShader(item, d[i].name)
-      applyIconCount(item, d[i].count)
+      applyIconCount(item, cnt)
       w.listingId = d[i].id
+      -- hide seller label on My tab
+      local sellerLbl = w:getChildById('seller')
+      if sellerLbl then sellerLbl:setText('') end
+      -- show per-row cancel button for My Listings
+      local rowCancel = w:recursiveGetChildById('rowCancel')
+      if rowCancel then
+        rowCancel:setVisible(true)
+        rowCancel.onClick = function()
+          Auction.send('AH_CANCEL', { id = w.listingId })
+        end
+      end
       print(string.format('[Auction][Client] added my row id=%s name=%s', tostring(d[i].id), tostring(d[i].name)))
       print('[Auction][Client] list child count:', Auction.browseList:getChildCount())
       if w.getWidth and w.getHeight then
@@ -413,6 +507,15 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       displayInfoBox('Auction', d.error)
     else
       displayInfoBox('Auction', 'Purchased for '..d.price..' gp')
+      Auction.send('AH_MY', {})
+      Auction.send('AH_SEARCH', { limit = 25, offset = 0 })
+    end
+  elseif e == 'AH_BUY_PART_ACK' then
+    print('[Auction][Client] AH_BUY_PART_ACK received')
+    if d and d.error then
+      displayInfoBox('Auction', d.error)
+    else
+      displayInfoBox('Auction', 'Purchased '..tostring(d.count)..' for '..tostring(d.price)..' gp')
       Auction.send('AH_MY', {})
       Auction.send('AH_SEARCH', { limit = 25, offset = 0 })
     end
@@ -558,7 +661,16 @@ function Auction.onBuy()
     displayInfoBox('Auction', 'Select a listing to buy.')
     return
   end
-  Auction.send('AH_BUY', { id = Auction.selectedId })
+  local desired = 1
+  if Auction.buyCountSpin and Auction.buyCountSpin.getValue then
+    desired = tonumber(Auction.buyCountSpin:getValue()) or 1
+  end
+  local full = tonumber(Auction.currentSelected and Auction.currentSelected.count or 1) or 1
+  if desired < full then
+    Auction.send('AH_BUY_PART', { id = Auction.selectedId, count = desired })
+  else
+    Auction.send('AH_BUY', { id = Auction.selectedId })
+  end
 end
 
 function Auction.onCancel()
