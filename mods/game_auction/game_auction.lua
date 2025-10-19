@@ -20,7 +20,7 @@ end
 
 -- Tab switching API
 function Auction.setTab(tab)
-  if tab ~= 'auction' and tab ~= 'my' then return end
+  if tab ~= 'auction' and tab ~= 'my' and tab ~= 'history' then return end
   Auction.activeTab = tab
   -- toggle UI
   local showCreate = (tab == 'my')
@@ -37,13 +37,38 @@ function Auction.setTab(tab)
   if costSuf and costSuf.setVisible then costSuf:setVisible(tab == 'auction') end
   local amountLbl = Auction.window and Auction.window:recursiveGetChildById('buyAmountLabel') or nil
   if amountLbl and amountLbl.setVisible then amountLbl:setVisible(tab == 'auction') end
+  -- Ensure we use the same list/scroll as other tabs for 'history'
+  if Auction.historyPanel and Auction.historyPanel.setVisible then Auction.historyPanel:setVisible(false) end
+  local resultsHeader = Auction.window and Auction.window:recursiveGetChildById('resultsHeader') or nil
+  local sellerHeader = Auction.window and Auction.window:recursiveGetChildById('sellerHeader') or nil
+  local browseScroll = Auction.window and Auction.window:recursiveGetChildById('browseScroll') or nil
+  local actionsRow = Auction.window and Auction.window:recursiveGetChildById('actionsRow') or nil
+  local browseVBar = Auction.window and Auction.window:recursiveGetChildById('browseVBar') or nil
+  if resultsHeader and resultsHeader.setVisible then resultsHeader:setVisible(true) end
+  if browseScroll and browseScroll.setVisible then browseScroll:setVisible(true) end
+  if actionsRow and actionsRow.setVisible then actionsRow:setVisible(false) end
+  if browseVBar and browseVBar.setVisible then browseVBar:setVisible(true) end
+  if sellerHeader and sellerHeader.setText then
+    if tab == 'history' then sellerHeader:setText('Date') else sellerHeader:setText('Seller') end
+  end
   -- clear current list
   if Auction.browseList then Auction.browseList:destroyChildren() end
   -- request data
   if tab == 'auction' then
     Auction.send('AH_SEARCH', { limit = 25, offset = 0 })
-  else
+  elseif tab == 'my' then
     Auction.send('AH_MY', {})
+  elseif tab == 'history' then
+    if Auction.browseList then
+      Auction.browseList:destroyChildren()
+      local loading = g_ui.createWidget('UILabel', Auction.browseList)
+      loading:setText('Loading...')
+      loading:setPhantom(true)
+      loading:setColor('#bbbbbb')
+      loading:setMarginTop(8)
+      loading:setMarginLeft(8)
+    end
+    Auction.send('AH_HISTORY', {})
   end
 end
 
@@ -165,10 +190,13 @@ function Auction.ensureWindow()
   Auction.createRowPanel = Auction.window:recursiveGetChildById('createRow')
   Auction.tabAuction   = Auction.window:recursiveGetChildById('tabAuction')
   Auction.tabMy        = Auction.window:recursiveGetChildById('tabMy')
+  Auction.tabHistory   = Auction.window:recursiveGetChildById('tabHistory')
   Auction.countValue   = Auction.window:recursiveGetChildById('countValue')
   Auction.buyCountSpin = Auction.window:recursiveGetChildById('buyCountSpin')
   Auction.buyCountValue= Auction.window:recursiveGetChildById('buyCountValue')
   Auction.buyCostValue = Auction.window:recursiveGetChildById('buyCostValue')
+  Auction.historyList  = Auction.window:recursiveGetChildById('historyList')
+  Auction.historyPanel = Auction.window:recursiveGetChildById('historyPanel')
 
   local function updateCountValue()
     if Auction.countValue and Auction.countSpin and Auction.countSpin.getValue then
@@ -269,6 +297,7 @@ function Auction.ensureWindow()
   if cancelButton then cancelButton.onClick = Auction.onCancel end
   if Auction.tabAuction then Auction.tabAuction.onClick = function() Auction.setTab('auction') end end
   if Auction.tabMy then Auction.tabMy.onClick = function() Auction.setTab('my') end end
+  if Auction.tabHistory then Auction.tabHistory.onClick = function() Auction.setTab('history') end end
   Auction.buyButton = buyButton
   Auction.cancelButton = cancelButton
   if Auction.buyButton and Auction.buyButton.setEnabled then Auction.buyButton:setEnabled(false) end
@@ -342,6 +371,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     if not okReq1 then print('[Auction][Client][Warn] Failed to request AH_SEARCH: '..tostring(reqErr1)) end
     local okReq2, reqErr2 = pcall(function() Auction.send('AH_MY', {}) end)
     if not okReq2 then print('[Auction][Client][Warn] Failed to request AH_MY: '..tostring(reqErr2)) end
+  -- history is fetched on demand when switching to tab
   elseif e == 'AH_SEARCH_DATA' then
     print(string.format('[Auction][Client] AH_SEARCH_DATA count=%d', type(d)=='table' and #d or -1))
     if not Auction.browseList or Auction.activeTab ~= 'auction' then return end
@@ -527,6 +557,40 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       displayInfoBox('Auction', 'Listing canceled.')
       Auction.send('AH_MY', {})
       Auction.send('AH_SEARCH', { limit = 25, offset = 0 })
+    end
+  elseif e == 'AH_HISTORY_DATA' then
+    print(string.format('[Auction][Client] AH_HISTORY_DATA count=%d', type(d)=='table' and #d or -1))
+    if Auction.activeTab ~= 'history' then return end
+    if not Auction.browseList then return end
+    Auction.browseList:destroyChildren()
+    if #d == 0 then
+      local empty = g_ui.createWidget('UILabel', Auction.browseList)
+      empty:setText('No sales yet.')
+      empty:setPhantom(true)
+      empty:setColor('#bbbbbb')
+      empty:setMarginTop(8)
+      empty:setMarginLeft(8)
+      return
+    end
+    for i = 1, #d do
+      local w = g_ui.createWidget('AuctionRow', Auction.browseList)
+      local cnt = tonumber(d[i].count) or 1
+      local baseName = tostring(d[i].name or ''):gsub('^%s*[xX]%s*%d+%s+', '')
+      w:getChildById('name'):setText(baseName)
+      w:getChildById('price'):setText(tostring(d[i].price) .. ' gold')
+      local item = w:getChildById('icon')
+      item:setItemId(d[i].cid)
+      applyIconShader(item, d[i].name)
+      applyIconCount(item, cnt)
+      -- show date in the middle column (reuse 'seller' label space)
+      local function fmt(ts)
+        if tonumber(ts) then
+          return os.date and os.date('%Y-%m-%d %H:%M', ts) or tostring(ts)
+        end
+        return tostring(ts)
+      end
+      local sellerLbl = w:getChildById('seller'); if sellerLbl then sellerLbl:setText(fmt(d[i].sold_at)) end
+      local rowCancel = w:recursiveGetChildById('rowCancel'); if rowCancel then rowCancel:setVisible(false) end
     end
   end
 end

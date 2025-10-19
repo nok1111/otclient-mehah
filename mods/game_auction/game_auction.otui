@@ -71,6 +71,13 @@ AuctionWindow < MainWindow
         margin-left: 6
         anchors.verticalCenter: parent.verticalCenter
 
+      Button
+        id: tabHistory
+        text: History
+        anchors.left: tabMy.right
+        margin-left: 6
+        anchors.verticalCenter: parent.verticalCenter
+
     Panel
       id: resultsHeader
       anchors.left: parent.left
@@ -304,7 +311,53 @@ AuctionWindow < MainWindow
         text: Buy Selected
         @onClick: Auction.onBuy()
 
+    Panel
+      id: historyPanel
+      anchors.top: resultsHeader.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-top: 4
+      visible: false
+      layout:
+        type: verticalBox
+      z-index: 3
 
+      Label
+        id: historyHeader
+        text: Last 50 Sales (Name | Count | Price | Date)
+        color: #cccccc
+        phantom: false
+        height: 16
+        margin-bottom: 2
+
+      Panel
+        id: historyBody
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: historyHeader.bottom
+        anchors.bottom: parent.bottom
+        layout:
+          type: verticalBox
+        z-index: 4
+        background-color: #00112266
+        border: 1 #224466
+
+        Panel
+          id: historyList
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-left: 6
+          margin-top: 4
+          minimum-height: 40
+          layout:
+            type: verticalBox
+            fit-children: true
+            fit-children-last: true
+          z-index: 5
+          background-color: #11331144
+          border: 1 #44aa44
 
 AuctionRow < Panel
   height: 36
