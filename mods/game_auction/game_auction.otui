@@ -78,6 +78,13 @@ AuctionWindow < MainWindow
         margin-left: 6
         anchors.verticalCenter: parent.verticalCenter
 
+      Button
+        id: tabMail
+        text: Mail
+        anchors.left: tabHistory.right
+        margin-left: 6
+        anchors.verticalCenter: parent.verticalCenter
+
     Panel
       id: resultsHeader
       anchors.left: parent.left
@@ -320,7 +327,7 @@ AuctionWindow < MainWindow
       margin-top: 4
       visible: false
       layout:
-        type: verticalBox
+        type: anchor
       z-index: 3
 
       Label

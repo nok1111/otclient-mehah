@@ -20,7 +20,7 @@ end
 
 -- Tab switching API
 function Auction.setTab(tab)
-  if tab ~= 'auction' and tab ~= 'my' and tab ~= 'history' then return end
+  if tab ~= 'auction' and tab ~= 'my' and tab ~= 'history' and tab ~= 'mail' then return end
   Auction.activeTab = tab
   -- toggle UI
   local showCreate = (tab == 'my')
@@ -46,10 +46,10 @@ function Auction.setTab(tab)
   local browseVBar = Auction.window and Auction.window:recursiveGetChildById('browseVBar') or nil
   if resultsHeader and resultsHeader.setVisible then resultsHeader:setVisible(true) end
   if browseScroll and browseScroll.setVisible then browseScroll:setVisible(true) end
-  if actionsRow and actionsRow.setVisible then actionsRow:setVisible(false) end
+  if actionsRow and actionsRow.setVisible then actionsRow:setVisible(tab == 'auction') end
   if browseVBar and browseVBar.setVisible then browseVBar:setVisible(true) end
   if sellerHeader and sellerHeader.setText then
-    if tab == 'history' then sellerHeader:setText('Date') else sellerHeader:setText('Seller') end
+    if tab == 'history' or tab == 'mail' then sellerHeader:setText('Date') else sellerHeader:setText('Seller') end
   end
   -- clear current list
   if Auction.browseList then Auction.browseList:destroyChildren() end
@@ -69,6 +69,17 @@ function Auction.setTab(tab)
       loading:setMarginLeft(8)
     end
     Auction.send('AH_HISTORY', {})
+  elseif tab == 'mail' then
+    if Auction.browseList then
+      Auction.browseList:destroyChildren()
+      local loading = g_ui.createWidget('UILabel', Auction.browseList)
+      loading:setText('Loading...')
+      loading:setPhantom(true)
+      loading:setColor('#bbbbbb')
+      loading:setMarginTop(8)
+      loading:setMarginLeft(8)
+    end
+    Auction.send('AH_MAIL', {})
   end
 end
 
@@ -132,7 +143,7 @@ Auction.listItemSlot = nil
 Auction.selectedId = nil
 Auction.listFromPos = nil
 Auction.pendingOpen = false
-Auction.activeTab = 'auction' -- 'auction' or 'my'
+Auction.activeTab = 'auction' -- 'auction' | 'my' | 'history' | 'mail'
 Auction.buyButton = nil
 Auction.cancelButton = nil
 Auction.tabAuction = nil
@@ -190,6 +201,7 @@ function Auction.ensureWindow()
   Auction.createRowPanel = Auction.window:recursiveGetChildById('createRow')
   Auction.tabAuction   = Auction.window:recursiveGetChildById('tabAuction')
   Auction.tabMy        = Auction.window:recursiveGetChildById('tabMy')
+  Auction.tabMail      = Auction.window:recursiveGetChildById('tabMail')
   Auction.tabHistory   = Auction.window:recursiveGetChildById('tabHistory')
   Auction.countValue   = Auction.window:recursiveGetChildById('countValue')
   Auction.buyCountSpin = Auction.window:recursiveGetChildById('buyCountSpin')
@@ -298,6 +310,7 @@ function Auction.ensureWindow()
   if Auction.tabAuction then Auction.tabAuction.onClick = function() Auction.setTab('auction') end end
   if Auction.tabMy then Auction.tabMy.onClick = function() Auction.setTab('my') end end
   if Auction.tabHistory then Auction.tabHistory.onClick = function() Auction.setTab('history') end end
+  if Auction.tabMail then Auction.tabMail.onClick = function() Auction.setTab('mail') end end
   Auction.buyButton = buyButton
   Auction.cancelButton = cancelButton
   if Auction.buyButton and Auction.buyButton.setEnabled then Auction.buyButton:setEnabled(false) end
@@ -591,6 +604,52 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       end
       local sellerLbl = w:getChildById('seller'); if sellerLbl then sellerLbl:setText(fmt(d[i].sold_at)) end
       local rowCancel = w:recursiveGetChildById('rowCancel'); if rowCancel then rowCancel:setVisible(false) end
+    end
+  elseif e == 'AH_MAIL_DATA' then
+    print(string.format('[Auction][Client] AH_MAIL_DATA count=%d', type(d)=='table' and #d or -1))
+    if Auction.activeTab ~= 'mail' then return end
+    if not Auction.browseList then return end
+    Auction.browseList:destroyChildren()
+    if #d == 0 then
+      local empty = g_ui.createWidget('UILabel', Auction.browseList)
+      empty:setText('No pending payouts.')
+      empty:setPhantom(true)
+      empty:setColor('#bbbbbb')
+      empty:setMarginTop(8)
+      empty:setMarginLeft(8)
+      return
+    end
+    for i = 1, #d do
+      local w = g_ui.createWidget('AuctionRow', Auction.browseList)
+      local cnt = tonumber(d[i].count) or 1
+      local baseName = tostring(d[i].name or ''):gsub('^%s*[xX]%s*%d+%s+', '')
+      w:getChildById('name'):setText(baseName)
+      w:getChildById('price'):setText(tostring(d[i].price) .. ' gold')
+      local item = w:getChildById('icon')
+      item:setItemId(d[i].cid)
+      applyIconShader(item, d[i].name)
+      applyIconCount(item, cnt)
+      local sellerLbl = w:getChildById('seller')
+      if sellerLbl then
+        local ts = tonumber(d[i].sold_at) or 0
+        sellerLbl:setText(os.date and os.date('%Y-%m-%d %H:%M', ts) or tostring(ts))
+      end
+      local rowCancel = w:recursiveGetChildById('rowCancel')
+      if rowCancel then
+        rowCancel:setVisible(true)
+        if rowCancel.setText then rowCancel:setText('Claim') end
+        local pid = d[i].id
+        rowCancel.onClick = function()
+          Auction.send('AH_CLAIM', { id = pid })
+        end
+      end
+    end
+  elseif e == 'AH_CLAIM_ACK' then
+    if d and d.error then
+      displayInfoBox('Auction', d.error)
+    else
+      displayInfoBox('Auction', 'Claimed '..tostring(d.amount)..' gp')
+      Auction.send('AH_MAIL', {})
     end
   end
 end
