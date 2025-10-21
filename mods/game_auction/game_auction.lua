@@ -49,7 +49,7 @@ function Auction.setTab(tab)
   if actionsRow and actionsRow.setVisible then actionsRow:setVisible(tab == 'auction') end
   if browseVBar and browseVBar.setVisible then browseVBar:setVisible(true) end
   if sellerHeader and sellerHeader.setText then
-    if tab == 'history' or tab == 'mail' then sellerHeader:setText('Date') else sellerHeader:setText('Seller') end
+    if tab == 'history' or tab == 'mail' then sellerHeader:setText('Date') else sellerHeader:setText('Time Left') end
   end
   -- clear current list
   if Auction.browseList then Auction.browseList:destroyChildren() end
@@ -418,9 +418,18 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       w.listingId = d[i].id
       w.stackCount = cnt
       w.totalPrice = tonumber(d[i].price) or 0
-      -- set seller label for Auction tab
+      -- set Time Left for Auction tab (hours if >=1h, else minutes)
       local sellerLbl = w:getChildById('seller')
-      if sellerLbl then sellerLbl:setText(tostring(d[i].sellerName or '')) end
+      if sellerLbl then
+        local ttl = tonumber(d[i].ttl) or 0
+        if ttl >= 3600 then
+          local hours = math.ceil(ttl / 3600)
+          sellerLbl:setText(string.format('%dh', hours))
+        else
+          local mins = math.max(0, math.ceil(ttl / 60))
+          sellerLbl:setText(string.format('%dm', mins))
+        end
+      end
       -- ensure per-row cancel is hidden on Auction tab rows
       local rowCancel = w:recursiveGetChildById('rowCancel')
       if rowCancel then rowCancel:setVisible(false) end
@@ -496,9 +505,18 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       applyIconShader(item, d[i].name)
       applyIconCount(item, cnt)
       w.listingId = d[i].id
-      -- hide seller label on My tab
+      -- show Time Left on My tab (hours if >=1h, else minutes)
       local sellerLbl = w:getChildById('seller')
-      if sellerLbl then sellerLbl:setText('') end
+      if sellerLbl then
+        local ttl = tonumber(d[i].ttl) or 0
+        if ttl >= 3600 then
+          local hours = math.ceil(ttl / 3600)
+          sellerLbl:setText(string.format('%dh', hours))
+        else
+          local mins = math.max(0, math.ceil(ttl / 60))
+          sellerLbl:setText(string.format('%dm', mins))
+        end
+      end
       -- show per-row cancel button for My Listings
       local rowCancel = w:recursiveGetChildById('rowCancel')
       if rowCancel then
@@ -624,7 +642,13 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       local cnt = tonumber(d[i].count) or 1
       local baseName = tostring(d[i].name or ''):gsub('^%s*[xX]%s*%d+%s+', '')
       w:getChildById('name'):setText(baseName)
-      w:getChildById('price'):setText(tostring(d[i].price) .. ' gold')
+      local priceLbl = w:getChildById('price')
+      local amount = tonumber(d[i].price) or 0
+      if amount > 0 then
+        priceLbl:setText(tostring(amount) .. ' gold')
+      else
+        priceLbl:setText('')
+      end
       local item = w:getChildById('icon')
       item:setItemId(d[i].cid)
       applyIconShader(item, d[i].name)
@@ -637,7 +661,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       local rowCancel = w:recursiveGetChildById('rowCancel')
       if rowCancel then
         rowCancel:setVisible(true)
-        if rowCancel.setText then rowCancel:setText('Claim') end
+        if rowCancel.setText then rowCancel:setText(amount > 0 and 'Claim' or 'Claim Item') end
         local pid = d[i].id
         rowCancel.onClick = function()
           Auction.send('AH_CLAIM', { id = pid })
@@ -648,7 +672,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     if d and d.error then
       displayInfoBox('Auction', d.error)
     else
-      displayInfoBox('Auction', 'Claimed '..tostring(d.amount)..' gp')
+      displayInfoBox('Auction', 'You successfully claimed this offer.')
       Auction.send('AH_MAIL', {})
     end
   end

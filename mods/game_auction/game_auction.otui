@@ -1,7 +1,7 @@
 AuctionWindow < MainWindow
   id: auctionWindow
   !text: tr("Auction House")
-  size: 640 500
+  size: 640 520
   visible: false
   @onEscape: self:hide()
 
@@ -47,7 +47,7 @@ AuctionWindow < MainWindow
     anchors.left: parent.left
     margin-top: 8
     margin-left: 8
-    size: 590 450
+    size: 590 470
 
     Panel
       id: tabsRow
@@ -261,7 +261,7 @@ AuctionWindow < MainWindow
         id: listButton
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        text: List
+        text: Create Offer
         @onClick: Auction.onList()
 
     Panel
@@ -281,10 +281,11 @@ AuctionWindow < MainWindow
 
       SpinBox
         id: buyCountSpin
-        anchors.left: prev.right
+        anchors.left: buyAmountLabel.right
         anchors.top: parent.top
         margin-left: 4
-        size: 80 18
+        margin-top: -4
+        size: 80 22
         minimum: 1
         maximum: 1
 
@@ -300,7 +301,7 @@ AuctionWindow < MainWindow
         anchors.left: buyCostLabel.right
         anchors.top: parent.top
         margin-left: 4
-        width: 80
+        width: 60
         text-align: right
         text: 0
 
@@ -314,7 +315,9 @@ AuctionWindow < MainWindow
       Button
         id: buyButton
         anchors.left: buyCostSuffix.right
+        anchors.top: parent.top
         margin-left: 12
+        margin-top: -4
         text: Buy Selected
         @onClick: Auction.onBuy()
 
@@ -345,7 +348,7 @@ AuctionWindow < MainWindow
         anchors.top: historyHeader.bottom
         anchors.bottom: parent.bottom
         layout:
-          type: verticalBox
+          type: anchor
         z-index: 4
         background-color: #00112266
         border: 1 #224466
