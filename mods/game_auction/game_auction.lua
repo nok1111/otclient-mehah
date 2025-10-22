@@ -55,7 +55,7 @@ function Auction.setTab(tab)
   if Auction.browseList then Auction.browseList:destroyChildren() end
   -- request data
   if tab == 'auction' then
-    Auction.send('AH_SEARCH', { limit = 25, offset = 0 })
+    Auction.send('AH_SEARCH', Auction.buildSearchParams())
   elseif tab == 'my' then
     Auction.send('AH_MY', {})
   elseif tab == 'history' then
@@ -133,6 +133,44 @@ end
 Auction = Auction or {}
 Auction.opCode = 102
 
+-- helper: category param from ComboBox
+local function getSelectedCategory()
+  local fb = Auction.filterBox
+  local txt = nil
+  if fb and fb.getCurrentOption then
+    local ok, val = pcall(function() return fb:getCurrentOption() end)
+    if ok then txt = val end
+  end
+  if not txt and fb and fb.getText then
+    local ok, val = pcall(function() return fb:getText() end)
+    if ok then txt = val end
+  end
+  if not txt and fb and fb.getCurrentIndex then
+    local ok, idx = pcall(function() return fb:getCurrentIndex() end)
+    if ok and type(idx) == 'number' then
+      local options = { 'All','Weapons','Shields','Armors','Boots','Helmet','Accessories','Runes','Pets','Others' }
+      txt = options[(idx or 0)+1]
+    end
+  end
+  txt = tostring(txt or 'All'):lower()
+  local map = {
+    ['all']='all', ['weapons']='weapons', ['shields']='shields', ['armors']='armors', ['boots']='boots', ['helmet']='helmet',
+    ['accessories']='accessories', ['runes']='runes', ['pets']='pets', ['others']='others'
+  }
+  return map[txt] or 'all'
+end
+
+-- helper: build AH_SEARCH payload with current UI values
+function Auction.buildSearchParams(nameOverride)
+  local name = nameOverride
+  if not name and Auction.searchEdit and Auction.searchEdit.getText then
+    name = Auction.searchEdit:getText()
+  end
+  local params = { limit = 25, offset = 0, category = getSelectedCategory() }
+  if name and name ~= '' then params.name = name end
+  return params
+end
+
 -- state
 Auction.window = nil
 Auction.browseList = nil
@@ -193,6 +231,7 @@ function Auction.ensureWindow()
   -- Recursively resolve children since they are nested
   Auction.browseList   = Auction.window:recursiveGetChildById('browseList')
   Auction.searchEdit   = Auction.window:recursiveGetChildById('searchEdit')
+  Auction.filterBox    = Auction.window:recursiveGetChildById('filterBox')
   Auction.priceEdit    = Auction.window:recursiveGetChildById('priceEdit')
   Auction.countSpin    = Auction.window:recursiveGetChildById('countSpin')
   Auction.listItemSlot = Auction.window:recursiveGetChildById('listItemSlot')
@@ -209,6 +248,22 @@ function Auction.ensureWindow()
   Auction.buyCostValue = Auction.window:recursiveGetChildById('buyCostValue')
   Auction.historyList  = Auction.window:recursiveGetChildById('historyList')
   Auction.historyPanel = Auction.window:recursiveGetChildById('historyPanel')
+
+  -- Initialize category options programmatically
+  if Auction.filterBox then
+    local opts = { 'All','Weapons','Shields','Armors','Boots','Helmet','Accessories','Runes','Pets','Others' }
+    -- clear existing if supported
+    if Auction.filterBox.clearOptions then pcall(function() Auction.filterBox:clearOptions() end) end
+    for i = 1, #opts do
+      pcall(function() Auction.filterBox:addOption(opts[i]) end)
+    end
+    -- Set default selection to All
+    if Auction.filterBox.setCurrentOption then
+      pcall(function() Auction.filterBox:setCurrentOption('All') end)
+    elseif Auction.filterBox.setText then
+      pcall(function() Auction.filterBox:setText('All') end)
+    end
+  end
 
   local function updateCountValue()
     if Auction.countValue and Auction.countSpin and Auction.countSpin.getValue then
@@ -291,13 +346,21 @@ function Auction.ensureWindow()
   end
 
   -- Bind button handlers
-  local openButton   = Auction.window:recursiveGetChildById('openButton')
   local searchButton = Auction.window:recursiveGetChildById('searchButton')
   local listButton   = Auction.window:recursiveGetChildById('listButton')
   local buyButton    = Auction.window:recursiveGetChildById('buyButton')
   local cancelButton = Auction.window:recursiveGetChildById('cancelButton')
-  if openButton   then openButton.onClick   = Auction.onOpen   end
   if searchButton then searchButton.onClick = Auction.onSearch end
+  if Auction.filterBox then
+    Auction.filterBox.onOptionChange = function(widget, text, index)
+      -- trigger a new search when category changes
+      Auction.onSearch()
+    end
+    -- some otclient builds use onChange
+    Auction.filterBox.onChange = function(widget)
+      Auction.onSearch()
+    end
+  end
   if Auction.searchEdit then
     Auction.searchEdit.onTextChange = function(widget, text)
       local term = text or (widget and widget.getText and widget:getText()) or ''
@@ -380,7 +443,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       print('[Auction][Client][Error] Failed to show auction window: '..tostring(showErr))
       return
     end
-    local okReq1, reqErr1 = pcall(function() Auction.send('AH_SEARCH', { limit = 25, offset = 0 }) end)
+    local okReq1, reqErr1 = pcall(function() Auction.send('AH_SEARCH', Auction.buildSearchParams()) end)
     if not okReq1 then print('[Auction][Client][Warn] Failed to request AH_SEARCH: '..tostring(reqErr1)) end
     local okReq2, reqErr2 = pcall(function() Auction.send('AH_MY', {}) end)
     if not okReq2 then print('[Auction][Client][Warn] Failed to request AH_MY: '..tostring(reqErr2)) end
@@ -557,7 +620,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     else
       displayInfoBox('Auction', 'Listed: '..d.name..' x'..d.count..' for '..d.price..' gp')
       Auction.send('AH_MY', {})
-      Auction.send('AH_SEARCH', { limit = 25, offset = 0 })
+      Auction.send('AH_SEARCH', Auction.buildSearchParams())
       if Auction.listItemSlot then Auction.listItemSlot:setItem(nil) end
       Auction.priceEdit:setText('')
       Auction.countSpin:setValue(1)
@@ -773,9 +836,8 @@ function Auction.onRefresh()
 end
 
 function Auction.onSearch()
-  print(string.format('[Auction][Client] onSearch: name=%s', tostring(Auction.searchEdit:getText())))
-  local name = Auction.searchEdit:getText()
-  Auction.send('AH_SEARCH', { name = name, limit = 25, offset = 0 })
+  print(string.format('[Auction][Client] onSearch: name=%s', tostring(Auction.searchEdit and Auction.searchEdit:getText() or '')))
+  Auction.send('AH_SEARCH', Auction.buildSearchParams())
 end
 
 -- Debounced live search from TextEdit.onTextChange
@@ -792,7 +854,7 @@ function Auction.onSearchChange(text)
     -- double-check current text
     if Auction.searchEdit and Auction.searchEdit.getText then term = Auction.searchEdit:getText() end
     print(string.format('[Auction][Client] onSearchChange debounced term=%s', tostring(term)))
-    Auction.send('AH_SEARCH', { name = term, limit = 25, offset = 0 })
+    Auction.send('AH_SEARCH', Auction.buildSearchParams(term))
   end, 200)
 end
 

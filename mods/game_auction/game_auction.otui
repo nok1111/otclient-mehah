@@ -14,18 +14,17 @@ AuctionWindow < MainWindow
     text: X
     @onClick: self:getParent():hide()
 
-  Button
-    id: openButton
+  ComboBox
+    id: filterBox
     anchors.top: parent.top
     anchors.left: parent.left
-    margin-top: 8
+    margin-top: 6
     margin-left: 8
-    text: Refresh
-    @onClick: Auction.onRefresh()
+    size: 150 22
 
   TextEdit
     id: searchEdit
-    anchors.left: openButton.right
+    anchors.left: filterBox.right
     anchors.top: parent.top
     margin-left: 8
     margin-top: 8
@@ -43,7 +42,7 @@ AuctionWindow < MainWindow
 
   Panel
     id: contentPane
-    anchors.top: openButton.bottom
+    anchors.top: searchButton.bottom
     anchors.left: parent.left
     margin-top: 8
     margin-left: 8
