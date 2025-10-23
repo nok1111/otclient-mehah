@@ -353,12 +353,11 @@ function Auction.ensureWindow()
   if searchButton then searchButton.onClick = Auction.onSearch end
   if Auction.filterBox then
     Auction.filterBox.onOptionChange = function(widget, text, index)
-      -- trigger a new search when category changes
-      Auction.onSearch()
+      if Auction.onFilterChange then Auction.onFilterChange() else Auction.onSearch() end
     end
     -- some otclient builds use onChange
     Auction.filterBox.onChange = function(widget)
-      Auction.onSearch()
+      if Auction.onFilterChange then Auction.onFilterChange() else Auction.onSearch() end
     end
   end
   if Auction.searchEdit then
@@ -836,8 +835,29 @@ function Auction.onRefresh()
 end
 
 function Auction.onSearch()
-  print(string.format('[Auction][Client] onSearch: name=%s', tostring(Auction.searchEdit and Auction.searchEdit:getText() or '')))
+  print(string.format('[Auction][Client] onSearch: name=%s', tostring(Auction.searchEdit and Auction.searchEdit:getText() or ''))) 
+  if Auction.activeTab == 'auction' then Auction.clearBrowseWithLoading() end
   Auction.send('AH_SEARCH', Auction.buildSearchParams())
+end
+
+function Auction.onFilterChange()
+  if Auction.activeTab ~= 'auction' then return end
+  Auction.clearBrowseWithLoading()
+  Auction.send('AH_SEARCH', Auction.buildSearchParams())
+end
+
+function Auction.clearBrowseWithLoading()
+  if not Auction.browseList then return end
+  Auction.browseList:destroyChildren()
+  local loading = g_ui.createWidget('UILabel', Auction.browseList)
+  loading:setText('Loading...')
+  loading:setPhantom(true)
+  loading:setColor('#bbbbbb')
+  loading:setMarginTop(8)
+  loading:setMarginLeft(8)
+  -- also reset selection and buttons
+  Auction.selectedId = nil
+  if Auction.buyButton and Auction.buyButton.setEnabled then Auction.buyButton:setEnabled(false) end
 end
 
 -- Debounced live search from TextEdit.onTextChange
