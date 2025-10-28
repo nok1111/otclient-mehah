@@ -139,18 +139,11 @@ local function getSelectedCategory()
   local txt = nil
   if fb and fb.getCurrentOption then
     local ok, val = pcall(function() return fb:getCurrentOption() end)
-    if ok then txt = val end
+    if ok and type(val) == 'string' and val ~= '' then txt = val end
   end
   if not txt and fb and fb.getText then
     local ok, val = pcall(function() return fb:getText() end)
-    if ok then txt = val end
-  end
-  if not txt and fb and fb.getCurrentIndex then
-    local ok, idx = pcall(function() return fb:getCurrentIndex() end)
-    if ok and type(idx) == 'number' then
-      local options = { 'All','Weapons','Shields','Armors','Boots','Helmet','Accessories','Runes','Pets','Others' }
-      txt = options[(idx or 0)+1]
-    end
+    if ok and type(val) == 'string' and val ~= '' then txt = val end
   end
   txt = tostring(txt or 'All'):lower()
   local map = {
@@ -167,6 +160,7 @@ function Auction.buildSearchParams(nameOverride)
     name = Auction.searchEdit:getText()
   end
   local params = { limit = 25, offset = 0, category = getSelectedCategory() }
+  print(string.format('[Auction][Client] buildSearchParams category=%s name=%s', tostring(params.category), tostring(name)))
   if name and name ~= '' then params.name = name end
   return params
 end
@@ -450,6 +444,21 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
   elseif e == 'AH_SEARCH_DATA' then
     print(string.format('[Auction][Client] AH_SEARCH_DATA count=%d', type(d)=='table' and #d or -1))
     if not Auction.browseList or Auction.activeTab ~= 'auction' then return end
+    -- client-side safety filter in case server didn't apply category
+    local cat = (function()
+      local ok, val = pcall(function() return Auction.buildSearchParams().category end)
+      return ok and val or 'all'
+    end)()
+    if type(d) == 'table' and cat == 'weapons' then
+      local filtered = {}
+      for i = 1, #d do
+        local wt = d[i].weapon_type
+        if type(wt) == 'string' and wt ~= '' then
+          filtered[#filtered+1] = d[i]
+        end
+      end
+      d = filtered
+    end
     -- reset selection and disable buy until user selects again
     if Auction.selectedBrowseRow then
       pcall(function() local o = Auction.selectedBrowseRow:getChildById('sel'); if o then o:setVisible(false) end end)
@@ -631,7 +640,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     else
       displayInfoBox('Auction', 'Purchased for '..d.price..' gp')
       Auction.send('AH_MY', {})
-      Auction.send('AH_SEARCH', { limit = 25, offset = 0 })
+      Auction.send('AH_SEARCH', Auction.buildSearchParams())
     end
   elseif e == 'AH_BUY_PART_ACK' then
     print('[Auction][Client] AH_BUY_PART_ACK received')
@@ -640,7 +649,9 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     else
       displayInfoBox('Auction', 'Purchased '..tostring(d.count)..' for '..tostring(d.price)..' gp')
       Auction.send('AH_MY', {})
-      Auction.send('AH_SEARCH', { limit = 25, offset = 0 })
+      local params = Auction.buildSearchParams()
+      print(string.format('[Auction][Client] refresh after BUY_PART with category=%s name=%s', tostring(params.category), tostring(params.name)))
+      Auction.send('AH_SEARCH', params)
     end
   elseif e == 'AH_CANCEL_ACK' then
     print('[Auction][Client] AH_CANCEL_ACK received')
@@ -649,7 +660,9 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     else
       displayInfoBox('Auction', 'Listing canceled.')
       Auction.send('AH_MY', {})
-      Auction.send('AH_SEARCH', { limit = 25, offset = 0 })
+      local params = Auction.buildSearchParams()
+      print(string.format('[Auction][Client] refresh after CANCEL with category=%s name=%s', tostring(params.category), tostring(params.name)))
+      Auction.send('AH_SEARCH', params)
     end
   elseif e == 'AH_HISTORY_DATA' then
     print(string.format('[Auction][Client] AH_HISTORY_DATA count=%d', type(d)=='table' and #d or -1))
