@@ -461,7 +461,73 @@ MapTravel.zonesConfig = {
 		creatureSizeExtra = 270,
 		creatureFixSize = 148,
 	},
+
+	{
+		name = "Hydra Lairs", 
+		outfit = { type = 1397 }, -- lookType ID (example)
+		recommendedLevel = "100+", 
+		modulePos = { marginTop = 1188, marginLeft = 850 },
+		effectId = 239,
+		creatureSizeExtra = 270,
+		creatureFixSize = 148,
+	},
+
+	{
+		name = "Scorpion's Veil", 
+		outfit = { type = 1485 }, -- lookType ID (example)
+		recommendedLevel = "30+", 
+		modulePos = { marginTop = 1120, marginLeft = 928 },
+		effectId = 239,
+		creatureSizeExtra = 100,
+	},
 	
+		{
+		name = "Emberwild Barrens", 
+		outfit = { type = 1497 }, -- lookType ID (example)
+		recommendedLevel = "85+", 
+		modulePos = { marginTop = 975, marginLeft = 890 },
+		effectId = 239,
+		creatureSizeExtra = 270,
+		creatureFixSize = 150,
+	},
+
+	{
+		name = "Emberwild Catacombs", 
+		outfit = { type = 2314 }, -- lookType ID (example)
+		recommendedLevel = "125+", 
+		modulePos = { marginTop = 890, marginLeft = 970 },
+		effectId = 239,
+		creatureSizeExtra = 270,
+		creatureFixSize = 120,
+	},
+	{
+		name = "Bone Beach", 
+		outfit = { type = 1628 }, -- lookType ID (example)
+		recommendedLevel = "175+", 
+		modulePos = { marginTop = 800, marginLeft = 910 },
+		effectId = 239,
+		creatureSizeExtra = 270,
+		creatureFixSize = 120,
+	},
+
+	{
+		name = "Jungle Depths", 
+		outfit = { type = 1567 }, -- lookType ID (example)
+		recommendedLevel = "175+", 
+		modulePos = { marginTop = 810, marginLeft = 875 },
+		effectId = 239,
+		creatureSizeExtra = 270,
+		creatureFixSize = 120,
+	},
+	{
+		name = "bonedust mountain", 
+		outfit = { type = 2555 }, -- lookType ID (example)
+		recommendedLevel = "230+", 
+		modulePos = { marginTop = 1038, marginLeft = 920 },
+		effectId = 239,
+		creatureSizeExtra = 270,
+		creatureFixSize = 120,
+	},
 
 
 
@@ -501,6 +567,14 @@ MapTravel.zonesConfig = {
     recommendedLevel = 60,
     modulePos = { marginTop = 635, marginLeft = 610 },
     imageScale = 0.65,
+  },
+    {
+    displayName = "Arena",
+    image = "/images/icons/flags.png",
+    name = "Sandstorm Colliseum",
+    recommendedLevel = 180,
+    modulePos = { marginTop = 1000, marginLeft = 1012 },
+    imageScale = 0.85,
   },
   -- Add more zone entries as needed
 }
