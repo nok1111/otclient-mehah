@@ -4,7 +4,7 @@ PageButton < Button
 
 
 ContainerWindow < MiniWindow
-  margin-top: 32
+  margin-top: 1
   height: 150
 
 
