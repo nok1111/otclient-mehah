@@ -67,6 +67,12 @@ local outfitOffsets = {
     [2431] = {x = 32, y = 32},
     [2432] = {x = 32, y = 32},
 
+    --trent
+    [2625] = {x = 32, y = 32},
+
+    --dragon
+    [2463] = {x = 15, y = 15},
+
     --the old widow
     [2806] = {x = 25, y = 1},
 
