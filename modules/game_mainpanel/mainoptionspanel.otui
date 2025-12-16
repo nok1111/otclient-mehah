@@ -1,7 +1,7 @@
 InventoryWindow
   id: mainoptionspanel
-  height: 195
-  &panelHeight: 195
+  height: 200
+  &panelHeight: 200
   image-source: /images/ui/windows/panel_border
   margin-top: 2
   on: true
@@ -50,20 +50,3 @@ InventoryWindow
       margin-left: 5
       phantom: true
       width: 1
-
-    UIWidget
-      id: specials
-      anchors.left: store.left
-      anchors.right: store.right
-      anchors.top: options.top
-      anchors.bottom: parent.bottom
-      margin-top: 0
-      margin-left: 0
-      margin-right: 0
-      margin-bottom: 0
-      phantom: true
-      layout:
-        type: grid
-        cell-size: 68 20
-        cell-spacing: 4
-        flow: true

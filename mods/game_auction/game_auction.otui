@@ -11,7 +11,7 @@ AuctionWindow < MainWindow
     anchors.right: parent.right
     margin-top: 6
     margin-right: 6
-    text: X
+    text: close
     @onClick: self:getParent():hide()
 
   ComboBox

@@ -76,6 +76,16 @@ local outfitOffsets = {
     --the old widow
     [2806] = {x = 25, y = 1},
 
+    --goblin  
+    [2602] = {x = 32, y = 32},
+    [2448] = {x = 18, y = 5},
+    [2437] = {x = 18, y = 15},
+    [2589] = {x = 32, y = 32},
+    [2590] = {x = 32, y = 32},
+
+
+
+
     -- Add all your outfit IDs and their offsets here
 }
 

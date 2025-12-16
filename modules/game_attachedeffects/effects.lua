@@ -2092,3 +2092,17 @@ AttachedEffectManager.register(245, 'npc area inactive', 665, ThingCategoryEffec
     speed = 0.75,
     offset = { -96, -96, true },
 })
+
+AttachedEffectManager.register(246, 'ground break heat wave', 660, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -75, -60, false},
+    
+})
+
+AttachedEffectManager.register(247, 'time bomb', 668, ThingCategoryEffect, {
+    loop = 1,
+    speed = 0.32,
+    offset = { -64, -64, false }
+})

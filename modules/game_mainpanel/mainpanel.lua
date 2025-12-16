@@ -1,7 +1,6 @@
 local standModeBox
 local chaseModeBox
 local optionsAmount = 0
-local specialsAmount = 0
 local storeAmount = 0
 
 local chaseModeRadioGroup
@@ -51,11 +50,7 @@ function reloadMainPanelSizes()
                     local options_panel = optionsController.ui.onPanel.options
                     local options_height = calculatePanelHeightFromPanel(options_panel, 18, 18, 5) 
 
-                    local specials_panel = optionsController.ui.onPanel.specials
-                    local specials_height = calculatePanelHeightFromPanel(specials_panel, 18, 18, 2) 
-
-                    local max_panel_height = math.max(options_height, specials_height)
-                    panel:setHeight(panel:getHeight() + max_panel_height)
+                    panel:setHeight(panel:getHeight() + options_height)
                     height = height + options_height
 
                     local store_panel = panel.onPanel.store
@@ -130,13 +125,17 @@ local function createButton_large(id, description, image, callback, special, fro
 end
 
 local function createButton(id, description, image, callback, special, front, index)
-    local panel
-    if special then
-        panel = optionsController.ui.onPanel.specials
-        specialsAmount = specialsAmount + 1
-    else
-        panel = optionsController.ui.onPanel.options
-        optionsAmount = optionsAmount + 1
+    -- Validación: verificar que el controlador esté inicializado
+    if not optionsController or not optionsController.ui then
+        return nil
+    end
+    
+    -- Todos los botones van al panel 'options'
+    local panel = optionsController.ui.onPanel.options
+    optionsAmount = optionsAmount + 1
+    
+    if not panel then
+        return nil
     end
 
     local button = panel:getChildById(id)
@@ -217,6 +216,7 @@ function optionsController:onGameStart()
             local config = loadButtonConfig()
             buttonConfigs = config.buttons or {}
             buttonOrder = config.order or {}
+            
             local optionsPanel = optionsController.ui.onPanel.options
             if optionsPanel then
                 for _, button in ipairs(optionsPanel:getChildren()) do
@@ -252,10 +252,6 @@ function addToggleButton(id, description, image, callback, front, index)
     return createButton(id, description, image, callback, false, front, index)
 end
 
-function addSpecialToggleButton(id, description, image, callback, front, index)
-    return createButton(id, description, image, callback, true, front, index)
-end
-
 function addStoreButton(id, description, image, callback, front)
     return createButton_large(id, description, image, callback, true, front)
 end
@@ -266,7 +262,7 @@ end
 
 function toggleExtendedViewButtons(extended)
     local optionsPanel = optionsController.ui.onPanel.options
-    local specialsPanel = optionsController.ui.onPanel.store
+    local storePanel = optionsController.ui.onPanel.store
     local rightGamePanel = modules.client_topmenu.getRightGameButtonsPanel()
     if extended then
         local optionChildren = optionsPanel:getChildren()
@@ -276,10 +272,10 @@ function toggleExtendedViewButtons(extended)
                 rightGamePanel:addChild(button)
             end
         end
-        local specialChildren = specialsPanel:getChildren()
-        for _, button in ipairs(specialChildren) do
+        local storeChildren = storePanel:getChildren()
+        for _, button in ipairs(storeChildren) do
             if not button:isDestroyed() then
-                button.originalPanel = "specials"
+                button.originalPanel = "store"
                 rightGamePanel:addChild(button)
             end
         end
@@ -291,8 +287,8 @@ function toggleExtendedViewButtons(extended)
             if not button:isDestroyed() then
                 if button.originalPanel == "options" then
                     optionsPanel:addChild(button)
-                elseif button.originalPanel == "specials" then
-                    specialsPanel:addChild(button)
+                elseif button.originalPanel == "store" then
+                    storePanel:addChild(button)
                 end
             end
         end
@@ -547,6 +543,68 @@ function reorderButtons()
         end
     end
     optionsPanel:reorderChildren(children)
+end
+
+function listAllButtons()
+    print("========== LISTA DE BOTONES DEL MAINPANEL ==========")
+    local optionsPanel = optionsController.ui.onPanel.options
+    if optionsPanel then
+        local buttons = optionsPanel:getChildren()
+        print("Total de botones: " .. #buttons)
+        for i, button in ipairs(buttons) do
+            local id = button:getId()
+            local visible = button:isVisible()
+            local tooltip = button:getTooltip()
+            print(string.format("[%d] ID: %s | Visible: %s | Tooltip: %s", i, tostring(id), tostring(visible), tostring(tooltip)))
+        end
+    else
+        print("ERROR: optionsPanel es nil")
+    end
+    print("=====================================================")
+end
+
+function showButton(buttonId)
+    local optionsPanel = optionsController.ui.onPanel.options
+    if optionsPanel then
+        local button = optionsPanel:getChildById(buttonId)
+        if button then
+            button:setVisible(true)
+            if buttonConfigs[buttonId] then
+                buttonConfigs[buttonId].visible = true
+            else
+                buttonConfigs[buttonId] = { visible = true, tooltip = button:getTooltip() or buttonId }
+            end
+            if not table.find(buttonOrder, buttonId) then
+                table.insert(buttonOrder, buttonId)
+            end
+            saveButtonConfig()
+            reloadMainPanelSizes()
+            print("[MainPanel] Botón '" .. buttonId .. "' ahora visible y guardado")
+        else
+            print("[MainPanel ERROR] Botón '" .. buttonId .. "' no encontrado")
+        end
+    end
+end
+
+function showAllButtons()
+    local optionsPanel = optionsController.ui.onPanel.options
+    if optionsPanel then
+        local count = 0
+        for _, button in ipairs(optionsPanel:getChildren()) do
+            local id = button:getId()
+            if id then
+                button:setVisible(true)
+                buttonConfigs[id] = { visible = true, tooltip = button:getTooltip() or id }
+                if not table.find(buttonOrder, id) then
+                    table.insert(buttonOrder, id)
+                end
+                count = count + 1
+            end
+        end
+        saveButtonConfig()
+        reloadMainPanelSizes()
+        print("[MainPanel] " .. count .. " botones ahora visibles y guardados")
+    end
 end
 
 function reset()
