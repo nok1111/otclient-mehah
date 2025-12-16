@@ -1,7 +1,7 @@
 InventoryWindow
   id: mainoptionspanel
-  height: 200
-  &panelHeight: 200
+  height: 240
+  &panelHeight: 240
   image-source: /images/ui/windows/panel_border
   margin-top: 2
   on: true
@@ -18,7 +18,7 @@ InventoryWindow
 
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
-      size: 140 20
+      size: 140 66
       phantom: true
       layout:
         type: verticalBox

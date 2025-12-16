@@ -313,8 +313,8 @@ function setupOptionsMainButton()
         return
     end
 
-    extraWidgets.optionsButtons = modules.game_mainpanel.addSpecialToggleButton('optionsMainButton', tr('Options'),
-        '/images/options/button_options', toggle, true)
+    extraWidgets.optionsButtons = modules.game_mainpanel.addStoreButton('optionsMainButton', tr('Options'),
+        '/images/options/button_options', toggle, false)
 end
 
 function getOption(key)

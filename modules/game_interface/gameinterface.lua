@@ -1313,9 +1313,9 @@ function setupOptionsMainButton()
         return
     end
 
-    logOutMainButton = modules.game_mainpanel.addSpecialToggleButton('logoutButton', tr('Exit'),
+    logOutMainButton = modules.game_mainpanel.addStoreButton('logoutButton', tr('Exit'),
         '/images/options/button_logout',
-        tryLogout)
+        tryLogout, false)
 end
 
 function checkAndOpenLeftPanel()
