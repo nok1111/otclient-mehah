@@ -2106,3 +2106,11 @@ AttachedEffectManager.register(247, 'time bomb', 668, ThingCategoryEffect, {
     speed = 0.32,
     offset = { -64, -64, false }
 })
+
+AttachedEffectManager.register(248, 'exp effect', 1116, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -32, -32, true }
+
+})
+
