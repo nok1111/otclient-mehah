@@ -1,0 +1,455 @@
+WikiCategoryItem < Button
+  height: 28
+  text-align: left
+  padding-left: 10
+  font: verdana-11px-rounded
+  background-color: #ffffff11
+  $hover:
+    background-color: #ffffff22
+  $on:
+    background-color: #ffffff33
+
+WikiSubCategoryItem < Button
+  height: 28
+  text-align: left
+  padding-left: 15
+  font: verdana-11px-rounded
+  background-color: #ffffff11
+  $hover:
+    background-color: #ffffff22
+  $on:
+    background-color: #ffffff33
+
+WikiListItem < Panel
+  height: 60
+  background-color: #ffffff11
+  margin: 2
+  
+  Item
+    id: icon
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    size: 40 40
+    margin-left: 10
+  
+  Label
+    id: name
+    anchors.left: icon.right
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-left: 10
+    margin-top: 8
+    font: verdana-11px-rounded
+    color: #ffcc00
+  
+  Label
+    id: description
+    anchors.left: icon.right
+    anchors.top: name.bottom
+    anchors.right: parent.right
+    margin-left: 10
+    margin-top: 2
+    font: verdana-11px-antialised
+    color: #cccccc
+    text-wrap: true
+
+WikiPetItem < Panel
+  height: 150
+  background-color: #ffffff11
+  margin: 3
+  padding: 12
+  
+  UICreature
+    id: petOutfit
+    anchors.top: parent.top
+    anchors.left: parent.left
+    size: 64 64
+    margin-top: 5
+    margin-left: 5
+  
+  Label
+    id: petName
+    anchors.top: parent.top
+    anchors.left: petOutfit.right
+    anchors.right: parent.right
+    margin-left: 12
+    margin-top: 2
+    font: verdana-11px-rounded
+    color: #ffcc00
+    text-align: left
+    height: 20
+  
+  Label
+    id: petRarity
+    anchors.top: petName.bottom
+    anchors.left: petOutfit.right
+    margin-left: 12
+    margin-top: 2
+    font: verdana-11px-antialised
+    color: #aaaaff
+    height: 15
+  
+  Label
+    id: petElement
+    anchors.top: petRarity.bottom
+    anchors.left: petOutfit.right
+    margin-left: 12
+    margin-top: 2
+    font: verdana-11px-antialised
+    color: #ffaa55
+    height: 15
+  
+  Label
+    id: petCollector
+    anchors.top: petElement.bottom
+    anchors.left: petOutfit.right
+    margin-left: 12
+    margin-top: 2
+    font: verdana-11px-antialised
+    color: #aaffaa
+    height: 15
+  
+  Label
+    !text: tr('Special Abilities:')
+    id: abilitiesLabel
+    anchors.top: petOutfit.bottom
+    anchors.left: parent.left
+    margin-top: 10
+    margin-left: 5
+    font: verdana-11px-rounded
+    color: #ffffff
+    height: 15
+  
+  Label
+    id: petAbilities
+    anchors.top: abilitiesLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 4
+    margin-left: 5
+    margin-right: 5
+    margin-bottom: 5
+    font: verdana-11px-antialised
+    color: #cccccc
+    text-wrap: true
+
+WikiTextContent < Label
+  height: 100
+  text-wrap: true
+  background-color: #ffffff11
+  padding: 10
+  font: verdana-11px-antialised
+
+WikiEnchantItem < Panel
+  height: 155
+  background-color: #ffffff11
+  margin: 3
+  padding: 12
+  
+  UIWidget
+    id: icon
+    anchors.left: parent.left
+    anchors.top: parent.top
+    size: 32 32
+    margin-left: 8
+    margin-top: 2
+    image-source: /images/icons/enchant.png
+  
+  Label
+    id: name
+    anchors.left: icon.right
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-left: 12
+    margin-top: 1
+    font: verdana-11px-rounded
+    color: #ffcc00
+    text-align: left
+    height: 20
+  
+  Label
+    id: description
+    anchors.left: icon.right
+    anchors.top: name.bottom
+    anchors.right: parent.right
+    margin-left: 12
+    margin-top: 4
+    margin-right: 8
+    font: verdana-11px-antialised
+    color: #dddddd
+    text-wrap: true
+    height: 28
+  
+  Label
+    id: enchantType
+    anchors.left: icon.right
+    anchors.top: description.bottom
+    margin-left: 12
+    margin-top: 4
+    font: verdana-11px-antialised
+    color: #aaaaff
+    height: 16
+  
+  Label
+    id: valuesPerLevel
+    anchors.left: icon.right
+    anchors.top: enchantType.bottom
+    margin-left: 12
+    margin-top: 3
+    font: verdana-11px-antialised
+    color: #ffaa55
+    height: 16
+  
+  Label
+    id: minLevel
+    anchors.left: icon.right
+    anchors.top: valuesPerLevel.bottom
+    margin-left: 12
+    margin-top: 3
+    font: verdana-11px-antialised
+    color: #55ff55
+    height: 16
+  
+  Label
+    id: equipment
+    anchors.left: icon.right
+    anchors.top: minLevel.bottom
+    anchors.right: parent.right
+    margin-left: 12
+    margin-top: 4
+    margin-right: 8
+    font: verdana-11px-antialised
+    color: #cccccc
+    text-wrap: true
+    height: 32
+
+WikiSearchResult < Panel
+  height: 70
+  background-color: #ffffff11
+  margin: 2
+  padding: 8
+  
+  $hover:
+    background-color: #ffffff22
+  
+  Label
+    id: resultCategory
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    font: verdana-11px-antialised
+    color: #aaaaaa
+    height: 15
+  
+  Label
+    id: resultName
+    anchors.top: resultCategory.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 2
+    font: verdana-11px-rounded
+    color: #ffcc00
+    height: 20
+  
+  Label
+    id: resultDesc
+    anchors.top: resultName.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 2
+    font: verdana-11px-antialised
+    color: #cccccc
+    text-wrap: true
+    height: 20
+
+MainWindow
+  id: wikiWindow
+  !text: tr('Game Wiki')
+  size: 900 600
+  @onEscape: hide()
+
+  Panel
+    id: leftPanel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    width: 200
+    margin-top: 5
+    margin-left: 5
+    margin-bottom: 5
+    background-color: #00000088
+    
+    Label
+      id: categoriesLabel
+      !text: tr('Categories')
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 25
+      text-align: center
+      font: verdana-11px-rounded
+      background-color: #ffffff22
+      margin: 2
+    
+    ScrollablePanel
+      id: categoryList
+      anchors.top: categoriesLabel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-top: 5
+      margin-left: 2
+      margin-right: 2
+      margin-bottom: 2
+      vertical-scrollbar: categoryListScrollBar
+      layout:
+        type: verticalBox
+        spacing: 2
+    
+    VerticalScrollBar
+      id: categoryListScrollBar
+      anchors.top: categoryList.top
+      anchors.bottom: categoryList.bottom
+      anchors.right: parent.right
+      step: 14
+      pixels-scroll: true
+
+  Panel
+    id: subCategoryPanel
+    anchors.top: parent.top
+    anchors.left: leftPanel.right
+    anchors.bottom: parent.bottom
+    width: 220
+    margin-top: 5
+    margin-left: 5
+    margin-bottom: 5
+    background-color: #00000088
+    
+    Label
+      id: subCategoriesLabel
+      !text: tr('Subcategories')
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 25
+      text-align: center
+      font: verdana-11px-rounded
+      background-color: #ffffff22
+      margin: 2
+    
+    ScrollablePanel
+      id: subCategoryList
+      anchors.top: subCategoriesLabel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-top: 5
+      margin-left: 2
+      margin-right: 2
+      margin-bottom: 2
+      vertical-scrollbar: subCategoryListScrollBar
+      layout:
+        type: verticalBox
+        spacing: 2
+    
+    VerticalScrollBar
+      id: subCategoryListScrollBar
+      anchors.top: subCategoryList.top
+      anchors.bottom: subCategoryList.bottom
+      anchors.right: parent.right
+      step: 14
+      pixels-scroll: true
+
+  Panel
+    id: contentContainer
+    anchors.top: parent.top
+    anchors.left: subCategoryPanel.right
+    anchors.right: parent.right
+    anchors.bottom: bottomPanel.top
+    margin-top: 5
+    margin-left: 5
+    margin-right: 5
+    margin-bottom: 5
+    background-color: #00000088
+    
+    Panel
+      id: searchPanel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 35
+      background-color: #ffffff11
+      margin: 2
+      
+      Label
+        id: searchLabel
+        !text: tr('Search:')
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        width: 60
+        margin-left: 10
+        font: verdana-11px-rounded
+      
+      TextEdit
+        id: searchEdit
+        anchors.left: searchLabel.right
+        anchors.right: languageButton.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 5
+        margin-right: 5
+        height: 25
+        @onTextChange: onSearchTextChange()
+      
+      Button
+        id: languageButton
+        !text: EN
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        width: 50
+        height: 25
+        margin-right: 10
+        @onClick: changeLanguage()
+    
+    ScrollablePanel
+      id: contentPanel
+      anchors.top: searchPanel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-top: 5
+      margin-left: 2
+      margin-right: 2
+      margin-bottom: 2
+      vertical-scrollbar: contentScrollBar
+      layout:
+        type: verticalBox
+        spacing: 5
+    
+    VerticalScrollBar
+      id: contentScrollBar
+      anchors.top: contentPanel.top
+      anchors.bottom: contentPanel.bottom
+      anchors.right: parent.right
+      step: 14
+      pixels-scroll: true
+
+  Panel
+    id: bottomPanel
+    anchors.left: leftPanel.right
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    height: 40
+    margin-left: 5
+    margin-right: 5
+    margin-bottom: 5
+    background-color: #00000088
+    
+    Button
+      id: closeButton
+      !text: tr('Close')
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      width: 80
+      margin-right: 10
+      @onClick: hide()

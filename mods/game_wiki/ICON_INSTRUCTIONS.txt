@@ -1,0 +1,31 @@
+📚 WIKI ICON SETUP
+
+You need to create a wiki icon for the top menu button.
+
+📁 Location:
+   Place the icon at: data/images/topbuttons/wiki.png
+
+📐 Specifications:
+   - Size: 20x20 pixels (recommended)
+   - Format: PNG with transparency
+   - Style: Match other top button icons
+
+🎨 Icon Suggestions:
+   - Book icon
+   - Question mark icon
+   - Information "i" icon
+   - Scroll icon
+   - Library icon
+
+🔧 Alternative if icon is missing:
+   The module will still work, but the button may not display correctly.
+   You can use any existing icon temporarily by changing the path in wiki.lua:
+
+   Line 10:
+   '/images/topbuttons/wiki'
+   
+   Change to an existing icon like:
+   '/images/topbuttons/options'
+
+💡 Tip:
+   Look at other icons in data/images/topbuttons/ to match the style!
