@@ -1,0 +1,9 @@
+Module
+  name: game_achievements
+  description: Achievement System UI
+  author: Achievement System v1.0
+  website: 
+  sandboxed: true
+  scripts: [ achievements ]
+  @onLoad: init()
+  @onUnload: terminate()

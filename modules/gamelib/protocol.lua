@@ -23,6 +23,18 @@ GameServerOpcodes = {
     GameServerOpenCrafting  = 57, --54
     GameServerJobs  = 60,
     GameServerUpdateFame  = 61,
+    GameServerNPCDialog = 80,
+    
+    -- Achievement System (Extended Opcodes 81-86)
+    -- These are handled via GameServerExtendedOpcode (50)
+    -- Registered in modules/gamelib/const.lua as ExtendedIds
+    GameServerAchievementList = 81,
+    GameServerAchievementUpdate = 82,
+    GameServerAchievementComplete = 83,
+    GameServerAchievementClaim = 84,
+    GameServerAchievementDetails = 85,
+    GameServerAchievementStats = 86,
+    
     GameServerOpenFameShop  = 88,
     GameServerAncestralTasks  = 89,
 

@@ -56,5 +56,6 @@ Module
     - game_creatureinformation
     - game_famenpcshop
     - game_tilewidgets
+    - game_achievements
   @onLoad: init()
   @onUnload: terminate()

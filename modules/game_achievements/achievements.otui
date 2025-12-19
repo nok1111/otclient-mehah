@@ -1,0 +1,537 @@
+// Achievement Item Widget (Custom widget definition)
+AchievementItem < Panel
+  height: 90
+  background-color: #2a2a2a
+  border-width: 1
+  border-color: #444444
+
+  // Icon/Visual
+  Panel
+    id: iconPanel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    width: 70
+    margin: 5
+
+    Item
+      id: achievementIcon
+      anchors.fill: parent
+      phantom: true
+      visible: false
+
+    UIWidget
+      id: achievementImage
+      anchors.fill: parent
+      phantom: true
+      visible: false
+
+  // Status Icon (top-right corner)
+  Label
+    id: statusIcon
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 5
+    margin-right: 5
+    size: 16 16
+    text: ?
+    text-align: center
+    font: verdana-11px-rounded
+    color: #888888
+
+  // Content
+  Panel
+    id: contentPanel
+    anchors.top: parent.top
+    anchors.left: iconPanel.right
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-left: 5
+    margin-right: 5
+
+    Label
+      id: achievementName
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      text: Achievement Name
+      font: verdana-11px-rounded
+      color: #FFD700
+
+    Label
+      id: achievementPoints
+      anchors.top: parent.top
+      anchors.right: parent.right
+      margin-top: 5
+      margin-right: 5
+      text: 0 pts
+      font: verdana-11px-rounded
+      color: #AAAAAA
+
+    Label
+      id: achievementDesc
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 3
+      text: Achievement description goes here
+      font: verdana-11px-rounded
+      color: #CCCCCC
+      text-wrap: true
+
+    // Claim Button
+    Button
+      id: claimButton
+      anchors.top: prev.bottom
+      anchors.right: parent.right
+      width: 70
+      height: 20
+      margin-top: 8
+      margin-right: 5
+      !text: tr('Claim')
+      visible: false
+      enabled: false
+
+    // Progress Bar Background
+    Panel
+      id: progressBackground
+      anchors.top: claimButton.top
+      anchors.left: parent.left
+      anchors.right: claimButton.left
+      margin-left: 80
+      margin-right: 5
+      height: 18
+      background-color: #1a1a1a
+      border-width: 1
+      border-color: #444444
+      
+      ProgressBar
+        id: progressBar
+        anchors.fill: parent
+        background-color: #00aa00
+        percent: 0
+        phantom: false
+        border-width: 0
+        
+      Label
+        id: progressLabel
+        anchors.centerIn: parent
+        text: 0 / 100 (0%)
+        font: verdana-11px-rounded
+        color: #FFFFFF
+        phantom: true
+
+MainWindow
+  !text: tr('Achievements')
+  size: 800 600
+  @onEscape: self:hide()
+
+  // Header with stats
+  Panel
+    id: headerPanel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 40
+    background-color: #1a1a1a
+    border-width: 1
+    border-color: #333333
+
+    Label
+      id: titleLabel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      margin-top: 10
+      margin-left: 15
+      text: Achievements
+      font: verdana-11px-rounded
+      color: #FFD700
+
+    Label
+      id: statsLabel
+      anchors.top: parent.top
+      anchors.right: parent.right
+      margin-top: 10
+      margin-right: 15
+      text: Completed: 0 | Claimed: 0 | Points: 0
+      font: verdana-11px-rounded
+      color: #CCCCCC
+
+  // Left panel - Categories
+  Panel
+    id: categoryPanel
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    width: 150
+    margin-top: 5
+    margin-left: 5
+    margin-bottom: 5
+    background-color: #1a1a1a
+    border-width: 1
+    border-color: #333333
+
+    Label
+      id: categoryTitle
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 25
+      margin: 5
+      text: Categories
+      font: verdana-11px-rounded
+      color: #FFD700
+      text-align: center
+
+    // All Category
+    Button
+      id: cat_all
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 28
+      margin-top: 5
+      margin-left: 5
+      margin-right: 5
+      !text: tr('All')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 0 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+      $hover !disabled:
+        image-clip: 0 34 116 34
+
+      $pressed:
+        image-clip: 0 68 116 34
+
+      $disabled:
+        color: #dfdfdf88
+
+    // Combat Category
+    Button
+      id: cat_combat
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 28
+      margin-top: 2
+      margin-left: 5
+      margin-right: 5
+      !text: tr('Combat')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 0 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+      $hover !disabled:
+        image-clip: 0 34 116 34
+
+      $pressed:
+        image-clip: 0 68 116 34
+
+      $disabled:
+        color: #dfdfdf88
+
+    // Exploration Category
+    Button
+      id: cat_exploration
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 28
+      margin-top: 2
+      margin-left: 5
+      margin-right: 5
+      !text: tr('Exploration')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 0 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+      $hover !disabled:
+        image-clip: 0 34 116 34
+
+      $pressed:
+        image-clip: 0 68 116 34
+
+      $disabled:
+        color: #dfdfdf88
+
+    // Collection Category
+    Button
+      id: cat_collection
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 28
+      margin-top: 2
+      margin-left: 5
+      margin-right: 5
+      !text: tr('Collection')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 0 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+      $hover !disabled:
+        image-clip: 0 34 116 34
+
+      $pressed:
+        image-clip: 0 68 116 34
+
+      $disabled:
+        color: #dfdfdf88
+
+    // Social Category
+    Button
+      id: cat_social
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 28
+      margin-top: 2
+      margin-left: 5
+      margin-right: 5
+      !text: tr('Social')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 0 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+      $hover !disabled:
+        image-clip: 0 34 116 34
+
+      $pressed:
+        image-clip: 0 68 116 34
+
+      $disabled:
+        color: #dfdfdf88
+
+    // Skills Category
+    Button
+      id: cat_skills
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 28
+      margin-top: 2
+      margin-left: 5
+      margin-right: 5
+      !text: tr('Skills')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 0 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+      $hover !disabled:
+        image-clip: 0 34 116 34
+
+      $pressed:
+        image-clip: 0 68 116 34
+
+      $disabled:
+        color: #dfdfdf88
+
+    // Special Category
+    Button
+      id: cat_special
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 28
+      margin-top: 2
+      margin-left: 5
+      margin-right: 5
+      !text: tr('Special')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 0 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+      $hover !disabled:
+        image-clip: 0 34 116 34
+
+      $pressed:
+        image-clip: 0 68 116 34
+
+      $disabled:
+        color: #dfdfdf88
+
+    // Pets Category
+    Button
+      id: cat_pets
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 28
+      margin-top: 2
+      margin-left: 5
+      margin-right: 5
+      !text: tr('Pets')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 0 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+      $hover !disabled:
+        image-clip: 0 34 116 34
+
+      $pressed:
+        image-clip: 0 68 116 34
+
+      $disabled:
+        color: #dfdfdf88
+
+    // Professions Category
+    Button
+      id: cat_professions
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 28
+      margin-top: 2
+      margin-left: 5
+      margin-right: 5
+      !text: tr('Professions')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 0 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+      $hover !disabled:
+        image-clip: 0 34 116 34
+
+      $pressed:
+        image-clip: 0 68 116 34
+
+      $disabled:
+        color: #dfdfdf88
+
+    // Dungeons Category
+    Button
+      id: cat_dungeons
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 28
+      margin-top: 2
+      margin-left: 5
+      margin-right: 5
+      !text: tr('Dungeons')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 0 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+      $hover !disabled:
+        image-clip: 0 34 116 34
+
+      $pressed:
+        image-clip: 0 68 116 34
+
+      $disabled:
+        color: #dfdfdf88
+
+    // Fame Category
+    Button
+      id: cat_fame
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 28
+      margin-top: 2
+      margin-left: 5
+      margin-right: 5
+      !text: tr('Fame')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 0 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+      $hover !disabled:
+        image-clip: 0 34 116 34
+
+      $pressed:
+        image-clip: 0 68 116 34
+
+      $disabled:
+        color: #dfdfdf88
+
+  // Right panel - Achievement List
+  Panel
+    id: achievementListPanel
+    anchors.top: headerPanel.bottom
+    anchors.left: categoryPanel.right
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 5
+    margin-left: 5
+    margin-right: 5
+    margin-bottom: 5
+    background-color: #1a1a1a
+    border-width: 1
+    border-color: #333333
+
+    VerticalScrollBar
+      id: achievementScrollBar
+      anchors.top: parent.top
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      step: 28
+      pixels-scroll: true
+
+    ScrollablePanel
+      id: achievementList
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: prev.left
+      anchors.bottom: parent.bottom
+      margin: 5
+      vertical-scrollbar: achievementScrollBar
+      layout:
+        type: verticalBox
+        spacing: 5
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    width: 80
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-bottom: 10
+    margin-right: 10

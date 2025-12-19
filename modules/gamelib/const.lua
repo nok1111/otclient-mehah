@@ -360,6 +360,14 @@ ExtendedIds = {
     NpcTaskList = 0x12,
     NpcRewardList = 0x13,
     NpcTaskWindowClose = 0x14,
+    
+    -- Achievement System (81-86)
+    AchievementList = 81,
+    AchievementUpdate = 82,
+    AchievementComplete = 83,
+    AchievementClaim = 84,
+    AchievementDetails = 85,
+    AchievementStats = 86,
 }
 
 PreviewState = {
