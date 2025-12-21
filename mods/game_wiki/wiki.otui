@@ -267,7 +267,7 @@ MainWindow
   id: wikiWindow
   !text: tr('Game Wiki')
   size: 900 600
-  @onEscape: hide()
+  @onEscape: modules.game_wiki.hide()
 
   Panel
     id: leftPanel
@@ -399,7 +399,7 @@ MainWindow
         margin-left: 5
         margin-right: 5
         height: 25
-        @onTextChange: onSearchTextChange()
+        @onTextChange: modules.game_wiki.onSearchTextChange()
       
       Button
         id: languageButton
@@ -409,7 +409,7 @@ MainWindow
         width: 50
         height: 25
         margin-right: 10
-        @onClick: changeLanguage()
+        @onClick: modules.game_wiki.changeLanguage()
     
     ScrollablePanel
       id: contentPanel
@@ -452,4 +452,4 @@ MainWindow
       anchors.verticalCenter: parent.verticalCenter
       width: 80
       margin-right: 10
-      @onClick: hide()
+      @onClick: modules.game_wiki.hide()

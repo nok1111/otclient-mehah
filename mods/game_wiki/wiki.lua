@@ -1,3 +1,4 @@
+-- coding: utf-8
 -- Wiki Module
 -- In-game knowledge base with search and categories
 

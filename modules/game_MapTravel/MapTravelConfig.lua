@@ -115,8 +115,8 @@ MapTravel.mapNodesConfig = {
 		displayName = "WildThorns",
 		nameId = "wildthorns",
 		discoverable = false,
-		modulePos = {marginTop = 775.5, marginLeft = 850.5},
-		serverPos = {33177, 31764, 6},
+		modulePos = {marginTop = 850.5, marginLeft = 850.5},
+		serverPos = {1010, 930, 3},
 		premium = false,
 		cost = {
 			gold = 20,
@@ -140,7 +140,7 @@ MapTravel.mapNodesConfig = {
 		discoverable = false,
 		modulePos = {marginTop = 1068, marginLeft = 613},
 		serverPos = {762, 1162, 6},
-		premium = true,
+		premium = false,
 		cost = {
 			gold = 20,
 		},
@@ -151,7 +151,7 @@ MapTravel.mapNodesConfig = {
 		discoverable = false,
 		modulePos = {marginTop = 1497.5, marginLeft = 100},
 		serverPos = {32008, 32443, 6},
-		premium = true,
+		premium = false,
 		cost = {
 			gold = 20,
 		},
@@ -162,7 +162,7 @@ MapTravel.mapNodesConfig = {
 		discoverable = false,
 		modulePos = {marginTop = 655, marginLeft = 360},
 		serverPos = {32008, 32443, 6},
-		premium = true,
+		premium = false,
 		cost = {
 			gold = 20,
 		},
@@ -173,7 +173,7 @@ MapTravel.mapNodesConfig = {
 		discoverable = false,
 		modulePos = {marginTop = 922, marginLeft = 638},
 		serverPos = {32008, 32443, 6},
-		premium = true,
+		premium = false,
 		cost = {
 			gold = 20,
 		},
@@ -184,7 +184,7 @@ MapTravel.mapNodesConfig = {
 		discoverable = false,
 		modulePos = {marginTop = 1100, marginLeft = 415.5},
 		serverPos = {558, 1202, 7},
-		premium = true,
+		premium = false,
 		cost = {
 			gold = 35,
 		},
@@ -195,11 +195,45 @@ MapTravel.mapNodesConfig = {
 		discoverable = false,
 		modulePos = {marginTop = 1105, marginLeft = 804},
 		serverPos = {959, 1198, 6},
-		premium = true,
+		premium = false,
 		cost = {
 			gold = 35,
 		},
 	},
+	[17] = {
+		displayName = "colliseum",
+		nameId = "colliseum",
+		discoverable = false,
+		modulePos = {marginTop = 1040, marginLeft = 975.5},
+		serverPos = {1128, 1140, 7},
+		premium = false,
+		cost = {
+			gold = 35,
+		},
+	},
+	[18] = {
+		displayName = "powderia",
+		nameId = "powderia",
+		discoverable = false,
+		modulePos = {marginTop = 1005, marginLeft = 340.5},
+		serverPos = {489, 1101, 7},
+		premium = false,
+		cost = {
+			gold = 35,
+		},
+	},
+	[19] = {
+		displayName = "dragonia",
+		nameId = "dragonia",
+		discoverable = false,
+		modulePos = { marginTop = 455, marginLeft = 375 },
+		serverPos = {526, 540, 7},
+		premium = false,
+		cost = {
+			gold = 35,
+		},
+	},
+
 
 
 }
@@ -528,7 +562,31 @@ MapTravel.zonesConfig = {
 		creatureSizeExtra = 270,
 		creatureFixSize = 120,
 	},
+	{
+		name = "isle of powderia", 
+		outfit = { type = 2582 }, -- lookType ID (example)
+		recommendedLevel = "215+", 
+		modulePos = { marginTop = 962, marginLeft = 365 },
+		effectId = 239,
+		creatureSizeExtra = 270,
+		creatureFixSize = 120,
+	},
+	{
+		name = "isle of dragonia", 
+		outfit = { type = 2463 }, -- lookType ID (example)
+		recommendedLevel = "135+", 
+		modulePos = { marginTop = 425, marginLeft = 330 },
+		effectId = 239,
+		creatureSizeExtra = 270,
+		creatureFixSize = 148,
+	},
 
+
+
+
+
+
+	--marginTop = 1005, marginLeft = 340.5
 
 
 

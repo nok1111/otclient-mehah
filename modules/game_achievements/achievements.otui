@@ -1,6 +1,6 @@
 // Achievement Item Widget (Custom widget definition)
 AchievementItem < Panel
-  height: 90
+  height: 105
   background-color: #2a2a2a
   border-width: 1
   border-color: #444444
@@ -121,6 +121,19 @@ AchievementItem < Panel
         font: verdana-11px-rounded
         color: #FFFFFF
         phantom: true
+
+    // Hint Label (how to get achievement)
+    Label
+      id: hintLabel
+      anchors.top: progressBackground.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 3
+      margin-left: 80
+      text: Hint: Complete the task to earn this achievement
+      font: verdana-11px-rounded
+      color: #888888
+      text-wrap: true
 
 MainWindow
   !text: tr('Achievements')
@@ -535,3 +548,59 @@ MainWindow
     anchors.right: parent.right
     margin-bottom: 10
     margin-right: 10
+
+// Achievement Unlock Popup Widget
+AchievementPopup < UIWidget
+  id: achievementPopup
+  size: 450 120
+  anchors.horizontalCenter: parent.horizontalCenter
+  anchors.top: parent.top
+  margin-top: 100
+  visible: false
+  focusable: false
+  phantom: true
+
+  UIWidget
+    id: popupBackground
+    image-source: /images/dungeons/challenge_completed
+    image-repeated: false
+    anchors.fill: parent
+
+  Label
+    id: popupTitle
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 30
+    text: ACHIEVEMENT UNLOCKED!
+    font: verdana-11px-rounded
+    color: #FFD700
+    text-align: center
+
+  Label
+    id: popupAchievementName
+    anchors.top: prev.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 40
+    margin-right: 40
+    text: Achievement Name
+    font: verdana-11px-rounded
+    color: #FFFFFF
+    text-align: center
+    text-wrap: true
+
+  Label
+    id: popupPoints
+    anchors.top: prev.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 40
+    margin-right: 40
+    text: +0 points
+    font: verdana-11px-rounded
+    color: #00FF00
+    text-align: center

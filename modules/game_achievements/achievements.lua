@@ -5,6 +5,8 @@
 
 achievementWindow = nil
 achievementButton = nil
+achievementPopup = nil
+activePopupEvent = nil
 
 -- Extended Opcode IDs
 local OPCODE_ACHIEVEMENT_LIST = 81      -- ExtendedIds.AchievementList
@@ -339,6 +341,54 @@ function createAchievementWidget(parent, achievement)
       g_logger.warning('[Achievements] Failed to set icon for achievement ' .. achievement.id .. ': ' .. tostring(err))
     end
   end
+  
+  -- Set hint label (how to get achievement)
+  local hintLabel = widget:recursiveGetChildById('hintLabel')
+  if hintLabel then
+    local hintText = achievement.hint or getDefaultHint(achievement)
+    hintLabel:setText(hintText)
+  end
+end
+
+function getDefaultHint(achievement)
+  -- Generate hint based on achievement type/category
+  if not achievement.progress then
+    return "Complete the required task"
+  end
+  
+  local progressType = achievement.progress.type
+  local required = achievement.progress.required or 1
+  
+  -- Map progress types to hints
+  local hints = {
+    kills = "Kill " .. required .. " monsters",
+    humanoid_kills = "Defeat " .. required .. " humanoid creatures",
+    lizard_kills = "Defeat " .. required .. " lizard creatures", 
+    elemental_kills = "Defeat " .. required .. " elemental creatures",
+    undead_kills = "Defeat " .. required .. " undead creatures",
+    wild_kills = "Defeat " .. required .. " wild creatures",
+    boss_kills = "Defeat " .. required .. " different bosses",
+    level = "Reach level " .. required,
+    blacksmith_level = "Reach Blacksmith level " .. required,
+    mining_level = "Reach Mining level " .. required,
+    herbalism_level = "Reach Herbalism level " .. required,
+    woodcutting_level = "Reach Woodcutting level " .. required,
+    enchanting_level = "Reach Enchanting level " .. required,
+    alchemy_level = "Reach Alchemy level " .. required,
+    crafted_blacksmith = "Craft " .. required .. " Blacksmith items",
+    crafted_alchemy = "Craft " .. required .. " Alchemy items",
+    crafted_enchanting = "Craft " .. required .. " Enchanting items",
+    crafted_refinery = "Craft " .. required .. " Refinery items",
+    pets = "Collect " .. required .. " different pets",
+    pet_level = "Raise a pet to level " .. required,
+    gold = "Accumulate " .. required .. " gold coins",
+    distance = "Travel " .. required .. " sqm total",
+    deaths = "Die " .. required .. " times (hopefully less!)",
+    logins = "Login " .. required .. " days",
+    playtime = "Play for " .. required .. " hours"
+  }
+  
+  return hints[progressType] or "Complete the required objective"
 end
 
 function updateStatsDisplay()
@@ -361,15 +411,12 @@ function requestAchievementData()
   
   local protocolGame = g_game.getProtocolGame()
   if protocolGame then
-    if currentCategory == "all" then
-      -- Request all categories
-      for _, category in ipairs(categories) do
-        if category.id ~= "all" then
-          protocolGame:sendExtendedOpcode(OPCODE_ACHIEVEMENT_DETAILS, category.id)
-        end
-      end
-    else
-      -- Request achievement list for current category
+    -- Always request player stats first
+    protocolGame:sendExtendedOpcode(OPCODE_ACHIEVEMENT_STATS, "")
+    
+    -- Only request specific category data, not all at once
+    -- "all" category shows cached data, user must click specific categories to load them
+    if currentCategory ~= "all" then
       protocolGame:sendExtendedOpcode(OPCODE_ACHIEVEMENT_DETAILS, currentCategory)
     end
   end
@@ -424,7 +471,10 @@ function onReceiveAchievementComplete(protocol, opcode, buffer)
   local data = json.decode(buffer)
   if not data then return end
   
-  -- Show completion notification
+  -- Show visual popup notification
+  showAchievementPopup(data.name or 'Unknown', data.points or 0)
+  
+  -- Also show text message as backup
   modules.game_textmessage.displayGameMessage(string.format(
     'Achievement Unlocked: %s (+%d points)!',
     data.name or 'Unknown',
@@ -461,4 +511,81 @@ function onReceiveStats(protocol, opcode, buffer)
   if achievementWindow and achievementWindow:isVisible() then
     updateStatsDisplay()
   end
+end
+
+-- Show achievement unlock popup with animation
+function showAchievementPopup(achievementName, points)
+  -- Create popup if it doesn't exist
+  if not achievementPopup then
+    achievementPopup = g_ui.createWidget('AchievementPopup', modules.game_interface.getRootPanel())
+    if not achievementPopup then
+      g_logger.error('[Achievements] Failed to create achievement popup')
+      return
+    end
+  end
+  
+  -- Cancel any existing popup animation
+  if activePopupEvent then
+    removeEvent(activePopupEvent)
+    activePopupEvent = nil
+  end
+  
+  -- Update popup text
+  local nameLabel = achievementPopup:recursiveGetChildById('popupAchievementName')
+  if nameLabel then
+    nameLabel:setText(achievementName)
+  end
+  
+  local pointsLabel = achievementPopup:recursiveGetChildById('popupPoints')
+  if pointsLabel then
+    pointsLabel:setText('+' .. points .. ' points')
+  end
+  
+  -- Show popup with fade in animation
+  achievementPopup:setVisible(true)
+  achievementPopup:setOpacity(0)
+  
+  -- Fade in over 0.3 seconds
+  local fadeInSteps = 10
+  local fadeInDelay = 30 -- milliseconds
+  local fadeInStep = 0
+  
+  local function fadeIn()
+    fadeInStep = fadeInStep + 1
+    local opacity = (fadeInStep / fadeInSteps)
+    achievementPopup:setOpacity(opacity)
+    
+    if fadeInStep < fadeInSteps then
+      scheduleEvent(fadeIn, fadeInDelay)
+    else
+      -- Keep visible for 4 seconds, then fade out
+      activePopupEvent = scheduleEvent(fadeOutPopup, 4000)
+    end
+  end
+  
+  fadeIn()
+end
+
+-- Fade out and hide popup
+function fadeOutPopup()
+  if not achievementPopup then return end
+  
+  local fadeOutSteps = 10
+  local fadeOutDelay = 30
+  local fadeOutStep = 0
+  
+  local function fadeOut()
+    fadeOutStep = fadeOutStep + 1
+    local opacity = 1.0 - (fadeOutStep / fadeOutSteps)
+    achievementPopup:setOpacity(opacity)
+    
+    if fadeOutStep < fadeOutSteps then
+      scheduleEvent(fadeOut, fadeOutDelay)
+    else
+      achievementPopup:setVisible(false)
+      activePopupEvent = nil
+    end
+  end
+  
+  fadeOut()
 end

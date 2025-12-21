@@ -150,6 +150,37 @@ function onTasksConfig(data)
 end
 
 function onTasksList(data)
+  -- Manual overrides for specific outfit IDs
+  -- Full control: realSize, zoom multiplier, margins for positioning
+  local outfitOverrides = {
+    -- [outfitId] = {realSize = X, zoom = Y, marginLeft = Z, marginTop = W}
+    -- Example: [2035] = {realSize = 64, zoom = 2.0, marginLeft = 5, marginTop = 0}
+    [2035] = {realSize = 64, zoom = 3.5, marginLeft = 5, marginTop = 5},
+    [1663] = {realSize = 64, zoom = 3.5, marginLeft = 5, marginTop = 5},
+    [2718] = {realSize = 64, zoom = 3.1, marginLeft = 5, marginTop = 9},
+
+    [1515] = {realSize = 64, zoom = 3.5, marginLeft = 5, marginTop = 3},
+    [1497] = {realSize = 64, zoom = 3.5, marginLeft = 5, marginTop = 3},
+    [1397] = {realSize = 64, zoom = 3.5, marginLeft = 5, marginTop = 3},
+    [2313] = {realSize = 64, zoom = 3.5, marginLeft = 5, marginTop = 3},
+    [2720] = {realSize = 64, zoom = 3.5, marginLeft = 5, marginTop = 8},
+    [2672] = {realSize = 64, zoom = 3.2, marginLeft = 25, marginTop = 20},
+
+    [1499] = {realSize = 64, zoom = 3.5, marginLeft = 5, marginTop = 3},
+    [1550] = {realSize = 64, zoom = 3.5, marginLeft = 5, marginTop = 3},
+    [306] = {realSize = 64, zoom = 3.7, marginLeft = 5, marginTop = 3},
+    [1169] = {realSize = 64, zoom = 3.7, marginLeft = 5, marginTop = 3},
+
+    [2693] = {realSize = 96, zoom = 4.5, marginLeft = 35, marginTop = 25},
+    [2644] = {realSize = 96, zoom = 5.0, marginLeft = 23, marginTop = 17},
+    [2552] = {realSize = 96, zoom = 5.0, marginLeft = 5, marginTop = 1},
+
+    [2463] = {realSize = 150, zoom = 15.0, marginLeft = 23, marginTop = 17},
+    [2626] = {realSize = 150, zoom = 15.0, marginLeft = 23, marginTop = 17},
+
+    [2427] = {realSize = 150, zoom = 15.0, marginLeft = 23, marginTop = 25},
+  }
+  
   for i, data2 in ipairs(data.chunk) do
 	tasks[#tasks + 1] = data2
   end
@@ -163,13 +194,51 @@ function onTasksList(data)
     widget.preview:setOutfit(outfit)
  
     local thingType = g_things.getThingType(outfit.type, ThingCategoryCreature)
- -- Add proper sizing for the 64x64 UICreature
-    widget.preview:setPadding(-30)
-    widget.preview:setMarginLeft(8)
-    widget.preview:setMarginTop(8)
-    widget.preview:setSize("48 48")
+    local override = outfitOverrides[outfit.type]
+    
+    -- Check override table first, fallback to automatic detection
+    local realSize = override and override.realSize or thingType:getRealSize()
+    
+    -- Dynamic zoom based on sprite size to prevent overflow
+    -- Small sprites = less zoom, large sprites = more zoom
+    local zoomMultiplier
+    if override and override.zoom then
+        zoomMultiplier = override.zoom
+    elseif realSize <= 32 then
+        zoomMultiplier = 5.2  -- 32px creatures (minimal transparent padding)
+    elseif realSize <= 64 then
+        zoomMultiplier = 3.5  -- 64px creatures
+    elseif realSize <= 96 then
+        zoomMultiplier = 3.6  -- 96px creatures
+    elseif realSize <= 128 then
+        zoomMultiplier = 4.0  -- 128px creatures
+    else
+        zoomMultiplier = 4.5  -- Very large creatures (most transparent padding)
+    end
+    
+    local zoomedSize = math.floor(realSize * zoomMultiplier)
+    
+    -- Debug: Print outfit info
+    print(string.format("[Task %d] %s | Outfit: %d | RealSize: %d | Zoom: %.1fx | Final: %d", 
+        taskId, task.name, outfit.type, realSize, zoomMultiplier, zoomedSize))
+    
+    widget.preview:setSize("64 64")
     widget.preview:setCenter(true)
-    widget.preview:setCreatureSize(thingType:getRealSize() + 148)
+    widget.preview:setPadding(-28)
+    widget.preview:setCreatureSize(zoomedSize)
+    
+    -- Apply custom margins if specified
+    if override then
+        if override.marginLeft then
+            widget.preview:setMarginLeft(override.marginLeft)
+            -- Compensate info panel to prevent label displacement
+            local infoMarginLeft = 5 - override.marginLeft
+            widget.info:setMarginLeft(infoMarginLeft)
+        end
+        if override.marginTop then
+            widget.preview:setMarginTop(override.marginTop)
+        end
+    end
 
 
     widget.info.title:setText(task.name)

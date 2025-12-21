@@ -57,7 +57,7 @@ TaskMenuEntry < Panel
     id: preview
     anchors.top: parent.top
     anchors.left: parent.left
-    size: 48 48
+    size: 64 64
 
   Panel
     id: info
