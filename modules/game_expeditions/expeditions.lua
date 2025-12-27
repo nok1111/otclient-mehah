@@ -107,9 +107,32 @@ function showExpeditionPanel(data)
             header:setImageSource('/images/ui/' .. (zone.headerImage or 'expedition_default'))
         end
         
+        local levelLabel = panel:getChildById('levelLabel')
+        if levelLabel and zone.minLevel then
+            if zone.maxLevel then
+                levelLabel:setText('Level ' .. zone.minLevel .. ' - ' .. zone.maxLevel)
+            else
+                levelLabel:setText('Level ' .. zone.minLevel .. '+')
+            end
+        end
+        
         local nameLabel = panel:getChildById('nameLabel')
         if nameLabel then
             nameLabel:setText(zone.name)
+        end
+        
+        local pvpLabel = panel:getChildById('pvpLabel')
+        if pvpLabel and zone.pvpType then
+            if zone.pvpType == "non-pvp" then
+                pvpLabel:setText('Non PVP Zone')
+                pvpLabel:setColor('#90EE90')  -- Green
+            elseif zone.pvpType == "pvp-enabled" then
+                pvpLabel:setText('PVP Enabled Zone')
+                pvpLabel:setColor('#FFD700')  -- Yellow
+            elseif zone.pvpType == "pvp-enforced" then
+                pvpLabel:setText('PVP Enforced Zone')
+                pvpLabel:setColor('#FF4444')  -- Red
+            end
         end
         
         local descLabel = panel:getChildById('descLabel')

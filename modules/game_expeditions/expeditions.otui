@@ -38,7 +38,7 @@ ExpeditionWindow < MainWindow
 
 ExpeditionPanel < UIWidget
   size: 280 400
-  image-source: /images/ui/panel_flat
+  image-source: /images/ui/windows/panel_border
   image-border: 4
   padding: 5
 
@@ -66,15 +66,52 @@ ExpeditionPanel < UIWidget
     text-auto-resize: true
     text-align: center
 
+  Panel
+    id: levelPanel
+    anchors.top: nameLabel.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 5
+    height: 20
+    background-color: #00000000
+    layout:
+      type: horizontalBox
+      spacing: 5
+      fit-children: true
+      align-center: true
+    
+    UIWidget
+      id: levelIcon
+      width: 9
+      height: 9
+      image-source: /images/icons/icon_experience
+      image-smooth: true
+    
+    Label
+      id: levelLabel
+      text: Level 1 - 20
+      font: verdana-11px-rounded
+      color: #FFAA00
+      text-auto-resize: true
+
+  Label
+    id: pvpLabel
+    anchors.top: levelPanel.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 5
+    text: Non PVP Zone
+    font: verdana-11px-rounded
+    color: #90EE90
+    text-auto-resize: true
+
   Label
     id: descLabel
-    anchors.top: nameLabel.bottom
+    anchors.top: pvpLabel.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     margin-top: 8
     margin-left: 10
     margin-right: 10
-    height: 80
+    height: 60
     text: Description of the expedition zone
     font: verdana-11px-antialised
     color: #C0C0C0
