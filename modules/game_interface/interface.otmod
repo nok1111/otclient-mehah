@@ -57,5 +57,6 @@ Module
     - game_famenpcshop
     - game_tilewidgets
     - game_achievements
+    - game_expeditions
   @onLoad: init()
   @onUnload: terminate()

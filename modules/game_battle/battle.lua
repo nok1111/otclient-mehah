@@ -6,8 +6,137 @@ local battleButtons = {} -- map of creature id
 local battleWindow, battleButton, battlePanel, mouseWidget, filterPanel, toggleFilterButton
 local lastBattleButtonSwitched, lastCreatureSelected
 
--- Hide Buttons ("hidePlayers", "hideNPCs", "hideMonsters", "hideSkulls", "hideParty")
+-- Hide Buttons ("hidePlayers", "hideNPCs", "hideMonsters", "hideSummons", "hideSkulls", "hideParty")
 local hideButtons = {}
+
+-- Summon and Pet names (auto-populated from server data)
+local summonNames = {
+    -- Summons (from data/monster/summons)
+    ["aery"] = true,
+    ["blessed tree"] = true,
+    ["creep"] = true,
+    ["elite skeleton guard"] = true,
+    ["elite skeleton mage"] = true,
+    ["elite wolf"] = true,
+    ["energy orb"] = true,
+    ["explosive barrel"] = true,
+    ["fire spirit"] = true,
+    ["frost barrel"] = true,
+    ["wind barrel"] = true,
+    ["hunting wolf"] = true,
+    ["ice clone"] = true,
+    ["servant"] = true,
+    ["shadow clone"] = true,
+    ["void archer"] = true,
+    ["void guard"] = true,
+    ["void mage"] = true,
+    ["zombie wall"] = true,
+    
+    -- Pets (from data/monster/pets) - names with * are included without asterisk for matching
+    ["air elemental*"] = true,
+    ["angel*"] = true,
+    ["aqua slime*"] = true,
+    ["baby*"] = true,
+    ["baby crow*"] = true,
+    ["baby dworc*"] = true,
+    ["baby elemental*"] = true,
+    ["baby eyeboh*"] = true,
+    ["baby fire fenix*"] = true,
+    ["baby frazzlemaw*"] = true,
+    ["baby ice fenix*"] = true,
+    ["baby nightmare*"] = true,
+    ["baby poodle*"] = true,
+    ["baby prisma*"] = true,
+    ["baby rex*"] = true,
+    ["baby squid*"] = true,
+    ["baby twin turtle*"] = true,
+    ["baby vector*"] = true,
+    ["badger*"] = true,
+    ["bear*"] = true,
+    ["bee queen*"] = true,
+    ["black cat*"] = true,
+    ["black spider*"] = true,
+    ["blood bug*"] = true,
+    ["boar cub*"] = true,
+    ["bob 1*"] = true,
+    ["bob 2*"] = true,
+    ["bug*"] = true,
+    ["bunny*"] = true,
+    ["chicken"] = true,
+    ["cobra"] = true,
+    ["crab*"] = true,
+    ["dark slime*"] = true,
+    ["darkin*"] = true,
+    ["deer*"] = true,
+    ["demon*"] = true,
+    ["dinosaur*"] = true,
+    ["dog*"] = true,
+    ["donkey*"] = true,
+    ["dragon*"] = true,
+    ["dragonling*"] = true,
+    ["dromedary*"] = true,
+    ["elephant*"] = true,
+    ["emberwing*"] = true,
+    ["evil*"] = true,
+    ["feral wolf*"] = true,
+    ["fire slime*"] = true,
+    ["flameheart*"] = true,
+    ["frostbite*"] = true,
+    ["ghost*"] = true,
+    ["golem*"] = true,
+    ["grizzly bear*"] = true,
+    ["guardiola*"] = true,
+    ["hacker*"] = true,
+    ["hellhound*"] = true,
+    ["horse*"] = true,
+    ["ice slime*"] = true,
+    ["ironhide*"] = true,
+    ["lamp*"] = true,
+    ["manta ray*"] = true,
+    ["megaloshark*"] = true,
+    ["minotaur guard*"] = true,
+    ["mushroom*"] = true,
+    ["panda*"] = true,
+    ["penguin*"] = true,
+    ["pig*"] = true,
+    ["poison slime*"] = true,
+    ["poodle*"] = true,
+    ["pumpkin head*"] = true,
+    ["rabbit*"] = true,
+    ["rat*"] = true,
+    ["sabertooth*"] = true,
+    ["scorpion*"] = true,
+    ["scylla*"] = true,
+    ["serpent*"] = true,
+    ["shadow panther*"] = true,
+    ["shadowmane*"] = true,
+    ["sheep*"] = true,
+    ["silverfang*"] = true,
+    ["skeleton*"] = true,
+    ["slime*"] = true,
+    ["snake*"] = true,
+    ["snowman*"] = true,
+    ["sorcerer familiar"] = true,
+    ["druid familiar"] = true,
+    ["knight familiar"] = true,
+    ["paladin familiar"] = true,
+    ["squirrel*"] = true,
+    ["terror bird*"] = true,
+    ["thornback turtle*"] = true,
+    ["tiger*"] = true,
+    ["tortoise*"] = true,
+    ["turkey*"] = true,
+    ["undead*"] = true,
+    ["unicorn*"] = true,
+    ["vampire*"] = true,
+    ["war wolf*"] = true,
+    ["wasp*"] = true,
+    ["water elemental*"] = true,
+    ["wild horse*"] = true,
+    ["winter wolf*"] = true,
+    ["wolf*"] = true,
+    ["worg*"] = true,
+}
 
 local eventOnCheckCreature = nil
 
@@ -107,7 +236,7 @@ function init() -- Initiating the module (load)
     end
 
     -- Adding Filter options
-    local options = { 'hidePlayers', 'hideNPCs', 'hideMonsters', 'hideSkulls', 'hideParty' }
+    local options = { 'hidePlayers', 'hideNPCs', 'hideMonsters', 'hideSummons', 'hideSkulls', 'hideParty' }
     for i, v in ipairs(options) do
         hideButtons[v] = battleWindow:recursiveGetChildById(v)
     end
@@ -466,12 +595,22 @@ function doCreatureFitFilters(creature) -- Check if creature fit current applied
     if pos.z ~= localPlayer:getPosition().z or not creature:canBeSeen() then
         return false
     end -- or not localPlayer:hasSight(pos)
+    
+    -- Check if creature is a summon (isSummon() or name match)
+    local isSummon = creature:isSummon()
+    if not isSummon then
+        local creatureName = creature:getName():lower()
+        isSummon = summonNames[creatureName] ~= nil
+    end
+    
     for i, v in pairs(hideButtons) do
         if v:isChecked() then
-            if (i == 'hidePlayers' and creature:isPlayer()) or (i == 'hideNPCs' and creature:isNpc()) or
-                (i == 'hideMonsters' and creature:isMonster()) or
-                (i == 'hideSkulls' and (creature:isPlayer() and creature:getSkull() == SkullNone)) or
-                (i == 'hideParty' and creature:getShield() > ShieldWhiteBlue) then
+            if (i == 'hidePlayers' and creature:isPlayer()) or 
+               (i == 'hideNPCs' and creature:isNpc()) or
+               (i == 'hideMonsters' and creature:isMonster()) or
+               (i == 'hideSummons' and isSummon) or
+               (i == 'hideSkulls' and (creature:isPlayer() and creature:getSkull() == SkullNone)) or
+               (i == 'hideParty' and creature:getShield() > ShieldWhiteBlue) then
                 return false
             end
         end

@@ -38,6 +38,8 @@ GameServerOpcodes = {
     GameServerOpenFameShop  = 88,
     GameServerAncestralTasks  = 89,
 
+    -- Expedition System (Extended Opcode 77)
+    GameServerExpeditions = 77,
 
     -- original tibia ONLY
     GameServerPassiveCooldown = 94,

@@ -5,6 +5,16 @@ stashSelectAmount = nil
 searchEdit = nil
 stashItems = {}
 
+-- Opcode for stash system
+local STASH_OPCODE = 200
+local STASH_ACTION = {
+    OPEN = 1,
+    ADD_ITEM = 2,
+    WITHDRAW_ITEM = 3,
+    UPDATE = 4,
+    CLOSE = 5
+}
+
 function resetSelectAmount()
     if stashSelectAmount then
         stashSelectAmount:destroy()
@@ -61,7 +71,16 @@ function prepareWithdraw(itemId, itemAmount)
 
     local okButton = stashSelectAmount:getChildById('buttonOk')
     local withdrawFunc = function()
-        g_game.stashWithdraw(itemId, itembox:getItemCount(), 1)
+        -- Send withdraw request to server via extended opcode
+        local data = {
+            action = STASH_ACTION.WITHDRAW_ITEM,
+            itemId = itemId,
+            count = itembox:getItemCount()
+        }
+        local proto = g_game.getProtocolGame()
+        if proto then
+            proto:sendExtendedOpcode(STASH_OPCODE, json.encode(data))
+        end
         stashSelectAmount:unlock()
         resetSelectAmount()
     end
@@ -84,18 +103,18 @@ function renderItems()
     end
     resetItems()
     radioItemSet = UIRadioGroup.create()
-    local searchFilter = searchEdit:getText()
+    local searchFilter = searchEdit:getText():lower()
     for itemId, amount in pairs(stashItems) do
         local thingType = g_things.getThingType(itemId, 0)
         if thingType then
             local itemName = thingType:getName()
-            if not itemName or itemName:lower():find(searchFilter) then
+            if not itemName or itemName == "" or itemName:lower():find(searchFilter, 1, true) then
                 local item = Item.create(itemId)
                 item:setCount(amount)
                 local itemBox = g_ui.createWidget('StashItemBox', itemsPanel)
                 itemBox:getChildById('item'):setItem(item)
                 radioItemSet:addWidget(itemBox)
-                if itemName then
+                if itemName and itemName ~= "" then
                     itemBox:setTooltip(itemName)
                 else
                     itemBox:setTooltip("Loading...")
@@ -136,12 +155,51 @@ function onSupplyStashClose()
     end
 end
 
+function onExtendedOpcode(protocol, opcode, buffer)
+    if opcode ~= STASH_OPCODE then
+        return
+    end
+    
+    local status, data = pcall(function() return json.decode(buffer) end)
+    if not status or not data then
+        return
+    end
+    
+    if data.action == STASH_ACTION.OPEN then
+        -- Server wants to open stash window
+        if stashWindow and stashWindow:isHidden() then
+            stashWindow:show()
+            stashWindow:lock()
+        end
+    elseif data.action == STASH_ACTION.UPDATE then
+        -- Server sends stash items to update display
+        stashItems = {}
+        if data.items then
+            for _, itemData in ipairs(data.items) do
+                local itemId = tonumber(itemData.itemId)
+                local count = tonumber(itemData.count)
+                if itemId and count then
+                    stashItems[itemId] = count
+                end
+            end
+        end
+        renderItems()
+    elseif data.action == STASH_ACTION.CLOSE then
+        -- Server wants to close stash window
+        onSupplyStashClose()
+    end
+end
+
 function init()
     g_ui.importStyle('game_stash')
     connect(g_game, {
         onSupplyStashEnter = onSupplyStashEnter,
         onGameEnd = onSupplyStashClose,
     })
+    
+    -- Register extended opcode for stash system
+    ProtocolGame.registerExtendedOpcode(STASH_OPCODE, onExtendedOpcode)
+    
     stashWindow = g_ui.createWidget('StashWindow', rootWidget)
     stashWindow:hide()
     itemsPanel = stashWindow:recursiveGetChildById('itemsPanel')
@@ -153,5 +211,10 @@ function terminate()
         onSupplyStashEnter = onSupplyStashEnter,
         onGameEnd = onSupplyStashClose,
     })
+    
+    -- Unregister extended opcode
+    ProtocolGame.unregisterExtendedOpcode(STASH_OPCODE, onExtendedOpcode)
+    
+    onSupplyStashClose()
     stashWindow:destroy()
 end

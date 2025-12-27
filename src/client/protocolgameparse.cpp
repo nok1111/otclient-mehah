@@ -1999,7 +1999,7 @@ void ProtocolGame::parseCreatureHealth(const InputMessagePtr& msg)
 
     const auto& creature = g_map.getCreatureById(creatureId);
     if (!creature) {
-        g_logger.traceError("ProtocolGame::parseCreatureHealth: could not get creature with id {}", creatureId);
+        //g_logger.traceError("ProtocolGame::parseCreatureHealth: could not get creature with id {}", creatureId);
         return;
     }
 
@@ -2045,7 +2045,7 @@ void ProtocolGame::parseCreatureSpeed(const InputMessagePtr& msg)
 
     const auto& creature = g_map.getCreatureById(creatureId);
     if (!creature) {
-        g_logger.traceError("ProtocolGame::parseCreatureSpeed: could not get creature with id {}", creatureId);
+        //g_logger.traceError("ProtocolGame::parseCreatureSpeed: could not get creature with id {}", creatureId);
         return;
     }
 

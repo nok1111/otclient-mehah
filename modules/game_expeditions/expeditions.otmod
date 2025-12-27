@@ -1,0 +1,9 @@
+Module
+  name: game_expeditions
+  description: Expedition selection and teleportation system
+  author: Custom
+  website: 
+  sandboxed: true
+  scripts: [ expeditions ]
+  @onLoad: init()
+  @onUnload: terminate()

@@ -1,0 +1,10 @@
+Module
+  name: outfits_effects
+  description: Lightweight module for creature titles and outfit offsets
+  author: Nok
+  website: None
+  sandboxed: true
+  autoload: true
+  scripts: [ outfits_effects ]
+  @onLoad: init()
+  @onUnload: terminate()

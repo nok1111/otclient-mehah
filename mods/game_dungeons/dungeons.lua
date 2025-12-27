@@ -88,6 +88,9 @@ function Dungeons.init()
 	if g_game.isOnline() then
 		Dungeons.create()
 	end
+	
+	Keybind.new("Dungeons", "Dungeons List", "Ctrl+Shift+D", "")
+	Keybind.bind("Dungeons", "Dungeons List", {{type = KEY_DOWN, callback = Dungeons.showList}})
 end
 
 function Dungeons.terminate()
@@ -110,6 +113,12 @@ function Dungeons.create()
 	end
 	Dungeons.UI = g_ui.displayUI("dungeons")
 	Dungeons.UI:hide()
+
+	Dungeons.listUI = g_ui.displayUI("dungeonList")
+	Dungeons.listUI:hide()
+	Dungeons.listUI:recursiveGetChildById("closeButton").onClick = function()
+		Dungeons.listUI:hide()
+	end
 
 	Dungeons.killCounter = g_ui.loadUI("killcounter", modules.game_interface.getMapPanel())
 	Dungeons.killCounter:hide()
@@ -147,12 +156,34 @@ function Dungeons.create()
 	end
 
 	Dungeons.setIconImageType(Dungeons.UI.bottomPanel.challengePoints.challengePointsIcon, 62)
+	
+	-- Request dungeon list from server
+	Dungeons.sendOpcode({topic = "requestDungeonList"})
+	
+	-- Add dungeon button to game interface
+	if modules.client_topmenu then
+		Dungeons.dungeonButton = modules.client_topmenu.addRightGameToggleButton('dungeonsButton', 
+			'Dungeons', 
+			'/images/topbuttons/dungeon', 
+			Dungeons.showList)
+	end
 end
 
 function Dungeons.destroy()
+	-- Remove dungeon button
+	if Dungeons.dungeonButton then
+		Dungeons.dungeonButton:destroy()
+		Dungeons.dungeonButton = nil
+	end
+	
 	if Dungeons.UI then
 		Dungeons.UI:destroy()
 		Dungeons.UI = nil
+	end
+
+	if Dungeons.listUI then
+		Dungeons.listUI:destroy()
+		Dungeons.listUI = nil
 	end
 
 	if Dungeons.difficultyTooltip then
@@ -224,6 +255,118 @@ function Dungeons.hide()
 		return
 	end
 	Dungeons.UI:hide()
+end
+
+function Dungeons.showList()
+	if not Dungeons.listUI then
+		return
+	end
+	Dungeons.listUI:show()
+	Dungeons.listUI:raise()
+	Dungeons.listUI:focus()
+end
+
+function Dungeons.hideList()
+	if not Dungeons.listUI then
+		return
+	end
+	Dungeons.listUI:hide()
+end
+
+function Dungeons.onDungeonList(data)
+	if not Dungeons.listUI then
+		return
+	end
+	
+	local dungeonListPanel = Dungeons.listUI:recursiveGetChildById("dungeonListPanel")
+	dungeonListPanel:destroyChildren()
+	
+	if not data.dungeons or #data.dungeons == 0 then
+		local label = g_ui.createWidget("Label", dungeonListPanel)
+		label:setText("No dungeons available")
+		label:setTextAlign(AlignCenter)
+		return
+	end
+	
+	for _, dungeon in ipairs(data.dungeons) do
+		local widget = g_ui.createWidget("DungeonListEntry", dungeonListPanel)
+		widget:recursiveGetChildById("dungeonName"):setText(dungeon.title)
+		widget:recursiveGetChildById("dungeonLevel"):setText("Level: " .. dungeon.level)
+		widget:recursiveGetChildById("dungeonParty"):setText("Party: " .. dungeon.party)
+		
+		-- Set header image with 70% opacity
+		local headerImage = widget:recursiveGetChildById("dungeonHeaderImage")
+		if headerImage then
+			headerImage:setImageSource("/images/dungeons/" .. dungeon.title)
+		end
+		
+		if dungeon.cooldown and dungeon.cooldown > 0 then
+			local cdLabel = widget:recursiveGetChildById("cooldownLabel")
+			cdLabel:setText("CD: " .. Dungeons.SecondsToShortTime(dungeon.cooldown))
+			cdLabel:setVisible(true)
+		end
+		
+		local dungeonTitle = dungeon.title
+		local highlightOverlay = widget:recursiveGetChildById("highlightOverlay")
+		local isHovered = false
+		local hoverTimer = nil
+		
+		local function checkMouseLeave()
+			if not widget or not isHovered then return end
+			
+			local mousePos = g_window.getMousePosition()
+			local widgetRect = widget:getRect()
+			
+			-- Verificar si el mouse está fuera del widget
+			if mousePos.x < widgetRect.x or 
+			   mousePos.x > widgetRect.x + widgetRect.width or
+			   mousePos.y < widgetRect.y or
+			   mousePos.y > widgetRect.y + widgetRect.height then
+				isHovered = false
+				highlightOverlay:setVisible(false)
+				if hoverTimer then
+					removeEvent(hoverTimer)
+					hoverTimer = nil
+				end
+			else
+				-- Si todavía está dentro, verificar de nuevo en 50ms
+				hoverTimer = scheduleEvent(checkMouseLeave, 50)
+			end
+		end
+		
+		-- Mouse enter/move
+		widget.onMouseMove = function(self, mousePos, mouseMoved)
+			if not isHovered then
+				isHovered = true
+				highlightOverlay:setVisible(true)
+				highlightOverlay:setBackgroundColor('#ffffff22')
+				highlightOverlay:setBorderWidth(2)
+				highlightOverlay:setBorderColor('#ffed2b')
+				
+				-- Empezar a verificar si el mouse sale
+				if hoverTimer then
+					removeEvent(hoverTimer)
+				end
+				hoverTimer = scheduleEvent(checkMouseLeave, 50)
+			end
+			
+			return false
+		end
+		
+		widget.onMouseRelease = function(self, mousePos, mouseButton)
+			if mouseButton == MouseLeftButton then
+				print("Dungeon clicked: " .. dungeonTitle)
+				Dungeons.hideList()
+				scheduleEvent(function()
+					print("Requesting dungeon data for: " .. dungeonTitle)
+					Dungeons.sendOpcode({topic = "dungeonBaseData-request", data = {dungeonName = dungeonTitle}})
+					Dungeons.sendOpcode({topic = "openDungeon", data = {dungeonName = dungeonTitle}})
+				end, 50)
+				return true
+			end
+			return false
+		end
+	end
 end
 
 
@@ -387,6 +530,8 @@ function Dungeons.onExtendedOpcode(protocol, code, buffer)
 		Dungeons.buildLeaderboardGroup(data)
 	elseif topic == "closeWindow" then
 		Dungeons.hide()
+	elseif topic == "dungeonList" then
+		Dungeons.onDungeonList(data)
 	end
 end
 
@@ -401,6 +546,10 @@ end
 ------ Dungeon Data Response & Updating
 
 function Dungeons.onDungeonData(data)
+	if not Dungeons.UI then
+		return
+	end
+	
 	Dungeons.show()
 	Dungeons.UI.bottomPanel.challengePoints:setText(data.challengePoints)
 

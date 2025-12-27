@@ -1,0 +1,113 @@
+DungeonListEntry < Panel
+  height: 50
+  border-width: 1
+  border-color: #ffffff30
+  background-color: #00000066
+  focusable: true
+
+  UIWidget
+    id: dungeonHeaderImage
+    anchors.fill: parent
+    phantom: true
+    image-smooth: true
+    opacity: 0.7
+
+  Panel
+    id: highlightOverlay
+    anchors.fill: parent
+    background-color: alpha
+    border-width: 0
+    border-color: alpha
+    visible: false
+    phantom: true
+
+  Label
+    id: dungeonName
+    anchors.left: parent.left
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-left: 10
+    margin-top: 5
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #ffed2b
+    phantom: true
+
+  Label
+    id: dungeonLevel
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    margin-left: 10
+    margin-bottom: 5
+    text-auto-resize: true
+    font: verdana-11px-antialised
+    color: #aaaaaa
+    phantom: true
+
+  Label
+    id: dungeonParty
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-right: 10
+    margin-bottom: 5
+    text-auto-resize: true
+    font: verdana-11px-antialised
+    color: #aaaaaa
+    phantom: true
+
+  Label
+    id: cooldownLabel
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-right: 10
+    margin-top: 5
+    text-auto-resize: true
+    font: verdana-11px-antialised
+    color: #ff6666
+    visible: false
+    phantom: true
+
+MainWindow
+  id: dungeonListWindow
+  text: Select Dungeon
+  size: 500 450
+  @onEscape: self:hide()
+
+  VerticalScrollBar
+    id: dungeonListScroll
+    anchors.top: parent.top
+    anchors.bottom: bottomPanel.top
+    anchors.right: parent.right
+    margin-bottom: 5
+    step: 50
+    pixels-scroll: true
+
+  ScrollablePanel
+    id: dungeonListPanel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: dungeonListScroll.left
+    anchors.bottom: bottomPanel.top
+    margin-bottom: 5
+    margin-right: 3
+    vertical-scrollbar: dungeonListScroll
+    layout:
+      type: verticalBox
+      spacing: 3
+
+  Panel
+    id: bottomPanel
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    anchors.left: parent.left
+    height: 40
+    image-source: /images/ui/panel_bottom
+    image-border: 9
+
+    Button
+      id: closeButton
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.right: parent.right
+      margin-right: 5
+      text: Close
+      width: 60

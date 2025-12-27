@@ -1,0 +1,105 @@
+ExpeditionWindow < MainWindow
+  id: expeditionWindow
+  !text: tr('Daily Expeditions')
+  size: 920 520
+  @onEscape: closeExpeditionPanel()
+
+  Label
+    id: titleLabel
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 10
+    text: Daily Expeditions
+    font: verdana-11px-rounded
+    color: #FFD700
+    text-auto-resize: true
+
+  Panel
+    id: panelContainer
+    anchors.top: titleLabel.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottom: closeButton.top
+    margin-top: 15
+    margin-bottom: 10
+    layout:
+      type: horizontalBox
+      spacing: 15
+      fit-children: true
+      align-center: true
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    width: 80
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 10
+    @onClick: closeExpeditionPanel()
+
+ExpeditionPanel < UIWidget
+  size: 280 400
+  image-source: /images/ui/panel_flat
+  image-border: 4
+  padding: 5
+
+  UIWidget
+    id: header
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 150
+    margin: 5
+    image-source: /images/ui/expedition_default
+    image-smooth: true
+
+  Label
+    id: nameLabel
+    anchors.top: header.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 10
+    margin-right: 10
+    text: Expedition Name
+    font: verdana-11px-rounded
+    color: #FFD700
+    text-auto-resize: true
+    text-align: center
+
+  Label
+    id: descLabel
+    anchors.top: nameLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 10
+    margin-right: 10
+    height: 80
+    text: Description of the expedition zone
+    font: verdana-11px-antialised
+    color: #C0C0C0
+    text-wrap: true
+    text-align: center
+
+  Label
+    id: rewardsLabel
+    anchors.top: descLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 10
+    margin-right: 10
+    height: 60
+    text: Rewards: None
+    font: verdana-11px-antialised
+    color: #90EE90
+    text-wrap: true
+    text-align: center
+
+  Button
+    id: joinButton
+    !text: tr('Join Expedition')
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 10
+    width: 150
