@@ -1,0 +1,10 @@
+Module
+  name: game_recycler
+  description: Item recycling system for gold
+  author: Nokturno
+  website: 
+  sandboxed: true
+  autoload: true
+  scripts: [ game_recycler ]
+  @onLoad: Recycler.init()
+  @onUnload: Recycler.terminate()

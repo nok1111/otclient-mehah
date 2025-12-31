@@ -1,0 +1,181 @@
+RecyclerSlot < Item
+  size: 36 36
+  margin: 2
+  phantom: false
+  virtual: true
+  focusable: true
+  accept-drop: true
+  item-id: 0
+  item-count: 0
+  draggable: false
+  z-index: 3
+  border-width: 1
+  border-color: #ffffff55
+  background-color: #00000088
+
+MainWindow
+  id: recyclerWindow
+  !text: tr('Recycling Station')
+  size: 250 360
+  @onEscape: Recycler.hide()
+
+  Label
+    id: titleLabel
+    !text: tr('Drop items to recycle')
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    text-align: center
+    font: verdana-11px-rounded
+    color: #c0c0c0
+
+  Panel
+    id: gridPanel
+    anchors.top: titleLabel.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 5
+    size: 126 126
+    phantom: false
+    background-color: #00000055
+    border-width: 1
+    border-color: #ffffff33
+
+    RecyclerSlot
+      id: slot1
+      anchors.top: parent.top
+      anchors.left: parent.left
+      margin: 3
+
+    RecyclerSlot
+      id: slot2
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin: 3
+
+    RecyclerSlot
+      id: slot3
+      anchors.top: parent.top
+      anchors.right: parent.right
+      margin: 3
+
+    RecyclerSlot
+      id: slot4
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.left: parent.left
+      margin: 3
+
+    RecyclerSlot
+      id: slot5
+      anchors.centerIn: parent
+      margin: 3
+
+    RecyclerSlot
+      id: slot6
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.right: parent.right
+      margin: 3
+
+    RecyclerSlot
+      id: slot7
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      margin: 3
+
+    RecyclerSlot
+      id: slot8
+      anchors.bottom: parent.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin: 3
+
+    RecyclerSlot
+      id: slot9
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      margin: 3
+
+  Panel
+    id: infoPanel
+    anchors.top: gridPanel.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    width: 226
+    margin-top: 15
+    height: 80
+    phantom: true
+
+    Label
+      id: totalLabel
+      !text: tr('Total Value:')
+      anchors.top: parent.top
+      anchors.left: parent.left
+      font: verdana-11px-rounded
+      color: #ffffff
+      text-auto-resize: true
+
+    Label
+      id: totalValue
+      text: 0 gold
+      anchors.top: parent.top
+      anchors.right: parent.right
+      font: verdana-11px-rounded
+      color: #00ff00
+      text-auto-resize: true
+
+    Label
+      id: rarityBonusLabel
+      !text: tr('Bonus per Rarity:')
+      anchors.top: totalLabel.bottom
+      anchors.left: parent.left
+      margin-top: 4
+      font: verdana-11px-rounded
+      color: #c0c0c0
+      text-auto-resize: true
+
+    Label
+      id: rarityBonusValue
+      text: + 0 gold
+      anchors.top: totalValue.bottom
+      anchors.right: parent.right
+      margin-top: 4
+      font: verdana-11px-rounded
+      color: #ffaa00
+      text-auto-resize: true
+
+    Label
+      id: enchantBonusLabel
+      !text: tr('Bonus per Enchants:')
+      anchors.top: rarityBonusLabel.bottom
+      anchors.left: parent.left
+      margin-top: 4
+      font: verdana-11px-rounded
+      color: #c0c0c0
+      text-auto-resize: true
+
+    Label
+      id: enchantBonusValue
+      text: + 0 gold
+      anchors.top: rarityBonusValue.bottom
+      anchors.right: parent.right
+      margin-top: 4
+      font: verdana-11px-rounded
+      color: #00aaff
+      text-auto-resize: true
+
+  Button
+    id: scrapButton
+    !text: tr('Scrap All')
+    width: 100
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    margin-bottom: 10
+    margin-left: 5
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    width: 100
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-bottom: 10
+    margin-right: 5

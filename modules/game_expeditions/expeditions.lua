@@ -99,20 +99,112 @@ function showExpeditionPanel(data)
     panelContainer:destroyChildren()
     Expeditions.panels = {}
     
-    for i, zone in ipairs(data.zones or {}) do
+    -- Set close button handler
+    local closeButton = Expeditions.window:getChildById('closeButton')
+    if closeButton then
+        closeButton.onClick = function()
+            closeExpeditionPanel()
+        end
+    end
+    
+    -- Store data for sliding navigation
+    Expeditions.allZones = data.zones or {}
+    Expeditions.currentOffset = 0  -- Which panel is the first visible (0-based)
+    
+    local numZones = #Expeditions.allZones
+    local panelWidth = 280
+    local panelHeight = 400
+    local panelSpacing = 15
+    local windowMargin = 40
+    
+    -- Window size based on max 3 visible panels
+    local maxVisiblePanels = math.min(numZones, 3)
+    local windowWidth = (panelWidth * maxVisiblePanels) + (panelSpacing * math.max(0, maxVisiblePanels - 1)) + windowMargin + 100
+    local windowHeight = 540
+    
+    Expeditions.window:setWidth(windowWidth)
+    Expeditions.window:setHeight(windowHeight)
+    
+    -- Set container size for 3 panels
+    local containerWidth = (panelWidth * maxVisiblePanels) + (panelSpacing * (maxVisiblePanels - 1))
+    local containerHeight = panelHeight
+    panelContainer:setWidth(containerWidth)
+    panelContainer:setHeight(containerHeight)
+    
+    -- Setup navigation buttons
+    local prevButton = Expeditions.window:getChildById('prevButton')
+    local nextButton = Expeditions.window:getChildById('nextButton')
+    
+    if prevButton then
+        prevButton.onClick = function()
+            Expeditions.slideLeft()
+        end
+    end
+    
+    if nextButton then
+        nextButton.onClick = function()
+            Expeditions.slideRight()
+        end
+    end
+    
+    -- Show navigation buttons only if more than 3 zones
+    if prevButton then prevButton:setVisible(numZones > 3) end
+    if nextButton then nextButton:setVisible(numZones > 3) end
+    
+    -- Show initial view
+    Expeditions.updatePanels()
+    
+    Expeditions.window:show()
+    Expeditions.window:raise()
+    Expeditions.window:focus()
+end
+
+function Expeditions.updatePanels()
+    if not Expeditions.window then return end
+    
+    local panelContainer = Expeditions.window:getChildById('panelContainer')
+    if not panelContainer then return end
+    
+    panelContainer:destroyChildren()
+    Expeditions.panels = {}
+    
+    local numZones = #Expeditions.allZones
+    local startIdx = Expeditions.currentOffset + 1
+    local endIdx = math.min(startIdx + 2, numZones)  -- Always show 3 panels
+    
+    local panelWidth = 280
+    local panelSpacing = 15
+    
+    for i = startIdx, endIdx do
+        local zone = Expeditions.allZones[i]
+        local panelIndex = i - startIdx
         local panel = g_ui.createWidget('ExpeditionPanel', panelContainer)
+        
+        -- Calculate horizontal position
+        local x = panelIndex * (panelWidth + panelSpacing)
+        local y = 0
+        
+        panel:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+        panel:addAnchor(AnchorTop, 'parent', AnchorTop)
+        panel:setMarginLeft(x)
+        panel:setMarginTop(y)
+        
+        print("[DEBUG] Offset " .. Expeditions.currentOffset .. " | Zone " .. i .. ": " .. zone.name .. " | Position: x=" .. x)
         
         local header = panel:getChildById('header')
         if header then
             header:setImageSource('/images/ui/' .. (zone.headerImage or 'expedition_default'))
         end
         
-        local levelLabel = panel:getChildById('levelLabel')
-        if levelLabel and zone.minLevel then
-            if zone.maxLevel then
-                levelLabel:setText('Level ' .. zone.minLevel .. ' - ' .. zone.maxLevel)
-            else
-                levelLabel:setText('Level ' .. zone.minLevel .. '+')
+        local levelPanel = panel:getChildById('levelPanel')
+        if levelPanel then
+            local levelLabel = levelPanel:getChildById('levelLabel')
+            if levelLabel and zone.minLevel then
+                if zone.maxLevel then
+                    levelLabel:setText('Level ' .. zone.minLevel .. ' - ' .. zone.maxLevel)
+                else
+                    levelLabel:setText('Level ' .. zone.minLevel .. '+')
+                end
             end
         end
         
@@ -155,9 +247,49 @@ function showExpeditionPanel(data)
         table.insert(Expeditions.panels, panel)
     end
     
-    Expeditions.window:show()
-    Expeditions.window:raise()
-    Expeditions.window:focus()
+    -- Update button states and colors
+    local prevButton = Expeditions.window:getChildById('prevButton')
+    local nextButton = Expeditions.window:getChildById('nextButton')
+    
+    if prevButton then
+        local canGoPrev = Expeditions.currentOffset > 0
+        prevButton:setEnabled(canGoPrev)
+        -- Cyan when enabled, gray when disabled
+        prevButton:setImageColor(canGoPrev and '#00FFFF' or '#666666')
+        local prevArrow = prevButton:getChildById('prevArrow')
+        if prevArrow then
+            prevArrow:setOpacity(canGoPrev and 1.0 or 0.5)
+        end
+    end
+    
+    if nextButton then
+        -- Can slide right if there are more panels after the 3rd visible one
+        local maxOffset = numZones - 3
+        local canGoNext = Expeditions.currentOffset < maxOffset
+        nextButton:setEnabled(canGoNext)
+        -- Cyan when enabled, gray when disabled
+        nextButton:setImageColor(canGoNext and '#00FFFF' or '#666666')
+        local nextArrow = nextButton:getChildById('nextArrow')
+        if nextArrow then
+            nextArrow:setOpacity(canGoNext and 1.0 or 0.5)
+        end
+    end
+end
+
+function Expeditions.slideLeft()
+    if Expeditions.currentOffset > 0 then
+        Expeditions.currentOffset = Expeditions.currentOffset - 1
+        Expeditions.updatePanels()
+    end
+end
+
+function Expeditions.slideRight()
+    local numZones = #Expeditions.allZones
+    local maxOffset = numZones - 3
+    if Expeditions.currentOffset < maxOffset then
+        Expeditions.currentOffset = Expeditions.currentOffset + 1
+        Expeditions.updatePanels()
+    end
 end
 
 function joinExpedition(zoneId)
@@ -176,6 +308,7 @@ end
 
 function closeExpeditionPanel()
     if Expeditions.window and not Expeditions.window:isDestroyed() then
+        Expeditions.window:hide()
         Expeditions.window:destroy()
         Expeditions.window = nil
     end

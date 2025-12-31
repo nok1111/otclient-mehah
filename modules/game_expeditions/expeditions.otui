@@ -1,7 +1,7 @@
 ExpeditionWindow < MainWindow
   id: expeditionWindow
   !text: tr('Daily Expeditions')
-  size: 920 520
+  height: 520
   @onEscape: closeExpeditionPanel()
 
   Label
@@ -14,18 +14,45 @@ ExpeditionWindow < MainWindow
     color: #FFD700
     text-auto-resize: true
 
+  Button
+    id: prevButton
+    width: 40
+    height: 40
+    anchors.top: titleLabel.bottom
+    anchors.left: parent.left
+    margin-top: 200
+    margin-left: 10
+    image-color: #00FFFF
+    image-border: 3
+    
+    UIWidget
+      id: prevArrow
+      anchors.centerIn: parent
+      image-source: /images/ui/scrollbar/scrollbar_arrow_left
+      phantom: true
+
   Panel
     id: panelContainer
     anchors.top: titleLabel.bottom
     anchors.horizontalCenter: parent.horizontalCenter
-    anchors.bottom: closeButton.top
     margin-top: 15
-    margin-bottom: 10
-    layout:
-      type: horizontalBox
-      spacing: 15
-      fit-children: true
-      align-center: true
+
+  Button
+    id: nextButton
+    width: 40
+    height: 40
+    anchors.top: titleLabel.bottom
+    anchors.right: parent.right
+    margin-top: 200
+    margin-right: 10
+    image-color: #00FFFF
+    image-border: 3
+    
+    UIWidget
+      id: nextArrow
+      anchors.centerIn: parent
+      image-source: /images/ui/scrollbar/scrollbar_arrow_right
+      phantom: true
 
   Button
     id: closeButton
@@ -33,8 +60,7 @@ ExpeditionWindow < MainWindow
     width: 80
     anchors.bottom: parent.bottom
     anchors.horizontalCenter: parent.horizontalCenter
-    margin-bottom: 10
-    @onClick: closeExpeditionPanel()
+    margin-bottom: 15
 
 ExpeditionPanel < UIWidget
   size: 280 400

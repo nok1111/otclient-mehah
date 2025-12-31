@@ -37,6 +37,7 @@ GameServerOpcodes = {
     
     GameServerOpenFameShop  = 88,
     GameServerAncestralTasks  = 89,
+    GameServerRecycler = 90,
 
     -- Expedition System (Extended Opcode 77)
     GameServerExpeditions = 77,

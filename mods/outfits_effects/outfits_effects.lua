@@ -36,6 +36,15 @@ local outfitOffsets = {
     [2624] = {x = 32, y = 32},
     [2717] = {x = 32, y = 32},
     [2718] = {x = 13, y = 15},
+
+
+
+    [2714] = {x = 32, y = 32},
+    [2715] = {x = 13, y = 15},
+    [2716] = {x = 13, y = 10},
+
+
+
     --ogres
     [2427] = {x = 32, y = 32},
     [2428] = {x = 32, y = 32},
@@ -92,6 +101,11 @@ local function setCreatureTitle(creature)
     local creatureId = creature:getId()
     
     print("[OutfitsEffects] Processing title for: " .. name)
+    
+    local outfit = creature:getOutfit()
+    if outfit then
+        print("[OutfitsEffects] Outfit ID: " .. (outfit.type or "nil"))
+    end
     
     -- Clean up old widget if exists
     if creatureWidgets[creatureId] then

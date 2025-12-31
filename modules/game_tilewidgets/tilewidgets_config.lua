@@ -17,6 +17,16 @@ TileWidgetsConfig = {
       }
     },
     {
+      pos = { x = 2240, y = 3258, z = 1 },
+      text = "Recycling Station",
+      opts = {
+        width = 120, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40
+      }
+    },
+    {
       pos = { x = 208, y = 707, z = 5 },
       text = "Alchemy Table",
       opts = {
