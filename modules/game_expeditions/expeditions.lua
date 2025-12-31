@@ -44,6 +44,8 @@ function onExtendedOpcode(protocol, opcode, buffer)
         
         if data.type == "show_expeditions" then
             showExpeditionPanel(data)
+        elseif data.type == "show_teleports" then
+            showTeleportPanel(data)
         end
     end
 end
@@ -290,6 +292,204 @@ function Expeditions.slideRight()
         Expeditions.currentOffset = Expeditions.currentOffset + 1
         Expeditions.updatePanels()
     end
+end
+
+function showTeleportPanel(data)
+    if not ensureWindow() then
+        print("[Expeditions] Failed to create window")
+        return
+    end
+    
+    if not Expeditions.window then
+        print("[Expeditions] Window is nil after ensureWindow")
+        return
+    end
+    
+    local titleLabel = Expeditions.window:getChildById('titleLabel')
+    if titleLabel then
+        titleLabel:setText(data.tierName or 'Teleporter')
+    end
+    
+    local panelContainer = Expeditions.window:getChildById('panelContainer')
+    if not panelContainer then
+        print("[Expeditions] panelContainer not found")
+        return
+    end
+    
+    panelContainer:destroyChildren()
+    Expeditions.panels = {}
+    
+    -- Set close button handler
+    local closeButton = Expeditions.window:getChildById('closeButton')
+    if closeButton then
+        closeButton.onClick = function()
+            closeExpeditionPanel()
+        end
+    end
+    
+    -- Store data for sliding navigation
+    Expeditions.allZones = data.zones or {}
+    Expeditions.currentOffset = 0
+    
+    local numZones = #Expeditions.allZones
+    local panelWidth = 210
+    local panelHeight = 320
+    local panelSpacing = 15
+    local windowMargin = 40
+    
+    -- Window size based on max 3 visible panels
+    local maxVisiblePanels = math.min(numZones, 3)
+    local windowWidth = (panelWidth * maxVisiblePanels) + (panelSpacing * math.max(0, maxVisiblePanels - 1)) + windowMargin + 100
+    local windowHeight = 460
+    
+    Expeditions.window:setWidth(windowWidth)
+    Expeditions.window:setHeight(windowHeight)
+    
+    -- Set container size for 3 panels
+    local containerWidth = (panelWidth * maxVisiblePanels) + (panelSpacing * (maxVisiblePanels - 1))
+    local containerHeight = panelHeight
+    panelContainer:setWidth(containerWidth)
+    panelContainer:setHeight(containerHeight)
+    
+    -- Setup navigation buttons
+    local prevButton = Expeditions.window:getChildById('prevButton')
+    local nextButton = Expeditions.window:getChildById('nextButton')
+    
+    if prevButton then
+        prevButton.onClick = function()
+            Expeditions.slideLeftTeleport()
+        end
+    end
+    
+    if nextButton then
+        nextButton.onClick = function()
+            Expeditions.slideRightTeleport()
+        end
+    end
+    
+    -- Show navigation buttons only if more than 3 zones
+    if prevButton then prevButton:setVisible(numZones > 3) end
+    if nextButton then nextButton:setVisible(numZones > 3) end
+    
+    -- Show initial view
+    Expeditions.updateTeleportPanels()
+    
+    Expeditions.window:show()
+    Expeditions.window:raise()
+    Expeditions.window:focus()
+end
+
+function Expeditions.updateTeleportPanels()
+    if not Expeditions.window then return end
+    
+    local panelContainer = Expeditions.window:getChildById('panelContainer')
+    if not panelContainer then return end
+    
+    panelContainer:destroyChildren()
+    Expeditions.panels = {}
+    
+    local numZones = #Expeditions.allZones
+    local startIdx = Expeditions.currentOffset + 1
+    local endIdx = math.min(startIdx + 2, numZones)  -- Always show 3 panels
+    
+    local panelWidth = 210
+    local panelSpacing = 15
+    
+    for i = startIdx, endIdx do
+        local zone = Expeditions.allZones[i]
+        local panelIndex = i - startIdx
+        local panel = g_ui.createWidget('TeleportPanel', panelContainer)
+        
+        -- Calculate horizontal position
+        local x = panelIndex * (panelWidth + panelSpacing)
+        local y = 0
+        
+        panel:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+        panel:addAnchor(AnchorTop, 'parent', AnchorTop)
+        panel:setMarginLeft(x)
+        panel:setMarginTop(y)
+        
+        print("[DEBUG] Teleport Offset " .. Expeditions.currentOffset .. " | Zone " .. i .. ": " .. zone.name .. " | Position: x=" .. x)
+        
+        local header = panel:getChildById('header')
+        if header then
+            header:setImageSource('/images/ui/' .. (zone.headerImage or 'expedition_default'))
+        end
+        
+        local nameLabel = panel:getChildById('nameLabel')
+        if nameLabel then
+            nameLabel:setText(zone.name)
+        end
+        
+        local descLabel = panel:getChildById('descLabel')
+        if descLabel then
+            descLabel:setText(zone.description)
+        end
+        
+        local teleportButton = panel:getChildById('teleportButton')
+        if teleportButton then
+            teleportButton.onClick = function()
+                joinTeleport(zone.id)
+            end
+        end
+        
+        table.insert(Expeditions.panels, panel)
+    end
+    
+    -- Update button states
+    local prevButton = Expeditions.window:getChildById('prevButton')
+    local nextButton = Expeditions.window:getChildById('nextButton')
+    
+    if prevButton then
+        local canGoPrev = Expeditions.currentOffset > 0
+        prevButton:setEnabled(canGoPrev)
+        prevButton:setImageColor(canGoPrev and '#00FFFF' or '#666666')
+        local prevArrow = prevButton:getChildById('prevArrow')
+        if prevArrow then
+            prevArrow:setOpacity(canGoPrev and 1.0 or 0.5)
+        end
+    end
+    
+    if nextButton then
+        local maxOffset = numZones - 3
+        local canGoNext = Expeditions.currentOffset < maxOffset
+        nextButton:setEnabled(canGoNext)
+        nextButton:setImageColor(canGoNext and '#00FFFF' or '#666666')
+        local nextArrow = nextButton:getChildById('nextArrow')
+        if nextArrow then
+            nextArrow:setOpacity(canGoNext and 1.0 or 0.5)
+        end
+    end
+end
+
+function Expeditions.slideLeftTeleport()
+    if Expeditions.currentOffset > 0 then
+        Expeditions.currentOffset = Expeditions.currentOffset - 1
+        Expeditions.updateTeleportPanels()
+    end
+end
+
+function Expeditions.slideRightTeleport()
+    local numZones = #Expeditions.allZones
+    local maxOffset = numZones - 3
+    if Expeditions.currentOffset < maxOffset then
+        Expeditions.currentOffset = Expeditions.currentOffset + 1
+        Expeditions.updateTeleportPanels()
+    end
+end
+
+function joinTeleport(zoneId)
+    local data = {
+        action = "join_teleport",
+        zoneId = zoneId
+    }
+    
+    local protocolGame = g_game.getProtocolGame()
+    if protocolGame then
+        protocolGame:sendExtendedOpcode(Expeditions.opCode, json.encode(data))
+    end
+    
+    closeExpeditionPanel()
 end
 
 function joinExpedition(zoneId)

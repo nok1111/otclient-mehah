@@ -1,6 +1,6 @@
 ExpeditionWindow < MainWindow
   id: expeditionWindow
-  !text: tr('Daily Expeditions')
+  !text: tr('Combat Expeditions')
   height: 520
   @onEscape: closeExpeditionPanel()
 
@@ -65,7 +65,7 @@ ExpeditionWindow < MainWindow
 ExpeditionPanel < UIWidget
   size: 280 400
   image-source: /images/ui/windows/panel_border
-  image-border: 4
+  image-border: 50
   padding: 5
 
   UIWidget
@@ -75,6 +75,7 @@ ExpeditionPanel < UIWidget
     anchors.right: parent.right
     height: 150
     margin: 5
+    margin-top: 15
     image-source: /images/ui/expedition_default
     image-smooth: true
 
@@ -166,3 +167,57 @@ ExpeditionPanel < UIWidget
     anchors.horizontalCenter: parent.horizontalCenter
     margin-bottom: 10
     width: 150
+
+TeleportPanel < UIWidget
+  size: 210 320
+  image-source: /images/ui/windows/panel_border
+  image-border: 50
+  padding: 5
+
+  UIWidget
+    id: header
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 180
+    margin: 5
+    margin-top: 15
+    image-source: /images/ui/expedition_default
+    image-smooth: true
+
+  Label
+    id: nameLabel
+    anchors.top: header.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 10
+    margin-right: 10
+    text: Location Name
+    font: verdana-11px-rounded
+    color: #FFD700
+    text-auto-resize: true
+    text-align: center
+
+  Label
+    id: descLabel
+    anchors.top: nameLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 10
+    height: 30
+    text: Description
+    font: verdana-11px-antialised
+    color: #C0C0C0
+    text-wrap: true
+    text-align: center
+
+  Button
+    id: teleportButton
+    !text: tr('Teleport')
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 5
+    width: 120
