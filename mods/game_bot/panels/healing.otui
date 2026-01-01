@@ -1,0 +1,214 @@
+BotPanel
+  id: healingPanel
+  anchors.fill: parent
+  focusable: true
+  enabled: true
+  phantom: false
+  
+  Label
+    text: Healing Settings
+    font: verdana-11px-rounded
+    text-align: center
+    text-auto-resize: true
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    
+  HorizontalSeparator
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 2
+    margin-right: 2
+    
+  Label
+    text: Healing Spell:
+    text-auto-resize: true
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 5
+    margin-right: 5
+    font: verdana-11px-rounded
+    
+  CheckBox
+    id: healSpellEnabled
+    text: Enabled
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    
+  Button
+    id: healSpellButton
+    text: Click to set spell
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    height: 25
+    
+  Label
+    text: Use when HP is below:
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 8
+    margin-left: 10
+    
+  HorizontalScrollBar
+    id: healSpellHpSlider
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    minimum: 0
+    maximum: 100
+    step: 5
+    
+  Label
+    id: healSpellHpLabel
+    text: 60%
+    anchors.top: prev.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 2
+    
+  HorizontalSeparator
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 2
+    margin-right: 2
+    
+  Label
+    text: Health Potion:
+    text-auto-resize: true
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 5
+    margin-right: 5
+    font: verdana-11px-rounded
+    
+  CheckBox
+    id: healthPotionEnabled
+    text: Enabled
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    
+  Button
+    id: healthPotionButton
+    text: Click to set item ID
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    height: 25
+    
+  Label
+    text: Use when HP is below:
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 8
+    margin-left: 10
+    
+  HorizontalScrollBar
+    id: healthPotionHpSlider
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    minimum: 0
+    maximum: 100
+    step: 5
+    
+  Label
+    id: healthPotionHpLabel
+    text: 40%
+    anchors.top: prev.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 2
+    
+  HorizontalSeparator
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 2
+    margin-right: 2
+    
+  Label
+    text: Mana Potion:
+    text-auto-resize: true
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 5
+    margin-right: 5
+    font: verdana-11px-rounded
+    
+  CheckBox
+    id: manaPotionEnabled
+    text: Enabled
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    
+  Button
+    id: manaPotionButton
+    text: Click to set item ID
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    height: 25
+    
+  Label
+    text: Use when MP is below:
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 8
+    margin-left: 10
+    
+  HorizontalScrollBar
+    id: manaPotionMpSlider
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    minimum: 0
+    maximum: 100
+    step: 5
+    
+  Label
+    id: manaPotionMpLabel
+    text: 70%
+    anchors.top: prev.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 2

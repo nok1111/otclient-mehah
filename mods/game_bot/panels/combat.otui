@@ -1,0 +1,170 @@
+BotPanel
+  id: combatPanel
+  anchors.fill: parent
+  focusable: true
+  enabled: true
+  phantom: false
+  
+  Label
+    text: Combat Settings
+    font: verdana-11px-rounded
+    text-align: center
+    text-auto-resize: true
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    
+  HorizontalSeparator
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 2
+    margin-right: 2
+    
+  CheckBox
+    id: attackAllCheckbox
+    text: Attack All Monsters
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 5
+    margin-right: 5
+    
+  CheckBox
+    id: attackSummonsCheckbox
+    text: Attack Summons
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 5
+    margin-right: 5
+    
+  Label
+    text: Exclude monsters from attacking:
+    text-wrap: true
+    text-align: center
+    text-auto-resize: true
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 5
+    margin-right: 5
+    height: 25
+    width: 70
+    font: verdana-11px-rounded
+    
+  Button
+    id: addMonsterButton
+    text: Exclude Monster
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    height: 25
+    
+  Button
+    id: clearMonstersButton
+    text: Clear Exclusions
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 3
+    margin-left: 10
+    margin-right: 5
+    height: 25
+    
+  TextList
+    id: monsterList
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 5
+    margin-right: 5
+    height: 80
+    vertical-scrollbar: monsterListScrollBar
+    
+  VerticalScrollBar
+    id: monsterListScrollBar
+    anchors.top: monsterList.top
+    anchors.bottom: monsterList.bottom
+    anchors.right: monsterList.right
+    step: 14
+    pixels-scroll: true
+    
+  HorizontalSeparator
+    anchors.top: monsterList.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 2
+    margin-right: 2
+    
+  Label
+    text: Attack Spells (max 3):
+    text-auto-resize: true
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 5
+    margin-right: 5
+    font: verdana-11px-rounded
+    
+  Button
+    id: spell1Button
+    text: Click to add spell 1
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    height: 25
+    
+  Button
+    id: spell2Button
+    text: Click to add spell 2
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    height: 25
+    
+  Button
+    id: spell3Button
+    text: Click to add spell 3
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    height: 25
+    
+  HorizontalSeparator
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 2
+    margin-right: 2
+    
+  CheckBox
+    id: combatEnabledCheckbox
+    text: Combat Enabled
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 5
+    margin-right: 5

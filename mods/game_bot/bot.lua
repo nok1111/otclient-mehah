@@ -1,800 +1,1473 @@
-botWindow = nil
+-- Simplified Bot Module
+-- Version 2.0 by nok1111
+-- All-in-one: Bot logic + UI in single file
+
 botButton = nil
+botMainLoop = nil
+botWindow = nil
 contentsPanel = nil
-editWindow = nil
+enableButton = nil
+statusLabel = nil
+botTabs = nil
 
-local checkEvent = nil
+-- Bot panels
+local combatPanel = nil
+local healingPanel = nil
+local supportPanel = nil
 
-local botStorage = {}
-local botStorageFile = nil
-local botWebSockets = {}
-local botMessages = nil
-local botTabs = nil
-local botExecutor = nil
+-- Setup flags to prevent multiple setups
+local combatSetup = false
+local healingSetup = false
+local supportSetup = false
+local needsUIRefresh = false  -- Flag to track when storage is loaded and UI needs update
 
-local configList = nil
-local enableButton = nil
-local executeEvent = nil
-local statusLabel = nil
+-- SimplifiedBot (integrated from bot_simple.lua)
+SimplifiedBot = {}
+local botEnabled = false
+local storage = {}
+local storageFile = nil
 
-local configManagerUrl = "http://otclient.ovh/configs.php"
+-- Combat state
+local lastAttackSpell = 1
+local currentTarget = nil
+
+-- Healing state
+local lastHealTime = 0
+local healCooldown = 1000
+
+-- Support state
+local lastSupport1 = 0
+local lastSupport2 = 0
+local lastEat = 0
+
+-- Potion item selection
+local mouseGrabberWidget = nil
+local potionTypeToSet = nil  -- 'health' or 'mana'
+
+-- Export for UI access
+modules.game_bot = modules.game_bot or {}
+modules.game_bot.botMainLoop = nil
+
+function onMiniWindowClose()
+  if botButton then botButton:setOn(false) end
+end
+
+function startChoosePotionItem(potionType)
+  if g_ui.isMouseGrabbed() then
+    return
+  end
+  potionTypeToSet = potionType
+  mouseGrabberWidget:grabMouse()
+  g_mouse.pushCursor('target')
+  print("[Bot] Crosshair active - click on", potionType, "potion item")
+end
+
+function onChoosePotionItemRelease(self, mousePosition, mouseButton)
+  local item = nil
+  if mouseButton == MouseLeftButton then
+    local clickedWidget = modules.game_interface.getRootPanel():recursiveGetChildByPos(mousePosition, false)
+    if clickedWidget then
+      if clickedWidget:getClassName() == 'UIItem' and not clickedWidget:isVirtual() then
+        item = clickedWidget:getItem()
+      end
+    end
+  end
+
+  if item and item:getPosition().x == 65535 and potionTypeToSet then
+    local itemId = item:getId()
+    print("[Bot] Selected item ID:", itemId, "for", potionTypeToSet)
+    
+    if potionTypeToSet == 'health' then
+      storage.healing.healthPotion.itemId = itemId
+      local healthPotionButton = healingPanel:recursiveGetChildById('healthPotionButton')
+      if healthPotionButton then
+        healthPotionButton:setText(tostring(itemId))
+      end
+    elseif potionTypeToSet == 'mana' then
+      storage.healing.manaPotion.itemId = itemId
+      local manaPotionButton = healingPanel:recursiveGetChildById('manaPotionButton')
+      if manaPotionButton then
+        manaPotionButton:setText(tostring(itemId))
+      end
+    elseif potionTypeToSet == 'food' then
+      storage.support.autoEat.itemId = itemId
+      local autoEatButton = supportPanel:recursiveGetChildById('autoEatButton')
+      if autoEatButton then
+        autoEatButton:setText(tostring(itemId))
+      end
+    end
+    
+    SimplifiedBot.saveStorage()
+    potionTypeToSet = nil
+  end
+  
+  g_mouse.popCursor('target')
+  self:ungrabMouse()
+  return true
+end
+
+function debugInput()
+  print("[DEBUG] Setting up input debugging...")
+  
+  connect(g_keyboard, {
+    onKeyPress = function(keyCode, keyboardModifiers)
+      print("[DEBUG] g_keyboard Key pressed:", keyCode, "Modifiers:", keyboardModifiers)
+      return false
+    end
+  })
+  
+  local rootWidget = modules.game_interface.getRootPanel()
+  if rootWidget then
+    connect(rootWidget, {
+      onKeyPress = function(self, keyCode, keyboardModifiers)
+        print("[DEBUG] Root widget key pressed:", keyCode)
+        return false
+      end
+    })
+    print("[DEBUG] Root widget connected")
+  else
+    print("[DEBUG] WARNING: rootWidget not found")
+  end
+  
+  print("[DEBUG] Input debugging active")
+end
 
 function init()
-  dofile("executor")
-
-  g_ui.importStyle("ui/basic.otui")
-  g_ui.importStyle("ui/panels.otui")
-  g_ui.importStyle("ui/config.otui")
-  g_ui.importStyle("ui/icons.otui")
-  g_ui.importStyle("ui/container.otui")
-
-  connect(g_game, {
-    onGameStart = online,
-    onGameEnd = offline,
-  })
-
-  initCallbacks()
-
-  botButton = modules.game_mainpanel.addToggleButton('botButton', tr('Bot'), '/images/options/bot', toggle, false, 99999)
-  botButton:setOn(false)
-  botButton:show()
-
-  botWindow = g_ui.loadUI('bot', modules.game_interface.getLeftPanel())
-  botWindow:setup()
-
-  contentsPanel = botWindow.contentsPanel
-  configList = contentsPanel.config
-  enableButton = contentsPanel.enableButton
-  statusLabel = contentsPanel.statusLabel
-  botMessages = contentsPanel.messages
-  botTabs = contentsPanel.botTabs
-  botTabs:setContentWidget(contentsPanel.botPanel)
-
-  editWindow = g_ui.displayUI('edit')
-  editWindow:hide()
-
-  if g_game.isOnline() then
-    clear()
-    online()
+  print("[Bot] Module initializing...")
+  
+  -- TEMPORARY: Debug input
+  debugInput()
+  
+  -- Storage will be initialized when character logs in (onlineSimple)
+  print("[Bot] Module loaded, waiting for character login...")
+  
+  -- STEP 3: Create UI (like original mehah)
+  if modules.game_interface then
+    print("[Bot] Creating bot UI...")
+    status, err = pcall(function()
+      -- Import UI styles first
+      g_ui.importStyle('ui/basic')
+      
+      botWindow = g_ui.loadUI('bot', modules.game_interface.getLeftPanel())
+      if not botWindow then
+        error("Failed to load bot.otui")
+      end
+      botWindow:hide()
+      
+      -- Create mouse grabber widget for item selection
+      mouseGrabberWidget = g_ui.createWidget('UIWidget')
+      mouseGrabberWidget:setVisible(false)
+      mouseGrabberWidget:setFocusable(false)
+      mouseGrabberWidget.onMouseRelease = onChoosePotionItemRelease
+      
+      -- Connect keyboard to botWindow for TextEdit input
+      connect(botWindow, {
+        onKeyPress = function(self, keyCode, keyboardModifiers)
+          return false -- Propagate event to children
+        end
+      })
+      
+      -- Get UI components
+      contentsPanel = botWindow.contentsPanel
+      enableButton = contentsPanel.enableButton
+      statusLabel = contentsPanel.statusLabel
+      botTabs = contentsPanel.tabButtonsPanel
+      
+      -- Setup enable button
+      enableButton.onClick = function()
+        if SimplifiedBot.isEnabled() then
+          SimplifiedBot.setOff()
+          if botMainLoop then botMainLoop.setOff() end
+          enableButton:setOn(false)
+          statusLabel:setText('Status: Stopped')
+        else
+          SimplifiedBot.setOn()
+          if botMainLoop then botMainLoop.setOn() end
+          enableButton:setOn(true)
+          statusLabel:setText('Status: Running')
+        end
+      end
+      
+      -- Initialize tabs (storage is ready now)
+      print("[Bot] Initializing UI tabs...")
+      local uiSuccess = initTabs()
+      if not uiSuccess then
+        error("initTabs() failed")
+      end
+    end)
+    
+    if not status then
+      print("[Bot] ERROR creating UI: " .. tostring(err))
+      return
+    end
+    print("[Bot] UI created successfully with tabs")
   end
+  
+  -- STEP 5: Connect game events
+  print("[Bot] Connecting game events...")
+  connect(g_game, {
+    onGameStart = onlineSimple,
+    onGameEnd = offlineSimple,
+  })
+  print("[Bot] Game events connected")
+  
+  if g_game.isOnline() then
+    print("[Bot] Player is already online, calling onlineSimple()...")
+    local success, error = pcall(onlineSimple)
+    if not success then
+      print("[Bot] ERROR in onlineSimple: " .. tostring(error))
+    end
+  end
+  
+  print("[Bot] Module initialized successfully")
 end
 
 function terminate()
-  save()
-  clear()
-
+  print("[Bot] Module terminating...")
+  
+  disconnect(g_keyboard)
+  
   disconnect(g_game, {
-    onGameStart = online,
-    onGameEnd = offline,
+    onGameStart = onlineSimple,
+    onGameEnd = offlineSimple,
   })
+  
+  -- Clean up panels
+  combatPanel = nil
+  healingPanel = nil
+  supportPanel = nil
+  
+  if SimplifiedBot and SimplifiedBot.terminate then
+    SimplifiedBot.terminate()
+  end
+  
+  if botMainLoop then
+    botMainLoop.setOff()
+  end
 
-  terminateCallbacks()
-  editWindow:destroy()
-
-  botWindow:destroy()
-  botButton:destroy()
+  if botButton then
+    botButton:destroy()
+    botButton = nil
+  end
+  
+  print("[Bot] Module terminated successfully")
 end
 
-function clear()
-  botExecutor = nil
-  removeEvent(checkEvent)
-
-  -- optimization, callback is not used when not needed
-  g_game.enableTileThingLuaCallback(false)
-
-  botTabs:clearTabs()
-  botTabs:setOn(false)
-
-  botMessages:destroyChildren()
-  botMessages:updateLayout()
-
-  for i, socket in pairs(botWebSockets) do
-    HTTP.cancel(i)
-    botWebSockets[i] = nil
-  end
-
-  for i, widget in pairs(g_ui.getRootWidget():getChildren()) do
-    if widget.botWidget then
-      widget:destroy()
-    end
-  end
-  for i, widget in pairs(modules.game_interface.gameMapPanel:getChildren()) do
-    if widget.botWidget then
-      widget:destroy()
-    end
-  end
-  for _, widget in pairs({modules.game_interface.getRightPanel(), modules.game_interface.getLeftPanel()}) do
-    for i, child in pairs(widget:getChildren()) do
-      if child.botWidget then
-        child:destroy()
-      end
-    end
-  end
-
-  local gameMapPanel = modules.game_interface.getMapPanel()
-  if gameMapPanel then
-    gameMapPanel:unlockVisibleFloor()
-  end
-
-  if g_sounds then
-    g_sounds.getChannel(SoundChannels.Bot):stop()
-  end
-end
-
-function refresh()
-  if not g_game.isOnline() then return end
-  save()
-  clear()
-
-  -- create bot dir
-  if not g_resources.directoryExists("/bot") then
-    g_resources.makeDir("/bot")
-    if not g_resources.directoryExists("/bot") then
-      return onError("Can't create bot directory in " .. g_resources.getWriteDir())
-    end
-  end
-
-  -- get list of configs
-  createDefaultConfigs()
-  local configs = g_resources.listDirectoryFiles("/bot", false, false)
-
-  -- clean
-  configList.onOptionChange = nil
-  enableButton.onClick = nil
-  configList:clearOptions()
-
-  -- select active config based on settings
-  local settings = g_settings.getNode('bot') or {}
-  local index = g_game.getCharacterName() .. "_" .. g_game.getClientVersion()
-  if settings[index] == nil then
-    settings[index] = {
-      enabled=false,
-      config=""
-    }
-  end
-
-  -- init list and buttons
-  for i=1,#configs do
-    configList:addOption(configs[i])
-  end
-  configList:setCurrentOption(settings[index].config)
-  if configList:getCurrentOption().text ~= settings[index].config then
-    settings[index].config = configList:getCurrentOption().text
-    settings[index].enabled = false
-  end
-
-  enableButton:setOn(settings[index].enabled)
-
-  configList.onOptionChange = function(widget)
-    settings[index].config = widget:getCurrentOption().text
-    g_settings.setNode('bot', settings)
-    g_settings.save()
-    refresh()
-  end
-
-  enableButton.onClick = function(widget)
-    settings[index].enabled = not settings[index].enabled
-    g_settings.setNode('bot', settings)
-    g_settings.save()
-    refresh()
-  end
-
-  if not g_game.isOnline() or not settings[index].enabled then
-    statusLabel:setOn(true)
-    statusLabel:setText("Status: disabled\nPress off button to enable")
-    analyzerButton = modules.game_mainpanel.getButton("botAnalyzersButton")
-    if analyzerButton then
-      analyzerButton:destroy()
-    end
+function toggleSimple()
+  print("[Bot] toggleSimple() called")
+  
+  if not botWindow then
+    print("[Bot] ERROR: botWindow not created")
     return
   end
+  
+  -- Toggle window visibility
+  if botWindow:isVisible() then
+    botWindow:hide()
+    if botButton then botButton:setOn(false) end
+  else
+    botWindow:show()
+    botWindow:raise()
+    botWindow:focus()
+    if botButton then botButton:setOn(true) end
+    modules.game_interface.checkAndOpenLeftPanel()
+    
+    -- If storage was loaded and UI needs refresh, force setup of all panels
+    if needsUIRefresh then
+      print("[Bot] Refreshing UI with loaded storage...")
+      
+      -- Reset all setup flags
+      combatSetup = false
+      healingSetup = false
+      supportSetup = false
+      
+      -- Force refresh of visible panel after a delay
+      scheduleEvent(function()
+        if combatPanel and combatPanel:isVisible() then
+          setupCombatPanel()
+        end
+        if healingPanel and healingPanel:isVisible() then
+          setupHealingPanel()
+        end
+        if supportPanel and supportPanel:isVisible() then
+          setupSupportPanel()
+        end
+      end, 100)
+      
+      needsUIRefresh = false
+    end
+  end
+end
 
-  local configName = settings[index].config
+function onlineSimple()
+  print("[Bot] onlineSimple() called")
+  
+  if not SimplifiedBot then
+    print("[Bot] ERROR: SimplifiedBot is nil!")
+    return
+  end
+  
+  -- Load storage now that character name is available
+  print("[Bot] Loading storage for character:", g_game.getCharacterName())
+  SimplifiedBot.loadStorage()
+  SimplifiedBot.init()
+  
+  -- Force UI refresh immediately if window is already open (character switch without closing client)
+  if botWindow and botWindow:isVisible() then
+    print("[Bot] Bot window is open - refreshing UI immediately...")
+    
+    -- Reset all setup flags
+    combatSetup = false
+    healingSetup = false
+    supportSetup = false
+    
+    -- Force refresh of visible panel
+    scheduleEvent(function()
+      if combatPanel and combatPanel:isVisible() then
+        setupCombatPanel()
+      end
+      if healingPanel and healingPanel:isVisible() then
+        setupHealingPanel()
+      end
+      if supportPanel and supportPanel:isVisible() then
+        setupSupportPanel()
+      end
+    end, 100)
+  else
+    -- Mark that UI needs refresh when window is opened later
+    needsUIRefresh = true
+    print("[Bot] Storage loaded - UI will refresh when bot window is opened")
+  end
+  
+  print("[Bot] SimplifiedBot ready for online mode")
 
-  -- storage
-  botStorage = {}
+  
+  
+  -- Create button if it doesn't exist
+  if not botButton then
+    local status, err = pcall(function()
+      print("[Bot] Creating bot button...")
+      botButton = modules.game_mainpanel.addToggleButton('botButton', tr('Bot'), '/images/options/bot', toggleSimple, false, 99999)
+      botButton:setOn(false)
+      botButton:show()
+    end)
+    
+    if not status then
+      print("[Bot] ERROR creating button: " .. tostring(err))
+      return
+    end
+  end
+  
+  -- Create main loop
+  if not botMainLoop then
+    status, err = pcall(function()
+      print("[Bot] Creating main loop...")
+      botMainLoop = {
+        event = nil,
+        enabled = false,
+        setOn = function()
+          if botMainLoop.enabled then return end
+          print("[Bot] Main loop STARTING...")
+          botMainLoop.enabled = true
+          botMainLoop.loop()
+        end,
+        setOff = function()
+          print("[Bot] Main loop STOPPING...")
+          botMainLoop.enabled = false
+          if botMainLoop.event then
+            removeEvent(botMainLoop.event)
+            botMainLoop.event = nil
+          end
+        end,
+        loop = function()
+          if not botMainLoop.enabled then return end
+          if SimplifiedBot and SimplifiedBot.mainLoop then
+            SimplifiedBot.mainLoop()
+          end
+          botMainLoop.event = scheduleEvent(botMainLoop.loop, 1000)
+        end
+      }
+      modules.game_bot.botMainLoop = botMainLoop
+    end)
+    
+    if not status then
+      print("[Bot] ERROR creating main loop: " .. tostring(err))
+      return
+    end
+  end
+  
+  
+  -- Load storage
+  status, err = pcall(function()
+    print("[Bot] Loading storage...")
+    SimplifiedBot.loadStorage()
+    if SimplifiedBot.isEnabled() and botMainLoop then
+      botMainLoop.setOn()
+    end
+  end)
+  
+  if not status then
+    print("[Bot] ERROR loading storage: " .. tostring(err))
+  end
+  
+  print("[Bot] onlineSimple() completed")
+end
 
-  local path = "/bot/" .. configName .. "/storage/"
+function offlineSimple()
+  print("[Bot] offlineSimple() - Character going offline")
+  
+  if SimplifiedBot and SimplifiedBot.saveStorage then
+    SimplifiedBot.saveStorage()
+  end
+  if SimplifiedBot and SimplifiedBot.setOff then
+    SimplifiedBot.setOff()
+  end
+  if botMainLoop then
+    botMainLoop.setOff()
+  end
+  
+  -- Clear storage and storageFile to prevent transfer between characters
+  print("[Bot] Clearing storage for next character login")
+  storage = {}
+  storageFile = nil
+  
+  -- Reset setup flags to force UI refresh on next login
+  combatSetup = false
+  healingSetup = false
+  supportSetup = false
+  needsUIRefresh = false
+  print("[Bot] UI setup flags reset")
+end
+
+-- SimplifiedBot Functions (integrated from bot_simple.lua)
+
+function SimplifiedBot.init()
+  print("[Bot] SimplifiedBot.init() called")
+  -- Storage will be loaded in onlineSimple() when character name is available
+  
+  if not storage.combat then
+    print("[Bot] storage.combat is NIL - creating new with defaults")
+    storage.combat = {
+      enabled = false,
+      attackAll = false,
+      attackSummons = false,
+      monsterList = {},
+      spells = {"", "", ""}
+    }
+  else
+    print("[Bot] storage.combat EXISTS - keeping saved values")
+    print("[Bot] - enabled:", storage.combat.enabled)
+    print("[Bot] - attackAll:", storage.combat.attackAll)
+    
+    -- Only set defaults for missing fields
+    if storage.combat.attackSummons == nil then
+      storage.combat.attackSummons = false
+    end
+    if not storage.combat.spells or #storage.combat.spells == 0 then
+      storage.combat.spells = {"", "", ""}
+    end
+    if not storage.combat.monsterList then
+      storage.combat.monsterList = {}
+    end
+  end
+  
+  if not storage.healing then
+    storage.healing = {
+      spell = {enabled = true, text = "minor heal", hpPercent = 60},
+      healthPotion = {enabled = true, itemId = 3160, hpPercent = 40},
+      manaPotion = {enabled = true, itemId = 268, mpPercent = 70}
+    }
+  end
+  
+  if not storage.support then
+    storage.support = {
+      spell1 = {enabled = false, text = "utamo vita", cooldown = 90},
+      spell2 = {enabled = false, text = "utani hur", cooldown = 60},
+      autoEat = {enabled = false, itemId = 3577, interval = 10}
+    }
+  end
+end
+
+function SimplifiedBot.terminate()
+  SimplifiedBot.saveStorage()
+  SimplifiedBot.setOff()
+end
+
+function SimplifiedBot.loadStorage()
+  local path = "/bot_simplified/"
   if not g_resources.directoryExists(path) then
     g_resources.makeDir(path)
   end
-
-  botStorageFile = path.."profile_" .. g_settings.getNumber('profile') .. ".json"
-  if g_resources.fileExists(botStorageFile) then
+  
+  local charName = g_game.getCharacterName()
+  if not charName or charName == "" then
+    charName = "default"
+  end
+  
+  -- Sanitize character name for filename (remove invalid chars)
+  charName = charName:gsub("[^%w_-]", "_")
+  
+  storageFile = path .. "settings_" .. g_settings.getNumber('profile') .. "_" .. charName .. ".json"
+  print("[Bot] Storage file: " .. storageFile)
+  
+  if g_resources.fileExists(storageFile) then
+    print("[Bot] Loading existing storage...")
     local status, result = pcall(function()
-      return json.decode(g_resources.readFileContents(botStorageFile))
+      return json.decode(g_resources.readFileContents(storageFile))
     end)
-    if not status then
-      return onError("Error while reading storage (" .. botStorageFile .. "). To fix this problem you can delete storage.json. Details: " .. result)
+    
+    if status then
+      storage = result
+      print("[Bot] Storage loaded successfully")
+    else
+      print("[Bot] Failed to load storage")
     end
-    botStorage = result
-  end
-
-  -- run script
-  local status, result = pcall(function()
-    return executeBot(configName, botStorage, botTabs, message, save, refresh, botWebSockets) end
-  )
-  if not status then
-    return onError(result)
-  end
-
-  statusLabel:setOn(false)
-  botExecutor = result
-  check()
-end
-
-function save()
-  if not botExecutor then
-    return
-  end
-
-  local settings = g_settings.getNode('bot') or {}
-  local index = g_game.getCharacterName() .. "_" .. g_game.getClientVersion()
-  if settings[index] == nil then
-    return
-  end
-
-  local status, result = pcall(function()
-    return json.encode(botStorage, 2)
-  end)
-  if not status then
-    return onError("Error while saving bot storage. Storage won't be saved. Details: " .. result)
-  end
-
-  if result:len() > 100 * 1024 * 1024 then
-    return onError("Storage file is too big, above 100MB, it won't be saved")
-  end
-
-  g_resources.writeFileContents(botStorageFile, result)
-end
-
-function onMiniWindowClose()
-  botButton:setOn(false)
-end
-
-function toggle()
-  if botButton:isOn() then
-    botWindow:close()
-    botButton:setOn(false)
   else
-    botWindow:open()
-    botButton:setOn(true)
-
-    modules.game_interface.checkAndOpenLeftPanel()
+    print("[Bot] No storage file found, using defaults")
   end
 end
 
-function online()
-  botWindow:setupOnStart()
-  if not modules.client_profiles.ChangedProfile then
-    scheduleEvent(refresh, 20)
-  end
-end
-
-function offline()
-  save()
-  clear()
-  editWindow:hide()
-end
-
-function onError(message)
-  statusLabel:setOn(true)
-  statusLabel:setText("Error:\n" .. message)
-  g_logger.error("[BOT] " .. message)
-end
-
-function edit()
-  local configs = g_resources.listDirectoryFiles("/bot", false, false)
-  editWindow.manager.upload.config:clearOptions()
-  for i=1,#configs do
-    editWindow.manager.upload.config:addOption(configs[i])
-  end
-  editWindow.manager.download.config:setText("")
-
-  editWindow:show()
-  editWindow:focus()
-  editWindow:raise()
-end
-
-local function copyFilesRecursively(sourcePath, targetPath)
-    local files = g_resources.listDirectoryFiles(sourcePath, true, false, false)
-    for _, file in ipairs(files) do
-        local baseName = file:split("/")
-        baseName = baseName[#baseName]
-        local targetFilePath = targetPath .. "/" .. baseName
-        if g_resources.directoryExists(file) then
-            g_resources.makeDir(targetFilePath)
-            if not g_resources.directoryExists(targetFilePath) then
-                return onError("Can't create directory: " .. targetFilePath)
-            end
-            copyFilesRecursively(file, targetFilePath)
-        else
-            local contents = g_resources.fileExists(file) and g_resources.readFileContents(file) or ""
-            if contents:len() > 0 then
-                g_resources.writeFileContents(targetFilePath, contents)
-            end
-        end
-    end
-end
-
-function createDefaultConfigs()
-    local defaultConfigFiles = g_resources.listDirectoryFiles("default_configs", false, false)
-    for _, configName in ipairs(defaultConfigFiles) do
-        local targetDir = "/bot/" .. configName
-        if not g_resources.directoryExists(targetDir) then
-            g_resources.makeDir(targetDir)
-            if not g_resources.directoryExists(targetDir) then
-                return onError("Can't create directory: " .. targetDir)
-            end
-            copyFilesRecursively("default_configs/" .. configName, targetDir)
-        end
-    end
-end
-
-function uploadConfig()
-  local config = editWindow.manager.upload.config:getCurrentOption().text
-  local archive = compressConfig(config)
-  if not archive then
-      return displayErrorBox(tr("Config upload failed"), tr("Config %s is invalid (can't be compressed)", config))
-  end
-  if archive:len() > 1024 * 1024 then
-      return displayErrorBox(tr("Config upload failed"), tr("Config %s is too big, maximum size is 1024KB. Now it has %s KB.", config, math.floor(archive:len() / 1024)))
-  end
-
-  local infoBox = displayInfoBox(tr("Uploading config"), tr("Uploading config %s. Please wait.", config))
-
-  HTTP.postJSON(configManagerUrl .. "?config=" .. config:gsub("%s+", "_"), archive, function(data, err)
-    if infoBox then
-      infoBox:destroy()
-    end
-    if err or data["error"] then
-      return displayErrorBox(tr("Config upload failed"), tr("Error while upload config %s:\n%s", config, err or data["error"]))
-    end
-    displayInfoBox(tr("Succesful config upload"), tr("Config %s has been uploaded.\n%s", config, data["message"]))
-  end)
-end
-
-function downloadConfig()
-  local hash = editWindow.manager.download.config:getText()
-  if hash:len() == 0 then
-      return displayErrorBox(tr("Config download error"), tr("Enter correct config hash"))
-  end
-  local infoBox = displayInfoBox(tr("Downloading config"), tr("Downloading config with hash %s. Please wait.", hash))
-  HTTP.download(configManagerUrl .. "?hash=" .. hash, hash .. ".zip", function(path, checksum, err)
-    if infoBox then
-      infoBox:destroy()
-    end
-    if err then
-      return displayErrorBox(tr("Config download error"), tr("Config with hash %s cannot be downloaded", hash))
-    end
-    modules.client_textedit.show("", {
-      title="Enter name for downloaded config",
-      description="Config with hash " .. hash .. " has been downloaded. Enter name for new config.\nWarning: if config with same name already exist, it will be overwritten!",
-      width=500
-    }, function(configName)
-      decompressConfig(configName, "/downloads/" .. path)
-      refresh()
-      edit()
-    end)
-  end)
-end
-
-function compressConfig(configName)
-  if not g_resources.directoryExists("/bot/" .. configName) then
-    return onError("Config " .. configName .. " doesn't exist")
-  end
-  local forArchive = {}
-  for _, file in ipairs(g_resources.listDirectoryFiles("/bot/" .. configName)) do
-    local fullPath = "/bot/" .. configName .. "/" .. file
-    if g_resources.fileExists(fullPath) then -- regular file
-        forArchive[file] = g_resources.readFileContents(fullPath)
-    else -- dir
-      for __, file2 in ipairs(g_resources.listDirectoryFiles(fullPath)) do
-        local fullPath2 = fullPath .. "/" .. file2
-        if g_resources.fileExists(fullPath2) then -- regular file
-            forArchive[file .. "/" .. file2] = g_resources.readFileContents(fullPath2)
-        end
-      end
-    end
-  end
-  return g_resources.createArchive(forArchive)
-end
-
-function decompressConfig(configName, archive)
-  if g_resources.directoryExists("/bot/" .. configName) then
-    g_resources.deleteFile("/bot/" .. configName) -- also delete dirs
-  end
-  local files = g_resources.decompressArchive(archive)
-  g_resources.makeDir("/bot/" .. configName)
-  if not g_resources.directoryExists("/bot/" .. configName) then
-    return onError("Can't create /bot/" .. configName .. " directory in " .. g_resources.getWriteDir())
-  end
-
-  for file, contents in pairs(files) do
-    local split = file:split("/")
-    split[#split] = nil -- remove file name
-    local dirPath = "/bot/" .. configName
-    for _, s in ipairs(split) do
-      dirPath = dirPath .. "/" .. s
-      if not g_resources.directoryExists(dirPath) then
-        g_resources.makeDir(dirPath)
-        if not g_resources.directoryExists(dirPath) then
-          return onError("Can't create " .. dirPath .. " directory in " .. g_resources.getWriteDir())
-        end
-      end
-    end
-    g_resources.writeFileContents("/bot/" .. configName .. file, contents)
-  end
-end
-
--- Executor
-function message(category, msg)
-  local widget = g_ui.createWidget('BotLabel', botMessages)
-  widget.added = g_clock.millis()
-  if category == 'error' then
-    widget:setText(msg)
-    widget:setColor("red")
-    g_logger.error("[BOT] " .. msg)
-  elseif category == 'warn' then
-    widget:setText(msg)
-    widget:setColor("yellow")
-    g_logger.warning("[BOT] " .. msg)
-  elseif category == 'info' then
-    widget:setText(msg)
-    widget:setColor("white")
-    g_logger.info("[BOT] " .. msg)
-  end
-
-  if botMessages:getChildCount() > 5 then
-    botMessages:getFirstChild():destroy()
-  end
-end
-
-function check()
-  removeEvent(checkEvent)
-  if not botExecutor then
+function SimplifiedBot.saveStorage()
+  if not storageFile then
+    print("[Bot] saveStorage: No storageFile set!")
     return
   end
-
-  checkEvent = scheduleEvent(check, 10)
-
+  
+  print("[Bot] Saving to file:", storageFile)
+  
   local status, result = pcall(function()
-    return botExecutor.script()
+    return json.encode(storage, 2)
   end)
+  
+  if status then
+    g_resources.writeFileContents(storageFile, result)
+    print("[Bot] Storage saved successfully")
+  else
+    print("[Bot] ERROR saving storage:", result)
+  end
+end
+
+function SimplifiedBot.setOn()
+  if not g_game.isOnline() then return end
+  botEnabled = true
+  SimplifiedBot.updateStatus()
+end
+
+function SimplifiedBot.setOff()
+  botEnabled = false
+  currentTarget = nil
+  if g_game.isOnline() then
+    g_game.cancelAttack()
+  end
+  SimplifiedBot.updateStatus()
+end
+
+function SimplifiedBot.toggle()
+  if botEnabled then
+    SimplifiedBot.setOff()
+  else
+    SimplifiedBot.setOn()
+  end
+end
+
+function SimplifiedBot.isEnabled()
+  return botEnabled
+end
+
+function SimplifiedBot.updateStatus()
+  if not botWindow then return end
+  
+  local statusLabel = botWindow:recursiveGetChildById('statusLabel')
+  local enableButton = botWindow:recursiveGetChildById('enableButton')
+  
+  if statusLabel then
+    if botEnabled then
+      statusLabel:setText("Status: Running")
+      statusLabel:setColor("#00FF00")
+    else
+      statusLabel:setText("Status: Stopped")
+      statusLabel:setColor("#FF0000")
+    end
+  end
+  
+  if enableButton then
+    enableButton:setOn(botEnabled)
+  end
+end
+
+function SimplifiedBot.setWindow(window)
+  botWindow = window
+  SimplifiedBot.updateStatus()
+end
+
+function SimplifiedBot.getStorage()
+  return storage
+end
+
+function SimplifiedBot.processCombat()
+  if not storage.combat then 
+    print("[Bot Combat] ERROR: storage.combat is nil")
+    return 
+  end
+  
+  -- Check if combat is enabled
+  if not storage.combat.enabled then
+    print("[Bot Combat] Combat is disabled - skipping")
+    -- Cancel any existing attack
+    if g_game.getAttackingCreature() then
+      g_game.cancelAttack()
+    end
+    return
+  end
+  
+  if not g_game.isOnline() then return end
+  
+  local player = g_game.getLocalPlayer()
+  if not player then return end
+  
+  local pos = player:getPosition()
+  local creatures = g_map.getSpectators(pos, false)
+  
+  print("[Bot Combat] Found", #creatures, "creatures nearby")
+  print("[Bot Combat] storage.combat.attackAll =", storage.combat.attackAll)
+  if storage.combat.monsterList and #storage.combat.monsterList > 0 then
+    print("[Bot Combat] Monster list:", table.concat(storage.combat.monsterList, ", "))
+  else
+    print("[Bot Combat] Monster list: EMPTY")
+  end
+  
+  local bestTarget = nil
+  local closestDistance = 999
+  local monstersFound = 0
+  local summonsSkipped = 0
+  
+  for _, creature in ipairs(creatures) do
+    if creature:isMonster() then
+      monstersFound = monstersFound + 1
+      
+      -- Check if should skip summons
+      local isSummon = creature:isSummon()
+      if isSummon and not storage.combat.attackSummons then
+        summonsSkipped = summonsSkipped + 1
+        print("[Bot Combat] Skipping summon:", creature:getName())
+        goto continue
+      end
+      
+      local shouldAttack = false
+      
+      if storage.combat.attackAll then
+        -- Attack all monsters EXCEPT those in exclusion list
+        shouldAttack = true
+        
+        -- Check if monster is in exclusion list (blacklist)
+        if storage.combat.monsterList and #storage.combat.monsterList > 0 then
+          local monsterName = creature:getName():lower()
+          for _, excludedName in ipairs(storage.combat.monsterList) do
+            if monsterName:find(excludedName:lower(), 1, true) then
+              shouldAttack = false
+              print("[Bot Combat] Monster excluded from attack:", creature:getName())
+              break
+            end
+          end
+        end
+        
+        if shouldAttack then
+          print("[Bot Combat] AttackAll enabled - will attack:", creature:getName())
+        end
+      end
+      
+      if shouldAttack then
+        local creaturePos = creature:getPosition()
+        local distance = math.max(math.abs(pos.x - creaturePos.x), math.abs(pos.y - creaturePos.y))
+        print("[Bot Combat] Monster", creature:getName(), "at distance", distance)
+        if distance < closestDistance then
+          closestDistance = distance
+          bestTarget = creature
+        end
+      end
+      
+      ::continue::
+    end
+  end
+  
+  print("[Bot Combat] Summary - Monsters:", monstersFound, "Summons skipped:", summonsSkipped, "Best target:", bestTarget and bestTarget:getName() or "none")
+  
+  if bestTarget then
+    currentTarget = bestTarget
+    if g_game.getAttackingCreature() ~= bestTarget then
+      print("[Bot Combat] Attacking:", bestTarget:getName())
+      g_game.attack(bestTarget)
+    end
+    SimplifiedBot.castAttackSpell()
+  else
+    currentTarget = nil
+    if g_game.getAttackingCreature() then
+      g_game.cancelAttack()
+    end
+  end
+end
+
+function SimplifiedBot.castAttackSpell()
+  if not storage.combat or not storage.combat.spells then
+    print("[Bot Spell] ERROR: storage.combat.spells is nil")
+    return
+  end
+  
+  local spells = storage.combat.spells
+  local validSpells = {}
+  
+  print("[Bot Spell] Raw spells from storage:", table.concat(spells or {}, ", "))
+  
+  for _, spell in ipairs(spells) do
+    if spell and spell:len() > 0 then
+      table.insert(validSpells, spell)
+    end
+  end
+  
+  print("[Bot Spell] Valid spells:", #validSpells, "spells -", table.concat(validSpells, ", "))
+  
+  if #validSpells == 0 then
+    print("[Bot Spell] No valid spells to cast")
+    return
+  end
+  
+  local spell = validSpells[lastAttackSpell]
+  if spell then
+    print("[Bot Spell] Casting:", spell)
+    g_game.talk(spell)
+  end
+  
+  lastAttackSpell = lastAttackSpell + 1
+  if lastAttackSpell > #validSpells then
+    lastAttackSpell = 1
+  end
+end
+
+function SimplifiedBot.processHealing()
+  if not g_game.isOnline() then return end
+  
+  local now = g_clock.millis()
+  if now - lastHealTime < healCooldown then return end
+  
+  local player = g_game.getLocalPlayer()
+  if not player then return end
+  
+  local hp = player:getHealthPercent()
+  local maxMana = player:getMaxMana()
+  local mp = maxMana > 0 and math.floor(100 * player:getMana() / maxMana) or 100
+  
+  if storage.healing.spell.enabled and hp < storage.healing.spell.hpPercent then
+    if storage.healing.spell.text:len() > 0 then
+      g_game.talk(storage.healing.spell.text)
+      lastHealTime = now
+      return
+    end
+  end
+  
+  if storage.healing.healthPotion.enabled and hp < storage.healing.healthPotion.hpPercent then
+    g_game.useInventoryItemWith(storage.healing.healthPotion.itemId, player)
+    lastHealTime = now
+    return
+  end
+  
+  if storage.healing.manaPotion.enabled and mp < storage.healing.manaPotion.mpPercent then
+    g_game.useInventoryItemWith(storage.healing.manaPotion.itemId, player)
+    lastHealTime = now
+    return
+  end
+end
+
+function SimplifiedBot.processSupport()
+  if not g_game.isOnline() then return end
+  
+  local now = g_clock.millis()
+  
+  if storage.support.spell1.enabled then
+    local cooldown = storage.support.spell1.cooldown * 1000
+    if now - lastSupport1 >= cooldown then
+      if storage.support.spell1.text:len() > 0 then
+        g_game.talk(storage.support.spell1.text)
+        lastSupport1 = now
+      end
+    end
+  end
+  
+  if storage.support.spell2.enabled then
+    local cooldown = storage.support.spell2.cooldown * 1000
+    if now - lastSupport2 >= cooldown then
+      if storage.support.spell2.text:len() > 0 then
+        g_game.talk(storage.support.spell2.text)
+        lastSupport2 = now
+      end
+    end
+  end
+  
+  if storage.support.autoEat.enabled then
+    local interval = storage.support.autoEat.interval * 1000
+    if now - lastEat >= interval then
+      SimplifiedBot.eatFood()
+      lastEat = now
+    end
+  end
+end
+
+function SimplifiedBot.eatFood()
+  local itemId = storage.support.autoEat.itemId
+  if itemId <= 100 then return end
+  
+  for _, container in pairs(g_game.getContainers()) do
+    for _, item in ipairs(container:getItems()) do
+      if item:getId() == itemId then
+        g_game.use(item)
+        return
+      end
+    end
+  end
+  
+  if g_game.getClientVersion() >= 780 then
+    g_game.useInventoryItem(itemId)
+  end
+end
+
+function SimplifiedBot.mainLoop()
+  if not botEnabled then 
+    print("[Bot MainLoop] botEnabled is false - not running")
+    return 
+  end
+  if not g_game.isOnline() then 
+    print("[Bot MainLoop] Not online - not running")
+    return 
+  end
+  
+  print("[Bot MainLoop] Executing... botEnabled:", botEnabled)
+  SimplifiedBot.processHealing()
+  SimplifiedBot.processCombat()
+  SimplifiedBot.processSupport()
+end
+
+-- UI Functions (consolidated from bot_ui.lua)
+
+function showTextInputModal(title, currentText, callback)
+  local inputWindow = g_ui.createWidget('MainWindow', g_ui.getRootWidget())
+  inputWindow:setId('textInputModal')
+  inputWindow:setText(title)
+  inputWindow:setSize({width = 340, height = 170})
+  
+  local label = g_ui.createWidget('Label', inputWindow)
+  label:setText('Enter spell text:')
+  label:setTextAlign(AlignLeft)
+  label:addAnchor(AnchorTop, 'parent', AnchorTop)
+  label:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+  label:setMarginTop(15)
+  label:setMarginLeft(15)
+  
+  local textEdit = g_ui.createWidget('TextEdit', inputWindow)
+  textEdit:setId('modalTextEdit')
+  textEdit:setText(currentText or "")
+  textEdit:addAnchor(AnchorTop, 'prev', AnchorBottom)
+  textEdit:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+  textEdit:addAnchor(AnchorRight, 'parent', AnchorRight)
+  textEdit:setMarginTop(8)
+  textEdit:setMarginLeft(15)
+  textEdit:setMarginRight(15)
+  textEdit:setHeight(25)
+  
+  local okButton = g_ui.createWidget('Button', inputWindow)
+  okButton:setText('OK')
+  okButton:setWidth(90)
+  okButton:setHeight(32)
+  okButton:addAnchor(AnchorTop, 'prev', AnchorBottom)
+  okButton:addAnchor(AnchorRight, 'parent', AnchorHorizontalCenter)
+  okButton:setMarginTop(15)
+  okButton:setMarginRight(5)
+  
+  local cancelButton = g_ui.createWidget('Button', inputWindow)
+  cancelButton:setText('Cancel')
+  cancelButton:setWidth(90)
+  cancelButton:setHeight(32)
+  cancelButton:addAnchor(AnchorTop, 'prev', AnchorTop)
+  cancelButton:addAnchor(AnchorLeft, 'parent', AnchorHorizontalCenter)
+  cancelButton:setMarginLeft(5)
+  
+  okButton.onClick = function()
+    local text = textEdit:getText()
+    if callback then callback(text) end
+    inputWindow:destroy()
+  end
+  
+  cancelButton.onClick = function()
+    inputWindow:destroy()
+  end
+  
+  textEdit.onKeyPress = function(self, keyCode, keyboardModifiers)
+    if keyCode == KeyEnter or keyCode == KeyNumpadEnter then
+      local text = textEdit:getText()
+      if callback then callback(text) end
+      inputWindow:destroy()
+      return true
+    elseif keyCode == KeyEscape then
+      inputWindow:destroy()
+      return true
+    end
+    return false
+  end
+  
+  inputWindow:show()
+  inputWindow:raise()
+  inputWindow:focus()
+  textEdit:focus()
+  textEdit:selectAll()
+end
+
+function initTabs()
+  print("[Bot] Initializing tabs...")
+  
+  if not botWindow or not botTabs or not contentsPanel then
+    g_logger.error("[Bot] Required UI components not found")
+    return false
+  end
+  
+  -- Get tab buttons
+  local combatTabButton = botTabs:getChildById('combatTabButton')
+  local healingTabButton = botTabs:getChildById('healingTabButton')
+  local supportTabButton = botTabs:getChildById('supportTabButton')
+  
+  if not combatTabButton or not healingTabButton or not supportTabButton then
+    g_logger.error("[Bot] Tab buttons not found")
+    return false
+  end
+  
+  -- Load panels
+  local status, err = pcall(function()
+    combatPanel = g_ui.loadUI('/game_bot/panels/combat', contentsPanel.botPanel)
+    healingPanel = g_ui.loadUI('/game_bot/panels/healing', contentsPanel.botPanel)
+    supportPanel = g_ui.loadUI('/game_bot/panels/support', contentsPanel.botPanel)
+  end)
+  
   if not status then
-    botExecutor = nil -- critical
-    return onError(result)
+    g_logger.error("[Bot] Failed to load panels: " .. tostring(err))
+    return false
   end
-
-  -- remove old messages
-  local widget = botMessages:getFirstChild()
-  if widget and widget.added + 5000 < g_clock.millis() then
-    widget:destroy()
+  
+  -- Setup tab switching
+  combatTabButton.onClick = function() 
+    showPanel(combatPanel)
+    combatTabButton:setOn(true)
+    healingTabButton:setOn(false)
+    supportTabButton:setOn(false)
+    if not combatSetup then
+      setupCombatPanel()
+    end
   end
+  
+  healingTabButton.onClick = function() 
+    showPanel(healingPanel)
+    combatTabButton:setOn(false)
+    healingTabButton:setOn(true)
+    supportTabButton:setOn(false)
+    setupHealingPanel()
+  end
+  
+  supportTabButton.onClick = function() 
+    showPanel(supportPanel)
+    combatTabButton:setOn(false)
+    healingTabButton:setOn(false)
+    supportTabButton:setOn(true)
+    setupSupportPanel()
+  end
+  
+  -- Show first tab and setup
+  showPanel(combatPanel)
+  combatTabButton:setOn(true)
+  
+  scheduleEvent(function()
+    setupCombatPanel()
+  end, 100)
+  
+  return true
 end
 
--- Callbacks
-function initCallbacks()
-  connect(rootWidget, {
-    onKeyDown = botKeyDown,
-    onKeyUp = botKeyUp,
-    onKeyPress = botKeyPress
-  })
-
-  connect(g_game, {
-    onTalk = botOnTalk,
-    onTextMessage = botOnTextMessage,
-    onLoginAdvice = botOnLoginAdvice,
-    onUse = botOnUse,
-    onUseWith = botOnUseWith,
-    onChannelList = botChannelList,
-    onOpenChannel = botOpenChannel,
-    onCloseChannel = botCloseChannel,
-    onChannelEvent = botChannelEvent,
-    onImbuementWindow = botImbuementWindow,
-    onModalDialog = botModalDialog,
-    onAttackingCreatureChange = botAttackingCreatureChange,
-    onAddItem = botContainerAddItem,
-    onRemoveItem = botContainerRemoveItem,
-    onEditText = botGameEditText,
-    onSpellCooldown = botSpellCooldown,
-    onSpellGroupCooldown = botGroupSpellCooldown
-  })
-
-  connect(Tile, {
-    onAddThing = botAddThing,
-    onRemoveThing = botRemoveThing
-  })
-
-  connect(Creature, {
-    onAppear = botCreatureAppear,
-    onDisappear = botCreatureDisappear,
-    onPositionChange = botCreaturePositionChange,
-    onHealthPercentChange = botCraetureHealthPercentChange,
-    onTurn = botCreatureTurn,
-    onWalk = botCreatureWalk,
-  })
-
-  connect(LocalPlayer, {
-    onPositionChange = botCreaturePositionChange,
-    onHealthPercentChange = botCraetureHealthPercentChange,
-    onTurn = botCreatureTurn,
-    onWalk = botCreatureWalk,
-    onManaChange = botManaChange,
-    onStatesChange = botStatesChange,
-    onInventoryChange = botInventoryChange
-  })
-
-  connect(Container, {
-    onOpen = botContainerOpen,
-    onClose = botContainerClose,
-    onUpdateItem = botContainerUpdateItem,
-    onAddItem = botContainerAddItem,
-    onRemoveItem = botContainerRemoveItem,
-  })
-
-  connect(g_map, {
-    onMissle = botOnMissle,
-    onAnimatedText = botOnAnimatedText,
-    onStaticText = botOnStaticText
-  })
-end
-
-function terminateCallbacks()
-  disconnect(rootWidget, {
-    onKeyDown = botKeyDown,
-    onKeyUp = botKeyUp,
-    onKeyPress = botKeyPress
-  })
-
-  disconnect(g_game, {
-    onTalk = botOnTalk,
-    onTextMessage = botOnTextMessage,
-    onLoginAdvice = botOnLoginAdvice,
-    onUse = botOnUse,
-    onUseWith = botOnUseWith,
-    onChannelList = botChannelList,
-    onOpenChannel = botOpenChannel,
-    onCloseChannel = botCloseChannel,
-    onChannelEvent = botChannelEvent,
-    onImbuementWindow = botImbuementWindow,
-    onModalDialog = botModalDialog,
-    onAttackingCreatureChange = botAttackingCreatureChange,
-    onEditText = botGameEditText,
-    onSpellCooldown = botSpellCooldown,
-    onSpellGroupCooldown = botGroupSpellCooldown
-  })
-
-  disconnect(Tile, {
-    onAddThing = botAddThing,
-    onRemoveThing = botRemoveThing
-  })
-
-  disconnect(Creature, {
-    onAppear = botCreatureAppear,
-    onDisappear = botCreatureDisappear,
-    onPositionChange = botCreaturePositionChange,
-    onHealthPercentChange = botCraetureHealthPercentChange,
-    onTurn = botCreatureTurn,
-    onWalk = botCreatureWalk,
-  })
-
-  disconnect(LocalPlayer, {
-    onPositionChange = botCreaturePositionChange,
-    onHealthPercentChange = botCraetureHealthPercentChange,
-    onTurn = botCreatureTurn,
-    onWalk = botCreatureWalk,
-    onManaChange = botManaChange,
-    onStatesChange = botStatesChange,
-    onInventoryChange = botInventoryChange
-  })
-
-  disconnect(Container, {
-    onOpen = botContainerOpen,
-    onClose = botContainerClose,
-    onUpdateItem = botContainerUpdateItem,
-    onAddItem = botContainerAddItem,
-    onRemoveItem = botContainerRemoveItem
-  })
-
-  disconnect(g_map, {
-    onMissle = botOnMissle,
-    onAnimatedText = botOnAnimatedText,
-    onStaticText = botOnStaticText
-  })
-end
-
-function safeBotCall(func)
-  local status, result = pcall(func)
-  if not status then
-    onError(result)
+function showPanel(panel)
+  if combatPanel then combatPanel:hide() end
+  if healingPanel then healingPanel:hide() end
+  if supportPanel then supportPanel:hide() end
+  
+  if panel then
+    local parent = panel:getParent()
+    if parent then
+      parent:setEnabled(true)
+      parent:setVisible(true)
+    end
+    
+    panel:setEnabled(true)
+    panel:setFocusable(true)
+    panel:setVisible(true)
+    panel:show()
+    panel:raise()
+    panel:focus()
   end
 end
 
-function botKeyDown(widget, keyCode, keyboardModifiers)
-  if botExecutor == nil then return false end
-  if keyCode == KeyUnknown then return end
-  safeBotCall(function() botExecutor.callbacks.onKeyDown(keyCode, keyboardModifiers) end)
+function setupCombatPanel()
+  print("[Bot Setup] setupCombatPanel() called - combatSetup:", combatSetup)
+  if combatSetup then 
+    print("[Bot Setup] Combat panel already setup - skipping")
+    return 
+  end
+  if not combatPanel then 
+    print("[Bot Setup] ERROR: combatPanel is nil")
+    return 
+  end
+  
+  local storage = SimplifiedBot.getStorage()
+  if not storage or not storage.combat then 
+    print("[Bot Setup] ERROR: storage or storage.combat is nil")
+    return 
+  end
+  
+  print("[Bot Setup] Setting up combat panel...")
+  combatSetup = true
+  
+  local attackAllCheckbox = combatPanel:recursiveGetChildById('attackAllCheckbox')
+  if attackAllCheckbox then
+    print("[Bot Setup] Loading attackAll from storage:", storage.combat.attackAll)
+    attackAllCheckbox:setChecked(storage.combat.attackAll)
+    attackAllCheckbox.onCheckChange = function(widget, checked)
+      print("[Bot Setup] attackAll checkbox changed to:", checked)
+      storage.combat.attackAll = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  local attackSummonsCheckbox = combatPanel:recursiveGetChildById('attackSummonsCheckbox')
+  if attackSummonsCheckbox then
+    print("[Bot Setup] Loading attackSummons from storage:", storage.combat.attackSummons)
+    attackSummonsCheckbox:setChecked(storage.combat.attackSummons)
+    attackSummonsCheckbox.onCheckChange = function(widget, checked)
+      print("[Bot Setup] attackSummons checkbox changed to:", checked)
+      storage.combat.attackSummons = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  local monsterList = combatPanel:recursiveGetChildById('monsterList')
+  local addMonsterButton = combatPanel:recursiveGetChildById('addMonsterButton')
+  local clearMonstersButton = combatPanel:recursiveGetChildById('clearMonstersButton')
+  
+  -- Function to refresh monster list display
+  local function refreshMonsterList()
+    if not monsterList then return end
+    monsterList:destroyChildren()
+    
+    if storage.combat.monsterList then
+      for index, monsterName in ipairs(storage.combat.monsterList) do
+        local panel = g_ui.createWidget('Panel', monsterList)
+        panel:setHeight(18)
+        panel:setPhantom(false)
+        
+        local label = g_ui.createWidget('Label', panel)
+        label:setText(monsterName)
+        label:setPhantom(false)
+        label:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+        label:addAnchor(AnchorTop, 'parent', AnchorTop)
+        label:setMarginLeft(5)
+        label:setMarginTop(2)
+        
+        local removeButton = g_ui.createWidget('Button', panel)
+        removeButton:setText('X')
+        removeButton:setWidth(20)
+        removeButton:setHeight(16)
+        removeButton:addAnchor(AnchorRight, 'parent', AnchorRight)
+        removeButton:addAnchor(AnchorTop, 'parent', AnchorTop)
+        removeButton:setMarginRight(20)  -- Increased margin to avoid scrollbar overlap
+        removeButton:setMarginTop(1)
+        removeButton:setTooltip('Remove this monster')
+        
+        removeButton.onClick = function()
+          table.remove(storage.combat.monsterList, index)
+          SimplifiedBot.saveStorage()
+          refreshMonsterList()
+        end
+      end
+    end
+  end
+  
+  refreshMonsterList()
+  
+  if addMonsterButton then
+    addMonsterButton.onClick = function()
+      showTextInputModal('Exclude Monster (name)', "", function(text)
+        if text and text ~= "" then
+          if not storage.combat.monsterList then
+            storage.combat.monsterList = {}
+          end
+          
+          table.insert(storage.combat.monsterList, text)
+          SimplifiedBot.saveStorage()
+          refreshMonsterList()
+        end
+      end)
+    end
+  end
+  
+  if clearMonstersButton then
+    clearMonstersButton.onClick = function()
+      storage.combat.monsterList = {}
+      SimplifiedBot.saveStorage()
+      refreshMonsterList()
+    end
+  end
+  
+  local combatEnabledCheckbox = combatPanel:recursiveGetChildById('combatEnabledCheckbox')
+  if combatEnabledCheckbox then
+    print("[Bot Setup] Combat Enabled from storage:", storage.combat.enabled)
+    combatEnabledCheckbox:setChecked(storage.combat.enabled)
+    combatEnabledCheckbox.onCheckChange = function(widget, checked)
+      print("[Bot Setup] Combat Enabled changed to:", checked)
+      storage.combat.enabled = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  local spell1Button = combatPanel:recursiveGetChildById('spell1Button')
+  local spell2Button = combatPanel:recursiveGetChildById('spell2Button')
+  local spell3Button = combatPanel:recursiveGetChildById('spell3Button')
+  
+  if spell1Button then
+    local currentSpell = storage.combat.spells[1] or ""
+    if currentSpell ~= "" then
+      spell1Button:setText(currentSpell)
+    end
+    
+    spell1Button.onClick = function()
+      showTextInputModal('Spell 1', storage.combat.spells[1] or "", function(text)
+        storage.combat.spells[1] = text
+        spell1Button:setText(text ~= "" and text or "Click to add spell 1")
+        SimplifiedBot.saveStorage()
+      end)
+    end
+  end
+  
+  if spell2Button then
+    local currentSpell = storage.combat.spells[2] or ""
+    if currentSpell ~= "" then
+      spell2Button:setText(currentSpell)
+    end
+    
+    spell2Button.onClick = function()
+      showTextInputModal('Spell 2', storage.combat.spells[2] or "", function(text)
+        storage.combat.spells[2] = text
+        spell2Button:setText(text ~= "" and text or "Click to add spell 2")
+        SimplifiedBot.saveStorage()
+      end)
+    end
+  end
+  
+  if spell3Button then
+    local currentSpell = storage.combat.spells[3] or ""
+    if currentSpell ~= "" then
+      spell3Button:setText(currentSpell)
+    end
+    
+    spell3Button.onClick = function()
+      showTextInputModal('Spell 3', storage.combat.spells[3] or "", function(text)
+        storage.combat.spells[3] = text
+        spell3Button:setText(text ~= "" and text or "Click to add spell 3")
+        SimplifiedBot.saveStorage()
+      end)
+    end
+  end
 end
 
-function botKeyUp(widget, keyCode, keyboardModifiers)
-  if botExecutor == nil then return false end
-  if keyCode == KeyUnknown then return end
-  safeBotCall(function() botExecutor.callbacks.onKeyUp(keyCode, keyboardModifiers) end)
+function setupHealingPanel()
+  if not healingPanel then return end
+  local storage = SimplifiedBot.getStorage()
+  
+  local healSpellEnabled = healingPanel:recursiveGetChildById('healSpellEnabled')
+  local healSpellButton = healingPanel:recursiveGetChildById('healSpellButton')
+  local healSpellHpSlider = healingPanel:recursiveGetChildById('healSpellHpSlider')
+  local healSpellHpLabel = healingPanel:recursiveGetChildById('healSpellHpLabel')
+  
+  if healSpellEnabled then
+    healSpellEnabled:setChecked(storage.healing.spell.enabled)
+    healSpellEnabled.onCheckChange = function(widget, checked)
+      storage.healing.spell.enabled = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  if healSpellButton then
+    local currentSpell = storage.healing.spell.text or ""
+    if currentSpell ~= "" then
+      healSpellButton:setText(currentSpell)
+    end
+    
+    healSpellButton.onClick = function()
+      showTextInputModal('Heal Spell', storage.healing.spell.text or "", function(text)
+        storage.healing.spell.text = text
+        healSpellButton:setText(text ~= "" and text or "Click to set spell")
+        SimplifiedBot.saveStorage()
+      end)
+    end
+  end
+  
+  if healSpellHpSlider and healSpellHpLabel then
+    healSpellHpSlider:setValue(storage.healing.spell.hpPercent)
+    healSpellHpLabel:setText(storage.healing.spell.hpPercent .. "%")
+    healSpellHpSlider.onValueChange = function()
+      local value = healSpellHpSlider:getValue()
+      storage.healing.spell.hpPercent = value
+      healSpellHpLabel:setText(value .. "%")
+      SimplifiedBot.saveStorage()
+    end
+    
+    -- Add tooltips to slider buttons
+    local decrementButton = healSpellHpSlider:getChildById('decrementButton')
+    local incrementButton = healSpellHpSlider:getChildById('incrementButton')
+    if decrementButton then
+      decrementButton:setTooltip('Decrease HP threshold')
+    end
+    if incrementButton then
+      incrementButton:setTooltip('Increase HP threshold')
+    end
+  end
+  
+  local healthPotionEnabled = healingPanel:recursiveGetChildById('healthPotionEnabled')
+  local healthPotionButton = healingPanel:recursiveGetChildById('healthPotionButton')
+  local healthPotionHpSlider = healingPanel:recursiveGetChildById('healthPotionHpSlider')
+  local healthPotionHpLabel = healingPanel:recursiveGetChildById('healthPotionHpLabel')
+  
+  if healthPotionEnabled then
+    healthPotionEnabled:setChecked(storage.healing.healthPotion.enabled)
+    healthPotionEnabled.onCheckChange = function(widget, checked)
+      storage.healing.healthPotion.enabled = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  if healthPotionButton then
+    local currentItem = tostring(storage.healing.healthPotion.itemId)
+    healthPotionButton:setText(currentItem)
+    healthPotionButton:setTooltip('Click to select health potion with crosshair')
+    
+    healthPotionButton.onClick = function()
+      startChoosePotionItem('health')
+    end
+  end
+  
+  if healthPotionHpSlider and healthPotionHpLabel then
+    healthPotionHpSlider:setValue(storage.healing.healthPotion.hpPercent)
+    healthPotionHpLabel:setText(storage.healing.healthPotion.hpPercent .. "%")
+    
+    -- Add tooltips to slider buttons
+    local decrementButton = healthPotionHpSlider:getChildById('decrementButton')
+    local incrementButton = healthPotionHpSlider:getChildById('incrementButton')
+    if decrementButton then
+      decrementButton:setTooltip('Decrease HP threshold')
+    end
+    if incrementButton then
+      incrementButton:setTooltip('Increase HP threshold')
+    end
+    healthPotionHpSlider.onValueChange = function()
+      local value = healthPotionHpSlider:getValue()
+      storage.healing.healthPotion.hpPercent = value
+      healthPotionHpLabel:setText(value .. "%")
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  local manaPotionEnabled = healingPanel:recursiveGetChildById('manaPotionEnabled')
+  local manaPotionButton = healingPanel:recursiveGetChildById('manaPotionButton')
+  local manaPotionMpSlider = healingPanel:recursiveGetChildById('manaPotionMpSlider')
+  local manaPotionMpLabel = healingPanel:recursiveGetChildById('manaPotionMpLabel')
+  
+  if manaPotionEnabled then
+    manaPotionEnabled:setChecked(storage.healing.manaPotion.enabled)
+    manaPotionEnabled.onCheckChange = function(widget, checked)
+      storage.healing.manaPotion.enabled = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  if manaPotionButton then
+    local currentItem = tostring(storage.healing.manaPotion.itemId)
+    manaPotionButton:setText(currentItem)
+    manaPotionButton:setTooltip('Click to select mana potion with crosshair')
+    
+    manaPotionButton.onClick = function()
+      startChoosePotionItem('mana')
+    end
+  end
+  
+  if manaPotionMpSlider and manaPotionMpLabel then
+    manaPotionMpSlider:setValue(storage.healing.manaPotion.mpPercent)
+    manaPotionMpLabel:setText(storage.healing.manaPotion.mpPercent .. "%")
+    
+    -- Add tooltips to slider buttons
+    local decrementButton = manaPotionMpSlider:getChildById('decrementButton')
+    local incrementButton = manaPotionMpSlider:getChildById('incrementButton')
+    if decrementButton then
+      decrementButton:setTooltip('Decrease MP threshold')
+    end
+    if incrementButton then
+      incrementButton:setTooltip('Increase MP threshold')
+    end
+    
+    manaPotionMpSlider.onValueChange = function()
+      local value = manaPotionMpSlider:getValue()
+      storage.healing.manaPotion.mpPercent = value
+      manaPotionMpLabel:setText(value .. "%")
+      SimplifiedBot.saveStorage()
+    end
+  end
 end
 
-function botKeyPress(widget, keyCode, keyboardModifiers, autoRepeatTicks)
-  if botExecutor == nil then return false end
-  if keyCode == KeyUnknown then return end
-  safeBotCall(function() botExecutor.callbacks.onKeyPress(keyCode, keyboardModifiers, autoRepeatTicks) end)
-end
-
-function botOnTalk(name, level, mode, text, channelId, pos)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onTalk(name, level, mode, text, channelId, pos) end)
-end
-
-function botOnTextMessage(mode, text)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onTextMessage(mode, text) end)
-end
-
-function botOnLoginAdvice(message)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onLoginAdvice(message) end)
-end
-
-function botAddThing(tile, thing)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onAddThing(tile, thing) end)
-end
-
-function botRemoveThing(tile, thing)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onRemoveThing(tile, thing) end)
-end
-
-function botCreatureAppear(creature)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onCreatureAppear(creature) end)
-end
-
-function botCreatureDisappear(creature)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onCreatureDisappear(creature) end)
-end
-
-function botCreaturePositionChange(creature, newPos, oldPos)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onCreaturePositionChange(creature, newPos, oldPos) end)
-end
-
-function botCraetureHealthPercentChange(creature, healthPercent)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onCreatureHealthPercentChange(creature, healthPercent) end)
-end
-
-function botOnUse(pos, itemId, stackPos, subType)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onUse(pos, itemId, stackPos, subType) end)
-end
-
-function botOnUseWith(pos, itemId, target, subType)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onUseWith(pos, itemId, target, subType) end)
-end
-
-function botContainerOpen(container, previousContainer)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onContainerOpen(container, previousContainer) end)
-end
-
-function botContainerClose(container)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onContainerClose(container) end)
-end
-
-function botContainerUpdateItem(container, slot, item, oldItem)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onContainerUpdateItem(container, slot, item, oldItem) end)
-end
-
-function botOnMissle(missle)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onMissle(missle) end)
-end
-
-function botOnAnimatedText(thing, text)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onAnimatedText(thing, text) end)
-end
-
-function botOnStaticText(thing, text)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onStaticText(thing, text) end)
-end
-
-function botChannelList(channels)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onChannelList(channels) end)
-end
-
-function botOpenChannel(channelId, name)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onOpenChannel(channelId, name) end)
-end
-
-function botCloseChannel(channelId)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onCloseChannel(channelId) end)
-end
-
-function botChannelEvent(channelId, name, event)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onChannelEvent(channelId, name, event) end)
-end
-
-function botCreatureTurn(creature, direction)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onTurn(creature, direction) end)
-end
-
-function botCreatureWalk(creature, oldPos, newPos)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onWalk(creature, oldPos, newPos) end)
-end
-
-function botImbuementWindow(itemId, slots, activeSlots, imbuements, needItems)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onImbuementWindow(itemId, slots, activeSlots, imbuements, needItems) end)
-end
-
-function botModalDialog(id, title, message, buttons, enterButton, escapeButton, choices, priority)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onModalDialog(id, title, message, buttons, enterButton, escapeButton, choices, priority) end)
-end
-
-function botGameEditText(id, itemId, maxLength, text, writer, time)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onGameEditText(id, itemId, maxLength, text, writer, time) end)
-end
-
-function botAttackingCreatureChange(creature, oldCreature)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onAttackingCreatureChange(creature,oldCreature) end)
-end
-
-function botManaChange(player, mana, maxMana, oldMana, oldMaxMana)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onManaChange(player, mana, maxMana, oldMana, oldMaxMana) end)
-end
-
-function botStatesChange(player, states, oldStates)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onStatesChange(player, states, oldStates) end)
-end
-
-function botContainerAddItem(container, slot, item, oldItem)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onAddItem(container, slot, item, oldItem) end)
-end
-
-function botContainerRemoveItem(container, slot, item)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onRemoveItem(container, slot, item) end)
-end
-
-function botSpellCooldown(iconId, duration)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onSpellCooldown(iconId, duration) end)
-end
-
-function botGroupSpellCooldown(iconId, duration)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onGroupSpellCooldown(iconId, duration) end)
-end
-
-function botInventoryChange(player, slot, item, oldItem)
-  if botExecutor == nil then return false end
-  safeBotCall(function() botExecutor.callbacks.onInventoryChange(player, slot, item, oldItem) end)
+function setupSupportPanel()
+  if not supportPanel then return end
+  local storage = SimplifiedBot.getStorage()
+  
+  local spell1Enabled = supportPanel:recursiveGetChildById('spell1Enabled')
+  local spell1Button = supportPanel:recursiveGetChildById('spell1Button')
+  local spell1CooldownSlider = supportPanel:recursiveGetChildById('spell1CooldownSlider')
+  local spell1CooldownLabel = supportPanel:recursiveGetChildById('spell1CooldownLabel')
+  
+  if spell1Enabled then
+    spell1Enabled:setChecked(storage.support.spell1.enabled)
+    spell1Enabled.onCheckChange = function(widget, checked)
+      storage.support.spell1.enabled = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  if spell1Button then
+    local currentSpell = storage.support.spell1.text or ""
+    if currentSpell ~= "" then
+      spell1Button:setText(currentSpell)
+    end
+    
+    spell1Button.onClick = function()
+      showTextInputModal('Support Spell 1', storage.support.spell1.text or "", function(text)
+        storage.support.spell1.text = text
+        spell1Button:setText(text ~= "" and text or "Click to set spell")
+        SimplifiedBot.saveStorage()
+      end)
+    end
+  end
+  
+  if spell1CooldownSlider and spell1CooldownLabel then
+    spell1CooldownSlider:setValue(storage.support.spell1.cooldown)
+    spell1CooldownLabel:setText(storage.support.spell1.cooldown .. "s")
+    
+    spell1CooldownSlider.onValueChange = function()
+      local value = spell1CooldownSlider:getValue()
+      storage.support.spell1.cooldown = value
+      spell1CooldownLabel:setText(value .. "s")
+      SimplifiedBot.saveStorage()
+    end
+    
+    -- Add tooltips to slider buttons
+    local decrementButton = spell1CooldownSlider:getChildById('decrementButton')
+    local incrementButton = spell1CooldownSlider:getChildById('incrementButton')
+    if decrementButton then
+      decrementButton:setTooltip('Decrease cooldown')
+    end
+    if incrementButton then
+      incrementButton:setTooltip('Increase cooldown')
+    end
+  end
+  
+  local spell2Enabled = supportPanel:recursiveGetChildById('spell2Enabled')
+  local spell2Button = supportPanel:recursiveGetChildById('spell2Button')
+  local spell2CooldownSlider = supportPanel:recursiveGetChildById('spell2CooldownSlider')
+  local spell2CooldownLabel = supportPanel:recursiveGetChildById('spell2CooldownLabel')
+  
+  if spell2Enabled then
+    spell2Enabled:setChecked(storage.support.spell2.enabled)
+    spell2Enabled.onCheckChange = function(widget, checked)
+      storage.support.spell2.enabled = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  if spell2Button then
+    local currentSpell = storage.support.spell2.text or ""
+    if currentSpell ~= "" then
+      spell2Button:setText(currentSpell)
+    end
+    
+    spell2Button.onClick = function()
+      showTextInputModal('Support Spell 2', storage.support.spell2.text or "", function(text)
+        storage.support.spell2.text = text
+        spell2Button:setText(text ~= "" and text or "Click to set spell")
+        SimplifiedBot.saveStorage()
+      end)
+    end
+  end
+  
+  if spell2CooldownSlider and spell2CooldownLabel then
+    spell2CooldownSlider:setValue(storage.support.spell2.cooldown)
+    spell2CooldownLabel:setText(storage.support.spell2.cooldown .. "s")
+    
+    spell2CooldownSlider.onValueChange = function()
+      local value = spell2CooldownSlider:getValue()
+      storage.support.spell2.cooldown = value
+      spell2CooldownLabel:setText(value .. "s")
+      SimplifiedBot.saveStorage()
+    end
+    
+    -- Add tooltips to slider buttons
+    local decrementButton = spell2CooldownSlider:getChildById('decrementButton')
+    local incrementButton = spell2CooldownSlider:getChildById('incrementButton')
+    if decrementButton then
+      decrementButton:setTooltip('Decrease cooldown')
+    end
+    if incrementButton then
+      incrementButton:setTooltip('Increase cooldown')
+    end
+  end
+  
+  local autoEatEnabled = supportPanel:recursiveGetChildById('autoEatEnabled')
+  local autoEatButton = supportPanel:recursiveGetChildById('autoEatButton')
+  local autoEatIntervalSlider = supportPanel:recursiveGetChildById('autoEatIntervalSlider')
+  local autoEatIntervalLabel = supportPanel:recursiveGetChildById('autoEatIntervalLabel')
+  
+  if autoEatEnabled then
+    autoEatEnabled:setChecked(storage.support.autoEat.enabled)
+    autoEatEnabled.onCheckChange = function(widget, checked)
+      storage.support.autoEat.enabled = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  if autoEatButton then
+    local currentItem = tostring(storage.support.autoEat.itemId)
+    autoEatButton:setText(currentItem)
+    autoEatButton:setTooltip('Click to select food item with crosshair')
+    
+    autoEatButton.onClick = function()
+      startChoosePotionItem('food')
+    end
+  end
+  
+  if autoEatIntervalSlider and autoEatIntervalLabel then
+    autoEatIntervalSlider:setValue(storage.support.autoEat.interval)
+    autoEatIntervalLabel:setText(storage.support.autoEat.interval .. "s")
+    
+    autoEatIntervalSlider.onValueChange = function()
+      local value = autoEatIntervalSlider:getValue()
+      storage.support.autoEat.interval = value
+      autoEatIntervalLabel:setText(value .. "s")
+      SimplifiedBot.saveStorage()
+    end
+    
+    -- Add tooltips to slider buttons
+    local decrementButton = autoEatIntervalSlider:getChildById('decrementButton')
+    local incrementButton = autoEatIntervalSlider:getChildById('incrementButton')
+    if decrementButton then
+      decrementButton:setTooltip('Decrease interval')
+    end
+    if incrementButton then
+      incrementButton:setTooltip('Increase interval')
+    end
+  end
 end

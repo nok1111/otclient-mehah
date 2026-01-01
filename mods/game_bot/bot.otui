@@ -24,43 +24,45 @@ MiniWindow
   id: botWindow
   !text: tr('Bot')
   height: 600
-  icon: /images/topbuttons/bot
   @onClose: modules.game_bot.onMiniWindowClose()
   &save: true
   &autoOpen: 10
 
+  UIWidget
+    id: miniwindowIcon
+    anchors.top: miniwindowHeader.top
+    anchors.left: miniwindowHeader.left
+    margin-top: 2
+    margin-left: 4
+    size: 12 12
+    image-source: /images/topbuttons/bot
+    image-smooth: false
+
+  Label
+    id: miniwindowTitle
+    anchors.top: miniwindowHeader.top
+    anchors.left: miniwindowHeader.left
+    anchors.right: miniwindowHeader.right
+    margin-top: 2
+    margin-left: 20
+    margin-right: 50
+    font: verdana-11px-monochrome
+    height: 13
+    color: #9d9d9dff
+    !text: tr('Bot')
+
   MiniWindowContents
-    ComboBox
-      id: config
-      &menuScroll: true
-      &menuHeight: 450
-      &menuScrollStep: 100
-      &parentWidth: true
+    Button
+      id: enableButton
       anchors.top: parent.top
       anchors.left: parent.left
       anchors.right: parent.right
       margin-top: 2
       margin-left: 2
-      margin-right: 75
-      text-offset: 3 0
-
-    Button
-      id: editConfig
-      anchors.top: prev.top
-      anchors.left: prev.right
-      anchors.right: parent.right
-      !text: tr('Edit')
-      @onClick: modules.game_bot.edit()
-      margin-left: 3
-      margin-right: 37
-
-    Button
-      id: enableButton
-      anchors.top: prev.top
-      anchors.left: prev.right
-      anchors.right: parent.right
-      margin-left: 3
       margin-right: 2
+      height: 40
+      text-align: center
+      text-vertical-align: center
 
       $on:
         text: On
@@ -83,7 +85,7 @@ MiniWindow
       margin-right: 3
 
       $on:
-        margin-top: 3
+        margin-top: 4
 
       $!on:
         text:
@@ -114,12 +116,55 @@ MiniWindow
       margin-left: 2
       margin-right: 2
 
-    BotTabBar
-      id: botTabs
+    Panel
+      id: tabButtonsPanel
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
-      margin-right: -20
+      height: 75
+      margin-top: 5
+      layout:
+        type: verticalBox
+        spacing: 2
+      
+      Button
+        id: combatTabButton
+        text: Combat
+        height: 22
+        
+        $on:
+          background-color: #2a5a2a
+          color: #00ff00
+          
+        $!on:
+          background-color: #1a1a1a
+          color: #aaaaaa
+        
+      Button
+        id: healingTabButton
+        text: Healing
+        height: 22
+        
+        $on:
+          background-color: #2a5a2a
+          color: #00ff00
+          
+        $!on:
+          background-color: #1a1a1a
+          color: #aaaaaa
+        
+      Button
+        id: supportTabButton
+        text: Support
+        height: 22
+        
+        $on:
+          background-color: #2a5a2a
+          color: #00ff00
+          
+        $!on:
+          background-color: #1a1a1a
+          color: #aaaaaa
 
     Panel
       id: botPanel

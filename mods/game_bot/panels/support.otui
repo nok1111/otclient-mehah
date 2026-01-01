@@ -1,0 +1,214 @@
+BotPanel
+  id: supportPanel
+  anchors.fill: parent
+  focusable: true
+  enabled: true
+  phantom: false
+  
+  Label
+    text: Support Settings
+    font: verdana-11px-rounded
+    text-align: center
+    text-auto-resize: true
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    
+  HorizontalSeparator
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 2
+    margin-right: 2
+    
+  Label
+    text: Support Spell 1:
+    text-auto-resize: true
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 5
+    margin-right: 5
+    font: verdana-11px-rounded
+    
+  CheckBox
+    id: spell1Enabled
+    text: Enabled
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    
+  Button
+    id: spell1Button
+    text: Click to set spell
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    height: 25
+    
+  Label
+    text: Cooldown (seconds):
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 8
+    margin-left: 10
+    
+  HorizontalScrollBar
+    id: spell1CooldownSlider
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    minimum: 1
+    maximum: 100
+    step: 1
+    
+  Label
+    id: spell1CooldownLabel
+    text: 90s
+    anchors.top: prev.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 2
+    
+  HorizontalSeparator
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 2
+    margin-right: 2
+    
+  Label
+    text: Support Spell 2:
+    text-auto-resize: true
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 5
+    margin-right: 5
+    font: verdana-11px-rounded
+    
+  CheckBox
+    id: spell2Enabled
+    text: Enabled
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    
+  Button
+    id: spell2Button
+    text: Click to set spell
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    height: 25
+    
+  Label
+    text: Cooldown (seconds):
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 8
+    margin-left: 10
+    
+  HorizontalScrollBar
+    id: spell2CooldownSlider
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    minimum: 1
+    maximum: 100
+    step: 1
+    
+  Label
+    id: spell2CooldownLabel
+    text: 60s
+    anchors.top: prev.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 2
+    
+  HorizontalSeparator
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 2
+    margin-right: 2
+    
+  Label
+    text: Auto Eat:
+    text-auto-resize: true
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 5
+    margin-right: 5
+    font: verdana-11px-rounded
+    
+  CheckBox
+    id: autoEatEnabled
+    text: Enabled
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    
+  Button
+    id: autoEatButton
+    text: Click to set item ID
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    height: 25
+    
+  Label
+    text: Interval (seconds):
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 8
+    margin-left: 10
+    
+  HorizontalScrollBar
+    id: autoEatIntervalSlider
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 5
+    minimum: 1
+    maximum: 100
+    step: 1
+    
+  Label
+    id: autoEatIntervalLabel
+    text: 10s
+    anchors.top: prev.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 2
