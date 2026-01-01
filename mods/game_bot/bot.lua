@@ -52,6 +52,9 @@ function onMiniWindowClose()
   if botButton then botButton:setOn(false) end
 end
 
+-- Export onMiniWindowClose for bot.otui @onClose callback
+modules.game_bot.onMiniWindowClose = onMiniWindowClose
+
 function startChoosePotionItem(potionType)
   if g_ui.isMouseGrabbed() then
     return
@@ -152,6 +155,11 @@ function init()
       if not botWindow then
         error("Failed to load bot.otui")
       end
+      
+      -- Setup MiniWindow (enables close/minimize buttons)
+      botWindow:setContentMinimumHeight(80)
+      botWindow:setup()
+      
       botWindow:hide()
       
       -- Create mouse grabber widget for item selection
@@ -168,13 +176,23 @@ function init()
       })
       
       -- Get UI components
-      contentsPanel = botWindow.contentsPanel
-      enableButton = contentsPanel.enableButton
-      statusLabel = contentsPanel.statusLabel
-      botTabs = contentsPanel.tabButtonsPanel
+      enableButton = botWindow:recursiveGetChildById('enableButton')
+      statusLabel = botWindow:recursiveGetChildById('statusLabel')
+      botTabs = botWindow:recursiveGetChildById('tabButtonsPanel')
+      contentsPanel = botWindow:recursiveGetChildById('miniwindowContents')
+      
+      if not enableButton or not statusLabel or not botTabs then
+        print("[Bot] WARNING: Some UI components not found")
+        print("[Bot] enableButton:", enableButton)
+        print("[Bot] statusLabel:", statusLabel)
+        print("[Bot] botTabs:", botTabs)
+      else
+        print("[Bot] UI components found successfully")
+      end
       
       -- Setup enable button
       enableButton.onClick = function()
+        print("[Bot] Enable button clicked!")
         if SimplifiedBot.isEnabled() then
           SimplifiedBot.setOff()
           if botMainLoop then botMainLoop.setOff() end
@@ -192,7 +210,7 @@ function init()
       print("[Bot] Initializing UI tabs...")
       local uiSuccess = initTabs()
       if not uiSuccess then
-        error("initTabs() failed")
+        print("[Bot] WARNING: initTabs() failed, but continuing...")
       end
     end)
     
@@ -922,15 +940,15 @@ end
 function initTabs()
   print("[Bot] Initializing tabs...")
   
-  if not botWindow or not botTabs or not contentsPanel then
+  if not botWindow or not botTabs then
     g_logger.error("[Bot] Required UI components not found")
     return false
   end
   
   -- Get tab buttons
-  local combatTabButton = botTabs:getChildById('combatTabButton')
-  local healingTabButton = botTabs:getChildById('healingTabButton')
-  local supportTabButton = botTabs:getChildById('supportTabButton')
+  local combatTabButton = botWindow:recursiveGetChildById('combatTabButton')
+  local healingTabButton = botWindow:recursiveGetChildById('healingTabButton')
+  local supportTabButton = botWindow:recursiveGetChildById('supportTabButton')
   
   if not combatTabButton or not healingTabButton or not supportTabButton then
     g_logger.error("[Bot] Tab buttons not found")
@@ -938,10 +956,16 @@ function initTabs()
   end
   
   -- Load panels
+  local botPanel = botWindow:recursiveGetChildById('botPanel')
+  if not botPanel then
+    g_logger.error("[Bot] botPanel not found")
+    return false
+  end
+  
   local status, err = pcall(function()
-    combatPanel = g_ui.loadUI('/game_bot/panels/combat', contentsPanel.botPanel)
-    healingPanel = g_ui.loadUI('/game_bot/panels/healing', contentsPanel.botPanel)
-    supportPanel = g_ui.loadUI('/game_bot/panels/support', contentsPanel.botPanel)
+    combatPanel = g_ui.loadUI('/game_bot/panels/combat', botPanel)
+    healingPanel = g_ui.loadUI('/game_bot/panels/healing', botPanel)
+    supportPanel = g_ui.loadUI('/game_bot/panels/support', botPanel)
   end)
   
   if not status then
