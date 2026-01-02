@@ -52,9 +52,9 @@ function init()
   ProtocolGame.registerExtendedOpcode(OPCODE_ACHIEVEMENT_COMPLETE, onReceiveAchievementComplete)
   ProtocolGame.registerExtendedOpcode(OPCODE_ACHIEVEMENT_STATS, onReceiveStats)
 
-  achievementButton = modules.client_topmenu.addRightGameToggleButton('achievementButton',
-    tr('Achievements') .. ' (Ctrl+H)', '/images/topbuttons/achievements',
-    toggle, false, 8)
+  achievementButton = modules.game_mainpanel.addStoreButton('achievementButton',
+    tr('Achievements'), '/images/topbuttons/achievements',
+    toggle, false, 5)
   achievementButton:setOn(false)
   
   g_keyboard.bindKeyDown('Ctrl+H', toggle)
