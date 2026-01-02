@@ -34,9 +34,11 @@ InventoryWindow
   draggable: true
   phantom: false
   image-source: /images/ui/windows/window_header
-  height: 250
+  height: 380
   margin-top: 2
-  &panelHeight: 250
+  image-border: 50
+  padding: 5
+  &panelHeight: 380
   on: true
 
   $!on:
@@ -56,7 +58,7 @@ InventoryWindow
       anchors.top: parent.top
       anchors.left: parent.left
       margin-left: 8
-      margin-top: 5
+      margin-top: 10
       size: 12 12
       @onClick: changeInventorySize()
 
@@ -71,6 +73,7 @@ InventoryWindow
       anchors.left: changeSize.right
       margin-left: 3
       size: 12 12
+      visible: false
       @onClick: modules.game_blessing.toggle()
       $pressed !disabled:
         image-clip: 12 0 12 12
@@ -84,6 +87,7 @@ InventoryWindow
       size: 34 12
       image-clip: 0 0 34 12
       margin-bottom: 3
+      visible: false
       @onClick: |
         local purse = g_game.getLocalPlayer():getInventoryItem(InventorySlotPurse)
         if purse then
@@ -116,9 +120,9 @@ InventoryWindow
       id: followPosture
       image-source: /images/inventory/buttons_general
       image-clip: 0 20 20 20
-      anchors.right: standPosture.right
-      anchors.top: standPosture.bottom
-      margin-top: 4
+      anchors.right: standPosture.left
+      anchors.top: standPosture.top
+      margin-right: 4
       size: 20 20
       @onClick: |
         selectPosture('follow')
@@ -129,64 +133,26 @@ InventoryWindow
       $disabled:
         image-clip: 20 20 20 20
     UICheckBox
-      id: expert
-      image-source: /images/inventory/buttons_general
-      image-clip: 0 140 20 20
-      anchors.right: standPosture.right
-      anchors.top: followPosture.bottom
+      id: pvpToggle
+      !text: tr('PVP')
+      text-align: center
+      font: cipsoftFont
+      color: #c0c0c0ff
+      anchors.right: followPosture.left
+      anchors.top: standPosture.top
+      margin-right: 4
+      margin-top: 0
       phantom: false
-      margin-top: 4
-      size: 20 20
-
-
-    UICheckBox
-      id: pvp
-      image-source: /images/game/combatmodes/onPanel
-      size: 44 21
-      image-clip: 0 0 44 21
-      margin: 2 4
-      anchors.right: standPosture.right
-      anchors.top: expert.bottom
-      margin-top: 4
-      margin-right: 0
-      phantom: false
-      size: 44 21
+      size: 44 20
 
       $checked:
-        image-clip: 0 20 44 21
-
-
-    WhiteHandBox
-      id: whiteHandBox
-      anchors.right: parent.right
-      anchors.top: pvp.bottom
-      margin-right: 8
-      margin-top: 5
-
-    RedFistBox
-      id: redFistBox
-      anchors.right: whiteHandBox.right
-      anchors.top: whiteHandBox.bottom
-      margin-right: -1
-      margin-right: 0
-
-    WhiteDoveBox
-      id: whiteDoveBox
-      anchors.right: whiteHandBox.left
-      anchors.top: whiteHandBox.top
-      margin-top: 0
-
-    YellowHandBox
-      id: yellowHandBox
-      anchors.right: whiteDoveBox.right
-      anchors.top: whiteDoveBox.bottom
-      margin-right: 0
+        color: #ff0000ff
 
     TopToggleButton
       id: attack
       image-source: /images/inventory/buttons_general
       image-clip: 0 40 20 20
-      anchors.right: standPosture.left
+      anchors.right: pvpToggle.left
       anchors.top: standPosture.top
       margin-right: 4
       size: 20 20
@@ -200,29 +166,12 @@ InventoryWindow
         image-clip: 20 40 20 20
 
     TopToggleButton
-      id: balanced
-      image-source: /images/inventory/buttons_general
-      image-clip: 0 80 20 20
-      anchors.right: attack.right
-      anchors.top: attack.bottom
-      margin-top: 4
-      size: 20 20
-      @onClick: |
-        selectCombat('balanced')
-
-      $pressed !disabled:
-        image-clip: 20 80 20 20
-
-      $disabled:
-        image-clip: 20 80 20 20
-
-    TopToggleButton
       id: defense
       image-source: /images/inventory/buttons_general
       image-clip: 0 60 20 20
-      anchors.right: attack.right
-      anchors.top: balanced.bottom
-      margin-top: 4
+      anchors.right: attack.left
+      anchors.top: attack.top
+      margin-right: 4
       size: 20 20
       @onClick: |
         selectCombat('defense')
@@ -262,153 +211,235 @@ InventoryWindow
       layout:
         type: horizontalBox
 
-    MainInventoryItem
-      id: amulet
-      anchors.bottom: rune2.top
-      anchors.left: rune2.left
-      anchors.right: rune2.right
-      margin-bottom: 3
-      &slotPosition: {x = 65535, y = 2, z = 0}
-
-    MainInventoryItem
-      id: helmet
+    Label
+      id: activeLabel
+      !text: tr('ACTIVE')
+      text-align: center
+      font: cipsoftFont
+      color: #ffa500ff
       anchors.top: changeSize.bottom
       anchors.left: changeSize.left
+      margin-top: 15
       margin-left: 3
-      &slotPosition: {x = 65535, y = 1, z = 0}
+      width: 70
+      height: 12
 
-    MainInventoryItem
-      id: rune1
-      anchors.top: ring.bottom
-      anchors.left: ring.left
-      anchors.right: ring.right
-      margin-top: 3
-      &slotPosition: {x = 65535, y = 12, z = 0}
+    Panel
+      id: activePanel
+      image-source: /images/ui/windows/miniwindow_old
+      image-border: 3
+      anchors.top: activeLabel.bottom
+      anchors.left: activeLabel.left
+      margin-top: 2
+      width: 70
+      height: 125
 
-    MainInventoryItem
-      id: rune2
-      anchors.top: rune1.top
-      anchors.left: rune1.right
-      margin-left: 3
-      &slotPosition: {x = 65535, y = 13, z = 0}
+      MainInventoryItem
+        id: helmet
+        !tooltip: tr('Spell Slot (Active)')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 8
+        &slotPosition: {x = 65535, y = 1, z = 0}
 
-    MainInventoryItem
-      id: rune3
-      anchors.top: rune1.top
-      anchors.left: rune2.right
-      margin-left: 3
-      &slotPosition: {x = 65535, y = 14, z = 0}
+      MainInventoryItem
+        id: boots
+        !tooltip: tr('Boots (Active)')
+        anchors.top: helmet.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 5
+        &slotPosition: {x = 65535, y = 8, z = 0}
+
+      MainInventoryItem
+        id: tools
+        !tooltip: tr('Torch (Active)')
+        anchors.top: boots.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 5
+        &slotPosition: {x = 65535, y = 10, z = 0}
+
+    Label
+      id: combatLabel
+      !text: tr('COMBAT')
+      text-align: center
+      font: cipsoftFont
+      color: #ffa500ff
+      anchors.top: activeLabel.top
+      anchors.left: activePanel.right
+      margin-left: 10
+      width: 70
+      height: 12
+
+    Panel
+      id: combatPanel
+      image-source: /images/ui/windows/miniwindow_old
+      image-border: 3
+      anchors.top: combatLabel.bottom
+      anchors.left: combatLabel.left
+      margin-top: 2
+      width: 70
+      height: 125
+
+      MainInventoryItem
+        id: sword
+        !tooltip: tr('Weapon')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 8
+        &slotPosition: {x = 65535, y = 6, z = 0}
+
+      MainInventoryItem
+        id: shield
+        !tooltip: tr('Shield')
+        anchors.top: sword.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 5
+        &slotPosition: {x = 65535, y = 5, z = 0}
+
+      MainInventoryItem
+        id: armor
+        !tooltip: tr('Armor')
+        anchors.top: shield.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 5
+        &slotPosition: {x = 65535, y = 4, z = 0}
 
     MainInventoryItem
       id: backpack
-      anchors.top: boots.bottom
-      anchors.left: boots.left
-      anchors.right: boots.right
-      margin-top: 3
+      !tooltip: tr('Backpack')
+      anchors.top: activePanel.bottom
+      anchors.left: activePanel.left
+      anchors.right: combatPanel.right
+      margin-top: 10
       &slotPosition: {x = 65535, y = 3, z = 0}
 
     MainInventoryItem
-      id: sword
-      anchors.top: helmet.bottom
-      anchors.left: helmet.left
-      margin-top: 3
-      &slotPosition: {x = 65535, y = 6, z = 0}
-
-    MainInventoryItem
       id: ring
-      anchors.top: sword.bottom
-      anchors.left: helmet.left
-      margin-top: 3
+      !tooltip: tr('Ring')
+      anchors.top: backpack.bottom
+      anchors.left: activePanel.left
+      margin-top: 8
       &slotPosition: {x = 65535, y = 9, z = 0}
 
     MainInventoryItem
-      id: armor
-      anchors.top: changeSize.bottom
-      anchors.left: helmet.right
-      margin-left: 3
-      &slotPosition: {x = 65535, y = 4, z = 0}
-
-    MainInventoryItem
-      id: legs
-      anchors.top: soulPanel.bottom
-      anchors.left: soulPanel.left
-      enabled: false
-      visible: false
-      margin-top: 3
-      &slotPosition: {x = 65535, y = 7, z = 0}
-
-    MainInventoryItem
-      id: boots
-      anchors.top: changeSize.bottom
-      anchors.left: armor.right
-      margin-left: 3
-      &slotPosition: {x = 65535, y = 8, z = 0}
-
-    MainInventoryItem
-      id: shield
-      anchors.bottom: amulet.top
-      anchors.left: amulet.left
-      anchors.right: amulet.right
-      margin-bottom: 3
-      &slotPosition: {x = 65535, y = 5, z = 0}
-
-    MainInventoryItem
-      id: tools
+      id: amulet
+      !tooltip: tr('Necklace')
       anchors.top: backpack.bottom
-      anchors.left: backpack.left
-      anchors.right: backpack.right
-      margin-top: 3
-      &slotPosition: {x = 65535, y = 10, z = 0}
+      anchors.right: combatPanel.right
+      margin-top: 8
+      &slotPosition: {x = 65535, y = 2, z = 0}
 
-    MainInventoryItem
-      id: soulPanel
-      anchors.top: rune2.bottom
-      anchors.left: rune1.left
-      anchors.right: rune1.right
-      margin-top: 3
+    Label
+      id: craftingLabel
+      !text: tr('CRAFTING')
+      text-align: center
+      font: cipsoftFont
+      color: #ffa500ff
+      anchors.top: ring.bottom
+      anchors.left: activePanel.left
+      anchors.right: combatPanel.right
+      margin-top: -5
+      height: 12
+
+    Panel
+      id: craftingPanel
+      image-source: /images/ui/windows/miniwindow_old
+      image-border: 3
+      anchors.top: craftingLabel.bottom
+      anchors.left: craftingLabel.left
+      anchors.right: craftingLabel.right
+      margin-top: 2
+      height: 50
+
+      MainInventoryItem
+        id: rune2
+        !tooltip: tr('Crafting Rune 2')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 10
+        &slotPosition: {x = 65535, y = 13, z = 0}
+
+      MainInventoryItem
+        id: rune1
+        !tooltip: tr('Crafting Rune 1')
+        anchors.top: rune2.top
+        anchors.right: rune2.left
+        margin-right: 10
+        &slotPosition: {x = 65535, y = 12, z = 0}
+
+      MainInventoryItem
+        id: rune3
+        !tooltip: tr('Crafting Rune 3')
+        anchors.top: rune2.top
+        anchors.left: rune2.right
+        margin-left: 10
+        &slotPosition: {x = 65535, y = 14, z = 0}
+
+    Panel
+      id: statsPanel
+      image-source: /images/ui/panel_flat
+      image-border: 3
+      image-color: #222222dd
+      anchors.top: craftingPanel.bottom
+      anchors.left: activePanel.left
+      anchors.right: combatPanel.right
+      margin-top: 10
+      height: 22
 
       Label
-        !text: tr('Soul')
-        text.align: center
+        !text: tr('Soul:')
         font: cipsoftFont
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top
-        color: #c0c0c0ff
-        margin-top: 1
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 5
+        color: #aaaaff
 
       Label
         id: soul
         !text: '100000'
         font: cipsoftFont
-        text-align: center
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        color: #c0c0c0ff
-
-    MainInventoryItem
-      id: capacityPanel
-      anchors.top: rune2.bottom
-      anchors.left: rune2.left
-      anchors.right: rune2.right
-      margin-top: 3
+        anchors.left: prev.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 3
+        color: #ffffff
 
       Label
-        !text: tr('Cap')
-        text.align: center
+        !text: tr('Cap:')
         font: cipsoftFont
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top
-        color: #c0c0c0ff
-        margin-top: 1
+        anchors.right: capacity.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-right: 3
+        color: #ffaa55
 
       Label
         id: capacity
         !text: '10000'
         font: cipsoftFont
-        text-align: center
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        color: #c0c0c0ff
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-right: 5
+        color: #ffffff
+
+    MainInventoryItem
+      id: soulPanel
+      visible: false
+      enabled: false
+      &slotPosition: {x = 65535, y = 0, z = 0}
+
+    MainInventoryItem
+      id: capacityPanel
+      visible: false
+      enabled: false
+      &slotPosition: {x = 65535, y = 0, z = 0}
+
+    MainInventoryItem
+      id: legs
+      anchors.top: statsPanel.bottom
+      anchors.left: statsPanel.left
+      enabled: false
+      visible: false
+      margin-top: 3
+      &slotPosition: {x = 65535, y = 7, z = 0}
 
   UIWidget
     id: offPanel
@@ -510,30 +541,14 @@ InventoryWindow
       $disabled:
         image-clip: 20 60 20 20
 
-    TopToggleButton
-      id: balanced
-      image-source: /images/inventory/buttons_general
-      image-clip: 0 80 20 20
-      anchors.left: defense.right
-      anchors.top: changeSize.top
-      margin-left: 1
-      size: 20 20
-      @onClick: |
-        selectCombat('balanced')
-
-      $pressed !disabled:
-        image-clip: 20 80 20 20
-
-      $disabled:
-        image-clip: 20 80 20 20
 
     TopToggleButton
       id: standPosture
       image-source: /images/inventory/buttons_general
       image-clip: 0 0 20 20
-      anchors.left: attack.left
-      anchors.top: attack.bottom
-      margin-top: 4
+      anchors.left: defense.right
+      anchors.top: changeSize.top
+      margin-left: 1
       size: 20 20
       @onClick: |
         selectPosture('stand')
@@ -560,24 +575,21 @@ InventoryWindow
 
       $disabled:
         image-clip: 20 20 20 20
-    SafeFightBox
-      id: pvp
+    UICheckBox
+      id: pvpToggle
+      !text: tr('PVP')
+      text-align: center
+      font: cipsoftFont
+      color: #c0c0c0ff
       anchors.left: followPosture.right
       anchors.top: standPosture.top
       margin-left: 1
       margin-top: 0
       phantom: false
+      size: 44 20
 
-    UIWidget
-      id: expert
-      image-source: /images/inventory/buttons_general
-      image-clip: 20 140 12 12
-      anchors.left: changeSize.left
-      anchors.bottom: soulAndCapacity.bottom
-      phantom: false
-      size: 12 12
-      @onClick: |
-        expertMode()
+      $checked:
+        color: #ff0000ff
 
     Button
       id: blessings

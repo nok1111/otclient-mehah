@@ -118,7 +118,7 @@ UIWidget
     anchors.top: parent.top
     &ignoreFillAll: true
     &onlyPhantomDrop: true
-    height: 200
+    height: 400
     focusable: false
     on: true
 

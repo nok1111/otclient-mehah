@@ -14,19 +14,46 @@ local function getInventoryUi()
 end
 
 local getSlotPanelBySlot = {
-    [InventorySlotHead] = function(ui) return ui.helmet, ui.helmet.helmet end,
+    [InventorySlotHead] = function(ui) 
+        local slot = ui.activePanel and ui.activePanel:getChildById('helmet') or ui.helmet
+        return slot, slot and slot.helmet or nil
+    end,
     [InventorySlotNeck] = function(ui) return ui.amulet, ui.amulet.amulet end,
     [InventorySlotBack] = function(ui) return ui.backpack, ui.backpack.backpack end,
-    [InventorySlotBody] = function(ui) return ui.armor, ui.armor.armor end,
-    [InventorySlotRight] = function(ui) return ui.shield, ui.shield.shield end,
-    [InventorySlotLeft] = function(ui) return ui.sword, ui.sword.sword end,
+    [InventorySlotBody] = function(ui) 
+        local slot = ui.combatPanel and ui.combatPanel:getChildById('armor') or ui.armor
+        return slot, slot and slot.armor or nil
+    end,
+    [InventorySlotRight] = function(ui) 
+        local slot = ui.combatPanel and ui.combatPanel:getChildById('shield') or ui.shield
+        return slot, slot and slot.shield or nil
+    end,
+    [InventorySlotLeft] = function(ui) 
+        local slot = ui.combatPanel and ui.combatPanel:getChildById('sword') or ui.sword
+        return slot, slot and slot.sword or nil
+    end,
     [InventorySlotLeg] = function(ui) return ui.legs, ui.legs.legs end,
-    [InventorySlotFeet] = function(ui) return ui.boots, ui.boots.boots end,
+    [InventorySlotFeet] = function(ui) 
+        local slot = ui.activePanel and ui.activePanel:getChildById('boots') or ui.boots
+        return slot, slot and slot.boots or nil
+    end,
     [InventorySlotFinger] = function(ui) return ui.ring, ui.ring.ring end,
-    [InventorySlotAmmo] = function(ui) return ui.tools, ui.tools.tools end,
-    [InventorySlotRune1] = function(ui) return ui.rune1, ui.rune1.rune1 end,
-    [InventorySlotRune2] = function(ui) return ui.rune2, ui.rune2.rune2 end,
-    [InventorySlotRune3] = function(ui) return ui.rune3, ui.rune3.rune3 end
+    [InventorySlotAmmo] = function(ui) 
+        local slot = ui.activePanel and ui.activePanel:getChildById('tools') or ui.tools
+        return slot, slot and slot.tools or nil
+    end,
+    [InventorySlotRune1] = function(ui) 
+        local slot = ui.craftingPanel and ui.craftingPanel:getChildById('rune1') or ui.rune1
+        return slot, slot and slot.rune1 or nil
+    end,
+    [InventorySlotRune2] = function(ui) 
+        local slot = ui.craftingPanel and ui.craftingPanel:getChildById('rune2') or ui.rune2
+        return slot, slot and slot.rune2 or nil
+    end,
+    [InventorySlotRune3] = function(ui) 
+        local slot = ui.craftingPanel and ui.craftingPanel:getChildById('rune3') or ui.rune3
+        return slot, slot and slot.rune3 or nil
+    end
 }
 
 local function formatDuration(duration)
@@ -106,10 +133,15 @@ local function combatEvent()
     
     if g_game.getFightMode() == FightOffensive then
         selectCombat('attack', true)
-    elseif g_game.getFightMode() == FightBalanced then
-        selectCombat('balanced', true)
     elseif g_game.getFightMode() == FightDefensive then
         selectCombat('defense', true)
+    end
+    
+    -- Update PVP toggle based on safe fight
+    local pvpEnabled = not g_game.isSafeFight()
+    local ui = getInventoryUi()
+    if ui.pvpToggle then
+        ui.pvpToggle:setChecked(pvpEnabled)
     end
 end
 
@@ -265,23 +297,61 @@ function inventoryController:onInit()
     refreshInventory_panel()
     local ui = getInventoryUi()
 
-    connect(inventoryController.ui.onPanel.pvp, {
-        onCheckChange = onSetSafeFight
+    -- PVP Toggle: OFF=safe mode, ON=can attack players
+    connect(inventoryController.ui.onPanel.pvpToggle, {
+        onCheckChange = onSetPVPToggle
     })
-    connect(inventoryController.ui.offPanel.pvp, {
-        onCheckChange = onSetSafeFight
+    connect(inventoryController.ui.offPanel.pvpToggle, {
+        onCheckChange = onSetPVPToggle
     })
-    connect(inventoryController.ui.onPanel.expert, {
-        onCheckChange = expertMode
-    })
-    pvpModeRadioGroup = UIRadioGroup.create()
-    pvpModeRadioGroup:addWidget(inventoryController.ui.onPanel.whiteDoveBox)
-    pvpModeRadioGroup:addWidget(inventoryController.ui.onPanel.whiteHandBox)
-    pvpModeRadioGroup:addWidget(inventoryController.ui.onPanel.yellowHandBox)
-    pvpModeRadioGroup:addWidget(inventoryController.ui.onPanel.redFistBox)
-    connect(pvpModeRadioGroup, {
-        onSelectionChange = onSetPVPMode
-    })
+end
+
+local slotTooltips = {
+    helmet = 'Spell Slot (Active)',
+    boots = 'Boots (Active)',
+    tools = 'Tools Slot',
+    sword = 'Weapon',
+    shield = 'Shield / Weapon',
+    armor = 'Armor',
+    backpack = 'Backpack',
+    ring = 'Ring',
+    amulet = 'Necklace',
+    rune1 = 'Crafting Rune Slot',
+    rune2 = 'Crafting Rune Slot',
+    rune3 = 'Crafting Rune Slot'
+}
+
+local function setupTooltips()
+    local onPanel = inventoryController.ui.onPanel
+    if not onPanel then 
+        return 
+    end
+    
+    local tooltipData = {
+        {panel = 'activePanel', slots = {'helmet', 'boots', 'tools'}},
+        {panel = 'combatPanel', slots = {'sword', 'shield', 'armor'}},
+        {panel = 'craftingPanel', slots = {'rune1', 'rune2', 'rune3'}},
+        {panel = nil, slots = {'backpack', 'ring', 'amulet'}}
+    }
+    
+    for _, data in ipairs(tooltipData) do
+        local parent = data.panel and onPanel:getChildById(data.panel) or onPanel
+        if parent then
+            for _, slotId in ipairs(data.slots) do
+                local widget = parent:getChildById(slotId)
+                if widget then
+                    local tooltipText = slotTooltips[slotId]
+                    widget.onHoverChange = function(self, hovered)
+                        if hovered then
+                            g_tooltip.display(tr(tooltipText))
+                        else
+                            g_tooltip.hide()
+                        end
+                    end
+                end
+            end
+        end
+    end
 end
 
 function inventoryController:onGameStart()
@@ -319,29 +389,19 @@ function inventoryController:onGameStart()
     refreshInventorySizes()
     refreshInventory_panel()
 
-    local elements = {
-        {inventoryController.ui.offPanel.blessings, inventoryController.ui.onPanel.blessings},
-        {inventoryController.ui.offPanel.expert, inventoryController.ui.onPanel.expert},
-        {inventoryController.ui.onPanel.whiteDoveBox},
-        {inventoryController.ui.onPanel.whiteHandBox},
-        {inventoryController.ui.onPanel.yellowHandBox},
-        {inventoryController.ui.onPanel.redFistBox}
-    }
-    
+    -- Show/hide blessings button based on client version
     local showBlessings = g_game.getClientVersion() >= 1000
-    local showPVPMode = g_game.getFeature(GamePVPMode)
-    
-    for i, elementGroup in ipairs(elements) do
-        local show = (i == 1 and showBlessings) or (i > 1 and showPVPMode)
-        for _, element in ipairs(elementGroup) do
-            if show then
-                element:show()
-            else
-                element:hide()
-            end
-        end
+    if showBlessings then
+        inventoryController.ui.offPanel.blessings:show()
+        inventoryController.ui.onPanel.blessings:show()
+    else
+        inventoryController.ui.offPanel.blessings:hide()
+        inventoryController.ui.onPanel.blessings:hide()
     end
-    inventoryController.ui.onPanel.purseButton:setVisible(g_game.getFeature(GamePurseSlot))
+    inventoryController.ui.onPanel.purseButton:setVisible(false)
+    
+    -- Setup tooltips after UI is loaded with delay
+    addEvent(setupTooltips, 500)
 end
 
 function inventoryController:onGameEnd()
@@ -387,6 +447,24 @@ function onSetSafeFight(self, checked)
     end
 end
 
+function onSetPVPToggle(self, checked)
+    -- Sync both panels
+    inventoryController.ui.onPanel.pvpToggle:setChecked(checked)
+    inventoryController.ui.offPanel.pvpToggle:setChecked(checked)
+    
+    if checked then
+        -- PVP ON: can attack players
+        g_game.setSafeFight(false)
+        g_game.setPVPMode(PVPRedFist)
+        modules.game_textmessage.displayGameMessage(tr("PVP mode activated"))
+    else
+        -- PVP OFF: safe mode
+        g_game.setSafeFight(true)
+        g_game.setPVPMode(PVPWhiteDove)
+        modules.game_textmessage.displayGameMessage(tr("PVP mode deactivated"))
+    end
+end
+
 function selectPosture(key, ignoreUpdate)
     local ui = getInventoryUi()
     if key == 'stand' then
@@ -408,21 +486,12 @@ function selectCombat(combat, ignoreUpdate)
     local ui = getInventoryUi()
     if combat == 'attack' then
         ui.attack:setEnabled(false)
-        ui.balanced:setEnabled(true)
         ui.defense:setEnabled(true)
         if not ignoreUpdate then
             g_game.setFightMode(FightOffensive)
         end
-    elseif combat == 'balanced' then
-        ui.attack:setEnabled(true)
-        ui.balanced:setEnabled(false)
-        ui.defense:setEnabled(true)
-        if not ignoreUpdate then
-            g_game.setFightMode(FightBalanced)
-        end
     elseif combat == 'defense' then
         ui.attack:setEnabled(true)
-        ui.balanced:setEnabled(true)
         ui.defense:setEnabled(false)
         if not ignoreUpdate then
             g_game.setFightMode(FightDefensive)
@@ -430,34 +499,6 @@ function selectCombat(combat, ignoreUpdate)
     end
 end
 
-function expertMode(self, checked)
-    local ui = getInventoryUi()
-
-    ui.whiteDoveBox:setVisible(checked)
-    ui.whiteHandBox:setVisible(checked)
-    ui.yellowHandBox:setVisible(checked)
-    ui.redFistBox:setVisible(checked)
-end
-
-function onSetPVPMode(self, selectedPVPButton)
-    if selectedPVPButton == nil then
-        return
-    end
-
-    local buttonId = selectedPVPButton:getId()
-    local pvpMode = PVPWhiteDove
-
-    if buttonId == 'whiteDoveBox' then
-        pvpMode = PVPWhiteDove
-    elseif buttonId == 'whiteHandBox' then
-        pvpMode = PVPWhiteHand
-    elseif buttonId == 'yellowHandBox' then
-        pvpMode = PVPYellowHand
-    elseif buttonId == 'redFistBox' then
-        pvpMode = PVPRedFist
-    end
-    g_game.setPVPMode(pvpMode)
-end
 
 function changeInventorySize()
     inventoryShrink = not inventoryShrink
