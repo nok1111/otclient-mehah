@@ -1,9 +1,11 @@
 InventoryWindow
   id: mainoptionspanel
-  height: 240
-  &panelHeight: 240
+  height: 260
+  &panelHeight: 260
   image-source: /images/ui/windows/panel_border
   margin-top: 2
+  image-border: 50
+  padding: 5
   on: true
 
 
