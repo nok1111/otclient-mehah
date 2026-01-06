@@ -2114,3 +2114,9 @@ AttachedEffectManager.register(248, 'exp effect', 1116, ThingCategoryEffect, {
 
 })
 
+AttachedEffectManager.register(249, 'mountain stance', 952, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.0,
+    offset = { -15, -15, true}, 
+})
+
