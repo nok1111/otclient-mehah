@@ -3,6 +3,8 @@ Expeditions.opCode = 77
 Expeditions.window = nil
 Expeditions.panels = {}
 
+local countdownEvent
+
 function init()
     connect(g_game, {
         onGameEnd = onGameEnd,
@@ -24,6 +26,12 @@ function terminate()
         Expeditions.window:destroy()
         Expeditions.window = nil
     end
+    
+    -- Stop countdown updates
+    if countdownEvent then
+        removeEvent(countdownEvent)
+        countdownEvent = nil
+    end
 end
 
 function onGameEnd()
@@ -32,6 +40,12 @@ function onGameEnd()
         Expeditions.window = nil
     end
     Expeditions.panels = {}
+    
+    -- Stop countdown updates
+    if countdownEvent then
+        removeEvent(countdownEvent)
+        countdownEvent = nil
+    end
 end
 
 function onExtendedOpcode(protocol, opcode, buffer)
@@ -46,6 +60,8 @@ function onExtendedOpcode(protocol, opcode, buffer)
             showExpeditionPanel(data)
         elseif data.type == "show_teleports" then
             showTeleportPanel(data)
+        elseif data.action == "close" then
+            closeExpeditionPanel()
         end
     end
 end
@@ -159,6 +175,49 @@ function showExpeditionPanel(data)
     Expeditions.window:show()
     Expeditions.window:raise()
     Expeditions.window:focus()
+    
+    -- Start countdown updates
+    if not countdownEvent then
+        countdownEvent = cycleEvent(updateCountdowns, 1000)
+    end
+end
+
+function updateCountdowns()
+    if not Expeditions.window or not Expeditions.window:isVisible() then
+        return
+    end
+    
+    local now = os.time()
+    
+    for _, panel in ipairs(Expeditions.panels) do
+        if panel.buffEndTime and panel.buffData then
+            local remaining = panel.buffEndTime - now
+            
+            if remaining > 0 then
+                local buffStatusPanel = panel:getChildById('buffStatusPanel')
+                local buffStatusLabel = buffStatusPanel and buffStatusPanel:getChildById('buffStatusLabel')
+                
+                if buffStatusLabel then
+                    local hours = math.floor(remaining / 3600)
+                    local minutes = math.floor((remaining % 3600) / 60)
+                    local seconds = remaining % 60
+                    local timeStr
+                    
+                    if hours > 0 then
+                        timeStr = string.format("%dh %02dm %02ds", hours, minutes, seconds)
+                    else
+                        timeStr = string.format("%02dm %02ds", minutes, seconds)
+                    end
+                    
+                    buffStatusLabel:setText(string.format('%s\n[%s]', panel.buffData.name, timeStr))
+                end
+            else
+                -- Buff expired
+                panel.buffEndTime = nil
+                panel.buffData = nil
+            end
+        end
+    end
 end
 
 function Expeditions.updatePanels()
@@ -234,14 +293,97 @@ function Expeditions.updatePanels()
             descLabel:setText(zone.description)
         end
         
-        local rewardsLabel = panel:getChildById('rewardsLabel')
-        if rewardsLabel then
-            rewardsLabel:setText('Rewards: ' .. zone.rewards)
+        local buffStatusPanel = panel:getChildById('buffStatusPanel')
+        local buffIcon = buffStatusPanel and buffStatusPanel:getChildById('buffIcon')
+        local buffStatusLabel = buffStatusPanel and buffStatusPanel:getChildById('buffStatusLabel')
+        local buffDescLabel = buffStatusPanel and buffStatusPanel:getChildById('buffDescLabel')
+        
+        if buffStatusLabel then
+            -- Handle zone buff status
+            if zone.buffStatus then
+                local status = zone.buffStatus
+                
+                if status.state == "active" then
+                    -- Buff is currently active - show with timer, icon, and description
+                    local hours = math.floor(status.remaining / 3600)
+                    local minutes = math.floor((status.remaining % 3600) / 60)
+                    local seconds = status.remaining % 60
+                    local timeStr
+                    
+                    if hours > 0 then
+                        timeStr = string.format("%dh %02dm %02ds", hours, minutes, seconds)
+                    else
+                        timeStr = string.format("%02dm %02ds", minutes, seconds)
+                    end
+                    
+                    buffStatusLabel:setText(string.format('%s\n[%s]', status.name, timeStr))
+                    buffStatusLabel:setColor(status.color or '#FFD700')
+                    
+                    -- Show buff description in white
+                    if buffDescLabel then
+                        buffDescLabel:setText(status.description or '')
+                        buffDescLabel:setVisible(true)
+                    end
+                    
+                    -- Show and set buff icon
+                    if buffIcon then
+                        buffIcon:setVisible(true)
+                        -- Map buff types to icon paths
+                        local iconPaths = {
+                            bloodPact = '/images/icons/fire',
+                            bountyHunt = '/images/icons/fire',
+                            doubleExp = '/images/icons/fire',
+                            monsterRush = '/images/icons/fire',
+                            orbShower = '/images/icons/fire'
+                        }
+                        local iconPath = iconPaths[status.type] or '/images/icons/fire'
+                        buffIcon:setImageSource(iconPath)
+                    end
+                    
+                    -- Store buff data for countdown
+                    panel.buffData = status
+                    panel.buffEndTime = os.time() + status.remaining
+                    panel.lastUpdateTime = os.time()
+                    
+                elseif status.state == "upcoming" then
+                    -- Zone has buff rotation enabled, but no active buff
+                    buffStatusLabel:setText(status.message or 'Next buff rotation coming soon')
+                    buffStatusLabel:setColor('#FFAA00')  -- Orange for upcoming
+                    if buffIcon then
+                        buffIcon:setVisible(false)
+                    end
+                    if buffDescLabel then
+                        buffDescLabel:setVisible(false)
+                    end
+                    
+                elseif status.state == "none" then
+                    -- No buffs available in this zone
+                    buffStatusLabel:setText(status.message or 'No buffs available in this zone')
+                    buffStatusLabel:setColor('#888888')  -- Gray for disabled
+                    if buffIcon then
+                        buffIcon:setVisible(false)
+                    end
+                    if buffDescLabel then
+                        buffDescLabel:setVisible(false)
+                    end
+                end
+            else
+                -- Fallback: show static rewards if buffStatus not present
+                buffStatusLabel:setText('Rewards: ' .. (zone.rewards or 'Unknown'))
+                buffStatusLabel:setColor('#90EE90')
+                if buffIcon then
+                    buffIcon:setVisible(false)
+                end
+                if buffDescLabel then
+                    buffDescLabel:setVisible(false)
+                end
+            end
         end
         
         local joinButton = panel:getChildById('joinButton')
         if joinButton then
             joinButton.onClick = function()
+                -- Send expedition ID directly
                 joinExpedition(zone.id)
             end
         end
@@ -377,6 +519,11 @@ function showTeleportPanel(data)
     Expeditions.window:show()
     Expeditions.window:raise()
     Expeditions.window:focus()
+    
+    -- Start countdown updates
+    if not countdownEvent then
+        countdownEvent = cycleEvent(updateCountdowns, 1000)
+    end
 end
 
 function Expeditions.updateTeleportPanels()
@@ -492,18 +639,15 @@ function joinTeleport(zoneId)
     closeExpeditionPanel()
 end
 
-function joinExpedition(zoneId)
+function joinExpedition(expeditionId)
     local data = {
         action = "join_expedition",
-        zoneId = zoneId
+        expeditionId = expeditionId
     }
-    
     local protocolGame = g_game.getProtocolGame()
     if protocolGame then
         protocolGame:sendExtendedOpcode(Expeditions.opCode, json.encode(data))
     end
-    
-    closeExpeditionPanel()
 end
 
 function closeExpeditionPanel()
@@ -513,4 +657,10 @@ function closeExpeditionPanel()
         Expeditions.window = nil
     end
     Expeditions.panels = {}
+    
+    -- Stop countdown updates
+    if countdownEvent then
+        removeEvent(countdownEvent)
+        countdownEvent = nil
+    end
 end

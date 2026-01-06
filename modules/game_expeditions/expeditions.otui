@@ -3,6 +3,10 @@ ExpeditionWindow < MainWindow
   !text: tr('Combat Expeditions')
   height: 520
   @onEscape: closeExpeditionPanel()
+  @onGeometryChange: |
+    if not self:isVisible() then
+      closeExpeditionPanel()
+    end
 
   Label
     id: titleLabel
@@ -135,30 +139,68 @@ ExpeditionPanel < UIWidget
     anchors.top: pvpLabel.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    margin-top: 8
+    margin-top: 2
     margin-left: 10
     margin-right: 10
-    height: 60
+    height: 30
     text: Description of the expedition zone
     font: verdana-11px-antialised
     color: #C0C0C0
     text-wrap: true
     text-align: center
 
-  Label
-    id: rewardsLabel
+  Panel
+    id: buffStatusPanel
     anchors.top: descLabel.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 10
-    margin-left: 10
-    margin-right: 10
-    height: 60
-    text: Rewards: None
-    font: verdana-11px-antialised
-    color: #90EE90
-    text-wrap: true
-    text-align: center
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 5
+    height: 90
+    width: 250
+    image-source: /images/ui/windows/miniwindow
+    image-border: 5
+    padding: 5
+    &panelHeight: 90
+    
+    UIWidget
+      id: buffIcon
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.top: parent.top
+      margin-top: 3
+      size: 12 12
+      image-smooth: true
+      image-fixed-ratio: true
+      phantom: false
+      visible: false
+    
+    Label
+      id: buffStatusLabel
+      anchors.top: buffIcon.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 2
+      text: No buffs available
+      font: verdana-11px-antialised
+      color: #888888
+      width: 200
+      text-wrap: true
+      text-align: center
+      text-auto-resize: true
+    
+    Label
+      id: buffDescLabel
+      anchors.top: buffStatusLabel.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 2
+      margin-left: 10
+      margin-right: 10
+      height: 30
+      text:
+      font: verdana-11px-antialised
+      color: #FFFFFF
+      text-wrap: true
+      text-align: center
+      visible: false
 
   Button
     id: joinButton
