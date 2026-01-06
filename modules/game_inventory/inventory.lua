@@ -296,14 +296,6 @@ inventoryController:setUI('inventory', modules.game_interface.getRightPanel())
 function inventoryController:onInit()
     refreshInventory_panel()
     local ui = getInventoryUi()
-
-    -- PVP Toggle: OFF=safe mode, ON=can attack players
-    connect(inventoryController.ui.onPanel.pvpToggle, {
-        onCheckChange = onSetPVPToggle
-    })
-    connect(inventoryController.ui.offPanel.pvpToggle, {
-        onCheckChange = onSetPVPToggle
-    })
 end
 
 local slotTooltips = {
@@ -322,36 +314,9 @@ local slotTooltips = {
 }
 
 local function setupTooltips()
-    local onPanel = inventoryController.ui.onPanel
-    if not onPanel then 
-        return 
-    end
-    
-    local tooltipData = {
-        {panel = 'activePanel', slots = {'helmet', 'boots', 'tools'}},
-        {panel = 'combatPanel', slots = {'sword', 'shield', 'armor'}},
-        {panel = 'craftingPanel', slots = {'rune1', 'rune2', 'rune3'}},
-        {panel = nil, slots = {'backpack', 'ring', 'amulet'}}
-    }
-    
-    for _, data in ipairs(tooltipData) do
-        local parent = data.panel and onPanel:getChildById(data.panel) or onPanel
-        if parent then
-            for _, slotId in ipairs(data.slots) do
-                local widget = parent:getChildById(slotId)
-                if widget then
-                    local tooltipText = slotTooltips[slotId]
-                    widget.onHoverChange = function(self, hovered)
-                        if hovered then
-                            g_tooltip.display(tr(tooltipText))
-                        else
-                            g_tooltip.hide()
-                        end
-                    end
-                end
-            end
-        end
-    end
+    -- Tooltips ahora se definen directamente en 10-items.otui
+    -- Los UIWidgets de slots tienen !tooltip y se muestran solo cuando enabled: false (slot vacío)
+    -- Cuando hay item equipado, el UIWidget tiene enabled: true y el tooltip del item se muestra normalmente
 end
 
 function inventoryController:onGameStart()
@@ -447,7 +412,7 @@ function onSetSafeFight(self, checked)
     end
 end
 
-function onSetPVPToggle(self, checked)
+function onSetPVPToggle(button, checked)
     -- Sync both panels
     inventoryController.ui.onPanel.pvpToggle:setChecked(checked)
     inventoryController.ui.offPanel.pvpToggle:setChecked(checked)
@@ -456,12 +421,10 @@ function onSetPVPToggle(self, checked)
         -- PVP ON: can attack players
         g_game.setSafeFight(false)
         g_game.setPVPMode(PVPRedFist)
-        modules.game_textmessage.displayGameMessage(tr("PVP mode activated"))
     else
         -- PVP OFF: safe mode
         g_game.setSafeFight(true)
         g_game.setPVPMode(PVPWhiteDove)
-        modules.game_textmessage.displayGameMessage(tr("PVP mode deactivated"))
     end
 end
 

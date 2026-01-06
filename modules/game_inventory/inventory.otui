@@ -101,7 +101,7 @@ InventoryWindow
 
     TopToggleButton
       id: standPosture
-      image-source: /images/inventory/buttons_general
+      image-source: /images/game/combatmodes/stand
       image-clip: 0 0 20 20
       anchors.right: parent.right
       anchors.top: changeSize.top
@@ -111,15 +111,15 @@ InventoryWindow
         selectPosture('stand')
 
       $pressed !disabled:
-        image-clip: 20 0 20 20
+        image-clip: 0 20 20 20
 
       $disabled:
-        image-clip: 20 0 20 20
+        image-clip: 0 20 20 20
 
     TopToggleButton
       id: followPosture
-      image-source: /images/inventory/buttons_general
-      image-clip: 0 20 20 20
+      image-source: /images/game/combatmodes/chasemode
+      image-clip: 0 0 20 20
       anchors.right: standPosture.left
       anchors.top: standPosture.top
       margin-right: 4
@@ -128,30 +128,33 @@ InventoryWindow
         selectPosture('follow')
 
       $pressed !disabled:
-        image-clip: 20 20 20 20
+        image-clip: 0 20 20 20
 
       $disabled:
-        image-clip: 20 20 20 20
-    UICheckBox
+        image-clip: 0 20 20 20
+    TopToggleButton
       id: pvpToggle
-      !text: tr('PVP')
-      text-align: center
-      font: cipsoftFont
-      color: #c0c0c0ff
+      image-source: /images/game/combatmodes/onPanel
+      image-clip: 0 0 44 20
       anchors.right: followPosture.left
       anchors.top: standPosture.top
       margin-right: 4
-      margin-top: 0
-      phantom: false
       size: 44 20
+      @onClick: onSetPVPToggle(self, not self:isChecked())
+
+      $pressed !disabled:
+        image-clip: 0 20 44 20
+
+      $disabled:
+        image-clip: 0 20 44 20
 
       $checked:
-        color: #ff0000ff
+        image-clip: 0 20 44 20
 
     TopToggleButton
       id: attack
-      image-source: /images/inventory/buttons_general
-      image-clip: 0 40 20 20
+      image-source: /images/game/combatmodes/fightoffensive
+      image-clip: 0 0 20 20
       anchors.right: pvpToggle.left
       anchors.top: standPosture.top
       margin-right: 4
@@ -160,15 +163,15 @@ InventoryWindow
         selectCombat('attack')
 
       $pressed !disabled:
-        image-clip: 20 40 20 20
+        image-clip: 0 20 20 20
 
       $disabled:
-        image-clip: 20 40 20 20
+        image-clip: 0 20 20 20
 
     TopToggleButton
       id: defense
-      image-source: /images/inventory/buttons_general
-      image-clip: 0 60 20 20
+      image-source: /images/game/combatmodes/fightdefensive
+      image-clip: 0 0 20 20
       anchors.right: attack.left
       anchors.top: attack.top
       margin-right: 4
@@ -177,10 +180,10 @@ InventoryWindow
         selectCombat('defense')
 
       $pressed !disabled:
-        image-clip: 20 60 20 20
+        image-clip: 0 20 20 20
 
       $disabled:
-        image-clip: 20 60 20 20
+        image-clip: 0 20 20 20
 
     TopToggleButton
       id: stop
@@ -276,6 +279,7 @@ InventoryWindow
       image-border: 3
       anchors.top: combatLabel.bottom
       anchors.left: combatLabel.left
+      phantom: true
       margin-top: 2
       width: 70
       height: 125
@@ -509,8 +513,8 @@ InventoryWindow
 
     TopToggleButton
       id: attack
-      image-source: /images/inventory/buttons_general
-      image-clip: 0 40 20 20
+      image-source: /images/game/combatmodes/fightoffensive
+      image-clip: 0 0 20 20
       anchors.left: soulAndCapacity.right
       anchors.top: changeSize.top
       margin-left: 3
@@ -519,15 +523,15 @@ InventoryWindow
         selectCombat('attack')
 
       $pressed !disabled:
-        image-clip: 20 40 20 20
+        image-clip: 0 20 20 20
 
       $disabled:
-        image-clip: 20 40 20 20
+        image-clip: 0 20 20 20
 
     TopToggleButton
       id: defense
-      image-source: /images/inventory/buttons_general
-      image-clip: 0 60 20 20
+      image-source: /images/game/combatmodes/fightdefensive
+      image-clip: 0 0 20 20
       anchors.left: attack.right
       anchors.top: changeSize.top
       margin-left: 1
@@ -536,15 +540,15 @@ InventoryWindow
         selectCombat('defense')
 
       $pressed !disabled:
-        image-clip: 20 60 20 20
+        image-clip: 0 20 20 20
 
       $disabled:
-        image-clip: 20 60 20 20
+        image-clip: 0 20 20 20
 
 
     TopToggleButton
       id: standPosture
-      image-source: /images/inventory/buttons_general
+      image-source: /images/game/combatmodes/stand
       image-clip: 0 0 20 20
       anchors.left: defense.right
       anchors.top: changeSize.top
@@ -554,15 +558,15 @@ InventoryWindow
         selectPosture('stand')
 
       $pressed !disabled:
-        image-clip: 20 0 20 20
+        image-clip: 0 20 20 20
 
       $disabled:
-        image-clip: 20 0 20 20
+        image-clip: 0 20 20 20
 
     TopToggleButton
       id: followPosture
-      image-source: /images/inventory/buttons_general
-      image-clip: 0 20 20 20
+      image-source: /images/game/combatmodes/chasemode
+      image-clip: 0 0 20 20
       anchors.left: standPosture.right
       anchors.top: standPosture.top
       margin-left: 1
@@ -571,25 +575,28 @@ InventoryWindow
         selectPosture('follow')
 
       $pressed !disabled:
-        image-clip: 20 20 20 20
+        image-clip: 0 20 20 20
 
       $disabled:
-        image-clip: 20 20 20 20
-    UICheckBox
+        image-clip: 0 20 20 20
+    TopToggleButton
       id: pvpToggle
-      !text: tr('PVP')
-      text-align: center
-      font: cipsoftFont
-      color: #c0c0c0ff
+      image-source: /images/game/combatmodes/onPanel
+      image-clip: 0 0 44 20
       anchors.left: followPosture.right
       anchors.top: standPosture.top
       margin-left: 1
-      margin-top: 0
-      phantom: false
       size: 44 20
+      @onClick: onSetPVPToggle(self, not self:isChecked())
+
+      $pressed !disabled:
+        image-clip: 0 20 44 20
+
+      $disabled:
+        image-clip: 0 20 44 20
 
       $checked:
-        color: #ff0000ff
+        image-clip: 0 20 44 20
 
     Button
       id: blessings
