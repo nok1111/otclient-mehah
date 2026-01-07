@@ -1,0 +1,248 @@
+TaskCard < Panel
+  size: 210 370
+  image-source: /images/ui/panel_flat
+  image-border: 3
+  image-color: #2a2a2a
+  padding: 8
+  phantom: false
+  
+  // Tier Badge en esquina superior derecha
+  Label
+    id: tierBadge
+    size: 80 20
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 2
+    margin-right: 2
+    text-align: center
+    font: verdana-11px-rounded
+    background-color: #1a1a1a
+    
+  // Task Name centered
+  Label
+    id: taskName
+    text: Hunt Task
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: tierBadge.left
+    font: verdana-11px-rounded
+    color: #ffffff
+    text-align: center
+    margin-top: 2
+    margin-right: 5
+    
+  // Header Image Panel (monsters image)
+  Panel
+    id: headerImagePanel
+    height: 80
+    anchors.top: taskName.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    image-source: /images/ui/panel_flat
+    image-border: 2
+    image-color: #3a3a3a
+    
+    // Aquí va la imagen de header (tier-specific)
+    UIWidget
+      id: headerImage
+      anchors.fill: parent
+      image-source: /images/tasks/header_normal
+      
+  // Info Panel (Kills y Zone)
+  Panel
+    id: infoPanel
+    height: 45
+    anchors.top: headerImagePanel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    image-source: /images/ui/panel_flat
+    image-border: 2
+    image-color: #1a1a1a
+    
+    Label
+      id: killsLabel
+      text: Kills: 120
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 5
+      font: verdana-11px-rounded
+      text-align: center
+      
+    Label
+      id: zoneLabel
+      text: Zone: 20-30
+      anchors.top: killsLabel.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 3
+      font: verdana-11px-rounded
+      text-align: center
+  
+  // Modifiers Panel
+  Panel
+    id: modifiersPanel
+    anchors.top: infoPanel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 90
+    margin-top: 5
+    image-source: /images/ui/panel_flat
+    image-border: 2
+    image-color: #1a1a1a
+    padding: 5
+    
+    Label
+      id: modifiersTitle
+      text: Modifiers:
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter
+      font: verdana-11px-rounded
+      color: #aaaaaa
+      
+    Panel
+      id: modifiersList
+      anchors.top: modifiersTitle.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-top: 3
+      layout:
+        type: verticalBox
+        spacing: 2
+        fit-children: false
+  
+  // Rewards Panel
+  Panel
+    id: rewardsPanel
+    anchors.top: modifiersPanel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 75
+    margin-top: 5
+    image-source: /images/ui/panel_flat
+    image-border: 2
+    image-color: #1a1a1a
+    padding: 5
+    
+    Label
+      id: rewardsTitle
+      text: Rewards:
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter
+      font: verdana-11px-rounded
+      color: #aaaaaa
+      
+    Panel
+      id: rewardsContainer
+      anchors.top: rewardsTitle.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      height: 50
+      
+      // Gold Reward
+      Panel
+        id: goldRewardPanel
+        size: 90 20
+        anchors.top: parent.top
+        anchors.left: parent.left
+        margin-left: 10
+        
+        UIWidget
+          id: goldIcon
+          size: 16 16
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          image-source: /images/game/items/3031
+          
+        Label
+          id: goldLabel
+          text: 240
+          anchors.left: goldIcon.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 5
+          color: #FFD700
+          font: verdana-11px-rounded
+          
+      // Fame Reward
+      Panel
+        id: fameRewardPanel
+        size: 90 20
+        anchors.top: parent.top
+        anchors.right: parent.right
+        margin-right: 10
+        
+        UIWidget
+          id: fameIcon
+          size: 16 16
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          image-source: /images/ui/icons/fame
+          
+        Label
+          id: fameLabel
+          text: 60
+          anchors.left: fameIcon.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 5
+          color: #00BFFF
+          font: verdana-11px-rounded
+      
+      // Additional Rewards (rerolls, potions, etc)
+      Panel
+        id: bonusRewardsPanel
+        anchors.top: goldRewardPanel.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 20
+        margin-top: 5
+        layout:
+          type: horizontalBox
+          spacing: 10
+          align-center: true
+    
+  // Lock Button
+  Button
+    id: lockButton
+    text: LOCK
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    width: 95
+    height: 25
+    margin-bottom: 5
+    image-color: #4a4a00
+    
+  // Start Button
+  Button
+    id: startButton
+    text: START
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    width: 95
+    height: 25
+    margin-bottom: 5
+    image-color: #004a00
+    
+  // Locked Overlay
+  Panel
+    id: lockedOverlay
+    anchors.fill: parent
+    visible: false
+    background-color: #00000080
+    phantom: true
+    
+    UIWidget
+      id: lockIcon
+      size: 32 32
+      anchors.centerIn: parent
+      image-source: /images/ui/icons/lock
+      
+    Label
+      text: LOCKED
+      anchors.top: lockIcon.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 5
+      font: verdana-11px-rounded
+      color: #FFD700
+      text-align: center

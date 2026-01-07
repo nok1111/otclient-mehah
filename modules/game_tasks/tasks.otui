@@ -1,502 +1,558 @@
-rewardItem < Label
-
-  Item
-    id: item
-    size: 30 30
-    anchors.left: parent.left
-    virtual: true
-    anchors.verticalCenter: parent.verticalCenter
-
-  Label
-    id: name
-    size: 100 30
-    anchors.left: prev.right
-    anchors.right: parent.right
-    text-offset: 0 6
-    anchors.verticalCenter: parent.verticalCenter
-    margin-left: 5
-
-monsterIn < UICreature
-
-  UICreature
-    id: monster
-    size: 50 50
-    anchors.left: parent.left
-    anchors.verticalCenter: parent.verticalCenter
-
-  Label
-    id: name
-    size: 100 30
-    anchors.left: prev.right
-    anchors.right: parent.right
-    text-offset: 0 6
-    anchors.verticalCenter: parent.verticalCenter
-    margin-left: 5
-
-MiniPanel < Panel
-  text-offset: 0 2
-  text-align: top
-  image-source: /images/ui/miniwindow
-  image-border: 4
-  image-border-top: 23
-  padding: 4
-  padding-top: 23
-
-TaskMenuEntry < Panel
-  height: 50
-  image-color: #ababab
-  image-source: /images/ui/panel_flat
-  image-border: 1
-  focusable: true
+TaskCard < Panel
+  id: taskCardPanel
+  height: 370
+  width: 210
+  image-border: 5
+  padding: 5
   phantom: false
-  border: 0 green
-  $focus:
-    border: 1 green
-
-  UICreature
-    id: preview
+  &cardHeight: 370
+  &cardWidth: 210
+  
+  Label
+    id: tierBadge
+    size: 80 20
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 6
+    margin-right: 2
+    text-align: center
+    font: verdana-11px-rounded
+    background-color: #1a1a1a
+    
+  Label
+    id: taskName
+    text: Hunt Task
     anchors.top: parent.top
     anchors.left: parent.left
-    size: 64 64
-
+    anchors.right: tierBadge.left
+    font: verdana-11px-rounded
+    color: #ffffff
+    text-align: center
+    margin-top: 8
+    margin-right: 5
+    
   Panel
-    id: info
-    anchors.left: prev.right
+    id: headerImagePanel
+    height: 80
+    width: 200
+    anchors.top: taskName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 20
+    image-source: /images/ui/panel_flat
+    image-border: 2
+    &panelHeight: 80
+    &panelWidth: 200
+    
+    UICreature
+      id: mainCreature
+      size: 64 64
+      anchors.centerIn: parent
+      phantom: true
+      
+  Panel
+    id: infoPanel
+    height: 45
+    width: 200
+    anchors.top: headerImagePanel.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 5
+    image-source: /images/ui/windows/mod_overlay
+    image-border: 5
+    padding: 5
+    &panelHeight: 45
+    &panelWidth: 200
+    
+    Label
+      id: killsLabel
+      text: Kills: 15
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 5
+      width: 200
+      font: verdana-11px-rounded
+      text-align: center
+      
+    Label
+      id: zoneLabel
+      text: Zone: 20-30
+      anchors.top: killsLabel.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 3
+      width: 200
+      font: verdana-11px-rounded
+      text-align: center
+  
+  Panel
+    id: modifiersPanel
+    height: 90
+    width: 200
+    anchors.top: infoPanel.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 5
+    image-border: 2
+    padding: 5
+    &panelHeight: 90
+    &panelWidth: 200
+    
+    Label
+      id: modifiersTitle
+      text: Modifiers:
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter
+      font: verdana-11px-rounded
+      color: #aaaaaa
+      
+    Panel
+      id: modifiersList
+      anchors.top: modifiersTitle.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-top: 3
+      layout:
+        type: verticalBox
+        spacing: 2
+        fit-children: false
+  
+  Panel
+    id: rewardsPanel
+    height: 75
+    width: 200
+    anchors.top: modifiersPanel.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 5
+    image-border: 2
+    padding: 5
+    &panelHeight: 75
+    &panelWidth: 200
+    
+    Label
+      id: rewardsTitle
+      text: Rewards:
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter
+      font: verdana-11px-rounded
+      color: #aaaaaa
+      
+    Panel
+      id: rewardsContainer
+      anchors.top: rewardsTitle.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      height: 50
+      
+      Panel
+        id: goldRewardPanel
+        size: 90 20
+        anchors.top: parent.top
+        anchors.left: parent.left
+        margin-left: 40
+        
+        UIWidget
+          id: goldIcon
+          size: 16 16
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          image-source: /images/icons/gold-bars
+          
+        Label
+          id: goldLabel
+          text: 240
+          anchors.left: goldIcon.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 5
+          width: 80
+          color: #FFD700
+          font: verdana-11px-rounded
+          
+      Panel
+        id: fameRewardPanel
+        size: 90 20
+        anchors.top: parent.top
+        anchors.right: parent.right
+        margin-right: 0
+        
+
+        
+        UIWidget
+          id: fameIcon
+          size: 16 16
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          image-source: /images/icons/fame
+          
+        Label
+          id: fameLabel
+          text: 60
+          anchors.left: fameIcon.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 5
+          width: 80
+          color: #ff9100ff
+          font: verdana-11px-rounded
+      
+      Panel
+        id: bonusRewardsPanel
+        anchors.top: goldRewardPanel.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 20
+        margin-top: 5
+        layout:
+          type: horizontalBox
+          spacing: 10
+          align-center: true
+    
+  Button
+    id: lockButton
+    text: LOCK
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    width: 80
+    height: 25
+    margin-bottom: 15
+    margin-left: 10
+    image-color: #4a4a00
+    
+  Button
+    id: startButton
+    text: START
+    anchors.bottom: parent.bottom
     anchors.right: parent.right
-    anchors.verticalCenter: parent.verticalCenter
-    margin-left: 5
-    layout:
-      type: verticalBox
-      fit-children: true
-
+    width: 80
+    height: 25
+    margin-bottom: 15
+    margin-right: 10
+    image-color: #09f309ff
+    
+  Panel
+    id: lockedOverlay
+    anchors.fill: parent
+    visible: false
+    background-color: #00000080
+    phantom: true
+    
+    UIWidget
+      id: lockIcon
+      size: 32 32
+      anchors.centerIn: parent
+      image-source: /images/icons/lock
+      
     Label
-      id: title
-      color: #dfdfdf
-
-    Label
-      id: level
-
-    Label
-      id: bonus
-      color: green
-      text: Recommended
-
-    Label
-      id: required
-      visible: false
-
-    Label
-      id: type
-      visible: false
-
-    Label
-      id: diff
-      visible: false
+      text: LOCKED
+      anchors.top: lockIcon.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 5
+      font: verdana-11px-rounded
+      color: #FFD700
+      text-align: center
 
 MainWindow
-  !text: tr('Artifacts Tasks')
-  size: 700 610
-  @onEscape: modules.game_tasks.toggle()
+  id: tasksWindow
+  !text: tr('TASK BOARD')
+  size: 700 750
+  @onEscape: modules.game_tasks.toggleTasksPanel()
 
-  ScrollablePanel
-    id: tasksList
-    width: 200
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.bottom: separator.top
-    margin-bottom: 10
-    image-source: /images/ui/menubox
-    image-border: 3
-    padding: 5
-    padding-right: 16
-    vertical-scrollbar: tasksListScroll
-    auto-focus: first
-    layout:
-      type: verticalBox
-
-  VerticalScrollBar
-    id: tasksListScroll
-    anchors.top: tasksList.top
-    anchors.bottom: tasksList.bottom
-    anchors.right: tasksList.right
-    margin: 3 3 3 0
-    step: 24
-    pixels-scroll: true
-
-  UIWidget
-    id: typePanel
+  Panel
+    id: headerPanel
     height: 70
+    width: 690
     anchors.top: parent.top
-    anchors.left: tasksList.right
-    anchors.right: parent.right
-    image-source: /images/ui/menubox
-    margin-left: 10
-    image-border: 3
-    padding: 10
-
-    UIWidget
-      id: label1
-      anchors.top: parent.top
-      anchors.left: parent.left
-      text: Type:
-      margin-top: 2
-
-    ComboBox
-      id: type
-      size: 155 20
-      anchors.top: parent.top
-      anchors.left: label1.right
-      margin-left: 10
-      @onOptionChange: modules.game_tasks.onSort()
-      @onSetup: |
-        self:addOption("All")
-        self:addOption("Experience")
-        self:addOption("Item")
-        self:addOption("Money")
-
-    UIWidget
-      id: label2
-      anchors.top: parent.top
-      anchors.left: type.right
-      margin-left: 27
-      margin-top: 2
-      text: Difficulty:
-
-    ComboBox
-      id: difficulty
-      size: 155 20
-      anchors.top: parent.top
-      anchors.left: label2.right
-      margin-left: 10
-      @onOptionChange: modules.game_tasks.onSort()
-      @onSetup: |
-        self:addOption("All")
-        self:addOption("Easy")
-        self:addOption("Medium")
-        self:addOption("Hard")
-
-    UIWidget
-      id: label3
-      anchors.top: parent.top
-      anchors.left: parent.left
-      margin-top: 35
-      text: Search Task:
-
-    TextEdit
-      id: search
-      anchors.top: parent.top
-      anchors.left: label3.right
-      width: 359
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 5
+    image-source: /images/ui/windows/miniwindow_old
+    image-border: 5
+    padding: 5
+    &panelHeight: 70
+    &panelWidth: 690
+    
+    Label
+      id: fameLabel
+      text: Fame: 0
       font: verdana-11px-rounded
-      margin-top: 32
+      anchors.left: parent.left
+      anchors.top: parent.top
+      width: 150
+      margin-top: 5
       margin-left: 10
-      @onKeyPress: modules.game_tasks.onSearch()
+      
+    Label
+      id: fameLevelLabel
+      text: Level 1 (0/100)
+      font: verdana-11px-rounded
+      anchors.left: parent.left
+      anchors.top: fameLabel.bottom
+      width: 200
+      margin-top: 5
+      margin-left: 10
+      
+    Label
+      id: dailyBonusLabel
+      text: Daily Bonus: +20 Fame (Available)
+      font: verdana-11px-rounded
+      color: #00ff00
+      anchors.right: parent.right
+      anchors.top: parent.top
+      margin-top: 5
+      margin-right: 10
 
-  UIWidget
-    id: main
-    height: 100
-    anchors.top: typePanel.bottom
-    anchors.left: tasksList.right
-    anchors.right: parent.right
-    image-source: /images/ui/menubox
-    image-border: 3
-    margin-left: 10
+  Label
+    id: availableTasksTitle
+    text: Available Tasks (3/3)
+    font: verdana-11px-rounded
+    anchors.top: headerPanel.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 15
+    text-align: center
+
+  Panel
+    id: taskCardsContainer
+    height: 380
+    anchors.top: availableTasksTitle.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
     margin-top: 10
-    padding: 10
+    width: 660
+    layout:
+      type: horizontalBox
+      spacing: 15
+      fit-children: false
+      align-center: true
 
-    UIWidget
-      id: rank
-      size: 110 80
-      image-source: /images/ui/panel_flat
-      image-border: 3
-      anchors.top: parent.top
-      anchors.right: parent.right
-      padding: 0 20 15 20
-
-      UIImageView
-        id: rankImage
-        image-smooth: true
-        image-fixed-ratio: false
-        anchors.fill: parent
-        margin-bottom: 5
-
-    UIWidget
-      id: rankName
-      anchors.top: rank.bottom
-      anchors.right: rank.right
-      anchors.left: rank.left
-      text-align: center
-      margin-top: -18
-      text: Beginner
-
-    VerticalSeparator
-      anchors.top: parent.top
-      anchors.bottom: parent.bottom
-      anchors.right: rank.left
-      margin-right: 8
-
-    UIWidget
-      id: nextBadge
-      anchors.top: parent.top
-      anchors.left: parent.left
-      anchors.right: parent.right
-      text-align: left
-      text: "Next Badge Reward: None"
-      color: #FF0000
-      margin-top: 5
-
-    UIWidget
-      id: ranks
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      text-align: left
-      text: Task Points:
-      margin-top: 5
-
-    UIWidget
-      id: points
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      text-align: left
-      text: Task Points:
-      margin-top: 5
-
-    UIWidget
-      id: itemContainer
-      anchors.top: nextBadge.top
-      anchors.right: rank.left
-      size: 45 45
-      margin-top: 3
-      margin-right: 48
-
-      Item
-        id: nextBadgeItem
-        size: 40 40
-        anchors.centerIn: parent
-        virtual: true
-
-    UIWidget
-      id: rankbarpanel
-      size: 312 18
-      image-source: /images/ui/panel_flat
-      image-border: 3
-      anchors.bottom: parent.bottom
-      anchors.left: parent.left
-      margin-top: 12
-      margin-right: 20
-
-      ProgressBar
-        id: rankBar
-        anchors.fill: parent
-        background-color: #964b00
-        margin: 1
-
-      VerticalSeparator
-        id: left
-        width: 3
-        image-source: /images/ui/panel_flat
-        image-border: 3
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        margin-right: 104
-        margin-top: 1
-        margin-bottom: 1
-
-      VerticalSeparator
-        id: right
-        width: 3
-        image-source: /images/ui/panel_flat
-        image-border: 3
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
+  Panel
+    id: actionPanel
+    height: 45
+    width: 690
+    anchors.top: taskCardsContainer.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 10
+    image-source: /images/ui/windows/miniwindow_old
+    image-border: 5
+    padding: 5
+    &panelHeight: 45
+    &panelWidth: 690
+    layout:
+      type: horizontalBox
+      spacing: 15
+      align-center: true
+    
+    Panel
+      id: rerollSection
+      width: 280
+      
+      UIWidget
+        id: rerollIcon
+        size: 16 16
         anchors.left: parent.left
-        margin-left: 104
-        margin-top: 1
-        margin-bottom: 1
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 5
+        image-source: /images/icons/reroll
+      
+      Button
+        id: rerollButton
+        text: Reroll Tasks
+        width: 110
+        height: 28
+        anchors.left: rerollIcon.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 5
+        @onClick: modules.game_tasks.onRerollClick()
+        
+      Label
+        id: rerollCostLabel
+        text: Cost:
+        anchors.left: rerollButton.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 5
+        font: verdana-11px-rounded
+        
+      UIWidget
+        id: fameCostIcon
+        size: 24 20
+        anchors.left: rerollCostLabel.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 5
+        margin-bottom: 2
+        image-source: /images/icons/fame_big
+        
+      Label
+        id: rerollCostAmount
+        text: 50
+        anchors.left: fameCostIcon.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 3
+        color: #FF8000
+        width: 50
+        font: verdana-11px-rounded
+      
+    VerticalSeparator
+      width: 2
+      margin-top: 5
+      margin-bottom: 5
+      margin-left: -50
+    
+    Panel
+      id: rerollsAvailableSection
+      width: 180
+      margin-left: 5
+      
+      UIWidget
+        id: rerollAvailableIcon
+        size: 16 16
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 5
+        image-source: /images/icons/reroll
+      
+      Label
+        id: rerollsAvailableLabel
+        text: Free Rerolls: 5/10
+        anchors.left: rerollAvailableIcon.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 5
+        width: 200
+        font: verdana-11px-rounded
+        color: #00ff00
+    
+    VerticalSeparator
+      width: 2
+      margin-top: 5
+      margin-bottom: 5
+    
+    Panel
+      id: premiumSection
+      width: 210
+      
+      UIWidget
+        id: premiumIcon
+        size: 24 20
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 5
+        margin-bottom: 2
+        image-source: /images/icons/fame_big
+        
+      Label
+        id: premiumLabel
+        text: Premium: 1 free lock
+        anchors.left: premiumIcon.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 5
+        font: verdana-11px-rounded
+        color: #FFD700
 
-  MiniPanel
-    id: rewards
-    size: 200 300
-    anchors.top: main.bottom
-    anchors.left: tasksList.right
+  Panel
+    id: activeTaskPanel
+    height: 120
+    width: 690
+    anchors.top: actionPanel.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
     margin-top: 10
-    margin-left: 10
-    text: Base Rewards
-    padding-bottom: 10
-
-    Label
-      id: tp
+    image-source: /images/ui/windows/panel_border
+    image-border: 5
+    padding: 8
+    &panelHeight: 120
+    &panelWidth: 690
+    
+    Panel
+      id: headerSection
+      height: 20
       anchors.top: parent.top
       anchors.left: parent.left
       anchors.right: parent.right
-      text-align: left
-      text-offset: 20 0
-      icon-align: left
-      icon-size: 15 15
-      margin-left: 5
-      icon-source: ranks/point
-
-    Label
-      id: rp
-      width: 140
-      anchors.top: tp.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      text-align: left
-      text-offset: 20 0
-      icon-align: left
-      icon-size: 15 15
-      margin-top: 8
-      margin-left: 5
-      icon-source: ranks/rankpts
-
-    Label
-      id: exp
-      width: 140
-      anchors.top: rp.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      text-align: left
-      text-offset: 20 0
-      icon-align: left
-      icon-size: 15 15
-      margin-top: 8
-      margin-left: 5
-      icon-source: ranks/exp
-
-    Label
-      id: gold
-      width: 140
-      anchors.top: exp.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      text-align: left
-      text-offset: 20 0
-      icon-align: left
-      icon-size: 15 15
-      margin-top: 8
-      margin-left: 5
-      icon-source: ranks/money
-
-    Label
-      id: boss
-      width: 140
-      anchors.top: gold.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      text-align: left
-      text-offset: 20 0
-      icon-align: left
-      icon-size: 15 15
-      margin-top: 8
-      margin-left: 5
-      icon-source: ranks/boss
-
-    Label
-      id: req
-      width: 140
-      anchors.top: boss.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      text-align: left
-      text-offset: 20 0
-      icon-align: left
-      icon-size: 15 15
-      margin-top: 8
-      margin-left: 5
-      icon-source: ranks/req
-
-    MiniPanel
-      id: itemReward
-      text: Items Reward:
-      anchors.bottom: parent.bottom
-      anchors.horizontalCenter: parent.horizontalCenter
-      size: 180 137
-
-      ScrollablePanel
-        id: List
-        anchors.fill: parent
-        padding: 0 5 4 5
-        vertical-scrollbar: listBar
-        layout:
-          type: grid
-          flow: true
-          cell-size: 150 35
-
-      VerticalScrollBar
-        id: listBar
-        anchors.top: List.top
-        anchors.bottom: List.bottom
-        anchors.right: List.right
-        margin-top: -4
-        margin-right: -1
-        step: 14
-        pixels-scroll: true
-
-  MiniPanel
-    id: monsters
-    text: Monsters
-    anchors.top: rewards.top
-    anchors.bottom: rewards.bottom
-    anchors.left: rewards.right
-    anchors.right: parent.right
-    margin-left: 10
-
+      
+      Label
+        id: activeTaskTitle
+        text: Active Task:
+        font: verdana-11px-rounded
+        color: #FFD700
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 5
+        text-auto-resize: true
+        
+      Label
+        id: activeTaskStatus
+        text: No active task
+        font: verdana-11px-rounded
+        color: #888888
+        anchors.left: activeTaskTitle.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 8
+        text-auto-resize: true
+      
     ScrollablePanel
-      id: list
-      anchors.fill: parent
-      padding: 0 5 4 5
-      vertical-scrollbar: listBar
+      id: progressContainer
+      anchors.top: headerSection.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 5
+      margin-right: 5
+      height: 55
+      vertical-scrollbar: progressScrollBar
       layout:
-        type: grid
-        flow: true
-        cell-size: 150 60
-
+        type: verticalBox
+        spacing: 3
+        fit-children: true
+      
     VerticalScrollBar
-      id: listBar
-      anchors.top: list.top
-      anchors.bottom: list.bottom
-      anchors.right: list.right
-      margin-top: -4
-      margin-right: -1
+      id: progressScrollBar
+      anchors.top: progressContainer.top
+      anchors.bottom: progressContainer.bottom
+      anchors.right: parent.right
       step: 14
       pixels-scroll: true
+        
+    Panel
+      id: taskButtonsPanel
+      height: 28
+      anchors.bottom: parent.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-bottom: 5
+      layout:
+        type: horizontalBox
+        spacing: 10
+        
+      Button
+        id: completeButton
+        text: Complete Task
+        width: 120
+        height: 25
+        visible: false
+        image-color: #00ff00
+        @onClick: modules.game_tasks.onCompleteClick()
 
-  Button
-    id: start
-    anchors.horizontalCenter: main.horizontalCenter
-    anchors.bottom: separator.bottom
-    text: Start Task
-    margin-bottom: 15
-    width: 100
-    image-color: green
-    @onClick: modules.game_tasks.start()
-
-  Button
-    id: cancel
-    anchors.horizontalCenter: main.horizontalCenter
-    anchors.bottom: separator.bottom
-    margin-bottom: 15
-    text: Abandon Task
-    visible: false
-    width: 100
-    image-color: red
-    @onClick: modules.game_tasks.cancel()
-  
-  HorizontalSeparator
-    id: separator
-    anchors.left: parent.left
-    anchors.right: parent.right
-    anchors.bottom: parent.bottom
-    margin-bottom: 30
+  Panel
+    id: dailyBonusPanel
+    height: 28
+    anchors.top: activeTaskPanel.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    width: 400
+    margin-top: 8
+    
+    UIWidget
+      id: fameIcon
+      size: 16 16
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      image-source: /images/icons/fame
+      
+    Label
+      id: dailyBonusText
+      text: +20 Fame (First Daily Task Completed)
+      color: #FFD700
+      font: verdana-11px-rounded
+      anchors.left: fameIcon.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 5
 
   Button
     id: closeButton
-    !text: tr('Close')
+    text: Close
     width: 100
-    anchors.horizontalCenter: prev.horizontalCenter
     anchors.bottom: parent.bottom
-    @onClick: modules.game_tasks.toggle()
+    anchors.right: parent.right
+    margin-bottom: -6
+    margin-right: 10
+    @onClick: modules.game_tasks.toggleTasksPanel()

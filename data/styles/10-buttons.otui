@@ -283,3 +283,41 @@ MainPanelLargeButton < UIButton
 
   $disabled:
     color: #dfdfdf88
+
+# Task Board Abandon button (red)
+AbandonTaskButton < UIButton
+  size: 116 28
+  image-source: /images/ui/buttons/close_button
+  image-clip: 0 0 116 34
+  image-border: 5
+  padding: 2 8 2 8
+  color: #ffffff
+  text-align: center
+
+  $hover !disabled:
+    image-clip: 0 34 116 34
+
+  $pressed !disabled:
+    image-clip: 0 68 116 34
+
+  $disabled:
+    color: #ffffff88
+
+# Task Board Start button (green)
+StartTaskButton < UIButton
+  size: 116 28
+  image-source: /images/ui/buttons/open_button
+  image-clip: 0 0 116 34
+  image-border: 5
+  padding: 2 8 2 8
+  color: #ffffff
+  text-align: center
+
+  $hover !disabled:
+    image-clip: 0 34 116 34
+
+  $pressed !disabled:
+    image-clip: 0 68 116 34
+
+  $disabled:
+    color: #ffffff88
