@@ -199,17 +199,27 @@ end
 
 function onTaskComplete(data)
     local message = "Task Completed!\n\n"
-    message = message .. "Gold: " .. data.rewards.gold .. "\n"
-    message = message .. "Fame: " .. data.rewards.fame .. "\n"
-    message = message .. "Experience: " .. data.rewards.experience .. "\n"
     
-    -- Show bonus rerolls/locks if present
+    -- Mostrar solo los 2 rewards que vengan (sin repetir)
+    if data.rewards.gold then
+        message = message .. "Gold: " .. data.rewards.gold .. "\n"
+    end
+    
+    if data.rewards.fame then
+        message = message .. "Fame: " .. data.rewards.fame .. "\n"
+    end
+    
+    if data.rewards.experience then
+        message = message .. "Experience: " .. data.rewards.experience .. "\n"
+    end
+    
+    -- Mostrar rolls como reward principal (no bonus)
     if data.rewards.bonus_rerolls and data.rewards.bonus_rerolls > 0 then
-        message = message .. "\n[BONUS] +" .. data.rewards.bonus_rerolls .. " Free Reroll" .. (data.rewards.bonus_rerolls > 1 and "s" or "") .. "!"
+        message = message .. "Free Rerolls: +" .. data.rewards.bonus_rerolls .. "\n"
     end
     
     if data.rewards.bonus_locks and data.rewards.bonus_locks > 0 then
-        message = message .. "\n[BONUS] +" .. data.rewards.bonus_locks .. " Free Lock" .. (data.rewards.bonus_locks > 1 and "s" or "") .. "!"
+        message = message .. "Free Locks: +" .. data.rewards.bonus_locks .. "\n"
     end
     
     if data.daily_bonus_claimed then
@@ -273,13 +283,32 @@ function refreshAvailableTasks()
     
     taskCardsContainer:destroyChildren()
     
+    -- Debug: printear info de todas las tasks disponibles
+    print("[Tasks Client] Refreshing available tasks:")
+    print("  Total tasks in availableTasks table: " .. table.size(availableTasks))
+    
     for slot = 1, 3 do
         local task = availableTasks[tostring(slot)]
         if task then
+            -- Debug print detallado
+            print(string.format("[Tasks Client] Slot %d: tier=%s, level_range=%s, zone=%s",
+                slot, task.tier or "?", task.level_range or "?", task.zone_name or "?"))
+            if task.monsters then
+                print(string.format("  Monsters: %d total", #task.monsters))
+                for _, m in ipairs(task.monsters) do
+                    print(string.format("    - %s: %d kills", m.name, m.kills))
+                end
+            end
+            if task.main_creature then
+                print(string.format("  Main creature outfit_id: %d", task.main_creature.outfit_id))
+            end
+            
             local taskCard = createTaskCard(task, slot)
             if taskCard then
                 taskCardsContainer:addChild(taskCard)
             end
+        else
+            print(string.format("[Tasks Client] Slot %d: NO TASK FOUND", slot))
         end
     end
 end
@@ -337,34 +366,98 @@ function createTaskCard(task, slot)
         taskName:setText(task.name)
     end
     
-    -- Header Panel with banner background
+   
+    
+    -- Limpiar creatures previas
     local headerImagePanel = taskCard:recursiveGetChildById('headerImagePanel')
-    if headerImagePanel and task.banner_image then
-        headerImagePanel:setImageSource(task.banner_image)
-        headerImagePanel:setImageBorder(2)
+    if headerImagePanel then
+        -- Remover creatures viejas si existen
+        local oldCreatures = headerImagePanel:getChildren()
+        for _, child in ipairs(oldCreatures) do
+            if child:getId():find('creature') then
+                child:destroy()
+            end
+        end
     end
     
-    -- Main Creature Outfit (first monster in list)
-    local creatureWidget = taskCard:recursiveGetChildById('mainCreature')
-    if creatureWidget and task.main_creature then
-        creatureWidget:setOutfit({
-            type = task.main_creature.outfit_id,
-            head = 0,
-            body = 0,
-            legs = 0,
-            feet = 0,
-            addons = 0
-        })
+    -- Crear y posicionar creatures según cantidad (1-3)
+    if task.outfits and #task.outfits > 0 and headerImagePanel then
+        local outfitCount = #task.outfits
+        
+        if outfitCount == 1 then
+            -- 1 creature: centrada
+            local creature = g_ui.createWidget('Creature', headerImagePanel)
+            creature:setId('creature1')
+            creature:setImageSource('/images/ui/windows/transparent')
+            creature:setOutfit(task.outfits[1])
+            creature:centerIn('parent')
+            creature:setMarginTop(0)
+            
+        elseif outfitCount == 2 then
+            -- 2 creatures: pareja (izquierda y derecha del primero)
+            local creature1 = g_ui.createWidget('Creature', headerImagePanel)
+            creature1:setId('creature1')
+            creature1:setImageSource('/images/ui/windows/transparent')
+            creature1:setOutfit(task.outfits[1])
+            creature1:centerIn('parent')
+            creature1:setMarginLeft(-25)
+            creature1:setMarginTop(0)
+            
+            local creature2 = g_ui.createWidget('Creature', headerImagePanel)
+            creature2:setId('creature2')
+            creature2:setImageSource('/images/ui/windows/transparent')
+            creature2:setOutfit(task.outfits[2])
+            creature2:centerIn('parent')
+            creature2:setMarginLeft(25)
+            creature2:setMarginTop(0)
+            
+        elseif outfitCount >= 3 then
+           
+            
+            local creature2 = g_ui.createWidget('Creature', headerImagePanel)
+            creature2:setId('creature2')
+            creature2:setImageSource('/images/ui/windows/transparent')
+            creature2:setOutfit(task.outfits[2])
+            creature2:centerIn('parent')
+            creature2:setMarginLeft(-40)
+            creature2:setMarginTop(0)
+
+             -- 3 creatures: trio (centro, izquierda, derecha)
+            local creature1 = g_ui.createWidget('Creature', headerImagePanel)
+            creature1:setId('creature1')
+            creature1:setImageSource('/images/ui/windows/transparent')
+            creature1:setOutfit(task.outfits[1])
+            creature1:centerIn('parent')
+            creature1:setMarginTop(0)
+            
+            local creature3 = g_ui.createWidget('Creature', headerImagePanel)
+            creature3:setId('creature3')
+            creature3:setImageSource('/images/ui/windows/transparent')
+            creature3:setOutfit(task.outfits[3])
+            creature3:centerIn('parent')
+            creature3:setMarginLeft(40)
+            creature3:setMarginTop(0)
+
+            
+        end
     end
     
+    -- Mostrar solo total de kills (sin nombres de monsters)
     local killsLabel = taskCard:recursiveGetChildById('killsLabel')
     if killsLabel then
         killsLabel:setText('Kills: ' .. task.total_kills)
     end
     
+    -- Level range label
     local zoneLabel = taskCard:recursiveGetChildById('zoneLabel')
     if zoneLabel then
-        zoneLabel:setText('Zone: ' .. task.level_range)
+        zoneLabel:setText('Level: ' .. task.level_range)
+    end
+    
+    -- Zone name label (restaurado)
+    local zoneNameLabel = taskCard:recursiveGetChildById('zoneNameLabel')
+    if zoneNameLabel and task.zone_name then
+        zoneNameLabel:setText(task.zone_name)
     end
     
     -- Modifiers with Icons
@@ -405,34 +498,78 @@ function createTaskCard(task, slot)
         end
     end
     
-    -- Gold Reward (with icon)
-    local goldLabel = taskCard:recursiveGetChildById('goldLabel')
-    if goldLabel then
-        goldLabel:setText(formatNumber(task.rewards.gold))
+    -- Sistema de 2 rewards dinámicos
+    local rewardTypes = {}
+    
+    if task.rewards.gold then
+        table.insert(rewardTypes, {
+            icon = '/images/icons/gold-bars',
+            text = formatNumber(task.rewards.gold),
+            color = '#FFD700'
+        })
     end
     
-    -- Fame Reward (with icon)
-    local fameLabel = taskCard:recursiveGetChildById('fameLabel')
-    if fameLabel then
-        fameLabel:setText(tostring(task.rewards.fame))
+    if task.rewards.fame then
+        table.insert(rewardTypes, {
+            icon = '/images/icons/fame',
+            text = tostring(task.rewards.fame),
+            color = '#ff9100ff'
+        })
     end
     
-    -- Bonus Rewards (rerolls, potions, etc - if any)
-    local bonusRewardsPanel = taskCard:recursiveGetChildById('bonusRewardsPanel')
-    if bonusRewardsPanel and task.rewards.bonus then
-        bonusRewardsPanel:destroyChildren()
-        for _, bonus in ipairs(task.rewards.bonus) do
-            local bonusPanel = g_ui.createWidget('Panel', bonusRewardsPanel)
-            bonusPanel:setSize({width = 50, height = 20})
-            
-            local bonusIcon = g_ui.createWidget('UIWidget', bonusPanel)
-            bonusIcon:setSize({width = 16, height = 16})
-            bonusIcon:setImageSource(bonus.icon)
-            
-            local bonusLabel = g_ui.createWidget('Label', bonusPanel)
-            bonusLabel:setMarginLeft(18)
-            bonusLabel:setText(tostring(bonus.amount))
+    if task.rewards.experience then
+        table.insert(rewardTypes, {
+            icon = '/images/icons/experience',
+            text = formatNumber(task.rewards.experience),
+            color = '#00BFFF'
+        })
+    end
+    
+    if task.rewards.bonus_rerolls and task.rewards.bonus_rerolls > 0 then
+        table.insert(rewardTypes, {
+            icon = '/images/icons/reroll',
+            text = '+' .. task.rewards.bonus_rerolls,
+            color = '#00FF00'
+        })
+    end
+    
+    if task.rewards.bonus_locks and task.rewards.bonus_locks > 0 then
+        table.insert(rewardTypes, {
+            icon = '/images/icons/lock',
+            text = '+' .. task.rewards.bonus_locks,
+            color = '#FFD700'
+        })
+    end
+    
+    -- Mostrar los 2 primeros rewards (siempre habrá exactamente 2)
+    local reward1Panel = taskCard:recursiveGetChildById('reward1Panel')
+    if reward1Panel and rewardTypes[1] then
+        local icon = reward1Panel:recursiveGetChildById('reward1Icon')
+        local label = reward1Panel:recursiveGetChildById('reward1Label')
+        
+        if icon then icon:setImageSource(rewardTypes[1].icon) end
+        if label then
+            label:setText(rewardTypes[1].text)
+            label:setColor(rewardTypes[1].color)
         end
+        reward1Panel:setVisible(true)
+    else
+        if reward1Panel then reward1Panel:setVisible(false) end
+    end
+    
+    local reward2Panel = taskCard:recursiveGetChildById('reward2Panel')
+    if reward2Panel and rewardTypes[2] then
+        local icon = reward2Panel:recursiveGetChildById('reward2Icon')
+        local label = reward2Panel:recursiveGetChildById('reward2Label')
+        
+        if icon then icon:setImageSource(rewardTypes[2].icon) end
+        if label then
+            label:setText(rewardTypes[2].text)
+            label:setColor(rewardTypes[2].color)
+        end
+        reward2Panel:setVisible(true)
+    else
+        if reward2Panel then reward2Panel:setVisible(false) end
     end
     
     local lockButton = taskCard:recursiveGetChildById('lockButton')

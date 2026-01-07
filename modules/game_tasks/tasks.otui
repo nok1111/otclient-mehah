@@ -38,20 +38,12 @@ TaskCard < Panel
     anchors.top: taskName.bottom
     anchors.horizontalCenter: parent.horizontalCenter
     margin-top: 20
-    image-source: /images/ui/panel_flat
-    image-border: 2
     &panelHeight: 80
     &panelWidth: 200
-    
-    UICreature
-      id: mainCreature
-      size: 64 64
-      anchors.centerIn: parent
-      phantom: true
       
   Panel
     id: infoPanel
-    height: 45
+    height: 60
     width: 200
     anchors.top: headerImagePanel.bottom
     anchors.horizontalCenter: parent.horizontalCenter
@@ -59,7 +51,7 @@ TaskCard < Panel
     image-source: /images/ui/windows/mod_overlay
     image-border: 5
     padding: 5
-    &panelHeight: 45
+    &panelHeight: 60
     &panelWidth: 200
     
     Label
@@ -81,6 +73,17 @@ TaskCard < Panel
       width: 200
       font: verdana-11px-rounded
       text-align: center
+      
+    Label
+      id: zoneNameLabel
+      text: Zone Name
+      anchors.top: zoneLabel.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 2
+      width: 200
+      font: verdana-11px-rounded
+      text-align: center
+      color: #FFD700
   
   Panel
     id: modifiersPanel
@@ -137,72 +140,53 @@ TaskCard < Panel
     Panel
       id: rewardsContainer
       anchors.top: rewardsTitle.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
+      anchors.horizontalCenter: parent.horizontalCenter
       margin-top: 5
-      height: 50
+      height: 20
+      width: 180
+      layout:
+        type: horizontalBox
+        spacing: 10
+        fit-children: false
       
       Panel
-        id: goldRewardPanel
-        size: 90 20
-        anchors.top: parent.top
-        anchors.left: parent.left
-        margin-left: 40
+        id: reward1Panel
+        size: 85 20
+        visible: false
         
         UIWidget
-          id: goldIcon
+          id: reward1Icon
           size: 16 16
           anchors.left: parent.left
           anchors.verticalCenter: parent.verticalCenter
-          image-source: /images/icons/gold-bars
+          margin-left: 40
           
         Label
-          id: goldLabel
-          text: 240
-          anchors.left: goldIcon.right
+          id: reward1Label
+          anchors.left: reward1Icon.right
           anchors.verticalCenter: parent.verticalCenter
           margin-left: 5
-          width: 80
-          color: #FFD700
+          width: 65
           font: verdana-11px-rounded
           
       Panel
-        id: fameRewardPanel
-        size: 90 20
-        anchors.top: parent.top
-        anchors.right: parent.right
-        margin-right: 0
-        
-
+        id: reward2Panel
+        size: 85 20
+        visible: false
         
         UIWidget
-          id: fameIcon
+          id: reward2Icon
           size: 16 16
           anchors.left: parent.left
           anchors.verticalCenter: parent.verticalCenter
-          image-source: /images/icons/fame
           
         Label
-          id: fameLabel
-          text: 60
-          anchors.left: fameIcon.right
+          id: reward2Label
+          anchors.left: reward2Icon.right
           anchors.verticalCenter: parent.verticalCenter
           margin-left: 5
-          width: 80
-          color: #ff9100ff
+          width: 65
           font: verdana-11px-rounded
-      
-      Panel
-        id: bonusRewardsPanel
-        anchors.top: goldRewardPanel.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 20
-        margin-top: 5
-        layout:
-          type: horizontalBox
-          spacing: 10
-          align-center: true
     
   Button
     id: lockButton
