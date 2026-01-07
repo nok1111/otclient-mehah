@@ -382,6 +382,14 @@ function createTaskCard(task, slot)
     
     -- Crear y posicionar creatures según cantidad (1-3)
     if task.outfits and #task.outfits > 0 and headerImagePanel then
+        print("[CLIENT DEBUG] task.outfits count: " .. #task.outfits)
+        for i, outfit in ipairs(task.outfits) do
+            print(string.format("[CLIENT DEBUG] outfit[%d]: type=%s, name=%s, level=%s", 
+                i, 
+                tostring(outfit.type), 
+                tostring(outfit.name), 
+                tostring(outfit.level)))
+        end
         local outfitCount = #task.outfits
         
         if outfitCount == 1 then
@@ -392,6 +400,14 @@ function createTaskCard(task, slot)
             creature:setOutfit(task.outfits[1])
             creature:centerIn('parent')
             creature:setMarginTop(0)
+            -- Tooltip
+            if task.outfits[1].name then
+                local tooltipText = task.outfits[1].name
+                if task.outfits[1].level then
+                    tooltipText = tooltipText
+                end
+                creature:setTooltip(tooltipText)
+            end
             
         elseif outfitCount == 2 then
             -- 2 creatures: pareja (izquierda y derecha del primero)
@@ -402,6 +418,14 @@ function createTaskCard(task, slot)
             creature1:centerIn('parent')
             creature1:setMarginLeft(-25)
             creature1:setMarginTop(0)
+            -- Tooltip
+            if task.outfits[1].name then
+                local tooltipText = task.outfits[1].name
+                if task.outfits[1].level then
+                    tooltipText = tooltipText
+                end
+                creature1:setTooltip(tooltipText)
+            end
             
             local creature2 = g_ui.createWidget('Creature', headerImagePanel)
             creature2:setId('creature2')
@@ -410,10 +434,17 @@ function createTaskCard(task, slot)
             creature2:centerIn('parent')
             creature2:setMarginLeft(25)
             creature2:setMarginTop(0)
+            -- Tooltip
+            if task.outfits[2].name then
+                local tooltipText = task.outfits[2].name
+                if task.outfits[2].level then
+                    tooltipText = tooltipText
+                end
+                creature2:setTooltip(tooltipText)
+            end
             
         elseif outfitCount >= 3 then
-           
-            
+            -- 3 creatures: trio (izquierda, centro, derecha)
             local creature2 = g_ui.createWidget('Creature', headerImagePanel)
             creature2:setId('creature2')
             creature2:setImageSource('/images/ui/windows/transparent')
@@ -421,14 +452,34 @@ function createTaskCard(task, slot)
             creature2:centerIn('parent')
             creature2:setMarginLeft(-40)
             creature2:setMarginTop(0)
+            -- Tooltip
 
-             -- 3 creatures: trio (centro, izquierda, derecha)
+            
+            if task.outfits[2].name then
+                local tooltipText = task.outfits[2].name
+                if task.outfits[2].level then
+                    tooltipText = tooltipText
+                end
+                creature2:setTooltip(tooltipText)
+                print("------Tooltip para creature2: " .. tooltipText)
+            else
+                print("------No se encontró nombre para creature2")
+            end
+
             local creature1 = g_ui.createWidget('Creature', headerImagePanel)
             creature1:setId('creature1')
             creature1:setImageSource('/images/ui/windows/transparent')
             creature1:setOutfit(task.outfits[1])
             creature1:centerIn('parent')
             creature1:setMarginTop(0)
+            -- Tooltip
+            if task.outfits[1].name then
+                local tooltipText = task.outfits[1].name
+                if task.outfits[1].level then
+                    tooltipText = tooltipText
+                end
+                creature1:setTooltip(tooltipText)
+            end
             
             local creature3 = g_ui.createWidget('Creature', headerImagePanel)
             creature3:setId('creature3')
@@ -437,6 +488,14 @@ function createTaskCard(task, slot)
             creature3:centerIn('parent')
             creature3:setMarginLeft(40)
             creature3:setMarginTop(0)
+            -- Tooltip
+            if task.outfits[3].name then
+                local tooltipText = task.outfits[3].name
+                if task.outfits[3].level then
+                    tooltipText = tooltipText
+                end
+                creature3:setTooltip(tooltipText)
+            end
 
             
         end
