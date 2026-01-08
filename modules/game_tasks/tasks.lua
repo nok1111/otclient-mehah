@@ -85,6 +85,7 @@ function toggleTasksPanel()
     tasksWindow:raise()
     tasksWindow:focus()
     openTasksButton:setOn(true)
+    
   end
 end
 
@@ -233,8 +234,16 @@ function onTaskBoardInit(data)
         refreshTaskBoard()
     end
     
-    -- Update task tracker when task is started or abandoned
-    updateTaskTracker()
+    -- Auto-show tracker if has active task
+    if activeTask then
+        if not taskTrackerWindow then
+            taskTrackerWindow = g_ui.loadUI('task_tracker', modules.game_interface.getMapPanel())
+        end
+        if taskTrackerWindow then
+            updateTaskTracker()
+            taskTrackerWindow:show()
+        end
+    end
 end
 
 function onTaskProgress(data)
@@ -272,14 +281,6 @@ function onTaskComplete(data)
     -- Hide task tracker when task completes
     if taskTrackerWindow then
         taskTrackerWindow:hide()
-    end
-    
-    -- Uncheck the checkbox
-    if tasksWindow then
-        local checkbox = tasksWindow:recursiveGetChildById('trackQuestsCheckbox')
-        if checkbox then
-            checkbox:setChecked(false)
-        end
     end
     
     local message = "Task Completed!\n\n"
@@ -1073,6 +1074,10 @@ function onAbandonClick()
         'Are you sure you want to abandon this task?\n\nProgress will be reset and the card will become available again.',
         {
             {text = 'Yes', callback = function()
+                -- Hide tracker when abandoning
+                if taskTrackerWindow then
+                    taskTrackerWindow:hide()
+                end
                 sendTaskBoardRequest('abandon')
                 dialog:destroy()
             end},
@@ -1093,65 +1098,14 @@ function onCompleteClick()
     sendTaskBoardRequest('complete')
 end
 
-function onTrackQuestsToggle(checked)
-    if checked then
-        -- Create tracker window on first use
-        if not taskTrackerWindow then
-            taskTrackerWindow = g_ui.loadUI('task_tracker', modules.game_interface.getMapPanel())
-            if not taskTrackerWindow then
-                print("[Task Board] Failed to create task tracker window")
-                local checkbox = tasksWindow:recursiveGetChildById('trackQuestsCheckbox')
-                if checkbox then
-                    checkbox:setChecked(false)
-                end
-                return
-            end
-        end
-        
-        if activeTask then
-            updateTaskTracker()
-            taskTrackerWindow:show()
-        else
-            local dialog = displayInfoBox('Task Board', 'No active task to track')
-            table.insert(activeDialogs, dialog)
-            -- Uncheck the checkbox
-            local checkbox = tasksWindow:recursiveGetChildById('trackQuestsCheckbox')
-            if checkbox then
-                checkbox:setChecked(false)
-            end
-        end
-    else
-        if taskTrackerWindow then
-            taskTrackerWindow:hide()
-        end
-    end
-end
 
 function updateTaskTracker()
-    print("[TRACKER] updateTaskTracker called")
-    if not taskTrackerWindow or not taskTrackerWindow:isVisible() then
-        print("[TRACKER] Window not visible or doesn't exist")
+    if not taskTrackerWindow then
         return
-    end
-    
-    print("[TRACKER] activeTask: " .. tostring(activeTask ~= nil))
-    if activeTask then
-        print("[TRACKER] activeTask.name: " .. tostring(activeTask.name))
-        print("[TRACKER] activeTask.outfits: " .. tostring(activeTask.outfits ~= nil))
-        if activeTask.outfits then
-            print("[TRACKER] outfits count: " .. #activeTask.outfits)
-            print("[TRACKER] outfits structure: " .. json.encode(activeTask.outfits))
-        end
     end
     
     if not activeTask then
         taskTrackerWindow:hide()
-        if tasksWindow then
-            local checkbox = tasksWindow:recursiveGetChildById('trackQuestsCheckbox')
-            if checkbox then
-                checkbox:setChecked(false)
-            end
-        end
         return
     end
     
