@@ -633,14 +633,24 @@ function createTaskCard(task, slot)
     
     local lockButton = taskCard:recursiveGetChildById('lockButton')
     if lockButton then
-        if task.locked then
-            lockButton:setText('UNLOCK')
-            lockButton:setImageColor('#FFD700')
+        -- Disable lock button if there's an active task
+        if activeTask then
+            lockButton:setEnabled(false)
+            lockButton:setOpacity(0.5)
+            lockButton:setText('LOCKED')
+            lockButton:setImageColor('#888888')
         else
-            lockButton:setText('LOCK')
-            lockButton:setImageColor('#ffffff')
+            lockButton:setEnabled(true)
+            lockButton:setOpacity(1.0)
+            if task.locked then
+                lockButton:setText('UNLOCK')
+                lockButton:setImageColor('#00BFFF')  -- Blue color for unlock
+            else
+                lockButton:setText('LOCK')
+                lockButton:setImageColor('#ffffff')
+            end
+            lockButton.onClick = function() onLockClick(slot, not task.locked) end
         end
-        lockButton.onClick = function() onLockClick(slot, not task.locked) end
     end
     
     -- Visual effects for active/inactive cards
@@ -677,16 +687,39 @@ function createTaskCard(task, slot)
     local startButton = taskCard:recursiveGetChildById('startButton')
     if startButton then
         if isActiveTask then
-            -- This is the active task - show Abandon button
-            startButton:setText('Abandon')
-            startButton:setImageColor('#ff0000')
-            startButton.onClick = function() onAbandonClick() end
+            -- This is the active task - check if complete
+            local isTaskComplete = true
+            if task.monsters then
+                for _, monster in ipairs(task.monsters) do
+                    local current = monster.current or 0
+                    if current < monster.kills then
+                        isTaskComplete = false
+                        break
+                    end
+                end
+            end
+            
+            if isTaskComplete then
+                -- Task is complete - show Complete button
+                startButton:setText('Complete')
+                startButton:setImageColor('#00ff00')
+                startButton.onClick = function() onCompleteClick() end
+            else
+                -- Task not complete - show Abandon button
+                startButton:setText('Abandon')
+                startButton:setImageColor('#ff0000')
+                startButton.onClick = function() onAbandonClick() end
+            end
         else
             -- Not active - show Start button
             startButton:setText('Start')
             startButton:setImageColor('#00ff00')
             if activeTask then
                 -- Another task is active, disable this one
+                startButton:setEnabled(false)
+                startButton:setOpacity(0.5)
+            elseif task.locked then
+                -- Task is locked, disable start button
                 startButton:setEnabled(false)
                 startButton:setOpacity(0.5)
             else
