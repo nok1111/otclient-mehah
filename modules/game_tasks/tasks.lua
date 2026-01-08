@@ -36,6 +36,8 @@ function init()
 		onGameEnd = destroy
     })
 
+    
+
 	ProtocolGame.registerExtendedOpcode(OPCODE, onExtendedOpcode)
 end
 
@@ -177,11 +179,51 @@ function onTaskBoardInit(data)
     rerollsAvailable = data.rerolls_available or 0
     maxRerolls = data.max_rerolls or 5
     
+    -- Copy outfits from availableTasks to activeTask (server doesn't send them in active_task)
+    print("[INIT] Attempting to copy outfits to activeTask...")
+    print("[INIT] activeTask exists: " .. tostring(activeTask ~= nil))
+    
+    -- Debug: print ALL keys in availableTasks
+    print("[INIT] availableTasks keys:")
+    for key, value in pairs(availableTasks) do
+        print("[INIT]   key: " .. tostring(key) .. " = " .. tostring(value.name or "unknown"))
+    end
+    
+    if activeTask then
+        print("[INIT] activeTask.slot: " .. tostring(activeTask.slot))
+        print("[INIT] activeTask.slot type: " .. type(activeTask.slot))
+        
+        -- Try to find the task by iterating
+        local foundTask = nil
+        for slot, task in pairs(availableTasks) do
+            print("[INIT] Comparing slot " .. tostring(slot) .. " (type: " .. type(slot) .. ") with activeTask.slot " .. tostring(activeTask.slot))
+            if tostring(slot) == tostring(activeTask.slot) then
+                foundTask = task
+                print("[INIT] Found matching task!")
+                break
+            end
+        end
+        
+        if foundTask and foundTask.outfits then
+            print("[INIT] foundTask.outfits count: " .. #foundTask.outfits)
+            activeTask.outfits = foundTask.outfits
+            print("[INIT] Copied outfits to activeTask from slot " .. activeTask.slot)
+        else
+            print("[INIT] Could not find task or outfits for slot " .. tostring(activeTask.slot))
+        end
+    else
+        print("[INIT] No activeTask")
+    end
+    
     print("[Task Board] Init received:")
     print("  - Available tasks count: " .. table.size(availableTasks))
     print("  - Active task: " .. (activeTask and activeTask.name or "None"))
     if activeTask then
         print("    Active task slot: " .. (activeTask.slot or "NO SLOT"))
+        print("    Active task outfits: " .. tostring(activeTask.outfits ~= nil))
+        if activeTask.outfits then
+            print("    Outfits count: " .. #activeTask.outfits)
+        end
     end
     for slot, task in pairs(availableTasks) do
         print("  - Slot " .. slot .. ": " .. (task.name or "NO NAME"))
@@ -190,10 +232,36 @@ function onTaskBoardInit(data)
     if tasksWindow and tasksWindow:isVisible() then
         refreshTaskBoard()
     end
+    
+    -- Update task tracker when task is started or abandoned
+    updateTaskTracker()
 end
 
 function onTaskProgress(data)
+    print("[DEBUG] onTaskProgress called")
+    print("[DEBUG] activeTask exists before: " .. tostring(activeTask ~= nil))
+    if activeTask then
+        print("[DEBUG] activeTask.outfits before: " .. tostring(activeTask.outfits ~= nil))
+        if activeTask.outfits then
+            print("[DEBUG] activeTask.outfits count before: " .. #activeTask.outfits)
+        end
+    end
+    
+    -- Preserve outfits when updating progress
+    if activeTask and activeTask.outfits then
+        data.outfits = activeTask.outfits
+        print("[DEBUG] Outfits preserved: " .. #data.outfits)
+    else
+        print("[DEBUG] No outfits to preserve")
+    end
+    
     activeTask = data
+    
+    print("[DEBUG] activeTask.outfits after assignment: " .. tostring(activeTask.outfits ~= nil))
+    if activeTask.outfits then
+        print("[DEBUG] activeTask.outfits count after: " .. #activeTask.outfits)
+    end
+    
     if tasksWindow and tasksWindow:isVisible() then
         refreshActiveTask()
     end
@@ -1060,8 +1128,20 @@ function onTrackQuestsToggle(checked)
 end
 
 function updateTaskTracker()
+    print("[TRACKER] updateTaskTracker called")
     if not taskTrackerWindow or not taskTrackerWindow:isVisible() then
+        print("[TRACKER] Window not visible or doesn't exist")
         return
+    end
+    
+    print("[TRACKER] activeTask: " .. tostring(activeTask ~= nil))
+    if activeTask then
+        print("[TRACKER] activeTask.name: " .. tostring(activeTask.name))
+        print("[TRACKER] activeTask.outfits: " .. tostring(activeTask.outfits ~= nil))
+        if activeTask.outfits then
+            print("[TRACKER] outfits count: " .. #activeTask.outfits)
+            print("[TRACKER] outfits structure: " .. json.encode(activeTask.outfits))
+        end
     end
     
     if not activeTask then
@@ -1087,59 +1167,58 @@ function updateTaskTracker()
         progressContainer:destroyChildren()
         
         if activeTask.monsters then
-            for _, monster in ipairs(activeTask.monsters) do
+            print("[TRACKER] Building outfit lookup...")
+            -- Build outfit lookup table
+            local outfitLookup = {}
+            if activeTask.outfits then
+                for idx, outfit in ipairs(activeTask.outfits) do
+                    outfitLookup[idx] = outfit
+                    print("[TRACKER] outfitLookup[" .. idx .. "] = " .. json.encode(outfit))
+                end
+            else
+                print("[TRACKER] No activeTask.outfits to build lookup")
+            end
+            
+            for i, monster in ipairs(activeTask.monsters) do
                 local current = monster.current or 0
                 local total = monster.kills
                 local isComplete = current >= total
                 
-                -- Container panel for each monster
-                local monsterPanel = g_ui.createWidget('Panel', progressContainer)
-                monsterPanel:setHeight(40)
+                -- Create monster entry using predefined widget
+                local entry = g_ui.createWidget('MonsterProgressEntry', progressContainer)
                 
-                -- Monster creature icon
-                if monster.outfit then
-                    local creature = g_ui.createWidget('Creature', monsterPanel)
-                    creature:setImageSource('/images/ui/windows/transparent')
-                    creature:setOutfit(monster.outfit)
-                    creature:setSize({width = 32, height = 32})
-                    creature:addAnchor(AnchorLeft, 'parent', AnchorLeft)
-                    creature:addAnchor(AnchorTop, 'parent', AnchorTop)
-                    creature:setMarginLeft(5)
-                    creature:setMarginTop(4)
-                    if monster.name then
-                        creature:setTooltip(monster.name)
+                -- Set creature outfit - try multiple access methods
+                local creatureWidget = entry:getChildById('creature')
+                if creatureWidget then
+                    local outfit = outfitLookup[i]
+                    print("[TRACKER] Monster " .. i .. " (" .. monster.name .. ") outfit: " .. tostring(outfit ~= nil))
+                    if outfit then
+                        print("[TRACKER] Setting outfit: " .. json.encode(outfit))
+                        creatureWidget:setOutfit(outfit)
+                        if monster.name then
+                            creatureWidget:setTooltip(monster.name)
+                        end
+                    else
+                        print("[TRACKER] No outfit for monster " .. i)
                     end
+                else
+                    print("[TRACKER] creatureWidget not found")
                 end
                 
-                -- Monster label and progress container
-                local infoPanel = g_ui.createWidget('Panel', monsterPanel)
-                infoPanel:addAnchor(AnchorLeft, 'parent', AnchorLeft)
-                infoPanel:addAnchor(AnchorTop, 'parent', AnchorTop)
-                infoPanel:addAnchor(AnchorRight, 'parent', AnchorRight)
-                infoPanel:setMarginLeft(42)
-                infoPanel:setMarginTop(2)
-                infoPanel:setHeight(36)
+                -- Set name label
+                local nameLabel = entry:getChildById('nameLabel')
+                if nameLabel then
+                    nameLabel:setText(monster.name .. ': ' .. current .. ' / ' .. total)
+                    nameLabel:setColor(isComplete and '#00ff00' or '#ffffff')
+                end
                 
-                -- Monster label
-                local monsterLabel = g_ui.createWidget('Label', infoPanel)
-                monsterLabel:setText(monster.name .. ': ' .. current .. ' / ' .. total)
-                monsterLabel:setFont('verdana-11px-rounded')
-                monsterLabel:setColor(isComplete and '#00ff00' or '#ffffff')
-                monsterLabel:setHeight(16)
-                monsterLabel:addAnchor(AnchorTop, 'parent', AnchorTop)
-                monsterLabel:addAnchor(AnchorLeft, 'parent', AnchorLeft)
-                monsterLabel:addAnchor(AnchorRight, 'parent', AnchorRight)
-                
-                -- Progress bar
-                local progressBar = g_ui.createWidget('ProgressBar', infoPanel)
-                progressBar:setHeight(12)
-                progressBar:setPercent(total > 0 and (current / total * 100) or 0)
-                progressBar:addAnchor(AnchorTop, 'prev', AnchorBottom)
-                progressBar:addAnchor(AnchorLeft, 'parent', AnchorLeft)
-                progressBar:addAnchor(AnchorRight, 'parent', AnchorRight)
-                progressBar:setMarginTop(4)
-                if isComplete then
-                    progressBar:setBackgroundColor('#00ff00')
+                -- Set progress bar
+                local progressBar = entry:getChildById('progressBar')
+                if progressBar then
+                    progressBar:setPercent(total > 0 and (current / total * 100) or 0)
+                    if isComplete then
+                        progressBar:setBackgroundColor('#00ff00')
+                    end
                 end
             end
         end

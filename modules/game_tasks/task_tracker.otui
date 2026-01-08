@@ -1,3 +1,40 @@
+MonsterProgressEntry < Panel
+  height: 40
+  margin-bottom: 3
+  
+  UICreature
+    id: creature
+    size: 32 32
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 4
+    margin-top: 4
+    phantom: true
+  
+  Label
+    id: nameLabel
+    anchors.left: creature.right
+    anchors.top: creature.top
+    anchors.right: parent.right
+    margin-left: 8
+    margin-right: 8
+    height: 16
+    font: verdana-11px-rounded
+    color: #ffffff
+    phantom: true
+    text-auto-resize: false
+  
+  ProgressBar
+    id: progressBar
+    anchors.left: creature.right
+    anchors.top: nameLabel.bottom
+    anchors.right: parent.right
+    margin-left: 8
+    margin-right: 8
+    margin-top: 2
+    height: 12
+    phantom: true
+
 UIWindow
   anchors.top: parent.top
   anchors.right: parent.right
@@ -32,4 +69,4 @@ UIWindow
     margin-bottom: 8
     layout:
       type: verticalBox
-      spacing: 5
+      spacing: 2
