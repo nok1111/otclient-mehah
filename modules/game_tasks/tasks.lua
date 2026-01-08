@@ -9,6 +9,7 @@ local OPCODE = 92
 
 local openTasksButton = nil
 local tasksWindow = nil
+local taskTrackerWindow = nil
 local activeDialogs = {}  -- Track active message boxes
 
 local availableTasks = {}
@@ -36,10 +37,6 @@ function init()
     })
 
 	ProtocolGame.registerExtendedOpcode(OPCODE, onExtendedOpcode)
-
-	if g_game.isOnline() then
-		create()
-	end
 end
 
 function terminate()
@@ -106,6 +103,11 @@ function destroy()
   if openTasksButton then
     openTasksButton:destroy()
     openTasksButton = nil
+  end
+  
+  if taskTrackerWindow then
+    taskTrackerWindow:destroy()
+    taskTrackerWindow = nil
   end
 
   availableTasks = {}
@@ -195,9 +197,23 @@ function onTaskProgress(data)
     if tasksWindow and tasksWindow:isVisible() then
         refreshActiveTask()
     end
+    updateTaskTracker()
 end
 
 function onTaskComplete(data)
+    -- Hide task tracker when task completes
+    if taskTrackerWindow then
+        taskTrackerWindow:hide()
+    end
+    
+    -- Uncheck the checkbox
+    if tasksWindow then
+        local checkbox = tasksWindow:recursiveGetChildById('trackQuestsCheckbox')
+        if checkbox then
+            checkbox:setChecked(false)
+        end
+    end
+    
     local message = "Task Completed!\n\n"
     
     -- Mostrar solo los 2 rewards que vengan (sin repetir)
@@ -1007,6 +1023,127 @@ function onCompleteClick()
     end
     
     sendTaskBoardRequest('complete')
+end
+
+function onTrackQuestsToggle(checked)
+    if checked then
+        -- Create tracker window on first use
+        if not taskTrackerWindow then
+            taskTrackerWindow = g_ui.loadUI('task_tracker', modules.game_interface.getMapPanel())
+            if not taskTrackerWindow then
+                print("[Task Board] Failed to create task tracker window")
+                local checkbox = tasksWindow:recursiveGetChildById('trackQuestsCheckbox')
+                if checkbox then
+                    checkbox:setChecked(false)
+                end
+                return
+            end
+        end
+        
+        if activeTask then
+            updateTaskTracker()
+            taskTrackerWindow:show()
+        else
+            local dialog = displayInfoBox('Task Board', 'No active task to track')
+            table.insert(activeDialogs, dialog)
+            -- Uncheck the checkbox
+            local checkbox = tasksWindow:recursiveGetChildById('trackQuestsCheckbox')
+            if checkbox then
+                checkbox:setChecked(false)
+            end
+        end
+    else
+        if taskTrackerWindow then
+            taskTrackerWindow:hide()
+        end
+    end
+end
+
+function updateTaskTracker()
+    if not taskTrackerWindow or not taskTrackerWindow:isVisible() then
+        return
+    end
+    
+    if not activeTask then
+        taskTrackerWindow:hide()
+        if tasksWindow then
+            local checkbox = tasksWindow:recursiveGetChildById('trackQuestsCheckbox')
+            if checkbox then
+                checkbox:setChecked(false)
+            end
+        end
+        return
+    end
+    
+    -- Update task name
+    local taskNameLabel = taskTrackerWindow:getChildById('taskNameLabel')
+    if taskNameLabel then
+        taskNameLabel:setText(activeTask.name or 'Task')
+    end
+    
+    -- Update monster progress
+    local progressContainer = taskTrackerWindow:getChildById('progressContainer')
+    if progressContainer then
+        progressContainer:destroyChildren()
+        
+        if activeTask.monsters then
+            for _, monster in ipairs(activeTask.monsters) do
+                local current = monster.current or 0
+                local total = monster.kills
+                local isComplete = current >= total
+                
+                -- Container panel for each monster
+                local monsterPanel = g_ui.createWidget('Panel', progressContainer)
+                monsterPanel:setHeight(40)
+                
+                -- Monster creature icon
+                if monster.outfit then
+                    local creature = g_ui.createWidget('Creature', monsterPanel)
+                    creature:setImageSource('/images/ui/windows/transparent')
+                    creature:setOutfit(monster.outfit)
+                    creature:setSize({width = 32, height = 32})
+                    creature:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+                    creature:addAnchor(AnchorTop, 'parent', AnchorTop)
+                    creature:setMarginLeft(5)
+                    creature:setMarginTop(4)
+                    if monster.name then
+                        creature:setTooltip(monster.name)
+                    end
+                end
+                
+                -- Monster label and progress container
+                local infoPanel = g_ui.createWidget('Panel', monsterPanel)
+                infoPanel:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+                infoPanel:addAnchor(AnchorTop, 'parent', AnchorTop)
+                infoPanel:addAnchor(AnchorRight, 'parent', AnchorRight)
+                infoPanel:setMarginLeft(42)
+                infoPanel:setMarginTop(2)
+                infoPanel:setHeight(36)
+                
+                -- Monster label
+                local monsterLabel = g_ui.createWidget('Label', infoPanel)
+                monsterLabel:setText(monster.name .. ': ' .. current .. ' / ' .. total)
+                monsterLabel:setFont('verdana-11px-rounded')
+                monsterLabel:setColor(isComplete and '#00ff00' or '#ffffff')
+                monsterLabel:setHeight(16)
+                monsterLabel:addAnchor(AnchorTop, 'parent', AnchorTop)
+                monsterLabel:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+                monsterLabel:addAnchor(AnchorRight, 'parent', AnchorRight)
+                
+                -- Progress bar
+                local progressBar = g_ui.createWidget('ProgressBar', infoPanel)
+                progressBar:setHeight(12)
+                progressBar:setPercent(total > 0 and (current / total * 100) or 0)
+                progressBar:addAnchor(AnchorTop, 'prev', AnchorBottom)
+                progressBar:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+                progressBar:addAnchor(AnchorRight, 'parent', AnchorRight)
+                progressBar:setMarginTop(4)
+                if isComplete then
+                    progressBar:setBackgroundColor('#00ff00')
+                end
+            end
+        end
+    end
 end
 
 function formatNumber(num)

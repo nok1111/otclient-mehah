@@ -1,0 +1,35 @@
+UIWindow
+  anchors.top: parent.top
+  anchors.right: parent.right
+  margin-top: 100
+  margin-right: 10
+  size: 320 200
+  draggable: true
+  
+  Label
+    id: taskNameLabel
+    text: Task Tracker
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 25
+    margin-top: 5
+    margin-left: 8
+    margin-right: 8
+    font: verdana-11px-rounded
+    color: #00BFFF
+    text-align: center
+    
+  Panel
+    id: progressContainer
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 5
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 8
+    layout:
+      type: verticalBox
+      spacing: 5

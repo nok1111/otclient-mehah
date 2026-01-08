@@ -531,6 +531,15 @@ MainWindow
       anchors.verticalCenter: parent.verticalCenter
       margin-left: 5
 
+  CheckBox
+    id: trackQuestsCheckbox
+    text: Track Quests
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    margin-bottom: -6
+    margin-left: 10
+    @onCheckChange: modules.game_tasks.onTrackQuestsToggle(self:isChecked())
+
   Button
     id: closeButton
     text: Close
