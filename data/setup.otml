@@ -24,6 +24,12 @@ game
     adjust-creature-information-based-crop-size: true
     diagonal-walk-speed: 3
 
+    # Health bar frame configurations (values match C++ defaults)
+    # Own summon, monster and NPC use height: 16, others use height: 13
+    health-bar-frame-own-summon-height: 16
+    health-bar-frame-monster-height: 16
+    health-bar-frame-npc-height: 16
+
   player
     diagonal-walk-speed: 3
 

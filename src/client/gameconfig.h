@@ -49,11 +49,28 @@ public:
     uint8_t getTileMaxThings() const { return m_tileMaxThings; }
     uint8_t getTileTransparentFloorViewRange() const { return m_tileTransparentFloorViewRange; }
 
+    struct HealthBarFrameConfig {
+        int offsetX{ -2 };
+        int offsetY{ -2 };
+        int width{ 54 };
+        int height{ 13 };
+    };
+
     bool isDrawingInformationByWidget() { return m_drawInformationByWidget; }
     bool isForcingNewWalkingFormula() const { return m_forceNewWalkingFormula; }
     bool isAdjustCreatureInformationBasedCropSize() { return m_adjustCreatureInformationBasedCropSize; }
     uint16_t getShieldBlinkTicks() { return m_shieldBlinkTicks; }
     uint16_t getVolatileSquareDuration() const { return m_volatileSquareDuration; }
+
+    const HealthBarFrameConfig& getHealthBarFramePlayer() const { return m_healthBarFramePlayer; }
+    const HealthBarFrameConfig& getHealthBarFrameOwnSummon() const { return m_healthBarFrameOwnSummon; }
+    const HealthBarFrameConfig& getHealthBarFramePlayerAndParty() const { return m_healthBarFramePlayerAndParty; }
+    const HealthBarFrameConfig& getHealthBarFrameSharedExp() const { return m_healthBarFrameSharedExp; }
+    const HealthBarFrameConfig& getHealthBarFrameParty() const { return m_healthBarFrameParty; }
+    const HealthBarFrameConfig& getHealthBarFrameMonster() const { return m_healthBarFrameMonster; }
+    const HealthBarFrameConfig& getHealthBarFrameNpc() const { return m_healthBarFrameNpc; }
+    const HealthBarFrameConfig& getHealthBarFrameKiller() const { return m_healthBarFrameKiller; }
+    const HealthBarFrameConfig& getHealthBarFramePlayers() const { return m_healthBarFramePlayers; }
 
     uint16_t getInvisibleTicksPerFrame() const { return m_invisibleTicksPerFrame; }
     uint16_t getItemTicksPerFrame() const { return m_itemTicksPerFrame; }
@@ -112,6 +129,16 @@ private:
     uint16_t m_shieldBlinkTicks{ 500 };
     uint16_t m_volatileSquareDuration{ 1000 };
     double m_creatureDiagonalWalkSpeed{ 3 };
+
+    HealthBarFrameConfig m_healthBarFramePlayer;
+    HealthBarFrameConfig m_healthBarFrameOwnSummon;
+    HealthBarFrameConfig m_healthBarFramePlayerAndParty;
+    HealthBarFrameConfig m_healthBarFrameSharedExp;
+    HealthBarFrameConfig m_healthBarFrameParty;
+    HealthBarFrameConfig m_healthBarFrameMonster;
+    HealthBarFrameConfig m_healthBarFrameNpc;
+    HealthBarFrameConfig m_healthBarFrameKiller;
+    HealthBarFrameConfig m_healthBarFramePlayers;
 
     // Player
     double m_playerDiagonalWalkSpeed{ 3 };

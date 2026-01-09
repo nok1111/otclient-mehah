@@ -31,6 +31,11 @@ static constexpr bool LOAD_SETUP = true;
 
 void GameConfig::init()
 {
+    // Initialize specific frame heights (own_summon, monster, npc use 16 instead of 13)
+    m_healthBarFrameOwnSummon.height = 16;
+    m_healthBarFrameMonster.height = 16;
+    m_healthBarFrameNpc.height = 16;
+
     const std::string& fileName = "/data/setup";
 
     try {
@@ -142,6 +147,87 @@ void GameConfig::loadCreatureNode(const OTMLNodePtr& mainNode) {
             m_creatureDiagonalWalkSpeed = node->value<double>();
         else if (node->tag() == "draw-information-by-widget-beta")
             m_drawInformationByWidget = node->value<bool>();
+        // Health bar frame player
+        else if (node->tag() == "health-bar-frame-player-offset-x")
+            m_healthBarFramePlayer.offsetX = node->value<int>();
+        else if (node->tag() == "health-bar-frame-player-offset-y")
+            m_healthBarFramePlayer.offsetY = node->value<int>();
+        else if (node->tag() == "health-bar-frame-player-width")
+            m_healthBarFramePlayer.width = node->value<int>();
+        else if (node->tag() == "health-bar-frame-player-height")
+            m_healthBarFramePlayer.height = node->value<int>();
+        // Health bar frame own summon
+        else if (node->tag() == "health-bar-frame-own-summon-offset-x")
+            m_healthBarFrameOwnSummon.offsetX = node->value<int>();
+        else if (node->tag() == "health-bar-frame-own-summon-offset-y")
+            m_healthBarFrameOwnSummon.offsetY = node->value<int>();
+        else if (node->tag() == "health-bar-frame-own-summon-width")
+            m_healthBarFrameOwnSummon.width = node->value<int>();
+        else if (node->tag() == "health-bar-frame-own-summon-height")
+            m_healthBarFrameOwnSummon.height = node->value<int>();
+        // Health bar frame player and party
+        else if (node->tag() == "health-bar-frame-player-and-party-offset-x")
+            m_healthBarFramePlayerAndParty.offsetX = node->value<int>();
+        else if (node->tag() == "health-bar-frame-player-and-party-offset-y")
+            m_healthBarFramePlayerAndParty.offsetY = node->value<int>();
+        else if (node->tag() == "health-bar-frame-player-and-party-width")
+            m_healthBarFramePlayerAndParty.width = node->value<int>();
+        else if (node->tag() == "health-bar-frame-player-and-party-height")
+            m_healthBarFramePlayerAndParty.height = node->value<int>();
+        // Health bar frame shared exp
+        else if (node->tag() == "health-bar-frame-shared-exp-offset-x")
+            m_healthBarFrameSharedExp.offsetX = node->value<int>();
+        else if (node->tag() == "health-bar-frame-shared-exp-offset-y")
+            m_healthBarFrameSharedExp.offsetY = node->value<int>();
+        else if (node->tag() == "health-bar-frame-shared-exp-width")
+            m_healthBarFrameSharedExp.width = node->value<int>();
+        else if (node->tag() == "health-bar-frame-shared-exp-height")
+            m_healthBarFrameSharedExp.height = node->value<int>();
+        // Health bar frame party
+        else if (node->tag() == "health-bar-frame-party-offset-x")
+            m_healthBarFrameParty.offsetX = node->value<int>();
+        else if (node->tag() == "health-bar-frame-party-offset-y")
+            m_healthBarFrameParty.offsetY = node->value<int>();
+        else if (node->tag() == "health-bar-frame-party-width")
+            m_healthBarFrameParty.width = node->value<int>();
+        else if (node->tag() == "health-bar-frame-party-height")
+            m_healthBarFrameParty.height = node->value<int>();
+        // Health bar frame monster
+        else if (node->tag() == "health-bar-frame-monster-offset-x")
+            m_healthBarFrameMonster.offsetX = node->value<int>();
+        else if (node->tag() == "health-bar-frame-monster-offset-y")
+            m_healthBarFrameMonster.offsetY = node->value<int>();
+        else if (node->tag() == "health-bar-frame-monster-width")
+            m_healthBarFrameMonster.width = node->value<int>();
+        else if (node->tag() == "health-bar-frame-monster-height")
+            m_healthBarFrameMonster.height = node->value<int>();
+        // Health bar frame npc
+        else if (node->tag() == "health-bar-frame-npc-offset-x")
+            m_healthBarFrameNpc.offsetX = node->value<int>();
+        else if (node->tag() == "health-bar-frame-npc-offset-y")
+            m_healthBarFrameNpc.offsetY = node->value<int>();
+        else if (node->tag() == "health-bar-frame-npc-width")
+            m_healthBarFrameNpc.width = node->value<int>();
+        else if (node->tag() == "health-bar-frame-npc-height")
+            m_healthBarFrameNpc.height = node->value<int>();
+        // Health bar frame killer
+        else if (node->tag() == "health-bar-frame-killer-offset-x")
+            m_healthBarFrameKiller.offsetX = node->value<int>();
+        else if (node->tag() == "health-bar-frame-killer-offset-y")
+            m_healthBarFrameKiller.offsetY = node->value<int>();
+        else if (node->tag() == "health-bar-frame-killer-width")
+            m_healthBarFrameKiller.width = node->value<int>();
+        else if (node->tag() == "health-bar-frame-killer-height")
+            m_healthBarFrameKiller.height = node->value<int>();
+        // Health bar frame players
+        else if (node->tag() == "health-bar-frame-players-offset-x")
+            m_healthBarFramePlayers.offsetX = node->value<int>();
+        else if (node->tag() == "health-bar-frame-players-offset-y")
+            m_healthBarFramePlayers.offsetY = node->value<int>();
+        else if (node->tag() == "health-bar-frame-players-width")
+            m_healthBarFramePlayers.width = node->value<int>();
+        else if (node->tag() == "health-bar-frame-players-height")
+            m_healthBarFramePlayers.height = node->value<int>();
     }
 }
 

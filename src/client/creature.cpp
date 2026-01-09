@@ -51,6 +51,16 @@ Creature::Creature() :m_type(Proto::CreatureTypeUnknown)
     m_name.setAlign(Fw::AlignTopCenter);
     m_typingIconTexture = g_textures.getTexture(g_gameConfig.getTypingIcon());
 
+    // Load health bar frame textures
+    m_healthBarPlayerFrame = g_textures.getTexture("/images/lifebars/player");
+    m_healthBarOwnSummonFrame = g_textures.getTexture("/images/lifebars/own_summon");
+    m_healthBarPlayerAndPartyFrame = g_textures.getTexture("/images/lifebars/player_and_party");
+    m_healthBarSharedExpFrame = g_textures.getTexture("/images/lifebars/shared_exp");
+    m_healthBarPartyFrame = g_textures.getTexture("/images/lifebars/party");
+    m_healthBarMonsterFrame = g_textures.getTexture("/images/lifebars/monster");
+    m_healthBarNpcFrame = g_textures.getTexture("/images/lifebars/npc");
+    m_healthBarKillerFrame = g_textures.getTexture("/images/lifebars/killer");
+    m_healthBarPlayersFrame = g_textures.getTexture("/images/lifebars/players");
 }
 
 Creature::~Creature() {
@@ -186,7 +196,7 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
         p.scale(g_app.getCreatureInformationScale());
     }
 
-    auto backgroundRect = Rect(p.x - (13.5), p.y - cropSizeBackGround, 27, 4);
+    auto backgroundRect = Rect(p.x - (13.5), p.y - cropSizeBackGround, 40, 6);
     auto textRect = Rect(p.x - nameSize.width() / 2.0, p.y - cropSizeText, nameSize);
 
     if (!isScaled) {
@@ -207,24 +217,78 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
 
     // health rect is based on background rect, so no worries
     Rect healthRect = backgroundRect.expanded(-1);
-    healthRect.setWidth((m_healthPercent / 100.0) * 25);
+    healthRect.setWidth((m_healthPercent / 100.0) * 38);
+
+    // Save original health bar Y position for icons (before mana bar moves it)
+    const int healthBarY = backgroundRect.y();
 
     if (drawFlags & Otc::DrawBars) {
+        // Determine which health bar frame to use
+        TexturePtr healthBarFrame;
+        GameConfig::HealthBarFrameConfig frameConfig;
+        
+        if (isLocalPlayer()) {
+            // Local player: check if party leader
+            if (getShield() == Otc::ShieldWhiteYellow || getShield() == Otc::ShieldYellow || 
+                getShield() == Otc::ShieldYellowSharedExp || getShield() == Otc::ShieldYellowNoSharedExpBlink ||
+                getShield() == Otc::ShieldYellowNoSharedExp) {
+                // Local player is party leader
+                healthBarFrame = m_healthBarPlayerAndPartyFrame;
+                frameConfig = g_gameConfig.getHealthBarFramePlayerAndParty();
+            } else {
+                // Local player without party
+                healthBarFrame = m_healthBarPlayerFrame;
+                frameConfig = g_gameConfig.getHealthBarFramePlayer();
+            }
+        } else if (getType() == Proto::CreatureTypeSummonOwn) {
+            healthBarFrame = m_healthBarOwnSummonFrame;
+            frameConfig = g_gameConfig.getHealthBarFrameOwnSummon();
+        } else if (getShield() > 0) {
+            // Party members (not local player)
+            if (getShield() == Otc::ShieldBlueSharedExp || getShield() == Otc::ShieldYellowSharedExp) {
+                // Party member with shared exp
+                healthBarFrame = m_healthBarSharedExpFrame;
+                frameConfig = g_gameConfig.getHealthBarFrameSharedExp();
+            } else {
+                // Party member without shared exp
+                healthBarFrame = m_healthBarPartyFrame;
+                frameConfig = g_gameConfig.getHealthBarFrameParty();
+            }
+        } else if (isMonster()) {
+            healthBarFrame = m_healthBarMonsterFrame;
+            frameConfig = g_gameConfig.getHealthBarFrameMonster();
+        } else if (isNpc()) {
+            healthBarFrame = m_healthBarNpcFrame;
+            frameConfig = g_gameConfig.getHealthBarFrameNpc();
+        } else if (getSkull() >= Otc::SkullWhite && getSkull() <= Otc::SkullBlack) {
+            healthBarFrame = m_healthBarKillerFrame;
+            frameConfig = g_gameConfig.getHealthBarFrameKiller();
+        } else {
+            healthBarFrame = m_healthBarPlayersFrame;
+            frameConfig = g_gameConfig.getHealthBarFramePlayers();
+        }
+
+        // Draw the frame overlay UNDER the health bar using config values
+        if (healthBarFrame) {
+            Rect frameRect(backgroundRect.x() + frameConfig.offsetX, backgroundRect.y() + frameConfig.offsetY, 
+                          frameConfig.width, frameConfig.height);
+            g_drawPool.addTexturedRect(frameRect, healthBarFrame);
+        }
+
         g_drawPool.addFilledRect(backgroundRect, Color::black);
         g_drawPool.addFilledRect(healthRect, fillColor);
 
         if (drawFlags & Otc::DrawManaBar && isLocalPlayer()) {
-            if (const auto& player = g_game.getLocalPlayer()) {
-                backgroundRect.moveTop(backgroundRect.bottom());
+            const auto& player = static_self_cast<LocalPlayer>();
+            backgroundRect.moveTop(backgroundRect.bottom() + 4);
 
-                g_drawPool.addFilledRect(backgroundRect, Color::black);
+            g_drawPool.addFilledRect(backgroundRect, Color::black);
 
-                Rect manaRect = backgroundRect.expanded(-1);
-                const double maxMana = player->getMaxMana();
-                manaRect.setWidth((maxMana ? player->getMana() / maxMana : 1) * 25);
+            Rect manaRect = backgroundRect.expanded(-1);
+            const double maxMana = player->getMaxMana();
+            manaRect.setWidth((maxMana ? player->getMana() / maxMana : 1) * 38);
 
-                g_drawPool.addFilledRect(manaRect, Color::blue);
-            }
+            g_drawPool.addFilledRect(manaRect, Color::blue);
         }
     }
 
@@ -240,29 +304,30 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
         }
     }
 
+    // Use original health bar Y position for icons (not affected by mana bar)
     if (m_skull != Otc::SkullNone && m_skullTexture)
-        g_drawPool.addTexturedPos(m_skullTexture, backgroundRect.x() + 13.5 + 12, backgroundRect.y() + 5);
+        g_drawPool.addTexturedPos(m_skullTexture, static_cast<int>(backgroundRect.x() + 12), healthBarY - 26);
 
     if (m_shield != Otc::ShieldNone && m_shieldTexture && m_showShieldTexture)
-        g_drawPool.addTexturedPos(m_shieldTexture, backgroundRect.x() + 13.5, backgroundRect.y() + 5);
+        g_drawPool.addTexturedPos(m_shieldTexture, static_cast<int>(backgroundRect.x()), healthBarY - 26);
 
     if (m_emblem != Otc::EmblemNone && m_emblemTexture)
-        g_drawPool.addTexturedPos(m_emblemTexture, backgroundRect.x() + 13.5 + 12, backgroundRect.y() + 16);
+        g_drawPool.addTexturedPos(m_emblemTexture, static_cast<int>(backgroundRect.x() + 24), healthBarY - 26);
 
     if (m_type != Proto::CreatureTypeUnknown && m_typeTexture)
-        g_drawPool.addTexturedPos(m_typeTexture, backgroundRect.x() + 13.5 + 12 + 12, backgroundRect.y() + 16);
+        g_drawPool.addTexturedPos(m_typeTexture, static_cast<int>(backgroundRect.x() + 36), healthBarY - 26);
 
     if (m_icon != Otc::NpcIconNone && m_iconTexture)
-        g_drawPool.addTexturedPos(m_iconTexture, backgroundRect.x() + 13.5 + 12, backgroundRect.y() + 5);
+        g_drawPool.addTexturedPos(m_iconTexture, static_cast<int>(backgroundRect.x() + 12), healthBarY - 26);
 
     if (g_gameConfig.drawTyping() && getTyping() && m_typingIconTexture)
-        g_drawPool.addTexturedPos(m_typingIconTexture, p.x + (nameSize.width() / 2.0) + 2, textRect.y() - 4);
+        g_drawPool.addTexturedPos(m_typingIconTexture, p.x + (nameSize.width() / 2.0) + 2, textRect.y() - 6);
 
     if (g_game.getClientVersion() >= 1281 && m_icons && !m_icons->atlasGroups.empty()) {
         int iconOffset = 0;
         for (const auto& iconTex : m_icons->atlasGroups) {
             if (!iconTex.texture) continue;
-            const Rect dest(backgroundRect.x() + 13.5 + 12, backgroundRect.y() + 5 + iconOffset * 14, iconTex.clip.size());
+            const Rect dest(static_cast<int>(backgroundRect.x() + 12), healthBarY - 26 + iconOffset * 26, iconTex.clip.size());
             g_drawPool.addTexturedRect(dest, iconTex.texture, iconTex.clip);
             m_icons->numberText.setText(std::to_string(iconTex.count));
             const auto textSize = m_icons->numberText.getTextSize();
@@ -914,6 +979,16 @@ void Creature::setShieldTexture(const std::string& filename, const bool blink)
 
     m_shieldBlink = blink;
 }
+
+void Creature::setHealthBarPlayerFrame(const std::string& filename) { m_healthBarPlayerFrame = g_textures.getTexture(filename); }
+void Creature::setHealthBarOwnSummonFrame(const std::string& filename) { m_healthBarOwnSummonFrame = g_textures.getTexture(filename); }
+void Creature::setHealthBarPlayerAndPartyFrame(const std::string& filename) { m_healthBarPlayerAndPartyFrame = g_textures.getTexture(filename); }
+void Creature::setHealthBarSharedExpFrame(const std::string& filename) { m_healthBarSharedExpFrame = g_textures.getTexture(filename); }
+void Creature::setHealthBarPartyFrame(const std::string& filename) { m_healthBarPartyFrame = g_textures.getTexture(filename); }
+void Creature::setHealthBarMonsterFrame(const std::string& filename) { m_healthBarMonsterFrame = g_textures.getTexture(filename); }
+void Creature::setHealthBarNpcFrame(const std::string& filename) { m_healthBarNpcFrame = g_textures.getTexture(filename); }
+void Creature::setHealthBarKillerFrame(const std::string& filename) { m_healthBarKillerFrame = g_textures.getTexture(filename); }
+void Creature::setHealthBarPlayersFrame(const std::string& filename) { m_healthBarPlayersFrame = g_textures.getTexture(filename); }
 
 void Creature::addTimedSquare(const uint8_t color)
 {

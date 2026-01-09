@@ -592,6 +592,15 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<Creature>("setTypeTexture", &Creature::setTypeTexture);
     g_lua.bindClassMemberFunction<Creature>("setIconTexture", &Creature::setIconTexture);
     g_lua.bindClassMemberFunction<Creature>("setIconsTexture", &Creature::setIconsTexture);
+    g_lua.bindClassMemberFunction<Creature>("setHealthBarPlayerFrame", &Creature::setHealthBarPlayerFrame);
+    g_lua.bindClassMemberFunction<Creature>("setHealthBarOwnSummonFrame", &Creature::setHealthBarOwnSummonFrame);
+    g_lua.bindClassMemberFunction<Creature>("setHealthBarPlayerAndPartyFrame", &Creature::setHealthBarPlayerAndPartyFrame);
+    g_lua.bindClassMemberFunction<Creature>("setHealthBarSharedExpFrame", &Creature::setHealthBarSharedExpFrame);
+    g_lua.bindClassMemberFunction<Creature>("setHealthBarPartyFrame", &Creature::setHealthBarPartyFrame);
+    g_lua.bindClassMemberFunction<Creature>("setHealthBarMonsterFrame", &Creature::setHealthBarMonsterFrame);
+    g_lua.bindClassMemberFunction<Creature>("setHealthBarNpcFrame", &Creature::setHealthBarNpcFrame);
+    g_lua.bindClassMemberFunction<Creature>("setHealthBarKillerFrame", &Creature::setHealthBarKillerFrame);
+    g_lua.bindClassMemberFunction<Creature>("setHealthBarPlayersFrame", &Creature::setHealthBarPlayersFrame);
     g_lua.bindClassMemberFunction<Creature>("setStaticWalking", &Creature::setStaticWalking);
     g_lua.bindClassMemberFunction<Creature>("setManaPercent", &Creature::setManaPercent);
     g_lua.bindClassMemberFunction<Creature>("showStaticSquare", &Creature::showStaticSquare);

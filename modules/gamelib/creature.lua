@@ -163,3 +163,15 @@ function Creature:onIconChange(iconId)
         self:setIconTexture(imagePath)
     end
 end
+
+function Creature:initHealthBarFrames()
+    self:setHealthBarPlayerFrame('/images/lifebars/player')
+    self:setHealthBarOwnSummonFrame('/images/lifebars/own_summon')
+    self:setHealthBarPlayerAndPartyFrame('/images/lifebars/player_and_party')
+    self:setHealthBarSharedExpFrame('/images/lifebars/shared_exp')
+    self:setHealthBarPartyFrame('/images/lifebars/party')
+    self:setHealthBarMonsterFrame('/images/lifebars/monster')
+    self:setHealthBarNpcFrame('/images/lifebars/npc')
+    self:setHealthBarKillerFrame('/images/lifebars/killer')
+    self:setHealthBarPlayersFrame('/images/lifebars/players')
+end

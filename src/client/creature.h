@@ -88,6 +88,16 @@ public:
     void setStaticWalking(uint16_t v);
     void setIconsTexture(const std::string& filename, const Rect& clip, const uint16_t count);
 
+    void setHealthBarPlayerFrame(const std::string& filename);
+    void setHealthBarOwnSummonFrame(const std::string& filename);
+    void setHealthBarPlayerAndPartyFrame(const std::string& filename);
+    void setHealthBarSharedExpFrame(const std::string& filename);
+    void setHealthBarPartyFrame(const std::string& filename);
+    void setHealthBarMonsterFrame(const std::string& filename);
+    void setHealthBarNpcFrame(const std::string& filename);
+    void setHealthBarKillerFrame(const std::string& filename);
+    void setHealthBarPlayersFrame(const std::string& filename);
+
     
 
     void onStartAttachEffect(const AttachedEffectPtr& effect) override;
@@ -281,6 +291,16 @@ private:
     TexturePtr m_typeTexture;
     TexturePtr m_iconTexture;
     TexturePtr m_typingIconTexture;
+
+    TexturePtr m_healthBarPlayerFrame;
+    TexturePtr m_healthBarOwnSummonFrame;
+    TexturePtr m_healthBarPlayerAndPartyFrame;
+    TexturePtr m_healthBarSharedExpFrame;
+    TexturePtr m_healthBarPartyFrame;
+    TexturePtr m_healthBarMonsterFrame;
+    TexturePtr m_healthBarNpcFrame;
+    TexturePtr m_healthBarKillerFrame;
+    TexturePtr m_healthBarPlayersFrame;
 
     EventPtr m_walkUpdateEvent;
     ScheduledEventPtr m_walkFinishAnimEvent;
