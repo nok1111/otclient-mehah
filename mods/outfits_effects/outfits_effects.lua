@@ -2,7 +2,7 @@
 -- Lightweight module for handling creature titles and outfit offsets
 
 local playerTitles = {
-    ["Nok"] = {title = "[Administrator]", color = "alpha", offsetX = 0, offsetY = 0}  -- offsetX/offsetY opcional
+    ["Nokturno"] = {title = "[Admin]", color = "alpha", offsetX = -15, offsetY = 45}  -- offsetX/offsetY opcional
 }
 
 local npcTitles = {
@@ -18,6 +18,7 @@ local npcTitles = {
     ["Sage Liora"] = {title = "[Valuable Pouches]", color = "#677ef5"}, 
     ["Arcanist Veyron"] = {title = "[Valuable Pouches]", color = "#677ef5"}, 
     ["Eldric The Woodwise"] = {title = "[Valuable Pouches]", color = "#677ef5"},
+    ["Auctioneer"] = {title = "[Market]", color = "#f5ec67ff"},
     --quests
     ["Sheriff Gordon"] = {quest = true},
 }
