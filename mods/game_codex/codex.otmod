@@ -1,0 +1,9 @@
+Module
+  name: game_codex
+  description: Codex Card System
+  author: Fifth
+  sandboxed: true
+  autoload: true
+  scripts: [ codexDataConfig, codex ]
+  @onLoad: Codex.init()
+  @onUnload: Codex.terminate()

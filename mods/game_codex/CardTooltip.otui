@@ -1,0 +1,33 @@
+UIWindow
+  id: CardTooltip
+  text-offset: 0 4
+  text-align: top
+  image-source: /images/ui/windows/card_window_rare
+  image-border: 5
+  image-auto-resize: true
+  width: 280
+  phantom: false
+  focusable: false
+  padding: 15
+  
+  Label
+    id: description
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 25
+    margin-right: 5
+    margin-left: 5
+    text-wrap: true
+    text-auto-resize: true
+    text-align: center
+    
+  Label
+    id: trigger
+    anchors.top: description.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 10
+    text-wrap: true
+    text-auto-resize: true
+    text-align: center
+    color: #00ffff

@@ -1,0 +1,588 @@
+
+CardEntry < UIWidget
+  size: 48 80
+  margin: 5
+  phantom: false
+  
+  UIWidget
+    id: cardImage
+    anchors.fill: parent
+    phantom: true
+
+CardLockIcon < UIWidget
+  size: 32 32
+  image-source: /images/ui/icon-lock
+  anchors.centerIn: parent
+  phantom: true
+
+CardLevelLabel < Label
+  anchors.bottom: parent.bottom
+  anchors.horizontalCenter: parent.horizontalCenter
+  margin-bottom: 3
+  text-auto-resize: true
+  font: verdana-11px-rounded
+
+DeckCardEntry < Panel
+  height: 60
+  image-source: /images/ui/panel_flat
+  image-border: 3
+  margin-top: 2
+  phantom: false
+  
+  UIWidget
+    id: cardIcon
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    size: 48 80
+    margin-left: 5
+    phantom: true
+  
+  Label
+    id: cardName
+    anchors.left: cardIcon.right
+    anchors.top: parent.top
+    anchors.right: equipButton.left
+    margin-left: 10
+    margin-top: 5
+    margin-right: 5
+    font: verdana-11px-rounded
+  
+  Label
+    id: cardLevel
+    anchors.left: cardIcon.right
+    anchors.top: cardName.bottom
+    margin-left: 10
+    margin-top: 2
+    color: #ffff00
+  
+  Button
+    id: equipButton
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 5
+    width: 60
+    !text: tr('Equip')
+
+ActiveSlot < Panel
+  size: 120 160
+  image-source: /images/ui/panel_flat
+  image-border: 3
+  margin: 5
+  phantom: false
+  
+  UIWidget
+    id: slotPlaceholder
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.top: parent.top
+    size: 96 160
+    margin-top: 5
+    image-source: /images/codex/cards/empty_slot.png
+    phantom: true
+  
+  UIWidget
+    id: slotCardImage
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.top: parent.top
+    size: 96 160
+    margin-top: 5
+    phantom: true
+    visible: false
+  
+  Label
+    id: slotLabel
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 5
+    text: Slot 1
+    font: verdana-11px-rounded
+  
+  Button
+    id: removeButton
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 5
+    width: 80
+    !text: tr('Remove')
+    visible: false
+
+CrateEntry < Panel
+  height: 35
+  image-source: /images/ui/panel_flat
+  image-border: 3
+  margin-top: 3
+  phantom: false
+
+MessageBase < UIWidget
+  !text: tr('.')
+  text-offset: 0 2
+  text-align: top
+  color: #f4ca16
+  size: 350 220
+  image-source: /images/ui/window
+  image-border: 6
+  image-border-top: 27
+  anchors.centerIn: parent
+  visible: false
+
+  Button
+    id: ConfirmButton
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottom: parent.bottom
+    margin-bottom: 20
+    !text: tr("OK")
+
+  Label
+    id: Text
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: ConfirmButton.top
+    margin-top: 40
+    margin-left: 20
+    margin-right: 20
+    margin-bottom: 10
+    text-align: center
+    text-wrap: true
+
+LockUI < Panel
+  anchors.fill: parent
+  opacity: 0.6
+  phantom: false
+  visible: false
+  background-color: #8c8c8c
+
+MainWindow
+  id: mainWindow
+  text: CODEX
+  size: 1000 700
+
+  // Header with Tabs
+  Panel
+    id: TabsPanel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 40
+    margin-top: 5
+    margin-left: 10
+    margin-right: 10
+
+    Button
+      id: CollectionTab
+      anchors.left: parent.left
+      anchors.top: parent.top
+      width: 100
+      !text: tr('Collection')
+
+    Button
+      id: DeckTab
+      anchors.left: CollectionTab.right
+      anchors.top: parent.top
+      margin-left: 5
+      width: 100
+      !text: tr('Deck')
+
+    Button
+      id: CratesTab
+      anchors.left: DeckTab.right
+      anchors.top: parent.top
+      margin-left: 5
+      width: 100
+      !text: tr('Crates')
+
+    Label
+      id: EssencesLabel
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      text: Codex Essences: 0
+      color: #ffff00
+      width: 150
+
+  // COLLECTION PANEL
+  Panel
+    id: CollectionPanel
+    anchors.top: TabsPanel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 5
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 40
+    visible: false
+
+    // Left side: Card Grid
+    UIScrollArea
+      id: CollectionGrid
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      width: 680
+      image-source: /images/ui/panel_flat
+      image-border: 3
+      padding: 10
+      layout:
+        type: grid
+        cell-size: 120 200
+        flow: true
+      vertical-scrollbar: CollectionScrollBar
+
+    VerticalScrollBar
+      id: CollectionScrollBar
+      anchors.top: CollectionGrid.top
+      anchors.bottom: CollectionGrid.bottom
+      anchors.right: CollectionGrid.right
+      margin-right: -10
+      pixels-scroll: true
+      step: 50
+
+    // Right side: Card Details
+    Panel
+      id: CardDetailsPanel
+      anchors.top: parent.top
+      anchors.left: CollectionGrid.right
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-left: 10
+      image-source: /images/ui/window
+      image-border: 6
+      image-border-top: 27
+      text: Card Details
+      text-offset: 0 2
+      text-align: top
+      
+      UIWidget
+        id: CardImageHeader
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        size: 96 160
+        margin-top: 35
+        visible: false
+      padding: 15
+
+      Label
+        id: CardName
+        anchors.top: CardImageHeader.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 10
+        text: Select a card
+        text-align: center
+        font: verdana-11px-rounded
+        color: #ffffff
+
+      Label
+        id: CardLevel
+        anchors.top: CardName.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 5
+        text: Level: -
+        text-align: center
+        font: verdana-11px-rounded
+        
+      ProgressBar
+        id: CardExpBar
+        anchors.top: CardLevel.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 10
+        margin-left: 20
+        margin-right: 20
+        height: 20
+        background-color: #2a2a2a
+        foreground-color: #FFD700
+        percent: 0
+        
+      Label
+        id: CardExpText
+        anchors.top: CardExpBar.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 5
+        text: 0 / 0 EXP
+        text-align: center
+        font: verdana-11px-rounded
+        color: #FFD700
+
+      Label
+        id: CardTrigger
+        anchors.top: CardExpText.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 15
+        text: Trigger: -
+        text-align: center
+        color: #00ffff
+
+      UIScrollArea
+        id: CardDescription
+        anchors.top: CardTrigger.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: CardStatus.top
+        margin-top: 15
+        margin-bottom: 10
+        padding: 5
+        layout:
+          type: verticalBox
+        vertical-scrollbar: CardDescScrollBar
+
+      VerticalScrollBar
+        id: CardDescScrollBar
+        anchors.top: CardDescription.top
+        anchors.bottom: CardDescription.bottom
+        anchors.right: CardDescription.right
+        margin-right: -10
+        pixels-scroll: true
+        step: 30
+
+      Label
+        id: CardStatus
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-bottom: 10
+        text: Status: -
+        text-align: center
+
+  // DECK PANEL
+  Panel
+    id: DeckPanel
+    anchors.top: TabsPanel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 5
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 40
+    visible: false
+
+    // Left side: Available Cards
+    UIScrollArea
+      id: AvailableCardsPanel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      width: 450
+      image-source: /images/ui/window
+      image-border: 6
+      image-border-top: 27
+      text: Available Cards
+      text-offset: 0 2
+      text-align: top
+      padding-top: 30
+      padding-left: 10
+      padding-right: 10
+      padding-bottom: 10
+      layout:
+        type: verticalBox
+        spacing: 2
+      vertical-scrollbar: AvailableCardsScrollBar
+
+    VerticalScrollBar
+      id: AvailableCardsScrollBar
+      anchors.top: AvailableCardsPanel.top
+      anchors.bottom: AvailableCardsPanel.bottom
+      anchors.right: AvailableCardsPanel.right
+      margin-right: -10
+      pixels-scroll: true
+      step: 50
+
+    // Right side: Active Slots
+    UIScrollArea
+      id: ActiveSlotsPanel
+      anchors.top: parent.top
+      anchors.left: AvailableCardsPanel.right
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-left: 10
+      image-source: /images/ui/window
+      image-border: 6
+      image-border-top: 27
+      text: Active Deck
+      text-offset: 0 2
+      text-align: top
+      padding-top: 30
+      padding-left: 10
+      padding-right: 10
+      padding-bottom: 10
+      layout:
+        type: grid
+        cell-size: 160 130
+        flow: true
+      vertical-scrollbar: ActiveSlotsScrollBar
+
+    VerticalScrollBar
+      id: ActiveSlotsScrollBar
+      anchors.top: ActiveSlotsPanel.top
+      anchors.bottom: ActiveSlotsPanel.bottom
+      anchors.right: ActiveSlotsPanel.right
+      margin-right: -10
+      pixels-scroll: true
+      step: 50
+
+  // CRATES PANEL
+  Panel
+    id: CratesPanel
+    anchors.top: TabsPanel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 5
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 40
+    visible: false
+
+    // Left side: Crate List
+    UIScrollArea
+      id: CratesList
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      width: 350
+      image-source: /images/ui/window
+      image-border: 6
+      image-border-top: 27
+      text: Available Crates
+      text-offset: 0 2
+      text-align: top
+      padding-top: 30
+      padding-left: 10
+      padding-right: 10
+      padding-bottom: 10
+      layout:
+        type: verticalBox
+        spacing: 3
+      vertical-scrollbar: CratesListScrollBar
+
+    VerticalScrollBar
+      id: CratesListScrollBar
+      anchors.top: CratesList.top
+      anchors.bottom: CratesList.bottom
+      anchors.right: CratesList.right
+      margin-right: -10
+      pixels-scroll: true
+      step: 50
+
+    // Right side: Crate Details
+    Panel
+      id: CrateDetailsPanel
+      anchors.top: parent.top
+      anchors.left: CratesList.right
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-left: 10
+      image-source: /images/ui/window
+      image-border: 6
+      image-border-top: 27
+      text: Crate Details
+      text-offset: 0 2
+      text-align: top
+      padding: 15
+
+      Label
+        id: CrateName
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 25
+        text: Select a crate
+        text-align: center
+        font: verdana-11px-rounded
+        color: #ffd700
+
+      Label
+        id: CrateCost
+        anchors.top: CrateName.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 10
+        text: Cost: -
+        text-align: center
+        color: #ffff00
+
+      Label
+        id: CrateRewardsTitle
+        anchors.top: CrateCost.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 20
+        text: Possible Rewards
+        text-align: center
+        font: verdana-11px-rounded
+        color: #aaaaaa
+
+      UIScrollArea
+        id: CrateRewards
+        anchors.top: CrateRewardsTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 120
+        margin-top: 10
+        visible: true
+        padding: 5
+        layout:
+          type: horizontalBox
+          spacing: 5
+        vertical-scrollbar: CrateRewardsScrollBar
+
+      VerticalScrollBar
+        id: CrateRewardsScrollBar
+        anchors.top: CrateRewards.top
+        anchors.bottom: CrateRewards.bottom
+        anchors.right: CrateRewards.right
+        margin-right: -10
+        pixels-scroll: true
+        step: 30
+
+      Label
+        id: CrateResultsTitle
+        anchors.top: CrateRewards.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 20
+        text: Cards Obtained
+        text-align: center
+        font: verdana-11px-rounded
+        color: #FFD700
+        visible: false
+
+      Panel
+        id: CrateResultsPanel
+        anchors.top: CrateResultsTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: OpenCrateButton.top
+        margin-top: 10
+        margin-bottom: 10
+        visible: false
+        layout:
+          type: horizontalBox
+          spacing: 10
+          align-center: true
+
+      Button
+        id: OpenCrateButton
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-bottom: 10
+        !text: tr('Open Crate')
+
+  // Bottom Buttons
+  Button
+    id: CloseButton
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-bottom: 3
+    margin-right: 10
+    !text: tr('Close')
+    @onClick: self:getParent():hide()
+
+  LockUI
+    id: LockUI
+
+  MessageBase
+    id: MessageBase
