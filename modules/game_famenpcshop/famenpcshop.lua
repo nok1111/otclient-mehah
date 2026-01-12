@@ -1,284 +1,527 @@
-famenpcWindow = nil
-itemsPanel = nil
-radioTabs = nil
-radioItems = nil
-searchText = nil
-setupPanel = nil
-quantity = nil
-quantityScroll = nil
-nameLabel = nil
-famedescLabel = nil
-priceLabel = nil
-moneyLabel = nil
-weightDesc = nil
-weightLabel = nil
-capacityDesc = nil
-capacityLabel = nil
-tradeButton = nil
+-- UI Components
+local window
+local famePointsLabel
+local fameLevelLabel
+local goldLabel
+local tokenLabel
+local searchInput
+local tabsPanel
+local itemsGrid
+local detailsPanel
+local radioCards
 
-ignoreCapacity = nil
+-- Data
+local playerFamePoints = 0
+local playerFameLevel = 0
+local allItems = {}
+local selectedItem = nil
+local currentCategory = 'all'
+local pendingReselect = nil
 
-playerFreeCapacity = 0
-playerfamepoints = 0
-playerFameLevel = 0
-tradeItems = {}
-selectedItem = nil
+-- Categories
+local CATEGORIES = {
+  {id = 'all', name = 'All', icon = '/images/icons/star'},
+  {id = 'mount', name = 'Mounts', icon = '/images/icons/horse'},
+  {id = 'outfit', name = 'Outfits', icon = '/images/icons/tshirt'},
+  {id = 'pet', name = 'Pets', icon = '/images/icons/pets'},
+  {id = 'item', name = 'Boosts', icon = '/images/icons/flash'}
+}
 
 function init()
-	famenpcWindow = g_ui.displayUI('famenpcshop')
-	famenpcWindow:setVisible(false)
-
-	itemsPanel = famenpcWindow:recursiveGetChildById('fameitemsPanel')
-	searchText = famenpcWindow:recursiveGetChildById('famesearchText')
-
-	setupPanel = famenpcWindow:recursiveGetChildById('famesetupPanel')
-	quantityScroll = setupPanel:getChildById('famequantityScroll')
-	nameLabel = setupPanel:getChildById('famename')
-	famedescLabel = setupPanel:getChildById('famedesc')
-	priceLabel = setupPanel:getChildById('fameprice')
-	moneyLabel = setupPanel:getChildById('famemoney')
-	weightDesc = setupPanel:getChildById('weightDesc')
-	weightLabel = setupPanel:getChildById('fameweight')
-	capacityDesc = setupPanel:getChildById('famecapacityDesc')
-	capacityLabel = setupPanel:getChildById('famecapacity')
-	tradeButton = famenpcWindow:recursiveGetChildById('fametradeButton')
-
-	ignoreCapacity = famenpcWindow:recursiveGetChildById('fameignoreCapacity')
-
-	if g_game.isOnline() then
-		playerFreeCapacity = g_game.getLocalPlayer():getFreeCapacity()
-	end
-
-	connect(g_game, { onGameEnd = hide })
-
-	connect(LocalPlayer, { onFreeCapacityChange = onFreeCapacityChange, onInventoryChange = onInventoryChange })
-
-	ProtocolGame.registerOpcode(GameServerOpcodes.GameServerOpenFameShop, parseNpcShop)
+  window = g_ui.displayUI('famenpcshop')
+  window:setVisible(false)
+  
+  -- Get UI components
+  famePointsLabel = window:recursiveGetChildById('famePointsLabel')
+  fameLevelLabel = window:recursiveGetChildById('fameLevelLabel')
+  goldLabel = window:recursiveGetChildById('goldLabel')
+  tokenLabel = window:recursiveGetChildById('tokenLabel')
+  searchInput = window:recursiveGetChildById('searchInput')
+  tabsPanel = window:recursiveGetChildById('tabsPanel')
+  itemsGrid = window:recursiveGetChildById('itemsGrid')
+  detailsPanel = window:recursiveGetChildById('detailsPanel')
+  
+  -- Create tabs
+  createTabs()
+  
+  -- Initialize radio group for item cards
+  radioCards = UIRadioGroup.create()
+  
+  connect(g_game, {onGameEnd = hide})
+  ProtocolGame.registerOpcode(GameServerOpcodes.GameServerOpenFameShop, parseNpcShop)
 end
 
 function terminate()
-	famenpcWindow:destroy()
-
-	disconnect(g_game, {onGameEnd = hide })
-
-	disconnect(LocalPlayer, { onFreeCapacityChange = onFreeCapacityChange, onInventoryChange = onInventoryChange })
-
-	ProtocolGame.unregisterOpcode(GameServerOpcodes.GameServerOpenFameShop, parseNpcShop)
+  if radioCards then
+    radioCards:destroy()
+  end
+  
+  window:destroy()
+  disconnect(g_game, {onGameEnd = hide})
+  ProtocolGame.unregisterOpcode(GameServerOpcodes.GameServerOpenFameShop, parseNpcShop)
 end
 
 function show()
-	if g_game.isOnline() then
-		famenpcWindow:show()
-		famenpcWindow:raise()
-		famenpcWindow:focus()
-	end
+  if g_game.isOnline() then
+    window:show()
+    window:raise()
+    window:focus()
+  end
 end
 
 function hide()
-	famenpcWindow:hide()
+  window:hide()
+  clearSelection()
 end
 
-function onItemBoxChecked(widget)
-	if widget:isChecked() then
-		local item = widget.item
-		selectedItem = item
-		famerefreshItem(item)
-		tradeButton:enable()
-	end
+function createTabs()
+  for _, category in ipairs(CATEGORIES) do
+    local tab = g_ui.createWidget('FameCategoryTab', tabsPanel)
+    
+    -- Set icon
+    local iconWidget = tab:getChildById('iconWidget')
+    iconWidget:setImageSource(category.icon)
+    
+    -- Set label
+    local tabLabel = tab:getChildById('tabLabel')
+    tabLabel:setText(category.name)
+    
+    tab.categoryId = category.id
+    tab.onClick = function()
+      selectCategory(category.id)
+    end
+  end
+  selectCategory('all')
 end
 
-function onQuantityValueChange(quantity)
-	if selectedItem then
-		weightLabel:setText(string.format('%.2f', selectedItem.weight * quantity) .. ' ' .. 'oz')
-		priceLabel:setText(formatCurrency(getFameItemPrice(selectedItem)))
-	end
+function selectCategory(categoryId)
+  currentCategory = categoryId
+  
+  -- Update tab visual states
+  for _, tab in ipairs(tabsPanel:getChildren()) do
+    if tab.categoryId == categoryId then
+      tab:setOn(true)
+    else
+      tab:setOn(false)
+    end
+  end
+  
+  refreshItems()
 end
 
-function onTradeClick()
-	local protocol = g_game.getProtocolGame()
-	if not protocol then
-		return
-	end
-	
-	local msg = OutputMessage.create()
-	msg:addU8(ClientOpcodes.ClientFameShopBuy)
-	msg:addString(selectedItem.type)
-	msg:addU16(selectedItem.id)
-	msg:addU32(selectedItem.price)
-	msg:addU16(tonumber(quantityScroll:getValue()))
-	protocol:send(msg)
+function onItemCardSelected(widget)
+  if widget:isChecked() then
+    selectedItem = widget.itemData
+    showItemDetails(selectedItem)
+  end
+end
+
+function onQuantityChange(quantity)
+  if selectedItem then
+    updateDetailsPrice()
+  end
+end
+
+function onBuyClick()
+  if not selectedItem then return end
+  
+  local protocol = g_game.getProtocolGame()
+  if not protocol then return end
+  
+  local quantityScroll = detailsPanel:getChildById('quantityScroll')
+  local quantity = quantityScroll:getValue()
+  
+  local msg = OutputMessage.create()
+  msg:addU8(ClientOpcodes.ClientFameShopBuy)
+  msg:addString(selectedItem.type)
+  msg:addU16(selectedItem.id)
+  msg:addU32(0) -- legacy price field (unused)
+  msg:addU16(quantity)
+  protocol:send(msg)
+  
+  -- Show purchase success effect
+  showPurchaseSuccess()
+end
+
+function showPurchaseSuccess()
+  local buyButton = detailsPanel:recursiveGetChildById('buyButton')
+  local checkIcon = detailsPanel:recursiveGetChildById('purchaseCheckIcon')
+  
+  if not buyButton or not checkIcon then return end
+  
+  -- Flash verde en el botón
+  buyButton:setColor('#00ff00')
+  scheduleEvent(function()
+    buyButton:setColor('#ffffff')
+  end, 600)
+  
+  -- Mostrar icono check con fadeIn
+  checkIcon:setVisible(true)
+  checkIcon:setOpacity(0)
+  g_effects.fadeIn(checkIcon, 300)
+  
+  -- Ocultar con fadeOut
+  scheduleEvent(function()
+    g_effects.fadeOut(checkIcon, 400)
+    scheduleEvent(function()
+      checkIcon:setVisible(false)
+    end, 400)
+  end, 1200)
+end
+
+function reopenShop()
+  -- Save selected item ID to re-select after refresh
+  local selectedItemId = nil
+  if selectedItem then
+    selectedItemId = selectedItem.id
+  end
+  
+  -- Store for use after parseNpcShop
+  pendingReselect = selectedItemId
+  
+  -- Request shop data again from server to update owned status
+  local protocol = g_game.getProtocolGame()
+  if protocol then
+    local msg = OutputMessage.create()
+    msg:addU8(ClientOpcodes.ClientFameShopOpen)
+    protocol:send(msg)
+  end
+end
+
+function reselectItem(itemId)
+  -- Find and select the card with matching item ID
+  if not itemsGrid or not radioCards then return end
+  
+  for _, card in ipairs(itemsGrid:getChildren()) do
+    if card.itemData and card.itemData.id == itemId then
+      radioCards:selectWidget(card)
+      return
+    end
+  end
 end
 
 function onSearchTextChange()
-	famerefreshPlayerGoods()
+  refreshItems()
 end
 
-function onIgnoreCapacityChange()
-	famerefreshPlayerGoods()
+function clearSelection()
+  if radioCards then
+    radioCards:selectWidget(nil)
+  end
+  selectedItem = nil
+  detailsPanel:setVisible(false)
 end
 
-function fameclearSelectedItem()
-	nameLabel:clearText()
-	weightLabel:clearText()
-	priceLabel:clearText()
-	tradeButton:disable()
-	quantityScroll:setMinimum(0)
-	quantityScroll:setMaximum(0)
-	if selectedItem then
-		if radioItems then
-			radioItems:selectWidget(nil)
-		end
-		selectedItem = nil
-	end
+function canPurchaseItem(item)
+  if not item then return false end
+  if playerFameLevel < item.fameLevel then return false end
+  
+  -- Check if player can afford fame currency (only currency we can validate client-side)
+  if item.currencies and #item.currencies > 0 then
+    for _, currency in ipairs(item.currencies) do
+      if currency.type == 'fame' then
+        if playerFamePoints < currency.amount then return false end
+      end
+      -- gold, token, and item currencies will be validated server-side
+    end
+  end
+  
+  return true
 end
 
-function getFameItemPrice(item, single)
-	local amount = 1
-	local single = single or false
-	if not single then
-		amount = quantityScroll:getValue()
-	end
-	return item.price * amount
+
+function showItemDetails(item)
+  detailsPanel:setVisible(true)
+  
+  local nameLabel = detailsPanel:getChildById('detailNameLabel')
+  local priceLabel = detailsPanel:getChildById('detailPriceLabel')
+  local levelLabel = detailsPanel:getChildById('detailLevelLabel')
+  local typeLabel = detailsPanel:getChildById('detailTypeLabel')
+  local descLabel = detailsPanel:getChildById('detailDescLabel')
+  local quantityScroll = detailsPanel:getChildById('quantityScroll')
+  local buyButton = detailsPanel:getChildById('buyButton')
+  local itemWidget = detailsPanel:getChildById('detailItemWidget')
+  local creatureWidget = detailsPanel:getChildById('detailCreatureWidget')
+  local ownedIcon = detailsPanel:recursiveGetChildById('detailOwnedIcon')
+  
+  nameLabel:setText(item.name)
+  
+  -- Display currencies in details
+  if item.currencies and #item.currencies > 0 then
+    local priceText = 'Price: '
+    for i, currency in ipairs(item.currencies) do
+      if i > 1 then priceText = priceText .. ' + ' end
+      priceText = priceText .. currency.amount .. ' '
+      if currency.type == 'fame' then
+        priceText = priceText .. 'Fame'
+      elseif currency.type == 'gold' then
+        priceText = priceText .. 'Gold'
+      elseif currency.type == 'token' then
+        priceText = priceText .. 'Tokens'
+      elseif currency.type == 'item' then
+        priceText = priceText .. 'Items'
+      end
+    end
+    priceLabel:setText(priceText)
+  end
+  
+  levelLabel:setText('Fame Level Required: ' .. item.fameLevel)
+  descLabel:setText(item.famedesc or '')
+  
+  -- Type label
+  local typeText = ''
+  if item.type == 'mount' or item.type == 'outfit' or item.type == 'pet' then
+    typeText = 'Cosmetic / Account-wide'
+  elseif item.type == 'item' then
+    typeText = 'Consumable'
+  end
+  typeLabel:setText(typeText)
+  
+  -- Check if owned and show overlay icon
+  local isOwned = item.owned or false
+  ownedIcon:setVisible(isOwned)
+  
+  -- Show creature or item
+  if item.type == 'item' then
+    itemWidget:setVisible(true)
+    creatureWidget:setVisible(false)
+    itemWidget:setItemId(item.clientId)
+    itemWidget:setVirtual(true)
+  else
+    itemWidget:setVisible(false)
+    creatureWidget:setVisible(true)
+    creatureWidget:setOutfit({type = item.clientId})
+  end
+  
+  -- Quantity - calculate based on fame currency if present
+  local maxQty = 1
+  if item.type == 'item' and item.currencies then
+    for _, currency in ipairs(item.currencies) do
+      if currency.type == 'fame' then
+        maxQty = math.floor(playerFamePoints / currency.amount)
+        break
+      end
+    end
+  end
+  maxQty = math.max(1, math.min(100, maxQty))
+  
+  quantityScroll:setMinimum(1)
+  quantityScroll:setMaximum(maxQty)
+  quantityScroll:setValue(1)
+  
+  -- Buy button state - disable if owned or can't purchase
+  if isOwned then
+    buyButton:setEnabled(false)
+    buyButton:setText('OWNED')
+  else
+    buyButton:setEnabled(canPurchaseItem(item))
+    buyButton:setText('BUY')
+  end
 end
 
-function canTradeFameItem(item)
-	return (ignoreCapacity:isChecked() or (not ignoreCapacity:isChecked() and playerFreeCapacity >= item.weight)) and playerfamepoints >= getFameItemPrice(item, true) and playerFameLevel >= item.fameLevel
+function updateDetailsPrice()
+  if not selectedItem then return end
+  local quantityScroll = detailsPanel:getChildById('quantityScroll')
+  local priceLabel = detailsPanel:getChildById('detailPriceLabel')
+  local qty = quantityScroll:getValue()
+  
+  -- Update price display with quantity multiplier
+  if selectedItem.currencies and #selectedItem.currencies > 0 then
+    local priceText = 'Price: '
+    for i, currency in ipairs(selectedItem.currencies) do
+      if i > 1 then priceText = priceText .. ' + ' end
+      priceText = priceText .. (currency.amount * qty) .. ' '
+      if currency.type == 'fame' then
+        priceText = priceText .. 'Fame'
+      elseif currency.type == 'gold' then
+        priceText = priceText .. 'Gold'
+      elseif currency.type == 'token' then
+        priceText = priceText .. 'Tokens'
+      elseif currency.type == 'item' then
+        priceText = priceText .. 'Items'
+      end
+    end
+    priceLabel:setText(priceText)
+  end
 end
 
-function famerefreshItem(item)
-	nameLabel:setText(item.name)
-	weightLabel:setText(string.format('%.2f', item.weight) .. ' ' .. 'oz')
-	priceLabel:setText(formatCurrency(getFameItemPrice(item)))
-    famedescLabel:setText(item.famedesc)
-	local capacityMaxCount = math.floor(playerFreeCapacity / item.weight)
-	if ignoreCapacity:isChecked() then
-		capacityMaxCount = 65535
-	end
-
-	local priceMaxCount = math.floor(playerfamepoints / getFameItemPrice(item, true))
-	local finalCount = math.max(0, math.min(100, math.min(priceMaxCount, capacityMaxCount)))
-	quantityScroll:setMinimum(1)
-	quantityScroll:setMaximum(finalCount)
-
-	setupPanel:enable()
+function refreshItems()
+  -- Save current selection before clearing
+  local previousSelectedId = nil
+  if selectedItem then
+    previousSelectedId = selectedItem.id
+  end
+  
+  itemsGrid:destroyChildren()
+  clearSelection()
+  
+  if radioCards then
+    radioCards:destroy()
+  end
+  radioCards = UIRadioGroup.create()
+  
+  local searchTerm = searchInput:getText():lower()
+  
+  for _, item in ipairs(allItems) do
+    local categoryMatch = (currentCategory == 'all' or item.type == currentCategory)
+    local searchMatch = (searchTerm == '' or item.name:lower():find(searchTerm, 1, true))
+    
+    if categoryMatch and searchMatch then
+      createItemCard(item)
+    end
+  end
+  
+  -- Try to restore previous selection first
+  if previousSelectedId then
+    reselectItem(previousSelectedId)
+  -- If no previous selection and no pending reselect, auto-select first
+  elseif not pendingReselect then
+    local firstCard = itemsGrid:getFirstChild()
+    if firstCard then
+      radioCards:selectWidget(firstCard)
+    end
+  end
 end
 
-function famerefreshTradeItems()
-	fameclearSelectedItem()
-
-	searchText:clearText()
-	setupPanel:disable()
-	itemsPanel:destroyChildren()
-
-	if radioItems then
-		radioItems:destroy()
-	end
-	radioItems = UIRadioGroup.create()
-
-	for key, item in pairs(tradeItems) do
-		local itemBox = g_ui.createWidget('fameNPCItemBox', itemsPanel)
-		itemBox.item = item
-
-		local text = item.name
-		text = text .. '\n' .. item.fameLevel .. " fame level"
-		local price = formatCurrency(item.price)
-		text = text .. '\n' .. price
-		itemBox:setText(text)
-
-		
-		if item.type == "item" then
-			local itemWidget = itemBox:getChildById('fameitem')
-			itemWidget:setItemId(item.clientId)
-			itemWidget:setVirtual(true)
-			itemWidget:setItemCount(item.amount)
-		elseif item.type == "mount" or item.type == "outfit" or item.type == "pet" then
-			local creatureWidget = itemBox:getChildById('fameoutfit')
-			print(item.type .. " " .. item.clientId)
-
-				print("itemWidget.setOutfit")
-				creatureWidget:setOutfit({
-					type = item.clientId
-				})
-
-			
-		end
-		radioItems:addWidget(itemBox)
-	end
+function createItemCard(item)
+  local card = g_ui.createWidget('FameItemCard', itemsGrid)
+  card.itemData = item
+  
+  local priceLabel = card:recursiveGetChildById('priceLabel')
+  local priceContainer = card:recursiveGetChildById('priceContainer')
+  local levelLabel = card:recursiveGetChildById('levelLabel')
+  local lockIcon = card:recursiveGetChildById('lockIcon')
+  local ownedIcon = card:recursiveGetChildById('ownedIcon')
+  local itemWidget = card:recursiveGetChildById('itemWidget')
+  local creatureWidget = card:recursiveGetChildById('creatureWidget')
+  
+  -- Display currencies
+  priceContainer:destroyChildren()
+  if item.currencies and #item.currencies > 0 then
+    for _, currency in ipairs(item.currencies) do
+      local icon = g_ui.createWidget('UIWidget', priceContainer)
+      icon:setSize('12 12')
+      icon:setPhantom(true)
+      
+      if currency.type == 'fame' then
+        icon:setImageSource('/images/icons/fame')
+      elseif currency.type == 'gold' then
+        icon:setImageSource('/images/icons/prey_gold')
+      elseif currency.type == 'token' then
+        icon:setImageSource('/images/icons/token')
+      elseif currency.type == 'item' then
+        icon:setImageSource('/images/icons/icon_misc')
+      end
+      
+      local label = g_ui.createWidget('Label', priceContainer)
+      label:setText(currency.amount)
+      label:setFont('verdana-11px-rounded')
+      label:setColor('#ffd700')
+      label:setTextAutoResize(true)
+      label:setPhantom(true)
+    end
+  end
+  
+  levelLabel:setText('Lvl ' .. item.fameLevel)
+  
+  -- Check if player owns this item (from server)
+  local isOwned = item.owned or false
+  
+  -- If owned, show large check icon covering the card
+  if isOwned then
+    ownedIcon:setVisible(true)
+    ownedIcon:breakAnchors()
+    ownedIcon:centerIn('parent')
+    card:setOn(false) -- Disable opacity for owned items
+  else
+    ownedIcon:setVisible(false)
+    -- Show lock if can't purchase
+    local canPurchase = canPurchaseItem(item)
+    card:setOn(canPurchase)
+    lockIcon:setVisible(not canPurchase)
+  end
+  
+  -- Show item or creature
+  if item.type == 'item' then
+    itemWidget:setVisible(true)
+    creatureWidget:setVisible(false)
+    itemWidget:setItemId(item.clientId)
+    itemWidget:setVirtual(true)
+  else
+    itemWidget:setVisible(false)
+    creatureWidget:setVisible(true)
+    creatureWidget:setOutfit({type = item.clientId})
+  end
+  
+  radioCards:addWidget(card)
 end
 
-function famerefreshPlayerGoods()
-	moneyLabel:setText(playerfamepoints)
-	capacityLabel:setText(string.format('%.2f', playerFreeCapacity) .. ' ' .. 'oz')
+function updateFameDisplay()
+  famePointsLabel:setText('Fame: ' .. playerFamePoints .. ' pts')
+  fameLevelLabel:setText('Level: ' .. playerFameLevel)
+  refreshItems()
+end
 
-	local searchFilter = searchText:getText():lower()
-	local foundSelectedItem = false
-
-	local items = itemsPanel:getChildCount()
-	for i = 1, items do
-		local itemWidget = itemsPanel:getChildByIndex(i)
-		local item = itemWidget.item
-
-		local canTradeFame = canTradeFameItem(item)
-		itemWidget:setOn(canTradeFame)
-		itemWidget:setEnabled(canTradeFame)
-
-		local searchCondition = (searchFilter == '') or (searchFilter ~= '' and string.find(item.name:lower(), searchFilter) ~= nil)
-		itemWidget:setVisible(searchCondition)
-
-		if selectedItem == item and itemWidget:isEnabled() and itemWidget:isVisible() then
-			foundSelectedItem = true
-		end
-	end
-
-	if not foundSelectedItem then
-		fameclearSelectedItem()
-	end
-
-	if selectedItem then
-		famerefreshItem(selectedItem)
-	end
+function updateGoldAndTokens(gold, tokens)
+  if goldLabel then
+    goldLabel:setText('Gold: ' .. gold)
+    refreshItems()
+  end
+  if tokenLabel then
+    tokenLabel:setText('Tokens: ' .. tokens)
+    refreshItems()
+  end
 end
 
 function parseNpcShop(protocol, msg)
-	-- parse info
-	tradeItems = {}
-	local size = msg:getU16()
-	for i = 1, size do
-		local item = {}
-		item.type = msg:getString()
-		item.id = msg:getU16()
-		item.clientId = msg:getU16()
-		item.price = msg:getU32()
-		item.amount = msg:getU16()
-		item.fameLevel = msg:getU32()
-		item.weight = msg:getU32()
-		item.name = msg:getString()
-		item.famedesc = msg:getString()
-		tradeItems[#tradeItems + 1] = item
-	end
-
-	playerfamepoints = msg:getU32()
-	playerFameLevel = msg:getU32()
-
-	famerefreshTradeItems()
-	famerefreshPlayerGoods()
-	addEvent(show) -- player goods has not been parsed yet
-end
-
-function onFreeCapacityChange(localPlayer, freeCapacity, oldFreeCapacity)
-	playerFreeCapacity = freeCapacity
-
-	if famenpcWindow:isVisible() then
-		famerefreshPlayerGoods()
-	end
-end
-
-function onInventoryChange(inventory, item, oldItem)
-	if famenpcWindow:isVisible() then
-		famerefreshPlayerGoods()
-	end
-end
-
-function formatCurrency(amount)
-	return amount .. ' ' .. "fame pts"
+  allItems = {}
+  
+  -- Read player's gold and tokens from server
+  local playerGold = msg:getU32()
+  local playerTokens = msg:getU32()
+  
+  local size = msg:getU16()
+  for i = 1, size do
+    local item = {}
+    item.type = msg:getString()
+    item.id = msg:getU16()
+    item.clientId = msg:getU16()
+    item.price = msg:getU32()
+    item.amount = msg:getU16()
+    item.fameLevel = msg:getU32()
+    item.weight = msg:getU32()
+    item.name = msg:getString()
+    item.famedesc = msg:getString()
+    item.owned = msg:getU8() == 1 -- owned flag from server
+    
+    -- Read currencies
+    local currencyCount = msg:getU8()
+    item.currencies = {}
+    for j = 1, currencyCount do
+      local currency = {}
+      currency.type = msg:getString()
+      if currency.type == 'item' then
+        currency.itemId = msg:getU16()
+        currency.amount = msg:getU32()
+      else
+        currency.amount = msg:getU32()
+      end
+      table.insert(item.currencies, currency)
+    end
+    
+    table.insert(allItems, item)
+  end
+  
+  playerFamePoints = msg:getU32()
+  playerFameLevel = msg:getU32()
+  
+  updateFameDisplay()
+  updateGoldAndTokens(playerGold, playerTokens)
+  show()
+  
+  -- Re-select previously selected item after refresh
+  if pendingReselect then
+    reselectItem(pendingReselect)
+    pendingReselect = nil
+  end
 end

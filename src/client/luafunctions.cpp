@@ -630,6 +630,8 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<Creature>("isFullHealth", &Creature::isFullHealth);
     g_lua.bindClassMemberFunction<Creature>("isCovered", &Creature::isCovered);
     g_lua.bindClassMemberFunction<Creature>("setOutfitOffset", &Creature::setOutfitOffset);
+    g_lua.bindClassMemberFunction<Creature>("setMountOffset", &Creature::setMountOffset);
+    g_lua.bindClassMemberFunction<Creature>("getMountOffset", &Creature::getMountOffset);
 
     g_lua.bindClassMemberFunction<Creature>("setText", &Creature::setText);
     g_lua.bindClassMemberFunction<Creature>("getText", &Creature::getText);

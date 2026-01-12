@@ -158,6 +158,9 @@ public:
     Point getOutfitOffset() { return m_outfitOffset; }
     void setOutfitOffset(int x, int y) { m_outfitOffset = Point(x, y); }
 
+    Point getMountOffset() { return m_mountOffset; }
+    void setMountOffset(int x, int y) { m_mountOffset = Point(x, y); }
+
     PointF getJumpOffset() { return m_jumpOffset; }
     Position getLastStepFromPosition() const { return m_lastStepFromPosition; }
     Position getLastStepToPosition() const { return m_lastStepToPosition; }
@@ -238,6 +241,7 @@ protected:
 
     Point m_walkOffset;
     Point m_outfitOffset;
+    Point m_mountOffset;
     Otc::Direction m_direction{ Otc::South };
 
     Timer m_walkTimer;

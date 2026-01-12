@@ -359,13 +359,19 @@ void Creature::internalDraw(Point dest, const Color& color)
             if (m_outfit.hasMount()) {
                 dest -= getMountThingType()->getDisplacement() * g_drawPool.getScaleFactor();
 
+                // Apply mount offset
+                Point mountDest = dest;
+                if (!m_mountOffset.isNull()) {
+                    mountDest += m_mountOffset * g_drawPool.getScaleFactor();
+                }
+
                 if (!replaceColorShader && hasMountShader()) {
                     g_drawPool.setShaderProgram(g_shaders.getShaderById(m_mountShaderId), true/*, [this]()-> void {
                         m_mountShader->bind();
                         m_mountShader->setUniformValue(ShaderManager::MOUNT_ID_UNIFORM, m_outfit.getMount());
                     }*/);
                 }
-                getMountThingType()->draw(dest, 0, m_numPatternX, 0, 0, getCurrentAnimationPhase(true), color);
+                getMountThingType()->draw(mountDest, 0, m_numPatternX, 0, 0, getCurrentAnimationPhase(true), color);
 
                 dest += getDisplacement() * g_drawPool.getScaleFactor();
             }
@@ -844,7 +850,13 @@ void Creature::setDirection(const Otc::Direction direction)
     if (direction == Otc::InvalidDirection)
         return;
 
+    const Otc::Direction oldDirection = m_direction;
     m_direction = direction;
+    
+    // Fire direction change event if direction actually changed
+    if (oldDirection != direction) {
+        callLuaField("onDirectionChange", direction, oldDirection);
+    }
 
     // xPattern => creature direction
     if (direction == Otc::NorthEast || direction == Otc::SouthEast)
@@ -887,6 +899,16 @@ void Creature::setOutfit(const Outfit& outfit)
 
     if (const auto& tile = getTile())
         tile->checkForDetachableThing();
+
+    // Check if mount changed and fire onMountChange event
+    if (g_game.getFeature(Otc::GamePlayerMounts)) {
+        const uint16_t oldMount = oldOutfit.getMount();
+        const uint16_t newMount = m_outfit.getMount();
+        
+        if (oldMount != newMount) {
+            callLuaField("onMountChange", newMount, oldMount);
+        }
+    }
 
     callLuaField("onOutfitChange", m_outfit, oldOutfit);
 }

@@ -1,244 +1,419 @@
-fameNPCOfferLabel < Label
-  anchors.left: prev.right
-  anchors.top: prev.top
-  margin-left: 5
-  text-auto-resize: true
+// Fame Category Tab - MainPanelGridButton with left icon
+FameCategoryTab < MainPanelGridButton
+  width: 100
+  height: 28
+  
+  UIWidget
+    id: iconWidget
+    size: 16 16
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 8
+    phantom: true
 
-fameNPCItemBox < UICheckBox
-  border-width: 1
-  border-color: #000000
-  color: #aaaaaa
-  image-source: /images/ui/miniwindow_orange
-  text-align: center
-  text-offset: 0 20
-  margin-top: 5
-  @onCheckChange: modules.game_famenpcshop.onItemBoxChecked(self)
+  Label
+    id: tabLabel
+    anchors.left: prev.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 6
+    text-auto-resize: true
+    phantom: true
+    color: #dfdfdf
+
+// Fame Item Card - Compact grid item
+FameItemCard < UICheckBox
+  size: 100 130
+  border-width: 2
+  border-color: #3a3a3a
+  image-source: /images/ui/windows/panel_border
+  image-auto-resize: true
+  @onCheckChange: modules.game_famenpcshop.onItemCardSelected(self)
 
   Item
-    id: fameitem
+    id: itemWidget
     phantom: true
     anchors.top: parent.top
     anchors.horizontalCenter: parent.horizontalCenter
-    image-color: #ffffffff
-    margin-top: 32
-    height: 32
-    width: 32
+    margin-top: 20
+    size: 48 48
 
   UICreature
-    id: fameoutfit
+    id: creatureWidget
     phantom: true
     anchors.top: parent.top
-    margin-top: 10
     anchors.horizontalCenter: parent.horizontalCenter
-    size: 64 64
+    margin-top: 10
+    size: 70 70
 
+  Panel
+    id: priceContainer
+    height: 16
+    anchors.bottom: next.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 2
+    layout:
+      type: horizontalBox
+      spacing: 3
+      fit-children: true
 
-  $checked on:
-    border-color: #ffffff
+    UIWidget
+      id: fameIcon
+      size: 12 12
+      image-source: /images/icons/fame
+      phantom: true
 
-  $!checked:
-    border-color: #000000
+    Label
+      id: priceLabel
+      text: 0 Fame
+      font: verdana-11px-rounded
+      color: #ffd700
+      text-auto-resize: true
+      phantom: true
+
+  Label
+    id: levelLabel
+    text: Lvl 1
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 5
+    font: verdana-11px-rounded
+    color: #aaaaaa
+    text-auto-resize: true
+
+  UIWidget
+    id: lockIcon
+    size: 24 24
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin: 5
+    image-source: /images/icons/lock_small
+    visible: false
+    phantom: true
+
+  UIWidget
+    id: ownedIcon
+    size: 32 32
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin: 5
+    image-source: /images/icons/check_buy
+    visible: false
+    phantom: true
+
+  $checked:
+    border-color: #ffd700
+    background-color: #2a2a2a
 
   $!on:
-    image-color: #ffffff88
-    color: #aaaaaa88
+    opacity: 0.5
 
 MainWindow
   id: famenpcWindow
-  size: 550 680
-  image-source: /images/ui/windows/mainwindow_fame
+  size: 700 580
   @onEscape: modules.game_famenpcshop.hide()
 
-  FlatPanel
-    height: 250
-    image-source: /images/ui/panel_lightflat
-    anchors.left: parent.left
-    anchors.right: parent.right
+  Button
+    id: closeButton
+    text: close
+    size: 60 26
     anchors.top: parent.top
-    margin-top: 140
-
-    VerticalScrollBar
-      id: itemsPanelListScrollBar
-      anchors.top: parent.top
-      anchors.bottom: parent.bottom
-      anchors.right: parent.right
-      step: 24
-      pixels-scroll: true
-
-    ScrollablePanel
-      id: fameitemsPanel
-      height: 250
-      anchors.left: parent.left
-      anchors.right: prev.left
-      anchors.top: parent.top
-      anchors.bottom: parent.bottom
-      vertical-scrollbar: itemsPanelListScrollBar
-      margin-left: 5
-      margin-right: 5
-      layout:
-        type: grid
-        cell-size: 120 200
-        flow: true
-        auto-spacing: true
-
-  FlatPanel
-    id: famesetupPanel
-    height: 222
-    width: 500
-    enabled: false
-    anchors.left: parent.left
-    anchors.top: prev.bottom
-    margin-top: 10
-    margin-right: 5
-    image-color: #ffffff88
-
-    Label
-      !text: tr('Name') .. ':'
-      anchors.left: parent.left
-      anchors.top: parent.top
-      margin-top: 5
-      margin-left: 5
-      width: 85
-
-    fameNPCOfferLabel
-      id: famename
-
-    Label
-      !text: tr('Price') .. ':'
-      anchors.left: parent.left
-      anchors.top: prev.bottom
-      margin-top: 5
-      margin-left: 5
-      width: 85
-
-    fameNPCOfferLabel
-      id: fameprice
-
-    Label
-      !text: tr('Your Fame Pts') .. ':'
-      anchors.left: parent.left
-      anchors.top: prev.bottom
-      margin-top: 5
-      margin-left: 5
-      width: 90
-
-    fameNPCOfferLabel
-      id: famemoney
-
-    Label
-      id: fameweightDesc
-      !text: tr('Weight') .. ':'
-      anchors.left: parent.left
-      anchors.top: prev.bottom
-      margin-top: 5
-      margin-left: 5
-      width: 85
-
-    fameNPCOfferLabel
-      id: fameweight
-
-    Label
-      id: famecapacityDesc
-      !text: tr('Your Capacity') .. ':'
-      anchors.left: parent.left
-      anchors.top: prev.bottom
-      margin-top: 5
-      margin-left: 5
-      width: 85
-
-    fameNPCOfferLabel
-      id: famecapacity
-
-    Label
-      !text: tr('Description') .. ':'
-      anchors.left: parent.left
-      anchors.top: prev.bottom
-      margin-top: 5
-      margin-left: 5
-      width: 85
-
-    TextEdit
-      id: famedesc
-      width: 350
-      height: 70
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      text-align: left
-      margin-top: 5
-      margin-left: 5
-      text-wrap: true
-      editable: false
-      multiline: true
-      change-cursor-image: false
-      focusable: false
-      selectable: false
-
-
-    HorizontalScrollBar
-      id: famequantityScroll
-      anchors.left: parent.left
-      anchors.right: parent.right
-      anchors.top: prev.bottom
-      margin-top: 5
-      margin-left: 5
-      margin-right: 5
-      show-value: true
-      minimum: 1
-      maximum: 1
-      step: 1
-      @onValueChange: modules.game_famenpcshop.onQuantityValueChange(self:getValue())
-
-  FlatPanel
-    id: famebuyOptions
-    height: 60
-    anchors.top: prev.top
-    anchors.left: parent.horizontalCenter
     anchors.right: parent.right
-    margin-left: 5
-    margin-right: 25
-    image-color: #ffffff88
+    margin: 14 4 4 4
+    font: verdana-11px-rounded
+    color: #ffffff
+    background-color: #cc0000
+    phantom: false
+    @onClick: modules.game_famenpcshop.hide()
+    
+    $hover:
+      background-color: #ff0000
 
-    Label
-      id: famesearchLabel
-      !text: tr('Search') .. ':'
+  // Header with Fame Points, Fame Level and Search
+  Panel
+    id: headerPanel
+    height: 40
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 10 80 0 10
+    image-source: /images/ui/windows/123123
+    image-auto-resize: true
+
+    // Fame Points Icon
+    UIWidget
+      id: fameIcon
+      size: 16 16
       anchors.left: parent.left
-      anchors.top: parent.top
-      text-auto-resize: true
-      margin-top: 7
-      margin-left: 5
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 10
+      image-source: /images/icons/fame_big
+      phantom: true
 
-    TextEdit
-      id: famesearchText
+    // Fame Points Label
+    Label
+      id: famePointsLabel
+      text: Fame: 0 pts
       anchors.left: prev.right
-      anchors.top: prev.top
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 6
+      font: verdana-11px-rounded
+      color: #ffd700
+      text-auto-resize: true
+
+    // Fame Level Icon
+    UIWidget
+      id: fameLevelIcon
+      size: 16 16
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 20
+      image-source: /images/icons/star
+      phantom: true
+
+    // Fame Level Label
+    Label
+      id: fameLevelLabel
+      text: Level: 0
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 6
+      font: verdana-11px-rounded
+      color: #88ccff
+      text-auto-resize: true
+
+    // Gold Icon
+    UIWidget
+      id: goldIcon
+      size: 16 16
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 20
+      image-source: /images/icons/prey_gold
+      phantom: true
+
+    // Gold Label
+    Label
+      id: goldLabel
+      text: Gold: 0
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 6
+      font: verdana-11px-rounded
+      color: #ffcc00
+      text-auto-resize: true
+
+    // Token Icon
+    UIWidget
+      id: tokenIcon
+      size: 16 16
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 20
+      image-source: /images/icons/token
+      phantom: true
+
+    // Token Label
+    Label
+      id: tokenLabel
+      text: Tokens: 0
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 6
+      font: verdana-11px-rounded
+      color: #00ffaa
+      text-auto-resize: true
+
+    // Search Icon
+    UIWidget
+      id: searchIcon
+      size: 16 16
+      anchors.right: next.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 6
+      image-source: /images/icons/search
+      phantom: true
+
+    // Search Input
+    TextEdit
+      id: searchInput
+      width: 130
+      height: 25
       anchors.right: parent.right
-      margin-top: -2
-      margin-left: 5
+      anchors.verticalCenter: parent.verticalCenter
       margin-right: 10
       @onTextChange: modules.game_famenpcshop.onSearchTextChange()
 
-    CheckBox
-      id: fameignoreCapacity
-      !text: tr('Ignore capacity')
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      margin-left: 5
-      margin-top: 5
-      @onCheckChange: modules.game_famenpcshop.onIgnoreCapacityChange()
+  // Tabs Panel
+  Panel
+    id: tabsPanel
+    height: 35
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 5 10 0 10
+    layout:
+      type: horizontalBox
+      spacing: 5
 
-  Button
-    id: fametradeButton
-    !text: tr('Buy')
-    width: 64
-    anchors.right: next.left
-    anchors.bottom: parent.bottom
-    margin-right: 10
-    @onClick: modules.game_famenpcshop.onTradeClick()
-
-  Button
-    !text: tr('Close')
-    width: 64
+  // Main Content Area
+  Panel
+    id: contentPanel
+    anchors.top: prev.bottom
+    anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: parent.bottom
-    @onClick: modules.game_famenpcshop.hide()
+    margin: 5 10 10 10
+
+    // Items Grid (Left Side)
+    Panel
+      id: itemsGridContainer
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      anchors.right: parent.horizontalCenter
+      margin-right: 5
+      background-color: #1a1a1a
+
+      VerticalScrollBar
+        id: itemsScrollBar
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        step: 140
+        pixels-scroll: true
+
+      ScrollablePanel
+        id: itemsGrid
+        anchors.fill: parent
+        margin-right: 12
+        vertical-scrollbar: itemsScrollBar
+        layout:
+          type: grid
+          cell-size: 145 130
+          cell-spacing: 10
+          flow: true
+
+    // Item Details Panel (Right Side)
+    Panel
+      id: detailsPanel
+      anchors.top: parent.top
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      anchors.left: parent.horizontalCenter
+      margin-left: 5
+      visible: false
+      image-source: /images/ui/windows/legendary
+      image-auto-resize: true
+
+      Label
+        id: detailNameLabel
+        text: Item Name
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 15
+        font: verdana-11px-rounded
+        color: #ffffff
+        text-align: center
+        text-auto-resize: true
+
+      UICreature
+        id: detailCreatureWidget
+        anchors.top: prev.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 10
+        size: 90 90
+
+      Item
+        id: detailItemWidget
+        anchors.top: detailNameLabel.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 32
+        size: 64 64
+
+      UIWidget
+        id: detailOwnedIcon
+        size: 96 96
+        anchors.top: detailNameLabel.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 10
+        image-source: /images/icons/check_buy
+        visible: false
+        phantom: true
+
+      Label
+        id: detailPriceLabel
+        text: Price: 0 Fame
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin: 10 10 0 10
+        font: verdana-11px-rounded
+        color: #ffd700
+        text-align: center
+
+      Label
+        id: detailLevelLabel
+        text: Fame Level Required: 0
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin: 5 10 0 10
+        color: #aaaaaa
+        text-align: center
+
+      Label
+        id: detailTypeLabel
+        text: Cosmetic / Account-wide
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin: 5 10 0 10
+        color: #88ccff
+        text-align: center
+
+      TextEdit
+        id: detailDescLabel
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin: 10
+        height: 60
+        text-wrap: true
+        editable: false
+        multiline: true
+        change-cursor-image: false
+        focusable: false
+        selectable: false
+        color: #cccccc
+        background-color: #1a1a1a
+
+      HorizontalScrollBar
+        id: quantityScroll
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: prev.bottom
+        margin: 10 10 0 10
+        show-value: true
+        minimum: 1
+        maximum: 1
+        step: 1
+        @onValueChange: modules.game_famenpcshop.onQuantityChange(self:getValue())
+
+      Button
+        id: buyButton
+        text: BUY
+        width: 130
+        height: 30
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: prev.bottom
+        margin-top: 15
+        @onClick: modules.game_famenpcshop.onBuyClick()
+
+      UIWidget
+        id: purchaseCheckIcon
+        size: 48 48
+        anchors.centerIn: buyButton
+        image-source: /images/icons/check_buy
+        visible: false
+        phantom: true
