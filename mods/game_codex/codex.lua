@@ -267,6 +267,25 @@ function Codex.setupCollectionUI()
 			end
 		end
 
+		-- Add EXP bar if unlocked and not max level
+		if isUnlocked and cardLevel < cardData.maxLevel then
+			local currentExp = Codex.cachedCardsExp[cardId] or 0
+			local expNeeded = Codex.cardExpTable[cardLevel] or 1
+			local expPercent = math.floor((currentExp / expNeeded) * 100)
+			
+			local expBar = g_ui.createWidget("ProgressBar", cardWidget)
+			expBar:setId("expBar")
+			expBar:addAnchor(AnchorBottom, "parent", AnchorBottom)
+			expBar:addAnchor(AnchorLeft, "parent", AnchorLeft)
+			expBar:addAnchor(AnchorRight, "parent", AnchorRight)
+			expBar:setHeight(4)
+			expBar:setMarginBottom(2)
+			expBar:setMarginLeft(2)
+			expBar:setMarginRight(2)
+			expBar:setBackgroundColor("#2a2a2a")
+			expBar:setPercent(expPercent)
+		end
+
 		-- Click handler
 		cardWidget.onClick = function()
 			Codex.selectCard(cardId)
@@ -461,6 +480,25 @@ function Codex.setupDeckUI()
 			local cardLevelLabel = cardWidget:getChildById("cardLevel")
 			if cardLevelLabel then
 				cardLevelLabel:setText("Level: " .. cardLevel .. "/" .. cardData.maxLevel)
+			end
+
+			-- Add EXP bar if not max level
+			if cardLevel < cardData.maxLevel then
+				local currentExp = Codex.cachedCardsExp[cardId] or 0
+				local expNeeded = Codex.cardExpTable[cardLevel] or 1
+				local expPercent = math.floor((currentExp / expNeeded) * 100)
+				
+				local expBar = g_ui.createWidget("ProgressBar", cardWidget)
+				expBar:setId("expBar")
+				expBar:addAnchor(AnchorBottom, "parent", AnchorBottom)
+				expBar:addAnchor(AnchorLeft, "parent", AnchorLeft)
+				expBar:addAnchor(AnchorRight, "parent", AnchorRight)
+				expBar:setHeight(3)
+				expBar:setMarginBottom(1)
+				expBar:setMarginLeft(5)
+				expBar:setMarginRight(5)
+				expBar:setBackgroundColor("#2a2a2a")
+				expBar:setPercent(expPercent)
 			end
 
 			-- Equip button
