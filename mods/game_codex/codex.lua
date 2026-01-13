@@ -56,6 +56,10 @@ function Codex.onGameStart()
 	Codex.cachedCardDatabase = {}
 	Codex.cachedCrateDatabase = {}
 	Codex.currentTab = Codex.TAB_COLLECTION
+	
+	-- Temporary batch accumulation
+	Codex.tempCardDatabase = {}
+	Codex.baseDataReceived = false
 
 	Codex.setupDialogButtons()
 	Codex.setupTabButtons()
@@ -586,6 +590,11 @@ function Codex.setupDeckUI()
 				slotCardImage.cardId = activeCardId
 				slotCardImage.cardData = cardData
 				slotCardImage.onHoverChange = Codex.onCardHoverChange
+				
+				-- Also add tooltip to the slot widget itself
+				slotWidget.cardId = activeCardId
+				slotWidget.cardData = cardData
+				slotWidget.onHoverChange = Codex.onCardHoverChange
 			end
 			if slotPlaceholder then slotPlaceholder:hide() end
 			if removeButton then
@@ -887,23 +896,37 @@ end
 
 function Codex.applyTooltip(cardData, cardLevel)
 	Codex.moveToolTip()
-	Codex.Tooltip:setText(cardData.name)
 	
+	-- Set card name with rarity color
+	local rarityColor = Codex.rarityColors[cardData.rarity] or "#ffffff"
+	Codex.Tooltip:setText(cardData.name)
+	Codex.Tooltip:setColor(rarityColor)
+	
+	-- Build detailed description
 	if Codex.Tooltip.description then
 		local desc = cardData.description[cardLevel] or cardData.description[1] or "No description"
-		Codex.Tooltip.description:setText(desc)
+		
+		-- Add level and rarity info
+		local levelInfo = "Level " .. cardLevel .. "/" .. cardData.maxLevel .. " • " .. (cardData.rarity or "common"):upper()
+		
+		-- Combine info
+		local fullDesc = levelInfo .. "\n\n" .. desc
+		
+		Codex.Tooltip.description:setText(fullDesc)
+		Codex.Tooltip.description:setColor("#ffffff")
 	end
 	
 	if Codex.Tooltip.trigger then
-		Codex.Tooltip.trigger:setText("Trigger: " .. cardData.trigger)
+		Codex.Tooltip.trigger:setText("⚡ " .. cardData.trigger)
+		Codex.Tooltip.trigger:setColor("#ffaa00")
 	end
 	
 	-- Calculate dynamic height based on text content
 	scheduleEvent(function()
 		local descHeight = Codex.Tooltip.description and Codex.Tooltip.description:getHeight() or 0
 		local triggerHeight = Codex.Tooltip.trigger and Codex.Tooltip.trigger:getHeight() or 0
-		local totalHeight = 60 + descHeight + triggerHeight -- 60 = padding + title + margins
-		Codex.Tooltip:setHeight(math.max(totalHeight, 80))
+		local totalHeight = 70 + descHeight + triggerHeight -- 70 = padding + title + margins
+		Codex.Tooltip:setHeight(math.max(totalHeight, 100))
 	end, 10)
 end
 
@@ -998,37 +1021,68 @@ function Codex.onExtendedOpcode(protocol, opcode, buffer)
 		Codex.cachedEssences = data.essences or 0
 		Codex.cachedMaxSlots = data.maxSlots or 3
 		
-		-- Convert cardDatabase string keys to numbers
-		Codex.cachedCardDatabase = {}
-		for cardIdStr, cardData in pairs(data.cardDatabase or {}) do
-			local cardId = tonumber(cardIdStr)
-			if cardId then
-				-- Also convert description keys back to numbers
-				if cardData.description then
-					local descConverted = {}
-					for levelStr, desc in pairs(cardData.description) do
-						local level = tonumber(levelStr)
-						if level then
-							descConverted[level] = desc
+		-- Reset temp database for batch accumulation
+		Codex.tempCardDatabase = {}
+		Codex.baseDataReceived = true
+		
+		print("[Codex] Base data received, waiting for batches...")
+		
+	elseif data.topic == "card-database-batch" then
+		-- Accumulate card batches
+		if data.cards then
+			for cardIdStr, cardData in pairs(data.cards) do
+				local cardId = tonumber(cardIdStr)
+				if cardId then
+					-- Convert description keys back to numbers
+					if cardData.description then
+						local descConverted = {}
+						for levelStr, desc in pairs(cardData.description) do
+							local level = tonumber(levelStr)
+							if level then
+								descConverted[level] = desc
+							end
 						end
+						cardData.description = descConverted
 					end
-					cardData.description = descConverted
+					Codex.tempCardDatabase[cardId] = cardData
 				end
-				Codex.cachedCardDatabase[cardId] = cardData
 			end
+			
+			local cardCount = 0
+			for _ in pairs(Codex.tempCardDatabase) do
+				cardCount = cardCount + 1
+			end
+			print("[Codex] Received batch " .. (data.batchIndex or "?") .. ", total cards: " .. cardCount)
 		end
 		
-		-- Convert crateDatabase string keys to numbers
+	elseif data.topic == "crate-database" then
+		-- Store crate database
 		Codex.cachedCrateDatabase = {}
-		for crateIdStr, crateData in pairs(data.crateDatabase or {}) do
+		for crateIdStr, crateData in pairs(data.crates or {}) do
 			local crateId = tonumber(crateIdStr)
 			if crateId then
 				Codex.cachedCrateDatabase[crateId] = crateData
 			end
 		end
-
-		-- Refresh current tab
-		Codex.switchTab(Codex.currentTab)
+		print("[Codex] Crate database received")
+		
+	elseif data.topic == "base-data-complete" then
+		-- Finalize: move temp database to actual database
+		if Codex.baseDataReceived then
+			Codex.cachedCardDatabase = Codex.tempCardDatabase
+			
+			local cardCount = 0
+			for _ in pairs(Codex.cachedCardDatabase) do
+				cardCount = cardCount + 1
+			end
+			
+			print("[Codex] Base data loading complete! Total cards: " .. cardCount)
+			
+			-- Now refresh UI
+			Codex.switchTab(Codex.currentTab)
+		else
+			print("[Codex ERROR] Received complete signal but no base data!")
+		end
 
 	elseif data.topic == "collection-update" then
 		local cardId = tonumber(data.cardId)
