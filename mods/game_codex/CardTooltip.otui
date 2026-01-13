@@ -2,13 +2,14 @@ UIWindow
   id: CardTooltip
   text-offset: 0 4
   text-align: top
-  image-source: /images/ui/windows/card_window_rare
+  image-source: /images/ui/windows/mainwindow
   image-border: 5
-  image-auto-resize: true
   width: 280
+  height: 100
   phantom: false
   focusable: false
   padding: 15
+  padding-bottom: 20
   
   Label
     id: description
@@ -25,8 +26,11 @@ UIWindow
   Label
     id: trigger
     anchors.top: description.bottom
-    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.left: parent.left
+    anchors.right: parent.right
     margin-top: 10
+    margin-left: 5
+    margin-right: 5
     text-wrap: true
     text-auto-resize: true
     text-align: center

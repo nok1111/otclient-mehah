@@ -39,3 +39,36 @@ Codex.rarityColors = {
 	epic = "#a335ee",
 	legendary = "#ff8000"
 }
+
+-- Get background image based on card level
+function Codex.getCardBackgroundByLevel(level)
+	if level == 1 then
+		return "/images/ui/tooltip-white"
+	elseif level >= 2 and level <= 4 then
+		return "/images/ui/tooltip_unique"
+	elseif level >= 5 and level <= 7 then
+		return "/images/ui/tooltip-blue"
+	elseif level >= 8 and level <= 9 then
+		return "/images/ui/tooltip-purple"
+	elseif level >= 10 then
+		return "/images/ui/tooltip-orange"
+	else
+		return "/images/ui/tooltip-white" -- Default
+	end
+end
+
+-- Get background image based on crate ID
+function Codex.getCrateBackground(crateId)
+	if crateId == 1 then
+		-- Bronze Crate
+		return "/images/ui/tooltip-white"
+	elseif crateId == 2 then
+		-- Silver Crate
+		return "/images/ui/tooltip-blue"
+	elseif crateId == 3 then
+		-- Gold Crate
+		return "/images/ui/tooltip-orange"
+	else
+		return "/images/ui/tooltip-white" -- Default
+	end
+end

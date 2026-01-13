@@ -461,6 +461,14 @@ function Codex.setupDeckUI()
 			cardWidget:setId("available_card_" .. cardId)
 			cardWidget.cardId = cardId
 			cardWidget.cardData = cardData
+			
+			-- Set background based on card level
+			local backgroundImage = Codex.getCardBackgroundByLevel(cardLevel)
+			cardWidget:setImageSource(backgroundImage)
+			cardWidget:setImageBorder(3)
+			cardWidget:setImageRepeated(false)
+			cardWidget:setImageFixedRatio(false)
+			
 
 			-- Set card icon
 			local cardIcon = cardWidget:getChildById("cardIcon")
@@ -512,12 +520,23 @@ function Codex.setupDeckUI()
 					Codex.equipCard(cardId)
 				end
 			end
+			
+			-- Add hover tooltip
+			cardWidget.onHoverChange = Codex.onCardHoverChange
 		end
 	end
 
 	-- Setup active slots
 	activeSlotsPanel:destroyChildren()
 	local maxSlots = 6 -- Total slots (3 base + 3 locked)
+	
+	-- Ascension requirements for locked slots
+	local ascensionRequirements = {
+		[4] = "Requires one ascension",
+		[5] = "Requires third ascension",
+		[6] = "Requires sixth ascension"
+	}
+	
 	for i = 1, maxSlots do
 		local slotWidget = g_ui.createWidget("ActiveSlot", activeSlotsPanel)
 		slotWidget:setId("slot_" .. i)
@@ -531,6 +550,7 @@ function Codex.setupDeckUI()
 		local slotPlaceholder = slotWidget:getChildById("slotPlaceholder")
 		local slotCardImage = slotWidget:getChildById("slotCardImage")
 		local removeButton = slotWidget:getChildById("removeButton")
+		local requirementLabel = slotWidget:getChildById("requirementLabel")
 		
 		if slotLabel then
 			if isLocked then
@@ -548,6 +568,12 @@ function Codex.setupDeckUI()
 			if slotCardImage then slotCardImage:hide() end
 			if removeButton then removeButton:hide() end
 			slotWidget:setOpacity(0.5)
+			
+			-- Show ascension requirement label
+			if requirementLabel and ascensionRequirements[i] then
+				requirementLabel:setText(ascensionRequirements[i])
+				requirementLabel:show()
+			end
 		elseif activeCardId and activeCardId > 0 then
 			-- Slot has a card
 			local cardData = Codex.cachedCardDatabase[activeCardId]
@@ -555,6 +581,11 @@ function Codex.setupDeckUI()
 				local imagePath = Codex.cardImagesPath .. cardData.cardFrame .. ".png"
 				slotCardImage:setImageSource(imagePath)
 				slotCardImage:show()
+				
+				-- Add tooltip to card image
+				slotCardImage.cardId = activeCardId
+				slotCardImage.cardData = cardData
+				slotCardImage.onHoverChange = Codex.onCardHoverChange
 			end
 			if slotPlaceholder then slotPlaceholder:hide() end
 			if removeButton then
@@ -625,21 +656,50 @@ function Codex.setupCratesUI()
 	cratesList:destroyChildren()
 
 	for crateId, crateData in pairs(Codex.cachedCrateDatabase) do
+		print("[Codex] Creating crate " .. crateId .. ", itemId: " .. tostring(crateData.itemId))
+		
 		local crateWidget = g_ui.createWidget("CrateEntry", cratesList)
 		crateWidget:setId("crate_" .. crateId)
 		crateWidget.crateId = crateId
 		crateWidget.crateData = crateData
+		
+		-- Set background based on crate ID
+		local backgroundImage = Codex.getCrateBackground(crateId)
+		crateWidget:setImageSource(backgroundImage)
+		crateWidget:setImageBorder(3)
+		crateWidget:setImageRepeated(false)
+		crateWidget:setImageFixedRatio(false)
+
+		-- Add item icon if itemId exists
+		if crateData.itemId then
+			print("[Codex] Adding item icon with ID: " .. crateData.itemId)
+			local itemWidget = g_ui.createWidget("Item", crateWidget)
+			itemWidget:setId("crateIcon")
+			itemWidget:setItemId(crateData.itemId)
+			itemWidget:addAnchor(AnchorLeft, "parent", AnchorLeft)
+			itemWidget:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
+			itemWidget:setMarginLeft(5)
+			itemWidget:setSize({width = 32, height = 32})
+			itemWidget:setImageSource("/images/ui/windows/transparent")
+			itemWidget:setPhantom(true)
+		else
+			print("[Codex] WARNING: No itemId for crate " .. crateId)
+		end
 
 		local nameLabel = g_ui.createWidget("Label", crateWidget)
 		nameLabel:setText(crateData.name)
 		nameLabel:addAnchor(AnchorLeft, "parent", AnchorLeft)
-		nameLabel:setMarginLeft(10)
+		nameLabel:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
+		nameLabel:setMarginLeft(crateData.itemId and 42 or 10)
+		nameLabel:setFont("verdana-11px-rounded")
 
 		local costLabel = g_ui.createWidget("Label", crateWidget)
 		costLabel:setText(crateData.cost .. " Essences")
 		costLabel:addAnchor(AnchorRight, "parent", AnchorRight)
+		costLabel:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
 		costLabel:setMarginRight(10)
 		costLabel:setColor("#ffff00")
+		costLabel:setFont("verdana-11px-rounded")
 
 		crateWidget.onClick = function()
 			Codex.selectCrate(crateId)
@@ -679,6 +739,11 @@ function Codex.selectCrate(crateId)
 				cardIcon:setSize({width = 60, height = 100})
 				cardIcon:setImageSource(Codex.cardImagesPath .. cardData.cardFrame .. ".png")
 				cardIcon:setOpacity(0.7)
+				
+				-- Add tooltip to card preview
+				cardIcon.cardId = reward.cardId
+				cardIcon.cardData = cardData
+				cardIcon.onHoverChange = Codex.onCardHoverChange
 			end
 		end
 	end
@@ -833,11 +898,13 @@ function Codex.applyTooltip(cardData, cardLevel)
 		Codex.Tooltip.trigger:setText("Trigger: " .. cardData.trigger)
 	end
 	
-	local totalHeight = 100
-	if Codex.Tooltip.description then
-		totalHeight = Codex.Tooltip.description:getHeight() + 80
-	end
-	Codex.Tooltip:setHeight(totalHeight)
+	-- Calculate dynamic height based on text content
+	scheduleEvent(function()
+		local descHeight = Codex.Tooltip.description and Codex.Tooltip.description:getHeight() or 0
+		local triggerHeight = Codex.Tooltip.trigger and Codex.Tooltip.trigger:getHeight() or 0
+		local totalHeight = 60 + descHeight + triggerHeight -- 60 = padding + title + margins
+		Codex.Tooltip:setHeight(math.max(totalHeight, 80))
+	end, 10)
 end
 
 function Codex.onCardHoverChange(widget, hovered)

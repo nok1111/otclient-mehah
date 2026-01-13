@@ -24,9 +24,6 @@ CardLevelLabel < Label
 
 DeckCardEntry < Panel
   height: 60
-  image-source: /images/ui/panel_flat
-  image-border: 3
-  margin-top: 2
   phantom: false
   
   UIWidget
@@ -64,7 +61,7 @@ DeckCardEntry < Panel
     !text: tr('Equip')
 
 ActiveSlot < Panel
-  size: 120 160
+  size: 190 230
   image-source: /images/ui/panel_flat
   image-border: 3
   margin: 5
@@ -74,8 +71,8 @@ ActiveSlot < Panel
     id: slotPlaceholder
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: parent.top
-    size: 96 160
-    margin-top: 5
+    size: 130 185
+    margin-top: 25
     image-source: /images/codex/cards/empty_slot.png
     phantom: true
   
@@ -83,8 +80,8 @@ ActiveSlot < Panel
     id: slotCardImage
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: parent.top
-    size: 96 160
-    margin-top: 5
+    size: 130 185
+    margin-top: 25
     phantom: true
     visible: false
   
@@ -96,18 +93,27 @@ ActiveSlot < Panel
     text: Slot 1
     font: verdana-11px-rounded
   
+  Label
+    id: requirementLabel
+    anchors.centerIn: parent
+    text-align: center
+    text-wrap: true
+    font: verdana-11px-rounded
+    color: #f57905ff
+    visible: false
+    width: 160
+  
   Button
     id: removeButton
     anchors.bottom: parent.bottom
     anchors.horizontalCenter: parent.horizontalCenter
-    margin-bottom: 5
-    width: 80
+    margin-bottom: 8
+    width: 90
     !text: tr('Remove')
     visible: false
 
 CrateEntry < Panel
-  height: 35
-  image-source: /images/ui/panel_flat
+  height: 50
   image-border: 3
   margin-top: 3
   phantom: false
@@ -212,14 +218,23 @@ MainWindow
     visible: false
 
     // Left side: Card Grid
+    UIWidget
+      id: CollectionBackground
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      width: 680
+      image-source: /images/codex/deck_bg
+      image-border: 3
+      phantom: true
+    
     UIScrollArea
       id: CollectionGrid
       anchors.top: parent.top
       anchors.left: parent.left
       anchors.bottom: parent.bottom
       width: 680
-      image-source: /images/ui/panel_flat
-      image-border: 3
+      background-color: alpha
       padding: 10
       layout:
         type: grid
@@ -410,8 +425,9 @@ MainWindow
       padding-bottom: 10
       layout:
         type: grid
-        cell-size: 160 130
+        cell-size: 200 240
         flow: true
+        align-center: true
       vertical-scrollbar: ActiveSlotsScrollBar
 
     VerticalScrollBar
