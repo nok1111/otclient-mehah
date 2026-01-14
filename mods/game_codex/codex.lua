@@ -68,7 +68,11 @@ function Codex.onGameStart()
 	Codex.cachedMaxSlots = 3
 	Codex.cachedCardDatabase = {}
 	Codex.cachedCrateDatabase = {}
+	Codex.cachedBronzeCrates = 0
+	Codex.cachedSilverCrates = 0
+	Codex.cachedGoldenCrates = 0
 	Codex.currentTab = Codex.TAB_COLLECTION
+	Codex.selectedCrateId = 1  -- Default to Bronze
 	
 	-- Temporary batch accumulation
 	Codex.tempCardDatabase = {}
@@ -793,217 +797,357 @@ function Codex.removeCard(slotIndex)
 	})
 end
 
------- Crates Tab
+------ Crates Tab (NEW DESIGN)
+
+-- Rarity colors for probability bars (only 4 rarities now)
+Codex.rarityColors = {
+	common = "#AAAAAA",
+	rare = "#0070DD",
+	epic = "#A335EE",
+	legendary = "#FF8000"
+}
 
 function Codex.setupCratesUI()
-	local cratesList = Codex.UI.CratesPanel and Codex.UI.CratesPanel.CratesList
-	local crateDetailsPanel = Codex.UI.CratesPanel and Codex.UI.CratesPanel.CrateDetailsPanel
+	local cratesPanel = Codex.UI.CratesPanel
+	if not cratesPanel then 
+		print("[Codex ERROR] CratesPanel not found in setupCratesUI")
+		return 
+	end
 	
-	if not cratesList or not crateDetailsPanel then return end
+	print("[Codex] Setting up Crates UI...")
 
-	cratesList:destroyChildren()
-
-	for crateId, crateData in pairs(Codex.cachedCrateDatabase) do
-		print("[Codex] Creating crate " .. crateId .. ", itemId: " .. tostring(crateData.itemId))
-		
-		local crateWidget = g_ui.createWidget("CrateEntry", cratesList)
-		crateWidget:setId("crate_" .. crateId)
-		crateWidget.crateId = crateId
-		crateWidget.crateData = crateData
-		
-		-- Set background based on crate ID
-		local backgroundImage = Codex.getCrateBackground(crateId)
-		crateWidget:setImageSource(backgroundImage)
-		crateWidget:setImageBorder(3)
-		crateWidget:setImageRepeated(false)
-		crateWidget:setImageFixedRatio(false)
-
-		-- Add item icon if itemId exists
-		if crateData.itemId then
-			print("[Codex] Adding item icon with ID: " .. crateData.itemId)
-			local itemWidget = g_ui.createWidget("Item", crateWidget)
-			itemWidget:setId("crateIcon")
-			itemWidget:setItemId(crateData.itemId)
-			itemWidget:addAnchor(AnchorLeft, "parent", AnchorLeft)
-			itemWidget:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
-			itemWidget:setMarginLeft(5)
-			itemWidget:setSize({width = 32, height = 32})
-			itemWidget:setImageSource("/images/ui/windows/transparent")
-			itemWidget:setPhantom(true)
-		else
-			print("[Codex] WARNING: No itemId for crate " .. crateId)
-		end
-
-		local nameLabel = g_ui.createWidget("Label", crateWidget)
-		nameLabel:setText(crateData.name)
-		nameLabel:addAnchor(AnchorLeft, "parent", AnchorLeft)
-		nameLabel:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
-		nameLabel:setMarginLeft(crateData.itemId and 42 or 10)
-		nameLabel:setFont("verdana-11px-rounded")
-
-		local costLabel = g_ui.createWidget("Label", crateWidget)
-		costLabel:setText(crateData.cost .. " Essences")
-		costLabel:addAnchor(AnchorRight, "parent", AnchorRight)
-		costLabel:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
-		costLabel:setMarginRight(10)
-		costLabel:setColor("#ffff00")
-		costLabel:setFont("verdana-11px-rounded")
-
-		crateWidget.onClick = function()
-			Codex.selectCrate(crateId)
-		end
+	-- Fallback: If server data not received, use hardcoded data
+	if not Codex.cachedCrateDatabase or not Codex.cachedCrateDatabase[1] then
+		print("[Codex] No crate database from server, using fallback data")
+		Codex.cachedCrateDatabase = {
+			[1] = {
+				id = 1,
+				name = "Bronze Crate",
+				craftCost = 25,
+				rarityWeights = {
+					common = 85,
+					rare = 12,
+					epic = 3,
+					legendary = 0
+				}
+			},
+			[2] = {
+				id = 2,
+				name = "Silver Crate",
+				craftCost = 60,
+				rarityWeights = {
+					common = 60,
+					rare = 25,
+					epic = 10,
+					legendary = 5
+				}
+			},
+			[3] = {
+				id = 3,
+				name = "Golden Crate",
+				craftCost = 120,
+				rarityWeights = {
+					common = 40,
+					rare = 35,
+					epic = 20,
+					legendary = 5
+				}
+			}
+		}
 	end
 
-	-- Update essences display
-	if Codex.UI.EssencesLabel then
-		Codex.UI.EssencesLabel:setText("Codex Essences: " .. Codex.cachedEssences)
-	end
-end
-
-function Codex.selectCrate(crateId)
-	local crateData = Codex.cachedCrateDatabase[crateId]
-	local crateDetailsPanel = Codex.UI.CratesPanel and Codex.UI.CratesPanel.CrateDetailsPanel
-	
-	if not crateData or not crateDetailsPanel then return end
-
-	Codex.selectedCrateId = crateId
-
-	if crateDetailsPanel.CrateName then
-		crateDetailsPanel.CrateName:setText(crateData.name)
-	end
-
-	if crateDetailsPanel.CrateCost then
-		crateDetailsPanel.CrateCost:setText("Cost: " .. crateData.cost .. " Codex Essences")
-	end
-
-	-- Show possible rewards as small card icons
-	if crateDetailsPanel.CrateRewards then
-		crateDetailsPanel.CrateRewards:destroyChildren()
-
-		for _, reward in ipairs(crateData.rewards) do
-			local cardData = Codex.cachedCardDatabase[reward.cardId]
-			if cardData then
-				local cardIcon = g_ui.createWidget("UIWidget", crateDetailsPanel.CrateRewards)
-				cardIcon:setSize({width = 60, height = 100})
-				cardIcon:setImageSource(Codex.cardImagesPath .. cardData.cardFrame .. ".png")
-				cardIcon:setOpacity(0.7)
-				
-				-- Add tooltip to card preview
-				cardIcon.cardId = reward.cardId
-				cardIcon.cardData = cardData
-				cardIcon.onHoverChange = Codex.onCardHoverChange
-			end
-		end
-	end
-
-	-- Hide results panel when selecting a new crate
-	local resultsTitle = crateDetailsPanel:getChildById("CrateResultsTitle")
-	local resultsPanel = crateDetailsPanel:getChildById("CrateResultsPanel")
-	if resultsTitle then resultsTitle:hide() end
-	if resultsPanel then 
-		resultsPanel:destroyChildren()
-		resultsPanel:hide()
-	end
-
-	if crateDetailsPanel.OpenCrateButton then
-		crateDetailsPanel.OpenCrateButton.onClick = function()
-			Codex.openCrate(crateId)
-		end
-	end
-end
-
-function Codex.openCrate(crateId)
-	local crateData = Codex.cachedCrateDatabase[crateId]
-	if not crateData then return end
-
-	if Codex.cachedEssences < crateData.cost then
-		Codex.setupMessage("Not Enough Essences", "You need " .. crateData.cost .. " Codex Essences to open this crate.")
+	-- Setup crate selector buttons with onClick handlers
+	local selectorPanel = cratesPanel:getChildById("CrateSelectorPanel")
+	if not selectorPanel then
+		print("[Codex ERROR] CrateSelectorPanel not found!")
 		return
 	end
+	
+	local bronzeButton = selectorPanel:getChildById("BronzeCrateButton")
+	local silverButton = selectorPanel:getChildById("SilverCrateButton")
+	local goldenButton = selectorPanel:getChildById("GoldenCrateButton")
 
+	print("[Codex] Bronze button: " .. tostring(bronzeButton ~= nil))
+	print("[Codex] Silver button: " .. tostring(silverButton ~= nil))
+	print("[Codex] Golden button: " .. tostring(goldenButton ~= nil))
+
+	if bronzeButton then
+		bronzeButton:setText("BRONZE CRATE\nx" .. Codex.cachedBronzeCrates)
+		connect(bronzeButton, { onClick = function()
+			print("[Codex] Bronze button clicked")
+			Codex.selectCrateType(1)
+		end })
+		print("[Codex] Bronze button configured")
+	else
+		print("[Codex ERROR] Bronze button not found!")
+	end
+
+	if silverButton then
+		silverButton:setText("SILVER CRATE\nx" .. Codex.cachedSilverCrates)
+		connect(silverButton, { onClick = function()
+			print("[Codex] Silver button clicked")
+			Codex.selectCrateType(2)
+		end })
+		print("[Codex] Silver button configured")
+	else
+		print("[Codex ERROR] Silver button not found!")
+	end
+
+	if goldenButton then
+		goldenButton:setText("GOLDEN CRATE\nx" .. Codex.cachedGoldenCrates)
+		connect(goldenButton, { onClick = function()
+			print("[Codex] Golden button clicked")
+			Codex.selectCrateType(3)
+		end })
+		print("[Codex] Golden button configured")
+	else
+		print("[Codex ERROR] Golden button not found!")
+	end
+
+	-- Setup crafting buttons
+	local craftingPanel = cratesPanel:getChildById("CraftingPanel")
+	if not craftingPanel then
+		print("[Codex ERROR] CraftingPanel not found!")
+		return
+	end
+	
+	local craftBronze = craftingPanel:getChildById("CraftBronzeButton")
+	local craftSilver = craftingPanel:getChildById("CraftSilverButton")
+	local craftGolden = craftingPanel:getChildById("CraftGoldenButton")
+
+	if craftBronze then
+		connect(craftBronze, { onClick = function()
+			print("[Codex] Craft Bronze clicked")
+			Codex.craftCrate(1)
+		end })
+	end
+
+	if craftSilver then
+		connect(craftSilver, { onClick = function()
+			print("[Codex] Craft Silver clicked")
+			Codex.craftCrate(2)
+		end })
+	end
+
+	if craftGolden then
+		connect(craftGolden, { onClick = function()
+			print("[Codex] Craft Golden clicked")
+			Codex.craftCrate(3)
+		end })
+	end
+
+	-- Display currently selected crate
+	print("[Codex] Displaying initial crate selection...")
+	Codex.selectCrateType(Codex.selectedCrateId or 1)
+end
+
+function Codex.selectCrateType(crateId)
+	print("[Codex] selectCrateType called with crateId: " .. crateId)
+	Codex.selectedCrateId = crateId
+	
+	local crateData = Codex.cachedCrateDatabase[crateId]
+	local cratesPanel = Codex.UI.CratesPanel
+	
+	if not cratesPanel then 
+		print("[Codex ERROR] CratesPanel not found")
+		return 
+	end
+	
+	if not crateData then 
+		print("[Codex ERROR] Crate data not found for crateId: " .. crateId)
+		print("[Codex] Available crates in cache:")
+		for id, data in pairs(Codex.cachedCrateDatabase) do
+			print("  - Crate ID: " .. id .. " = " .. (data.name or "unknown"))
+		end
+		return 
+	end
+
+	local displayPanel = cratesPanel:getChildById("CrateDisplayPanel")
+	if not displayPanel then 
+		print("[Codex ERROR] CrateDisplayPanel not found")
+		return 
+	end
+
+	-- Update crate name
+	local nameLabel = displayPanel:getChildById("SelectedCrateName")
+	if nameLabel then
+		nameLabel:setText(crateData.name:upper())
+		print("[Codex] Updated crate name to: " .. crateData.name)
+	end
+
+	-- Update owned count
+	local ownedLabel = displayPanel:getChildById("CrateOwnedCount")
+	if ownedLabel then
+		local ownedCount = 0
+		if crateId == 1 then ownedCount = Codex.cachedBronzeCrates
+		elseif crateId == 2 then ownedCount = Codex.cachedSilverCrates
+		elseif crateId == 3 then ownedCount = Codex.cachedGoldenCrates
+		end
+		ownedLabel:setText("You own: " .. ownedCount)
+		print("[Codex] Updated owned count to: " .. ownedCount)
+	end
+
+	-- Update probability bars
+	local barsPanel = displayPanel:getChildById("ProbabilityBarsPanel")
+	if barsPanel then
+		barsPanel:destroyChildren()
+		
+		if crateData.rarityWeights then
+			print("[Codex] Creating probability bars...")
+			-- Sort rarities for consistent display order (only 4 rarities)
+			local rarityOrder = {"common", "rare", "epic", "legendary"}
+			for _, rarity in ipairs(rarityOrder) do
+				local weight = crateData.rarityWeights[rarity]
+				if weight and weight > 0 then
+					Codex.createProbabilityBar(barsPanel, rarity, weight)
+					print("[Codex] Created bar for " .. rarity .. ": " .. weight .. "%")
+				end
+			end
+		else
+			print("[Codex ERROR] No rarityWeights found in crateData")
+		end
+	end
+
+	-- Setup Open button
+	local openButton = displayPanel:getChildById("OpenCrateButton")
+	if openButton then
+		local ownedCount = 0
+		if crateId == 1 then ownedCount = Codex.cachedBronzeCrates
+		elseif crateId == 2 then ownedCount = Codex.cachedSilverCrates
+		elseif crateId == 3 then ownedCount = Codex.cachedGoldenCrates
+		end
+		
+		openButton:setEnabled(ownedCount > 0)
+		openButton.onClick = function()
+			print("[Codex] Opening crate: " .. crateId)
+			Codex.sendOpcode({
+				topic = "open-crate-request",
+				crateId = crateId
+			})
+		end
+		print("[Codex] Open button configured, enabled: " .. tostring(ownedCount > 0))
+	end
+end
+
+function Codex.createProbabilityBar(parent, rarity, weight)
+	local container = g_ui.createWidget("UIWidget", parent)
+	container:setHeight(25)
+	
+	-- Rarity label
+	local label = g_ui.createWidget("Label", container)
+	label:setText(rarity:gsub("^%l", string.upper))
+	label:setColor(Codex.rarityColors[rarity] or "#FFFFFF")
+	label:addAnchor(AnchorLeft, "parent", AnchorLeft)
+	label:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
+	label:setWidth(100)
+	
+	-- Progress bar background
+	local barBg = g_ui.createWidget("UIWidget", container)
+	barBg:addAnchor(AnchorLeft, "parent", AnchorLeft)
+	barBg:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
+	barBg:setMarginLeft(110)
+	barBg:setSize({width = 200, height = 15})
+	barBg:setBackgroundColor("#2a2a2a")
+	
+	-- Progress bar fill
+	local barFill = g_ui.createWidget("UIWidget", barBg)
+	barFill:addAnchor(AnchorLeft, "parent", AnchorLeft)
+	barFill:addAnchor(AnchorTop, "parent", AnchorTop)
+	barFill:addAnchor(AnchorBottom, "parent", AnchorBottom)
+	barFill:setWidth(math.floor(200 * weight / 100))
+	barFill:setBackgroundColor(Codex.rarityColors[rarity] or "#FFFFFF")
+	
+	-- Percentage label
+	local percentLabel = g_ui.createWidget("Label", container)
+	percentLabel:setText(weight .. "%")
+	percentLabel:addAnchor(AnchorLeft, "parent", AnchorLeft)
+	percentLabel:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
+	percentLabel:setMarginLeft(320)
+	percentLabel:setColor("#FFFFFF")
+end
+
+function Codex.craftCrate(crateId)
 	Codex.sendOpcode({
-		topic = "open-crate-request",
+		topic = "craft-crate-request",
 		crateId = crateId
 	})
 end
 
-function Codex.showCrateResults(rewards)
-	print("[Codex] showCrateResults called with " .. #rewards .. " rewards")
-	
-	local crateDetailsPanel = Codex.UI.CratesPanel and Codex.UI.CratesPanel.CrateDetailsPanel
-	if not crateDetailsPanel then 
-		print("[Codex] ERROR: CrateDetailsPanel not found")
-		return 
-	end
+function Codex.showCrateOptionsOverlay(options)
+	local overlay = Codex.UI:getChildById("CrateOptionsOverlay")
+	if not overlay then return end
 
-	local resultsTitle = crateDetailsPanel:getChildById("CrateResultsTitle")
-	local resultsPanel = crateDetailsPanel:getChildById("CrateResultsPanel")
-	
-	print("[Codex] resultsTitle exists: " .. tostring(resultsTitle ~= nil))
-	print("[Codex] resultsPanel exists: " .. tostring(resultsPanel ~= nil))
-	
-	if not resultsTitle or not resultsPanel then return end
+	local cardOptionsPanel = overlay:getChildById("CardOptionsPanel")
+	if not cardOptionsPanel then return end
 
-	-- Clear previous results
-	resultsPanel:destroyChildren()
-	
-	-- Show results section
-	resultsTitle:show()
-	resultsPanel:show()
+	cardOptionsPanel:destroyChildren()
 
-	-- Add each reward card with fade-in animation
-	local delay = 0
-	for i, reward in ipairs(rewards) do
-		print("[Codex] Processing reward " .. i .. ": cardId=" .. reward.cardId)
-		local cardData = Codex.cachedCardDatabase[reward.cardId]
+	for i, option in ipairs(options) do
+		local cardData = Codex.cachedCardDatabase[option.cardId]
 		if cardData then
-			print("[Codex] Card data found: " .. cardData.name)
-			
-			-- Create card container
-			local cardContainer = g_ui.createWidget("UIWidget", resultsPanel)
-			cardContainer:setSize({width = 110, height = 180})
-			cardContainer:setOpacity(0)
+			local cardContainer = g_ui.createWidget("UIWidget", cardOptionsPanel)
+			cardContainer:setSize({width = 150, height = 280})
 			
 			-- Card image
-			local cardWidget = g_ui.createWidget("UIWidget", cardContainer)
-			cardWidget:setSize({width = 96, height = 160})
-			cardWidget:setImageSource(Codex.cardImagesPath .. cardData.cardFrame .. ".png")
-			cardWidget:addAnchor(AnchorTop, "parent", AnchorTop)
-			cardWidget:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
+			local cardImage = g_ui.createWidget("UIWidget", cardContainer)
+			cardImage:setSize({width = 130, height = 200})
+			cardImage:setImageSource(Codex.cardImagesPath .. cardData.cardFrame .. ".png")
+			cardImage:addAnchor(AnchorTop, "parent", AnchorTop)
+			cardImage:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
 			
-			-- Add level indicator if leveled up
-			if reward.leveledUp then
-				local levelLabel = g_ui.createWidget("Label", cardWidget)
-				levelLabel:setText("LEVEL UP!")
-				levelLabel:setColor("#00ff00")
-				levelLabel:setFont("verdana-11px-rounded")
-				levelLabel:setTextAlign(AlignTopCenter)
-				levelLabel:setMarginTop(5)
-			end
-			
-			-- Add card name below
+			-- Card name
 			local nameLabel = g_ui.createWidget("Label", cardContainer)
 			nameLabel:setText(cardData.name)
-			nameLabel:setColor(Codex.rarityColors[cardData.rarity] or "#ffffff")
+			nameLabel:setColor(Codex.rarityColors[cardData.rarity] or "#FFFFFF")
 			nameLabel:setFont("verdana-11px-rounded")
-			nameLabel:setTextAlign(AlignBottomCenter)
-			nameLabel:addAnchor(AnchorBottom, "parent", AnchorBottom)
+			nameLabel:setTextAlign(AlignTopCenter)
+			nameLabel:addAnchor(AnchorTop, "cardImage", AnchorBottom)
 			nameLabel:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
+			nameLabel:setMarginTop(5)
 			
-			-- Fade in animation with delay
-			scheduleEvent(function()
-				print("[Codex] Fading in card: " .. cardData.name)
-				g_effects.fadeIn(cardContainer, 150)
-			end, delay)
+			-- Duplicate indicator
+			if option.isDuplicate then
+				local dupLabel = g_ui.createWidget("Label", cardContainer)
+				dupLabel:setText("Already Owned")
+				dupLabel:setColor("#FFAA00")
+				dupLabel:setFont("verdana-11px-rounded")
+				dupLabel:setTextAlign(AlignTopCenter)
+				dupLabel:addAnchor(AnchorTop, "nameLabel", AnchorBottom)
+				dupLabel:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
+				dupLabel:setMarginTop(2)
+			end
 			
-			delay = delay + 200 -- 200ms between each card
-		else
-			print("[Codex] ERROR: Card data not found for cardId=" .. reward.cardId)
+			-- Select button
+			local selectButton = g_ui.createWidget("Button", cardContainer)
+			selectButton:setText("SELECT")
+			selectButton:setSize({width = 120, height = 25})
+			selectButton:addAnchor(AnchorBottom, "parent", AnchorBottom)
+			selectButton:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
+			selectButton.onClick = function()
+				Codex.selectCrateReward(option.cardId)
+				overlay:hide()
+			end
 		end
 	end
+
+	overlay:show()
+	overlay:raise()
+	overlay:focus()
 end
 
------- Tooltip Management
+function Codex.selectCrateReward(cardId)
+	Codex.sendOpcode({
+		topic = "select-crate-reward",
+		cardId = cardId
+	})
+end
+
+------ Tooltip Management (keeping old showCrateResults for backward compatibility)
+
+function Codex.showCrateResults(rewards)
+	-- This function is deprecated, now using showCrateOptionsOverlay
+	print("[Codex] showCrateResults deprecated, use showCrateOptionsOverlay")
+end
 
 function Codex.moveToolTip()
 	if not Codex.Tooltip or not Codex.Tooltip:isVisible() then
@@ -1199,6 +1343,9 @@ function Codex.onExtendedOpcode(protocol, opcode, buffer)
 
 		Codex.cachedEssences = data.essences or 0
 		Codex.cachedMaxSlots = data.maxSlots or 3
+		Codex.cachedBronzeCrates = data.bronzeCrates or 0
+		Codex.cachedSilverCrates = data.silverCrates or 0
+		Codex.cachedGoldenCrates = data.goldenCrates or 0
 		
 		-- Reset temp database for batch accumulation
 		Codex.tempCardDatabase = {}
@@ -1244,13 +1391,21 @@ function Codex.onExtendedOpcode(protocol, opcode, buffer)
 	elseif data.topic == "crate-database" then
 		-- Store crate database
 		Codex.cachedCrateDatabase = {}
+		local crateCount = 0
 		for crateIdStr, crateData in pairs(data.crates or {}) do
 			local crateId = tonumber(crateIdStr)
 			if crateId then
 				Codex.cachedCrateDatabase[crateId] = crateData
+				crateCount = crateCount + 1
+				print("[Codex] Stored crate " .. crateId .. ": " .. (crateData.name or "unknown"))
+				if crateData.rarityWeights then
+					print("[Codex]   Has rarityWeights")
+				else
+					print("[Codex]   WARNING: No rarityWeights!")
+				end
 			end
 		end
-		print("[Codex] Crate database received")
+		print("[Codex] Crate database received, total crates: " .. crateCount)
 		
 	elseif data.topic == "base-data-complete" then
 		-- Finalize: move temp database to actual database
@@ -1302,11 +1457,32 @@ function Codex.onExtendedOpcode(protocol, opcode, buffer)
 			Codex.UI.EssencesLabel:setText("Codex Essences: " .. Codex.cachedEssences)
 		end
 
+	elseif data.topic == "crates-update" then
+		Codex.cachedBronzeCrates = data.bronzeCrates or 0
+		Codex.cachedSilverCrates = data.silverCrates or 0
+		Codex.cachedGoldenCrates = data.goldenCrates or 0
+		-- Refresh crates UI if visible
+		if Codex.currentTab == Codex.TAB_CRATES then
+			Codex.setupCratesUI()
+		end
+
 	elseif data.topic == "open-crate-reply" then
-		if data.success and data.rewards then
-			Codex.showCrateResults(data.rewards)
+		if data.success and data.options then
+			-- Show overlay with 3 card options
+			Codex.showCrateOptionsOverlay(data.options)
 		elseif data.message then
 			Codex.setupMessage("Crate Opening Failed", data.message)
+		end
+
+	elseif data.topic == "crate-reward-selected" then
+		if data.success then
+			Codex.setupMessage("Card Obtained!", data.message)
+			-- Refresh UI
+			if Codex.currentTab == Codex.TAB_COLLECTION then
+				Codex.setupCollectionUI()
+			end
+		else
+			Codex.setupMessage("Selection Failed", data.message)
 		end
 
 	elseif data.topic == "message-reply" then

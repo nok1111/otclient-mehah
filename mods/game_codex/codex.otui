@@ -472,7 +472,7 @@ MainWindow
       pixels-scroll: true
       step: 50
 
-  // CRATES PANEL
+  // CRATES PANEL - NEW DESIGN
   Panel
     id: CratesPanel
     anchors.top: TabsPanel.bottom
@@ -485,140 +485,177 @@ MainWindow
     margin-bottom: 40
     visible: false
 
-    // Left side: Crate List
-    UIScrollArea
-      id: CratesList
+    // Top: Crate Selector (LoL Style)
+    Panel
+      id: CrateSelectorPanel
       anchors.top: parent.top
       anchors.left: parent.left
-      anchors.bottom: parent.bottom
-      width: 350
-      image-source: /images/ui/window
-      image-border: 6
-      image-border-top: 27
-      text: Available Crates
-      text-offset: 0 2
-      text-align: top
-      padding-top: 30
-      padding-left: 10
-      padding-right: 10
-      padding-bottom: 10
-      layout:
-        type: verticalBox
-        spacing: 3
-      vertical-scrollbar: CratesListScrollBar
-
-    VerticalScrollBar
-      id: CratesListScrollBar
-      anchors.top: CratesList.top
-      anchors.bottom: CratesList.bottom
-      anchors.right: CratesList.right
-      margin-right: -10
-      pixels-scroll: true
-      step: 50
-
-    // Right side: Crate Details
-    Panel
-      id: CrateDetailsPanel
-      anchors.top: parent.top
-      anchors.left: CratesList.right
       anchors.right: parent.right
-      anchors.bottom: parent.bottom
-      margin-left: 10
+      height: 80
+      layout:
+        type: horizontalBox
+        spacing: 10
+        align-center: true
+
+      // Bronze Crate Button
+      Button
+        id: BronzeCrateButton
+        size: 200 70
+        text: BRONZE CRATE
+        font: verdana-11px-rounded
+
+      // Silver Crate Button
+      Button
+        id: SilverCrateButton
+        size: 200 70
+        text: SILVER CRATE
+        font: verdana-11px-rounded
+
+      // Golden Crate Button
+      Button
+        id: GoldenCrateButton
+        size: 200 70
+        text: GOLDEN CRATE
+        font: verdana-11px-rounded
+
+    // Center: Selected Crate Display
+    Panel
+      id: CrateDisplayPanel
+      anchors.top: CrateSelectorPanel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: CraftingPanel.top
+      margin-top: 10
+      margin-bottom: 10
       image-source: /images/ui/window
       image-border: 6
-      image-border-top: 27
-      text: Crate Details
-      text-offset: 0 2
-      text-align: top
-      padding: 15
+      padding: 20
 
       Label
-        id: CrateName
+        id: SelectedCrateName
         anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        margin-top: 25
-        text: Select a crate
-        text-align: center
-        font: verdana-11px-rounded
-        color: #ffd700
-
-      Label
-        id: CrateCost
-        anchors.top: CrateName.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors.horizontalCenter: parent.horizontalCenter
         margin-top: 10
-        text: Cost: -
-        text-align: center
-        color: #ffff00
-
-      Label
-        id: CrateRewardsTitle
-        anchors.top: CrateCost.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        margin-top: 20
-        text: Possible Rewards
-        text-align: center
-        font: verdana-11px-rounded
-        color: #aaaaaa
-
-      UIScrollArea
-        id: CrateRewards
-        anchors.top: CrateRewardsTitle.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 120
-        margin-top: 10
-        visible: true
-        padding: 5
-        layout:
-          type: horizontalBox
-          spacing: 5
-        vertical-scrollbar: CrateRewardsScrollBar
-
-      VerticalScrollBar
-        id: CrateRewardsScrollBar
-        anchors.top: CrateRewards.top
-        anchors.bottom: CrateRewards.bottom
-        anchors.right: CrateRewards.right
-        margin-right: -10
-        pixels-scroll: true
-        step: 30
-
-      Label
-        id: CrateResultsTitle
-        anchors.top: CrateRewards.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        margin-top: 20
-        text: Cards Obtained
+        text: BRONZE CODEX CRATE
         text-align: center
         font: verdana-11px-rounded
         color: #FFD700
-        visible: false
 
-      Panel
-        id: CrateResultsPanel
-        anchors.top: CrateResultsTitle.bottom
+      Label
+        id: CrateOwnedCount
+        anchors.top: SelectedCrateName.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 5
+        text: You own: 0
+        text-align: center
+        color: #FFFFFF
+
+      Label
+        id: DropChancesTitle
+        anchors.top: CrateOwnedCount.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: OpenCrateButton.top
+        margin-top: 20
+        text: Drop Chances:
+        text-align: center
+        font: verdana-11px-rounded
+        color: #AAAAAA
+
+      // Probability Bars Container
+      Panel
+        id: ProbabilityBarsPanel
+        anchors.top: DropChancesTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
         margin-top: 10
-        margin-bottom: 10
-        visible: false
+        height: 150
         layout:
-          type: horizontalBox
-          spacing: 10
-          align-center: true
+          type: verticalBox
+          spacing: 8
 
       Button
         id: OpenCrateButton
-        anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
         margin-bottom: 10
-        !text: tr('Open Crate')
+        size: 200 30
+        text: OPEN CRATE
+        font: verdana-11px-rounded
+
+    // Bottom: Crafting Info
+    Panel
+      id: CraftingPanel
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 40
+      image-source: /images/ui/window
+      image-border: 6
+      padding: 10
+      layout:
+        type: horizontalBox
+        spacing: 20
+        align-center: true
+
+      Label
+        id: CraftingLabel
+        text: Crafting:
+        color: #AAAAAA
+
+      Button
+        id: CraftBronzeButton
+        size: 150 25
+        text: 25 Essences → Bronze
+        font: verdana-11px-rounded
+
+      Button
+        id: CraftSilverButton
+        size: 150 25
+        text: 60 Essences → Silver
+        font: verdana-11px-rounded
+
+      Button
+        id: CraftGoldenButton
+        size: 150 25
+        text: 120 Essences → Golden
+        font: verdana-11px-rounded
+
+  // CRATE OPTIONS OVERLAY (Choose 1 of 3)
+  Panel
+    id: CrateOptionsOverlay
+    anchors.fill: parent
+    visible: false
+    background-color: #000000AA
+    focusable: true
+
+    Panel
+      id: OverlayContent
+      anchors.centerIn: parent
+      size: 700 400
+      image-source: /images/ui/window
+      image-border: 6
+      padding: 20
+
+      Label
+        id: OverlayTitle
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 10
+        text: Choose 1 Card
+        font: verdana-11px-rounded
+        color: #FFD700
+
+      Panel
+        id: CardOptionsPanel
+        anchors.top: OverlayTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin-top: 20
+        layout:
+          type: horizontalBox
+          spacing: 20
+          align-center: true
 
   // Bottom Buttons
   Button
