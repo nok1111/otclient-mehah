@@ -47,7 +47,13 @@ function controller:onGameStart()
     g_game.getLocalPlayer():attachEffect(g_attachedEffects.getById(2))
     g_game.getLocalPlayer():attachEffect(g_attachedEffects.getById(3))
     g_game.getLocalPlayer():getTile():attachEffect(g_attachedEffects.getById(1))
-    g_game.getLocalPlayer():attachParticleEffect("creature-effect")]]
+    g_game.getLocalPlayer():attachParticleEffect("creature-effect")
+    
+    local particle = g_ui.createWidget('GroupCooldownParticles', progressRect)
+    particle:fill('parent')
+    scheduleEvent(function() particle:destroy() end, 1000)
+    
+    ]]
 end
 
 function controller:onGameEnd()
