@@ -35,3 +35,36 @@ UIWindow
     text-auto-resize: true
     text-align: center
     color: #00ffff
+    
+  Label
+    id: cardDesc
+    anchors.top: trigger.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-right: 5
+    margin-left: 5
+    text-wrap: true
+    text-auto-resize: true
+    text-align: center
+    
+  ProgressBar
+    id: expBar
+    anchors.top: cardDesc.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 10
+    margin-right: 10
+    height: 16
+    background-color: #FFD700
+    percent: 0
+    
+  Label
+    id: expLabel
+    anchors.top: expBar.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 1
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #FFD700

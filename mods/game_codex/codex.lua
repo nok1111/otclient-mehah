@@ -1,4 +1,17 @@
 
+------ Trigger Icons Mapping
+
+Codex.triggerIcons = {
+	onHit = "/images/icons/row-1-column-1",           -- Espada para ataques
+	passive = "/images/icons/row-2-column-8",       -- Estrella para pasivos
+	onKill = "/images/icons/row-2-column-4",         -- Calavera para kills
+	onDamageTaken = "/images/icons/row-1-column-3",  -- Escudo para daño recibido
+	onDeath = "/images/icons/row-5-column-3",       -- Fuego para muerte/rebirth
+	onSpell = "/images/icons/row-4-column-7",       -- Cristal para hechizos
+	onLowHP = "/images/icons/row-5-column-7",       -- Corazón para low HP
+	onHeal = "/images/icons/row-5-column-2",         -- Corazón verde para heals
+}
+
 ------ Initialization and Termination
 
 function Codex.init()
@@ -225,7 +238,53 @@ function Codex.setupCollectionUI()
 	print("[Codex] Card database size: " .. table.size(Codex.cachedCardDatabase))
 	print("[Codex] Player cards size: " .. table.size(Codex.cachedCards))
 
+	-- Sort card IDs for consistent pagination
+	local sortedCardIds = {}
 	for cardId, cardData in pairs(Codex.cachedCardDatabase) do
+		table.insert(sortedCardIds, cardId)
+		print("[Codex DEBUG] Found card ID: " .. cardId .. " - " .. cardData.name)
+	end
+	table.sort(sortedCardIds)
+	
+	-- Calculate pagination
+	local totalCards = #sortedCardIds
+	local cardsPerPage = Codex.cardsPerPage or 20 -- Fallback to 20
+	local totalPages = math.ceil(totalCards / cardsPerPage)
+	local startIndex = (Codex.currentCollectionPage - 1) * cardsPerPage + 1
+	local endIndex = math.min(startIndex + cardsPerPage - 1, totalCards)
+	
+	print("[Codex DEBUG] Total cards in database: " .. totalCards)
+	print("[Codex DEBUG] Cards per page (Codex.cardsPerPage): " .. tostring(Codex.cardsPerPage))
+	print("[Codex DEBUG] Cards per page (used): " .. cardsPerPage)
+	print("[Codex DEBUG] Division result (totalCards / cardsPerPage): " .. (totalCards / cardsPerPage))
+	print("[Codex DEBUG] Total pages (math.ceil): " .. totalPages)
+	print("[Codex DEBUG] Current page: " .. Codex.currentCollectionPage)
+	print("[Codex DEBUG] Showing cards from index " .. startIndex .. " to " .. endIndex)
+	
+	-- Update page info label
+	local paginationPanel = Codex.UI.CollectionPanel and Codex.UI.CollectionPanel:getChildById("PaginationPanel")
+	if paginationPanel then
+		local pageInfo = paginationPanel:getChildById("PageInfo")
+		if pageInfo then
+			pageInfo:setText("Page " .. Codex.currentCollectionPage .. " / " .. totalPages)
+		end
+		
+		-- Update navigation buttons
+		local prevButton = paginationPanel:getChildById("PrevPageButton")
+		if prevButton then
+			prevButton:setEnabled(Codex.currentCollectionPage > 1)
+		end
+		
+		local nextButton = paginationPanel:getChildById("NextPageButton")
+		if nextButton then
+			nextButton:setEnabled(Codex.currentCollectionPage < totalPages)
+		end
+	end
+
+	-- Display only cards for current page
+	for i = startIndex, endIndex do
+		local cardId = sortedCardIds[i]
+		local cardData = Codex.cachedCardDatabase[cardId]
 		print("[Codex] Creating card widget for cardId: " .. cardId .. " - " .. cardData.name)
 		
 		local cardWidget = g_ui.createWidget("CardEntry", collectionGrid)
@@ -261,13 +320,35 @@ function Codex.setupCollectionUI()
 			local lockIcon = g_ui.createWidget("CardLockIcon", cardWidget)
 		end
 
-		-- Add level label
-		local levelLabel = g_ui.createWidget("CardLevelLabel", cardWidget)
+		-- Add card name label with rarity color
+		local nameLabel = g_ui.createWidget("Label", cardWidget)
+		if nameLabel then
+			nameLabel:setId("cardNameLabel")
+			nameLabel:setText(cardData.name)
+			nameLabel:setColor(Codex.rarityColors[cardData.rarity] or "#ffffff")
+			nameLabel:setFont("verdana-11px-rounded")
+			nameLabel:setTextAlign(AlignBottomCenter)
+			nameLabel:addAnchor(AnchorBottom, "parent", AnchorBottom)
+			nameLabel:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
+			nameLabel:setMarginBottom(17) -- Space for level label and exp bar below
+			nameLabel:setTextAutoResize(true)
+		end
+
+		-- Add level label (positioned at bottom-left)
+		local levelLabel = g_ui.createWidget("Label", cardWidget)
 		if levelLabel then
+			levelLabel:setId("cardLevelLabel")
+			levelLabel:setFont("verdana-11px-rounded")
+			levelLabel:setTextAutoResize(true)
+			levelLabel:setColor("#FFD700")
+			levelLabel:addAnchor(AnchorBottom, "parent", AnchorBottom)
+			levelLabel:addAnchor(AnchorLeft, "parent", AnchorLeft)
+			levelLabel:setMarginBottom(17)
+			levelLabel:setMarginLeft(19)
 			if isUnlocked then
-				levelLabel:setText(cardLevel .. "/" .. cardData.maxLevel)
+				levelLabel:setText(cardLevel) --cardLevel .. "/" .. cardData.maxLevel
 			else
-				levelLabel:setText("LOCKED")
+				levelLabel:setText("0")
 			end
 		end
 
@@ -282,12 +363,23 @@ function Codex.setupCollectionUI()
 			expBar:addAnchor(AnchorBottom, "parent", AnchorBottom)
 			expBar:addAnchor(AnchorLeft, "parent", AnchorLeft)
 			expBar:addAnchor(AnchorRight, "parent", AnchorRight)
-			expBar:setHeight(4)
-			expBar:setMarginBottom(2)
+			expBar:setHeight(10)
+			expBar:setMarginTop(20)
 			expBar:setMarginLeft(2)
 			expBar:setMarginRight(2)
-			expBar:setBackgroundColor("#2a2a2a")
+			expBar:setBackgroundColor("#FFD700")
 			expBar:setPercent(expPercent)
+			
+			-- Add exp text label
+			local expLabel = g_ui.createWidget("Label", cardWidget)
+			expLabel:setId("expLabel")
+			expLabel:setText(currentExp .. "/" .. expNeeded)
+			expLabel:setFont("verdana-11px-rounded")
+			expLabel:setColor("#fdfdfcff")
+			expLabel:setTextAutoResize(true)
+			expLabel:addAnchor(AnchorBottom, "parent", AnchorBottom)
+			expLabel:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
+			expLabel:setMarginBottom(-2)
 		end
 
 		-- Click handler
@@ -300,6 +392,42 @@ function Codex.setupCollectionUI()
 	end
 	
 	print("[Codex] Collection UI setup complete!")
+	
+	-- Setup pagination button handlers
+	local paginationPanel = Codex.UI.CollectionPanel and Codex.UI.CollectionPanel:getChildById("PaginationPanel")
+	if paginationPanel then
+		local prevButton = paginationPanel:getChildById("PrevPageButton")
+		local nextButton = paginationPanel:getChildById("NextPageButton")
+		
+		if prevButton then
+			prevButton.onClick = function()
+				Codex.prevCollectionPage()
+			end
+		end
+		
+		if nextButton then
+			nextButton.onClick = function()
+				Codex.nextCollectionPage()
+			end
+		end
+	end
+end
+
+function Codex.nextCollectionPage()
+	local totalCards = table.size(Codex.cachedCardDatabase)
+	local totalPages = math.ceil(totalCards / Codex.cardsPerPage)
+	
+	if Codex.currentCollectionPage < totalPages then
+		Codex.currentCollectionPage = Codex.currentCollectionPage + 1
+		Codex.setupCollectionUI()
+	end
+end
+
+function Codex.prevCollectionPage()
+	if Codex.currentCollectionPage > 1 then
+		Codex.currentCollectionPage = Codex.currentCollectionPage - 1
+		Codex.setupCollectionUI()
+	end
 end
 
 function Codex.selectCard(cardId)
@@ -384,10 +512,10 @@ function Codex.updateCardDetails()
 	if cardDetailsPanel.CardDescription then
 		cardDetailsPanel.CardDescription:destroyChildren()
 		
-		if isUnlocked then
+		if isUnlocked and cardData.description then
 			-- Show current level and max level descriptions
-			local currentDesc = cardData.description[cardLevel] or cardData.description[1]
-			local maxDesc = cardData.description[cardData.maxLevel]
+			local currentDesc = cardData.description[cardLevel] or cardData.description[1] or "No description"
+			local maxDesc = cardData.description[cardData.maxLevel] or "No description"
 
 			local currentLabel = g_ui.createWidget("Label", cardDetailsPanel.CardDescription)
 			currentLabel:setText("Current (Lvl " .. cardLevel .. "):")
@@ -509,8 +637,19 @@ function Codex.setupDeckUI()
 				expBar:setMarginBottom(1)
 				expBar:setMarginLeft(5)
 				expBar:setMarginRight(5)
-				expBar:setBackgroundColor("#2a2a2a")
+				expBar:setBackgroundColor("#FFD700")
 				expBar:setPercent(expPercent)
+				
+				-- Add exp text label
+				local expLabel = g_ui.createWidget("Label", cardWidget)
+				expLabel:setId("expLabel")
+				expLabel:setText(currentExp .. "/" .. expNeeded)
+				expLabel:setFont("verdana-11px-rounded")
+				expLabel:setColor("#FFD700")
+				expLabel:setTextAutoResize(true)
+				expLabel:addAnchor(AnchorBottom, "parent", AnchorBottom)
+				expLabel:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
+				expLabel:setMarginBottom(3)
 			end
 
 			-- Equip button
@@ -902,30 +1041,70 @@ function Codex.applyTooltip(cardData, cardLevel)
 	Codex.Tooltip:setText(cardData.name)
 	Codex.Tooltip:setColor(rarityColor)
 	
-	-- Build detailed description
+	-- Set level info in description label
 	if Codex.Tooltip.description then
-		local desc = cardData.description[cardLevel] or cardData.description[1] or "No description"
-		
-		-- Add level and rarity info
-		local levelInfo = "Level " .. cardLevel .. "/" .. cardData.maxLevel .. " • " .. (cardData.rarity or "common"):upper()
-		
-		-- Combine info
-		local fullDesc = levelInfo .. "\n\n" .. desc
-		
-		Codex.Tooltip.description:setText(fullDesc)
+		local levelInfo = "Level " .. cardLevel .. "/" .. cardData.maxLevel .. " - " .. (cardData.rarity or "common"):upper()
+		Codex.Tooltip.description:setText(levelInfo)
 		Codex.Tooltip.description:setColor("#ffffff")
 	end
 	
 	if Codex.Tooltip.trigger then
-		Codex.Tooltip.trigger:setText("⚡ " .. cardData.trigger)
-		Codex.Tooltip.trigger:setColor("#ffaa00")
+		-- Limpiar widgets hijos existentes (iconos previos)
+		Codex.Tooltip.trigger:destroyChildren()
+		
+		local triggerIconPath = Codex.triggerIcons[cardData.trigger]
+		if triggerIconPath then
+			-- Crear widget de icono centrado
+			local iconWidget = g_ui.createWidget("UIWidget", Codex.Tooltip.trigger)
+			iconWidget:setImageSource(triggerIconPath)
+			iconWidget:setSize({width = 16, height = 16})
+			iconWidget:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
+			iconWidget:addAnchor(AnchorTop, "parent", AnchorTop)
+			
+			-- Texto del trigger centrado debajo del icono (usando text-offset vertical)
+			Codex.Tooltip.trigger:setText(cardData.trigger)
+			Codex.Tooltip.trigger:setColor("#ffaa00")
+			Codex.Tooltip.trigger:setTextOffset({x = 0, y = 14}) -- Bajar solo el texto, no el icono
+		else
+			Codex.Tooltip.trigger:setText(cardData.trigger)
+			Codex.Tooltip.trigger:setColor("#ffaa00")
+			Codex.Tooltip.trigger:setTextOffset({x = 0, y = 0})
+		end
+	end
+	
+	-- Set card description in cardDesc label
+	if Codex.Tooltip.cardDesc then
+		local desc = cardData.description[cardLevel] or cardData.description[1] or "No description"
+		Codex.Tooltip.cardDesc:setText(desc)
+		Codex.Tooltip.cardDesc:setColor("#ffffff")
+	end
+	
+	-- Set exp bar and label (if not max level)
+	if Codex.Tooltip.expBar and Codex.Tooltip.expLabel then
+		if cardLevel < cardData.maxLevel then
+			local currentExp = Codex.cachedCardsExp[cardData.id] or 0
+			local expNeeded = Codex.cardExpTable[cardLevel] or 1
+			local expPercent = math.floor((currentExp / expNeeded) * 100)
+			
+			Codex.Tooltip.expBar:setPercent(expPercent)
+			Codex.Tooltip.expBar:show()
+			
+			Codex.Tooltip.expLabel:setText(currentExp .. "/" .. expNeeded)
+			Codex.Tooltip.expLabel:setColor("#ffffff")
+			Codex.Tooltip.expLabel:show()
+		else
+			Codex.Tooltip.expBar:hide()
+			Codex.Tooltip.expLabel:hide()
+		end
 	end
 	
 	-- Calculate dynamic height based on text content
 	scheduleEvent(function()
 		local descHeight = Codex.Tooltip.description and Codex.Tooltip.description:getHeight() or 0
 		local triggerHeight = Codex.Tooltip.trigger and Codex.Tooltip.trigger:getHeight() or 0
-		local totalHeight = 70 + descHeight + triggerHeight -- 70 = padding + title + margins
+		local cardDescHeight = Codex.Tooltip.cardDesc and Codex.Tooltip.cardDesc:getHeight() or 0
+		local expBarHeight = (Codex.Tooltip.expBar and Codex.Tooltip.expBar:isVisible()) and 18 or 0
+		local totalHeight = 70 + descHeight + triggerHeight + cardDescHeight + expBarHeight -- 70 = padding + title + margins
 		Codex.Tooltip:setHeight(math.max(totalHeight, 100))
 	end, 10)
 end
@@ -1028,23 +1207,30 @@ function Codex.onExtendedOpcode(protocol, opcode, buffer)
 		print("[Codex] Base data received, waiting for batches...")
 		
 	elseif data.topic == "card-database-batch" then
-		-- Accumulate card batches
+		-- Accumulate card batches and merge with local descriptions
 		if data.cards then
-			for cardIdStr, cardData in pairs(data.cards) do
+			for cardIdStr, serverData in pairs(data.cards) do
 				local cardId = tonumber(cardIdStr)
 				if cardId then
-					-- Convert description keys back to numbers
-					if cardData.description then
-						local descConverted = {}
-						for levelStr, desc in pairs(cardData.description) do
-							local level = tonumber(levelStr)
-							if level then
-								descConverted[level] = desc
-							end
-						end
-						cardData.description = descConverted
+					-- Get local description data
+					local localData = Codex.cardDescriptions[cardId]
+					if localData then
+						-- Merge: server data (mechanical) + client data (UI)
+						Codex.tempCardDatabase[cardId] = {
+							id = serverData.id,
+							storage = serverData.storage,
+							maxLevel = serverData.maxLevel,
+							-- From client descriptions file:
+							name = localData.name,
+							rarity = localData.rarity,
+							trigger = localData.trigger,
+							cardFrame = localData.cardFrame,
+							description = localData.descriptions
+						}
+					else
+						print("[Codex WARNING] No local description found for card ID: " .. cardId)
+						Codex.tempCardDatabase[cardId] = serverData
 					end
-					Codex.tempCardDatabase[cardId] = cardData
 				end
 			end
 			

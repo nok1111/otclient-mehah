@@ -31,13 +31,16 @@ Codex.TAB_COLLECTION = 1
 Codex.TAB_DECK = 2
 Codex.TAB_CRATES = 3
 
--- Rarity Colors
+-- Pagination Constants
+Codex.cardsPerPage = 20
+Codex.currentCollectionPage = 1
+
+-- Rarity Colors (4 tiers only)
 Codex.rarityColors = {
-	common = "#9d9d9d",
-	uncommon = "#1eff00",
-	rare = "#0070dd",
-	epic = "#a335ee",
-	legendary = "#ff8000"
+	common = "#ffffff",      -- Blanco
+	rare = "#00ff00",        -- Verde
+	epic = "#a335ee",        -- Morado
+	legendary = "#ff8000"    -- Naranja
 }
 
 -- Get background image based on card level

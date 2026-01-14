@@ -228,17 +228,50 @@ MainWindow
       image-border: 3
       phantom: true
     
+    // Pagination Controls
+    Panel
+      id: PaginationPanel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      width: 680
+      height: 30
+      background-color: #00000080
+      
+      Button
+        id: PrevPageButton
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        text: < Previous
+        width: 100
+        margin-left: 10
+      
+      Label
+        id: PageInfo
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        text: Page 1 / 1
+        color: #ffffff
+      
+      Button
+        id: NextPageButton
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        text: Next >
+        width: 100
+        margin-right: 10
+    
     UIScrollArea
       id: CollectionGrid
-      anchors.top: parent.top
+      anchors.top: PaginationPanel.bottom
       anchors.left: parent.left
       anchors.bottom: parent.bottom
       width: 680
       background-color: alpha
       padding: 10
+      margin-top: 5
       layout:
         type: grid
-        cell-size: 120 200
+        cell-size: 160 205
         flow: true
       vertical-scrollbar: CollectionScrollBar
 
@@ -270,8 +303,8 @@ MainWindow
         id: CardImageHeader
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
-        size: 96 160
-        margin-top: 35
+        size: 160 205
+        margin-top: 10
         visible: false
       padding: 15
 
