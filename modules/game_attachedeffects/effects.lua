@@ -2121,3 +2121,1800 @@ AttachedEffectManager.register(249, 'mountain stance', 952, ThingCategoryEffect,
     offset = { -15, -15, true}, 
 })
 
+-- SIZE CHANGE EFFECTS (Testing)
+-- SIZE INCREMENT EFFECTS (Permanent - 0.015 increments)
+
+
+AttachedEffectManager.register(250, 'Miniaturize', 0, 0, {
+    duration = 8000,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(0.5, 300)
+        
+        local e = Effect.create()
+        e:setId(53)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 300)
+        
+        local e = Effect.create()
+        e:setId(54)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(251, 'Growing Rage', 590, ThingCategoryEffect, {
+    loop = 1,
+    duration = 12000,
+    offset = { 0, 0, true },
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.3, 2000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+    end
+})
+
+AttachedEffectManager.register(252, 'Titan Form', 497, ThingCategoryEffect, {
+    duration = 15000,
+    speed = 1,
+    offset = { 0, 0, true },
+    shader = 'Monster Might',
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(2.0, 1000)
+        
+        local e = Effect.create()
+        e:setId(497)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 1000)
+        
+        local e = Effect.create()
+        e:setId(497)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(253, 'Tiny Creature', 0, 0, {
+    duration = 6000,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(0.3, 400)
+        owner:setBounce(5, 10, 2000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 400)
+        oldOwner:setBounce(0, 0)
+    end
+})
+AttachedEffectManager.register(254, 'Size +5%', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.05, 500)
+        
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        
+        local e = Effect.create()
+        e:setId(50)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(255, 'Size +10%', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.10, 500)
+        
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        
+        local e = Effect.create()
+        e:setId(50)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(256, 'Size +15%', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.15, 500)
+        
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        
+        local e = Effect.create()
+        e:setId(50)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(257, 'Size +20%', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.20, 500)
+        
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        
+        local e = Effect.create()
+        e:setId(50)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(258, 'Size +25%', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.25, 500)
+        
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        
+        local e = Effect.create()
+        e:setId(50)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(259, 'Size +30%', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.30, 500)
+        
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        
+        local e = Effect.create()
+        e:setId(50)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(260, 'Size +35%', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.35, 500)
+        
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        
+        local e = Effect.create()
+        e:setId(50)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(261, 'Size +40%', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.40, 500)
+        
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        
+        local e = Effect.create()
+        e:setId(50)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(262, 'Size +45%', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.45, 500)
+        
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        
+        local e = Effect.create()
+        e:setId(50)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(263, 'Size +50%', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.50, 500)
+        
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        
+        local e = Effect.create()
+        e:setId(50)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+-- EFFECT SIZE EXAMPLES (Visual effect size, not creature size)
+AttachedEffectManager.register(264, 'Fire Mini', 590, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { 16, 16, true },
+    size = { 32, 32 }  -- Pequeño 32x32
+})
+
+AttachedEffectManager.register(265, 'Fire Normal', 590, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { 0, 0, true }
+    -- Sin size = tamaño original del sprite (~64x64)
+})
+
+AttachedEffectManager.register(266, 'Fire Large', 590, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -32, -32, true },
+    size = { 128, 128 }  -- Grande 128x128 (2x)
+})
+
+AttachedEffectManager.register(267, 'Fire Giant', 590, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -64, -64, true },
+    size = { 192, 192 }  -- Gigante 192x192 (3x)
+})
+
+AttachedEffectManager.register(268, 'Fire Massive', 590, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -96, -96, true },
+    size = { 256, 256 }  -- Masivo 256x256 (4x)
+})
+
+AttachedEffectManager.register(269, 'Fire Beam Horizontal', 590, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -96, 0, true },
+    size = { 256, 64 }  -- Beam horizontal ancho
+})
+
+AttachedEffectManager.register(270, 'Fire Beam Vertical', 590, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { 0, -96, true },
+    size = { 64, 256 }  -- Beam vertical alto
+})
+
+AttachedEffectManager.register(271, 'Angel Light Tiny', 3, ThingCategoryEffect, {
+    loop = 1,
+    speed = 0.65,
+    offset = { 8, 8, true },
+    size = { 24, 24 }  -- Luz angelical pequeña
+})
+
+AttachedEffectManager.register(272, 'Angel Light Huge', 3, ThingCategoryEffect, {
+    loop = 1,
+    speed = 0.65,
+    offset = { -64, -64, true },
+    size = { 160, 160 }  -- Luz angelical enorme
+})
+
+AttachedEffectManager.register(273, 'Energy Aura Wide', 497, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -80, -40, true },
+    size = { 200, 100 }  -- Aura ancha y baja
+})
+
+-- ═══════════════════════════════════════════════════════════════
+-- ⚡ EFECTOS ÉPICOS - DESLUMBRANTES ⚡
+-- ═══════════════════════════════════════════════════════════════
+
+-- 🎯 ORBITAL STRIKE - Missiles convergiendo desde todas direcciones
+AttachedEffectManager.register(280, 'Orbital Strike', 0, 0, {
+    duration = 2000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local radius = 5
+        local missiles = 12  -- 12 missiles formando un círculo completo
+        
+        for i = 0, missiles - 1 do
+            local angle = (360 / missiles) * i
+            local rad = math.rad(angle)
+            local startX = pos.x + math.floor(math.cos(rad) * radius)
+            local startY = pos.y + math.floor(math.sin(rad) * radius)
+            
+            local missile = AttachedEffect.create(38, ThingCategoryMissile)
+            missile:setDuration(2000)
+            missile:setBounce(0, 20, 500)  -- Bounce para efecto de impacto
+            missile:setOpacity(0.9)
+            
+            -- Mover desde la posición calculada hacia el owner
+            missile:move({x = startX, y = startY, z = pos.z}, pos)
+            effect:attachEffect(missile)
+        end
+        
+        -- Efecto de explosión central al final
+        local centralExplosion = AttachedEffect.create(7, ThingCategoryEffect)
+        centralExplosion:setDuration(1000)
+        centralExplosion:setOpacity(0)
+        centralExplosion:setFade(0, 100, 1800)  -- Aparece gradualmente
+        centralExplosion:setPulse(80, 120, 400)  -- Pulsa al aparecer
+        effect:attachEffect(centralExplosion)
+    end
+})
+
+-- 🔥 PHOENIX WINGS - Alas de fuego con partículas ascendentes
+AttachedEffectManager.register(281, 'Phoenix Wings', 590, ThingCategoryEffect, {
+    duration = 3000,
+    loop = -1,
+    speed = 0.8,
+    onAttach = function(effect, owner)
+        local spriteSize = g_gameConfig.getSpriteSize()
+        
+        -- Ala izquierda
+        local leftWing = AttachedEffect.create(590, ThingCategoryEffect)
+        leftWing:setDuration(3000)
+        leftWing:setOffset(-spriteSize * 1.5, -spriteSize * 0.5)
+        leftWing:setBounce(0, 8, 2000)  -- Aleteo suave
+        leftWing:setOpacity(0.85)
+        effect:attachEffect(leftWing)
+        
+        -- Ala derecha
+        local rightWing = AttachedEffect.create(590, ThingCategoryEffect)
+        rightWing:setDuration(3000)
+        rightWing:setOffset(spriteSize * 1.5, -spriteSize * 0.5)
+        rightWing:setBounce(0, 8, 2000)
+        rightWing:setOpacity(0.85)
+        effect:attachEffect(rightWing)
+        
+        -- Partículas de fuego ascendentes
+        for i = 1, 6 do
+            local particle = AttachedEffect.create(590, ThingCategoryEffect)
+            particle:setDuration(1500)
+            particle:setOffset((i - 3.5) * 10, 20)
+            particle:setBounce(20, 60, 1200)  -- Ascienden
+            particle:setFade(100, 0, 1500)  -- Desaparecen arriba
+            particle:setOpacity(0.6)
+            effect:attachEffect(particle)
+        end
+    end
+})
+
+-- ⭐ DIVINE ASCENSION - Luz divina con anillos giratorios
+AttachedEffectManager.register(282, 'Divine Ascension', 3, ThingCategoryEffect, {
+    duration = 4000,
+    loop = -1,
+    speed = 0.5,
+    onAttach = function(effect, owner)
+        -- Pilar de luz central
+        local pillar = AttachedEffect.create(3, ThingCategoryEffect)
+        pillar:setDuration(4000)
+        pillar:setOffset(0, -32, true)
+        pillar:setPulse(90, 110, 1000)
+        pillar:setOpacity(0.9)
+        effect:attachEffect(pillar)
+        
+        -- Anillo base
+        local baseRing = AttachedEffect.create(497, ThingCategoryEffect)
+        baseRing:setDuration(4000)
+        baseRing:setOffset(0, 10, true)
+        baseRing:setBounce(0, 5, 2000)
+        baseRing:setOpacity(0.7)
+        effect:attachEffect(baseRing)
+        
+        -- Partículas orbitales (simulando rotación)
+        for i = 0, 7 do
+            local angle = (360 / 8) * i
+            local rad = math.rad(angle)
+            local distance = 40
+            local orbitalX = math.floor(math.cos(rad) * distance)
+            local orbitalY = math.floor(math.sin(rad) * distance)
+            
+            local particle = AttachedEffect.create(3, ThingCategoryEffect)
+            particle:setDuration(2000)
+            particle:setOffset(orbitalX, orbitalY, true)
+            particle:setFade(0, 100, 2000)
+            particle:setPulse(50, 100, 1000)
+            particle:setOpacity(0.6)
+            effect:attachEffect(particle)
+        end
+    end
+})
+
+-- 👤 SHADOW CLONE - Múltiples copias sombrías
+AttachedEffectManager.register(283, 'Shadow Clone', 50, ThingCategoryEffect, {
+    duration = 2500,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local spriteSize = g_gameConfig.getSpriteSize()
+        local positions = {
+            {-spriteSize, -spriteSize},      -- Arriba-izquierda
+            {spriteSize, -spriteSize},       -- Arriba-derecha
+            {-spriteSize, spriteSize},       -- Abajo-izquierda
+            {spriteSize, spriteSize},        -- Abajo-derecha
+            {-spriteSize * 1.5, 0},          -- Izquierda
+            {spriteSize * 1.5, 0},           -- Derecha
+        }
+        
+        for i, pos in ipairs(positions) do
+            local clone = AttachedEffect.create(50, ThingCategoryEffect)
+            clone:setDuration(2500)
+            clone:setOffset(pos[1], pos[2], true)
+            clone:setOpacity(0)
+            clone:setFade(0, 70, 800)  -- Aparecen
+            clone:setBounce(0, 5, 1500)
+            effect:attachEffect(clone)
+            
+            -- Segunda onda de clones más lejos
+            local clone2 = AttachedEffect.create(50, ThingCategoryEffect)
+            clone2:setDuration(2000)
+            clone2:setOffset(pos[1] * 1.8, pos[2] * 1.8, true)
+            clone2:setOpacity(0)
+            clone2:setFade(0, 40, 1200)
+            clone2:setPulse(50, 100, 800)
+            effect:attachEffect(clone2)
+        end
+    end
+})
+
+-- ⚡ ELEMENTAL STORM - Tormenta de todos los elementos
+AttachedEffectManager.register(284, 'Elemental Storm', 0, 0, {
+    duration = 5000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        
+        -- Fuego - Círculo de llamas
+        for i = 0, 7 do
+            local angle = (360 / 8) * i
+            local rad = math.rad(angle)
+            local distance = 3
+            local fireX = pos.x + math.floor(math.cos(rad) * distance)
+            local fireY = pos.y + math.floor(math.sin(rad) * distance)
+            
+            local fireMissile = AttachedEffect.create(38, ThingCategoryMissile)
+            fireMissile:setDuration(3000)
+            fireMissile:setBounce(0, 15, 1000)
+            fireMissile:move({x = fireX, y = fireY, z = pos.z}, pos)
+            effect:attachEffect(fireMissile)
+        end
+        
+        -- Energía - Rayos desde arriba
+        for i = -2, 2 do
+            local lightning = AttachedEffect.create(497, ThingCategoryEffect)
+            lightning:setDuration(2000)
+            lightning:setOffset(i * 20, -60, true)
+            lightning:setBounce(60, 10, 1500)  -- Caen
+            lightning:setFade(100, 0, 2000)
+            lightning:setOpacity(0.8)
+            effect:attachEffect(lightning)
+        end
+        
+        -- Luz divina central
+        local divine = AttachedEffect.create(3, ThingCategoryEffect)
+        divine:setDuration(5000)
+        divine:setOpacity(0)
+        divine:setFade(0, 100, 1000)
+        divine:setPulse(80, 120, 800)
+        effect:attachEffect(divine)
+        
+        -- Oscuridad pulsante
+        local darkness = AttachedEffect.create(50, ThingCategoryEffect)
+        darkness:setDuration(5000)
+        darkness:setOffset(0, 0, true)
+        darkness:setPulse(50, 150, 1200)
+        darkness:setOpacity(0.4)
+        effect:attachEffect(darkness)
+    end
+})
+
+-- 🌀 TIME WARP - Distorsión temporal
+AttachedEffectManager.register(285, 'Time Warp', 497, ThingCategoryEffect, {
+    duration = 3500,
+    loop = -1,
+    speed = 0.3,
+    onAttach = function(effect, owner)
+        -- Anillos concéntricos que se expanden
+        for ring = 1, 5 do
+            local ripple = AttachedEffect.create(497, ThingCategoryEffect)
+            ripple:setDuration(3000)
+            ripple:setOffset(0, 0, true)
+            ripple:setOpacity(0)
+            ripple:setFade(0, 80 - (ring * 10), 800 + (ring * 200))  -- Aparecen en secuencia
+            ripple:setPulse(100 - (ring * 5), 100 + (ring * 20), 2000)  -- Se expanden
+            effect:attachEffect(ripple)
+        end
+        
+        -- Partículas flotantes erráticas
+        for i = 1, 12 do
+            local particle = AttachedEffect.create(3, ThingCategoryEffect)
+            particle:setDuration(2500)
+            local angle = (360 / 12) * i
+            local rad = math.rad(angle)
+            local px = math.floor(math.cos(rad) * 30)
+            local py = math.floor(math.sin(rad) * 30)
+            particle:setOffset(px, py, true)
+            particle:setBounce(0, 20, 1500)  -- Flotan arriba y abajo
+            particle:setPulse(60, 100, 800)
+            particle:setOpacity(0.7)
+            effect:attachEffect(particle)
+        end
+    end
+})
+
+-- 🕳️ BLACK HOLE - Vacío absorbente
+AttachedEffectManager.register(286, 'Black Hole', 50, ThingCategoryEffect, {
+    duration = 4000,
+    loop = -1,
+    speed = 1.2,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        
+        -- Núcleo oscuro pulsante
+        local core = AttachedEffect.create(50, ThingCategoryEffect)
+        core:setDuration(4000)
+        core:setOffset(0, 0, true)
+        core:setPulse(120, 80, 1000)  -- Se contrae (reverse pulse)
+        core:setOpacity(0.95)
+        effect:attachEffect(core)
+        
+        -- Anillo de energía giratorio
+        local energyRing = AttachedEffect.create(497, ThingCategoryEffect)
+        energyRing:setDuration(4000)
+        energyRing:setOffset(0, 0, true)
+        energyRing:setPulse(110, 90, 1500)
+        energyRing:setOpacity(0.6)
+        effect:attachEffect(energyRing)
+        
+        -- Partículas siendo absorbidas hacia el centro
+        for i = 0, 15 do
+            local angle = (360 / 16) * i
+            local rad = math.rad(angle)
+            local distance = 6
+            local startX = pos.x + math.floor(math.cos(rad) * distance)
+            local startY = pos.y + math.floor(math.sin(rad) * distance)
+            
+            -- Missile que se mueve hacia el centro
+            local particle = AttachedEffect.create(38, ThingCategoryMissile)
+            particle:setDuration(2500)
+            particle:setOpacity(0.7)
+            particle:setFade(100, 0, 2500)  -- Desaparece al llegar al centro
+            particle:move({x = startX, y = startY, z = pos.z}, pos)
+            effect:attachEffect(particle)
+        end
+    end
+})
+
+-- ⚡ CELESTIAL JUDGEMENT - Rayo divino desde el cielo
+AttachedEffectManager.register(287, 'Celestial Judgement', 0, 0, {
+    duration = 3000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local spriteSize = g_gameConfig.getSpriteSize()
+        
+        -- Marca en el suelo (preparación)
+        local mark = AttachedEffect.create(497, ThingCategoryEffect)
+        mark:setDuration(1000)
+        mark:setOffset(0, 0, true)
+        mark:setPulse(80, 120, 800)
+        mark:setFade(0, 100, 500)
+        effect:attachEffect(mark)
+        
+        -- Rayo descendente (después de 1 segundo)
+        local beam = AttachedEffect.create(3, ThingCategoryEffect)
+        beam:setDuration(2000)
+        beam:setOffset(0, -spriteSize * 3, true)
+        beam:setOpacity(0)
+        beam:setFade(0, 100, 200)  -- Aparece instantáneamente
+        beam:setBounce(spriteSize * 3, 0, 400)  -- Desciende rápido
+        effect:attachEffect(beam)
+        
+        -- Explosión al impactar
+        local explosion = AttachedEffect.create(7, ThingCategoryEffect)
+        explosion:setDuration(1500)
+        explosion:setOffset(0, 0, true)
+        explosion:setOpacity(0)
+        explosion:setFade(0, 100, 1000)
+        explosion:setPulse(80, 150, 500)
+        effect:attachEffect(explosion)
+        
+        -- Ondas de choque
+        for i = 1, 3 do
+            local shockwave = AttachedEffect.create(497, ThingCategoryEffect)
+            shockwave:setDuration(2000)
+            shockwave:setOffset(0, 0, true)
+            shockwave:setOpacity(0)
+            shockwave:setFade(0, 70 - (i * 15), 800 + (i * 300))
+            shockwave:setPulse(100, 100 + (i * 30), 1500)
+            effect:attachEffect(shockwave)
+        end
+    end
+})
+
+-- 🌊 TSUNAMI WAVE - Ola gigante convergente
+AttachedEffectManager.register(288, 'Tsunami Wave', 0, 0, {
+    duration = 3000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local distance = 7
+        
+        -- Olas desde 4 direcciones cardinales
+        local directions = {
+            {x = 0, y = -distance, name = "Norte"},
+            {x = 0, y = distance, name = "Sur"},
+            {x = -distance, y = 0, name = "Oeste"},
+            {x = distance, y = 0, name = "Este"}
+        }
+        
+        for _, dir in ipairs(directions) do
+            -- Ola principal
+            local wave = AttachedEffect.create(38, ThingCategoryMissile)
+            wave:setDuration(2500)
+            wave:setBounce(0, 25, 800)  -- Ola alta
+            wave:setOpacity(0.85)
+            wave:move({x = pos.x + dir.x, y = pos.y + dir.y, z = pos.z}, pos)
+            effect:attachEffect(wave)
+            
+            -- Espuma de la ola
+            local foam = AttachedEffect.create(497, ThingCategoryEffect)
+            foam:setDuration(2000)
+            foam:setOpacity(0)
+            foam:setFade(0, 60, 1500)
+            foam:setBounce(0, 15, 1200)
+            effect:attachEffect(foam)
+        end
+        
+        -- Explosión central al chocar
+        local splash = AttachedEffect.create(7, ThingCategoryEffect)
+        splash:setDuration(1500)
+        splash:setOpacity(0)
+        splash:setFade(0, 100, 2000)
+        splash:setPulse(80, 140, 600)
+        effect:attachEffect(splash)
+    end
+})
+
+-- 🌟 SUPERNOVA - Explosión estelar masiva
+AttachedEffectManager.register(289, 'Supernova', 3, ThingCategoryEffect, {
+    duration = 5000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        -- Núcleo colapsando
+        local core = AttachedEffect.create(3, ThingCategoryEffect)
+        core:setDuration(1500)
+        core:setOffset(0, 0, true)
+        core:setPulse(150, 50, 1000)  -- Se contrae
+        core:setOpacity(1.0)
+        effect:attachEffect(core)
+        
+        -- Explosión masiva
+        local blast = AttachedEffect.create(7, ThingCategoryEffect)
+        blast:setDuration(3500)
+        blast:setOffset(0, 0, true)
+        blast:setOpacity(0)
+        blast:setFade(0, 100, 1200)
+        blast:setPulse(50, 200, 2000)  -- Se expande masivamente
+        effect:attachEffect(blast)
+        
+        -- Partículas expulsadas en todas direcciones
+        for i = 0, 23 do
+            local angle = (360 / 24) * i
+            local rad = math.rad(angle)
+            local distance = 8
+            local targetX = owner:getPosition().x + math.floor(math.cos(rad) * distance)
+            local targetY = owner:getPosition().y + math.floor(math.sin(rad) * distance)
+            
+            local debris = AttachedEffect.create(38, ThingCategoryMissile)
+            debris:setDuration(3000)
+            debris:setOpacity(0.8)
+            debris:setFade(100, 0, 3000)  -- Se desvanecen
+            debris:setBounce(0, 15, 1500)
+            debris:move(owner:getPosition(), {x = targetX, y = targetY, z = owner:getPosition().z})
+            effect:attachEffect(debris)
+        end
+        
+        -- Ondas de choque expansivas
+        for wave = 1, 5 do
+            local shockwave = AttachedEffect.create(497, ThingCategoryEffect)
+            shockwave:setDuration(4000)
+            shockwave:setOffset(0, 0, true)
+            shockwave:setOpacity(0)
+            shockwave:setFade(0, 80 - (wave * 12), 500 + (wave * 400))
+            shockwave:setPulse(100, 100 + (wave * 50), 3000)
+            effect:attachEffect(shockwave)
+        end
+    end
+})
+
+-- ═══════════════════════════════════════════════════════════════
+-- 💀 EFECTOS MAMALONES PARTE 2 💀
+-- ═══════════════════════════════════════════════════════════════
+
+-- 🌪️ VORTEX OF SOULS - Vórtice de almas giratorio
+AttachedEffectManager.register(290, 'Vortex of Souls', 0, 0, {
+    duration = 4000,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        
+        -- Núcleo oscuro del vórtice
+        local core = AttachedEffect.create(50, ThingCategoryEffect)
+        core:setDuration(4000)
+        core:setOffset(0, 0, true)
+        core:setPulse(100, 130, 1500)
+        core:setOpacity(0.8)
+        effect:attachEffect(core)
+        
+        -- 3 capas de almas girando a diferentes velocidades
+        for layer = 1, 3 do
+            local numSouls = 6 + (layer * 2)  -- 8, 10, 12 almas por capa
+            local radius = layer * 1.5
+            
+            for i = 0, numSouls - 1 do
+                local angle = (360 / numSouls) * i
+                local rad = math.rad(angle)
+                local soulX = pos.x + math.floor(math.cos(rad) * radius)
+                local soulY = pos.y + math.floor(math.sin(rad) * radius)
+                
+                local soul = AttachedEffect.create(50, ThingCategoryEffect)
+                soul:setDuration(2500 - (layer * 200))
+                soul:setOpacity(0.5 + (layer * 0.1))
+                soul:setFade(0, 70, 1000)
+                soul:setBounce(0, 10, 1500 - (layer * 100))
+                soul:move({x = soulX, y = soulY, z = pos.z}, pos)
+                effect:attachEffect(soul)
+            end
+        end
+        
+        -- Energía ascendente del centro
+        for i = 1, 4 do
+            local energy = AttachedEffect.create(497, ThingCategoryEffect)
+            energy:setDuration(2000)
+            energy:setOffset((i - 2.5) * 15, 0, true)
+            energy:setBounce(0, 80, 1800)  -- Asciende alto
+            energy:setFade(100, 0, 2000)
+            energy:setOpacity(0.6)
+            effect:attachEffect(energy)
+        end
+    end
+})
+
+-- ⚔️ BLADE STORM - Tormenta de espadas giratorias
+AttachedEffectManager.register(291, 'Blade Storm', 0, 0, {
+    duration = 3500,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        
+        -- 12 espadas formando círculo y girando
+        for blade = 0, 11 do
+            local angle = (360 / 12) * blade
+            local rad = math.rad(angle)
+            local distance = 4
+            
+            -- Posición inicial (afuera)
+            local startX = pos.x + math.floor(math.cos(rad) * distance)
+            local startY = pos.y + math.floor(math.sin(rad) * distance)
+            
+            -- Posición final (cerca del centro)
+            local endAngle = math.rad(angle + 180)  -- Gira media vuelta
+            local endX = pos.x + math.floor(math.cos(endAngle) * 1.5)
+            local endY = pos.y + math.floor(math.sin(endAngle) * 1.5)
+            
+            local sword = AttachedEffect.create(38, ThingCategoryMissile)
+            sword:setDuration(3500)
+            sword:setDirection(blade % 8)  -- Dirección rotando
+            sword:setOpacity(0.9)
+            sword:setBounce(0, 10, 1000)
+            sword:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+            effect:attachEffect(sword)
+        end
+        
+        -- Destello central al final
+        local flash = AttachedEffect.create(7, ThingCategoryEffect)
+        flash:setDuration(1500)
+        flash:setOpacity(0)
+        flash:setFade(0, 100, 3000)
+        flash:setPulse(80, 150, 500)
+        effect:attachEffect(flash)
+    end
+})
+
+-- 🔮 PRISMATIC BURST - Explosión prismática de colores
+AttachedEffectManager.register(292, 'Prismatic Burst', 0, 0, {
+    duration = 3000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        
+        -- Núcleo comprimiéndose
+        local core = AttachedEffect.create(3, ThingCategoryEffect)
+        core:setDuration(1000)
+        core:setPulse(150, 50, 900)  -- Se comprime
+        core:setOpacity(1.0)
+        effect:attachEffect(core)
+        
+        -- Múltiples explosiones de diferentes colores (simulado con efectos)
+        local effects = {3, 7, 497, 590, 50}  -- Diferentes IDs para simular colores
+        
+        for _, effectId in ipairs(effects) do
+            local burst = AttachedEffect.create(effectId, ThingCategoryEffect)
+            burst:setDuration(2500)
+            burst:setOpacity(0)
+            burst:setFade(0, 80, 800)
+            burst:setPulse(50, 180, 2000)
+            effect:attachEffect(burst)
+        end
+        
+        -- 20 partículas saliendo en todas direcciones
+        for i = 0, 19 do
+            local angle = (360 / 20) * i
+            local rad = math.rad(angle)
+            local distance = 6
+            local targetX = pos.x + math.floor(math.cos(rad) * distance)
+            local targetY = pos.y + math.floor(math.sin(rad) * distance)
+            
+            local particle = AttachedEffect.create(38, ThingCategoryMissile)
+            particle:setDuration(2500)
+            particle:setOpacity(0.8)
+            particle:setFade(100, 0, 2500)
+            particle:setBounce(0, 20, 1200)
+            particle:move(pos, {x = targetX, y = targetY, z = pos.z})
+            effect:attachEffect(particle)
+        end
+    end
+})
+
+-- 🌩️ CHAIN LIGHTNING - Rayos en cadena
+AttachedEffectManager.register(293, 'Chain Lightning', 0, 0, {
+    duration = 2500,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local spriteSize = g_gameConfig.getSpriteSize()
+        
+        -- Rayo principal cayendo
+        local mainBolt = AttachedEffect.create(497, ThingCategoryEffect)
+        mainBolt:setDuration(800)
+        mainBolt:setOffset(0, -spriteSize * 2, true)
+        mainBolt:setBounce(spriteSize * 2, 0, 400)
+        mainBolt:setOpacity(1.0)
+        effect:attachEffect(mainBolt)
+        
+        -- Rayos secundarios en cadena (8 direcciones)
+        for dir = 0, 7 do
+            local angle = dir * 45
+            local rad = math.rad(angle)
+            local chainDist = 2
+            local chainX = pos.x + math.floor(math.cos(rad) * chainDist)
+            local chainY = pos.y + math.floor(math.sin(rad) * chainDist)
+            
+            local chainBolt = AttachedEffect.create(497, ThingCategoryEffect)
+            chainBolt:setDuration(1500)
+            chainBolt:setOpacity(0)
+            chainBolt:setFade(0, 90, 600)
+            chainBolt:move(pos, {x = chainX, y = chainY, z = pos.z})
+            effect:attachEffect(chainBolt)
+        end
+        
+        -- Chispas eléctricas flotantes
+        for spark = 1, 10 do
+            local sparkEffect = AttachedEffect.create(497, ThingCategoryEffect)
+            sparkEffect:setDuration(2000)
+            sparkEffect:setOffset((spark - 5) * 10, -20 - (spark * 5), true)
+            sparkEffect:setBounce(0, 30, 1000)
+            sparkEffect:setFade(100, 0, 2000)
+            sparkEffect:setOpacity(0.7)
+            effect:attachEffect(sparkEffect)
+        end
+    end
+})
+
+-- 💎 CRYSTAL PRISON - Prisión de cristal formándose
+AttachedEffectManager.register(294, 'Crystal Prison', 0, 0, {
+    duration = 3500,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        
+        -- Base de cristal
+        local base = AttachedEffect.create(497, ThingCategoryEffect)
+        base:setDuration(3500)
+        base:setOffset(0, 10, true)
+        base:setOpacity(0)
+        base:setFade(0, 80, 1000)
+        base:setPulse(80, 100, 2000)
+        effect:attachEffect(base)
+        
+        -- 6 pilares de cristal emergiendo desde el suelo
+        for pillar = 0, 5 do
+            local angle = (360 / 6) * pillar
+            local rad = math.rad(angle)
+            local distance = 1.5
+            local pillarX = math.floor(math.cos(rad) * distance) * 20
+            local pillarY = math.floor(math.sin(rad) * distance) * 20
+            
+            local crystal = AttachedEffect.create(3, ThingCategoryEffect)
+            crystal:setDuration(3000)
+            crystal:setOffset(pillarX, pillarY + 40, true)
+            crystal:setBounce(40, 0, 1500)  -- Emerge desde abajo
+            crystal:setOpacity(0)
+            crystal:setFade(0, 85, 1000 + (pillar * 100))
+            effect:attachEffect(crystal)
+        end
+        
+        -- Cúpula superior formándose
+        local dome = AttachedEffect.create(3, ThingCategoryEffect)
+        dome:setDuration(2500)
+        dome:setOffset(0, -60, true)
+        dome:setBounce(60, -20, 2000)  -- Desciende desde arriba
+        dome:setOpacity(0)
+        dome:setFade(0, 70, 1500)
+        dome:setPulse(80, 110, 1500)
+        effect:attachEffect(dome)
+        
+        -- Destellos de cristalización
+        for flash = 1, 8 do
+            local sparkle = AttachedEffect.create(7, ThingCategoryEffect)
+            sparkle:setDuration(2000)
+            sparkle:setOffset((flash - 4.5) * 15, -10 - (flash * 3), true)
+            sparkle:setOpacity(0)
+            sparkle:setFade(0, 60, 500 + (flash * 200))
+            sparkle:setPulse(50, 100, 800)
+            effect:attachEffect(sparkle)
+        end
+    end
+})
+
+-- 🩸 BLOOD RITUAL - Ritual sangriento
+AttachedEffectManager.register(295, 'Blood Ritual', 0, 0, {
+    duration = 4500,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        
+        -- Círculo ritual base (oscuro)
+        local circle = AttachedEffect.create(50, ThingCategoryEffect)
+        circle:setDuration(4500)
+        circle:setOffset(0, 0, true)
+        circle:setPulse(90, 120, 2000)
+        circle:setOpacity(0)
+        circle:setFade(0, 75, 1000)
+        effect:attachEffect(circle)
+        
+        -- Runas alrededor del círculo (6 puntos)
+        for rune = 0, 5 do
+            local angle = (360 / 6) * rune
+            local rad = math.rad(angle)
+            local distance = 2.5
+            local runeX = pos.x + math.floor(math.cos(rad) * distance)
+            local runeY = pos.y + math.floor(math.sin(rad) * distance)
+            
+            -- Runa apareciendo
+            local runeEffect = AttachedEffect.create(7, ThingCategoryEffect)
+            runeEffect:setDuration(3500)
+            runeEffect:setOpacity(0)
+            runeEffect:setFade(0, 80, 500 + (rune * 300))
+            runeEffect:setPulse(80, 110, 1500)
+            runeEffect:move({x = runeX, y = runeY, z = pos.z}, pos)
+            effect:attachEffect(runeEffect)
+        end
+        
+        -- Energía oscura ascendente desde las runas
+        for stream = 0, 5 do
+            local angle = (360 / 6) * stream
+            local rad = math.rad(angle)
+            local streamX = math.floor(math.cos(rad) * 40)
+            local streamY = math.floor(math.sin(rad) * 40)
+            
+            local energy = AttachedEffect.create(50, ThingCategoryEffect)
+            energy:setDuration(3000)
+            energy:setOffset(streamX, streamY + 30, true)
+            energy:setBounce(30, -40, 2500)  -- Asciende hacia el centro
+            energy:setFade(0, 70, 1500)
+            energy:setOpacity(0.6)
+            effect:attachEffect(energy)
+        end
+        
+        -- Explosión final de energía oscura
+        local burst = AttachedEffect.create(50, ThingCategoryEffect)
+        burst:setDuration(2000)
+        burst:setOpacity(0)
+        burst:setFade(0, 100, 3500)
+        burst:setPulse(80, 160, 800)
+        effect:attachEffect(burst)
+    end
+})
+
+-- 🌀 GRAVITY WELL - Pozo gravitacional
+AttachedEffectManager.register(296, 'Gravity Well', 0, 0, {
+    duration = 5000,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        
+        -- Centro del pozo (distorsión espacial)
+        local well = AttachedEffect.create(50, ThingCategoryEffect)
+        well:setDuration(5000)
+        well:setOffset(0, 0, true)
+        well:setPulse(110, 90, 1200)  -- Pulso de succión
+        well:setOpacity(0.9)
+        effect:attachEffect(well)
+        
+        -- Anillos gravitacionales pulsantes
+        for ring = 1, 4 do
+            local gravRing = AttachedEffect.create(497, ThingCategoryEffect)
+            gravRing:setDuration(4000)
+            gravRing:setOffset(0, 0, true)
+            gravRing:setOpacity(0)
+            gravRing:setFade(0, 60 - (ring * 10), 800 + (ring * 200))
+            gravRing:setPulse(100 + (ring * 10), 100 - (ring * 5), 2000)
+            effect:attachEffect(gravRing)
+        end
+        
+        -- Materia siendo absorbida (16 partículas)
+        for matter = 0, 15 do
+            local angle = (360 / 16) * matter
+            local rad = math.rad(angle)
+            local distance = 5
+            local matterX = pos.x + math.floor(math.cos(rad) * distance)
+            local matterY = pos.y + math.floor(math.sin(rad) * distance)
+            
+            local particle = AttachedEffect.create(38, ThingCategoryMissile)
+            particle:setDuration(3500)
+            particle:setOpacity(0.7)
+            particle:setFade(80, 0, 3500)
+            particle:setBounce(0, 15, 1500)
+            particle:move({x = matterX, y = matterY, z = pos.z}, pos)
+            effect:attachEffect(particle)
+        end
+        
+        -- Destello al centro cuando la materia llega
+        local impactFlash = AttachedEffect.create(7, ThingCategoryEffect)
+        impactFlash:setDuration(3000)
+        impactFlash:setOpacity(0)
+        impactFlash:setFade(0, 100, 3000)
+        impactFlash:setPulse(50, 120, 500)
+        effect:attachEffect(impactFlash)
+    end
+})
+
+-- 👻 SPECTRAL DANCE - Danza espectral
+AttachedEffectManager.register(297, 'Spectral Dance', 0, 0, {
+    duration = 4000,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        
+        -- 4 espectros danzando en círculo
+        for ghost = 0, 3 do
+            local angle = (360 / 4) * ghost
+            local rad = math.rad(angle)
+            local distance = 2
+            
+            -- Posición inicial
+            local startX = pos.x + math.floor(math.cos(rad) * distance)
+            local startY = pos.y + math.floor(math.sin(rad) * distance)
+            
+            -- Posición opuesta (para el movimiento circular)
+            local endAngle = math.rad(angle + 90)
+            local endX = pos.x + math.floor(math.cos(endAngle) * distance)
+            local endY = pos.y + math.floor(math.sin(endAngle) * distance)
+            
+            local specter = AttachedEffect.create(50, ThingCategoryEffect)
+            specter:setDuration(3000)
+            specter:setOpacity(0)
+            specter:setFade(0, 60, 1000)
+            specter:setBounce(0, 15, 2000)  -- Flotando
+            specter:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+            effect:attachEffect(specter)
+        end
+        
+        -- Rastro espectral
+        for trail = 1, 12 do
+            local trailEffect = AttachedEffect.create(50, ThingCategoryEffect)
+            trailEffect:setDuration(2500)
+            trailEffect:setOffset((trail - 6.5) * 10, (trail % 2) * 15, true)
+            trailEffect:setOpacity(0)
+            trailEffect:setFade(0, 40, 1000 + (trail * 100))
+            trailEffect:setPulse(60, 100, 1500)
+            effect:attachEffect(trailEffect)
+        end
+    end
+})
+
+-- 🔥❄️ ELEMENTAL FUSION - Fusión de fuego y hielo
+AttachedEffectManager.register(298, 'Elemental Fusion', 0, 0, {
+    duration = 3500,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        
+        -- Lado de fuego (izquierda)
+        for fire = 0, 3 do
+            local fireEffect = AttachedEffect.create(590, ThingCategoryEffect)
+            fireEffect:setDuration(3000)
+            fireEffect:setOffset(-40 - (fire * 10), (fire - 1.5) * 20, true)
+            fireEffect:setBounce(0, 20, 1500)
+            fireEffect:setOpacity(0.8)
+            fireEffect:setFade(0, 90, 800)
+            effect:attachEffect(fireEffect)
+        end
+        
+        -- Lado de hielo (derecha) - simulado con efectos azules
+        for ice = 0, 3 do
+            local iceEffect = AttachedEffect.create(3, ThingCategoryEffect)
+            iceEffect:setDuration(3000)
+            iceEffect:setOffset(40 + (ice * 10), (ice - 1.5) * 20, true)
+            iceEffect:setBounce(0, 20, 1500)
+            iceEffect:setOpacity(0.8)
+            iceEffect:setFade(0, 90, 800)
+            effect:attachEffect(iceEffect)
+        end
+        
+        -- Colisión en el centro
+        local collision = AttachedEffect.create(7, ThingCategoryEffect)
+        collision:setDuration(2500)
+        collision:setOpacity(0)
+        collision:setFade(0, 100, 1500)
+        collision:setPulse(70, 150, 800)
+        effect:attachEffect(collision)
+        
+        -- Explosión de vapor/energía
+        for steam = 0, 11 do
+            local angle = (360 / 12) * steam
+            local rad = math.rad(angle)
+            local distance = 4
+            local steamX = pos.x + math.floor(math.cos(rad) * distance)
+            local steamY = pos.y + math.floor(math.sin(rad) * distance)
+            
+            local steamEffect = AttachedEffect.create(497, ThingCategoryEffect)
+            steamEffect:setDuration(2500)
+            steamEffect:setOpacity(0.7)
+            steamEffect:setFade(100, 0, 2500)
+            steamEffect:move(pos, {x = steamX, y = steamY, z = pos.z})
+            effect:attachEffect(steamEffect)
+        end
+    end
+})
+
+-- 💀⚡ DEATH'S TOUCH - Toque de la muerte
+AttachedEffectManager.register(299, 'Deaths Touch', 0, 0, {
+    duration = 3000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local spriteSize = g_gameConfig.getSpriteSize()
+        
+        -- Mano esquelética descendiendo
+        local hand = AttachedEffect.create(50, ThingCategoryEffect)
+        hand:setDuration(2000)
+        hand:setOffset(0, -spriteSize * 3, true)
+        hand:setBounce(spriteSize * 3, 0, 1200)  -- Desciende
+        hand:setOpacity(0)
+        hand:setFade(0, 90, 600)
+        effect:attachEffect(hand)
+        
+        -- Aura de muerte al contacto
+        local deathAura = AttachedEffect.create(50, ThingCategoryEffect)
+        deathAura:setDuration(2500)
+        deathAura:setOpacity(0)
+        deathAura:setFade(0, 100, 1000)
+        deathAura:setPulse(80, 140, 1000)
+        effect:attachEffect(deathAura)
+        
+        -- Almas escapando en espiral
+        for soul = 0, 7 do
+            local angle = (360 / 8) * soul
+            local rad = math.rad(angle)
+            local distance = 3
+            local soulX = pos.x + math.floor(math.cos(rad) * distance)
+            local soulY = pos.y + math.floor(math.sin(rad) * distance)
+            
+            local soulEffect = AttachedEffect.create(50, ThingCategoryEffect)
+            soulEffect:setDuration(2500)
+            soulEffect:setOpacity(0.6)
+            soulEffect:setFade(100, 0, 2500)
+            soulEffect:setBounce(0, 40, 1800)  -- Ascienden
+            soulEffect:move(pos, {x = soulX, y = soulY, z = pos.z})
+            effect:attachEffect(soulEffect)
+        end
+        
+        -- Grietas oscuras
+        for crack = 0, 3 do
+            local angle = crack * 90
+            local rad = math.rad(angle)
+            local crackX = math.floor(math.cos(rad) * 30)
+            local crackY = math.floor(math.sin(rad) * 30)
+            
+            local crackEffect = AttachedEffect.create(50, ThingCategoryEffect)
+            crackEffect:setDuration(2000)
+            crackEffect:setOffset(crackX, crackY, true)
+            crackEffect:setOpacity(0)
+            crackEffect:setFade(0, 70, 800 + (crack * 200))
+            effect:attachEffect(crackEffect)
+        end
+    end
+})
+
+-- ═══════════════════════════════════════════════════════════════
+-- 🌀 EFECTOS ORBITALES 🌀
+-- ═══════════════════════════════════════════════════════════════
+
+-- 🔮 ORBITING MISSILES - 4 missiles orbitando
+AttachedEffectManager.register(300, 'Orbiting Missiles 4', 0, 0, {
+    duration = 4000,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local radius = 2
+        local numMissiles = 4
+        
+        for i = 0, numMissiles - 1 do
+            local angle = (360 / numMissiles) * i
+            local rad = math.rad(angle)
+            
+            -- Posición inicial
+            local startX = pos.x + math.floor(math.cos(rad) * radius)
+            local startY = pos.y + math.floor(math.sin(rad) * radius)
+            
+            -- Posición final (90 grados adelante para simular órbita)
+            local endAngle = math.rad(angle + 90)
+            local endX = pos.x + math.floor(math.cos(endAngle) * radius)
+            local endY = pos.y + math.floor(math.sin(endAngle) * radius)
+            
+            local missile = AttachedEffect.create(38, ThingCategoryMissile)
+            missile:setDuration(4000)
+            missile:setDirection(i * 2)
+            missile:setOpacity(0.9)
+            missile:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+            effect:attachEffect(missile)
+        end
+    end
+})
+
+-- ⚡ ORBITING MISSILES - 8 missiles orbitando rápido
+AttachedEffectManager.register(301, 'Orbiting Missiles 8', 0, 0, {
+    duration = 3000,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local radius = 2.5
+        local numMissiles = 8
+        
+        for i = 0, numMissiles - 1 do
+            local angle = (360 / numMissiles) * i
+            local rad = math.rad(angle)
+            
+            local startX = pos.x + math.floor(math.cos(rad) * radius)
+            local startY = pos.y + math.floor(math.sin(rad) * radius)
+            
+            local endAngle = math.rad(angle + 90)
+            local endX = pos.x + math.floor(math.cos(endAngle) * radius)
+            local endY = pos.y + math.floor(math.sin(endAngle) * radius)
+            
+            local missile = AttachedEffect.create(38, ThingCategoryMissile)
+            missile:setDuration(3000)
+            missile:setDirection(i % 8)
+            missile:setOpacity(0.85)
+            missile:setBounce(0, 8, 1500)
+            missile:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+            effect:attachEffect(missile)
+        end
+    end
+})
+
+-- 🔥 FIRE ORBIT - Bolas de fuego orbitando
+AttachedEffectManager.register(302, 'Fire Orbit', 0, 0, {
+    duration = 4500,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local radius = 2
+        local numOrbs = 6
+        
+        for i = 0, numOrbs - 1 do
+            local angle = (360 / numOrbs) * i
+            local rad = math.rad(angle)
+            
+            local startX = pos.x + math.floor(math.cos(rad) * radius)
+            local startY = pos.y + math.floor(math.sin(rad) * radius)
+            
+            local endAngle = math.rad(angle + 120)
+            local endX = pos.x + math.floor(math.cos(endAngle) * radius)
+            local endY = pos.y + math.floor(math.sin(endAngle) * radius)
+            
+            local fireOrb = AttachedEffect.create(590, ThingCategoryEffect)
+            fireOrb:setDuration(4500)
+            fireOrb:setOpacity(0.8)
+            fireOrb:setPulse(90, 110, 1000)
+            fireOrb:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+            effect:attachEffect(fireOrb)
+        end
+    end
+})
+
+-- ⭐ DIVINE ORBIT - Luces divinas orbitando
+AttachedEffectManager.register(303, 'Divine Orbit', 0, 0, {
+    duration = 5000,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local radius = 2.5
+        local numLights = 5
+        
+        for i = 0, numLights - 1 do
+            local angle = (360 / numLights) * i
+            local rad = math.rad(angle)
+            
+            local startX = pos.x + math.floor(math.cos(rad) * radius)
+            local startY = pos.y + math.floor(math.sin(rad) * radius)
+            
+            local endAngle = math.rad(angle + 72)
+            local endX = pos.x + math.floor(math.cos(endAngle) * radius)
+            local endY = pos.y + math.floor(math.sin(endAngle) * radius)
+            
+            local light = AttachedEffect.create(3, ThingCategoryEffect)
+            light:setDuration(5000)
+            light:setOpacity(0.7)
+            light:setPulse(85, 115, 1200)
+            light:setFade(0, 90, 1000)
+            light:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+            effect:attachEffect(light)
+        end
+    end
+})
+
+-- 💀 SHADOW ORBIT - Sombras orbitando
+AttachedEffectManager.register(304, 'Shadow Orbit', 0, 0, {
+    duration = 4000,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local radius = 2
+        local numShadows = 6
+        
+        for i = 0, numShadows - 1 do
+            local angle = (360 / numShadows) * i
+            local rad = math.rad(angle)
+            
+            local startX = pos.x + math.floor(math.cos(rad) * radius)
+            local startY = pos.y + math.floor(math.sin(rad) * radius)
+            
+            local endAngle = math.rad(angle + 60)
+            local endX = pos.x + math.floor(math.cos(endAngle) * radius)
+            local endY = pos.y + math.floor(math.sin(endAngle) * radius)
+            
+            local shadow = AttachedEffect.create(50, ThingCategoryEffect)
+            shadow:setDuration(4000)
+            shadow:setOpacity(0.6)
+            shadow:setFade(0, 75, 800)
+            shadow:setBounce(0, 10, 2000)
+            shadow:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+            effect:attachEffect(shadow)
+        end
+    end
+})
+
+-- 🌀 DOUBLE ORBIT - Doble órbita (interna y externa)
+AttachedEffectManager.register(305, 'Double Orbit', 0, 0, {
+    duration = 5000,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        
+        -- Órbita interna (4 missiles)
+        local innerRadius = 1.5
+        for i = 0, 3 do
+            local angle = (360 / 4) * i
+            local rad = math.rad(angle)
+            
+            local startX = pos.x + math.floor(math.cos(rad) * innerRadius)
+            local startY = pos.y + math.floor(math.sin(rad) * innerRadius)
+            
+            local endAngle = math.rad(angle + 90)
+            local endX = pos.x + math.floor(math.cos(endAngle) * innerRadius)
+            local endY = pos.y + math.floor(math.sin(endAngle) * innerRadius)
+            
+            local innerMissile = AttachedEffect.create(38, ThingCategoryMissile)
+            innerMissile:setDuration(3000)
+            innerMissile:setOpacity(0.9)
+            innerMissile:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+            effect:attachEffect(innerMissile)
+        end
+        
+        -- Órbita externa (8 efectos)
+        local outerRadius = 3
+        for i = 0, 7 do
+            local angle = (360 / 8) * i
+            local rad = math.rad(angle)
+            
+            local startX = pos.x + math.floor(math.cos(rad) * outerRadius)
+            local startY = pos.y + math.floor(math.sin(rad) * outerRadius)
+            
+            local endAngle = math.rad(angle + 45)
+            local endX = pos.x + math.floor(math.cos(endAngle) * outerRadius)
+            local endY = pos.y + math.floor(math.sin(endAngle) * outerRadius)
+            
+            local outerEffect = AttachedEffect.create(497, ThingCategoryEffect)
+            outerEffect:setDuration(5000)
+            outerEffect:setOpacity(0.7)
+            outerEffect:setPulse(90, 110, 1500)
+            outerEffect:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+            effect:attachEffect(outerEffect)
+        end
+    end
+})
+
+-- 💫 SPIRAL ORBIT - Órbita en espiral expandiéndose
+AttachedEffectManager.register(306, 'Spiral Orbit', 0, 0, {
+    duration = 4000,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local numParticles = 12
+        
+        for i = 0, numParticles - 1 do
+            local angle = (360 / numParticles) * i
+            local rad = math.rad(angle)
+            
+            -- Radio inicial pequeño
+            local startRadius = 1.5 + (i * 0.1)
+            local startX = pos.x + math.floor(math.cos(rad) * startRadius)
+            local startY = pos.y + math.floor(math.sin(rad) * startRadius)
+            
+            -- Radio final más grande
+            local endAngle = math.rad(angle + 90)
+            local endRadius = 2.5 + (i * 0.1)
+            local endX = pos.x + math.floor(math.cos(endAngle) * endRadius)
+            local endY = pos.y + math.floor(math.sin(endAngle) * endRadius)
+            
+            local particle = AttachedEffect.create(497, ThingCategoryEffect)
+            particle:setDuration(4000)
+            particle:setOpacity(0.6 + (i * 0.02))
+            particle:setFade(0, 80, 1000)
+            particle:setPulse(80, 120, 1200)
+            particle:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+            effect:attachEffect(particle)
+        end
+    end
+})
+
+-- ⚔️ BLADE CIRCLE - Círculo de espadas rotando
+AttachedEffectManager.register(307, 'Blade Circle', 0, 0, {
+    duration = 3500,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local radius = 2.5
+        local numBlades = 8
+        
+        for i = 0, numBlades - 1 do
+            local angle = (360 / numBlades) * i
+            local rad = math.rad(angle)
+            
+            local startX = pos.x + math.floor(math.cos(rad) * radius)
+            local startY = pos.y + math.floor(math.sin(rad) * radius)
+            
+            local endAngle = math.rad(angle + 45)
+            local endX = pos.x + math.floor(math.cos(endAngle) * radius)
+            local endY = pos.y + math.floor(math.sin(endAngle) * radius)
+            
+            local blade = AttachedEffect.create(38, ThingCategoryMissile)
+            blade:setDuration(3500)
+            blade:setDirection(i % 8)
+            blade:setOpacity(0.95)
+            blade:setBounce(0, 5, 1500)
+            blade:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+            effect:attachEffect(blade)
+        end
+    end
+})
+
+-- 🌟 COSMIC ORBIT - Órbita cósmica con múltiples capas
+AttachedEffectManager.register(308, 'Cosmic Orbit', 0, 0, {
+    duration = 6000,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        
+        -- 3 anillos de diferentes tamaños y velocidades
+        local rings = {
+            {radius = 1.5, particles = 4, duration = 3000, effectId = 3},
+            {radius = 2.5, particles = 6, duration = 4500, effectId = 497},
+            {radius = 3.5, particles = 8, duration = 6000, effectId = 590}
+        }
+        
+        for ringIdx, ring in ipairs(rings) do
+            for i = 0, ring.particles - 1 do
+                local angle = (360 / ring.particles) * i
+                local rad = math.rad(angle)
+                
+                local startX = pos.x + math.floor(math.cos(rad) * ring.radius)
+                local startY = pos.y + math.floor(math.sin(rad) * ring.radius)
+                
+                -- Ángulo de rotación depende del anillo
+                local rotationAngle = 60 + (ringIdx * 30)
+                local endAngle = math.rad(angle + rotationAngle)
+                local endX = pos.x + math.floor(math.cos(endAngle) * ring.radius)
+                local endY = pos.y + math.floor(math.sin(endAngle) * ring.radius)
+                
+                local particle = AttachedEffect.create(ring.effectId, ThingCategoryEffect)
+                particle:setDuration(ring.duration)
+                particle:setOpacity(0.5 + (ringIdx * 0.15))
+                particle:setPulse(85, 115, 1000 + (ringIdx * 200))
+                particle:setFade(0, 70 + (ringIdx * 10), 800)
+                particle:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+                effect:attachEffect(particle)
+            end
+        end
+    end
+})
+
+-- 🌀 REVERSE ORBIT - Órbita en reversa (hacia dentro)
+AttachedEffectManager.register(309, 'Reverse Orbit', 0, 0, {
+    duration = 4000,
+    loop = -1,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local numMissiles = 6
+        
+        for i = 0, numMissiles - 1 do
+            local angle = (360 / numMissiles) * i
+            local rad = math.rad(angle)
+            
+            -- Empieza afuera
+            local startRadius = 3
+            local startX = pos.x + math.floor(math.cos(rad) * startRadius)
+            local startY = pos.y + math.floor(math.sin(rad) * startRadius)
+            
+            -- Termina cerca del centro (órbita inversa)
+            local endAngle = math.rad(angle - 90)
+            local endRadius = 1.5
+            local endX = pos.x + math.floor(math.cos(endAngle) * endRadius)
+            local endY = pos.y + math.floor(math.sin(endAngle) * endRadius)
+            
+            local missile = AttachedEffect.create(38, ThingCategoryMissile)
+            missile:setDuration(4000)
+            missile:setDirection((numMissiles - i) % 8)
+            missile:setOpacity(0.9)
+            missile:setFade(100, 70, 2000)
+            missile:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+            effect:attachEffect(missile)
+        end
+    end
+})
+
+-- ═══════════════════════════════════════════════════════════════
+-- 🌍 EFECTOS ESTILO MUNDO (CIRCULAR CONTINUO) 🌍
+-- ═══════════════════════════════════════════════════════════════
+
+-- 🔄 CIRCULAR ORBIT 5 - 5 missiles orbitando 10 segundos (vuelta completa)
+AttachedEffectManager.register(310, 'Circular Orbit 5', 0, 0, {
+    duration = 10000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local radius = 2
+        local numMissiles = 5
+        local segmentDuration = 625  -- Duración de cada segmento (90°)
+        local numCycles = 4  -- 4 vueltas completas en 10 segundos
+        
+        -- Cada missile completa vueltas divididas en 4 segmentos de 90°
+        for cycle = 0, numCycles - 1 do
+            for segment = 0, 3 do  -- 4 segmentos por vuelta
+                for i = 0, numMissiles - 1 do
+                    local baseAngle = (360 / numMissiles) * i
+                    local startAngle = baseAngle + (segment * 90)
+                    local endAngle = startAngle + 90
+                    
+                    local startRad = math.rad(startAngle)
+                    local startX = pos.x + math.floor(math.cos(startRad) * radius)
+                    local startY = pos.y + math.floor(math.sin(startRad) * radius)
+                    
+                    local endRad = math.rad(endAngle)
+                    local endX = pos.x + math.floor(math.cos(endRad) * radius)
+                    local endY = pos.y + math.floor(math.sin(endRad) * radius)
+                    
+                    local missile = AttachedEffect.create(38, ThingCategoryMissile)
+                    missile:setDuration(segmentDuration)
+                    missile:setDirection(i % 8)
+                    missile:setOpacity(0.95)
+                    missile:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+                    effect:attachEffect(missile)
+                end
+            end
+        end
+    end
+})
+
+-- 🔄 CIRCULAR ORBIT 6 - 6 missiles orbitando 10 segundos (vuelta completa)
+AttachedEffectManager.register(311, 'Circular Orbit 6', 0, 0, {
+    duration = 10000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local radius = 2.5
+        local numMissiles = 6
+        local segmentDuration = 625
+        local numCycles = 4
+        
+        for cycle = 0, numCycles - 1 do
+            for segment = 0, 3 do
+                for i = 0, numMissiles - 1 do
+                    local baseAngle = (360 / numMissiles) * i
+                    local startAngle = baseAngle + (segment * 90)
+                    local endAngle = startAngle + 90
+                    
+                    local startRad = math.rad(startAngle)
+                    local startX = pos.x + math.floor(math.cos(startRad) * radius)
+                    local startY = pos.y + math.floor(math.sin(startRad) * radius)
+                    
+                    local endRad = math.rad(endAngle)
+                    local endX = pos.x + math.floor(math.cos(endRad) * radius)
+                    local endY = pos.y + math.floor(math.sin(endRad) * radius)
+                    
+                    local missile = AttachedEffect.create(38, ThingCategoryMissile)
+                    missile:setDuration(segmentDuration)
+                    missile:setDirection(i % 8)
+                    missile:setOpacity(0.95)
+                    missile:setBounce(0, 5, 1200)
+                    missile:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+                    effect:attachEffect(missile)
+                end
+            end
+        end
+    end
+})
+
+-- 🔄 FAST CIRCULAR ORBIT - Órbita circular rápida (6 segundos, 4 vueltas)
+AttachedEffectManager.register(312, 'Fast Circular Orbit', 0, 0, {
+    duration = 6000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local radius = 2
+        local numMissiles = 5
+        local segmentDuration = 375  -- Más rápido
+        local numCycles = 4
+        
+        for cycle = 0, numCycles - 1 do
+            for segment = 0, 3 do
+                for i = 0, numMissiles - 1 do
+                    local baseAngle = (360 / numMissiles) * i
+                    local startAngle = baseAngle + (segment * 90)
+                    local endAngle = startAngle + 90
+                    
+                    local startRad = math.rad(startAngle)
+                    local startX = pos.x + math.floor(math.cos(startRad) * radius)
+                    local startY = pos.y + math.floor(math.sin(startRad) * radius)
+                    
+                    local endRad = math.rad(endAngle)
+                    local endX = pos.x + math.floor(math.cos(endRad) * radius)
+                    local endY = pos.y + math.floor(math.sin(endRad) * radius)
+                    
+                    local missile = AttachedEffect.create(38, ThingCategoryMissile)
+                    missile:setDuration(segmentDuration)
+                    missile:setDirection(i % 8)
+                    missile:setOpacity(0.9)
+                    missile:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+                    effect:attachEffect(missile)
+                end
+            end
+        end
+    end
+})
+
+-- 🔄 SLOW CIRCULAR ORBIT - Órbita circular lenta (15 segundos, 4 vueltas)
+AttachedEffectManager.register(313, 'Slow Circular Orbit', 0, 0, {
+    duration = 15000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local radius = 2.5
+        local numMissiles = 6
+        local segmentDuration = 937  -- Más lento
+        local numCycles = 4
+        
+        for cycle = 0, numCycles - 1 do
+            for segment = 0, 3 do
+                for i = 0, numMissiles - 1 do
+                    local baseAngle = (360 / numMissiles) * i
+                    local startAngle = baseAngle + (segment * 90)
+                    local endAngle = startAngle + 90
+                    
+                    local startRad = math.rad(startAngle)
+                    local startX = pos.x + math.floor(math.cos(startRad) * radius)
+                    local startY = pos.y + math.floor(math.sin(startRad) * radius)
+                    
+                    local endRad = math.rad(endAngle)
+                    local endX = pos.x + math.floor(math.cos(endRad) * radius)
+                    local endY = pos.y + math.floor(math.sin(endRad) * radius)
+                    
+                    local missile = AttachedEffect.create(38, ThingCategoryMissile)
+                    missile:setDuration(segmentDuration)
+                    missile:setDirection(i % 8)
+                    missile:setOpacity(0.85)
+                    missile:setPulse(90, 110, 1500)
+                    missile:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+                    effect:attachEffect(missile)
+                end
+            end
+        end
+    end
+})
+
+-- 🔥 FIRE CIRCULAR ORBIT - Órbita de fuego 10 segundos (4 vueltas)
+AttachedEffectManager.register(314, 'Fire Circular Orbit', 0, 0, {
+    duration = 10000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local radius = 2
+        local numOrbs = 6
+        local segmentDuration = 625
+        local numCycles = 4
+        
+        for cycle = 0, numCycles - 1 do
+            for segment = 0, 3 do
+                for i = 0, numOrbs - 1 do
+                    local baseAngle = (360 / numOrbs) * i
+                    local startAngle = baseAngle + (segment * 90)
+                    local endAngle = startAngle + 90
+                    
+                    local startRad = math.rad(startAngle)
+                    local startX = pos.x + math.floor(math.cos(startRad) * radius)
+                    local startY = pos.y + math.floor(math.sin(startRad) * radius)
+                    
+                    local endRad = math.rad(endAngle)
+                    local endX = pos.x + math.floor(math.cos(endRad) * radius)
+                    local endY = pos.y + math.floor(math.sin(endRad) * radius)
+                    
+                    local fireOrb = AttachedEffect.create(590, ThingCategoryEffect)
+                    fireOrb:setDuration(segmentDuration)
+                    fireOrb:setOpacity(0.8)
+                    fireOrb:setPulse(85, 115, 1000)
+                    fireOrb:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
+                    effect:attachEffect(fireOrb)
+                end
+            end
+        end
+    end
+})
+
