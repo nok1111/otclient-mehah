@@ -172,16 +172,16 @@ Codex.cardDescriptions = {
 		trigger = "passive",
 		cardFrame = "the behemoth",
 		descriptions = {
-			[1] = "Increase your max health by 20% and gain 5% life leech",
-			[2] = "Increase your max health by 25% and gain 6% life leech",
-			[3] = "Increase your max health by 30% and gain 7% life leech",
-			[4] = "Increase your max health by 35% and gain 8% life leech",
-			[5] = "Increase your max health by 40% and gain 10% life leech",
-			[6] = "Increase your max health by 45% and gain 12% life leech",
-			[7] = "Increase your max health by 50% and gain 14% life leech",
-			[8] = "Increase your max health by 55% and gain 16% life leech",
-			[9] = "Increase your max health by 60% and gain 18% life leech",
-			[10] = "Increase your max health by 65% and gain 20% life leech"
+			[1] = "Increase your size by 5%, max health by 20% and gain 5% life leech",
+			[2] = "Increase your size by 10%, max health by 25% and gain 6% life leech",
+			[3] = "Increase your size by 15%, max health by 30% and gain 7% life leech",
+			[4] = "Increase your size by 20%, max health by 35% and gain 8% life leech",
+			[5] = "Increase your size by 25%, max health by 40% and gain 10% life leech",
+			[6] = "Increase your size by 30%, max health by 45% and gain 12% life leech",
+			[7] = "Increase your size by 35%, max health by 50% and gain 14% life leech",
+			[8] = "Increase your size by 40%, max health by 55% and gain 16% life leech",
+			[9] = "Increase your size by 45%, max health by 60% and gain 18% life leech",
+			[10] = "Increase your size by 50%, max health by 65% and gain 20% life leech"
 		}
 	},
 	[11] = {
