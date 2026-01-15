@@ -71,6 +71,7 @@ function Codex.onGameStart()
 	Codex.cachedBronzeCrates = 0
 	Codex.cachedSilverCrates = 0
 	Codex.cachedGoldenCrates = 0
+	Codex.crateAnimationInProgress = false
 	Codex.currentTab = Codex.TAB_COLLECTION
 	Codex.selectedCrateId = 1  -- Default to Bronze
 	
@@ -799,13 +800,8 @@ end
 
 ------ Crates Tab (NEW DESIGN)
 
--- Rarity colors for probability bars (only 4 rarities now)
-Codex.rarityColors = {
-	common = "#AAAAAA",
-	rare = "#0070DD",
-	epic = "#A335EE",
-	legendary = "#FF8000"
-}
+-- Note: Codex.rarityColors already defined in codexDataConfig.lua, don't redefine
+-- Using same colors for probability bars
 
 function Codex.setupCratesUI()
 	local cratesPanel = Codex.UI.CratesPanel
@@ -872,7 +868,9 @@ function Codex.setupCratesUI()
 	print("[Codex] Golden button: " .. tostring(goldenButton ~= nil))
 
 	if bronzeButton then
-		bronzeButton:setText("BRONZE CRATE\nx" .. Codex.cachedBronzeCrates)
+		bronzeButton:setText("\n\n\n" .. "     BRONZE CRATE\nx" .. Codex.cachedBronzeCrates)
+		
+		
 		connect(bronzeButton, { onClick = function()
 			print("[Codex] Bronze button clicked")
 			Codex.selectCrateType(1)
@@ -883,7 +881,7 @@ function Codex.setupCratesUI()
 	end
 
 	if silverButton then
-		silverButton:setText("SILVER CRATE\nx" .. Codex.cachedSilverCrates)
+		silverButton:setText("\n\n\n" .. "     SILVER CRATE\nx" .. Codex.cachedSilverCrates)
 		connect(silverButton, { onClick = function()
 			print("[Codex] Silver button clicked")
 			Codex.selectCrateType(2)
@@ -894,7 +892,7 @@ function Codex.setupCratesUI()
 	end
 
 	if goldenButton then
-		goldenButton:setText("GOLDEN CRATE\nx" .. Codex.cachedGoldenCrates)
+		goldenButton:setText("\n\n\n" .. "     GOLDEN CRATE\nx" .. Codex.cachedGoldenCrates)
 		connect(goldenButton, { onClick = function()
 			print("[Codex] Golden button clicked")
 			Codex.selectCrateType(3)
@@ -968,6 +966,17 @@ function Codex.selectCrateType(crateId)
 		return 
 	end
 
+	-- Update panel background image based on crate type
+	local imageMap = {
+		[1] = "/images/ui/windows/card_window_normal",   -- Bronze
+		[2] = "/images/ui/windows/card_window_rare",     -- Silver
+		[3] = "/images/ui/windows/card_window_legendary" -- Golden
+	}
+	if imageMap[crateId] then
+		displayPanel:setImageSource(imageMap[crateId])
+		print("[Codex] Updated panel image to: " .. imageMap[crateId])
+	end
+
 	-- Update crate name
 	local nameLabel = displayPanel:getChildById("SelectedCrateName")
 	if nameLabel then
@@ -1003,6 +1012,12 @@ function Codex.selectCrateType(crateId)
 					print("[Codex] Created bar for " .. rarity .. ": " .. weight .. "%")
 				end
 			end
+			
+			-- Add bonus essences bar if available
+			if crateData.bonusEssences then
+				Codex.createBonusEssencesBar(barsPanel, crateData.bonusEssences.amount, 
+					crateData.bonusEssences.chance)
+			end
 		else
 			print("[Codex ERROR] No rarityWeights found in crateData")
 		end
@@ -1019,6 +1034,12 @@ function Codex.selectCrateType(crateId)
 		
 		openButton:setEnabled(ownedCount > 0)
 		openButton.onClick = function()
+			-- Block opening if animation is in progress
+			if Codex.crateAnimationInProgress then
+				print("[Codex] Cannot open crate - animation in progress")
+				return
+			end
+			
 			print("[Codex] Opening crate: " .. crateId)
 			Codex.sendOpcode({
 				topic = "open-crate-request",
@@ -1029,24 +1050,26 @@ function Codex.selectCrateType(crateId)
 	end
 end
 
-function Codex.createProbabilityBar(parent, rarity, weight)
-	local container = g_ui.createWidget("UIWidget", parent)
-	container:setHeight(25)
+function Codex.createProbabilityBar(container, rarity, weight)
+	local barContainer = g_ui.createWidget("UIWidget", container)
+	barContainer:setSize({width = 400, height = 25})
+	barContainer:setMarginTop(5)
 	
-	-- Rarity label
-	local label = g_ui.createWidget("Label", container)
-	label:setText(rarity:gsub("^%l", string.upper))
+	-- Rarity label with color (right-aligned)
+	local label = g_ui.createWidget("Label", barContainer)
+	label:setText(rarity:sub(1,1):upper() .. rarity:sub(2))
 	label:setColor(Codex.rarityColors[rarity] or "#FFFFFF")
 	label:addAnchor(AnchorLeft, "parent", AnchorLeft)
 	label:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
-	label:setWidth(100)
+	label:setWidth(120)
+	label:setTextAlign(AlignRight)
 	
 	-- Progress bar background
-	local barBg = g_ui.createWidget("UIWidget", container)
+	local barBg = g_ui.createWidget("UIWidget", barContainer)
 	barBg:addAnchor(AnchorLeft, "parent", AnchorLeft)
 	barBg:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
-	barBg:setMarginLeft(110)
-	barBg:setSize({width = 200, height = 15})
+	barBg:setMarginLeft(130)
+	barBg:setSize({width = 170, height = 15})
 	barBg:setBackgroundColor("#2a2a2a")
 	
 	-- Progress bar fill
@@ -1054,16 +1077,55 @@ function Codex.createProbabilityBar(parent, rarity, weight)
 	barFill:addAnchor(AnchorLeft, "parent", AnchorLeft)
 	barFill:addAnchor(AnchorTop, "parent", AnchorTop)
 	barFill:addAnchor(AnchorBottom, "parent", AnchorBottom)
-	barFill:setWidth(math.floor(200 * weight / 100))
+	barFill:setWidth(math.floor(170 * weight / 100))
 	barFill:setBackgroundColor(Codex.rarityColors[rarity] or "#FFFFFF")
 	
 	-- Percentage label
-	local percentLabel = g_ui.createWidget("Label", container)
+	local percentLabel = g_ui.createWidget("Label", barContainer)
 	percentLabel:setText(weight .. "%")
 	percentLabel:addAnchor(AnchorLeft, "parent", AnchorLeft)
 	percentLabel:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
-	percentLabel:setMarginLeft(320)
+	percentLabel:setMarginLeft(310)
 	percentLabel:setColor("#FFFFFF")
+end
+
+function Codex.createBonusEssencesBar(container, amount, chance)
+	local barContainer = g_ui.createWidget("UIWidget", container)
+	barContainer:setSize({width = 400, height = 25})
+	barContainer:setMarginTop(15)
+	
+	-- Bonus label (right-aligned)
+	local label = g_ui.createWidget("Label", barContainer)
+	label:setText("Bonus Essences")
+	label:setColor("#FFD700")
+	label:addAnchor(AnchorLeft, "parent", AnchorLeft)
+	label:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
+	label:setWidth(120)
+	label:setTextAlign(AlignRight)
+	
+	-- Progress bar background
+	local barBg = g_ui.createWidget("UIWidget", barContainer)
+	barBg:addAnchor(AnchorLeft, "parent", AnchorLeft)
+	barBg:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
+	barBg:setMarginLeft(130)
+	barBg:setSize({width = 170, height = 15})
+	barBg:setBackgroundColor("#2a2a2a")
+	
+	-- Progress bar fill
+	local barFill = g_ui.createWidget("UIWidget", barBg)
+	barFill:addAnchor(AnchorLeft, "parent", AnchorLeft)
+	barFill:addAnchor(AnchorTop, "parent", AnchorTop)
+	barFill:addAnchor(AnchorBottom, "parent", AnchorBottom)
+	barFill:setWidth(math.floor(170 * chance / 100))
+	barFill:setBackgroundColor("#FFD700")
+	
+	-- Percentage label
+	local percentLabel = g_ui.createWidget("Label", barContainer)
+	percentLabel:setText(chance .. "%")
+	percentLabel:addAnchor(AnchorLeft, "parent", AnchorLeft)
+	percentLabel:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
+	percentLabel:setMarginLeft(310)
+	percentLabel:setColor("#FFD700")
 end
 
 function Codex.craftCrate(crateId)
@@ -1073,73 +1135,251 @@ function Codex.craftCrate(crateId)
 	})
 end
 
-function Codex.showCrateOptionsOverlay(options)
-	local overlay = Codex.UI:getChildById("CrateOptionsOverlay")
-	if not overlay then return end
-
-	local cardOptionsPanel = overlay:getChildById("CardOptionsPanel")
-	if not cardOptionsPanel then return end
-
-	cardOptionsPanel:destroyChildren()
-
-	for i, option in ipairs(options) do
-		local cardData = Codex.cachedCardDatabase[option.cardId]
-		if cardData then
-			local cardContainer = g_ui.createWidget("UIWidget", cardOptionsPanel)
-			cardContainer:setSize({width = 150, height = 280})
-			
-			-- Card image
-			local cardImage = g_ui.createWidget("UIWidget", cardContainer)
-			cardImage:setSize({width = 130, height = 200})
-			cardImage:setImageSource(Codex.cardImagesPath .. cardData.cardFrame .. ".png")
-			cardImage:addAnchor(AnchorTop, "parent", AnchorTop)
-			cardImage:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
-			
-			-- Card name
-			local nameLabel = g_ui.createWidget("Label", cardContainer)
-			nameLabel:setText(cardData.name)
-			nameLabel:setColor(Codex.rarityColors[cardData.rarity] or "#FFFFFF")
-			nameLabel:setFont("verdana-11px-rounded")
-			nameLabel:setTextAlign(AlignTopCenter)
-			nameLabel:addAnchor(AnchorTop, "cardImage", AnchorBottom)
-			nameLabel:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
-			nameLabel:setMarginTop(5)
-			
-			-- Duplicate indicator
-			if option.isDuplicate then
-				local dupLabel = g_ui.createWidget("Label", cardContainer)
-				dupLabel:setText("Already Owned")
-				dupLabel:setColor("#FFAA00")
-				dupLabel:setFont("verdana-11px-rounded")
-				dupLabel:setTextAlign(AlignTopCenter)
-				dupLabel:addAnchor(AnchorTop, "nameLabel", AnchorBottom)
-				dupLabel:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
-				dupLabel:setMarginTop(2)
-			end
-			
-			-- Select button
-			local selectButton = g_ui.createWidget("Button", cardContainer)
-			selectButton:setText("SELECT")
-			selectButton:setSize({width = 120, height = 25})
-			selectButton:addAnchor(AnchorBottom, "parent", AnchorBottom)
-			selectButton:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
-			selectButton.onClick = function()
-				Codex.selectCrateReward(option.cardId)
-				overlay:hide()
-			end
-		end
+function Codex.showEssencesBonusOverlay(amount, crateId)
+	print("[Codex DEBUG] showEssencesBonusOverlay called")
+	print("[Codex DEBUG]   amount: " .. tostring(amount))
+	print("[Codex DEBUG]   crateId: " .. tostring(crateId))
+	
+	local overlay = Codex.UI:getChildById("EssencesBonusOverlay")
+	if not overlay then 
+		print("[Codex ERROR] EssencesBonusOverlay not found")
+		return 
 	end
 
+	local content = overlay:getChildById("EssencesBonusContent")
+	if not content then 
+		print("[Codex ERROR] EssencesBonusContent not found")
+		return 
+	end
+
+	-- Setup essence image based on crate type
+	local essenceImage = content:getChildById("BonusEssenceImage")
+	if essenceImage then
+		-- Image path: /images/codex/essences/bronze_50.png, silver_80.png, golden_120.png
+		local crateNames = {[1] = "bronze", [2] = "silver", [3] = "golden"}
+		local crateName = crateNames[crateId] or "bronze"
+		local imagePath = "/images/codex/" .. crateName .. "_" .. amount .. ".png"
+		print("[Codex DEBUG] Setting essence image: " .. imagePath)
+		essenceImage:setImageSource(imagePath)
+		essenceImage:setOpacity(0) -- Start invisible for fade-in
+		
+		-- Click to close with fade-out
+		essenceImage.onClick = function()
+			print("[Codex DEBUG] Essence clicked, fading out...")
+			g_effects.fadeOut(essenceImage, 300)
+			scheduleEvent(function()
+				overlay:hide()
+				-- Refresh collection UI if visible
+				if Codex.currentTab == Codex.TAB_COLLECTION then
+					Codex.setupCollectionUI()
+				end
+			end, 300)
+		end
+	else
+		print("[Codex ERROR] BonusEssenceImage not found")
+	end
+
+	-- Setup amount label
+	local amountLabel = content:getChildById("BonusEssenceAmount")
+	if amountLabel then
+		amountLabel:setText("+" .. amount .. " Codex Essences!")
+	end
+
+	-- Show overlay
+	print("[Codex DEBUG] Showing essences overlay...")
 	overlay:show()
 	overlay:raise()
 	overlay:focus()
+
+	-- Fade in animation
+	if essenceImage then
+		scheduleEvent(function()
+			print("[Codex DEBUG] Starting essence fade-in animation")
+			g_effects.fadeIn(essenceImage, 500) -- 500ms fade-in
+		end, 100)
+	end
 end
 
-function Codex.selectCrateReward(cardId)
-	Codex.sendOpcode({
-		topic = "select-crate-reward",
-		cardId = cardId
-	})
+function Codex.showCardObtainedOverlay(cardId, cardLevel, rarityColor, bonusEssences, crateId)
+	print("[Codex DEBUG] showCardObtainedOverlay called")
+	print("[Codex DEBUG]   cardId: " .. tostring(cardId))
+	print("[Codex DEBUG]   cardLevel: " .. tostring(cardLevel))
+	print("[Codex DEBUG]   bonusEssences: " .. tostring(bonusEssences))
+	print("[Codex DEBUG]   crateId: " .. tostring(crateId))
+	
+	local overlay = Codex.UI:getChildById("CardObtainedOverlay")
+	if not overlay then 
+		print("[Codex ERROR] CardObtainedOverlay not found")
+		return 
+	end
+
+	local content = overlay:getChildById("CardObtainedContent")
+	if not content then 
+		print("[Codex ERROR] CardObtainedContent not found")
+		return 
+	end
+
+	local cardData = Codex.cachedCardDatabase[cardId]
+	if not cardData then 
+		print("[Codex ERROR] Card data not found for cardId: " .. cardId)
+		return 
+	end
+	print("[Codex DEBUG] Card data found: " .. cardData.name)
+
+	-- Setup card image
+	local cardImage = content:getChildById("ObtainedCardImage")
+	if cardImage then
+		local imagePath = Codex.cardImagesPath .. cardData.cardFrame .. ".png"
+		print("[Codex DEBUG] Setting image: " .. imagePath)
+		cardImage:setImageSource(imagePath)
+		cardImage:setOpacity(0) -- Start invisible for fade-in
+		
+		-- Make card data available for tooltip
+		cardImage.cardId = cardId
+		cardImage.cardData = cardData
+		
+		-- Enable tooltip on hover
+		cardImage.onHoverChange = Codex.onCardHoverChange
+	else
+		print("[Codex ERROR] ObtainedCardImage not found")
+	end
+
+	-- Setup card name
+	local nameLabel = content:getChildById("ObtainedCardName")
+	if nameLabel then
+		nameLabel:setText(cardData.name)
+		nameLabel:setOpacity(0) -- Start invisible
+		local color = rarityColor or Codex.rarityColors[cardData.rarity] or "#FFFFFF"
+		nameLabel:setColor(color)
+	end
+
+	-- Setup level info
+	local levelLabel = content:getChildById("ObtainedCardLevel")
+	if levelLabel then
+		local text = ""
+		if cardLevel > 1 then
+			text = "LEVEL UP! -> Level " .. cardLevel
+		else
+			text = "NEW CARD! Level " .. cardLevel
+		end
+		levelLabel:setText(text)
+		levelLabel:setOpacity(0) -- Start invisible
+		-- Use rarity color for level too
+		local color = rarityColor or Codex.rarityColors[cardData.rarity] or "#FFFFFF"
+		levelLabel:setColor(color)
+	end
+
+	-- Show overlay
+	print("[Codex DEBUG] Showing overlay...")
+	overlay:show()
+	overlay:raise()
+	overlay:focus()
+
+	-- Block crate opening during animation
+	Codex.crateAnimationInProgress = true
+	print("[Codex DEBUG] Crate opening BLOCKED during animation")
+
+	-- Suspense effect (2 seconds before revealing card)
+	print("[Codex DEBUG] Creating suspense effect...")
+	local suspenseEffect = g_ui.createWidget('CardSuspenseEffect', overlay)
+	if suspenseEffect then
+		
+		suspenseEffect:raise()
+		print("[Codex DEBUG] Suspense effect created")
+		
+		-- Destroy suspense and reveal card after 2 seconds
+		scheduleEvent(function()
+			-- Unblock crate opening after suspense
+			Codex.crateAnimationInProgress = false
+			print("[Codex DEBUG] Crate opening UNBLOCKED")
+			
+			if suspenseEffect then
+				suspenseEffect:destroy()
+				print("[Codex DEBUG] Suspense effect destroyed")
+			end
+			
+			-- NOW reveal the card with all effects
+			if cardImage then
+				print("[Codex DEBUG] Starting fade-in animation")
+				g_effects.fadeIn(cardImage, 500) -- 500ms fade-in
+				
+				-- Fade in name and level labels at the same time
+				if nameLabel then
+					g_effects.fadeIn(nameLabel, 500)
+				end
+				if levelLabel then
+					g_effects.fadeIn(levelLabel, 500)
+				end
+				
+				-- Common close function with fade-out
+				local closeOverlay = function()
+					print("[Codex DEBUG] Closing overlay with fade-out...")
+					-- Fade out all visible elements
+					if cardImage then g_effects.fadeOut(cardImage, 300) end
+					if nameLabel then g_effects.fadeOut(nameLabel, 300) end
+					if levelLabel then g_effects.fadeOut(levelLabel, 300) end
+					
+					-- Wait for fade-out to complete
+					scheduleEvent(function()
+						overlay:hide()
+						
+						-- Check if there's bonus essences to show
+						if bonusEssences and bonusEssences > 0 and crateId then
+							print("[Codex DEBUG] Showing bonus essences overlay...")
+							Codex.showEssencesBonusOverlay(bonusEssences, crateId)
+						else
+							-- Refresh collection UI if visible
+							if Codex.currentTab == Codex.TAB_COLLECTION then
+								Codex.setupCollectionUI()
+							end
+						end
+					end, 300)
+				end
+				
+				-- Make card clickable
+				cardImage.onClick = closeOverlay
+				
+				-- Add particle effect
+				print("[Codex DEBUG] Creating particle effect...")
+				local particle = g_ui.createWidget('CardObtainedParticles', cardImage)
+				if particle then
+					particle:fill('parent')
+					particle:setOpacity(0.75) -- Semi-transparent
+					particle:setFocusable(true) -- Make clickable
+					particle.onClick = closeOverlay -- Same close function
+					-- Destroy particle after 1.5 seconds
+					scheduleEvent(function() 
+						if particle then
+							particle:destroy() 
+							print("[Codex DEBUG] Particle effect destroyed")
+						end
+					end, 1500)
+				else
+					print("[Codex ERROR] Failed to create particle effect")
+				end
+				
+				-- Add UIEffect (effect 1075 from .dat)
+				print("[Codex DEBUG] Creating UIEffect (1075)...")
+				local effectWidget = g_ui.createWidget('CardEffectWidget', cardImage)
+				if effectWidget then
+					effectWidget:fill('parent')
+					effectWidget:setFocusable(true) -- Make clickable
+					effectWidget.onClick = closeOverlay -- Same close function
+					-- Destroy effect after 600ms
+					scheduleEvent(function()
+						if effectWidget then
+							effectWidget:destroy()
+							print("[Codex DEBUG] UIEffect destroyed")
+						end
+					end, 600)
+				else
+					print("[Codex ERROR] Failed to create UIEffect")
+				end
+			end
+		end, 2000) -- 2 seconds suspense
+	else
+		print("[Codex ERROR] Failed to create suspense effect")
+	end
 end
 
 ------ Tooltip Management (keeping old showCrateResults for backward compatibility)
@@ -1467,21 +1707,71 @@ function Codex.onExtendedOpcode(protocol, opcode, buffer)
 		end
 
 	elseif data.topic == "open-crate-reply" then
-		if data.success and data.options then
-			-- Show overlay with 3 card options
-			Codex.showCrateOptionsOverlay(data.options)
+		print("[Codex DEBUG] Received open-crate-reply")
+		print("[Codex DEBUG]   success: " .. tostring(data.success))
+		
+		if data.success and data.cardData then
+			print("[Codex DEBUG] Card obtained: " .. tostring(data.cardData.name))
+			print("[Codex DEBUG]   cardId: " .. tostring(data.cardData.cardId))
+			print("[Codex DEBUG]   level: " .. tostring(data.cardData.level))
+			print("[Codex DEBUG]   leveledUp: " .. tostring(data.cardData.leveledUp))
+			print("[Codex DEBUG]   bonusEssences: " .. tostring(data.cardData.bonusEssences))
+			print("[Codex DEBUG]   crateId: " .. tostring(data.cardData.crateId))
+			
+			-- Show card directly in overlay with fade-in
+			Codex.showCardObtainedOverlay(
+				data.cardData.cardId, 
+				data.cardData.level, 
+				Codex.rarityColors[data.cardData.rarity],
+				data.cardData.bonusEssences,
+				data.cardData.crateId
+			)
 		elseif data.message then
+			print("[Codex DEBUG] Showing error message: " .. data.message)
 			Codex.setupMessage("Crate Opening Failed", data.message)
+		else
+			print("[Codex ERROR] Unknown open-crate-reply state")
 		end
 
 	elseif data.topic == "crate-reward-selected" then
+		print("[Codex DEBUG] Received crate-reward-selected")
+		print("[Codex DEBUG]   success: " .. tostring(data.success))
+		print("[Codex DEBUG]   cardId: " .. tostring(data.cardId))
+		print("[Codex DEBUG]   level: " .. tostring(data.level))
+		
 		if data.success then
-			Codex.setupMessage("Card Obtained!", data.message)
+			-- Hide options overlay first
+			local optionsOverlay = Codex.UI:getChildById("CrateOptionsOverlay")
+			if optionsOverlay then
+				print("[Codex DEBUG] Hiding options overlay")
+				optionsOverlay:hide()
+			else
+				print("[Codex ERROR] CrateOptionsOverlay not found to hide")
+			end
+			
+			-- Get card data for rarity color
+			local cardData = Codex.cachedCardDatabase[data.cardId]
+			if cardData then
+				print("[Codex DEBUG] Card found in cache: " .. cardData.name)
+				print("[Codex DEBUG] Card rarity: " .. tostring(cardData.rarity))
+			else
+				print("[Codex ERROR] Card not found in cache for cardId: " .. tostring(data.cardId))
+			end
+			
+			local rarityColor = cardData and Codex.rarityColors[cardData.rarity] or "#FFFFFF"
+			print("[Codex DEBUG] Calculated rarity color: " .. rarityColor)
+			
+			-- Show card obtained overlay with fade-in animation
+			print("[Codex DEBUG] Calling showCardObtainedOverlay...")
+			Codex.showCardObtainedOverlay(data.cardId, data.level, rarityColor)
+			
 			-- Refresh UI
 			if Codex.currentTab == Codex.TAB_COLLECTION then
+				print("[Codex DEBUG] Refreshing collection UI")
 				Codex.setupCollectionUI()
 			end
 		else
+			print("[Codex DEBUG] Crate reward selection failed: " .. tostring(data.message))
 			Codex.setupMessage("Selection Failed", data.message)
 		end
 

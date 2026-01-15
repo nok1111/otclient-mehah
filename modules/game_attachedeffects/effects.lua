@@ -88,6 +88,7 @@ AttachedEffectManager.register(6, 'Lake Monster', 34, ThingCategoryEffect, {
     transform = true,
     hideOwner = true,
     duration = 1500,
+    size = { 128, 128 },
     -- loop = 1,
     onDetach = function(effect, oldOwner)
         local e = Effect.create()
