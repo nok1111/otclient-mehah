@@ -154,16 +154,16 @@ Codex.cardDescriptions = {
 		trigger = "passive",
 		cardFrame = "the witch",
 		descriptions = {
-			[1] = "gain +1% magic damage for every 1000 max mana points",
-			[2] = "gain +2% magic damage for every 1000 max mana points",
-			[3] = "gain +3% magic damage for every 1000 max mana points",
-			[4] = "gain +4% magic damage for every 1000 max mana points",
-			[5] = "gain +5% magic damage for every 1000 max mana points",
-			[6] = "gain +6% magic damage for every 1000 max mana points",
-			[7] = "gain +7% magic damage for every 1000 max mana points",
-			[8] = "gain +8% magic damage for every 1000 max mana points",
-			[9] = "gain +9% magic damage for every 1000 max mana points",
-			[10] = "gain +10% magic damage for every 1000 max mana points"
+			[1] = "gain +2 magic level for every 1000 max mana points",
+			[2] = "gain +2 magic level for every 950 max mana points",
+			[3] = "gain +2 magic level for every 950 max mana points",
+			[4] = "gain +2 magic level for every 900 max mana points",
+			[5] = "gain +2 magic level for every 850 max mana points",
+			[6] = "gain +2 magic level for every 800 max mana points",
+			[7] = "gain +2 magic level for every 750 max mana points",
+			[8] = "gain +2 magic level for every 700 max mana points",
+			[9] = "gain +2 magic level for every 650 max mana points",
+			[10] = "gain +2 magic level for every 600 max mana points"
 		}
 	},
 	[10] = {
@@ -542,6 +542,276 @@ Codex.cardDescriptions = {
 			[8] = "Healing poisons nearby enemies for 3 seconds dealing 19% of the healing amount per second",
 			[9] = "Healing poisons nearby enemies for 3 seconds dealing 21% of the healing amount per second",
 			[10] = "Healing poisons nearby enemies for 3 seconds dealing 23% of the healing amount per second"
+		}
+	},
+	[31] = {
+		name = "The Dragon",
+		rarity = "legendary",
+		trigger = "onHit",
+		cardFrame = "the dragon",
+		descriptions = {
+			[1] = "Stack Furia de Dragón on hit. At 5 stacks, release a fire wave dealing 150% damage",
+			[2] = "Stack Furia de Dragón on hit. At 5 stacks, release a fire wave dealing 175% damage",
+			[3] = "Stack Furia de Dragón on hit. At 5 stacks, release a fire wave dealing 200% damage",
+			[4] = "Stack Furia de Dragón on hit. At 5 stacks, release a fire wave dealing 225% damage",
+			[5] = "Stack Furia de Dragón on hit. At 5 stacks, release a fire wave dealing 250% damage",
+			[6] = "Stack Furia de Dragón on hit. At 5 stacks, release a fire wave dealing 275% damage",
+			[7] = "Stack Furia de Dragón on hit. At 5 stacks, release a fire wave dealing 300% damage",
+			[8] = "Stack Furia de Dragón on hit. At 5 stacks, release a fire wave dealing 325% damage",
+			[9] = "Stack Furia de Dragón on hit. At 5 stacks, release a fire wave dealing 350% damage",
+			[10] = "Stack Furia de Dragón on hit. At 5 stacks, release a fire wave dealing 400% damage"
+		}
+	},
+	[32] = {
+		name = "Pyromancer",
+		rarity = "rare",
+		trigger = "onSpell",
+		cardFrame = "pyromancer",
+		descriptions = {
+			[1] = "5% chance on spell cast to create fire fields that deal damage for 4 seconds",
+			[2] = "6% chance on spell cast to create fire fields that deal damage for 4 seconds",
+			[3] = "7% chance on spell cast to create fire fields that deal damage for 4 seconds",
+			[4] = "8% chance on spell cast to create fire fields that deal damage for 4 seconds",
+			[5] = "9% chance on spell cast to create fire fields that deal damage for 4 seconds",
+			[6] = "10% chance on spell cast to create fire fields that deal damage for 4 seconds",
+			[7] = "11% chance on spell cast to create fire fields that deal damage for 4 seconds",
+			[8] = "12% chance on spell cast to create fire fields that deal damage for 4 seconds",
+			[9] = "13% chance on spell cast to create fire fields that deal damage for 4 seconds",
+			[10] = "15% chance on spell cast to create fire fields that deal damage for 4 seconds"
+		}
+	},
+	[33] = {
+		name = "Dragon Lord",
+		rarity = "legendary",
+		trigger = "passive",
+		cardFrame = "dragon lord",
+		descriptions = {
+			[1] = "For each dragon card: +1% crit, +3% HP, +3% MP, +1% damage",
+			[2] = "For each dragon card: +2% crit, +4% HP, +4% MP, +2% damage",
+			[3] = "For each dragon card: +3% crit, +5% HP, +5% MP, +3% damage",
+			[4] = "For each dragon card: +4% crit, +6% HP, +6% MP, +4% damage",
+			[5] = "For each dragon card: +5% crit, +7% HP, +7% MP, +5% damage",
+			[6] = "For each dragon card: +6% crit, +8% HP, +8% MP, +6% damage",
+			[7] = "For each dragon card: +7% crit, +9% HP, +9% MP, +7% damage",
+			[8] = "For each dragon card: +8% crit, +10% HP, +10% MP, +8% damage",
+			[9] = "For each dragon card: +9% crit, +11% HP, +11% MP, +9% damage",
+			[10] = "For each dragon card: +10% crit, +12% HP, +12% MP, +10% damage"
+		}
+	},
+	[34] = {
+		name = "Essence Reaver",
+		rarity = "epic",
+		trigger = "passive",
+		cardFrame = "essence reaver",
+		descriptions = {
+			[1] = "+5% chance to obtain essences from monsters and elite variations",
+			[2] = "+7% chance to obtain essences from monsters and elite variations",
+			[3] = "+9% chance to obtain essences from monsters and elite variations",
+			[4] = "+11% chance to obtain essences from monsters and elite variations",
+			[5] = "+13% chance to obtain essences from monsters and elite variations",
+			[6] = "+15% chance to obtain essences from monsters and elite variations",
+			[7] = "+18% chance to obtain essences from monsters and elite variations",
+			[8] = "+21% chance to obtain essences from monsters and elite variations",
+			[9] = "+24% chance to obtain essences from monsters and elite variations",
+			[10] = "+28% chance to obtain essences from monsters and elite variations"
+		}
+	},
+	[35] = {
+		name = "Frost Dragon",
+		rarity = "epic",
+		trigger = "onHit",
+		cardFrame = "frost dragon",
+		descriptions = {
+			[1] = "6% chance to deal 20% ice damage and slow the enemy",
+			[2] = "8% chance to deal 25% ice damage and slow the enemy",
+			[3] = "10% chance to deal 30% ice damage and slow the enemy",
+			[4] = "12% chance to deal 35% ice damage and slow the enemy",
+			[5] = "14% chance to deal 40% ice damage and slow the enemy",
+			[6] = "16% chance to deal 45% ice damage and slow the enemy",
+			[7] = "18% chance to deal 50% ice damage and slow the enemy",
+			[8] = "20% chance to deal 55% ice damage and slow the enemy",
+			[9] = "23% chance to deal 60% ice damage and slow the enemy",
+			[10] = "26% chance to deal 70% ice damage and slow the enemy"
+		}
+	},
+	[36] = {
+		name = "Blossom Dragon",
+		rarity = "epic",
+		trigger = "onSpell",
+		cardFrame = "blossom dragon",
+		descriptions = {
+			[1] = "Every 4th healing spell: 3x3 nature damage (80%) + heal 5% max HP",
+			[2] = "Every 4th healing spell: 3x3 nature damage (90%) + heal 6% max HP",
+			[3] = "Every 4th healing spell: 3x3 nature damage (100%) + heal 7% max HP",
+			[4] = "Every 4th healing spell: 3x3 nature damage (110%) + heal 8% max HP",
+			[5] = "Every 4th healing spell: 3x3 nature damage (120%) + heal 9% max HP",
+			[6] = "Every 4th healing spell: 3x3 nature damage (130%) + heal 10% max HP",
+			[7] = "Every 4th healing spell: 3x3 nature damage (140%) + heal 11% max HP",
+			[8] = "Every 4th healing spell: 3x3 nature damage (150%) + heal 12% max HP",
+			[9] = "Every 4th healing spell: 3x3 nature damage (160%) + heal 13% max HP",
+			[10] = "Every 4th healing spell: 3x3 nature damage (180%) + heal 15% max HP"
+		}
+	},
+	[37] = {
+		name = "Scorpion",
+		rarity = "common",
+		trigger = "onHit",
+		cardFrame = "scorpion",
+		descriptions = {
+			[1] = "Attacks have a 20% chance to poison for 50% damage per second (5s)",
+			[2] = "Attacks have a 20% chance to poison for 60% damage per second (5s)",
+			[3] = "Attacks have a 20% chance to poison for 70% damage per second (5s)",
+			[4] = "Attacks have a 20% chance to poison for 80% damage per second (5s)",
+			[5] = "Attacks have a 20% chance to poison for 90% damage per second (5s)",
+			[6] = "Attacks have a 20% chance to poison for 100% damage per second (5s)",
+			[7] = "Attacks have a 20% chance to poison for 110% damage per second (5s)",
+			[8] = "Attacks have a 20% chance to poison for 120% damage per second (5s)",
+			[9] = "Attacks have a 20% chance to poison for 130% damage per second (5s)",
+			[10] = "Attacks have a 20% chance to poison for 140% damage per second (5s)"
+		}
+	},
+	[38] = {
+		name = "The Viper",
+		rarity = "common",
+		trigger = "onHit",
+		cardFrame = "the viper",
+		descriptions = {
+			[1] = "Earth/poison damage now bites the target dealing poison damage dealing player level (0.22) per card level",
+			[2] = "Earth/poison damage now bites the target dealing poison damage dealing player level (0.22) per card level",
+			[3] = "Earth/poison damage now bites the target dealing poison damage dealing player level (0.22) per card level",
+			[4] = "Earth/poison damage now bites the target dealing poison damage dealing player level (0.22) per card level",
+			[5] = "Earth/poison damage now bites the target dealing poison damage dealing player level (0.22) per card level",
+			[6] = "Earth/poison damage now bites the target dealing poison damage dealing player level (0.22) per card level",
+			[7] = "Earth/poison damage now bites the target dealing poison damage dealing player level (0.22) per card level",
+			[8] = "Earth/poison damage now bites the target dealing poison damage dealing player level (0.22) per card level",
+			[9] = "Earth/poison damage now bites the target dealing poison damage dealing player level (0.22) per card level",
+			[10] = "Earth/poison damage now bites the target dealing poison damage dealing player level (0.22) per card level"
+		}
+	},
+	[39] = {
+		name = "Zeus",
+		rarity = "legendary",
+		trigger = "onSpell",
+		cardFrame = "zeus",
+		descriptions = {
+			[1] = "Every 10th spell: lightning strikes all nearby enemies dealing 120% damage",
+			[2] = "Every 10th spell: lightning strikes all nearby enemies dealing 135% damage",
+			[3] = "Every 10th spell: lightning strikes all nearby enemies dealing 150% damage",
+			[4] = "Every 10th spell: lightning strikes all nearby enemies dealing 165% damage",
+			[5] = "Every 10th spell: lightning strikes all nearby enemies dealing 180% damage",
+			[6] = "Every 10th spell: lightning strikes all nearby enemies dealing 200% damage",
+			[7] = "Every 10th spell: lightning strikes all nearby enemies dealing 220% damage",
+			[8] = "Every 10th spell: lightning strikes all nearby enemies dealing 240% damage",
+			[9] = "Every 10th spell: lightning strikes all nearby enemies dealing 260% damage",
+			[10] = "Every 10th spell: lightning strikes all nearby enemies dealing 300% damage"
+		}
+	},
+	[40] = {
+		name = "Svarog",
+		rarity = "legendary",
+		trigger = "onKill",
+		cardFrame = "svarog",
+		descriptions = {
+			[1] = "Each kill: +3% fire damage (max 3 stacks, lost after 10 no kill)",
+			[2] = "Each kill: +3.5% fire damage (max 3 stacks, lost after 10 no kill)",
+			[3] = "Each kill: +4% fire damage (max 3 stacks, lost after 10 no kill)",
+			[4] = "Each kill: +4.5% fire damage (max 4 stacks, lost after 10 no kill)",
+			[5] = "Each kill: +5% fire damage (max 4 stacks, lost after 10 no kill)",
+			[6] = "Each kill: +5.5% fire damage (max 4 stacks, lost after 10 no kill)",
+			[7] = "Each kill: +6% fire damage (max 4 stacks, lost after 10 no kill)", 
+			[8] = "Each kill: +6.5% fire damage (max 4 stacks, lost after 10 no kill)",
+			[9] = "Each kill: +7% fire damage (max 4 stacks, lost after 10 no kill)",
+			[10] = "Each kill: +7.5% fire damage (max 5 stacks, lost after 10 no kill)"
+		}
+	},
+	[41] = {
+		name = "Veles",
+		rarity = "epic",
+		trigger = "onHit",
+		cardFrame = "veles",
+		descriptions = {
+			[1] = "8% chance on earth damage to create earth spikes in a line",
+			[2] = "10% chance on earth damage to create earth spikes in a line",
+			[3] = "12% chance on earth damage to create earth spikes in a line",
+			[4] = "14% chance on earth damage to create earth spikes in a line",
+			[5] = "16% chance on earth damage to create earth spikes in a line",
+			[6] = "18% chance on earth damage to create earth spikes in a line",
+			[7] = "20% chance on earth damage to create earth spikes in a line",
+			[8] = "23% chance on earth damage to create earth spikes in a line",
+			[9] = "26% chance on earth damage to create earth spikes in a line",
+			[10] = "30% chance on earth damage to create earth spikes in a line"
+		}
+	},
+	[42] = {
+		name = "Yacy",
+		rarity = "legendary",
+		trigger = "onSpell",
+		cardFrame = "yacy",
+		descriptions = {
+			[1] = "Healing spells deal 10% AoE damage, damage spells heal for 5% AoE",
+			[2] = "Healing spells deal 12% AoE damage, damage spells heal for 6% AoE",
+			[3] = "Healing spells deal 14% AoE damage, damage spells heal for 7% AoE",
+			[4] = "Healing spells deal 16% AoE damage, damage spells heal for 8% AoE",
+			[5] = "Healing spells deal 18% AoE damage, damage spells heal for 9% AoE",
+			[6] = "Healing spells deal 20% AoE damage, damage spells heal for 10% AoE",
+			[7] = "Healing spells deal 23% AoE damage, damage spells heal for 11% AoE",
+			[8] = "Healing spells deal 26% AoE damage, damage spells heal for 12% AoE",
+			[9] = "Healing spells deal 30% AoE damage, damage spells heal for 13% AoE",
+			[10] = "Healing spells deal 35% AoE damage, damage spells heal for 15% AoE"
+		}
+	},
+	[43] = {
+		name = "Quetzalcoatl",
+		rarity = "legendary",
+		trigger = "onCrit",
+		cardFrame = "quetzalcoatl",
+		descriptions = {
+			[1] = "Critical hits launch 1 missiles to nearby enemies (2 Seconds cooldown)",
+			[2] = "Critical hits launch 2 missiles to nearby enemies (2 Seconds cooldown)",
+			[3] = "Critical hits launch 3 missiles to nearby enemies (2 Seconds cooldown)",
+			[4] = "Critical hits launch 4 missiles to nearby enemies (2 Seconds cooldown)",
+			[5] = "Critical hits launch 5 missiles to nearby enemies (2 Seconds cooldown)",
+			[6] = "Critical hits launch 6 missiles to nearby enemies (2 Seconds cooldown)",
+			[7] = "Critical hits launch 7 missiles to nearby enemies (2 Seconds cooldown)",
+			[8] = "Critical hits launch 8 missiles to nearby enemies (2 Seconds cooldown)",
+			[9] = "Critical hits launch 9 missiles to nearby enemies (2 Seconds cooldown)",
+			[10] = "Critical hits launch 10 missiles to nearby enemies (2 Seconds cooldown)"
+		}
+	},
+	[44] = {
+		name = "The Obelisk",
+		rarity = "epic",
+		trigger = "onStandStill",
+		cardFrame = "the obelisk",
+		descriptions = {
+			[1] = "Standing still for 3 seconds reduces physical damage taken by 8%",
+			[2] = "Standing still for 3 seconds reduces physical damage taken by 10%",
+			[3] = "Standing still for 3 seconds reduces physical damage taken by 12%",
+			[4] = "Standing still for 3 seconds reduces physical damage taken by 14%",
+			[5] = "Standing still for 3 seconds reduces physical damage taken by 16%",
+			[6] = "Standing still for 3 seconds reduces physical damage taken by 18%",
+			[7] = "Standing still for 3 seconds reduces physical damage taken by 20%",
+			[8] = "Standing still for 3 seconds reduces physical damage taken by 23%",
+			[9] = "Standing still for 3 seconds reduces physical damage taken by 26%",
+			[10] = "Standing still for 3 seconds reduces physical damage taken by 30%"
+		}
+	},
+	[45] = {
+		name = "The Bull",
+		rarity = "epic",
+		trigger = "onDash",
+		cardFrame = "the bull",
+		descriptions = {
+			[1] = "your dash or teleport spells creates an earthquake trail dealing 120% of your level as earth damage",
+			[2] = "your dash or teleport spells creates an earthquake trail dealing 135% of your level as earth damage",
+			[3] = "your dash or teleport spells creates an earthquake trail dealing 150% of your level as earth damage",
+			[4] = "your dash or teleport spells creates an earthquake trail dealing 165% of your level as earth damage",
+			[5] = "your dash or teleport spells creates an earthquake trail dealing 180% of your level as earth damage",
+			[6] = "your dash or teleport spells creates an earthquake trail dealing 200% of your level as earth damage",
+			[7] = "your dash or teleport spells creates an earthquake trail dealing 220% of your level as earth damage",
+			[8] = "your dash or teleport spells creates an earthquake trail dealing 240% of your level as earth damage",
+			[9] = "your dash or teleport spells creates an earthquake trail dealing 260% of your level as earth damage",
+			[10] = "your dash or teleport spells creates an earthquake trail dealing 300% of your level as earth damage"
 		}
 	}
 }

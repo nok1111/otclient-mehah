@@ -10,6 +10,9 @@ Codex.triggerIcons = {
 	onSpell = "/images/icons/row-4-column-7",       -- Cristal para hechizos
 	onLowHP = "/images/icons/row-5-column-7",       -- Corazón para low HP
 	onHeal = "/images/icons/row-5-column-2",         -- Corazón verde para heals
+	onCrit = "/images/icons/row-8-column-6",         -- Rayo para críticos
+	onDash = "/images/icons/dash",         -- Bota/velocidad para dash
+	onStandStill = "/images/icons/blast",   -- Piedra/defensa para stand still
 }
 
 ------ Initialization and Termination
@@ -796,6 +799,74 @@ function Codex.removeCard(slotIndex)
 		topic = "deactivate-card-request",
 		slotIndex = slotIndex
 	})
+end
+
+-- Update only active slots (optimized, no full UI rebuild)
+function Codex.updateActiveSlots()
+	local activeSlotsPanel = Codex.UI.DeckPanel and Codex.UI.DeckPanel.ActiveSlotsPanel
+	local availableCardsPanel = Codex.UI.DeckPanel and Codex.UI.DeckPanel.AvailableCardsPanel
+	
+	if not activeSlotsPanel then
+		print("[Codex] ActiveSlotsPanel not found in updateActiveSlots")
+		return
+	end
+	
+	-- Update each existing slot widget
+	local maxSlots = 6
+	for i = 1, maxSlots do
+		local slotWidget = activeSlotsPanel:getChildById("slot_" .. i)
+		if slotWidget then
+			local isLocked = i > Codex.cachedMaxSlots
+			local activeCardId = Codex.cachedActiveCards[i]
+			
+			local slotPlaceholder = slotWidget:getChildById("slotPlaceholder")
+			local slotCardImage = slotWidget:getChildById("slotCardImage")
+			local removeButton = slotWidget:getChildById("removeButton")
+			local requirementLabel = slotWidget:getChildById("requirementLabel")
+			
+			if not isLocked and activeCardId and activeCardId > 0 then
+				-- Slot has a card
+				local cardData = Codex.cachedCardDatabase[activeCardId]
+				if cardData then
+					if slotPlaceholder then slotPlaceholder:hide() end
+					if requirementLabel then requirementLabel:hide() end
+					
+					if slotCardImage then
+						local imagePath = Codex.cardImagesPath .. cardData.cardFrame .. ".png"
+						slotCardImage:setImageSource(imagePath)
+						slotCardImage:show()
+					end
+					
+					if removeButton then
+						removeButton:show()
+						removeButton:setEnabled(true)
+						removeButton.onClick = function()
+							Codex.removeCard(i)
+						end
+					end
+				end
+			else
+				-- Empty or locked slot
+				if slotPlaceholder then slotPlaceholder:show() end
+				if slotCardImage then slotCardImage:hide() end
+				if removeButton then removeButton:hide() end
+			end
+		end
+	end
+	
+	-- Update equip buttons in available cards panel
+	if availableCardsPanel then
+		for _, cardWidget in ipairs(availableCardsPanel:getChildren()) do
+			local cardId = cardWidget.cardId
+			if cardId then
+				local equipButton = cardWidget:getChildById("equipButton")
+				if equipButton then
+					local isEquipped = Codex.isCardEquipped(cardId)
+					equipButton:setEnabled(not isEquipped)
+				end
+			end
+		end
+	end
 end
 
 ------ Crates Tab (NEW DESIGN)
@@ -1688,7 +1759,8 @@ function Codex.onExtendedOpcode(protocol, opcode, buffer)
 			end
 		end
 		if Codex.currentTab == Codex.TAB_DECK then
-			Codex.setupDeckUI()
+			-- Solo actualizar slots activos, no recrear todo el UI
+			Codex.updateActiveSlots()
 		end
 
 	elseif data.topic == "currency-update" then

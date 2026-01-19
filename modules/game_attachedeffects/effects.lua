@@ -1789,6 +1789,9 @@ AttachedEffectManager.register(208, 'damaged', 0, 0, {
         or owner:getAttachedEffectById(203)
         or owner:getAttachedEffectById(207)
         or owner:getAttachedEffectById(214)
+        or owner:getAttachedEffectById(251)
+        or owner:getAttachedEffectById(316)
+        
 
         if not hasOtherShader then
             owner:setShader('Damaged')
@@ -1803,6 +1806,8 @@ AttachedEffectManager.register(208, 'damaged', 0, 0, {
             or oldOwner:getAttachedEffectById(203)
             or oldOwner:getAttachedEffectById(207)
             or oldOwner:getAttachedEffectById(214)
+            or oldOwner:getAttachedEffectById(251)
+            or oldOwner:getAttachedEffectById(316)
             if not hasOtherShader then
                 oldOwner:setShader('Outfit - Default')
             end
@@ -2144,14 +2149,15 @@ AttachedEffectManager.register(250, 'Miniaturize', 0, 0, {
 })
 
 AttachedEffectManager.register(251, 'Growing Rage', 590, ThingCategoryEffect, {
-    loop = 1,
-    duration = 12000,
-    offset = { 0, 0, true },
+
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.3, 2000)
+        
+        owner:setScaleFactor(1.2, 650)
+        owner:setShader('Monster Might')
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
+        oldOwner:setShader('Outfit - Default')
     end
 })
 
@@ -2161,6 +2167,7 @@ AttachedEffectManager.register(252, 'Titan Form', 497, ThingCategoryEffect, {
     offset = { 0, 0, true },
     shader = 'Monster Might',
     onAttach = function(effect, owner)
+        
         owner:setScaleFactor(2.0, 1000)
         
         local e = Effect.create()
@@ -3884,6 +3891,7 @@ AttachedEffectManager.register(313, 'Slow Circular Orbit', 0, 0, {
 AttachedEffectManager.register(314, 'Fire Circular Orbit', 0, 0, {
     duration = 10000,
     permanent = false,
+    
     onAttach = function(effect, owner)
         local pos = owner:getPosition()
         local radius = 2
@@ -3906,10 +3914,10 @@ AttachedEffectManager.register(314, 'Fire Circular Orbit', 0, 0, {
                     local endX = pos.x + math.floor(math.cos(endRad) * radius)
                     local endY = pos.y + math.floor(math.sin(endRad) * radius)
                     
-                    local fireOrb = AttachedEffect.create(590, ThingCategoryEffect)
+                    local fireOrb = AttachedEffect.create(885, ThingCategoryEffect)
                     fireOrb:setDuration(segmentDuration)
                     fireOrb:setOpacity(0.8)
-                    fireOrb:setPulse(85, 115, 1000)
+                    fireOrb:setPulse(20, 35, 1000)
                     fireOrb:move({x = startX, y = startY, z = pos.z}, {x = endX, y = endY, z = pos.z})
                     effect:attachEffect(fireOrb)
                 end
@@ -3918,3 +3926,328 @@ AttachedEffectManager.register(314, 'Fire Circular Orbit', 0, 0, {
     end
 })
 
+AttachedEffectManager.register(315, 'executioner', 218, ThingCategoryEffect, {
+    loop = 2,
+    speed = 1,
+    offset = { 0, 0, true },
+})
+
+AttachedEffectManager.register(316, 'water elemental', 241, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    opacity = 0.8,
+    offset = { 0, 0, true },
+    onAttach = function(effect, owner)
+        owner:setShader('magnetic')
+    end,
+    onDetach = function(effect, oldOwner)
+        if oldOwner and oldOwner:getTile() then
+            oldOwner:setShader('Outfit - Default')
+        end
+    end
+})
+
+AttachedEffectManager.register(317, 'phoenix reborn 1', 859, ThingCategoryEffect, {
+    loop = 1,
+    speed = 0.5,
+    offset = { -100, -111, false },
+    onAttach = function(effect, owner)
+        owner:setShader('Lava')
+    end,
+    onDetach = function(effect, oldOwner)
+        if oldOwner and oldOwner:getTile() then
+            oldOwner:setShader('Outfit - Default')
+        end
+    end
+})
+
+AttachedEffectManager.register(318, 'phoenix reborn 2', 893, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -64, -48, true },
+})
+
+AttachedEffectManager.register(319, 'soul leech', 1069, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    opacity = 0.8,
+    offset = { -32, -28, false },
+})
+
+AttachedEffectManager.register(320, 'goliath heal', 977, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.8,
+    offset = { -20, -5, true },
+    onAttach = function(effect, owner)
+        owner:setShader('Red Glow')
+    end,
+    onDetach = function(effect, oldOwner)
+        if oldOwner and oldOwner:getTile() then
+            oldOwner:setShader('Outfit - Default')
+        end
+    end
+})
+
+AttachedEffectManager.register(321, 'falcon aura slow', 885 , ThingCategoryEffect, {
+    duration = 700,
+    opacity = 0.85,
+    speed = 1.9,
+    offset = { -64, -64, false}, 
+})
+
+AttachedEffectManager.register(322, 'obelisk', 876 , ThingCategoryEffect, {
+    opacity = 0.85,
+    speed = 1.3,
+    offset = { -32, -32, false}, 
+})
+
+AttachedEffectManager.register(323, 'obelisk', 921 , ThingCategoryEffect, {
+    loop = 1,
+    opacity = 0.85,
+    speed = 0.7,
+    offset = { -32, -32, false}, 
+})
+
+AttachedEffectManager.register(324, 'the hydra', 910, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -27, -20, true},
+})
+
+AttachedEffectManager.register(325, 'hammersword', 1167, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -24, -24, false},
+    pulse = {32, 64, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(326, 'mechagolem', 794, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 1000,
+    loop = 1,
+    speed = 1,
+    offset = { 5, 5, true},
+    pulse = {15, 20, 500},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(327, 'final symphony', 1167, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    shader = "Golden",
+    offset = { -24, -24, false},
+    pulse = {32, 64, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(328, 'slime', 283, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    opacity = 0.8,
+    offset = { 0, 0, false },
+    onAttach = function(effect, owner)
+        owner:setShader('slime')
+    end,
+    onDetach = function(effect, oldOwner)
+        if oldOwner and oldOwner:getTile() then
+            oldOwner:setShader('Outfit - Default')
+        end
+    end
+})
+
+AttachedEffectManager.register(329, 'the dragon (north)', 1186, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -85, 32, false},
+    pulse = {10, 12, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(330, 'the dragon (south)', 1184, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -90, -110, true},
+    pulse = {10, 12, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(331, 'the dragon (izquierda)', 1187, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { 5, -95, false},
+    pulse = {10, 12, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(332, 'the dragon (derecha)', 1185, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -115, -90, true},
+    pulse = {10, 12, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(333, 'archangel smite', 1004, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -55, -14, true},
+    
+})
+
+AttachedEffectManager.register(334, 'frost dragon', 934, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1.6,
+    offset = { -35, -20, true},
+    
+})
+
+AttachedEffectManager.register(335, 'blossom dragon 1', 1168, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -60, -60, false},
+    
+})
+
+AttachedEffectManager.register(336, 'blossom dragon 3', 1142, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 0.9,
+    offset = { -90, -90, true},
+    
+})
+
+AttachedEffectManager.register(337, 'blossom dragon 2', 1141, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1.4,
+    offset = { -20, 0, true},
+})
+
+AttachedEffectManager.register(338, 'scorpion', 1126, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1.4,
+    offset = { -55, -80, true},
+    pulse = {0, 1, 1200},
+})
+
+AttachedEffectManager.register(339, 'viper', 1188, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 0.9,
+    shader = "Corrupted",
+    offset = { 5, 5, true},
+    pulse = {32, 55, 500},
+})
+
+
+AttachedEffectManager.register(340, 'zeus', 1169, ThingCategoryEffect, {
+
+    duration = 1200,
+    disableWalkAnimation = true,
+    offset = { -32, -32, false},
+    pulse = {1, 10, 5000},
+
+    onAttach = function(effect, owner)
+        owner:setBounce(40, 45, 2200)
+        --effect:setBounce(0, 120, 2200)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setBounce(0, 0)
+    end
+})
+
+AttachedEffectManager.register(341, 'Svarog 1', 1061, ThingCategoryEffect, {
+    opacity = 1,
+    speed = 0.9,
+    duration = 10000,
+    --shader = "Corrupted",
+    offset = { -26, -26, false},
+    --pulse = {32, 55, 500},
+     onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(590)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(590)
+        oldOwner:getTile():addThing(e)
+    end
+})
+AttachedEffectManager.register(342, 'Svarog 2', 1061, ThingCategoryEffect, {
+    opacity = 0.4,
+    speed = 0.9,
+    duration = 10000,
+    --shader = "Corrupted",
+    offset = { -26, -26, true},
+    --pulse = {32, 55, 500},
+})
+
+
+AttachedEffectManager.register(343, 'veles (north)', 822, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { 10, 32, false},
+    pulse = {10, 12, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+AttachedEffectManager.register(344, 'veles (north)', 822, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -30, 32, false},
+    pulse = {10, 12, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(345, 'veles (south)', 823, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { 10, -100, true},
+    pulse = {10, 12, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(346, 'veles (south)', 823, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -30, -110, true},
+    pulse = {10, 12, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(347, 'veles (izquierda)', 824, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { 5, -45, false},
+    pulse = {10, 12, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(348, 'veles (derecha)', 821, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -115, -45, true},
+    pulse = {10, 12, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(349, 'yacy heal', 1039, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -64, -64, false},
+    --pulse = {10, 12, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(350, 'yacy damage', 1035, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -64, -64, false},
+   -- pulse = {2, 5, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
