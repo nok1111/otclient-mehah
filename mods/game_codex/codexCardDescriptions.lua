@@ -813,5 +813,617 @@ Codex.cardDescriptions = {
 			[9] = "your dash or teleport spells creates an earthquake trail dealing 260% of your level as earth damage",
 			[10] = "your dash or teleport spells creates an earthquake trail dealing 300% of your level as earth damage"
 		}
+	},
+	[46] = {
+		name = "The Dwarf",
+		rarity = "rare",
+		trigger = "onDamageTaken",
+		cardFrame = "the dwarf",
+		descriptions = {
+			[1] = "When HP drops below 40%, heal 15% max HP and gain speed for 1s (20s cooldown)",
+			[2] = "When HP drops below 40%, heal 20% max HP and gain speed for 1.5s (20s cooldown)",
+			[3] = "When HP drops below 40%, heal 25% max HP and gain speed for 2s (20s cooldown)",
+			[4] = "When HP drops below 40%, heal 30% max HP and gain speed for 2.5s (20s cooldown)",
+			[5] = "When HP drops below 40%, heal 35% max HP and gain speed for 3s (20s cooldown)",
+			[6] = "When HP drops below 40%, heal 40% max HP and gain speed for 3.5s (20s cooldown)",
+			[7] = "When HP drops below 40%, heal 45% max HP and gain speed for 4s (20s cooldown)",
+			[8] = "When HP drops below 40%, heal 50% max HP and gain speed for 4.5s (20s cooldown)",
+			[9] = "When HP drops below 40%, heal 55% max HP and gain speed for 5s (20s cooldown)",
+			[10] = "When HP drops below 40%, heal 60% max HP and gain speed for 5.5s (20s cooldown)"
+		}
+	},
+	[47] = {
+		name = "The Skeleton",
+		rarity = "common",
+		trigger = "onDamageTaken",
+		cardFrame = "the skeleton",
+		descriptions = {
+			[1] = "3% chance to reduce physical damage to 1 (15s cooldown)",
+			[2] = "4% chance to reduce physical damage to 1 (15s cooldown)",
+			[3] = "5% chance to reduce physical damage to 1 (15s cooldown)",
+			[4] = "6% chance to reduce physical damage to 1 (15s cooldown)",
+			[5] = "7% chance to reduce physical damage to 1 (15s cooldown)",
+			[6] = "8% chance to reduce physical damage to 1 (15s cooldown)",
+			[7] = "9% chance to reduce physical damage to 1 (15s cooldown)",
+			[8] = "10% chance to reduce physical damage to 1 (15s cooldown)",
+			[9] = "12% chance to reduce physical damage to 1 (15s cooldown)",
+			[10] = "15% chance to reduce physical damage to 1 (15s cooldown)"
+		}
+	},
+	[48] = {
+		name = "The Soldier",
+		rarity = "common",
+		trigger = "passive",
+		cardFrame = "the soldier",
+		descriptions = {
+			[1] = "+10 shielding skill, +5% crit chance",
+			[2] = "+15 shielding skill, +6% crit chance",
+			[3] = "+20 shielding skill, +7% crit chance",
+			[4] = "+25 shielding skill, +8% crit chance",
+			[5] = "+30 shielding skill, +9% crit chance",
+			[6] = "+35 shielding skill, +10% crit chance",
+			[7] = "+40 shielding skill, +11% crit chance",
+			[8] = "+45 shielding skill, +12% crit chance",
+			[9] = "+50 shielding skill, +13% crit chance",
+			[10] = "+60 shielding skill, +15% crit chance"
+		}
+	},
+	[49] = {
+		name = "The Sargent",
+		rarity = "rare",
+		trigger = "passive",
+		cardFrame = "the sargent",
+		descriptions = {
+			[1] = "Remove party exp penalty. On kill: party heals 1% HP/Mana",
+			[2] = "Remove party exp penalty. On kill: party heals 1.5% HP/Mana",
+			[3] = "Remove party exp penalty. On kill: party heals 2% HP/Mana",
+			[4] = "Remove party exp penalty. On kill: party heals 2.5% HP/Mana",
+			[5] = "Remove party exp penalty. On kill: party heals 3% HP/Mana",
+			[6] = "Remove party exp penalty. On kill: party heals 3.5% HP/Mana",
+			[7] = "Remove party exp penalty. On kill: party heals 4% HP/Mana",
+			[8] = "Remove party exp penalty. On kill: party heals 4.5% HP/Mana",
+			[9] = "Remove party exp penalty. On kill: party heals 5% HP/Mana",
+			[10] = "Remove party exp penalty. On kill: party heals 5.5% HP/Mana"
+		}
+	},
+	[50] = {
+		name = "Cyborg",
+		rarity = "epic",
+		trigger = "onDamageTaken",
+		cardFrame = "cyborg",
+		descriptions = {
+			[1] = "Melee attacks have 1% chance to fire energy laser in your direction",
+			[2] = "Melee attacks have 1.2% chance to fire energy laser in your direction",
+			[3] = "Melee attacks have 1.4% chance to fire energy laser in your direction",
+			[4] = "Melee attacks have 1.6% chance to fire energy laser in your direction",
+			[5] = "Melee attacks have 1.8% chance to fire energy laser in your direction",
+			[6] = "Melee attacks have 2% chance to fire energy laser in your direction",
+			[7] = "Melee attacks have 2.2% chance to fire energy laser in your direction",
+			[8] = "Melee attacks have 2.4% chance to fire energy laser in your direction",
+			[9] = "Melee attacks have 2.6% chance to fire energy laser in your direction",
+			[10] = "Melee attacks have 3% chance to fire energy laser in your direction"
+		}
+	},
+	[51] = {
+		name = "Mecha T-Rex",
+		rarity = "legendary",
+		trigger = "passive",
+		cardFrame = "mecha t-rex",
+		descriptions = {
+			[1] = "Melee attacks deal area damage, scaling with robot/jurassic cards (+10% per card)",
+			[2] = "Melee attacks deal area damage, scaling with robot/jurassic cards (+12% per card)",
+			[3] = "Melee attacks deal area damage, scaling with robot/jurassic cards (+14% per card)",
+			[4] = "Melee attacks deal area damage, scaling with robot/jurassic cards (+16% per card)",
+			[5] = "Melee attacks deal area damage, scaling with robot/jurassic cards (+18% per card)",
+			[6] = "Melee attacks deal area damage, scaling with robot/jurassic cards (+20% per card)",
+			[7] = "Melee attacks deal area damage, scaling with robot/jurassic cards (+23% per card)",
+			[8] = "Melee attacks deal area damage, scaling with robot/jurassic cards (+26% per card)",
+			[9] = "Melee attacks deal area damage, scaling with robot/jurassic cards (+30% per card)",
+			[10] = "Melee attacks deal area damage, scaling with robot/jurassic cards (+35% per card)"
+		}
+	},
+	[52] = {
+		name = "Twisted Mecha",
+		rarity = "epic",
+		trigger = "onDamageTaken",
+		cardFrame = "twisted mecha",
+		descriptions = {
+			[1] = "+10% energy damage. Every 10 spells: chain lightning",
+			[2] = "+12% energy damage. Every 10 spells: chain lightning",
+			[3] = "+14% energy damage. Every 10 spells: chain lightning",
+			[4] = "+16% energy damage. Every 10 spells: chain lightning",
+			[5] = "+18% energy damage. Every 10 spells: chain lightning",
+			[6] = "+20% energy damage. Every 10 spells: chain lightning",
+			[7] = "+23% energy damage. Every 10 spells: chain lightning",
+			[8] = "+26% energy damage. Every 10 spells: chain lightning",
+			[9] = "+30% energy damage. Every 10 spells: chain lightning",
+			[10] = "+35% energy damage. Every 10 spells: chain lightning"
+		}
+	},
+	[53] = {
+		name = "Bad Circuit",
+		rarity = "rare",
+		trigger = "onDamageTaken",
+		cardFrame = "bad circuit",
+		descriptions = {
+			[1] = "4% chance to become immune for 1.5s when taking damage (12s cooldown)",
+			[2] = "5% chance to become immune for 1.5s when taking damage (12s cooldown)",
+			[3] = "6% chance to become immune for 1.5s when taking damage (12s cooldown)",
+			[4] = "7% chance to become immune for 1.5s when taking damage (12s cooldown)",
+			[5] = "8% chance to become immune for 1.5s when taking damage (12s cooldown)",
+			[6] = "9% chance to become immune for 1.5s when taking damage (12s cooldown)",
+			[7] = "10% chance to become immune for 1.5s when taking damage (12s cooldown)",
+			[8] = "11% chance to become immune for 1.5s when taking damage (12s cooldown)",
+			[9] = "13% chance to become immune for 1.5s when taking damage (12s cooldown)",
+			[10] = "15% chance to become immune for 1.5s when taking damage (12s cooldown)"
+		}
+	},
+	[54] = {
+		name = "The Opportunist",
+		rarity = "rare",
+		trigger = "onHit",
+		cardFrame = "the opportunist",
+		descriptions = {
+			[1] = "+8% damage against targets with 90% HP or more",
+			[2] = "+10% damage against targets with 90% HP or more",
+			[3] = "+12% damage against targets with 90% HP or more",
+			[4] = "+14% damage against targets with 90% HP or more",
+			[5] = "+16% damage against targets with 90% HP or more",
+			[6] = "+18% damage against targets with 90% HP or more",
+			[7] = "+20% damage against targets with 90% HP or more",
+			[8] = "+23% damage against targets with 90% HP or more",
+			[9] = "+26% damage against targets with 90% HP or more",
+			[10] = "+30% damage against targets with 90% HP or more"
+		}
+	},
+	[55] = {
+		name = "Raiju",
+		rarity = "epic",
+		trigger = "onHit",
+		cardFrame = "raiju",
+		descriptions = {
+			[1] = "Every 12 energy attacks, chain lightning to 3 enemies for 80% damage (5s cooldown)",
+			[2] = "Every 11 energy attacks, chain lightning to 3 enemies for 90% damage (5s cooldown)",
+			[3] = "Every 10 energy attacks, chain lightning to 3 enemies for 100% damage (5s cooldown)",
+			[4] = "Every 9 energy attacks, chain lightning to 3 enemies for 110% damage (5s cooldown)",
+			[5] = "Every 8 energy attacks, chain lightning to 3 enemies for 120% damage (5s cooldown)",
+			[6] = "Every 7 energy attacks, chain lightning to 3 enemies for 130% damage (5s cooldown)",
+			[7] = "Every 6 energy attacks, chain lightning to 3 enemies for 140% damage (5s cooldown)",
+			[8] = "Every 5 energy attacks, chain lightning to 3 enemies for 150% damage (5s cooldown)",
+			[9] = "Every 4 energy attacks, chain lightning to 3 enemies for 160% damage (5s cooldown)",
+			[10] = "Every 3 energy attacks, chain lightning to 3 enemies for 180% damage (5s cooldown)"
+		}
+	},
+	[56] = {
+		name = "The Fairy",
+		rarity = "common",
+		trigger = "passive",
+		cardFrame = "the fairy",
+		descriptions = {
+			[1] = "+8% movement speed, +5% dodge chance",
+			[2] = "+10% movement speed, +6% dodge chance",
+			[3] = "+12% movement speed, +7% dodge chance",
+			[4] = "+14% movement speed, +8% dodge chance",
+			[5] = "+16% movement speed, +9% dodge chance",
+			[6] = "+18% movement speed, +10% dodge chance",
+			[7] = "+20% movement speed, +11% dodge chance",
+			[8] = "+23% movement speed, +12% dodge chance",
+			[9] = "+26% movement speed, +14% dodge chance",
+			[10] = "+30% movement speed, +16% dodge chance"
+		}
+	},
+	[57] = {
+		name = "Centaur",
+		rarity = "rare",
+		trigger = "passive",
+		cardFrame = "centaur",
+		descriptions = {
+			[1] = "+5% movement speed, +5% attack speed",
+			[2] = "+6% movement speed, +6% attack speed",
+			[3] = "+7% movement speed, +7% attack speed",
+			[4] = "+8% movement speed, +8% attack speed",
+			[5] = "+9% movement speed, +9% attack speed",
+			[6] = "+10% movement speed, +10% attack speed",
+			[7] = "+11% movement speed, +11% attack speed",
+			[8] = "+12% movement speed, +12% attack speed",
+			[9] = "+14% movement speed, +14% attack speed",
+			[10] = "+16% movement speed, +16% attack speed"
+		}
+	},
+	[58] = {
+		name = "Lone Wolf",
+		rarity = "rare",
+		trigger = "onKill",
+		cardFrame = "lone wolf",
+		descriptions = {
+			[1] = "When solo: kills heal 10% HP/Mana and grant +5% exp",
+			[2] = "When solo: kills heal 12% HP/Mana and grant +6% exp",
+			[3] = "When solo: kills heal 14% HP/Mana and grant +7% exp",
+			[4] = "When solo: kills heal 16% HP/Mana and grant +8% exp",
+			[5] = "When solo: kills heal 18% HP/Mana and grant +9% exp",
+			[6] = "When solo: kills heal 20% HP/Mana and grant +10% exp",
+			[7] = "When solo: kills heal 23% HP/Mana and grant +11% exp",
+			[8] = "When solo: kills heal 26% HP/Mana and grant +12% exp",
+			[9] = "When solo: kills heal 30% HP/Mana and grant +14% exp",
+			[10] = "When solo: kills heal 35% HP/Mana and grant +16% exp"
+		}
+	},
+	[59] = {
+		name = "The Greed",
+		rarity = "rare",
+		trigger = "passive",
+		cardFrame = "the greed",
+		descriptions = {
+			[1] = "When in party: gain +8% of allies' experience",
+			[2] = "When in party: gain +11% of allies' experience",
+			[3] = "When in party: gain +14% of allies' experience",
+			[4] = "When in party: gain +17% of allies' experience",
+			[5] = "When in party: gain +20% of allies' experience",
+			[6] = "When in party: gain +23% of allies' experience",
+			[7] = "When in party: gain +26% of allies' experience",
+			[8] = "When in party: gain +30% of allies' experience",
+			[9] = "When in party: gain +35% of allies' experience",
+			[10] = "When in party: gain +40% of allies' experience"
+		}
+	},
+	[60] = {
+		name = "Barry the Hunter",
+		rarity = "epic",
+		trigger = "onKill",
+		cardFrame = "barry the hunter",
+		descriptions = {
+			[1] = "+1% distance skill per 700 max HP",
+			[2] = "+1.5% distance skill per 700 max HP",
+			[3] = "+2% distance skill per 700 max HP",
+			[4] = "+2.5% distance skill per 700 max HP",
+			[5] = "+3% distance skill per 700 max HP",
+			[6] = "+3.5% distance skill per 700 max HP",
+			[7] = "+4% distance skill per 700 max HP",
+			[8] = "+4.5% distance skill per 700 max HP",
+			[9] = "+5% distance skill per 700 max HP",
+			[10] = "+6% distance skill per 700 max HP"
+		}
+	},
+	[61] = {
+		name = "The Apprentice",
+		rarity = "common",
+		trigger = "onKill",
+		cardFrame = "the apprentice",
+		descriptions = {
+			[1] = "2% chance to gain 1 codex knowledge on kill",
+			[2] = "3% chance to gain 2 codex knowledge on kill",
+			[3] = "4% chance to gain 3 codex knowledge on kill",
+			[4] = "5% chance to gain 4 codex knowledge on kill",
+			[5] = "6% chance to gain 5 codex knowledge on kill",
+			[6] = "7% chance to gain 6 codex knowledge on kill",
+			[7] = "8% chance to gain 7 codex knowledge on kill",
+			[8] = "9% chance to gain 8 codex knowledge on kill",
+			[9] = "10% chance to gain 9 codex knowledge on kill",
+			[10] = "12% chance to gain 11 codex knowledge on kill"
+		}
+	},
+	[62] = {
+		name = "Envy",
+		rarity = "rare",
+		trigger = "onKill",
+		cardFrame = "envy",
+		descriptions = {
+			[1] = "When ally kills: 8% chance to gain 8% of their random skill",
+			[2] = "When ally kills: 10% chance to gain 10% of their random skill",
+			[3] = "When ally kills: 12% chance to gain 12% of their random skill",
+			[4] = "When ally kills: 14% chance to gain 14% of their random skill",
+			[5] = "When ally kills: 16% chance to gain 16% of their random skill",
+			[6] = "When ally kills: 18% chance to gain 18% of their random skill",
+			[7] = "When ally kills: 20% chance to gain 20% of their random skill",
+			[8] = "When ally kills: 23% chance to gain 23% of their random skill",
+			[9] = "When ally kills: 26% chance to gain 26% of their random skill",
+			[10] = "When ally kills: 30% chance to gain 30% of their random skill"
+		}
+	},
+	[63] = {
+		name = "The Magician",
+		rarity = "rare",
+		trigger = "passive",
+		cardFrame = "the magician",
+		descriptions = {
+			[1] = "+2 magic level",
+			[2] = "+3 magic level",
+			[3] = "+4 magic level",
+			[4] = "+5 magic level",
+			[5] = "+6 magic level",
+			[6] = "+7 magic level",
+			[7] = "+8 magic level",
+			[8] = "+9 magic level",
+			[9] = "+10 magic level",
+			[10] = "+12 magic level"
+		}
+	},
+	[64] = {
+		name = "The Druid",
+		rarity = "epic",
+		trigger = "passive",
+		cardFrame = "the druid",
+		descriptions = {
+			[1] = "+2% max mana per active card in deck",
+			[2] = "+3% max mana per active card in deck",
+			[3] = "+4% max mana per active card in deck",
+			[4] = "+5% max mana per active card in deck",
+			[5] = "+6% max mana per active card in deck",
+			[6] = "+7% max mana per active card in deck",
+			[7] = "+8% max mana per active card in deck",
+			[8] = "+9% max mana per active card in deck",
+			[9] = "+10% max mana per active card in deck",
+			[10] = "+12% max mana per active card in deck"
+		}
+	},
+	[65] = {
+		name = "Magic Cannon",
+		rarity = "legendary",
+		trigger = "onSpell",
+		cardFrame = "magic cannon",
+		descriptions = {
+			[1] = "Offensive spells: reduce CD by 120ms per tile distance",
+			[2] = "Offensive spells: reduce CD by 110ms per tile distance",
+			[3] = "Offensive spells: reduce CD by 100ms per tile distance",
+			[4] = "Offensive spells: reduce CD by 90ms per tile distance",
+			[5] = "Offensive spells: reduce CD by 80ms per tile distance",
+			[6] = "Offensive spells: reduce CD by 70ms per tile distance",
+			[7] = "Offensive spells: reduce CD by 60ms per tile distance",
+			[8] = "Offensive spells: reduce CD by 50ms per tile distance",
+			[9] = "Offensive spells: reduce CD by 40ms per tile distance",
+			[10] = "Offensive spells: reduce CD by 30ms per tile distance"
+		}
+	},
+	[66] = {
+		name = "The Sage",
+		rarity = "epic",
+		trigger = "passive",
+		cardFrame = "the sage",
+		descriptions = {
+			[1] = "+1% max mana from half of max HP",
+			[2] = "+2% max mana from half of max HP",
+			[3] = "+2% max mana from half of max HP",
+			[4] = "+3% max mana from half of max HP",
+			[5] = "+3% max mana from half of max HP",
+			[6] = "+4% max mana from half of max HP",
+			[7] = "+4% max mana from half of max HP",
+			[8] = "+5% max mana from half of max HP",
+			[9] = "+5% max mana from half of max HP",
+			[10] = "+6% max mana from half of max HP"
+		}
+	},
+	[67] = {
+		name = "The Elixir",
+		rarity = "rare",
+		trigger = "passive",
+		cardFrame = "the elixir",
+		descriptions = {
+			[1] = "+5% potion healing",
+			[2] = "+7% potion healing",
+			[3] = "+9% potion healing",
+			[4] = "+11% potion healing",
+			[5] = "+13% potion healing",
+			[6] = "+15% potion healing",
+			[7] = "+17% potion healing",
+			[8] = "+19% potion healing",
+			[9] = "+22% potion healing",
+			[10] = "+25% potion healing"
+		}
+	},
+	[68] = {
+		name = "The Pulse",
+		rarity = "epic",
+		trigger = "onStandStill",
+		cardFrame = "the pulse",
+		descriptions = {
+			[1] = "Stand still: Holy AoE damage every 3s (2x2) - 60 base damage",
+			[2] = "Stand still: Holy AoE damage every 3s (2x2) - 70 base damage",
+			[3] = "Stand still: Holy AoE damage every 3s (2x2) - 80 base damage",
+			[4] = "Stand still: Holy AoE damage every 3s (2x2) - 90 base damage",
+			[5] = "Stand still: Holy AoE damage every 3s (2x2) - 100 base damage",
+			[6] = "Stand still: Holy AoE damage every 3s (2x2) - 110 base damage",
+			[7] = "Stand still: Holy AoE damage every 3s (2x2) - 120 base damage",
+			[8] = "Stand still: Holy AoE damage every 3s (2x2) - 130 base damage",
+			[9] = "Stand still: Holy AoE damage every 3s (2x2) - 140 base damage",
+			[10] = "Stand still: Holy AoE damage every 3s (2x2) - 160 base damage"
+		}
+	},
+	[69] = {
+		name = "Cannibal",
+		rarity = "epic",
+		trigger = "onKill",
+		cardFrame = "cannibal",
+		descriptions = {
+			[1] = "On kill: +8% crit for 5min. Player kill: 5% chance full heal",
+			[2] = "On kill: +10% crit for 5min. Player kill: 6% chance full heal",
+			[3] = "On kill: +12% crit for 5min. Player kill: 7% chance full heal",
+			[4] = "On kill: +14% crit for 5min. Player kill: 8% chance full heal",
+			[5] = "On kill: +16% crit for 5min. Player kill: 9% chance full heal",
+			[6] = "On kill: +18% crit for 5min. Player kill: 10% chance full heal",
+			[7] = "On kill: +20% crit for 5min. Player kill: 11% chance full heal",
+			[8] = "On kill: +23% crit for 5min. Player kill: 12% chance full heal",
+			[9] = "On kill: +26% crit for 5min. Player kill: 13% chance full heal",
+			[10] = "On kill: +30% crit for 5min. Player kill: 15% chance full heal"
+		}
+	},
+	[70] = {
+		name = "The Vampire",
+		rarity = "rare",
+		trigger = "passive",
+		cardFrame = "the vampire",
+		descriptions = {
+			[1] = "+2% life leech, 5% chance Bite (heal x2)",
+			[2] = "+3% life leech, 7% chance Bite (heal x2)",
+			[3] = "+4% life leech, 9% chance Bite (heal x2)",
+			[4] = "+5% life leech, 11% chance Bite (heal x2)",
+			[5] = "+6% life leech, 13% chance Bite (heal x2)",
+			[6] = "+7% life leech, 15% chance Bite (heal x2)",
+			[7] = "+8% life leech, 18% chance Bite (heal x2)",
+			[8] = "+10% life leech, 21% chance Bite (heal x2)",
+			[9] = "+12% life leech, 24% chance Bite (heal x2)",
+			[10] = "+15% life leech, 28% chance Bite (heal x2)"
+		}
+	},
+	[71] = {
+		name = "Triforce",
+		rarity = "legendary",
+		trigger = "passive",
+		cardFrame = "triforce",
+		descriptions = {
+			[1] = "+2 sword, distance, and magic level",
+			[2] = "+3 sword, distance, and magic level",
+			[3] = "+4 sword, distance, and magic level",
+			[4] = "+5 sword, distance, and magic level",
+			[5] = "+6 sword, distance, and magic level",
+			[6] = "+7 sword, distance, and magic level",
+			[7] = "+8 sword, distance, and magic level",
+			[8] = "+9 sword, distance, and magic level",
+			[9] = "+10 sword, distance, and magic level",
+			[10] = "+12 sword, distance, and magic level"
+		}
+	},
+	[72] = {
+		name = "Superior",
+		rarity = "rare",
+		trigger = "passive",
+		cardFrame = "superior",
+		descriptions = {
+			[1] = "+10% to all skills",
+			[2] = "+12% to all skills",
+			[3] = "+14% to all skills",
+			[4] = "+16% to all skills",
+			[5] = "+18% to all skills",
+			[6] = "+20% to all skills",
+			[7] = "+22% to all skills",
+			[8] = "+24% to all skills",
+			[9] = "+26% to all skills",
+			[10] = "+30% to all skills"
+		}
+	},
+	[73] = {
+		name = "Vengance",
+		rarity = "epic",
+		trigger = "onDamageTaken",
+		cardFrame = "vengance",
+		descriptions = {
+			[1] = "On hit taken: +4% damage per stack (max 20), lasts 5s",
+			[2] = "On hit taken: +5% damage per stack (max 20), lasts 5s",
+			[3] = "On hit taken: +6% damage per stack (max 20), lasts 5s",
+			[4] = "On hit taken: +7% damage per stack (max 20), lasts 5s",
+			[5] = "On hit taken: +8% damage per stack (max 20), lasts 5s",
+			[6] = "On hit taken: +9% damage per stack (max 20), lasts 5s",
+			[7] = "On hit taken: +10% damage per stack (max 20), lasts 5s",
+			[8] = "On hit taken: +11% damage per stack (max 20), lasts 5s",
+			[9] = "On hit taken: +13% damage per stack (max 20), lasts 5s",
+			[10] = "On hit taken: +15% damage per stack (max 20), lasts 5s"
+		}
+	},
+	[74] = {
+		name = "Snowball",
+		rarity = "common",
+		trigger = "onHit",
+		cardFrame = "snowball",
+		descriptions = {
+			[1] = "Ice spells: +1% crit per consecutive cast (max 40%)",
+			[2] = "Ice spells: +2% crit per consecutive cast (max 40%)",
+			[3] = "Ice spells: +3% crit per consecutive cast (max 40%)",
+			[4] = "Ice spells: +4% crit per consecutive cast (max 40%)",
+			[5] = "Ice spells: +5% crit per consecutive cast (max 40%)",
+			[6] = "Ice spells: +6% crit per consecutive cast (max 40%)",
+			[7] = "Ice spells: +7% crit per consecutive cast (max 40%)",
+			[8] = "Ice spells: +8% crit per consecutive cast (max 40%)",
+			[9] = "Ice spells: +9% crit per consecutive cast (max 40%)",
+			[10] = "Ice spells: +10% crit per consecutive cast (max 40%)"
+		}
+	},
+	[75] = {
+		name = "Union",
+		rarity = "epic",
+		trigger = "passive",
+		cardFrame = "union",
+		descriptions = {
+			[1] = "+2% HP/Mana per unique vocation in party",
+			[2] = "+3% HP/Mana per unique vocation in party",
+			[3] = "+4% HP/Mana per unique vocation in party",
+			[4] = "+5% HP/Mana per unique vocation in party",
+			[5] = "+6% HP/Mana per unique vocation in party",
+			[6] = "+7% HP/Mana per unique vocation in party",
+			[7] = "+8% HP/Mana per unique vocation in party",
+			[8] = "+9% HP/Mana per unique vocation in party",
+			[9] = "+10% HP/Mana per unique vocation in party",
+			[10] = "+12% HP/Mana per unique vocation in party"
+		}
+	},
+	[76] = {
+		name = "All for One",
+		rarity = "legendary",
+		trigger = "passive",
+		cardFrame = "all for one",
+		descriptions = {
+			[1] = "+1% all skills per nearby party member",
+			[2] = "+2% all skills per nearby party member",
+			[3] = "+3% all skills per nearby party member",
+			[4] = "+4% all skills per nearby party member",
+			[5] = "+5% all skills per nearby party member",
+			[6] = "+6% all skills per nearby party member",
+			[7] = "+7% all skills per nearby party member",
+			[8] = "+8% all skills per nearby party member",
+			[9] = "+9% all skills per nearby party member",
+			[10] = "+10% all skills per nearby party member"
+		}
+	},
+	[77] = {
+		name = "The Minotaur",
+		rarity = "rare",
+		trigger = "passive",
+		cardFrame = "the minotaur",
+		descriptions = {
+			[1] = "Melee attacks: +120% physical damage based on shielding skill",
+			[2] = "Melee attacks: +135% physical damage based on shielding skill",
+			[3] = "Melee attacks: +150% physical damage based on shielding skill",
+			[4] = "Melee attacks: +165% physical damage based on shielding skill",
+			[5] = "Melee attacks: +180% physical damage based on shielding skill",
+			[6] = "Melee attacks: +200% physical damage based on shielding skill",
+			[7] = "Melee attacks: +220% physical damage based on shielding skill",
+			[8] = "Melee attacks: +240% physical damage based on shielding skill",
+			[9] = "Melee attacks: +260% physical damage based on shielding skill",
+			[10] = "Melee attacks: +300% physical damage based on shielding skill"
+		}
+	},
+	[78] = {
+		name = "The Griffin",
+		rarity = "epic",
+		trigger = "passive",
+		cardFrame = "the griffin",
+		descriptions = {
+			[1] = "Physical attacks: +15% damage based on movement speed",
+			[2] = "Physical attacks: +18% damage based on movement speed",
+			[3] = "Physical attacks: +21% damage based on movement speed",
+			[4] = "Physical attacks: +24% damage based on movement speed",
+			[5] = "Physical attacks: +27% damage based on movement speed",
+			[6] = "Physical attacks: +30% damage based on movement speed",
+			[7] = "Physical attacks: +33% damage based on movement speed",
+			[8] = "Physical attacks: +36% damage based on movement speed",
+			[9] = "Physical attacks: +40% damage based on movement speed",
+			[10] = "Physical attacks: +45% damage based on movement speed"
+		}
+	},
+	[79] = {
+		name = "Giant Slayer",
+		rarity = "epic",
+		trigger = "passive",
+		cardFrame = "giant slayer",
+		descriptions = {
+			[1] = "Damage scales with HP difference vs target (max +16.5%)",
+			[2] = "Damage scales with HP difference vs target (max +18%)",
+			[3] = "Damage scales with HP difference vs target (max +19.5%)",
+			[4] = "Damage scales with HP difference vs target (max +21%)",
+			[5] = "Damage scales with HP difference vs target (max +22.5%)",
+			[6] = "Damage scales with HP difference vs target (max +24%)",
+			[7] = "Damage scales with HP difference vs target (max +25.5%)",
+			[8] = "Damage scales with HP difference vs target (max +27%)",
+			[9] = "Damage scales with HP difference vs target (max +28.5%)",
+			[10] = "Damage scales with HP difference vs target (max +30%)"
+		}
 	}
 }
