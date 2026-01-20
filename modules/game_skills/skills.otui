@@ -201,16 +201,6 @@ MiniWindow
         background-color: red
 
     SkillButton
-      id: skillId1
-      SkillNameLabel
-        !text: tr('Focus')
-      SkillValueLabel
-      ImageSkill
-        image-source: /images/icons/icon_club
-        image-size: 9 9
-      SkillPercentPanel
-
-    SkillButton
       id: skillId2
       SkillNameLabel
         !text: tr('Strenght')
@@ -250,16 +240,6 @@ MiniWindow
         image-size: 9 9
       SkillPercentPanel
 
-    SkillButton
-      id: skillId0
-      SkillNameLabel
-        !text: tr('Luck')
-      SkillValueLabel
-      ImageSkill
-        image-source: /images/icons/icon_seasonalevent
-        image-size: 9 9
-      SkillPercentPanel
-
     HorizontalSeparator
       margin-top: 4
       margin-bottom: 2
@@ -267,9 +247,9 @@ MiniWindow
     SkillButton
       SkillNameLabel
         !text: tr('jobs:')
-        margin-left: 65
+        text-align: center
         margin-top: 3
-
+        color: #FFD700
 
     HorizontalSeparator
       margin-bottom: 4
@@ -278,6 +258,7 @@ MiniWindow
       id: professionId1
       SkillNameLabel
         id: label
+        !text: tr('Blacksmithing')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_fishing
@@ -288,6 +269,7 @@ MiniWindow
       id: professionId2
       SkillNameLabel
         id: label
+        !text: tr('Alchemy')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_fishing
@@ -298,6 +280,7 @@ MiniWindow
       id: professionId3
       SkillNameLabel
         id: label
+        !text: tr('Refinery')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_fishing
@@ -308,6 +291,7 @@ MiniWindow
       id: professionId4
       SkillNameLabel
         id: label
+        !text: tr('Enchanting')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_fishing
@@ -318,6 +302,7 @@ MiniWindow
       id: professionId5
       SkillNameLabel
         id: label
+        !text: tr('Mining')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_fishing
@@ -328,6 +313,7 @@ MiniWindow
       id: professionId6
       SkillNameLabel
         id: label
+        !text: tr('Herbalism')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_fishing
@@ -338,6 +324,7 @@ MiniWindow
       id: professionId7
       SkillNameLabel
         id: label
+        !text: tr('Fishing')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_fishing
@@ -348,32 +335,31 @@ MiniWindow
       id: professionId8
       SkillNameLabel
         id: label
+        !text: tr('Woodcutting')
       SkillValueLabel
       ImageSkill
         image-source: /images/icons/icon_fishing
         image-size: 9 9
       SkillPercentPanel
 
+    HorizontalSeparator
+      margin-top: 4
+      margin-bottom: 2
+
     SkillButton
-      id: skillId6
       SkillNameLabel
-        !text: tr('Fishing')
-      SkillValueLabel
-      ImageSkill
-        image-source: /images/icons/icon_fishing
-        image-size: 9 9
-      SkillPercentPanel
+        !text: tr('special stats:')
+        text-align: center
+        margin-top: 3
+        color: #FFD700
+
+    HorizontalSeparator
+      margin-bottom: 4
 
     SmallSkillButton
       id: skillId7
       SkillNameLabel
         !text: tr('Critical Hit Chance')
-      SkillValueLabel
-
-    SmallSkillButton
-      id: skillId8
-      SkillNameLabel
-        !text: tr('Critical Hit Damage')
       SkillValueLabel
 
     SmallSkillButton
@@ -383,21 +369,9 @@ MiniWindow
       SkillValueLabel
 
     SmallSkillButton
-      id: skillId10
-      SkillNameLabel
-        !text: tr('Life Leech Amount')
-      SkillValueLabel
-
-    SmallSkillButton
       id: skillId11
       SkillNameLabel
         !text: tr('Mana Leech Chance')
-      SkillValueLabel
-
-    SmallSkillButton
-      id: skillId12
-      SkillNameLabel
-        !text: tr('Mana Leech Amount')
       SkillValueLabel
 
     SmallSkillButton

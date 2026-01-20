@@ -151,7 +151,10 @@ function setSkillValue(id, value)
     if skill then
         local widget = skill:getChildById('value')
         if id == "skillId7" or id == "skillId9" or id == "skillId11" or id == "skillId13" or id == "skillId14" or id == "skillId15" then
-            local value = value
+            -- Cap Critical Hit Chance display at 100%
+            if id == "skillId7" then
+                value = math.min(value, 100)
+            end
             widget:setText(value .. "%")
         else
             widget:setText(value)
@@ -286,53 +289,74 @@ function refresh()
     onRegenerationChange(player, player:getRegenerationTime())
     onSpeedChange(player, player:getSpeed())
 
-    -- Define skill ranges at the top of the file for maintainability
-local COMBAT_SKILLS = {Skill.Fist, Skill.Club, Skill.Sword, Skill.Axe, Skill.Distance, Skill.Shielding, Skill.Fishing}
-local SPECIAL_SKILLS = {Skill.CriticalChance, Skill.CriticalDamage, Skill.LifeLeechChance, Skill.LifeLeechAmount, 
-                       Skill.ManaLeechChance, Skill.ManaLeechAmount, Skill.AttackSpeed, Skill.Weaken, Skill.ExtraHealing}
+    -- Parse combat skills individually
+    onSkillChange(player, Skill.Club, player:getSkillLevel(Skill.Club), player:getSkillLevelPercent(Skill.Club))
+    onSkillChange(player, Skill.Sword, player:getSkillLevel(Skill.Sword), player:getSkillLevelPercent(Skill.Sword))
+    onSkillChange(player, Skill.Axe, player:getSkillLevel(Skill.Axe), player:getSkillLevelPercent(Skill.Axe))
+    onSkillChange(player, Skill.Distance, player:getSkillLevel(Skill.Distance), player:getSkillLevelPercent(Skill.Distance))
+    onSkillChange(player, Skill.Shielding, player:getSkillLevel(Skill.Shielding), player:getSkillLevelPercent(Skill.Shielding))
 
--- Update skills function
-for _, skillId in ipairs(COMBAT_SKILLS) do
-    local level = player:getSkillLevel(skillId)
-    local percent = player:getSkillLevelPercent(skillId)
-    if level and percent then
-        onSkillChange(player, skillId, level, percent)
-    end
-end
+    -- Parse professions individually (jobs)
+    -- Note: These use a separate event system and are parsed via parseJobs opcode
 
-for _, skillId in ipairs(SPECIAL_SKILLS) do
-    local level = player:getSkillLevel(skillId)
-    local percent = player:getSkillLevelPercent(skillId)
+    -- Parse special skills individually
+    onSkillChange(player, Skill.CriticalChance, player:getSkillLevel(Skill.CriticalChance), player:getSkillLevelPercent(Skill.CriticalChance))
+    onSkillChange(player, Skill.LifeLeechChance, player:getSkillLevel(Skill.LifeLeechChance), player:getSkillLevelPercent(Skill.LifeLeechChance))
+    onSkillChange(player, Skill.ManaLeechChance, player:getSkillLevel(Skill.ManaLeechChance), player:getSkillLevelPercent(Skill.ManaLeechChance))
+    onSkillChange(player, Skill.AttackSpeed, player:getSkillLevel(Skill.AttackSpeed), player:getSkillLevelPercent(Skill.AttackSpeed))
+    onSkillChange(player, Skill.Weaken, player:getSkillLevel(Skill.Weaken), player:getSkillLevelPercent(Skill.Weaken))
+    onSkillChange(player, Skill.ExtraHealing, player:getSkillLevel(Skill.ExtraHealing), player:getSkillLevelPercent(Skill.ExtraHealing))
 
-    print(level, percent)
-    if level and percent then
-        onSkillChange(player, skillId, level, percent)
-    end
-end
-
-
-local hasAdditionalSkills = g_game.getFeature(GameAdditionalSkills)
-    for i = Skill.Fist, Skill.Transcendence do
-
-        if i > Skill.Fishing then
-            local ativedAdditionalSkills = hasAdditionalSkills
-            if ativedAdditionalSkills then
-                if g_game.getClientVersion() >= 1281 then
-	            if i == Skill.LifeLeechAmount or i == Skill.ManaLeechAmount then
-                        ativedAdditionalSkills = false
-                    elseif g_game.getClientVersion() < 1332 and Skill.Transcendence then
-                        ativedAdditionalSkills = false
-                    elseif i >= Skill.Fatal and player:getSkillLevel(i) <= 0 then
-                        ativedAdditionalSkills = false
-                    end
-		elseif g_game.getClientVersion() < 1281 and i >= Skill.Fatal then
-                    ativedAdditionalSkills = false
-	        end
+    -- Parse additional skills individually if available
+    local hasAdditionalSkills = g_game.getFeature(GameAdditionalSkills)
+    if hasAdditionalSkills then
+        if g_game.getClientVersion() >= 1281 then
+            -- Fatal, Dodge, Momentum, Transcendence
+            if player:getSkillLevel(Skill.Fatal) > 0 then
+                onSkillChange(player, Skill.Fatal, player:getSkillLevel(Skill.Fatal), player:getSkillLevelPercent(Skill.Fatal))
+                toggleSkill('skillId16', true)
+            else
+                toggleSkill('skillId16', false)
             end
 
-            toggleSkill('skillId' .. i, ativedAdditionalSkills)
+            if player:getSkillLevel(Skill.Dodge) > 0 then
+                onSkillChange(player, Skill.Dodge, player:getSkillLevel(Skill.Dodge), player:getSkillLevelPercent(Skill.Dodge))
+                toggleSkill('skillId17', true)
+            else
+                toggleSkill('skillId17', false)
+            end
+
+            if player:getSkillLevel(Skill.Momentum) > 0 then
+                onSkillChange(player, Skill.Momentum, player:getSkillLevel(Skill.Momentum), player:getSkillLevelPercent(Skill.Momentum))
+                toggleSkill('skillId18', true)
+            else
+                toggleSkill('skillId18', false)
+            end
+
+            if g_game.getClientVersion() >= 1332 and Skill.Transcendence then
+                if player:getSkillLevel(Skill.Transcendence) > 0 then
+                    onSkillChange(player, Skill.Transcendence, player:getSkillLevel(Skill.Transcendence), player:getSkillLevelPercent(Skill.Transcendence))
+                    toggleSkill('skillId19', true)
+                else
+                    toggleSkill('skillId19', false)
+                end
+            else
+                toggleSkill('skillId19', false)
+            end
+        else
+            -- Hide all additional skills for older clients
+            toggleSkill('skillId16', false)
+            toggleSkill('skillId17', false)
+            toggleSkill('skillId18', false)
+            toggleSkill('skillId19', false)
         end
+    else
+        toggleSkill('skillId16', false)
+        toggleSkill('skillId17', false)
+        toggleSkill('skillId18', false)
+        toggleSkill('skillId19', false)
     end
+
     update()
     updateHeight()
 end

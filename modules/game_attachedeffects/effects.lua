@@ -1791,6 +1791,9 @@ AttachedEffectManager.register(208, 'damaged', 0, 0, {
         or owner:getAttachedEffectById(214)
         or owner:getAttachedEffectById(251)
         or owner:getAttachedEffectById(316)
+        or owner:getAttachedEffectById(354)
+        or owner:getAttachedEffectById(357)
+
         
 
         if not hasOtherShader then
@@ -1808,6 +1811,8 @@ AttachedEffectManager.register(208, 'damaged', 0, 0, {
             or oldOwner:getAttachedEffectById(214)
             or oldOwner:getAttachedEffectById(251)
             or oldOwner:getAttachedEffectById(316)
+            or oldOwner:getAttachedEffectById(354)
+            or oldOwner:getAttachedEffectById(357)
             if not hasOtherShader then
                 oldOwner:setShader('Outfit - Default')
             end
@@ -2183,15 +2188,15 @@ AttachedEffectManager.register(252, 'Titan Form', 497, ThingCategoryEffect, {
     end
 })
 
-AttachedEffectManager.register(253, 'Tiny Creature', 0, 0, {
-    duration = 6000,
+AttachedEffectManager.register(253, 'Tiny Creature (dwarf)', 0, 0, {
+    duration = 5000,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(0.3, 400)
-        owner:setBounce(5, 10, 2000)
+        owner:setScaleFactor(0.75, 400)
+       -- owner:setBounce(10, 5, 2000)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 400)
-        oldOwner:setBounce(0, 0)
+        --oldOwner:setBounce(0, 0)
     end
 })
 AttachedEffectManager.register(254, 'Size +5%', 0, 0, {
@@ -4250,4 +4255,80 @@ AttachedEffectManager.register(350, 'yacy damage', 1035, ThingCategoryEffect, {
     speed = 1,
     offset = { -64, -64, false},
    -- pulse = {2, 5, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(351, 'Transform', 298, ThingCategoryCreature, {
+    transform = true,
+    duration = 1000,
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(27)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(338)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(352, 'trex-stomp', 936, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -25, -25, true},
+    pulse = {10, 12, 1200},  -- Pulsa de 85% a 120% cada 1.2 segundos
+})
+
+AttachedEffectManager.register(353, 'trex-stomp 2', 1168, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -60, -60, false},
+    
+})
+
+AttachedEffectManager.register(354, 'raiju damage', 962, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -60, -64, true},
+    pulse = {1, 4, 1200},
+    onAttach = function(effect, owner)
+        owner:setShader('Blackout')
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setShader('Outfit - Default')
+    end
+
+    
+})
+
+AttachedEffectManager.register(355, 'fairy sparkles', 186, ThingCategoryEffect, {
+    opacity = 0.8,
+    duration = 8000,
+    speed = 1.2,
+    offset = { -15, 15, true},
+})
+
+AttachedEffectManager.register(356, 'fairy wind', 185, ThingCategoryEffect, {
+    opacity = 0.9,
+    speed = 0.5,
+    offset = { 10, 10, true},
+})
+
+AttachedEffectManager.register(357, 'fairy pink aura', 184, ThingCategoryEffect, {
+    speed = 1.5,
+    disableWalkAnimation = true,
+    shader = 'Rainbow',
+    offset = { -10, -7, false},
+    onAttach = function(effect, owner)
+        owner:setBounce(0, 10, 1000)
+        owner:setShader('Rainbow')
+        effect:setBounce(0, 2, 500)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setBounce(0, 0)
+        oldOwner:setShader('Outfit - Default')
+    end
 })
