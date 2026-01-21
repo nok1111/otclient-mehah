@@ -2315,21 +2315,15 @@ void ProtocolGame::parsePlayerSkills(const InputMessagePtr& msg) const
         msg->getU8();
     }
 
-    if (g_game.getClientVersion() >= 1281) {
-        // forge skill stats
-        const uint8_t lastSkill = g_game.getClientVersion() >= 1332 ? Otc::LastSkill : Otc::Momentum + 1;
-        for (int_fast32_t skill = Otc::Fatal; skill < lastSkill; ++skill) {
-            const uint16_t level = msg->getU16();
-            const uint16_t baseLevel = msg->getU16();
-            m_localPlayer->setSkill(static_cast<Otc::Skill>(skill), level, 0);
-            m_localPlayer->setBaseSkill(static_cast<Otc::Skill>(skill), baseLevel);
-        }
-
-        // bonus cap
-        const uint32_t capacity = msg->getU32(); // base + bonus capacity
-        msg->getU32(); // base capacity
-
-        m_localPlayer->setTotalCapacity(capacity);
+    // Additional skill stats (Dodge, Block, CooldownReduction, Barrier)
+    g_logger.info("[DEBUG] Reading additional skills from Dodge ({}) to LastSkill ({})", static_cast<int>(Otc::Dodge), static_cast<int>(Otc::LastSkill));
+    for (int_fast32_t skill = Otc::Dodge; skill < Otc::LastSkill; ++skill) {
+        g_logger.info("[DEBUG] Reading skill ID: {}", static_cast<int>(skill));
+        const uint16_t level = msg->getU16();
+        const uint16_t baseLevel = msg->getU16();
+        g_logger.info("[DEBUG] Skill {} - Level: {}, BaseLevel: {}", static_cast<int>(skill), level, baseLevel);
+        m_localPlayer->setSkill(static_cast<Otc::Skill>(skill), level, 0);
+        m_localPlayer->setBaseSkill(static_cast<Otc::Skill>(skill), baseLevel);
     }
 }
 
@@ -4398,14 +4392,14 @@ void ProtocolGame::parseCyclopediaCharacterInfo(const InputMessagePtr& msg)
 
             std::vector<std::vector<uint16_t>> forgeSkillsArray;
 
-            if (g_game.getClientVersion() >= 1281) {
-                // forge skill stats
-                const uint8_t lastSkill = g_game.getClientVersion() >= 1332 ? Otc::LastSkill : Otc::Momentum + 1;
-                for (uint16_t skill = Otc::Fatal; skill < lastSkill; ++skill) {
-                    const uint16_t skillLevel = msg->getU16();
-                    msg->getU16();
-                    forgeSkillsArray.push_back({ skill, skillLevel });
-                }
+            // Additional skill stats (Dodge, Block, CooldownReduction, Barrier)
+            g_logger.info("[DEBUG CYCLOPEDIA] Reading additional skills from Dodge ({}) to LastSkill ({})", static_cast<int>(Otc::Dodge), static_cast<int>(Otc::LastSkill));
+            for (uint16_t skill = Otc::Dodge; skill < Otc::LastSkill; ++skill) {
+                g_logger.info("[DEBUG CYCLOPEDIA] Reading skill ID: {}", static_cast<int>(skill));
+                const uint16_t skillLevel = msg->getU16();
+                const uint16_t baseLevel = msg->getU16();
+                g_logger.info("[DEBUG CYCLOPEDIA] Skill {} - Level: {}, BaseLevel: {}", static_cast<int>(skill), skillLevel, baseLevel);
+                forgeSkillsArray.push_back({ skill, skillLevel });
             }
 
             msg->getU16(); // Cleave Percent

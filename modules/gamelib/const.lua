@@ -62,10 +62,10 @@ Skill = {
     AttackSpeed = 13,
     Weaken = 14,
     ExtraHealing = 15,
-    Fatal = 16,
-    Dodge = 17,
-    Momentum = 18,
-    Transcendence = 19
+    Dodge = 16,
+    Block = 17,
+    CooldownReduction = 18,
+    Barrier = 19
 }
 
 North = Directions.North

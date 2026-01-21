@@ -144,10 +144,10 @@ namespace Otc
         AttackSpeed,
         Weaken,
         ExtraHealing,
-        Fatal,
         Dodge,
-        Momentum,
-        Transcendence,
+        Block,
+        CooldownReduction,
+        Barrier,
         LastSkill
     };
 
