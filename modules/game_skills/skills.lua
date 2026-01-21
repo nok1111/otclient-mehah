@@ -118,13 +118,21 @@ end
 
 function resetSkillColor(id)
     local skill = skillsWindow:recursiveGetChildById(id)
+    if not skill then
+        return
+    end
     local widget = skill:getChildById('value')
+    if not widget then
+        return
+    end
     widget:setColor('#bbbbbb')
 end
 
 function toggleSkill(id, state)
     local skill = skillsWindow:recursiveGetChildById(id)
-    skill:setVisible(state)
+    if skill then
+        skill:setVisible(state)
+    end
 end
 
 function setSkillBase(id, value, baseValue)
@@ -132,7 +140,13 @@ function setSkillBase(id, value, baseValue)
         return
     end
     local skill = skillsWindow:recursiveGetChildById(id)
+    if not skill then
+        return
+    end
     local widget = skill:getChildById('value')
+    if not widget then
+        return
+    end
 
     if value > baseValue then
         widget:setColor('#008b00') -- green
@@ -150,9 +164,10 @@ function setSkillValue(id, value)
     local skill = skillsWindow:recursiveGetChildById(id)
     if skill then
         local widget = skill:getChildById('value')
-        if id == "skillId7" or id == "skillId9" or id == "skillId11" or id == "skillId13" or id == "skillId14" or id == "skillId15" then
-            -- Cap Critical Hit Chance display at 100%
-            if id == "skillId7" then
+        -- Skills that display as percentage: CriticalChance, LifeLeechChance, ManaLeechChance, AttackSpeed, Weaken, ExtraHealing, Dodge, Block, CooldownReduction
+        if id == "skillId7" or id == "skillId9" or id == "skillId11" or id == "skillId13" or id == "skillId14" or id == "skillId15" or id == "skillId16" or id == "skillId17" or id == "skillId18" then
+            -- Cap Critical Hit Chance and Dodge display at 100%
+            if id == "skillId7" or id == "skillId16" then
                 value = math.min(value, 100)
             end
             widget:setText(value .. "%")
@@ -306,56 +321,10 @@ function refresh()
     onSkillChange(player, Skill.AttackSpeed, player:getSkillLevel(Skill.AttackSpeed), player:getSkillLevelPercent(Skill.AttackSpeed))
     onSkillChange(player, Skill.Weaken, player:getSkillLevel(Skill.Weaken), player:getSkillLevelPercent(Skill.Weaken))
     onSkillChange(player, Skill.ExtraHealing, player:getSkillLevel(Skill.ExtraHealing), player:getSkillLevelPercent(Skill.ExtraHealing))
-
-    -- Parse additional skills individually if available
-    local hasAdditionalSkills = g_game.getFeature(GameAdditionalSkills)
-    if hasAdditionalSkills then
-        if g_game.getClientVersion() >= 1281 then
-            -- Fatal, Dodge, Momentum, Transcendence
-            if player:getSkillLevel(Skill.Fatal) > 0 then
-                onSkillChange(player, Skill.Fatal, player:getSkillLevel(Skill.Fatal), player:getSkillLevelPercent(Skill.Fatal))
-                toggleSkill('skillId16', true)
-            else
-                toggleSkill('skillId16', false)
-            end
-
-            if player:getSkillLevel(Skill.Dodge) > 0 then
-                onSkillChange(player, Skill.Dodge, player:getSkillLevel(Skill.Dodge), player:getSkillLevelPercent(Skill.Dodge))
-                toggleSkill('skillId17', true)
-            else
-                toggleSkill('skillId17', false)
-            end
-
-            if player:getSkillLevel(Skill.Momentum) > 0 then
-                onSkillChange(player, Skill.Momentum, player:getSkillLevel(Skill.Momentum), player:getSkillLevelPercent(Skill.Momentum))
-                toggleSkill('skillId18', true)
-            else
-                toggleSkill('skillId18', false)
-            end
-
-            if g_game.getClientVersion() >= 1332 and Skill.Transcendence then
-                if player:getSkillLevel(Skill.Transcendence) > 0 then
-                    onSkillChange(player, Skill.Transcendence, player:getSkillLevel(Skill.Transcendence), player:getSkillLevelPercent(Skill.Transcendence))
-                    toggleSkill('skillId19', true)
-                else
-                    toggleSkill('skillId19', false)
-                end
-            else
-                toggleSkill('skillId19', false)
-            end
-        else
-            -- Hide all additional skills for older clients
-            toggleSkill('skillId16', false)
-            toggleSkill('skillId17', false)
-            toggleSkill('skillId18', false)
-            toggleSkill('skillId19', false)
-        end
-    else
-        toggleSkill('skillId16', false)
-        toggleSkill('skillId17', false)
-        toggleSkill('skillId18', false)
-        toggleSkill('skillId19', false)
-    end
+    onSkillChange(player, Skill.Dodge, player:getSkillLevel(Skill.Dodge), player:getSkillLevelPercent(Skill.Dodge))
+    onSkillChange(player, Skill.Block, player:getSkillLevel(Skill.Block), player:getSkillLevelPercent(Skill.Block))
+    onSkillChange(player, Skill.CooldownReduction, player:getSkillLevel(Skill.CooldownReduction), player:getSkillLevelPercent(Skill.CooldownReduction))
+    onSkillChange(player, Skill.Barrier, player:getSkillLevel(Skill.Barrier), player:getSkillLevelPercent(Skill.Barrier))
 
     update()
     updateHeight()

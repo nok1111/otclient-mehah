@@ -395,25 +395,25 @@ MiniWindow
     SmallSkillButton
       id: skillId16
       SkillNameLabel
-        !text: tr('fatal')
+        !text: tr('dodge')
       SkillValueLabel
-
+    
     SmallSkillButton
       id: skillId17
       SkillNameLabel
-        !text: tr('dodge')
+        !text: tr('block')
       SkillValueLabel
     
     SmallSkillButton
       id: skillId18
       SkillNameLabel
-        !text: tr('Momentum')
+        !text: tr('cooldown reduction')
       SkillValueLabel
     
     SmallSkillButton
       id: skillId19
       SkillNameLabel
-        !text: tr('Transcendence')
+        !text: tr('barrier')
       SkillValueLabel  
     SmallSkillButton
       id: amplification

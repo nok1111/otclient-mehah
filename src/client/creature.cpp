@@ -290,6 +290,23 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
 
             g_drawPool.addFilledRect(manaRect, Color::blue);
         }
+        
+        // Draw barrier bar above health bar if barrier exists (grows right to left)
+        if (m_barrierPercent > 0) {
+            // Use healthBarY (original position) instead of backgroundRect.y() to work correctly for all players
+            Rect barrierBackgroundRect(backgroundRect.x() + 1, healthBarY + 0, backgroundRect.width(), 6);
+            
+            //g_drawPool.addFilledRect(barrierBackgroundRect, Color::black);
+            
+            Rect barrierRect = barrierBackgroundRect.expanded(-1);
+            int barrierWidth = (m_barrierPercent / 100.0) * 38;
+            barrierRect.setWidth(barrierWidth);
+            // Position from right to left
+            barrierRect.moveLeft(barrierBackgroundRect.right() - 1 - barrierWidth);
+            
+            // Cyan/blue color for barrier
+            g_drawPool.addFilledRect(barrierRect, Color(0x00, 0xC8, 0xFF));
+        }
     }
 
     g_drawPool.setDrawOrder(DrawOrder::SECOND);
@@ -843,6 +860,16 @@ void Creature::setHealthPercent(const uint8_t healthPercent)
 
     if (isDead())
         onDeath();
+}
+
+void Creature::setBarrierPercent(const uint8_t barrierPercent)
+{
+    if (m_barrierPercent == barrierPercent) return;
+    
+    const uint8_t oldBarrierPercent = m_barrierPercent;
+    m_barrierPercent = barrierPercent;
+    
+    callLuaField("onBarrierPercentChange", barrierPercent, oldBarrierPercent);
 }
 
 void Creature::setDirection(const Otc::Direction direction)
