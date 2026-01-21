@@ -1996,6 +1996,7 @@ void ProtocolGame::parseCreatureHealth(const InputMessagePtr& msg)
 {
     const uint32_t creatureId = msg->getU32();
     const uint8_t healthPercent = msg->getU8();
+    const uint8_t barrierPercent = msg->getU8(); // Read barrier percent from server
 
     const auto& creature = g_map.getCreatureById(creatureId);
     if (!creature) {
@@ -2004,6 +2005,7 @@ void ProtocolGame::parseCreatureHealth(const InputMessagePtr& msg)
     }
 
     creature->setHealthPercent(healthPercent);
+    creature->setBarrierPercent(barrierPercent);
 }
 
 void ProtocolGame::parseCreatureLight(const InputMessagePtr& msg)
