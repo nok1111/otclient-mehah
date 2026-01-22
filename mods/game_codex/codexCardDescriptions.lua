@@ -1425,5 +1425,185 @@ Codex.cardDescriptions = {
 			[9] = "Damage scales with HP difference vs target (max +28.5%)",
 			[10] = "Damage scales with HP difference vs target (max +30%)"
 		}
+	},
+	[80] = {
+		name = "Chainless",
+		rarity = "legendary",
+		trigger = "onSpell",
+		cardFrame = "chainless",
+		descriptions = {
+			[1] = "Different spells in a row: 4th spell gets +30% damage",
+			[2] = "Different spells in a row: 4th spell gets +33% damage",
+			[3] = "Different spells in a row: 4th spell gets +36% damage",
+			[4] = "Different spells in a row: 4th spell gets +39% damage",
+			[5] = "Different spells in a row: 4th spell gets +42% damage",
+			[6] = "Different spells in a row: 4th spell gets +45% damage",
+			[7] = "Different spells in a row: 4th spell gets +48% damage",
+			[8] = "Different spells in a row: 4th spell gets +51% damage",
+			[9] = "Different spells in a row: 4th spell gets +54% damage",
+			[10] = "Different spells in a row: 4th spell gets +60% damage"
+		}
+	},
+	[81] = {
+		name = "Leviathan",
+		rarity = "epic",
+		trigger = "onStandStill",
+		cardFrame = "leviathan",
+		descriptions = {
+			[1] = "Stand still 6s: +10% damage for 3s",
+			[2] = "Stand still 6s: +12% damage for 3s",
+			[3] = "Stand still 6s: +14% damage for 3s",
+			[4] = "Stand still 6s: +16% damage for 3s",
+			[5] = "Stand still 6s: +18% damage for 3s",
+			[6] = "Stand still 6s: +20% damage for 3s",
+			[7] = "Stand still 6s: +23% damage for 3s",
+			[8] = "Stand still 6s: +26% damage for 3s",
+			[9] = "Stand still 6s: +30% damage for 3s",
+			[10] = "Stand still 6s: +35% damage for 3s"
+		}
+	},
+	[82] = {
+		name = "Nautilus",
+		rarity = "epic",
+		trigger = "onThink",
+		cardFrame = "nautilus",
+		descriptions = {
+			[1] = "Every 6s: +30% max HP shield, -50% movement speed",
+			[2] = "Every 6s: +35% max HP shield, -50% movement speed",
+			[3] = "Every 6s: +40% max HP shield, -50% movement speed",
+			[4] = "Every 6s: +45% max HP shield, -50% movement speed",
+			[5] = "Every 6s: +50% max HP shield, -50% movement speed",
+			[6] = "Every 6s: +55% max HP shield, -50% movement speed",
+			[7] = "Every 6s: +60% max HP shield, -50% movement speed",
+			[8] = "Every 6s: +65% max HP shield, -50% movement speed",
+			[9] = "Every 6s: +70% max HP shield, -50% movement speed",
+			[10] = "Every 6s: +75% max HP shield, -50% movement speed"
+		}
+	},
+	[83] = {
+		name = "Shielded to the teeth",
+		rarity = "epic",
+		trigger = "onShield",
+		cardFrame = "shielded to the teeth",
+		descriptions = {
+			[1] = "Gain shield: +10% block chance for 5s",
+			[2] = "Gain shield: +12% block chance for 5s",
+			[3] = "Gain shield: +14% block chance for 5s",
+			[4] = "Gain shield: +16% block chance for 5s",
+			[5] = "Gain shield: +18% block chance for 5s",
+			[6] = "Gain shield: +20% block chance for 5s",
+			[7] = "Gain shield: +23% block chance for 5s",
+			[8] = "Gain shield: +26% block chance for 5s",
+			[9] = "Gain shield: +30% block chance for 5s",
+			[10] = "Gain shield: +35% block chance for 5s"
+		}
+	},
+	[84] = {
+		name = "The Pope",
+		rarity = "epic",
+		trigger = "onShieldDamage",
+		cardFrame = "the pope",
+		descriptions = {
+			[1] = "Shield absorbs damage: heal for 30% of absorbed damage",
+			[2] = "Shield absorbs damage: heal for 33% of absorbed damage",
+			[3] = "Shield absorbs damage: heal for 36% of absorbed damage",
+			[4] = "Shield absorbs damage: heal for 39% of absorbed damage",
+			[5] = "Shield absorbs damage: heal for 42% of absorbed damage",
+			[6] = "Shield absorbs damage: heal for 45% of absorbed damage",
+			[7] = "Shield absorbs damage: heal for 48% of absorbed damage",
+			[8] = "Shield absorbs damage: heal for 51% of absorbed damage",
+			[9] = "Shield absorbs damage: heal for 54% of absorbed damage",
+			[10] = "Shield absorbs damage: heal for 57% of absorbed damage"
+		}
+	},
+	[85] = {
+		name = "Wrecking Ball",
+		rarity = "epic",
+		trigger = "onDash",
+		cardFrame = "wrecking ball",
+		descriptions = {
+			[1] = "Dash: +10% max HP shield",
+			[2] = "Dash: +12% max HP shield",
+			[3] = "Dash: +14% max HP shield",
+			[4] = "Dash: +16% max HP shield",
+			[5] = "Dash: +18% max HP shield",
+			[6] = "Dash: +20% max HP shield",
+			[7] = "Dash: +23% max HP shield",
+			[8] = "Dash: +26% max HP shield",
+			[9] = "Dash: +30% max HP shield",
+			[10] = "Dash: +35% max HP shield"
+		}
+	},
+	[86] = {
+		name = "Bubble Gun",
+		rarity = "epic",
+		trigger = "onCrit",
+		cardFrame = "bubble gun",
+		descriptions = {
+			[1] = "Critical hit: +30% crit damage as shield",
+			[2] = "Critical hit: +33% crit damage as shield",
+			[3] = "Critical hit: +36% crit damage as shield",
+			[4] = "Critical hit: +39% crit damage as shield",
+			[5] = "Critical hit: +42% crit damage as shield",
+			[6] = "Critical hit: +45% crit damage as shield",
+			[7] = "Critical hit: +48% crit damage as shield",
+			[8] = "Critical hit: +51% crit damage as shield",
+			[9] = "Critical hit: +54% crit damage as shield",
+			[10] = "Critical hit: +57% crit damage as shield"
+		}
+	},
+	[87] = {
+		name = "The Dancer",
+		rarity = "epic",
+		trigger = "passive",
+		cardFrame = "the dancer",
+		descriptions = {
+			[1] = "+10% crit. Crit: 10% chance gain dodge = crit% for 2s",
+			[2] = "+10% crit. Crit: 12% chance gain dodge = crit% for 2s",
+			[3] = "+10% crit. Crit: 14% chance gain dodge = crit% for 2s",
+			[4] = "+10% crit. Crit: 16% chance gain dodge = crit% for 2s",
+			[5] = "+10% crit. Crit: 18% chance gain dodge = crit% for 2s",
+			[6] = "+10% crit. Crit: 20% chance gain dodge = crit% for 2s",
+			[7] = "+10% crit. Crit: 23% chance gain dodge = crit% for 2s",
+			[8] = "+10% crit. Crit: 26% chance gain dodge = crit% for 2s",
+			[9] = "+10% crit. Crit: 30% chance gain dodge = crit% for 2s",
+			[10] = "+10% crit. Crit: 35% chance gain dodge = crit% for 2s"
+		}
+	},
+	[88] = {
+		name = "Demonic Pact",
+		rarity = "epic",
+		trigger = "onKill",
+		cardFrame = "demonic pact",
+		descriptions = {
+			[1] = "Kill: summons gain shield 10% max HP for 5s",
+			[2] = "Kill: summons gain shield 12% max HP for 5s",
+			[3] = "Kill: summons gain shield 14% max HP for 5s",
+			[4] = "Kill: summons gain shield 16% max HP for 5s",
+			[5] = "Kill: summons gain shield 18% max HP for 5s",
+			[6] = "Kill: summons gain shield 20% max HP for 5s",
+			[7] = "Kill: summons gain shield 23% max HP for 5s",
+			[8] = "Kill: summons gain shield 26% max HP for 5s",
+			[9] = "Kill: summons gain shield 30% max HP for 5s",
+			[10] = "Kill: summons gain shield 35% max HP for 5s"
+		}
+	},
+	[89] = {
+		name = "Gaia",
+		rarity = "legendary",
+		trigger = "passive",
+		cardFrame = "gaia",
+		descriptions = {
+			[1] = "+10% healing. Heals grant shield 10% of heal amount for 5s",
+			[2] = "+12% healing. Heals grant shield 12% of heal amount for 5s",
+			[3] = "+14% healing. Heals grant shield 14% of heal amount for 5s",
+			[4] = "+16% healing. Heals grant shield 16% of heal amount for 5s",
+			[5] = "+18% healing. Heals grant shield 18% of heal amount for 5s",
+			[6] = "+20% healing. Heals grant shield 20% of heal amount for 5s",
+			[7] = "+22% healing. Heals grant shield 23% of heal amount for 5s",
+			[8] = "+24% healing. Heals grant shield 26% of heal amount for 5s",
+			[9] = "+26% healing. Heals grant shield 30% of heal amount for 5s",
+			[10] = "+30% healing. Heals grant shield 35% of heal amount for 5s"
+		}
 	}
 }
