@@ -148,6 +148,7 @@ namespace Otc
         Block,
         CooldownReduction,
         Barrier,
+        ShieldPower,
         LastSkill
     };
 

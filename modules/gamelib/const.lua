@@ -65,7 +65,8 @@ Skill = {
     Dodge = 16,
     Block = 17,
     CooldownReduction = 18,
-    Barrier = 19
+    Barrier = 19,
+    ShieldPower = 20
 }
 
 North = Directions.North

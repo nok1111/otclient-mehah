@@ -409,12 +409,19 @@ MiniWindow
       SkillNameLabel
         !text: tr('cooldown reduction')
       SkillValueLabel
+
+    SmallSkillButton
+      id: skillId20
+      SkillNameLabel
+        !text: tr('shield power')
+      SkillValueLabel  
     
     SmallSkillButton
       id: skillId19
       SkillNameLabel
         !text: tr('barrier')
       SkillValueLabel  
+
     SmallSkillButton
       id: amplification
       visible: false

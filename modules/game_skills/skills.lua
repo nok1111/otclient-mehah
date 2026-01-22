@@ -164,8 +164,8 @@ function setSkillValue(id, value)
     local skill = skillsWindow:recursiveGetChildById(id)
     if skill then
         local widget = skill:getChildById('value')
-        -- Skills that display as percentage: CriticalChance, LifeLeechChance, ManaLeechChance, AttackSpeed, Weaken, ExtraHealing, Dodge, Block, CooldownReduction
-        if id == "skillId7" or id == "skillId9" or id == "skillId11" or id == "skillId13" or id == "skillId14" or id == "skillId15" or id == "skillId16" or id == "skillId17" or id == "skillId18" then
+        -- Skills that display as percentage: CriticalChance, LifeLeechChance, ManaLeechChance, AttackSpeed, Weaken, ExtraHealing, Dodge, Block, CooldownReduction, ShieldPower
+        if id == "skillId7" or id == "skillId9" or id == "skillId11" or id == "skillId13" or id == "skillId14" or id == "skillId15" or id == "skillId16" or id == "skillId17" or id == "skillId18" or id == "skillId20" then
             -- Cap Critical Hit Chance and Dodge display at 100%
             if id == "skillId7" or id == "skillId16" then
                 value = math.min(value, 100)
@@ -325,6 +325,7 @@ function refresh()
     onSkillChange(player, Skill.Block, player:getSkillLevel(Skill.Block), player:getSkillLevelPercent(Skill.Block))
     onSkillChange(player, Skill.CooldownReduction, player:getSkillLevel(Skill.CooldownReduction), player:getSkillLevelPercent(Skill.CooldownReduction))
     onSkillChange(player, Skill.Barrier, player:getSkillLevel(Skill.Barrier), player:getSkillLevelPercent(Skill.Barrier))
+    onSkillChange(player, Skill.ShieldPower, player:getSkillLevel(Skill.ShieldPower), player:getSkillLevelPercent(Skill.ShieldPower))
 
     update()
     updateHeight()
