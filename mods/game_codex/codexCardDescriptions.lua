@@ -928,16 +928,16 @@ Codex.cardDescriptions = {
 		trigger = "onDamageTaken",
 		cardFrame = "twisted mecha",
 		descriptions = {
-			[1] = "you recive +10% more energy damage. Every 10 attack spells: chain lightning dealing 50% of its damage",
-			[2] = "you recive +12% more energy damage. Every 10 attack spells: chain lightning dealing 60% of its damage",
-			[3] = "you recive +14% more energy damage. Every 10 attack spells: chain lightning dealing 70% of its damage",
-			[4] = "you recive +16% more energy damage. Every 10 attack spells: chain lightning dealing 80% of its damage",
-			[5] = "you recive +18% more energy damage. Every 10 attack spells: chain lightning dealing 90% of its damage",
-			[6] = "you recive +20% more energy damage. Every 10 attack spells: chain lightning dealing 100% of its damage",
-			[7] = "you recive +23% more energy damage. Every 10 attack spells: chain lightning dealing 110% of its damage",
-			[8] = "you recive +26% more energy damage. Every 10 attack spells: chain lightning dealing 120% of its damage",
-			[9] = "you recive +30% more energy damage. Every 10 attack spells: chain lightning dealing 130% of its damage",
-			[10] = "you recive +35% more energy damage. Every 10 attack spells: chain lightning dealing 140% of its damage"
+			[1] = "+30% energy received damage. Every 10 spells: chain lightning",
+			[2] = "+25% energy received damage. Every 10 spells: chain lightning",
+			[3] = "+20% energy received damage. Every 10 spells: chain lightning",
+			[4] = "+18% energy received damage. Every 10 spells: chain lightning",
+			[5] = "+16% energy received damage. Every 10 spells: chain lightning",
+			[6] = "+14% energy received damage. Every 10 spells: chain lightning",
+			[7] = "+12% energy received damage. Every 10 spells: chain lightning",
+			[8] = "+10% energy received damage. Every 10 spells: chain lightning",
+			[9] = "+8% energy received damage. Every 10 spells: chain lightning",
+			[10] = "+6% energy received damage. Every 10 spells: chain lightning"
 		}
 	},
 	[53] = {
@@ -1605,5 +1605,63 @@ Codex.cardDescriptions = {
 			[9] = "+26% healing. Heals grant shield 30% of heal amount for 5s",
 			[10] = "+30% healing. Heals grant shield 35% of heal amount for 5s"
 		}
+	},
+	[90] = {
+		name = "Kiss of Heavens",
+		rarity = "epic",
+		trigger = "onDefensiveSpell",
+		cardFrame = "kiss of heavens",
+		descriptions = {
+			[1] = "Defensive spell: 12% chance heal 5% max HP + stun enemies 3s",
+			[2] = "+12% healing. Heals grant shield 12% of heal amount for 5s",
+			[3] = "+14% healing. Heals grant shield 14% of heal amount for 5s",
+			[4] = "+16% healing. Heals grant shield 16% of heal amount for 5s",
+			[5] = "+18% healing. Heals grant shield 18% of heal amount for 5s",
+			[6] = "+20% healing. Heals grant shield 20% of heal amount for 5s",
+			[7] = "+22% healing. Heals grant shield 23% of heal amount for 5s",
+			[8] = "+24% healing. Heals grant shield 26% of heal amount for 5s",
+			[9] = "+26% healing. Heals grant shield 30% of heal amount for 5s",
+			[10] = "+30% healing. Heals grant shield 35% of heal amount for 5s"
+		}
+	},
+
+	-- Card 91: Crazy to Shoot (onBowAttack & onWandAttack + onCrit)
+	[91] = {
+		name = "Crazy to Shoot",
+		rarity = "rare",	
+		trigger = "onCrit",
+		cardFrame = "crazy to shoot",
+		descriptions = {
+			[1] = "Distance attacks: 12% chance +1% crit (max 10%). Crits: 12% chance +1% attack speed (max 10%)",
+			[2] = "Distance attacks: 14% chance +1% crit (max 12%). Crits: 14% chance +1% attack speed (max 12%)",
+			[3] = "Distance attacks: 16% chance +1% crit (max 14%). Crits: 16% chance +1% attack speed (max 14%)",
+			[4] = "Distance attacks: 18% chance +1% crit (max 16%). Crits: 18% chance +1% attack speed (max 16%)",
+			[5] = "Distance attacks: 20% chance +1% crit (max 18%). Crits: 20% chance +1% attack speed (max 18%)",
+			[6] = "Distance attacks: 23% chance +1% crit (max 20%). Crits: 23% chance +1% attack speed (max 20%)",
+			[7] = "Distance attacks: 26% chance +1% crit (max 23%). Crits: 26% chance +1% attack speed (max 23%)",
+			[8] = "Distance attacks: 30% chance +1% crit (max 26%). Crits: 30% chance +1% attack speed (max 26%)",
+			[9] = "Distance attacks: 35% chance +1% crit (max 30%). Crits: 35% chance +1% attack speed (max 30%)",
+			[10] = "Distance attacks: 40% chance +1% crit (max 35%). Crits: 40% chance +1% attack speed (max 35%)"
+		}
+	},
+
+	-- Card 92: Blood Pool (onHit - melee only, handled by unified_passives.lua)
+	[92] = {
+		name = "Blood Pool",
+		rarity = "rare",
+		trigger = "onHit",
+		cardFrame = "blood pool",	
+		descriptions = {
+			[1] = "Melee hits: 12% chance +5% attack speed & life leech for 5s (5s cooldown)",
+			[2] = "Melee hits: 14% chance +6% attack speed & life leech for 5s (5s cooldown)",
+			[3] = "Melee hits: 16% chance +7% attack speed & life leech for 5s (5s cooldown)",
+			[4] = "Melee hits: 18% chance +8% attack speed & life leech for 5s (5s cooldown)",
+			[5] = "Melee hits: 20% chance +9% attack speed & life leech for 5s (5s cooldown)",
+			[6] = "Melee hits: 23% chance +10% attack speed & life leech for 5s (5s cooldown)",
+			[7] = "Melee hits: 26% chance +11% attack speed & life leech for 5s (5s cooldown)",
+			[8] = "Melee hits: 30% chance +12% attack speed & life leech for 5s (5s cooldown)",
+			[9] = "Melee hits: 35% chance +14% attack speed & life leech for 5s (5s cooldown)",
+			[10] = "Melee hits: 40% chance +16% attack speed & life leech for 5s (5s cooldown)"
+		},
 	}
 }
