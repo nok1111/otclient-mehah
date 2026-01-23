@@ -66,7 +66,14 @@ Skill = {
     Block = 17,
     CooldownReduction = 18,
     Barrier = 19,
-    ShieldPower = 20
+    ShieldPower = 20,
+    FireDamage = 21,
+    EarthDamage = 22,
+    HolyDamage = 23,
+    PhysicalDamage = 24,
+    IceDamage = 25,
+    EnergyDamage = 26,
+    DeathDamage = 27
 }
 
 North = Directions.North

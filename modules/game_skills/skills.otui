@@ -423,6 +423,48 @@ MiniWindow
       SkillValueLabel  
 
     SmallSkillButton
+      id: skillId21
+      SkillNameLabel
+        !text: tr('fire damage')
+      SkillValueLabel
+
+    SmallSkillButton
+      id: skillId22
+      SkillNameLabel
+        !text: tr('earth damage')
+      SkillValueLabel
+
+    SmallSkillButton
+      id: skillId23
+      SkillNameLabel
+        !text: tr('holy damage')
+      SkillValueLabel
+
+    SmallSkillButton
+      id: skillId24
+      SkillNameLabel
+        !text: tr('physical damage')
+      SkillValueLabel
+
+    SmallSkillButton
+      id: skillId25
+      SkillNameLabel
+        !text: tr('ice damage')
+      SkillValueLabel
+
+    SmallSkillButton
+      id: skillId26
+      SkillNameLabel
+        !text: tr('energy damage')
+      SkillValueLabel
+
+    SmallSkillButton
+      id: skillId27
+      SkillNameLabel
+        !text: tr('death damage')
+      SkillValueLabel
+
+    SmallSkillButton
       id: amplification
       visible: false
       SkillNameLabel
