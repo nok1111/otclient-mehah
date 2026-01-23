@@ -164,8 +164,8 @@ function setSkillValue(id, value)
     local skill = skillsWindow:recursiveGetChildById(id)
     if skill then
         local widget = skill:getChildById('value')
-        -- Skills that display as percentage: CriticalChance, LifeLeechChance, ManaLeechChance, AttackSpeed, Weaken, ExtraHealing, Dodge, Block, CooldownReduction, ShieldPower
-        if id == "skillId7" or id == "skillId9" or id == "skillId11" or id == "skillId13" or id == "skillId14" or id == "skillId15" or id == "skillId16" or id == "skillId17" or id == "skillId18" or id == "skillId20" then
+        -- Skills that display as percentage: CriticalChance, LifeLeechChance, ManaLeechChance, AttackSpeed, Weaken, ExtraHealing, Dodge, Block, CooldownReduction, ShieldPower, FireDamage, EarthDamage, HolyDamage, PhysicalDamage, IceDamage, EnergyDamage, DeathDamage
+        if id == "skillId7" or id == "skillId9" or id == "skillId11" or id == "skillId13" or id == "skillId14" or id == "skillId15" or id == "skillId16" or id == "skillId17" or id == "skillId18" or id == "skillId20" or id == "skillId21" or id == "skillId22" or id == "skillId23" or id == "skillId24" or id == "skillId25" or id == "skillId26" or id == "skillId27" then
             -- Cap Critical Hit Chance and Dodge display at 100%
             if id == "skillId7" or id == "skillId16" then
                 value = math.min(value, 100)
@@ -326,6 +326,13 @@ function refresh()
     onSkillChange(player, Skill.CooldownReduction, player:getSkillLevel(Skill.CooldownReduction), player:getSkillLevelPercent(Skill.CooldownReduction))
     onSkillChange(player, Skill.Barrier, player:getSkillLevel(Skill.Barrier), player:getSkillLevelPercent(Skill.Barrier))
     onSkillChange(player, Skill.ShieldPower, player:getSkillLevel(Skill.ShieldPower), player:getSkillLevelPercent(Skill.ShieldPower))
+    onSkillChange(player, Skill.FireDamage, player:getSkillLevel(Skill.FireDamage), player:getSkillLevelPercent(Skill.FireDamage))
+    onSkillChange(player, Skill.EarthDamage, player:getSkillLevel(Skill.EarthDamage), player:getSkillLevelPercent(Skill.EarthDamage))
+    onSkillChange(player, Skill.HolyDamage, player:getSkillLevel(Skill.HolyDamage), player:getSkillLevelPercent(Skill.HolyDamage))
+    onSkillChange(player, Skill.PhysicalDamage, player:getSkillLevel(Skill.PhysicalDamage), player:getSkillLevelPercent(Skill.PhysicalDamage))
+    onSkillChange(player, Skill.IceDamage, player:getSkillLevel(Skill.IceDamage), player:getSkillLevelPercent(Skill.IceDamage))
+    onSkillChange(player, Skill.EnergyDamage, player:getSkillLevel(Skill.EnergyDamage), player:getSkillLevelPercent(Skill.EnergyDamage))
+    onSkillChange(player, Skill.DeathDamage, player:getSkillLevel(Skill.DeathDamage), player:getSkillLevelPercent(Skill.DeathDamage))
 
     update()
     updateHeight()

@@ -149,6 +149,13 @@ namespace Otc
         CooldownReduction,
         Barrier,
         ShieldPower,
+        FireDamage,
+        EarthDamage,
+        HolyDamage,
+        PhysicalDamage,
+        IceDamage,
+        EnergyDamage,
+        DeathDamage,
         LastSkill
     };
 
