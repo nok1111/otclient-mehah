@@ -1,0 +1,6 @@
+Font
+  name: roboto-rounded-30px
+  texture: roboto-rounded-30px
+  height: 36
+  glyph-size: 36 36
+  space-width: 3

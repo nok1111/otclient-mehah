@@ -2,7 +2,7 @@
 -- Lightweight module for handling creature titles and outfit offsets
 
 local playerTitles = {
-    ["Nokturno"] = {title = "[Admin]", color = "alpha", offsetX = -15, offsetY = 45}  -- offsetX/offsetY opcional
+    ["Nokturno"] = {title = "[Admin]", color = "alpha", offsetX = -15, offsetY = 50}  -- offsetX/offsetY opcional
 }
 
 local npcTitles = {
@@ -131,7 +131,7 @@ local creatureWidgets = {}  -- Track widgets by creature ID
 
 -- Global default offsets for all NPCs/Players/Creatures
 local globalOffsets = {
-    npc = {offsetX = 0, offsetY = 15},      -- Default for all NPCs
+    npc = {offsetX = 0, offsetY = 23},      -- Default for all NPCs
     player = {offsetX = 0, offsetY = 0},   -- Default for all Players
     creature = {offsetX = 0, offsetY = 0}  -- Default for all Creatures
 }

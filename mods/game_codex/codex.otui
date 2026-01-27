@@ -264,6 +264,7 @@ MainWindow
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         text: Page 1 / 1
+        width: 100
         color: #ffffff
       
       Button

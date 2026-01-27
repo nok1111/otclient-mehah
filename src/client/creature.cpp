@@ -197,7 +197,7 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
     }
 
     auto backgroundRect = Rect(p.x - (13.5), p.y - cropSizeBackGround, 40, 6);
-    auto textRect = Rect(p.x - nameSize.width() / 2.0, p.y - cropSizeText, nameSize);
+    auto textRect = Rect(p.x - nameSize.width() / 2.0, p.y - cropSizeText - 4, nameSize);
 
     if (!isScaled) {
         backgroundRect.bind(parentRect);
@@ -335,7 +335,7 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
         g_drawPool.addTexturedPos(m_typeTexture, static_cast<int>(backgroundRect.x() + 36), healthBarY - 26);
 
     if (m_icon != Otc::NpcIconNone && m_iconTexture)
-        g_drawPool.addTexturedPos(m_iconTexture, static_cast<int>(backgroundRect.x() + 12), healthBarY - 26);
+        g_drawPool.addTexturedPos(m_iconTexture, static_cast<int>(backgroundRect.x() + 50), healthBarY - 2);
 
     if (g_gameConfig.drawTyping() && getTyping() && m_typingIconTexture)
         g_drawPool.addTexturedPos(m_typingIconTexture, p.x + (nameSize.width() / 2.0) + 2, textRect.y() - 6);

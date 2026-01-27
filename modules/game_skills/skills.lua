@@ -165,7 +165,7 @@ function setSkillValue(id, value)
     if skill then
         local widget = skill:getChildById('value')
         -- Skills that display as percentage: CriticalChance, LifeLeechChance, ManaLeechChance, AttackSpeed, Weaken, ExtraHealing, Dodge, Block, CooldownReduction, ShieldPower, FireDamage, EarthDamage, HolyDamage, PhysicalDamage, IceDamage, EnergyDamage, DeathDamage
-        if id == "skillId7" or id == "skillId9" or id == "skillId11" or id == "skillId13" or id == "skillId14" or id == "skillId15" or id == "skillId16" or id == "skillId17" or id == "skillId18" or id == "skillId20" or id == "skillId21" or id == "skillId22" or id == "skillId23" or id == "skillId24" or id == "skillId25" or id == "skillId26" or id == "skillId27" then
+        if id == "skillId7" or id == "skillId10" or id == "skillId12" or id == "skillId13" or id == "skillId14" or id == "skillId15" or id == "skillId16" or id == "skillId17" or id == "skillId18" or id == "skillId20" or id == "skillId21" or id == "skillId22" or id == "skillId23" or id == "skillId24" or id == "skillId25" or id == "skillId26" or id == "skillId27" then
             -- Cap Critical Hit Chance and Dodge display at 100%
             if id == "skillId7" or id == "skillId16" then
                 value = math.min(value, 100)
@@ -316,8 +316,8 @@ function refresh()
 
     -- Parse special skills individually
     onSkillChange(player, Skill.CriticalChance, player:getSkillLevel(Skill.CriticalChance), player:getSkillLevelPercent(Skill.CriticalChance))
-    onSkillChange(player, Skill.LifeLeechChance, player:getSkillLevel(Skill.LifeLeechChance), player:getSkillLevelPercent(Skill.LifeLeechChance))
-    onSkillChange(player, Skill.ManaLeechChance, player:getSkillLevel(Skill.ManaLeechChance), player:getSkillLevelPercent(Skill.ManaLeechChance))
+    onSkillChange(player, Skill.LifeLeechAmount, player:getSkillLevel(Skill.LifeLeechAmount), player:getSkillLevelPercent(Skill.LifeLeechAmount))
+    onSkillChange(player, Skill.ManaLeechAmount, player:getSkillLevel(Skill.ManaLeechAmount), player:getSkillLevelPercent(Skill.ManaLeechAmount))
     onSkillChange(player, Skill.AttackSpeed, player:getSkillLevel(Skill.AttackSpeed), player:getSkillLevelPercent(Skill.AttackSpeed))
     onSkillChange(player, Skill.Weaken, player:getSkillLevel(Skill.Weaken), player:getSkillLevelPercent(Skill.Weaken))
     onSkillChange(player, Skill.ExtraHealing, player:getSkillLevel(Skill.ExtraHealing), player:getSkillLevelPercent(Skill.ExtraHealing))

@@ -4,15 +4,21 @@
 Codex.triggerIcons = {
 	onHit = "/images/icons/row-1-column-1",           -- Espada para ataques
 	passive = "/images/icons/row-2-column-8",       -- Estrella para pasivos
-	onKill = "/images/icons/row-2-column-4",         -- Calavera para kills
+	onKill = "/images/icons/skull",         -- Calavera para kills
 	onDamageTaken = "/images/icons/row-1-column-3",  -- Escudo para daño recibido
 	onDeath = "/images/icons/row-5-column-3",       -- Fuego para muerte/rebirth
 	onSpell = "/images/icons/row-4-column-7",       -- Cristal para hechizos
 	onLowHP = "/images/icons/row-5-column-7",       -- Corazón para low HP
 	onHeal = "/images/icons/row-5-column-2",         -- Corazón verde para heals
 	onCrit = "/images/icons/row-8-column-6",         -- Rayo para críticos
-	onDash = "/images/icons/dash",         -- Bota/velocidad para dash
-	onStandStill = "/images/icons/blast",   -- Piedra/defensa para stand still
+	onDash = "/images/icons/speed",         -- Bota/velocidad para dash
+	onStandStill = "/images/icons/row-7-column-1",   -- Piedra/defensa para stand still
+	onDefensiveSpell = "/images/icons/prey_defense",   -- Piedra/defensa para stand still
+	onShield = "/images/icons/row-1-column-3",   -- Escudo para shield
+	onShieldDamage = "/images/icons/row-2-column-6",   -- Escudo para shield damage
+	onDefensiveSpell = "/images/icons/row-5-column-6",   -- Piedra/defensa para stand still
+	onAttackSpell = "/images/icons/row-5-column-6",
+	onHealingSpell = "/images/icons/row-6-column-1",   -- Cristal para hechizos
 }
 
 ------ Initialization and Termination

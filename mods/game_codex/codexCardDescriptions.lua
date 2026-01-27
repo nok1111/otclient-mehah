@@ -190,16 +190,16 @@ Codex.cardDescriptions = {
 		trigger = "onSpell",
 		cardFrame = "guns lover",
 		descriptions = {
-			[1] = "Dealing damage with a bow or crossbow has a chance 5% to trigger a bullet barrage",
-			[2] = "Dealing damage with a bow or crossbow has a chance 6% to trigger a bullet barrage",
-			[3] = "Dealing damage with a bow or crossbow has a chance 8% to trigger a bullet barrage",
-			[4] = "Dealing damage with a bow or crossbow has a chance 10% to trigger a bullet barrage",
-			[5] = "Dealing damage with a bow or crossbow has a chance 12% to trigger a bullet barrage",
-			[6] = "Dealing damage with a bow or crossbow has a chance 14% to trigger a bullet barrage",
-			[7] = "Dealing damage with a bow or crossbow has a chance 16% to trigger a bullet barrage",
-			[8] = "Dealing damage with a bow or crossbow has a chance 18% to trigger a bullet barrage",
-			[9] = "Dealing damage with a bow or crossbow has a chance 20% to trigger a bullet barrage",
-			[10] = "Dealing damage with a bow or crossbow has a chance 25% to trigger a bullet barrage"
+			[1] = "Ranged attacks: 10% chance for 2x2 AoE (30% + 3% per attack speed%)",
+			[2] = "Ranged attacks: 12% chance for 2x2 AoE (30% + 3% per attack speed%)",
+			[3] = "Ranged attacks: 14% chance for 2x2 AoE (30% + 3% per attack speed%)",
+			[4] = "Ranged attacks: 16% chance for 2x2 AoE (30% + 3% per attack speed%)",
+			[5] = "Ranged attacks: 18% chance for 2x2 AoE (30% + 3% per attack speed%)",
+			[6] = "Ranged attacks: 20% chance for 2x2 AoE (30% + 3% per attack speed%)",
+			[7] = "Ranged attacks: 22% chance for 2x2 AoE (30% + 3% per attack speed%)",
+			[8] = "Ranged attacks: 24% chance for 2x2 AoE (30% + 3% per attack speed%)",
+			[9] = "Ranged attacks: 26% chance for 2x2 AoE (30% + 3% per attack speed%)",
+			[10] = "Ranged attacks: 28% chance for 2x2 AoE (30% + 3% per attack speed%)"
 		}
 	},
 	[12] = {
@@ -546,7 +546,7 @@ Codex.cardDescriptions = {
 	},
 	[31] = {
 		name = "The Dragon",
-		rarity = "legendary",
+		rarity = "rare",
 		trigger = "onHit",
 		cardFrame = "the dragon",
 		descriptions = {
@@ -564,7 +564,7 @@ Codex.cardDescriptions = {
 	},
 	[32] = {
 		name = "Pyromancer",
-		rarity = "rare",
+		rarity = "common",
 		trigger = "onSpell",
 		cardFrame = "pyromancer",
 		descriptions = {
@@ -600,7 +600,7 @@ Codex.cardDescriptions = {
 	},
 	[34] = {
 		name = "Essence Reaver",
-		rarity = "epic",
+		rarity = "common",
 		trigger = "passive",
 		cardFrame = "essence reaver",
 		descriptions = {
@@ -618,7 +618,7 @@ Codex.cardDescriptions = {
 	},
 	[35] = {
 		name = "Frost Dragon",
-		rarity = "epic",
+		rarity = "rare",
 		trigger = "onHit",
 		cardFrame = "frost dragon",
 		descriptions = {
@@ -637,7 +637,7 @@ Codex.cardDescriptions = {
 	[36] = {
 		name = "Blossom Dragon",
 		rarity = "epic",
-		trigger = "onSpell",
+		trigger = "onHealingSpell",
 		cardFrame = "blossom dragon",
 		descriptions = {
 			[1] = "Every 4th healing spell: 3x3 nature damage (80%) + heal 5% max HP",
@@ -690,7 +690,7 @@ Codex.cardDescriptions = {
 	},
 	[39] = {
 		name = "Zeus",
-		rarity = "legendary",
+		rarity = "common",
 		trigger = "onSpell",
 		cardFrame = "zeus",
 		descriptions = {
@@ -708,7 +708,7 @@ Codex.cardDescriptions = {
 	},
 	[40] = {
 		name = "Svarog",
-		rarity = "legendary",
+		rarity = "rare",
 		trigger = "onKill",
 		cardFrame = "svarog",
 		descriptions = {
@@ -744,8 +744,8 @@ Codex.cardDescriptions = {
 	},
 	[42] = {
 		name = "Yacy",
-		rarity = "legendary",
-		trigger = "onSpell",
+		rarity = "epic",
+		trigger = "onHealingSpell",
 		cardFrame = "yacy",
 		descriptions = {
 			[1] = "Healing spells deal 10% AoE damage, damage spells heal for 5% AoE",
@@ -780,7 +780,7 @@ Codex.cardDescriptions = {
 	},
 	[44] = {
 		name = "The Obelisk",
-		rarity = "epic",
+		rarity = "common",
 		trigger = "onStandStill",
 		cardFrame = "the obelisk",
 		descriptions = {
@@ -798,7 +798,7 @@ Codex.cardDescriptions = {
 	},
 	[45] = {
 		name = "The Bull",
-		rarity = "epic",
+		rarity = "common",
 		trigger = "onDash",
 		cardFrame = "the bull",
 		descriptions = {
@@ -816,7 +816,7 @@ Codex.cardDescriptions = {
 	},
 	[46] = {
 		name = "The Dwarf",
-		rarity = "rare",
+		rarity = "common",
 		trigger = "onDamageTaken",
 		cardFrame = "the dwarf",
 		descriptions = {
@@ -924,7 +924,7 @@ Codex.cardDescriptions = {
 	},
 	[52] = {
 		name = "Twisted Mecha",
-		rarity = "epic",
+		rarity = "rare",
 		trigger = "onDamageTaken",
 		cardFrame = "twisted mecha",
 		descriptions = {
@@ -942,7 +942,7 @@ Codex.cardDescriptions = {
 	},
 	[53] = {
 		name = "Bad Circuit",
-		rarity = "rare",
+		rarity = "common",
 		trigger = "onDamageTaken",
 		cardFrame = "bad circuit",
 		descriptions = {
@@ -960,7 +960,7 @@ Codex.cardDescriptions = {
 	},
 	[54] = {
 		name = "The Opportunist",
-		rarity = "rare",
+		rarity = "common",
 		trigger = "onHit",
 		cardFrame = "the opportunist",
 		descriptions = {
@@ -996,7 +996,7 @@ Codex.cardDescriptions = {
 	},
 	[56] = {
 		name = "The Fairy",
-		rarity = "common",
+		rarity = "epic",
 		trigger = "passive",
 		cardFrame = "the fairy",
 		descriptions = {
@@ -1014,7 +1014,7 @@ Codex.cardDescriptions = {
 	},
 	[57] = {
 		name = "Centaur",
-		rarity = "rare",
+		rarity = "common",
 		trigger = "passive",
 		cardFrame = "centaur",
 		descriptions = {
@@ -1032,25 +1032,25 @@ Codex.cardDescriptions = {
 	},
 	[58] = {
 		name = "Lone Wolf",
-		rarity = "rare",
+		rarity = "epic",
 		trigger = "onKill",
-		cardFrame = "lone wolf",
+		cardFrame = "dire wolf",
 		descriptions = {
-			[1] = "When solo: kills heal 10% HP/Mana and grant +5% exp",
-			[2] = "When solo: kills heal 12% HP/Mana and grant +6% exp",
-			[3] = "When solo: kills heal 14% HP/Mana and grant +7% exp",
-			[4] = "When solo: kills heal 16% HP/Mana and grant +8% exp",
-			[5] = "When solo: kills heal 18% HP/Mana and grant +9% exp",
-			[6] = "When solo: kills heal 20% HP/Mana and grant +10% exp",
-			[7] = "When solo: kills heal 23% HP/Mana and grant +11% exp",
-			[8] = "When solo: kills heal 26% HP/Mana and grant +12% exp",
-			[9] = "When solo: kills heal 30% HP/Mana and grant +14% exp",
-			[10] = "When solo: kills heal 35% HP/Mana and grant +16% exp"
+			[1] = "When solo: kills heal 3% HP/Mana and grant +2% exp",
+			[2] = "When solo: kills heal 3.5% HP/Mana and grant +2.5% exp",
+			[3] = "When solo: kills heal 4% HP/Mana and grant +3% exp",
+			[4] = "When solo: kills heal 4.5% HP/Mana and grant +3.5% exp",
+			[5] = "When solo: kills heal 5% HP/Mana and grant +4% exp",
+			[6] = "When solo: kills heal 5.5% HP/Mana and grant +4.5% exp",
+			[7] = "When solo: kills heal 6% HP/Mana and grant +5% exp",
+			[8] = "When solo: kills heal 6.5% HP/Mana and grant +5.5% exp",
+			[9] = "When solo: kills heal 7% HP/Mana and grant +6% exp",
+			[10] = "When solo: kills heal 7.5% HP/Mana and grant +6.5% exp"
 		}
 	},
 	[59] = {
 		name = "The Greed",
-		rarity = "rare",
+		rarity = "common",
 		trigger = "passive",
 		cardFrame = "the greed",
 		descriptions = {
@@ -1068,8 +1068,8 @@ Codex.cardDescriptions = {
 	},
 	[60] = {
 		name = "Barry the Hunter",
-		rarity = "epic",
-		trigger = "onKill",
+		rarity = "common",
+		trigger = "passive",
 		cardFrame = "barry the hunter",
 		descriptions = {
 			[1] = "+1% distance skill per 700 max HP",
@@ -1090,16 +1090,16 @@ Codex.cardDescriptions = {
 		trigger = "onKill",
 		cardFrame = "the apprentice",
 		descriptions = {
-			[1] = "2% chance to gain 1 codex knowledge on kill",
-			[2] = "3% chance to gain 2 codex knowledge on kill",
-			[3] = "4% chance to gain 3 codex knowledge on kill",
-			[4] = "5% chance to gain 4 codex knowledge on kill",
-			[5] = "6% chance to gain 5 codex knowledge on kill",
-			[6] = "7% chance to gain 6 codex knowledge on kill",
-			[7] = "8% chance to gain 7 codex knowledge on kill",
-			[8] = "9% chance to gain 8 codex knowledge on kill",
-			[9] = "10% chance to gain 9 codex knowledge on kill",
-			[10] = "12% chance to gain 11 codex knowledge on kill"
+			[1] = "3% chance to gain 1 codex knowledge on kill",
+			[2] = "3.1% chance to gain 2 codex knowledge on kill",
+			[3] = "3.2% chance to gain 3 codex knowledge on kill",
+			[4] = "3.3% chance to gain 4 codex knowledge on kill",
+			[5] = "3.4% chance to gain 5 codex knowledge on kill",
+			[6] = "3.5% chance to gain 6 codex knowledge on kill",
+			[7] = "3.6% chance to gain 7 codex knowledge on kill",
+			[8] = "3.7% chance to gain 8 codex knowledge on kill",
+			[9] = "3.8% chance to gain 9 codex knowledge on kill",
+			[10] = "4.2% chance to gain 11 codex knowledge on kill"
 		}
 	},
 	[62] = {
@@ -1122,7 +1122,7 @@ Codex.cardDescriptions = {
 	},
 	[63] = {
 		name = "The Magician",
-		rarity = "rare",
+		rarity = "common",
 		trigger = "passive",
 		cardFrame = "the magician",
 		descriptions = {
@@ -1140,7 +1140,7 @@ Codex.cardDescriptions = {
 	},
 	[64] = {
 		name = "The Druid",
-		rarity = "epic",
+		rarity = "common",
 		trigger = "passive",
 		cardFrame = "the druid",
 		descriptions = {
@@ -1158,38 +1158,38 @@ Codex.cardDescriptions = {
 	},
 	[65] = {
 		name = "Magic Cannon",
-		rarity = "legendary",
-		trigger = "onSpell",
+		rarity = "epic",
+		trigger = "onAttackSpell",
 		cardFrame = "magic cannon",
 		descriptions = {
-			[1] = "Offensive spells: reduce CD by 120ms per tile distance",
-			[2] = "Offensive spells: reduce CD by 110ms per tile distance",
-			[3] = "Offensive spells: reduce CD by 100ms per tile distance",
-			[4] = "Offensive spells: reduce CD by 90ms per tile distance",
-			[5] = "Offensive spells: reduce CD by 80ms per tile distance",
-			[6] = "Offensive spells: reduce CD by 70ms per tile distance",
-			[7] = "Offensive spells: reduce CD by 60ms per tile distance",
-			[8] = "Offensive spells: reduce CD by 50ms per tile distance",
-			[9] = "Offensive spells: reduce CD by 40ms per tile distance",
-			[10] = "Offensive spells: reduce CD by 30ms per tile distance"
+			[1] = "Offensive spells: reduce CD by 150ms per tile distance",
+			[2] = "Offensive spells: reduce CD by 165ms per tile distance",
+			[3] = "Offensive spells: reduce CD by 180ms per tile distance",
+			[4] = "Offensive spells: reduce CD by 195ms per tile distance",
+			[5] = "Offensive spells: reduce CD by 210ms per tile distance",
+			[6] = "Offensive spells: reduce CD by 225ms per tile distance",
+			[7] = "Offensive spells: reduce CD by 240ms per tile distance",
+			[8] = "Offensive spells: reduce CD by 255ms per tile distance",
+			[9] = "Offensive spells: reduce CD by 270ms per tile distance",
+			[10] = "Offensive spells: reduce CD by 285ms per tile distance"
 		}
 	},
 	[66] = {
 		name = "The Sage",
-		rarity = "epic",
+		rarity = "common",
 		trigger = "passive",
 		cardFrame = "the sage",
 		descriptions = {
-			[1] = "+1% max mana from half of max HP",
-			[2] = "+2% max mana from half of max HP",
-			[3] = "+2% max mana from half of max HP",
-			[4] = "+3% max mana from half of max HP",
-			[5] = "+3% max mana from half of max HP",
-			[6] = "+4% max mana from half of max HP",
-			[7] = "+4% max mana from half of max HP",
-			[8] = "+5% max mana from half of max HP",
-			[9] = "+5% max mana from half of max HP",
-			[10] = "+6% max mana from half of max HP"
+			[1] = "gain +30% max mana from your total maximum health",
+			[2] = "gain +40% max mana from your total maximum health",
+			[3] = "gain +50% max mana from your total maximum health",
+			[4] = "gain +60% max mana from your total maximum health",
+			[5] = "gain +70% max mana from your total maximum health",
+			[6] = "gain +80% max mana from your total maximum health",
+			[7] = "gain +90% max mana from your total maximum health",
+			[8] = "gain +100% max mana from your total maximum health",
+			[9] = "gain +110% max mana from your total maximum health",
+			[10] = "gain +120% max mana from your total maximum health"
 		}
 	},
 	[67] = {
@@ -1212,7 +1212,7 @@ Codex.cardDescriptions = {
 	},
 	[68] = {
 		name = "The Pulse",
-		rarity = "epic",
+		rarity = "rare",
 		trigger = "onStandStill",
 		cardFrame = "the pulse",
 		descriptions = {
@@ -1230,7 +1230,7 @@ Codex.cardDescriptions = {
 	},
 	[69] = {
 		name = "Cannibal",
-		rarity = "epic",
+		rarity = "common",
 		trigger = "onKill",
 		cardFrame = "cannibal",
 		descriptions = {
@@ -1266,7 +1266,7 @@ Codex.cardDescriptions = {
 	},
 	[71] = {
 		name = "Triforce",
-		rarity = "legendary",
+		rarity = "epic",
 		trigger = "passive",
 		cardFrame = "triforce",
 		descriptions = {
@@ -1284,25 +1284,25 @@ Codex.cardDescriptions = {
 	},
 	[72] = {
 		name = "Superior",
-		rarity = "rare",
+		rarity = "epic",
 		trigger = "passive",
 		cardFrame = "superior",
 		descriptions = {
 			[1] = "+10% to all skills",
-			[2] = "+12% to all skills",
-			[3] = "+14% to all skills",
-			[4] = "+16% to all skills",
-			[5] = "+18% to all skills",
-			[6] = "+20% to all skills",
-			[7] = "+22% to all skills",
-			[8] = "+24% to all skills",
-			[9] = "+26% to all skills",
-			[10] = "+30% to all skills"
+			[2] = "+11% to all skills",
+			[3] = "+12% to all skills",
+			[4] = "+13% to all skills",
+			[5] = "+14% to all skills",
+			[6] = "+15% to all skills",
+			[7] = "+16% to all skills",
+			[8] = "+17% to all skills",
+			[9] = "+18% to all skills",
+			[10] = "+22% to all skills"
 		}
 	},
 	[73] = {
 		name = "Vengance",
-		rarity = "epic",
+		rarity = "rare",
 		trigger = "onDamageTaken",
 		cardFrame = "vengance",
 		descriptions = {
@@ -1321,19 +1321,19 @@ Codex.cardDescriptions = {
 	[74] = {
 		name = "Snowball",
 		rarity = "common",
-		trigger = "onHit",
+		trigger = "onKill",
 		cardFrame = "snowball",
 		descriptions = {
-			[1] = "Ice spells: +1% crit per consecutive cast (max 40%)",
-			[2] = "Ice spells: +2% crit per consecutive cast (max 40%)",
-			[3] = "Ice spells: +3% crit per consecutive cast (max 40%)",
-			[4] = "Ice spells: +4% crit per consecutive cast (max 40%)",
-			[5] = "Ice spells: +5% crit per consecutive cast (max 40%)",
-			[6] = "Ice spells: +6% crit per consecutive cast (max 40%)",
-			[7] = "Ice spells: +7% crit per consecutive cast (max 40%)",
-			[8] = "Ice spells: +8% crit per consecutive cast (max 40%)",
-			[9] = "Ice spells: +9% crit per consecutive cast (max 40%)",
-			[10] = "Ice spells: +10% crit per consecutive cast (max 40%)"
+			[1] = "On kill: 30% chance frost explosion (lvl x1 to x1.5 dmg, 3x3). Always gain +0.1% ice dmg per kill. Area: 5x5 at 80, 7x7 at 160 stacks (max 100). Reset on death",
+			[2] = "On kill: 35% chance frost explosion (lvl x2 to x3 dmg, 3x3). Always gain +0.2% ice dmg per kill. Area: 5x5 at 80, 7x7 at 160 stacks (max 110). Reset on death",
+			[3] = "On kill: 40% chance frost explosion (lvl x3 to x4.5 dmg, 3x3). Always gain +0.3% ice dmg per kill. Area: 5x5 at 80, 7x7 at 160 stacks (max 120). Reset on death",
+			[4] = "On kill: 45% chance frost explosion (lvl x4 to x6 dmg, 3x3). Always gain +0.4% ice dmg per kill. Area: 5x5 at 85, 7x7 at 170 stacks (max 130). Reset on death",
+			[5] = "On kill: 50% chance frost explosion (lvl x5 to x7.5 dmg, 3x3). Always gain +0.5% ice dmg per kill. Area: 5x5 at 90, 7x7 at 180 stacks (max 140). Reset on death",
+			[6] = "On kill: 55% chance frost explosion (lvl x6 to x9 dmg, 3x3). Always gain +0.6% ice dmg per kill. Area: 5x5 at 95, 7x7 at 190 stacks (max 150). Reset on death",
+			[7] = "On kill: 60% chance frost explosion (lvl x7 to x10.5 dmg, 3x3). Always gain +0.7% ice dmg per kill. Area: 5x5 at 100, 7x7 at 200 stacks (max 160). Reset on death",
+			[8] = "On kill: 65% chance frost explosion (lvl x8 to x12 dmg, 3x3). Always gain +0.8% ice dmg per kill. Area: 5x5 at 100, 7x7 at 200 stacks (max 170). Reset on death",
+			[9] = "On kill: 70% chance frost explosion (lvl x9 to x13.5 dmg, 3x3). Always gain +0.9% ice dmg per kill. Area: 5x5 at 100, 7x7 at 200 stacks (max 180). Reset on death",
+			[10] = "On kill: 80% chance frost explosion (lvl x10 to x15 dmg, 3x3). Always gain +1% ice dmg per kill. Area: 5x5 at 100, 7x7 at 200 stacks (max 200). Reset on death"
 		}
 	},
 	[75] = {
@@ -1392,25 +1392,25 @@ Codex.cardDescriptions = {
 	},
 	[78] = {
 		name = "The Griffin",
-		rarity = "epic",
+		rarity = "legendary",
 		trigger = "passive",
 		cardFrame = "the griffin",
 		descriptions = {
-			[1] = "Physical attacks: +15% damage based on movement speed",
-			[2] = "Physical attacks: +18% damage based on movement speed",
-			[3] = "Physical attacks: +21% damage based on movement speed",
-			[4] = "Physical attacks: +24% damage based on movement speed",
-			[5] = "Physical attacks: +27% damage based on movement speed",
-			[6] = "Physical attacks: +30% damage based on movement speed",
-			[7] = "Physical attacks: +33% damage based on movement speed",
-			[8] = "Physical attacks: +36% damage based on movement speed",
-			[9] = "Physical attacks: +40% damage based on movement speed",
-			[10] = "Physical attacks: +45% damage based on movement speed"
+			[1] = "gain +2% movement speed, Physical attacks: deal more damage based on movement speed",
+			[2] = "gain +4% movement speed, Physical attacks: deal more damage based on movement speed",
+			[3] = "gain +6% movement speed, Physical attacks: deal more damage based on movement speed",
+			[4] = "gain +8% movement speed, Physical attacks: deal more damage based on movement speed",
+			[5] = "gain +10% movement speed, Physical attacks: deal more damage based on movement speed",
+			[6] = "gain +12% movement speed, Physical attacks: deal more damage based on movement speed",
+			[7] = "gain +14% movement speed, Physical attacks: deal more damage based on movement speed",
+			[8] = "gain +16% movement speed, Physical attacks: deal more damage based on movement speed",
+			[9] = "gain +18% movement speed, Physical attacks: deal more damage based on movement speed",
+			[10] = "gain +20% movement speed, Physical attacks: deal more damage based on movement speed"
 		}
 	},
 	[79] = {
 		name = "Giant Slayer",
-		rarity = "epic",
+		rarity = "rare",
 		trigger = "passive",
 		cardFrame = "giant slayer",
 		descriptions = {
@@ -1428,7 +1428,7 @@ Codex.cardDescriptions = {
 	},
 	[80] = {
 		name = "Chainless",
-		rarity = "legendary",
+		rarity = "epic",
 		trigger = "onSpell",
 		cardFrame = "chainless",
 		descriptions = {
@@ -1446,7 +1446,7 @@ Codex.cardDescriptions = {
 	},
 	[81] = {
 		name = "Leviathan",
-		rarity = "epic",
+		rarity = "rare",
 		trigger = "onStandStill",
 		cardFrame = "leviathan",
 		descriptions = {
@@ -1464,8 +1464,8 @@ Codex.cardDescriptions = {
 	},
 	[82] = {
 		name = "Nautilus",
-		rarity = "epic",
-		trigger = "onThink",
+		rarity = "rare",
+		trigger = "passive",
 		cardFrame = "nautilus",
 		descriptions = {
 			[1] = "Every 6s: +30% max HP shield, -50% movement speed",
@@ -1482,9 +1482,9 @@ Codex.cardDescriptions = {
 	},
 	[83] = {
 		name = "Shielded to the teeth",
-		rarity = "epic",
+		rarity = "rare",
 		trigger = "onShield",
-		cardFrame = "shielded to the teeth",
+		cardFrame = "armored to the teeth",
 		descriptions = {
 			[1] = "Gain shield: +10% block chance for 5s",
 			[2] = "Gain shield: +12% block chance for 5s",
@@ -1500,27 +1500,27 @@ Codex.cardDescriptions = {
 	},
 	[84] = {
 		name = "The Pope",
-		rarity = "epic",
+		rarity = "common",
 		trigger = "onShieldDamage",
-		cardFrame = "the pope",
+		cardFrame = "thepope",
 		descriptions = {
-			[1] = "Shield absorbs damage: heal for 30% of absorbed damage",
-			[2] = "Shield absorbs damage: heal for 33% of absorbed damage",
-			[3] = "Shield absorbs damage: heal for 36% of absorbed damage",
-			[4] = "Shield absorbs damage: heal for 39% of absorbed damage",
-			[5] = "Shield absorbs damage: heal for 42% of absorbed damage",
-			[6] = "Shield absorbs damage: heal for 45% of absorbed damage",
-			[7] = "Shield absorbs damage: heal for 48% of absorbed damage",
-			[8] = "Shield absorbs damage: heal for 51% of absorbed damage",
-			[9] = "Shield absorbs damage: heal for 54% of absorbed damage",
-			[10] = "Shield absorbs damage: heal for 57% of absorbed damage"
+			[1] = "Shield absorbs damage: heal 10% of absorbed damage",
+			[2] = "Shield absorbs damage: heal 12% of absorbed damage",
+			[3] = "Shield absorbs damage: heal 14% of absorbed damage",
+			[4] = "Shield absorbs damage: heal 16% of absorbed damage",
+			[5] = "Shield absorbs damage: heal 18% of absorbed damage",
+			[6] = "Shield absorbs damage: heal 20% of absorbed damage",
+			[7] = "Shield absorbs damage: heal 23% of absorbed damage",
+			[8] = "Shield absorbs damage: heal 26% of absorbed damage",
+			[9] = "Shield absorbs damage: heal 30% of absorbed damage",
+			[10] = "Shield absorbs damage: heal 35% of absorbed damage"
 		}
 	},
 	[85] = {
 		name = "Wrecking Ball",
-		rarity = "epic",
+		rarity = "common",
 		trigger = "onDash",
-		cardFrame = "wrecking ball",
+		cardFrame = "wreckingball",
 		descriptions = {
 			[1] = "Dash: +10% max HP shield",
 			[2] = "Dash: +12% max HP shield",
@@ -1538,7 +1538,7 @@ Codex.cardDescriptions = {
 		name = "Bubble Gun",
 		rarity = "epic",
 		trigger = "onCrit",
-		cardFrame = "bubble gun",
+		cardFrame = "bubbles gun",
 		descriptions = {
 			[1] = "Critical hit: +30% crit damage as shield",
 			[2] = "Critical hit: +33% crit damage as shield",
@@ -1558,16 +1558,16 @@ Codex.cardDescriptions = {
 		trigger = "passive",
 		cardFrame = "the dancer",
 		descriptions = {
-			[1] = "+10% crit. Crit: 10% chance gain dodge = crit% for 2s",
-			[2] = "+10% crit. Crit: 12% chance gain dodge = crit% for 2s",
-			[3] = "+10% crit. Crit: 14% chance gain dodge = crit% for 2s",
-			[4] = "+10% crit. Crit: 16% chance gain dodge = crit% for 2s",
-			[5] = "+10% crit. Crit: 18% chance gain dodge = crit% for 2s",
-			[6] = "+10% crit. Crit: 20% chance gain dodge = crit% for 2s",
-			[7] = "+10% crit. Crit: 23% chance gain dodge = crit% for 2s",
-			[8] = "+10% crit. Crit: 26% chance gain dodge = crit% for 2s",
-			[9] = "+10% crit. Crit: 30% chance gain dodge = crit% for 2s",
-			[10] = "+10% crit. Crit: 35% chance gain dodge = crit% for 2s"
+			[1] = "+10% crit. Crit: gain 1% dodge chance for 3 seconds. Dodge: gain 1% critical chance for 3 seconds",
+			[2] = "+10% crit. Crit: gain 2% dodge chance for 3 seconds. Dodge: gain 2% critical chance for 3 seconds",
+			[3] = "+10% crit. Crit: gain 3% dodge chance for 3 seconds. Dodge: gain 3% critical chance for 3 seconds",
+			[4] = "+10% crit. Crit: gain 4% dodge chance for 3 seconds. Dodge: gain 4% critical chance for 3 seconds",
+			[5] = "+10% crit. Crit: gain 5% dodge chance for 3 seconds. Dodge: gain 5% critical chance for 3 seconds",
+			[6] = "+10% crit. Crit: gain 6% dodge chance for 3 seconds. Dodge: gain 6% critical chance for 3 seconds",
+			[7] = "+10% crit. Crit: gain 7% dodge chance for 3 seconds. Dodge: gain 7% critical chance for 3 seconds",
+			[8] = "+10% crit. Crit: gain 8% dodge chance for 3 seconds. Dodge: gain 8% critical chance for 3 seconds",
+			[9] = "+10% crit. Crit: gain 9% dodge chance for 3 seconds. Dodge: gain 9% critical chance for 3 seconds",
+			[10] = "+10% crit. Crit: gain 10% dodge chance for 3 seconds. Dodge: gain 10% critical chance for 3 seconds"
 		}
 	},
 	[88] = {
@@ -1608,27 +1608,27 @@ Codex.cardDescriptions = {
 	},
 	[90] = {
 		name = "Kiss of Heavens",
-		rarity = "epic",
+		rarity = "rare",
 		trigger = "onDefensiveSpell",
 		cardFrame = "kiss of heavens",
 		descriptions = {
 			[1] = "Defensive spell: 12% chance heal 5% max HP + stun enemies 3s",
-			[2] = "+12% healing. Heals grant shield 12% of heal amount for 5s",
-			[3] = "+14% healing. Heals grant shield 14% of heal amount for 5s",
-			[4] = "+16% healing. Heals grant shield 16% of heal amount for 5s",
-			[5] = "+18% healing. Heals grant shield 18% of heal amount for 5s",
-			[6] = "+20% healing. Heals grant shield 20% of heal amount for 5s",
-			[7] = "+22% healing. Heals grant shield 23% of heal amount for 5s",
-			[8] = "+24% healing. Heals grant shield 26% of heal amount for 5s",
-			[9] = "+26% healing. Heals grant shield 30% of heal amount for 5s",
-			[10] = "+30% healing. Heals grant shield 35% of heal amount for 5s"
+			[2] = "Defensive spell: 14% chance heal 6% max HP + stun enemies 3s",
+			[3] = "Defensive spell: 16% chance heal 7% max HP + stun enemies 3s",
+			[4] = "Defensive spell: 18% chance heal 8% max HP + stun enemies 3s",
+			[5] = "Defensive spell: 20% chance heal 9% max HP + stun enemies 3s",
+			[6] = "Defensive spell: 23% chance heal 10% max HP + stun enemies 3s",
+			[7] = "Defensive spell: 26% chance heal 11% max HP + stun enemies 3s",
+			[8] = "Defensive spell: 30% chance heal 12% max HP + stun enemies 3s",
+			[9] = "Defensive spell: 35% chance heal 14% max HP + stun enemies 3s",
+			[10] = "Defensive spell: 40% chance heal 16% max HP + stun enemies 3s"
 		}
 	},
 
 	-- Card 91: Crazy to Shoot (onBowAttack & onWandAttack + onCrit)
 	[91] = {
 		name = "Crazy to Shoot",
-		rarity = "rare",	
+		rarity = "epic",	
 		trigger = "onCrit",
 		cardFrame = "crazy to shoot",
 		descriptions = {
@@ -1663,5 +1663,245 @@ Codex.cardDescriptions = {
 			[9] = "Melee hits: 35% chance +14% attack speed & life leech for 5s (5s cooldown)",
 			[10] = "Melee hits: 40% chance +16% attack speed & life leech for 5s (5s cooldown)"
 		},
+	},
+
+	-- Card 93: Bullet Rain (onBowAttack/onWandAttack - AoE damage scaled by attack speed)
+	[93] = {
+		name = "Bullet Rain",
+		rarity = "common",
+		trigger = "onHit",
+		cardFrame = "bullet rain",
+		descriptions = {
+			[1] = "Ranged attacks: 12% chance for 2x2 AoE (30% + 0.5% per attack speed%)",
+			[2] = "Ranged attacks: 14% chance for 2x2 AoE (30% + 0.5% per attack speed%)",
+			[3] = "Ranged attacks: 16% chance for 2x2 AoE (30% + 0.5% per attack speed%)",
+			[4] = "Ranged attacks: 18% chance for 2x2 AoE (30% + 0.5% per attack speed%)",
+			[5] = "Ranged attacks: 20% chance for 2x2 AoE (30% + 0.5% per attack speed%)",
+			[6] = "Ranged attacks: 23% chance for 2x2 AoE (30% + 0.5% per attack speed%)",
+			[7] = "Ranged attacks: 26% chance for 2x2 AoE (30% + 0.5% per attack speed%)",
+			[8] = "Ranged attacks: 30% chance for 2x2 AoE (30% + 0.5% per attack speed%)",
+			[9] = "Ranged attacks: 35% chance for 2x2 AoE (30% + 0.5% per attack speed%)",
+			[10] = "Ranged attacks: 40% chance for 2x2 AoE (30% + 0.5% per attack speed%)"
+		}
+	},
+
+	-- Card 94: Sniper (onBowAttack/onWandAttack - missile damage scaled by distance)
+	[94] = {
+		name = "Sniper",
+		rarity = "rare",
+		trigger = "onHit",
+		cardFrame = "sniper",
+		descriptions = {
+			[1] = "Ranged attacks: 15% chance for missile (playerLevel * 0.30 * tiles)",
+			[2] = "Ranged attacks: 17% chance for missile (playerLevel * 0.35 * tiles)",
+			[3] = "Ranged attacks: 19% chance for missile (playerLevel * 0.40 * tiles)",
+			[4] = "Ranged attacks: 21% chance for missile (playerLevel * 0.45 * tiles)",
+			[5] = "Ranged attacks: 23% chance for missile (playerLevel * 0.50 * tiles)",
+			[6] = "Ranged attacks: 25% chance for missile (playerLevel * 0.55 * tiles)",
+			[7] = "Ranged attacks: 27% chance for missile (playerLevel * 0.60 * tiles)",
+			[8] = "Ranged attacks: 29% chance for missile (playerLevel * 0.65 * tiles)",
+			[9] = "Ranged attacks: 31% chance for missile (playerLevel * 0.70 * tiles)",
+			[10] = "Ranged attacks: 33% chance for missile (playerLevel * 0.75 * tiles)"
+		}
+	},
+
+	-- Card 95: Doom (onAttack - death damage triggers crit + death damage buff)
+	[95] = {
+		name = "Doom",
+		rarity = "epic",
+		trigger = "onHit",
+		cardFrame = "doom",
+		descriptions = {
+			[1] = "Death damage: 15% chance for buff (+2% crit, +10% death dmg, 5s)",
+			[2] = "Death damage: 17% chance for buff (+3% crit, +12% death dmg, 5s)",
+			[3] = "Death damage: 19% chance for buff (+4% crit, +14% death dmg, 5s)",
+			[4] = "Death damage: 21% chance for buff (+5% crit, +16% death dmg, 5s)",
+			[5] = "Death damage: 23% chance for buff (+6% crit, +18% death dmg, 5s)",
+			[6] = "Death damage: 25% chance for buff (+7% crit, +20% death dmg, 5s)",
+			[7] = "Death damage: 27% chance for buff (+8% crit, +23% death dmg, 5s)",
+			[8] = "Death damage: 29% chance for buff (+9% crit, +26% death dmg, 5s)",
+			[9] = "Death damage: 31% chance for buff (+10% crit, +30% death dmg, 5s)",
+			[10] = "Death damage: 33% chance for buff (+12% crit, +35% death dmg, 5s)"
+		}
+	},
+
+	-- Card 96: Candle of Atonement (Passive bonuses + holy damage shield)
+	[96] = {
+		name = "Candle of Atonement",
+		rarity = "common",
+		trigger = "passive",
+		cardFrame = "candleofattonenment",
+		descriptions = {
+			[1] = "+10% healing, +10% shielding. Holy dmg: shield = 10% dmg (2s, 10s CD)",
+			[2] = "+12% healing, +12% shielding. Holy dmg: shield = 12% dmg (2s, 10s CD)",
+			[3] = "+14% healing, +14% shielding. Holy dmg: shield = 14% dmg (2s, 10s CD)",
+			[4] = "+16% healing, +16% shielding. Holy dmg: shield = 16% dmg (2s, 10s CD)",
+			[5] = "+18% healing, +18% shielding. Holy dmg: shield = 18% dmg (2s, 10s CD)",
+			[6] = "+20% healing, +20% shielding. Holy dmg: shield = 20% dmg (2s, 10s CD)",
+			[7] = "+23% healing, +23% shielding. Holy dmg: shield = 23% dmg (2s, 10s CD)",
+			[8] = "+26% healing, +26% shielding. Holy dmg: shield = 26% dmg (2s, 10s CD)",
+			[9] = "+30% healing, +30% shielding. Holy dmg: shield = 30% dmg (2s, 10s CD)",
+			[10] = "+35% healing, +35% shielding. Holy dmg: shield = 35% dmg (2s, 10s CD)"
+		}
+	},
+
+	-- Card 97: Dark Commander (onDeath - summon death causes AoE damage)
+	[97] = {
+		name = "Dark Commander",
+		rarity = "common",
+		trigger = "passive",
+		cardFrame = "dark commander",
+		descriptions = {
+			[1] = "Summon death: AoE damage = 10% of summon max HP",
+			[2] = "Summon death: AoE damage = 12% of summon max HP",
+			[3] = "Summon death: AoE damage = 14% of summon max HP",
+			[4] = "Summon death: AoE damage = 16% of summon max HP",
+			[5] = "Summon death: AoE damage = 18% of summon max HP",
+			[6] = "Summon death: AoE damage = 20% of summon max HP",
+			[7] = "Summon death: AoE damage = 23% of summon max HP",
+			[8] = "Summon death: AoE damage = 26% of summon max HP",
+			[9] = "Summon death: AoE damage = 30% of summon max HP",
+			[10] = "Summon death: AoE damage = 35% of summon max HP"
+		}
+	},
+
+	-- Card 98: The Hero (onKill - gain fame points)
+	[98] = {
+		name = "The Hero",
+		rarity = "common",
+		trigger = "onKill",
+		cardFrame = "the hero",
+		descriptions = {
+			[1] = "Kill monsters lv 2+: +10% fame points",
+			[2] = "Kill monsters lv 2+: +12% fame points",
+			[3] = "Kill monsters lv 2+: +14% fame points",
+			[4] = "Kill monsters lv 2+: +16% fame points",
+			[5] = "Kill monsters lv 2+: +18% fame points",
+			[6] = "Kill monsters lv 2+: +20% fame points",
+			[7] = "Kill monsters lv 2+: +23% fame points",
+			[8] = "Kill monsters lv 2+: +26% fame points",
+			[9] = "Kill monsters lv 2+: +30% fame points",
+			[10] = "Kill monsters lv 2+: +35% fame points"
+		}
+	},
+
+	-- Card 99: Fire Circus (onSpell - orbital fire rings)
+	[99] = {
+		name = "Fire Circus",
+		rarity = "rare",
+		trigger = "onAttackSpell",
+		cardFrame = "fire circus",
+		descriptions = {
+			[1] = "Attack spells: 12% chance for 5 fire rings (20% dmg each, 6s)",
+			[2] = "Attack spells: 14% chance for 5 fire rings (25% dmg each, 6s)",
+			[3] = "Attack spells: 16% chance for 5 fire rings (30% dmg each, 6s)",
+			[4] = "Attack spells: 18% chance for 5 fire rings (35% dmg each, 6s)",
+			[5] = "Attack spells: 20% chance for 5 fire rings (40% dmg each, 6s)",
+			[6] = "Attack spells: 23% chance for 5 fire rings (45% dmg each, 6s)",
+			[7] = "Attack spells: 26% chance for 5 fire rings (50% dmg each, 6s)",
+			[8] = "Attack spells: 30% chance for 5 fire rings (55% dmg each, 6s)",
+			[9] = "Attack spells: 35% chance for 5 fire rings (60% dmg each, 6s)",
+			[10] = "Attack spells: 40% chance for 5 fire rings (70% dmg each, 6s)"
+		}
+	},
+
+	-- Card 100: Carnival (onKill - explosive balloon summon)
+	[100] = {
+		name = "Carnival",
+		rarity = "legendary",
+		trigger = "onKill",
+		cardFrame = "carnival",
+		descriptions = {
+			[1] = "+1 Magic level, Kill: 15% chance to spawn balloon scaling with magic level + (50% dmg AoE, 3s)",
+			[2] = "+2 Magic level, Kill: 18% chance to spawn balloon scaling with magic level + (60% dmg AoE, 3s)",
+			[3] = "+3 Magic level, Kill: 21% chance to spawn balloon scaling with magic level + (70% dmg AoE, 3s)",
+			[4] = "+4 Magic level, Kill: 24% chance to spawn balloon scaling with magic level + (80% dmg AoE, 3s)",
+			[5] = "+5 Magic level, Kill: 27% chance to spawn balloon scaling with magic level + (90% dmg AoE, 3s)",
+			[6] = "+6 Magic level, Kill: 30% chance to spawn balloon scaling with magic level + (100% dmg AoE, 3s)",
+			[7] = "+7 Magic level, Kill: 33% chance to spawn balloon scaling with magic level + (110% dmg AoE, 3s)",
+			[8] = "+8 Magic level, Kill: 36% chance to spawn balloon scaling with magic level + (120% dmg AoE, 3s)",
+			[9] = "+9 Magic level, Kill: 40% chance to spawn balloon scaling with magic level + (130% dmg AoE, 3s)",
+			[10] = "+10 Magic level, Kill: 45% chance to spawn balloon scaling with magic level + (150% dmg AoE, 3s)"
+		}
+	},
+
+	-- Card 101: The Clown (onAttack - clones throwing pies)
+	[101] = {
+		name = "The Clown",
+		rarity = "rare",
+		trigger = "onAttackSpell",
+		cardFrame = "clown",
+		descriptions = {
+			[1] = "Attack: 5% chance to spawn 1 clone throwing pies",
+			[2] = "Attack: 7% chance to spawn 1 clone throwing pies",
+			[3] = "Attack: 9% chance to spawn 2 clones throwing pies",
+			[4] = "Attack: 11% chance to spawn 2 clones throwing pies",
+			[5] = "Attack: 13% chance to spawn 3 clones throwing pies",
+			[6] = "Attack: 15% chance to spawn 3 clones throwing pies",
+			[7] = "Attack: 17% chance to spawn 4 clones throwing pies",
+			[8] = "Attack: 19% chance to spawn 4 clones throwing pies",
+			[9] = "Attack: 22% chance to spawn 5 clones throwing pies",
+			[10] = "Attack: 25% chance to spawn 6 clones throwing pies"
+		}
+	},
+
+	-- Card 102: Dark Monk (onAttack - death damage buff)
+	[102] = {
+		name = "Dark Monk",
+		rarity = "common",
+		trigger = "onHit",
+		cardFrame = "dark monk",
+		descriptions = {
+			[1] = "Physical damage: 1% chance to gain +1 death damage for 10s",
+			[2] = "Physical damage: 2% chance to gain +2 death damage for 10s",
+			[3] = "Physical damage: 3% chance to gain +3 death damage for 10s",
+			[4] = "Physical damage: 4% chance to gain +4 death damage for 10s",
+			[5] = "Physical damage: 5% chance to gain +5 death damage for 10s",
+			[6] = "Physical damage: 6% chance to gain +6 death damage for 10s",
+			[7] = "Physical damage: 7% chance to gain +7 death damage for 10s",
+			[8] = "Physical damage: 8% chance to gain +8 death damage for 10s",
+			[9] = "Physical damage: 9% chance to gain +9 death damage for 10s",
+			[10] = "Physical damage: 10% chance to gain +10 death damage for 10s"
+		}
+	},
+
+	-- Card 103: The Priest (onHeal - holy charges for spell damage boost)
+	[103] = {
+		name = "The Priest",
+		rarity = "common",
+		trigger = "onHeal",
+		cardFrame = "the priest",
+		descriptions = {
+			[1] = "Heals generate holy charges. At 3 charges: next spell +15% damage",
+			[2] = "Heals generate holy charges. At 3 charges: next spell +18% damage",
+			[3] = "Heals generate holy charges. At 3 charges: next spell +21% damage",
+			[4] = "Heals generate holy charges. At 3 charges: next spell +24% damage",
+			[5] = "Heals generate holy charges. At 3 charges: next spell +27% damage",
+			[6] = "Heals generate holy charges. At 3 charges: next spell +30% damage",
+			[7] = "Heals generate holy charges. At 3 charges: next spell +33% damage",
+			[8] = "Heals generate holy charges. At 3 charges: next spell +36% damage",
+			[9] = "Heals generate holy charges. At 3 charges: next spell +42% damage",
+			[10] = "Heals generate holy charges. At 3 charges: next spell +48% damage"
+		}
+	},
+
+	-- Card 104: Backtoashes (onKill - death missiles to nearby enemies)
+	[104] = {
+		name = "Backtoashes",
+		rarity = "rare",
+		trigger = "onKill",
+		cardFrame = "backtoashes",
+		descriptions = {
+			[1] = "On kill: 5% chance to launch 2 death missiles to enemies in 4x4",
+			[2] = "On kill: 6% chance to launch 2 death missiles to enemies in 4x4",
+			[3] = "On kill: 7% chance to launch 3 death missiles to enemies in 4x4",
+			[4] = "On kill: 8% chance to launch 3 death missiles to enemies in 4x4",
+			[5] = "On kill: 9% chance to launch 4 death missiles to enemies in 4x4",
+			[6] = "On kill: 10% chance to launch 4 death missiles to enemies in 4x4",
+			[7] = "On kill: 11% chance to launch 5 death missiles to enemies in 4x4",
+			[8] = "On kill: 12% chance to launch 5 death missiles to enemies in 4x4",
+			[9] = "On kill: 14% chance to launch 6 death missiles to enemies in 4x4",
+			[10] = "On kill: 16% chance to launch 6 death missiles to enemies in 4x4"
+		}
 	}
 }

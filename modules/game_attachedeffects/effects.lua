@@ -4332,3 +4332,156 @@ AttachedEffectManager.register(357, 'fairy pink aura', 184, ThingCategoryEffect,
         oldOwner:setShader('Outfit - Default')
     end
 })
+
+AttachedEffectManager.register(358, 'the pulse', 875 , ThingCategoryEffect, {
+    opacity = 0.85,
+    speed = 1.3,
+    shader = "Golden",
+    offset = { -32, -32, false}, 
+})
+
+AttachedEffectManager.register(359, 'leviathan', 240 , ThingCategoryEffect, {
+    loop = 1,
+    opacity = 0.85,
+    speed = 0.85,
+    offset = { -25, -25, true}, 
+})
+
+AttachedEffectManager.register(360, 'the necromancer', 301, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        owner:setShader('Ghost')
+        owner:getTile():addThing(e)
+       
+        
+    end,
+})
+
+AttachedEffectManager.register(361, 'sniper', 1171, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -23, -15, true},
+    
+})  
+
+AttachedEffectManager.register(362, 'sniper 2', 992, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -50, -22, true},
+    
+})  
+
+-- Card 99: Fire Circus - 5 Orbital Fire Rings (con rotación real)
+AttachedEffectManager.register(363, 'Fire Circus', 0, 0, {
+    duration = 6000,
+    permanent = false,
+    onAttach = function(effect, owner)
+        local pos = owner:getPosition()
+        local spriteSize = g_gameConfig.getSpriteSize()
+        local radius = 2  -- 2 tiles de radio
+        
+        -- 12 posiciones orbitales
+        local orbitalPositions = {
+            {0, -2},  {1, -2},  {2, -1},  {2,  0},
+            {2,  1},  {1,  2},  {0,  2},  {-1, 2},
+            {-2, 1},  {-2, 0},  {-2, -1}, {-1, -2}
+        }
+        
+        -- 5 anillos con diferentes offsets iniciales
+        local ringOffsets = {0, 2, 5, 7, 10}
+        
+        -- Crear rotación continua usando move() con loop
+        -- Cada missile recorre un segmento y lo repite con loop
+        for ringIndex, ringOffset in ipairs(ringOffsets) do
+            -- Crear 12 segmentos de movimiento (puntos del círculo)
+            for i = 1, #orbitalPositions do
+                local currentIdx = ((i - 1 + ringOffset) % #orbitalPositions) + 1
+                local nextIdx = (currentIdx % #orbitalPositions) + 1
+                
+                local fromOffset = orbitalPositions[currentIdx]
+                local toOffset = orbitalPositions[nextIdx]
+                
+                -- Posiciones absolutas para el movimiento
+                local fromPos = {
+                    x = pos.x + fromOffset[1],
+                    y = pos.y + fromOffset[2],
+                    z = pos.z
+                }
+                local toPos = {
+                    x = pos.x + toOffset[1],
+                    y = pos.y + toOffset[2],
+                    z = pos.z
+                }
+                
+                -- Crear missile con movimiento
+                local missile = AttachedEffect.create(178, ThingCategoryMissile)
+                missile:setOpacity(0.85)
+                missile:setLoop(60)  -- Repetir 60 veces (~6 segundos)
+                missile:move(fromPos, toPos)
+                
+                effect:attachEffect(missile)
+            end
+        end
+        
+        -- Efecto visual en el suelo (estático)
+        local groundRing = AttachedEffect.create(760, ThingCategoryEffect)
+        groundRing:setDuration(6000)
+        groundRing:setOffset(-spriteSize, -spriteSize, false)
+        groundRing:setOpacity(0.7)
+        effect:attachEffect(groundRing)
+        
+        -- Llamarada central al activar
+        local centerFlare = AttachedEffect.create(36, ThingCategoryEffect)
+        centerFlare:setDuration(800)
+        centerFlare:setOffset(0, 0, true)
+        effect:attachEffect(centerFlare)
+    end
+})
+
+AttachedEffectManager.register(364, 'guns lover', 805, ThingCategoryEffect, {--941
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -32, -32, true},
+    
+})  
+
+AttachedEffectManager.register(365, 'Transform clown', 273, ThingCategoryCreature, {
+    transform = true,
+    --duration = 5000,
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(50)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(366, 'Transform balloon', 2929, ThingCategoryCreature, {
+    transform = true,
+    --duration = 5000,
+    onAttach = function(effect, owner)
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        local e = Effect.create()
+        e:setId(50)
+        oldOwner:getTile():addThing(e)
+    end
+})
+
+AttachedEffectManager.register(367, 'back to ashes', 917, ThingCategoryEffect, {
+    opacity = 0.7,
+    speed = 1,
+    offset = { -50, -34, true},
+})
