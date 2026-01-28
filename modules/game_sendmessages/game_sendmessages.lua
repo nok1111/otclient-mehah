@@ -118,25 +118,30 @@ function sendWindowNow(str)
     messageWindow:hide()
     local cfg = convertMessage(str)
     
+    -- Set title (centered, gold color)
     local msg_title = messageWindow:recursiveGetChildById('messageTitle')
-    msg_title:setText(cfg[1])
-    --msg_title:setColor("#fca103")
+    if msg_title then
+        msg_title:setText(cfg[1] or "Notification")
+    end
     
+    -- Set image (centered)
+    local msg_picture = messageWindow:recursiveGetChildById('messagePicture')
+    if msg_picture then
+        if cfg[3] and cfg[3] ~= "" then
+            msg_picture:setImageSource(cfg[3])
+            msg_picture:show()
+        else
+            msg_picture:hide()
+        end
+    end
+    
+    -- Set description text (centered below image)
     local msg_text = messageWindow:recursiveGetChildById('messageText')
-    local children = msg_text:getChildren()
-    for k = 1, #children do
-        children[k]:destroy()
-    end    
-    msg_text:setBorderWidth(0)
-    --local desc = g_ui.createWidget('NewsText', msg_text)
-    msg_text:setText(cfg[2])    
+    if msg_text then
+        msg_text:setText(cfg[2] or "")
+    end
     
-    local msg_picture = messageWindow:recursiveGetChildById('messagePicture')    
-    msg_picture:setImageSource(cfg[3])  
     messageWindow:show()
-	--messageWindow:focus()
-	--messageWindow:grabMouse()
-    
 end
 
 function closeWindow()

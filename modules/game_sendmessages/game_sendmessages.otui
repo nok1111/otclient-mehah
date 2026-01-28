@@ -14,12 +14,11 @@ sendMessagesLabel < Label
 
 HeadlessWindow
   id: sendMessages
-  size: 600 300
+  size: 300 300
   padding: 3
-  image-source: /images/ui/miniwindow
+  image-source: /images/ui/windows/mainwindow
   focusable: false
   draggable: false
-  --@onClick: modules.game_sendmessages.closeWindow()
 
   Button
     size: 24 24
@@ -28,63 +27,49 @@ HeadlessWindow
     anchors.right: parent.right
     @onClick: modules.game_sendmessages.closeWindow()
 
-  Button
+  Label
     id: messageTitle
-    !text: tr('#TITLE_HERE')
-    color: white
-    --font: sans-bold-16px
+    !text: tr('Title')
+    color: #FFD700
+    font: verdana-14px-bold
     text-wrap: true
-    text-auto-resize:true
+    text-auto-resize: true
     anchors.top: parent.top
-    anchors.left: parent.left
+    anchors.horizontalCenter: parent.horizontalCenter
     width: 300
     text-align: center
-    margin-left: 15
-    margin-top: 15
-    focusable: false
-    selectable: false
-
-  UIWidget
-    id: close
-    !text: tr('')
-    text-align: center
-    anchors.bottom: parent.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    @onClick: modules.game_sendmessages.closeWindow()
+    margin-top: 0
+    padding: 10
 
   UIWidget
     id: messagePicture
     anchors.top: messageTitle.bottom
-    anchors.right: parent.right
+    anchors.horizontalCenter: parent.horizontalCenter
     image-source: /images/tutorial.png
     image-align: center
-    image-size: 235 235
-    width: 260
-    margin-top: 5
+    image-size: 128 128
+    size: 128 128
+    margin-top: 15
 
-  VerticalScrollBar
-    id: contentScrollBar
-    anchors.top: messageTitle.bottom
-    anchors.bottom: close.top
-    anchors.left: content.right
-    margin-left: 15
+  Label
+    id: messageText
+    !text: tr('Description')
+    color: white
+    font: verdana-12px
+    text-wrap: true
+    text-auto-resize: true
+    anchors.top: messagePicture.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    width: 280
+    text-align: center
+    margin-top: 15
+    padding: 15
 
-  ScrollablePanel
-    id: content
-    anchors.top: messageTitle.bottom
-    anchors.bottom: close.top
-    anchors.left: parent.left
-    width: 300
-    vertical-scrollbar: contentScrollBar
-
-    UIWidget
-      id: messageText
-      border: 1 #00ff00
-      padding: 3
-      margin-right: 15
-      width: 300
-      anchors.top: parent.top
-      text-wrap: true
-      text-auto-resize:true
-      margin-top: 5
+  Button
+    id: closeButton
+    !text: tr('Close')
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    width: 100
+    margin-bottom: 10
+    @onClick: modules.game_sendmessages.closeWindow()
