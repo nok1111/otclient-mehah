@@ -307,6 +307,17 @@ function onTaskComplete(data)
         message = message .. "Free Locks: +" .. data.rewards.bonus_locks .. "\n"
     end
     
+    if data.rewards.codex_essences and data.rewards.codex_essences > 0 then
+        message = message .. "Codex Essences: +" .. data.rewards.codex_essences .. "\n"
+    end
+    
+    if data.rewards.codex_crate_type and data.rewards.codex_crate_type > 0 then
+        local crateNames = {[1] = "Bronze Crate", [2] = "Silver Crate", [3] = "Golden Crate"}
+        local crateName = crateNames[data.rewards.codex_crate_type] or "Crate"
+        local crateAmount = data.rewards.codex_crate_amount or 1
+        message = message .. crateName .. ": x" .. crateAmount .. "\n"
+    end
+    
     if data.daily_bonus_claimed then
         message = message .. "\nDaily Bonus: +" .. data.daily_bonus_amount .. " Fame!"
     end
@@ -682,6 +693,32 @@ function createTaskCard(task, slot)
             icon = '/images/icons/lock',
             text = '+' .. task.rewards.bonus_locks,
             color = '#FFD700'
+        })
+    end
+    
+    if task.rewards.codex_essences and task.rewards.codex_essences > 0 then
+        table.insert(rewardTypes, {
+            icon = '/images/codex/essence_icon',
+            text = tostring(task.rewards.codex_essences),
+            color = '#A020F0'
+        })
+    end
+    
+    if task.rewards.codex_crate_type and task.rewards.codex_crate_type > 0 then
+        local crateIcons = {
+            [1] = '/images/icons/bronce_crate',
+            [2] = '/images/icons/silver_crate',
+            [3] = '/images/icons/golden_crate'
+        }
+        local crateColors = {
+            [1] = '#CD7F32',
+            [2] = '#C0C0C0',
+            [3] = '#FFD700'
+        }
+        table.insert(rewardTypes, {
+            icon = crateIcons[task.rewards.codex_crate_type] or crateIcons[1],
+            text = 'x' .. (task.rewards.codex_crate_amount or 1),
+            color = crateColors[task.rewards.codex_crate_type] or '#FFFFFF'
         })
     end
     
