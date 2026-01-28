@@ -1868,7 +1868,7 @@ Codex.cardDescriptions = {
 	-- Card 103: The Priest (onHeal - holy charges for spell damage boost)
 	[103] = {
 		name = "The Priest",
-		rarity = "common",
+		rarity = "legendary",
 		trigger = "onHeal",
 		cardFrame = "the priest",
 		descriptions = {

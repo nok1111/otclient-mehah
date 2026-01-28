@@ -4,6 +4,6 @@ Module
   author: Fifth
   sandboxed: true
   autoload: true
-  scripts: [ codexDataConfig, codexCardDescriptions, codex ]
+  scripts: [ codexDataConfig, codexCardDescriptions, codex_filters, codex ]
   @onLoad: Codex.init()
   @onUnload: Codex.terminate()

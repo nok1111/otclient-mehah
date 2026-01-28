@@ -83,6 +83,7 @@ function Codex.onGameStart()
 	Codex.crateAnimationInProgress = false
 	Codex.currentTab = Codex.TAB_COLLECTION
 	Codex.selectedCrateId = 1  -- Default to Bronze
+	Codex.selectedUpgradeCardId = nil  -- For Upgrade tab
 	
 	-- Temporary batch accumulation
 	Codex.tempCardDatabase = {}
@@ -90,6 +91,7 @@ function Codex.onGameStart()
 
 	Codex.setupDialogButtons()
 	Codex.setupTabButtons()
+	Codex.initializeFilters()
 	
 	-- Request initial data from server
 	Codex.sendOpcode({ topic = "base-data-request" })
@@ -127,6 +129,10 @@ function Codex.show()
 	Codex.UI:raise()
 	Codex.UI:focus()
 	Codex.Button:setOn(true)
+	
+	-- Request fresh currency data from server when opening Codex
+	Codex.sendOpcode({ topic = "currency-request" })
+	
 	Codex.switchTab(Codex.currentTab)
 end
 
@@ -151,11 +157,14 @@ function Codex.setupTabButtons()
 	local collectionTab = tabsPanel:getChildById("CollectionTab")
 	local deckTab = tabsPanel:getChildById("DeckTab")
 	local cratesTab = tabsPanel:getChildById("CratesTab")
-	local essencesLabel = tabsPanel:getChildById("EssencesLabel")
+	local upgradeTab = tabsPanel:getChildById("UpgradeTab")
+	local essencesPanel = tabsPanel:getChildById("EssencesPanel")
+	local essencesLabel = essencesPanel and essencesPanel:getChildById("EssencesLabel") or nil
 	
 	print("[Codex] CollectionTab exists: " .. tostring(collectionTab ~= nil))
 	print("[Codex] DeckTab exists: " .. tostring(deckTab ~= nil))
 	print("[Codex] CratesTab exists: " .. tostring(cratesTab ~= nil))
+	print("[Codex] UpgradeTab exists: " .. tostring(upgradeTab ~= nil))
 	print("[Codex] EssencesLabel exists: " .. tostring(essencesLabel ~= nil))
 	
 	if collectionTab then
@@ -176,11 +185,18 @@ function Codex.setupTabButtons()
 			Codex.switchTab(Codex.TAB_CRATES) 
 		end
 	end
+	if upgradeTab then
+		upgradeTab.onClick = function() 
+			print("[Codex] Upgrade tab clicked!")
+			Codex.switchTab(Codex.TAB_UPGRADE) 
+		end
+	end
 	
 	-- Store references for later use
 	Codex.UI.CollectionTab = collectionTab
 	Codex.UI.DeckTab = deckTab
 	Codex.UI.CratesTab = cratesTab
+	Codex.UI.UpgradeTab = upgradeTab
 	Codex.UI.EssencesLabel = essencesLabel
 	
 	-- Update essences display immediately
@@ -198,16 +214,29 @@ function Codex.switchTab(tabId)
 	local collectionPanel = Codex.UI:getChildById("CollectionPanel")
 	local deckPanel = Codex.UI:getChildById("DeckPanel")
 	local cratesPanel = Codex.UI:getChildById("CratesPanel")
+	local upgradePanel = Codex.UI:getChildById("UpgradePanel")
+	local filterPanel = Codex.UI:getChildById("FilterPanel")
 
 	-- Hide all panels
 	if collectionPanel then collectionPanel:hide() end
 	if deckPanel then deckPanel:hide() end
 	if cratesPanel then cratesPanel:hide() end
+	if upgradePanel then upgradePanel:hide() end
+
+	-- Show/hide filter panel based on tab (hide for Crates tab)
+	if filterPanel then
+		if tabId == Codex.TAB_CRATES then
+			filterPanel:hide()
+		else
+			filterPanel:show()
+		end
+	end
 
 	-- Reset tab button states
 	if Codex.UI.CollectionTab then Codex.UI.CollectionTab:setOn(false) end
 	if Codex.UI.DeckTab then Codex.UI.DeckTab:setOn(false) end
 	if Codex.UI.CratesTab then Codex.UI.CratesTab:setOn(false) end
+	if Codex.UI.UpgradeTab then Codex.UI.UpgradeTab:setOn(false) end
 
 	-- Show selected panel and activate tab
 	if tabId == Codex.TAB_COLLECTION then
@@ -229,12 +258,18 @@ function Codex.switchTab(tabId)
 		if cratesPanel then cratesPanel:show() end
 		if Codex.UI.CratesTab then Codex.UI.CratesTab:setOn(true) end
 		Codex.setupCratesUI()
+	elseif tabId == Codex.TAB_UPGRADE then
+		print("[Codex] Showing Upgrade panel")
+		if upgradePanel then upgradePanel:show() end
+		if Codex.UI.UpgradeTab then Codex.UI.UpgradeTab:setOn(true) end
+		Codex.setupUpgradeUI()
 	end
 	
 	-- Store panel references
 	Codex.UI.CollectionPanel = collectionPanel
 	Codex.UI.DeckPanel = deckPanel
 	Codex.UI.CratesPanel = cratesPanel
+	Codex.UI.UpgradePanel = upgradePanel
 end
 
 ------ Collection Tab
@@ -252,26 +287,42 @@ function Codex.setupCollectionUI()
 	print("[Codex] Card database size: " .. table.size(Codex.cachedCardDatabase))
 	print("[Codex] Player cards size: " .. table.size(Codex.cachedCards))
 
-	-- Sort card IDs for consistent pagination
-	local sortedCardIds = {}
+	-- Step 1: Get all card IDs and sort them
+	local allCardIds = {}
 	for cardId, cardData in pairs(Codex.cachedCardDatabase) do
-		table.insert(sortedCardIds, cardId)
-		print("[Codex DEBUG] Found card ID: " .. cardId .. " - " .. cardData.name)
+		table.insert(allCardIds, cardId)
 	end
-	table.sort(sortedCardIds)
+	table.sort(allCardIds)
 	
-	-- Calculate pagination
-	local totalCards = #sortedCardIds
-	local cardsPerPage = Codex.cardsPerPage or 20 -- Fallback to 20
-	local totalPages = math.ceil(totalCards / cardsPerPage)
+	-- Step 2: Filter cards BEFORE pagination
+	local filteredCardIds = {}
+	for _, cardId in ipairs(allCardIds) do
+		local cardData = Codex.cachedCardDatabase[cardId]
+		local cardLevel = Codex.cachedCards[cardId] or 0
+		
+		-- Only include cards that pass the filters
+		if Codex.passesFilters(cardId, cardLevel, cardData) then
+			table.insert(filteredCardIds, cardId)
+		end
+	end
+	
+	-- Step 3: Calculate pagination based on FILTERED cards
+	local totalFilteredCards = #filteredCardIds
+	local cardsPerPage = Codex.cardsPerPage or 20
+	local totalPages = math.max(1, math.ceil(totalFilteredCards / cardsPerPage))
+	
+	-- Ensure current page is valid for filtered results
+	if Codex.currentCollectionPage > totalPages then
+		Codex.currentCollectionPage = totalPages
+	end
+	
 	local startIndex = (Codex.currentCollectionPage - 1) * cardsPerPage + 1
-	local endIndex = math.min(startIndex + cardsPerPage - 1, totalCards)
+	local endIndex = math.min(startIndex + cardsPerPage - 1, totalFilteredCards)
 	
-	print("[Codex DEBUG] Total cards in database: " .. totalCards)
-	print("[Codex DEBUG] Cards per page (Codex.cardsPerPage): " .. tostring(Codex.cardsPerPage))
-	print("[Codex DEBUG] Cards per page (used): " .. cardsPerPage)
-	print("[Codex DEBUG] Division result (totalCards / cardsPerPage): " .. (totalCards / cardsPerPage))
-	print("[Codex DEBUG] Total pages (math.ceil): " .. totalPages)
+	print("[Codex DEBUG] Total cards in database: " .. #allCardIds)
+	print("[Codex DEBUG] Filtered cards: " .. totalFilteredCards)
+	print("[Codex DEBUG] Cards per page: " .. cardsPerPage)
+	print("[Codex DEBUG] Total pages: " .. totalPages)
 	print("[Codex DEBUG] Current page: " .. Codex.currentCollectionPage)
 	print("[Codex DEBUG] Showing cards from index " .. startIndex .. " to " .. endIndex)
 	
@@ -295,10 +346,12 @@ function Codex.setupCollectionUI()
 		end
 	end
 
-	-- Display only cards for current page
+	-- Step 4: Display only cards for current page from FILTERED set
 	for i = startIndex, endIndex do
-		local cardId = sortedCardIds[i]
+		local cardId = filteredCardIds[i]
 		local cardData = Codex.cachedCardDatabase[cardId]
+		local cardLevel = Codex.cachedCards[cardId] or 0
+		
 		print("[Codex] Creating card widget for cardId: " .. cardId .. " - " .. cardData.name)
 		
 		local cardWidget = g_ui.createWidget("CardEntry", collectionGrid)
@@ -307,7 +360,6 @@ function Codex.setupCollectionUI()
 			return
 		end
 		
-		local cardLevel = Codex.cachedCards[cardId] or 0
 		local isUnlocked = cardLevel > 0
 
 		cardWidget:setId("card_" .. cardId)
@@ -354,7 +406,7 @@ function Codex.setupCollectionUI()
 			levelLabel:setId("cardLevelLabel")
 			levelLabel:setFont("verdana-11px-rounded")
 			levelLabel:setTextAutoResize(true)
-			levelLabel:setColor("#FFD700")
+			levelLabel:setColor("#A020F0")
 			levelLabel:addAnchor(AnchorBottom, "parent", AnchorBottom)
 			levelLabel:addAnchor(AnchorLeft, "parent", AnchorLeft)
 			levelLabel:setMarginBottom(17)
@@ -381,7 +433,7 @@ function Codex.setupCollectionUI()
 			expBar:setMarginTop(20)
 			expBar:setMarginLeft(2)
 			expBar:setMarginRight(2)
-			expBar:setBackgroundColor("#FFD700")
+			expBar:setBackgroundColor("#A020F0")
 			expBar:setPercent(expPercent)
 			
 			-- Add exp text label
@@ -535,27 +587,32 @@ function Codex.updateCardDetails()
 			currentLabel:setText("Current (Lvl " .. cardLevel .. "):")
 			currentLabel:setColor("#00ff00")
 			currentLabel:setMarginTop(5)
+			currentLabel:setTextAutoResize(true)
 
 			local currentDescLabel = g_ui.createWidget("Label", cardDetailsPanel.CardDescription)
 			currentDescLabel:setText(currentDesc)
 			currentDescLabel:setTextWrap(true)
+			currentDescLabel:setTextAutoResize(true)
 			currentDescLabel:setMarginTop(2)
 
 			if cardLevel < cardData.maxLevel then
 				local maxLabel = g_ui.createWidget("Label", cardDetailsPanel.CardDescription)
 				maxLabel:setText("Max (Lvl " .. cardData.maxLevel .. "):")
-				maxLabel:setColor("#ffd700")
+				maxLabel:setColor("#A020F0")
 				maxLabel:setMarginTop(10)
+				maxLabel:setTextAutoResize(true)
 
 				local maxDescLabel = g_ui.createWidget("Label", cardDetailsPanel.CardDescription)
 				maxDescLabel:setText(maxDesc)
 				maxDescLabel:setTextWrap(true)
+				maxDescLabel:setTextAutoResize(true)
 				maxDescLabel:setMarginTop(2)
 			end
 		else
 			local lockedLabel = g_ui.createWidget("Label", cardDetailsPanel.CardDescription)
 			lockedLabel:setText("This card is locked. Open crates to unlock it!")
 			lockedLabel:setTextWrap(true)
+			lockedLabel:setTextAutoResize(true)
 			lockedLabel:setColor("#888888")
 		end
 	end
@@ -603,13 +660,18 @@ function Codex.setupDeckUI()
 	for cardId, cardLevel in pairs(Codex.cachedCards) do
 		local cardData = Codex.cachedCardDatabase[cardId]
 		if cardData then
+			-- Apply filters
+			if not Codex.passesFilters(cardId, cardLevel, cardData) then
+				goto continue
+			end
+			
 			local cardWidget = g_ui.createWidget("DeckCardEntry", availableCardsPanel)
 			cardWidget:setId("available_card_" .. cardId)
 			cardWidget.cardId = cardId
 			cardWidget.cardData = cardData
 			
-			-- Set background based on card level
-			local backgroundImage = Codex.getCardBackgroundByLevel(cardLevel)
+			-- Set background based on card rarity
+			local backgroundImage = Codex.getCardBackgroundByRarity(cardData.rarity)
 			cardWidget:setImageSource(backgroundImage)
 			cardWidget:setImageBorder(3)
 			cardWidget:setImageRepeated(false)
@@ -651,7 +713,7 @@ function Codex.setupDeckUI()
 				expBar:setMarginBottom(1)
 				expBar:setMarginLeft(5)
 				expBar:setMarginRight(5)
-				expBar:setBackgroundColor("#FFD700")
+				expBar:setBackgroundColor("#A020F0")
 				expBar:setPercent(expPercent)
 				
 				-- Add exp text label
@@ -659,7 +721,7 @@ function Codex.setupDeckUI()
 				expLabel:setId("expLabel")
 				expLabel:setText(currentExp .. "/" .. expNeeded)
 				expLabel:setFont("verdana-11px-rounded")
-				expLabel:setColor("#FFD700")
+				expLabel:setColor("#A020F0")
 				expLabel:setTextAutoResize(true)
 				expLabel:addAnchor(AnchorBottom, "parent", AnchorBottom)
 				expLabel:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
@@ -680,6 +742,8 @@ function Codex.setupDeckUI()
 			
 			-- Add hover tooltip
 			cardWidget.onHoverChange = Codex.onCardHoverChange
+			
+			::continue::
 		end
 	end
 
@@ -841,7 +905,16 @@ function Codex.updateActiveSlots()
 						local imagePath = Codex.cardImagesPath .. cardData.cardFrame .. ".png"
 						slotCardImage:setImageSource(imagePath)
 						slotCardImage:show()
+						-- Update tooltip data
+						slotCardImage.cardId = activeCardId
+						slotCardImage.cardData = cardData
+						slotCardImage.onHoverChange = Codex.onCardHoverChange
 					end
+					
+					-- Update tooltip data on slot widget itself
+					slotWidget.cardId = activeCardId
+					slotWidget.cardData = cardData
+					slotWidget.onHoverChange = Codex.onCardHoverChange
 					
 					if removeButton then
 						removeButton:show()
@@ -852,9 +925,17 @@ function Codex.updateActiveSlots()
 					end
 				end
 			else
-				-- Empty or locked slot
+				-- Empty or locked slot - clear tooltip data
 				if slotPlaceholder then slotPlaceholder:show() end
-				if slotCardImage then slotCardImage:hide() end
+				if slotCardImage then
+					slotCardImage:hide()
+					slotCardImage.cardId = nil
+					slotCardImage.cardData = nil
+					slotCardImage.onHoverChange = nil
+				end
+				slotWidget.cardId = nil
+				slotWidget.cardData = nil
+				slotWidget.onHoverChange = nil
 				if removeButton then removeButton:hide() end
 			end
 		end
@@ -896,18 +977,18 @@ function Codex.setupCratesUI()
 			[1] = {
 				id = 1,
 				name = "Bronze Crate",
-				craftCost = 25,
+				craftCost = 100,
 				rarityWeights = {
-					common = 85,
-					rare = 12,
-					epic = 3,
-					legendary = 0
+					common = 70,
+					rare = 20,
+					epic = 8,
+					legendary = 2
 				}
 			},
 			[2] = {
 				id = 2,
 				name = "Silver Crate",
-				craftCost = 60,
+				craftCost = 200,
 				rarityWeights = {
 					common = 60,
 					rare = 25,
@@ -918,12 +999,12 @@ function Codex.setupCratesUI()
 			[3] = {
 				id = 3,
 				name = "Golden Crate",
-				craftCost = 120,
+				craftCost = 350,
 				rarityWeights = {
-					common = 40,
-					rare = 35,
-					epic = 20,
-					legendary = 5
+					common = 30,
+					rare = 30,
+					epic = 30,
+					legendary = 10
 				}
 			}
 		}
@@ -990,25 +1071,40 @@ function Codex.setupCratesUI()
 	local craftSilver = craftingPanel:getChildById("CraftSilverButton")
 	local craftGolden = craftingPanel:getChildById("CraftGoldenButton")
 
-	if craftBronze then
-		connect(craftBronze, { onClick = function()
-			print("[Codex] Craft Bronze clicked")
-			Codex.craftCrate(1)
-		end })
-	end
+	-- Only connect handlers once
+	if not Codex.cratesHandlersConnected then
+		if craftBronze then
+			craftBronze.onClick = function()
+				if Codex.craftingInProgress then return end
+				print("[Codex] Craft Bronze clicked")
+				craftBronze:setEnabled(false)
+				Codex.craftCrate(1)
+				scheduleEvent(function() craftBronze:setEnabled(true) end, 600)
+			end
+		end
 
-	if craftSilver then
-		connect(craftSilver, { onClick = function()
-			print("[Codex] Craft Silver clicked")
-			Codex.craftCrate(2)
-		end })
-	end
+		if craftSilver then
+			craftSilver.onClick = function()
+				if Codex.craftingInProgress then return end
+				print("[Codex] Craft Silver clicked")
+				craftSilver:setEnabled(false)
+				Codex.craftCrate(2)
+				scheduleEvent(function() craftSilver:setEnabled(true) end, 600)
+			end
+		end
 
-	if craftGolden then
-		connect(craftGolden, { onClick = function()
-			print("[Codex] Craft Golden clicked")
-			Codex.craftCrate(3)
-		end })
+		if craftGolden then
+			craftGolden.onClick = function()
+				if Codex.craftingInProgress then return end
+				print("[Codex] Craft Golden clicked")
+				craftGolden:setEnabled(false)
+				Codex.craftCrate(3)
+				scheduleEvent(function() craftGolden:setEnabled(true) end, 600)
+			end
+		end
+		
+		Codex.cratesHandlersConnected = true
+		print("[Codex] Crate handlers connected (first time only)")
 	end
 
 	-- Display currently selected crate
@@ -1174,7 +1270,7 @@ function Codex.createBonusEssencesBar(container, amount, chance)
 	-- Bonus label (right-aligned)
 	local label = g_ui.createWidget("Label", barContainer)
 	label:setText("Bonus Essences")
-	label:setColor("#FFD700")
+	label:setColor("#A020F0")
 	label:addAnchor(AnchorLeft, "parent", AnchorLeft)
 	label:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
 	label:setWidth(120)
@@ -1194,7 +1290,7 @@ function Codex.createBonusEssencesBar(container, amount, chance)
 	barFill:addAnchor(AnchorTop, "parent", AnchorTop)
 	barFill:addAnchor(AnchorBottom, "parent", AnchorBottom)
 	barFill:setWidth(math.floor(170 * chance / 100))
-	barFill:setBackgroundColor("#FFD700")
+	barFill:setBackgroundColor("#A020F0")
 	
 	-- Percentage label
 	local percentLabel = g_ui.createWidget("Label", barContainer)
@@ -1202,14 +1298,29 @@ function Codex.createBonusEssencesBar(container, amount, chance)
 	percentLabel:addAnchor(AnchorLeft, "parent", AnchorLeft)
 	percentLabel:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
 	percentLabel:setMarginLeft(310)
-	percentLabel:setColor("#FFD700")
+	percentLabel:setColor("#A020F0")
 end
 
 function Codex.craftCrate(crateId)
+	-- Prevent multiple simultaneous crafts
+	if Codex.craftingInProgress then
+		print("[Codex] Craft already in progress, ignoring request")
+		return
+	end
+	
+	Codex.craftingInProgress = true
+	print("[Codex] Starting craft for crate " .. crateId)
+	
 	Codex.sendOpcode({
 		topic = "craft-crate-request",
 		crateId = crateId
 	})
+	
+	-- Reset flag after a short delay
+	scheduleEvent(function()
+		Codex.craftingInProgress = false
+		print("[Codex] Craft cooldown reset")
+	end, 500)
 end
 
 function Codex.showEssencesBonusOverlay(amount, crateId)
@@ -1582,6 +1693,259 @@ function Codex.onCardHoverChange(widget, hovered)
 	end
 end
 
+------ Upgrade Tab
+
+function Codex.setupUpgradeUI()
+	print("[Codex] Setting up Upgrade UI...")
+	
+	local upgradePanel = Codex.UI.UpgradePanel
+	if not upgradePanel then 
+		print("[Codex] UpgradePanel not found!")
+		return 
+	end
+	
+	local cardGrid = upgradePanel:getChildById("UpgradeCardGrid")
+	if not cardGrid then
+		print("[Codex] UpgradeCardGrid not found!")
+		return
+	end
+	
+	cardGrid:destroyChildren()
+	
+	local ownedCards = {}
+	for cardId, level in pairs(Codex.cachedCards) do
+		if level > 0 then
+			table.insert(ownedCards, cardId)
+		end
+	end
+	table.sort(ownedCards)
+	
+	print("[Codex] Found " .. #ownedCards .. " owned cards for upgrade")
+	
+	for _, cardId in ipairs(ownedCards) do
+		local cardData = Codex.cachedCardDatabase[cardId]
+		if cardData then
+			local cardLevel = Codex.cachedCards[cardId] or 0
+			
+			-- Apply filters
+			if not Codex.passesFilters(cardId, cardLevel, cardData) then
+				goto continue
+			end
+			
+			local cardWidget = g_ui.createWidget("CardEntry", cardGrid)
+			
+			if cardWidget then
+				cardWidget:setId("upgrade_card_" .. cardId)
+				cardWidget.cardId = cardId
+				cardWidget.cardData = cardData
+				
+				local cardImage = cardWidget:getChildById("cardImage")
+				if cardImage then
+					local imagePath = Codex.cardImagesPath .. cardData.cardFrame .. ".png"
+					cardImage:setImageSource(imagePath)
+					cardImage:setImageColor("#ffffff")
+					cardImage:setOpacity(1.0)
+				end
+				
+				local nameLabel = g_ui.createWidget("Label", cardWidget)
+				if nameLabel then
+					nameLabel:setId("cardNameLabel")
+					nameLabel:setText(cardData.name)
+					nameLabel:setColor(Codex.rarityColors[cardData.rarity] or "#ffffff")
+					nameLabel:setFont("verdana-11px-rounded")
+					nameLabel:setTextAlign(AlignBottomCenter)
+					nameLabel:addAnchor(AnchorBottom, "parent", AnchorBottom)
+					nameLabel:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
+					nameLabel:setMarginBottom(10)
+					nameLabel:setTextAutoResize(true)
+				end
+				
+				local levelLabel = g_ui.createWidget("Label", cardWidget)
+				if levelLabel then
+					levelLabel:setId("cardLevelLabel")
+					levelLabel:setFont("verdana-11px-rounded")
+					levelLabel:setTextAutoResize(true)
+					levelLabel:setColor("#A020F0")
+					levelLabel:addAnchor(AnchorBottom, "parent", AnchorBottom)
+					levelLabel:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
+					levelLabel:setMarginBottom(-12)
+					levelLabel:setText("Lv " .. cardLevel .. "/" .. cardData.maxLevel)
+				end
+				
+				if cardLevel < cardData.maxLevel then
+					local currentExp = Codex.cachedCardsExp[cardId] or 0
+					local expNeeded = Codex.cardExpTable[cardLevel] or 1
+					local expPercent = math.floor((currentExp / expNeeded) * 100)
+					
+					local expBar = g_ui.createWidget("ProgressBar", cardWidget)
+					if expBar then
+						expBar:setId("miniExpBar")
+						expBar:addAnchor(AnchorBottom, "parent", AnchorBottom)
+						expBar:addAnchor(AnchorLeft, "parent", AnchorLeft)
+						expBar:addAnchor(AnchorRight, "parent", AnchorRight)
+						expBar:setHeight(6)
+						expBar:setMarginLeft(4)
+						expBar:setMarginRight(4)
+						expBar:setMarginBottom(2)
+						expBar:setBackgroundColor("#A020F0")
+						expBar:setPercent(expPercent)
+					end
+				end
+				
+				cardWidget.onClick = function()
+					Codex.selectUpgradeCard(cardId)
+				end
+			end
+			
+			::continue::
+		end
+	end
+	
+	if Codex.selectedUpgradeCardId and Codex.cachedCards[Codex.selectedUpgradeCardId] then
+		Codex.selectUpgradeCard(Codex.selectedUpgradeCardId)
+	elseif #ownedCards > 0 then
+		Codex.selectUpgradeCard(ownedCards[1])
+	else
+		Codex.clearUpgradeDetails()
+	end
+end
+
+function Codex.selectUpgradeCard(cardId)
+	print("[Codex] Selecting card for upgrade: " .. cardId)
+	
+	Codex.selectedUpgradeCardId = cardId
+	
+	local upgradePanel = Codex.UI.UpgradePanel
+	if not upgradePanel then return end
+	
+	local detailsPanel = upgradePanel:getChildById("UpgradeDetailsPanel")
+	if not detailsPanel then return end
+	
+	local cardData = Codex.cachedCardDatabase[cardId]
+	local cardLevel = Codex.cachedCards[cardId] or 0
+	local currentExp = Codex.cachedCardsExp[cardId] or 0
+	local expNeeded = Codex.cardExpTable[cardLevel] or 0
+	
+	if not cardData then return end
+	
+	local cardImage = detailsPanel:getChildById("UpgradeCardImage")
+	if cardImage then
+		local imagePath = Codex.cardImagesPath .. cardData.cardFrame .. ".png"
+		cardImage:setImageSource(imagePath)
+		cardImage:setVisible(true)
+	end
+	
+	local cardName = detailsPanel:getChildById("UpgradeCardName")
+	if cardName then
+		cardName:setText(cardData.name)
+		cardName:setColor(Codex.rarityColors[cardData.rarity] or "#ffffff")
+	end
+	
+	local cardLevelLabel = detailsPanel:getChildById("UpgradeCardLevel")
+	if cardLevelLabel then
+		cardLevelLabel:setText("Level: " .. cardLevel .. " / " .. cardData.maxLevel)
+	end
+	
+	local expBar = detailsPanel:getChildById("UpgradeExpBar")
+	local expText = detailsPanel:getChildById("UpgradeExpText")
+	if expBar and expText then
+		expBar:setBackgroundColor("#A020F0")
+		if cardLevel < cardData.maxLevel then
+			local expPercent = math.floor((currentExp / expNeeded) * 100)
+			expBar:setPercent(expPercent)
+			expText:setText(currentExp .. " / " .. expNeeded .. " EXP")
+		else
+			expBar:setPercent(100)
+			expText:setText("MAX LEVEL")
+		end
+	end
+	
+	local descLabel = detailsPanel:getChildById("UpgradeCardDescription")
+	if descLabel and cardData.description then
+		local desc = cardData.description[cardLevel] or cardData.description[1] or "-"
+		descLabel:setText(desc)
+	end
+	
+	local nextLevelDesc = detailsPanel:getChildById("UpgradeNextLevelDescription")
+	if nextLevelDesc and cardData.description then
+		if cardLevel < cardData.maxLevel then
+			local nextLevel = cardLevel + 1
+			local nextDesc = cardData.description[nextLevel]
+			if nextDesc then
+				nextLevelDesc:setText("Next Level: " .. nextDesc)
+				nextLevelDesc:setVisible(true)
+			else
+				nextLevelDesc:setVisible(false)
+			end
+		else
+			nextLevelDesc:setVisible(false)
+		end
+	end
+	
+	local feedButton = detailsPanel:getChildById("FeedExpButton")
+	local maxLevelLabel = detailsPanel:getChildById("MaxLevelLabel")
+	
+	if feedButton and maxLevelLabel then
+		if cardLevel >= cardData.maxLevel then
+			feedButton:setEnabled(false)
+			feedButton:setVisible(false)
+			maxLevelLabel:setVisible(true)
+		else
+			feedButton:setEnabled(true)
+			feedButton:setVisible(true)
+			maxLevelLabel:setVisible(false)
+			
+			feedButton.onClick = function()
+				Codex.feedCardExp(cardId)
+			end
+		end
+	end
+end
+
+function Codex.clearUpgradeDetails()
+	local upgradePanel = Codex.UI.UpgradePanel
+	if not upgradePanel then return end
+	
+	local detailsPanel = upgradePanel:getChildById("UpgradeDetailsPanel")
+	if not detailsPanel then return end
+	
+	local cardImage = detailsPanel:getChildById("UpgradeCardImage")
+	if cardImage then cardImage:setVisible(false) end
+	
+	local cardName = detailsPanel:getChildById("UpgradeCardName")
+	if cardName then cardName:setText("Select a card") end
+	
+	local cardLevel = detailsPanel:getChildById("UpgradeCardLevel")
+	if cardLevel then cardLevel:setText("Level: -") end
+	
+	local expBar = detailsPanel:getChildById("UpgradeExpBar")
+	if expBar then expBar:setPercent(0) end
+	
+	local expText = detailsPanel:getChildById("UpgradeExpText")
+	if expText then expText:setText("0 / 0 EXP") end
+	
+	local descLabel = detailsPanel:getChildById("UpgradeCardDescription")
+	if descLabel then descLabel:setText("-") end
+	
+	local feedButton = detailsPanel:getChildById("FeedExpButton")
+	if feedButton then
+		feedButton:setEnabled(false)
+		feedButton:setVisible(true)
+	end
+	
+	local maxLevelLabel = detailsPanel:getChildById("MaxLevelLabel")
+	if maxLevelLabel then maxLevelLabel:setVisible(false) end
+end
+
+function Codex.feedCardExp(cardId)
+	print("[Codex] Feeding EXP to card: " .. cardId)
+	
+	Codex.sendOpcode({
+		topic = "feed-card-exp",
+		cardId = cardId
+	})
+end
+
 ------ Dialogs and Messages
 
 function Codex.setupDialogButtons()
@@ -1851,6 +2215,33 @@ function Codex.onExtendedOpcode(protocol, opcode, buffer)
 		else
 			print("[Codex DEBUG] Crate reward selection failed: " .. tostring(data.message))
 			Codex.setupMessage("Selection Failed", data.message)
+		end
+
+	elseif data.topic == "feed-card-exp-reply" then
+		if data.success then
+			if data.newLevel then
+				Codex.cachedCards[data.cardId] = data.newLevel
+			end
+			if data.newExp ~= nil then
+				Codex.cachedCardsExp[data.cardId] = data.newExp
+			end
+			if data.newEssences ~= nil then
+				Codex.cachedEssences = data.newEssences
+				if Codex.UI.EssencesLabel then
+					Codex.UI.EssencesLabel:setText("Codex Essences: " .. data.newEssences)
+				end
+			end
+			
+			if data.levelUp then
+				print("[Codex] LEVEL UP! Card " .. data.cardId .. " -> Level " .. data.newLevel)
+			end
+			
+			if Codex.currentTab == Codex.TAB_UPGRADE then
+				Codex.setupUpgradeUI()
+			end
+		else
+			print("[Codex] Failed to feed exp: " .. (data.message or "unknown error"))
+			Codex.setupMessage("Cannot Upgrade", data.message or "Not enough resources")
 		end
 
 	elseif data.topic == "message-reply" then

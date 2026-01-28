@@ -172,7 +172,7 @@ LockUI < Panel
 MainWindow
   id: mainWindow
   text: CODEX
-  size: 1000 700
+  size: 1000 800
 
   // Header with Tabs
   Panel
@@ -208,18 +208,198 @@ MainWindow
       width: 100
       !text: tr('Crates')
 
-    Label
-      id: EssencesLabel
+    Button
+      id: UpgradeTab
+      anchors.left: CratesTab.right
+      anchors.top: parent.top
+      margin-left: 5
+      width: 100
+      !text: tr('Upgrade')
+
+    Panel
+      id: EssencesPanel
       anchors.right: parent.right
       anchors.verticalCenter: parent.verticalCenter
-      text: Codex Essences: 0
-      color: #ffff00
+      margin-right: 10
+      width: 180
+      height: 30
+      
+      UIWidget
+        id: EssenceIcon
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        size: 24 24
+        image-source: /images/icons/gem_24px
+        
+      Label
+        id: EssencesLabel
+        anchors.left: EssenceIcon.right
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 5
+        text: Codex Essences: 0
+        color: #A020F0
+
+  // FILTER PANEL
+  Panel
+    id: FilterPanel
+    anchors.top: TabsPanel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 65
+    margin-top: 5
+    margin-left: 10
+    margin-right: 10
+    background-color: #00000080
+    image-source: /images/ui/panel_flat
+    image-border: 3
+
+    TextEdit
+      id: SearchInput
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin-left: 10
+      margin-top: 8
+      width: 200
+      height: 22
+      placeholder: Search cards...
+      font: verdana-11px-rounded
+
+    Label
+      id: TriggerFilterLabel
+      anchors.left: SearchInput.right
+      anchors.top: parent.top
+      margin-left: 15
+      margin-top: 10
+      text: Trigger:
+      font: verdana-11px-rounded
+      color: #ffffff
+
+    ComboBox
+      id: TriggerFilterDropdown
+      anchors.left: TriggerFilterLabel.right
+      anchors.top: parent.top
+      margin-left: 5
+      margin-top: 8
       width: 150
+      height: 22
+      font: verdana-11px-rounded
+
+    Label
+      id: RarityFilterLabel
+      anchors.left: TriggerFilterDropdown.right
+      anchors.top: parent.top
+      margin-left: 15
+      margin-top: 10
+      text: Rarity:
+      font: verdana-11px-rounded
+      color: #ffffff
+
+    CheckBox
+      id: CommonCheckbox
+      anchors.left: RarityFilterLabel.right
+      anchors.top: parent.top
+      margin-left: 5
+      margin-top: 8
+      width: 80
+      !text: tr('Common')
+      font: verdana-11px-rounded
+
+    CheckBox
+      id: RareCheckbox
+      anchors.left: CommonCheckbox.right
+      anchors.top: parent.top
+      margin-left: 5
+      margin-top: 8
+      width: 70
+      !text: tr('Rare')
+      font: verdana-11px-rounded
+
+    CheckBox
+      id: EpicCheckbox
+      anchors.left: RareCheckbox.right
+      anchors.top: parent.top
+      margin-left: 5
+      margin-top: 8
+      width: 70
+      !text: tr('Epic')
+      font: verdana-11px-rounded
+
+    CheckBox
+      id: LegendaryCheckbox
+      anchors.left: EpicCheckbox.right
+      anchors.top: parent.top
+      margin-left: 5
+      margin-top: 8
+      width: 90
+      !text: tr('Legendary')
+      font: verdana-11px-rounded
+
+    Label
+      id: LevelFilterLabel
+      anchors.left: parent.left
+      anchors.top: SearchInput.bottom
+      margin-left: 10
+      margin-top: 8
+      text: Level:
+      font: verdana-11px-rounded
+      color: #ffffff
+
+    CheckBox
+      id: Level1to3Checkbox
+      anchors.left: LevelFilterLabel.right
+      anchors.top: SearchInput.bottom
+      margin-left: 5
+      margin-top: 6
+      width: 70
+      !text: tr('1-3')
+      font: verdana-11px-rounded
+
+    CheckBox
+      id: Level4to6Checkbox
+      anchors.left: Level1to3Checkbox.right
+      anchors.top: SearchInput.bottom
+      margin-left: 5
+      margin-top: 6
+      width: 70
+      !text: tr('4-6')
+      font: verdana-11px-rounded
+
+    CheckBox
+      id: Level7to9Checkbox
+      anchors.left: Level4to6Checkbox.right
+      anchors.top: SearchInput.bottom
+      margin-left: 5
+      margin-top: 6
+      width: 70
+      !text: tr('7-9')
+      font: verdana-11px-rounded
+
+    CheckBox
+      id: Level10Checkbox
+      anchors.left: Level7to9Checkbox.right
+      anchors.top: SearchInput.bottom
+      margin-left: 5
+      margin-top: 6
+      width: 70
+      !text: tr('Max (10)')
+      font: verdana-11px-rounded
+
+    Button
+      id: ClearFiltersButton
+      anchors.right: parent.right
+      anchors.top: parent.top
+      margin-right: 10
+      margin-top: 8
+      width: 100
+      height: 22
+      !text: tr('Clear Filters')
+      font: verdana-11px-rounded
 
   // COLLECTION PANEL
   Panel
     id: CollectionPanel
-    anchors.top: TabsPanel.bottom
+    anchors.top: FilterPanel.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: parent.bottom
@@ -237,6 +417,7 @@ MainWindow
       anchors.bottom: parent.bottom
       width: 680
       image-source: /images/codex/deck_bg
+      margin-top: 30
       image-size: 680 560
       image-fixed-ratio: true
       image-border: 3
@@ -354,7 +535,7 @@ MainWindow
         margin-right: 20
         height: 20
         background-color: #2a2a2a
-        foreground-color: #FFD700
+        foreground-color: #A020F0
         percent: 0
         
       Label
@@ -366,7 +547,7 @@ MainWindow
         text: 0 / 0 EXP
         text-align: center
         font: verdana-11px-rounded
-        color: #FFD700
+        color: #A020F0
 
       Label
         id: CardTrigger
@@ -412,7 +593,7 @@ MainWindow
   // DECK PANEL
   Panel
     id: DeckPanel
-    anchors.top: TabsPanel.bottom
+    anchors.top: FilterPanel.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: parent.bottom
@@ -633,20 +814,187 @@ MainWindow
       Button
         id: CraftBronzeButton
         size: 150 25
-        text: 25 Essences → Bronze
+        text: 100 Essences -> Bronze
         font: verdana-11px-rounded
 
       Button
         id: CraftSilverButton
         size: 150 25
-        text: 60 Essences → Silver
+        text: 200 Essences -> Silver
         font: verdana-11px-rounded
 
       Button
         id: CraftGoldenButton
         size: 150 25
-        text: 120 Essences → Golden
+        text: 350 Essences -> Golden
         font: verdana-11px-rounded
+
+  // UPGRADE PANEL
+  Panel
+    id: UpgradePanel
+    anchors.top: FilterPanel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 5
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 40
+    visible: false
+
+    // Left side: Card Grid
+    UIScrollArea
+      id: UpgradeCardGrid
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      width: 550
+      image-source: /images/ui/window
+      image-border: 6
+      image-border-top: 27
+      text: Cards
+      text-offset: 0 2
+      text-align: top
+      padding-top: 35
+      padding-left: 10
+      padding-right: 10
+      padding-bottom: 10
+      layout:
+        type: grid
+        cell-size: 105 145
+        flow: true
+      vertical-scrollbar: UpgradeGridScrollBar
+
+    VerticalScrollBar
+      id: UpgradeGridScrollBar
+      anchors.top: UpgradeCardGrid.top
+      anchors.bottom: UpgradeCardGrid.bottom
+      anchors.right: UpgradeCardGrid.right
+      margin-right: -10
+      pixels-scroll: true
+      step: 50
+
+    // Right side: Selected Card Details
+    Panel
+      id: UpgradeDetailsPanel
+      anchors.top: parent.top
+      anchors.left: UpgradeCardGrid.right
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-left: 10
+      image-source: /images/ui/window
+      image-border: 6
+      image-border-top: 27
+      text: Card Details
+      text-offset: 0 2
+      text-align: top
+      padding: 20
+
+      UIWidget
+        id: UpgradeCardImage
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        size: 160 205
+        margin-top: 30
+        visible: false
+
+      Label
+        id: UpgradeCardName
+        anchors.top: UpgradeCardImage.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 20
+        text: Select a card
+        text-align: center
+        font: verdana-11px-rounded
+        color: #ffffff
+
+      Label
+        id: UpgradeCardLevel
+        anchors.top: UpgradeCardName.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 8
+        text: Level: -
+        text-align: center
+        font: verdana-11px-rounded
+        color: #ffff00
+
+      ProgressBar
+        id: UpgradeExpBar
+        anchors.top: UpgradeCardLevel.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 15
+        margin-left: 30
+        margin-right: 30
+        height: 25
+        background-color: #2a2a2a
+        foreground-color: #A020F0
+        percent: 0
+
+      Label
+        id: UpgradeExpText
+        anchors.top: UpgradeExpBar.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 8
+        text: 0 / 0 EXP
+        text-align: center
+        font: verdana-11px-rounded
+        color: #A020F0
+
+      Label
+        id: UpgradeCardDescription
+        anchors.top: UpgradeExpText.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 25
+        margin-left: 15
+        margin-right: 15
+        text: -
+        text-align: center
+        text-wrap: true
+        text-auto-resize: true
+        font: verdana-11px-rounded
+        color: #aaaaaa
+
+      Label
+        id: UpgradeNextLevelDescription
+        anchors.top: UpgradeCardDescription.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 15
+        margin-left: 15
+        margin-right: 15
+        text: -
+        text-align: center
+        text-wrap: true
+        text-auto-resize: true
+        font: verdana-11px-rounded
+        color: #66ff66
+        visible: false
+
+      Button
+        id: FeedExpButton
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        margin-bottom: 30
+        size: 200 40
+        !text: tr('[ FEED EXP ]')
+        font: verdana-11px-rounded
+        enabled: false
+
+      Label
+        id: MaxLevelLabel
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        margin-bottom: 35
+        text: Max Level
+        text-align: center
+        font: verdana-11px-rounded
+        color: #888888
+        visible: false
 
   // CARD OBTAINED OVERLAY (Crate opens directly)
   Panel
@@ -749,7 +1097,7 @@ MainWindow
         margin-top: 20
         text-align: center
         font: verdana-11px-rounded
-        color: #FFD700
+        color: #A020F0
 
   // Bottom Buttons
   Button

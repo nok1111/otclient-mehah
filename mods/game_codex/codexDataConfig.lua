@@ -30,6 +30,7 @@ Codex.cardsPerRow = 5
 Codex.TAB_COLLECTION = 1
 Codex.TAB_DECK = 2
 Codex.TAB_CRATES = 3
+Codex.TAB_UPGRADE = 4
 
 -- Pagination Constants
 Codex.cardsPerPage = 20
@@ -54,6 +55,21 @@ function Codex.getCardBackgroundByLevel(level)
 	elseif level >= 8 and level <= 9 then
 		return "/images/ui/tooltip-purple"
 	elseif level >= 10 then
+		return "/images/ui/tooltip-orange"
+	else
+		return "/images/ui/tooltip-white" -- Default
+	end
+end
+
+-- Get background image based on card rarity
+function Codex.getCardBackgroundByRarity(rarity)
+	if rarity == "common" then
+		return "/images/ui/tooltip-white"
+	elseif rarity == "rare" then
+		return "/images/ui/tooltip_unique"
+	elseif rarity == "epic" then
+		return "/images/ui/tooltip-purple"
+	elseif rarity == "legendary" then
 		return "/images/ui/tooltip-orange"
 	else
 		return "/images/ui/tooltip-white" -- Default

@@ -57,7 +57,7 @@ UIWindow
     margin-left: 10
     margin-right: 10
     height: 16
-    background-color: #FFD700
+    background-color: #A020F0
     percent: 0
     
   Label
@@ -67,4 +67,4 @@ UIWindow
     margin-top: 1
     text-auto-resize: true
     font: verdana-11px-rounded
-    color: #FFD700
+    color: #A020F0
