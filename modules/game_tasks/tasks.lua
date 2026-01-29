@@ -711,8 +711,8 @@ function createTaskCard(task, slot)
             [3] = '/images/icons/golden_crate'
         }
         local crateColors = {
-            [1] = '#CD7F32',
-            [2] = '#C0C0C0',
+            [1] = '#a75401a2',
+            [2] = '#13b5caff',
             [3] = '#FFD700'
         }
         table.insert(rewardTypes, {

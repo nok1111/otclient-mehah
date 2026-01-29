@@ -345,6 +345,37 @@ function Expeditions.updatePanels()
                     panel.buffEndTime = os.time() + status.remaining
                     panel.lastUpdateTime = os.time()
                     
+                elseif status.state == "cooldown" then
+                    -- Buff ended, in cooldown period
+                    local hours = math.floor(status.remaining / 3600)
+                    local minutes = math.floor((status.remaining % 3600) / 60)
+                    local seconds = status.remaining % 60
+                    local timeStr
+                    
+                    if hours > 0 then
+                        timeStr = string.format("%dh %02dm %02ds", hours, minutes, seconds)
+                    else
+                        timeStr = string.format("%02dm %02ds", minutes, seconds)
+                    end
+                    
+                    buffStatusLabel:setText(string.format('Buff Cooldown\n[%s]', timeStr))
+                    buffStatusLabel:setColor('#FF6600')  -- Orange-red for cooldown
+                    
+                    if buffDescLabel then
+                        buffDescLabel:setText(string.format("'%s' ended. Next buff available in:", status.lastBuffName or "Last buff"))
+                        buffDescLabel:setVisible(true)
+                        buffDescLabel:setColor('#FFAA00')
+                    end
+                    
+                    if buffIcon then
+                        buffIcon:setVisible(false)
+                    end
+                    
+                    -- Store cooldown data for countdown
+                    panel.buffData = {name = "Cooldown"}
+                    panel.buffEndTime = os.time() + status.remaining
+                    panel.lastUpdateTime = os.time()
+                    
                 elseif status.state == "upcoming" then
                     -- Zone has buff rotation enabled, but no active buff
                     buffStatusLabel:setText(status.message or 'Next buff rotation coming soon')
