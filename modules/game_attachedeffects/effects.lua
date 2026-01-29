@@ -1532,6 +1532,13 @@ AttachedEffectManager.register(179, '[Vampiric]', 2911, ThingCategoryCreature, {
     opacity = 1,
     speed = 1,
     offset = { -38, -38, true},
+
+    onAttach = function(effect, owner)       
+        owner:setScaleFactor(1.4, 1000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 1000)
+    end
     
 })
 
@@ -1539,6 +1546,12 @@ AttachedEffectManager.register(180, '[Sacred]', 2906, ThingCategoryCreature, {
     opacity = 1,
     speed = 2.5,
     offset = { -38, -38, true},
+    onAttach = function(effect, owner)       
+        owner:setScaleFactor(1.4, 1000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 1000)
+    end
     
 })
 
@@ -1546,6 +1559,12 @@ AttachedEffectManager.register(181, '[Arcane]', 2908, ThingCategoryCreature, {
     opacity = 1,
     speed = 2.5,
     offset = { -38, -38, true},
+    onAttach = function(effect, owner)       
+        owner:setScaleFactor(1.4, 1000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 1000)
+    end
     
 })
 
@@ -1553,7 +1572,12 @@ AttachedEffectManager.register(182, '[Corrosive]', 2907, ThingCategoryCreature, 
     opacity = 1,
     speed = 2.5,
     offset = { -38, -38, true},
-    
+    onAttach = function(effect, owner)       
+        owner:setScaleFactor(1.4, 1000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 1000)
+    end    
 })
 
 AttachedEffectManager.register(183, '[Frostbound]', 2905, ThingCategoryCreature, {
@@ -1561,33 +1585,60 @@ AttachedEffectManager.register(183, '[Frostbound]', 2905, ThingCategoryCreature,
     speed = 2.5,
     offset = { -38, -38, true},
     shader = "frost armor",
-    
+    onAttach = function(effect, owner)       
+        owner:setScaleFactor(1.4, 1000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 1000)
+    end    
 })
 
 AttachedEffectManager.register(184, '[Plagued]', 2907, ThingCategoryCreature, {
     opacity = 1,
     speed = 2.5,
     offset = { -38, -38, true},
-    
+    onAttach = function(effect, owner)       
+        owner:setScaleFactor(1.4, 1000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 1000)
+    end    
 })
 
 AttachedEffectManager.register(185, '[Burning]', 2902, ThingCategoryCreature, {
     opacity = 1,
     speed = 2.5,
     offset = { -38, -38, true},
-    
+    onAttach = function(effect, owner)       
+        owner:setScaleFactor(1.4, 1000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 1000)
+    end    
 })
 
 AttachedEffectManager.register(186, '[Reaper]', 2904, ThingCategoryCreature, {
     opacity = 1,
     speed = 2.5,
     offset = { -38, -38, true},
+    onAttach = function(effect, owner)       
+        owner:setScaleFactor(1.4, 1000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 1000)
+    end    
 })
 
 AttachedEffectManager.register(187, '[Darkness]', 2903, ThingCategoryCreature, {
     opacity = 1,
     speed = 2.5,
     offset = { -38, -38, true},
+    onAttach = function(effect, owner)       
+        owner:setScaleFactor(1.4, 1000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 1000)
+    end    
 })
 
 AttachedEffectManager.register(188, 'plagued aoe summon effect', 910, ThingCategoryEffect, {
