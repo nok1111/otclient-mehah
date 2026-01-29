@@ -334,7 +334,12 @@ function Expeditions.updatePanels()
                             bountyHunt = '/images/icons/fire',
                             doubleExp = '/images/icons/fire',
                             monsterRush = '/images/icons/fire',
-                            orbShower = '/images/icons/fire'
+                            orbShower = '/images/icons/fire',
+                            rapidRegen = '/images/icons/fire',
+                            speedDemon = '/images/icons/fire',
+                            survivalInstinct = '/images/icons/fire',
+                            bloodMoon = '/images/icons/fire',
+                            codexKnowledge = '/images/icons/fire'
                         }
                         local iconPath = iconPaths[status.type] or '/images/icons/fire'
                         buffIcon:setImageSource(iconPath)
