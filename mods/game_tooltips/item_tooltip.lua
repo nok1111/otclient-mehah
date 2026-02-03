@@ -74,7 +74,17 @@ local implicits = {
   ["a_all"] = "Damage Reduction",
   ["attackspeed"] = "Attack Speed",
   ["wkn"] = "Weakness",
+  ["blk"] = "Block chance",
+  ["dod"] = "Dodge chance",
+  ["cdr"] = "Cooldown Reduction",
+  ["sp"] = "Shield Power",
   ["eh"] = "Extra Healing",
+  ["pd"] = "Physical Damage",
+  ["ed"] = "Energy Damage",
+  ["fd"] = "Fire Damage",
+  ["id"] = "Ice Damage",
+  ["hd"] = "Holy Damage",
+  ["dd"] = "Death Damage",
   ["cap"] = "Slots",
 
 
@@ -141,6 +151,17 @@ local impPercent = {
   ["as"] = true,
   ["wkn"] = true,
   ["eh"] = true,
+  ["blk"] = true,
+  ["dod"] = true,
+  ["cdr"] = true,
+  ["sp"] = true,
+  ["pd"] = true,
+  ["ed"] = true,
+  ["fd"] = true,
+  ["id"] = true,
+  ["hd"] = true,
+  ["dd"] = true,
+
 }
 
 function init()
