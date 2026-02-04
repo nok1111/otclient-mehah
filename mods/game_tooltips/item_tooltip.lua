@@ -25,7 +25,14 @@ local Colors = {
   Description = "#8080ff",
   Implicit = "#ffbb22",
   Attribute = "#2266ff",
-  Mirrored = "#22ffbb"
+  Mirrored = "#22ffbb",
+  -- Quality tier colors
+  QualityDamaged = "#ff4444",
+  QualityWorn = "#ffaa44",
+  QualityNormal = "#aaaaaa",
+  QualitySuperior = "#44ff44",
+  QualityPristine = "#44ffff",
+  QualityPerfect = "#ff44ff"
 }
 
 local rarityColor = {
@@ -279,7 +286,20 @@ function newTooltip(data)
   local _secondStat = data.hitChance or data.defense or 0
   local _thirdStat = data.shootRange or data.extraDefense or 0
   local _weight = data.weight
+  
+  -- Base stats for quality bonus display
+  local _baseAttack = data.baseAttack or nil
+  local _baseDefense = data.baseDefense or nil
+  local _baseArmor = data.baseArmor or nil
+  local _baseExtraDefense = data.baseExtraDefense or nil
+  
   g_logger.info(string.format("[tooltips] newTooltip: uid=%s clientId=%s name='%s'", tostring(_itemUId), tostring(_itemId), tostring(_itemName)))
+  -- Source Quality data
+  local _sourceQuality = data.sourceQuality or nil
+  local _sourceType = data.sourceType or nil
+  local _qualityTier = data.qualityTier or nil
+  local _qualityBonuses = data.qualityBonuses or nil
+
   -- Cache by real item UID only if available (server 'new' path). Virtual items ('newByClientId') have no uid.
   if type(_itemUId) == 'number' and _itemUId > 0 then
     cachedItems[_itemUId] = {
@@ -301,7 +321,15 @@ function newTooltip(data)
       first = _firstStat,
       second = _secondStat,
       third = _thirdStat,
-      weight = _weight
+      weight = _weight,
+      sourceQuality = _sourceQuality,
+      sourceType = _sourceType,
+      qualityTier = _qualityTier,
+      qualityBonuses = _qualityBonuses,
+      baseAttack = _baseAttack,
+      baseDefense = _baseDefense,
+      baseArmor = _baseArmor,
+      baseExtraDefense = _baseExtraDefense
     }
   else
     g_logger.info("[tooltips] skip uid cache (virtual item; no uid)")
@@ -328,7 +356,15 @@ function newTooltip(data)
       first = _firstStat,
       second = _secondStat,
       third = _thirdStat,
-      weight = _weight
+      weight = _weight,
+      sourceQuality = _sourceQuality,
+      sourceType = _sourceType,
+      qualityTier = _qualityTier,
+      qualityBonuses = _qualityBonuses,
+      baseAttack = _baseAttack,
+      baseDefense = _baseDefense,
+      baseArmor = _baseArmor,
+      baseExtraDefense = _baseExtraDefense
     }
   else
     g_logger.warning(string.format("[tooltips] skip clientId cache: invalid clientId=%s", tostring(_itemId)))
@@ -499,27 +535,29 @@ function buildItemTooltip(item)
     addString("Item Level " .. iLvl, Colors.ItemLevel)
   end
 
+  -- Helper to format stat (shows only final value)
+  local function formatStatWithBonus(label, current, base)
+    return label .. ": " .. current
+  end
+
   local firstText, secondText, thirdText
   if (type == "Armor" or type == "Spell" or type == "Legs" or type == "Ring" or type == "Necklace" or type == "Boots" or type == "Ammunition") and first ~= 0 then
-    firstText = "Armor: " .. first
+    firstText = formatStatWithBonus("Armor", first, item.baseArmor)
   elseif
     type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Axe" or type == "Fist" or
       type == "Distance" then 
-        print("type", type)
-    firstText = "Attack: " .. first
-    print("firstText", firstText) 
+    firstText = formatStatWithBonus("Attack", first, item.baseAttack)
   elseif type == "Shield" then
-    firstText = "Defense: " .. second
+    firstText = formatStatWithBonus("Defense", second, item.baseDefense)
   end
 
   if type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" then
-    secondText = "Defense: " .. second
-
+    secondText = formatStatWithBonus("Defense", second, item.baseDefense)
   end
 
   -- Extra-Defense text for melee weapons (one-handed and two-handed)
   if (type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Axe") and third ~= 0 then
-    thirdText = "Extra-Defense: " .. third
+    thirdText = formatStatWithBonus("Extra-Defense", third, item.baseExtraDefense)
   elseif type == "Distance" or type == "Axe" then
     secondText = "Shoot Range: " .. third
   end
@@ -593,6 +631,42 @@ function buildItemTooltip(item)
   if desc and desc:len() > 0 then
     addEmpty(5)
     addString(desc, Colors.Description, true)
+  end
+
+  -- =========================================================================
+  -- SOURCE QUALITY DISPLAY
+  -- =========================================================================
+  if item.sourceQuality and item.qualityTier then
+    addSeparator()
+    addEmpty(5)
+    
+    -- Get quality color based on tier
+    local qualityColor = Colors.QualityNormal
+    local qualityTier = item.qualityTier
+    if qualityTier == "Damaged" then
+      qualityColor = Colors.QualityDamaged
+    elseif qualityTier == "Worn" then
+      qualityColor = Colors.QualityWorn
+    elseif qualityTier == "Normal" then
+      qualityColor = Colors.QualityNormal
+    elseif qualityTier == "Superior" then
+      qualityColor = Colors.QualitySuperior
+    elseif qualityTier == "Pristine" then
+      qualityColor = Colors.QualityPristine
+    elseif qualityTier == "Perfect" then
+      qualityColor = Colors.QualityPerfect
+    end
+    
+    -- Format quality percentage
+    local qualityPercent = math.floor(item.sourceQuality * 100)
+    local qualityText = string.format("Quality: %s (%d%%)", qualityTier, qualityPercent)
+    addString(qualityText, qualityColor)
+    
+    -- Show source type
+    if item.sourceType then
+      local sourceText = "Source: " .. item.sourceType:gsub("_", " "):gsub("(%a)([%w_']*)", function(a, b) return string.upper(a) .. b end)
+      addString(sourceText, "#888888")
+    end
   end
 
   shrinkSeparators()
