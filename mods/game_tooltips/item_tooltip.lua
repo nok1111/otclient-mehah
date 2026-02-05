@@ -299,8 +299,9 @@ function newTooltip(data)
   local _sourceType = data.sourceType or nil
   local _qualityTier = data.qualityTier or nil
   local _qualityBonuses = data.qualityBonuses or nil
-  local _modifiedStats = data.modifiedStats or nil
-
+  
+  g_logger.info(string.format("[tooltips] newTooltip: uid=%s clientId=%s name='%s'", tostring(_itemUId), tostring(_itemId), tostring(_itemName)))
+  
   -- Cache by real item UID only if available (server 'new' path). Virtual items ('newByClientId') have no uid.
   if type(_itemUId) == 'number' and _itemUId > 0 then
     cachedItems[_itemUId] = {
@@ -327,7 +328,6 @@ function newTooltip(data)
       sourceType = _sourceType,
       qualityTier = _qualityTier,
       qualityBonuses = _qualityBonuses,
-      modifiedStats = _modifiedStats,
       baseAttack = _baseAttack,
       baseDefense = _baseDefense,
       baseArmor = _baseArmor,
@@ -363,7 +363,6 @@ function newTooltip(data)
       sourceType = _sourceType,
       qualityTier = _qualityTier,
       qualityBonuses = _qualityBonuses,
-      modifiedStats = _modifiedStats,
       baseAttack = _baseAttack,
       baseDefense = _baseDefense,
       baseArmor = _baseArmor,
@@ -623,47 +622,6 @@ function buildItemTooltip(item)
     addEmpty(5)
     for i = 1, maxAttributes do
       addString(attributes[i], Colors.Attribute)
-    end
-  end
-
-  -- =========================================================================
-  -- MODIFIED STATS FROM QUALITY
-  -- =========================================================================
-  if item.modifiedStats and next(item.modifiedStats) then
-    addSeparator()
-    addEmpty(5)
-    
-    local statNames = {
-      magicLevel = "Magic Level",
-      critChance = "Critical Chance",
-      skillSword = "Sword Skill",
-      skillAxe = "Axe Skill",
-      skillClub = "Club Skill",
-      skillDistance = "Distance Skill",
-      skillShield = "Shield Skill",
-      speed = "Speed",
-      lifeLeechChance = "Life Leech Chance",
-      lifeLeechAmount = "Life Leech",
-      manaLeechChance = "Mana Leech Chance",
-      manaLeechAmount = "Mana Leech",
-      maxHpPercent = "Max HP %",
-      maxMpPercent = "Max MP %",
-      extraHealing = "Extra Healing",
-      attackSpeed = "Attack Speed",
-      block = "Block",
-      dodge = "Dodge",
-      shieldPower = "Shield Power",
-      cooldownReduction = "Cooldown Reduction",
-      healthGain = "Health Regen",
-      manaGain = "Mana Regen",
-      maxHp = "Max HP",
-      maxMp = "Max MP"
-    }
-    
-    for statKey, statValue in pairs(item.modifiedStats) do
-      local statName = statNames[statKey] or statKey
-      local statText = statName .. " " .. (statValue > 0 and "+" or "") .. statValue
-      addString(statText, Colors.Implicit)
     end
   end
 
