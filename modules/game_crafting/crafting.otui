@@ -50,6 +50,7 @@ MainWindow
     anchors.horizontalCenter: skillBar.horizontalCenter
     anchors.verticalCenter: skillBar.verticalCenter
     text-align: center
+    width: 100
     color: #FFFFFF
     margin-left: 0
     margin-top: 0
