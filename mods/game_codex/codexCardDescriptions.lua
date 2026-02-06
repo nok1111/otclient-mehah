@@ -280,16 +280,16 @@ Codex.cardDescriptions = {
 		trigger = "onHit",
 		cardFrame = "bloodisfuel",
 		descriptions = {
-			[1] = "Spend 2% HP on cast to deal 2% extra damage",
-			[2] = "Spend 3% HP on cast to deal 4% extra damage",
-			[3] = "Spend 4% HP on cast to deal 8% extra damage",
-			[4] = "Spend 5% HP on cast to deal 12% extra damage",
-			[5] = "Spend 6% HP on cast to deal 16% extra damage",
-			[6] = "Spend 7% HP on cast to deal 18% extra damage",
-			[7] = "Spend 8% HP on cast to deal 20% extra damage",
-			[8] = "Spend 9% HP on cast to deal 22% extra damage",
-			[9] = "Spend 10% HP on cast to deal 24% extra damage",
-			[10] = "Spend 10% HP on cast to deal 25% extra damage"
+			[1] = "spells cost 2% max HP, gain +4% damage",
+			[2] = "spells cost 3% max HP, gain +5% damage",
+			[3] = "spells cost 4% max HP, gain +6% damage",
+			[4] = "spells cost 5% max HP, gain +7% damage",
+			[5] = "spells cost 6% max HP, gain +8% damage",
+			[6] = "spells cost 7% max HP, gain +9% damage",
+			[7] = "spells cost 8% max HP, gain +10% damage",
+			[8] = "spells cost 8% max HP, gain +11% damage",
+			[9] = "spells cost 8% max HP, gain +12% damage",
+			[10] = "spells cost 8% max HP, gain +15% damage"
 		}
 	},
 	[17] = {
