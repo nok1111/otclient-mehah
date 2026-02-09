@@ -225,9 +225,9 @@ PassiveSkills.paragonConfig = {
 			barColor = "#30aa30",
 			stats = {
 				{ id = "expGain", name = "EXP Gain", perPoint = 1, unit = "%", capLabel = nil },
-				{ id = "skillGain", name = "Skill Gain", perPoint = 1, unit = "%", capLabel = nil },
-				{ id = "goldFind", name = "Gold Find", perPoint = 1, unit = "%", capLabel = nil },
-				{ id = "lootChance", name = "Loot Chc", perPoint = 0.3, unit = "%", capLabel = "cap 25%" },
+				{ id = "craftingExp", name = "Craft Exp", perPoint = 1, unit = "%", capLabel = nil },
+				{ id = "fameGain", name = "Fame Gain", perPoint = 1, unit = "%", capLabel = nil },
+				{ id = "codexKnowledge", name = "Codex Kn.", perPoint = 0.3, unit = "%", capLabel = "cap 25%" },
 			},
 		},
 	},
