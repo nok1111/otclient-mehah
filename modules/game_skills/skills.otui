@@ -53,6 +53,13 @@ SkillPercentPanel < ProgressBar
   anchors.top: parent.top
   phantom: false
 
+SectionLabel < GameLabel
+  font: verdana-11px-monochrome
+  text-align: center
+  height: 14
+  margin-top: 3
+  margin-bottom: 1
+
 MiniWindow
   id: skillWindow
   !text: tr('Skills')
@@ -67,24 +74,40 @@ MiniWindow
     padding-right: 5
     layout: verticalBox
 
+    SectionLabel
+      !text: tr('CHARACTER')
+      color: #FFD700
+      margin-top: 2
+
     SkillButton
-      margin-top: 5
       id: experience
       height: 15
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         !text: tr('Experience')
+        color: #a098b0
       SkillValueLabel
 
     SkillButton
       id: level
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         !text: tr('Level')
+        color: #f4ca16
       SkillValueLabel
+        color: #f4ca16
       RedPercentPanel
 
     SkillButton
       id: fame
       height: 45
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       UIWidget
         anchors.left: parent.left
         anchors.right: parent.right
@@ -137,331 +160,497 @@ MiniWindow
     SkillButton
       id: health
       height: 15
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         !text: tr('Hit Points')
+        color: #a098b0
       SkillValueLabel
 
     SkillButton
       id: mana
       height: 15
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         !text: tr('Mana')
-      SkillValueLabel
-
-    SkillButton
-      id: soul
-      height: 15
-      SkillNameLabel
-        !text: tr('Soul Points')
+        color: #a098b0
       SkillValueLabel
 
     SkillButton
       id: capacity
       height: 15
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         !text: tr('Capacity')
+        color: #a098b0
       SkillValueLabel
 
     SkillButton
       id: speed
       height: 15
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         !text: tr('Speed')
+        color: #a098b0
       SkillValueLabel
 
-    SkillButton
-      id: regenerationTime
-      SkillNameLabel
-        !text: tr('Regeneration Time')
-      SkillValueLabel
+    HorizontalSeparator
+      margin-top: 4
+      margin-bottom: 2
 
-    SkillButton
-      id: stamina
-      SkillNameLabel
-        !text: tr('Stamina')
-      SkillValueLabel
-      RedPercentPanel
-
-    SkillButton
-      id: offlineTraining
-      SkillNameLabel
-        !text: tr('Offline Training')
-      SkillValueLabel
-      RedPercentPanel
+    SectionLabel
+      !text: tr('COMBAT SKILLS')
+      color: #ff6060
 
     SkillButton
       id: magiclevel
+      height: 30
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
+      ImageSkill
+        image-source: /images/icons/skill_attack
+        image-size: 24 24
+        size: 24 24
+        margin-top: 2
+        margin-left: 2
       SkillNameLabel
         !text: tr('Magic Level')
+        color: #a098b0
+        anchors.bottom: none
+        margin-left: 30
       SkillValueLabel
-      ImageSkill
-        image-source: /images/icons/icon_magic
-        image-size: 9 9
+        anchors.bottom: none
       SkillPercentPanel
-        background-color: red
+        margin-left: 30
+        margin-top: 16
+        background-color: #cc3030
 
     SkillButton
       id: skillId2
+      height: 30
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
+      ImageSkill
+        image-source: /images/icons/skill_attack
+        image-size: 24 24
+        size: 24 24
+        margin-top: 2
+        margin-left: 2
       SkillNameLabel
         !text: tr('Strenght')
+        color: #a098b0
+        anchors.bottom: none
+        margin-left: 30
       SkillValueLabel
-      ImageSkill
-        image-source: /images/icons/icon_sword
-        image-size: 9 9
+        anchors.bottom: none
       SkillPercentPanel
+        margin-left: 30
+        margin-top: 16
+        background-color: #cc3030
 
     SkillButton
       id: skillId3
+      height: 30
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
+      ImageSkill
+        image-source: /images/icons/skill_attack
+        image-size: 24 24
+        size: 24 24
+        margin-top: 2
+        margin-left: 2
       SkillNameLabel
         !text: tr('Arcana')
+        color: #a098b0
+        anchors.bottom: none
+        margin-left: 30
       SkillValueLabel
-      ImageSkill
-        image-source: /images/icons/icon_axe
-        image-size: 9 9
+        anchors.bottom: none
       SkillPercentPanel
+        margin-left: 30
+        margin-top: 16
+        background-color: #cc3030
 
     SkillButton
       id: skillId4
+      height: 30
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
+      ImageSkill
+        image-source: /images/icons/skill_attack
+        image-size: 24 24
+        size: 24 24
+        margin-top: 2
+        margin-left: 2
       SkillNameLabel
         !text: tr('Distance')
+        color: #a098b0
+        anchors.bottom: none
+        margin-left: 30
       SkillValueLabel
-      ImageSkill
-        image-source: /images/icons/icon_distance
-        image-size: 9 9
+        anchors.bottom: none
       SkillPercentPanel
+        margin-left: 30
+        margin-top: 16
+        background-color: #cc3030
 
     SkillButton
       id: skillId5
+      height: 30
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
+      ImageSkill
+        image-source: /images/icons/skill_attack
+        image-size: 24 24
+        size: 24 24
+        margin-top: 2
+        margin-left: 2
       SkillNameLabel
         !text: tr('Defence')
+        color: #a098b0
+        anchors.bottom: none
+        margin-left: 30
       SkillValueLabel
-      ImageSkill
-        image-source: /images/icons/icon_shielding
-        image-size: 9 9
+        anchors.bottom: none
       SkillPercentPanel
+        margin-left: 30
+        margin-top: 16
+        background-color: #cc3030
 
     HorizontalSeparator
       margin-top: 4
       margin-bottom: 2
 
-    SkillButton
-      SkillNameLabel
-        !text: tr('jobs:')
-        text-align: center
-        margin-top: 3
-        color: #FFD700
-
-    HorizontalSeparator
-      margin-bottom: 4
+    SectionLabel
+      !text: tr('CRAFTING')
+      color: #3060cc
 
     SkillButton
       id: professionId1
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         id: label
         !text: tr('Blacksmithing')
+        color: #a098b0
       SkillValueLabel
       ImageSkill
-        image-source: /images/icons/icon_fishing
+        image-source: /images/icons/thunder
         image-size: 9 9
       SkillPercentPanel
+        background-color: #3060cc
 
     SkillButton
       id: professionId2
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         id: label
         !text: tr('Alchemy')
+        color: #a098b0
       SkillValueLabel
       ImageSkill
-        image-source: /images/icons/icon_fishing
+        image-source: /images/icons/thunder
         image-size: 9 9
       SkillPercentPanel
+        background-color: #3060cc
 
     SkillButton
       id: professionId3
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         id: label
         !text: tr('Refinery')
+        color: #a098b0
       SkillValueLabel
       ImageSkill
-        image-source: /images/icons/icon_fishing
+        image-source: /images/icons/thunder
         image-size: 9 9
       SkillPercentPanel
+        background-color: #3060cc
 
     SkillButton
       id: professionId4
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         id: label
         !text: tr('Enchanting')
+        color: #a098b0
       SkillValueLabel
       ImageSkill
-        image-source: /images/icons/icon_fishing
+        image-source: /images/icons/thunder
         image-size: 9 9
       SkillPercentPanel
+        background-color: #3060cc
 
     SkillButton
       id: professionId5
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         id: label
         !text: tr('Mining')
+        color: #a098b0
       SkillValueLabel
       ImageSkill
-        image-source: /images/icons/icon_fishing
+        image-source: /images/icons/thunder
         image-size: 9 9
       SkillPercentPanel
+        background-color: #3060cc
 
     SkillButton
       id: professionId6
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         id: label
         !text: tr('Herbalism')
+        color: #a098b0
       SkillValueLabel
       ImageSkill
-        image-source: /images/icons/icon_fishing
+        image-source: /images/icons/thunder
         image-size: 9 9
       SkillPercentPanel
+        background-color: #3060cc
 
     SkillButton
       id: professionId7
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         id: label
         !text: tr('Fishing')
+        color: #a098b0
       SkillValueLabel
       ImageSkill
-        image-source: /images/icons/icon_fishing
+        image-source: /images/icons/thunder
         image-size: 9 9
       SkillPercentPanel
+        background-color: #3060cc
 
     SkillButton
       id: professionId8
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         id: label
         !text: tr('Woodcutting')
+        color: #a098b0
       SkillValueLabel
       ImageSkill
-        image-source: /images/icons/icon_fishing
+        image-source: /images/icons/thunder
         image-size: 9 9
       SkillPercentPanel
+        background-color: #3060cc
 
     HorizontalSeparator
       margin-top: 4
       margin-bottom: 2
 
-    SkillButton
-      SkillNameLabel
-        !text: tr('special stats:')
-        text-align: center
-        margin-top: 3
-        color: #FFD700
-
-    HorizontalSeparator
-      margin-bottom: 4
+    SectionLabel
+      !text: tr('SPECIAL STATS')
+      color: #60d0ff
 
     SmallSkillButton
       id: skillId7
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         !text: tr('Critical Hit Chance')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId10 
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         !text: tr('Life Leech Amount')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId12
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         !text: tr('Mana Leech Amount')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId13
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         !text: tr('Attack Speed')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId14
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         !text: tr('Weakened')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId15
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
         !text: tr('Extra Healing')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId16
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
-        !text: tr('dodge')
+        !text: tr('Dodge')
+        color: #a098b0
       SkillValueLabel
     
     SmallSkillButton
       id: skillId17
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
-        !text: tr('block')
+        !text: tr('Block')
+        color: #a098b0
       SkillValueLabel
     
     SmallSkillButton
       id: skillId18
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
-        !text: tr('cooldown reduction')
+        !text: tr('Cooldown Reduction')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId20
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
-        !text: tr('shield power')
-      SkillValueLabel  
+        !text: tr('Shield Power')
+        color: #a098b0
+      SkillValueLabel
     
     SmallSkillButton
       id: skillId19
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
-        !text: tr('barrier')
-      SkillValueLabel  
+        !text: tr('Barrier')
+        color: #a098b0
+      SkillValueLabel
 
     SmallSkillButton
       id: skillId21
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
-        !text: tr('fire damage')
+        !text: tr('Fire Damage')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId22
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
-        !text: tr('earth damage')
+        !text: tr('Earth Damage')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId23
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
-        !text: tr('holy damage')
+        !text: tr('Holy Damage')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId24
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
-        !text: tr('physical damage')
+        !text: tr('Physical Damage')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId25
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
-        !text: tr('ice damage')
+        !text: tr('Ice Damage')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId26
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
-        !text: tr('energy damage')
+        !text: tr('Energy Damage')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton
       id: skillId27
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
       SkillNameLabel
-        !text: tr('death damage')
+        !text: tr('Death Damage')
+        color: #a098b0
       SkillValueLabel
 
     SmallSkillButton

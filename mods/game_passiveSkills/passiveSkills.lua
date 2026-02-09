@@ -200,7 +200,7 @@ PassiveSkills.paragonConfig = {
 			color = "#ff6060",
 			barColor = "#cc3030",
 			stats = {
-				{ id = "attack", name = "Attack", perPoint = 2, unit = "flat", capLabel = nil },
+				{ id = "physicalDmg", name = "Phys Dmg", perPoint = 1, unit = "%", capLabel = nil },
 				{ id = "elemDmg", name = "Elem Dmg", perPoint = 1, unit = "flat", capLabel = nil },
 				{ id = "atkSpeed", name = "Atk Speed", perPoint = 0.3, unit = "%", capLabel = "cap 30%" },
 				{ id = "critDmg", name = "Crit Dmg", perPoint = 2, unit = "flat", capLabel = nil },
@@ -212,7 +212,7 @@ PassiveSkills.paragonConfig = {
 			color = "#60a0ff",
 			barColor = "#3060cc",
 			stats = {
-				{ id = "defense", name = "Defense", perPoint = 2, unit = "flat", capLabel = nil },
+				{ id = "blockChance", name = "Block Chc", perPoint = 0.3, unit = "%", capLabel = "cap 25%" },
 				{ id = "maxHP", name = "Max HP", perPoint = 50, unit = "flat", capLabel = nil },
 				{ id = "maxMana", name = "Max Mana", perPoint = 40, unit = "flat", capLabel = nil },
 				{ id = "healing", name = "Healing", perPoint = 0.3, unit = "%", capLabel = "cap 25%" },
@@ -886,6 +886,7 @@ function PassiveSkills.displayTotalBuffs()
 				buffLabel:setTextAutoResize(true)
 				buffLabel:setPhantom(false)
 				buffLabel:setMarginTop(isFirst and 0 or 10)
+				buffLabel:setColor('#a098b0')
 
 				if nodeData.totalBuffsDesc and nodeData.totalBuffsDesc.desc then
 					local descTemplate = nodeData.totalBuffsDesc.desc
@@ -902,14 +903,14 @@ function PassiveSkills.displayTotalBuffs()
 					descLabel:setTextWrap(true)
 					descLabel:setTextAutoResize(true)
 					descLabel:setPhantom(false)
-					descLabel:setColor('green')
+					descLabel:setColor('#60dd60')
 				else
 					local descLabel = g_ui.createWidget("Label", PassiveSkills.UI.totalBuffsPanel)
 					descLabel:setText(nodeData.description )
 					descLabel:setTextWrap(true)
 					descLabel:setTextAutoResize(true)
 					descLabel:setPhantom(false)
-					descLabel:setColor('green')
+					descLabel:setColor('#60dd60')
 				end
 			end
 		end
