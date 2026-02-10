@@ -259,17 +259,21 @@ end
 
 function update()
     local offlineTraining = skillsWindow:recursiveGetChildById('offlineTraining')
-    if not g_game.getFeature(GameOfflineTrainingTime) then
-        offlineTraining:hide()
-    else
-        offlineTraining:show()
+    if offlineTraining then
+        if not g_game.getFeature(GameOfflineTrainingTime) then
+            offlineTraining:hide()
+        else
+            offlineTraining:show()
+        end
     end
 
     local regenerationTime = skillsWindow:recursiveGetChildById('regenerationTime')
-    if not g_game.getFeature(GamePlayerRegenerationTime) then
-        regenerationTime:hide()
-    else
-        regenerationTime:show()
+    if regenerationTime then
+        if not g_game.getFeature(GamePlayerRegenerationTime) then
+            regenerationTime:hide()
+        else
+            regenerationTime:show()
+        end
     end
 end
 
@@ -277,7 +281,10 @@ function online()
     skillsWindow:setupOnStart() -- load character window configuration
     refresh()
     if g_game.getFeature(GameEnterGameShowAppearance) then
-        skillsWindow:recursiveGetChildById('regenerationTime'):getChildByIndex(1):setText('Food')
+        local regenerationTime = skillsWindow:recursiveGetChildById('regenerationTime')
+        if regenerationTime then
+            regenerationTime:getChildByIndex(1):setText('Food')
+        end
     end
 end
 
@@ -455,6 +462,21 @@ function showPercentBar(button, show)
             button:setHeight(21 - 6)
         end
     end
+end
+
+function updateParagonDisplay(paragonLvl, paragonXP, xpNeeded, isActive)
+    if not skillsWindow then return end
+
+    setSkillValue('paragonLevel', paragonLvl or 0)
+
+    local percent = 0
+    if xpNeeded and xpNeeded > 0 then
+        percent = math.floor((paragonXP or 0) / xpNeeded * 100)
+    end
+    percent = math.max(0, math.min(percent, 100))
+
+    local tooltip = string.format('%s / %s XP (%d%%)', comma_value(paragonXP or 0), comma_value(xpNeeded or 0), percent)
+    setSkillPercent('paragonLevel', percent, tooltip)
 end
 
 function onExperienceChange(localPlayer, value)

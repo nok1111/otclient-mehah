@@ -103,6 +103,20 @@ MiniWindow
       RedPercentPanel
 
     SkillButton
+      id: paragonLevel
+      background-color: #1a152080
+      border-width: 1
+      border-color: #2a2040
+      SkillNameLabel
+        !text: tr('Paragon')
+        color: #b06cff
+      SkillValueLabel
+        !text: tr('0')
+        color: #b06cff
+      RedPercentPanel
+        background-color: #8a3cff
+
+    SkillButton
       id: fame
       height: 45
       background-color: #1a152080
