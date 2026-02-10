@@ -601,6 +601,16 @@ TaskDescription < UIWidget
     text-align: center
 
   Label
+    id: rewardCodex
+    size: 300 0
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 3
+    margin-left: 21
+    color: #b388ff
+    font: verdana-11px-rounded
+
+  Label
     id: rewardOutfit
     size: 300 1
     anchors.top: prev.bottom

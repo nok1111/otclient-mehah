@@ -4582,3 +4582,170 @@ AttachedEffectManager.register(374, 'Mana flow', 982, ThingCategoryEffect, {
     speed = 1,
     offset = { -64, -32, false},
 })
+
+
+AttachedEffectManager.register(375, 'Guardian Wings', 2912, ThingCategoryCreature, {
+    speed = 1,
+    duration = 7000,
+    disableWalkAnimation = false,
+    dirOffset = {
+        [North] = { 0, -10, true }, 
+        [East] = { 0, 0 }, --derecha
+        [South] = { 0, -3 },
+        [West] = { -5, -5, true } --izquierda
+    },
+})
+
+AttachedEffectManager.register(376, 'Frozen Wings', 2913, ThingCategoryCreature, {
+    speed = 1,
+    duration = 7000,
+    disableWalkAnimation = false,
+    dirOffset = {
+        [North] = { 0, -10, true }, 
+        [East] = { 0, 0 }, --derecha
+        [South] = { 0, -3 },
+        [West] = { -5, -5, true } --izquierda
+    },
+})
+
+AttachedEffectManager.register(377, 'Emerald Wings', 2914, ThingCategoryCreature, {
+    speed = 1,
+    duration = 7000,
+    disableWalkAnimation = false,
+    dirOffset = {
+        [North] = { 0, -10, true }, 
+        [East] = { 0, 0 }, --derecha
+        [South] = { 0, -3 },
+        [West] = { -5, -5, true } --izquierda
+    },
+})
+
+AttachedEffectManager.register(378, 'Crystal Wings', 2915, ThingCategoryCreature, {
+    speed = 1,
+    duration = 7000,
+    disableWalkAnimation = false,
+    dirOffset = {
+        [North] = { 0, -10, true }, 
+        [East] = { 0, 0 }, --derecha
+        [South] = { 0, -3 },
+        [West] = { -5, -5, true } --izquierda
+    },
+})
+
+AttachedEffectManager.register(379, 'Ruby Wings', 2916, ThingCategoryCreature, {
+    speed = 1,
+    duration = 7000,
+    disableWalkAnimation = false,
+    dirOffset = {
+        [North] = { 0, -10, true }, 
+        [East] = { 0, 0 }, --derecha
+        [South] = { 0, -3 },
+        [West] = { -5, -5, true } --izquierda
+    },
+})
+
+AttachedEffectManager.register(380, 'Infernal Wings', 2917, ThingCategoryCreature, {
+    speed = 1,
+    duration = 7000,
+    disableWalkAnimation = false,
+    dirOffset = {
+        [North] = { -5, -10, true }, 
+        [East] = { -10, -10 }, --derecha
+        [South] = { -10, -10 },
+        [West] = { -5, -5, true } --izquierda
+    },
+})
+
+AttachedEffectManager.register(381, 'Halo', 2939, ThingCategoryCreature, {
+    speed = 1,
+    duration = 7000,
+    disableWalkAnimation = false,
+    dirOffset = {
+        [North] = { -2, 0, true }, 
+        [East] = { -2, -2 }, --derecha
+        [South] = { -8, 0 },
+        [West] = { -5, -7, true } --izquierda
+    },
+})
+
+AttachedEffectManager.register(382, 'party balloons', 2929, ThingCategoryCreature, {
+    speed = 1,
+    duration = 7000,
+    disableWalkAnimation = false,
+    dirOffset = {
+        [North] = { 0, 0, true }, 
+        [East] = { 0, 0 }, --derecha
+        [South] = { 0, 0 },
+        [West] = { 0, 0, true } --izquierda
+    },
+})
+
+AttachedEffectManager.register(383, 'Dark Wings', 2320, ThingCategoryCreature, {
+    speed = 1,
+    duration = 7000,
+    disableWalkAnimation = false,
+    dirOffset = {
+        [North] = { 0, -10, true }, 
+        [East] = { 0, 0 }, --derecha
+        [South] = { -6, -3 },
+        [West] = { -5, -5, true } --izquierda
+    },
+})
+
+AttachedEffectManager.register(384, 'might Aura', '/images/game/effects/red_spin', ThingExternalTexture, {
+    duration = 3000,
+    size = { 68, 68 },
+    offset = { 13, 8, false }
+})
+
+AttachedEffectManager.register(385, 'disco ball', '/images/game/effects/disco_ball', ThingExternalTexture, {
+    duration = 3000,
+    speed = 0.7,
+    size = { 40, 40 },
+    offset = { 32, 32, true },
+    --shader = 'Rainbow',
+})
+
+AttachedEffectManager.register(386, 'black arrows', '/images/game/effects/arrows_black', ThingExternalTexture, {
+    duration = 3000,
+    size = { 90, 90 },
+    offset = { 30, 30, false }
+})
+
+AttachedEffectManager.register(387, 'green circle', '/images/game/effects/green', ThingExternalTexture, {
+   duration = 3000,
+    size = { 90, 90 },
+    offset = { 30, 30, false }
+})
+
+AttachedEffectManager.register(388, 'Spin effect', '/images/game/effects/purple_sharingan', ThingExternalTexture, {
+    duration = 3000,
+    speed = 0.45,
+    size = { 90, 90 },
+    offset = { 30, 30, false }
+})
+
+AttachedEffectManager.register(389, 'purple square', '/images/game/effects/purplesquare', ThingExternalTexture, {
+    duration = 3000,
+    size = { 55, 55 },
+    offset = { 5, 5, false }
+})
+
+AttachedEffectManager.register(390, 'red circle', '/images/game/effects/red_circle', ThingExternalTexture, {
+    duration = 3000,
+    size = { 90, 90 },
+    offset = { 22, 21, false }
+})
+
+AttachedEffectManager.register(391, 'black arrows', '/images/game/effects/arrows_black', ThingExternalTexture, {
+    duration = 3000,
+    size = { 90, 90 },
+    shader = "Outfit - Rainbow",
+    offset = { 30, 30, false }
+})
+
+AttachedEffectManager.register(392, 'overcharged', 2160, ThingCategoryCreature, {
+    opacity = 1,
+    speed = 1,
+    offset = { 0, 0, true},
+})

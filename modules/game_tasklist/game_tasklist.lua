@@ -611,6 +611,8 @@ function parseIncomingTaskList(buffer)
         local rewardsOutfitCnt = tonumber(basicRewardSplit[3])
         local rewardsMoney = tonumber(basicRewardSplit[4]) or 0
         local rewardsChoiceCnt = tonumber(basicRewardSplit[5]) or 0
+        local rewardsCodexEssences = tonumber(basicRewardSplit[6]) or 0
+        local rewardsCodexCrateCnt = tonumber(basicRewardSplit[7]) or 0
         for j = 1, rewardsItemCnt do
             table.insert(rewardItems, {name = itemRewardSplit[(4*(j-1)) + 1], itemCid = tonumber(itemRewardSplit[(4*(j-1)) + 2]), itemSid = tonumber(itemRewardSplit[(4*(j-1)) + 3]), itemCnt = tonumber(itemRewardSplit[(4*(j-1)) + 4])})
         end
@@ -633,7 +635,17 @@ function parseIncomingTaskList(buffer)
               table.insert(choiceItems, {name = name, itemCid = cid, itemSid = sid, itemCnt = cnt})
             end
         end
-        rewardList = {exp = tonumber(basicRewardSplit[1]), money = rewardsMoney, items = rewardItems, outfits = rewardOutfits, choice = choiceItems}
+        -- codex crates slice (triplets: crateType:amount:name)
+        local codexCrates = {}
+        for j = 1, rewardsCodexCrateCnt do
+            local crateType = tonumber(tailSplit[tailIdx]); tailIdx = tailIdx + 1
+            local crateAmt  = tonumber(tailSplit[tailIdx]); tailIdx = tailIdx + 1
+            local crateName = tailSplit[tailIdx];           tailIdx = tailIdx + 1
+            if crateType and crateAmt then
+              table.insert(codexCrates, {crateType = crateType, amount = crateAmt, name = crateName or ('Crate ' .. crateType)})
+            end
+        end
+        rewardList = {exp = tonumber(basicRewardSplit[1]), money = rewardsMoney, items = rewardItems, outfits = rewardOutfits, choice = choiceItems, codex_essences = rewardsCodexEssences, codex_crates = codexCrates}
         -----------------------------------------------------------------------------------------------------------------------------------------------
         table.insert(parseTaskList, {taskNumber = taskSplit[11], taskName = taskSplit[1], taskDesc = taskSplit[2], taskGoals = targetList,
                                      taskGoalCnt = tonumber(taskSplit[4]), taskMinLvl = tonumber(taskSplit[5]), taskMaxLvl = tonumber(taskSplit[6]),
@@ -1751,6 +1763,27 @@ function UpdateNpcTaskDescription()
     if moneyIcon then moneyIcon:setVisible(false) end
   end
 
+  -- Codex rewards (NPC pane)
+  local npcCodexLbl = npcTaskDescription:getChildById('rewardCodex')
+  if npcCodexLbl then
+    local codexParts = {}
+    local ce = (rec.taskRewards and rec.taskRewards.codex_essences) or 0
+    if ce > 0 then table.insert(codexParts, tostring(ce) .. ' Codex Essences') end
+    local cc = (rec.taskRewards and rec.taskRewards.codex_crates) or {}
+    for _, cr in ipairs(cc) do
+      table.insert(codexParts, tostring(cr.amount) .. 'x ' .. tostring(cr.name))
+    end
+    if #codexParts > 0 then
+      npcCodexLbl:setText(table.concat(codexParts, '  +  '))
+      npcCodexLbl:setHeight(15)
+      npcCodexLbl:setVisible(true)
+    else
+      npcCodexLbl:setText('')
+      npcCodexLbl:setHeight(0)
+      npcCodexLbl:setVisible(false)
+    end
+  end
+
   -- Populate Objectives / Progress / Hints / Zone / Source (NPC description panel)
   do
     local goals = rec.taskGoals or {}
@@ -2206,6 +2239,26 @@ function updateTaskDescription(taskNumber)
     moneyLbl:setText("")
     moneyLbl:setVisible(false)
     if moneyIcon then moneyIcon:setVisible(false) end
+  end
+  -- Codex rewards (Quest Log pane)
+  local codexLbl = taskDescriptionWindow:getChildById('rewardCodex')
+  if codexLbl then
+    local codexParts = {}
+    local ce = (localTaskList[taskNumber].taskRewards and localTaskList[taskNumber].taskRewards.codex_essences) or 0
+    if ce > 0 then table.insert(codexParts, tostring(ce) .. ' Codex Essences') end
+    local cc = (localTaskList[taskNumber].taskRewards and localTaskList[taskNumber].taskRewards.codex_crates) or {}
+    for _, cr in ipairs(cc) do
+      table.insert(codexParts, tostring(cr.amount) .. 'x ' .. tostring(cr.name))
+    end
+    if #codexParts > 0 then
+      codexLbl:setText(table.concat(codexParts, '  +  '))
+      codexLbl:setHeight(15)
+      codexLbl:setVisible(true)
+    else
+      codexLbl:setText('')
+      codexLbl:setHeight(0)
+      codexLbl:setVisible(false)
+    end
   end
   if localTaskList[taskNumber].taskRewards.outfits and #localTaskList[taskNumber].taskRewards.outfits > 0 then
     local outfit = localTaskList[taskNumber].taskRewards.outfits[1]
