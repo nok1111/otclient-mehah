@@ -4536,3 +4536,49 @@ AttachedEffectManager.register(367, 'back to ashes', 917, ThingCategoryEffect, {
     speed = 1,
     offset = { -50, -34, true},
 })
+
+AttachedEffectManager.register(368, 'Codex Infusion', 2950, ThingCategoryCreature, {
+    opacity = 0.85,
+    speed = 1,
+    offset = { -50, -35, true},
+})
+
+AttachedEffectManager.register(369, 'Fame Infusion', 2951, ThingCategoryCreature, {
+
+    opacity = 1,
+    speed = 1,
+    offset = { -35, -35, true},
+})
+
+AttachedEffectManager.register(370, 'Shadow Swords', 2954, ThingCategoryCreature, {
+
+    opacity = 1,
+    speed = 1,
+    offset = { -53, -50, false},
+})
+
+AttachedEffectManager.register(371, 'Void World', 958, ThingCategoryEffect, {
+    opacity = 1,
+    speed = 1,
+    offset = { -64, -64, false},
+})
+
+AttachedEffectManager.register(372, 'Sparks', 959, ThingCategoryEffect, {
+    opacity = 0.85,
+    speed = 1,
+    offset = { -20, -32, true},
+})
+
+AttachedEffectManager.register(373, 'cursed', 963, ThingCategoryEffect, {
+    duration = 2000,
+    opacity = 1,
+    speed = 1,
+    offset = { -64, -64, false},
+})
+
+AttachedEffectManager.register(374, 'Mana flow', 982, ThingCategoryEffect, {
+
+    opacity = 1,
+    speed = 1,
+    offset = { -64, -32, false},
+})
