@@ -185,7 +185,19 @@ function onRecipeSelected(w, child)
 	craftingWindow:recursiveGetChildById("recipeDesc"):setText(recipe.desc)
 
 	local label = craftingWindow:recursiveGetChildById("recipeLabel")
-	label:setText(recipe.name)
+
+    local tierText = ""
+    if recipe.tier == 1 then
+        tierText = "T1"
+    elseif recipe.tier == 2 then
+        tierText = "T2"
+    elseif recipe.tier == 3 then
+        tierText = "T3"
+    elseif recipe.tier == 4 then
+        tierText = "T4"
+    end
+    
+	label:setText(tierText .. " " ..recipe.name)--
 	label:setWidth(label:getTextSize().width)
 end
 
@@ -291,7 +303,19 @@ function renderRecipeList(skill, recipes)
             index = index + 1
             local widget = g_ui.createWidget('Recipe', recipeList)
             widget:setImageSource("/images/ui/list1.png")
-            widget:setText(recipe.name)
+
+            local tierText = ""
+    if recipe.tier == 1 then
+        tierText = "T1"
+    elseif recipe.tier == 2 then
+        tierText = "T2"
+    elseif recipe.tier == 3 then
+        tierText = "T3"
+    elseif recipe.tier == 4 then
+        tierText = "T4"
+    end
+    
+    widget:setText(tierText .. " " ..recipe.name)
 
             local item = g_ui.createWidget('UIItem', widget)
             item:setItemId(recipe.spriteId)
