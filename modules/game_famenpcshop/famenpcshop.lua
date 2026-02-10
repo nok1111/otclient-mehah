@@ -10,22 +10,32 @@ local itemsGrid
 local detailsPanel
 local radioCards
 
+-- Cosmetic preview widgets
+local cosmeticPreview
+local cosmeticCreature
+local cosmeticFloor
+local FLOOR_TILES = 3
+
 -- Data
 local playerFamePoints = 0
 local playerFameLevel = 0
+local playerParagonLevel = 0
+local currentShopId = 1
 local allItems = {}
 local selectedItem = nil
 local currentCategory = 'all'
 local pendingReselect = nil
 
--- Categories
-local CATEGORIES = {
-  {id = 'all', name = 'All', icon = '/images/icons/star'},
-  {id = 'mount', name = 'Mounts', icon = '/images/icons/horse'},
-  {id = 'outfit', name = 'Outfits', icon = '/images/icons/tshirt'},
-  {id = 'pet', name = 'Pets', icon = '/images/icons/pets'},
-  {id = 'item', name = 'Boosts', icon = '/images/icons/flash'}
+-- Category display metadata (add new types here as needed)
+local CATEGORY_META = {
+  item    = {name = 'Boosts',   icon = '/images/icons/flash'},
+  mount   = {name = 'Mounts',   icon = '/images/icons/horse'},
+  outfit  = {name = 'Outfits',  icon = '/images/icons/tshirt'},
+  pet     = {name = 'Pets',     icon = '/images/icons/pets'},
+  wings   = {name = 'Wings',    icon = '/images/icons/wings'},
+  effect  = {name = 'Effects',  icon = '/images/icons/effect'},
 }
+local activeCategories = {}
 
 function init()
   window = g_ui.displayUI('famenpcshop')
@@ -41,8 +51,15 @@ function init()
   itemsGrid = window:recursiveGetChildById('itemsGrid')
   detailsPanel = window:recursiveGetChildById('detailsPanel')
   
-  -- Create tabs
-  createTabs()
+  -- Cosmetic preview widgets
+  cosmeticPreview = detailsPanel:recursiveGetChildById('cosmeticPreview')
+  cosmeticCreature = detailsPanel:recursiveGetChildById('cosmeticCreature')
+  cosmeticFloor = detailsPanel:recursiveGetChildById('cosmeticFloor')
+  
+
+  -- Setup cosmetic creature preview
+  cosmeticCreature:setCreatureSize(200)
+  cosmeticCreature:setCenter(true)
   
   -- Initialize radio group for item cards
   radioCards = UIRadioGroup.create()
@@ -75,22 +92,29 @@ function hide()
 end
 
 function createTabs()
-  for _, category in ipairs(CATEGORIES) do
+  tabsPanel:destroyChildren()
+
+  -- Always add "All" tab first
+  local allTab = g_ui.createWidget('FameCategoryTab', tabsPanel)
+  local allIcon = allTab:getChildById('iconWidget')
+  allIcon:setImageSource('/images/icons/star')
+  local allLabel = allTab:getChildById('tabLabel')
+  allLabel:setText('All')
+  allTab.categoryId = 'all'
+  allTab.onClick = function() selectCategory('all') end
+
+  -- Add tabs only for categories present in this shop
+  for _, catId in ipairs(activeCategories) do
+    local meta = CATEGORY_META[catId] or {name = catId, icon = '/images/icons/star'}
     local tab = g_ui.createWidget('FameCategoryTab', tabsPanel)
-    
-    -- Set icon
     local iconWidget = tab:getChildById('iconWidget')
-    iconWidget:setImageSource(category.icon)
-    
-    -- Set label
+    iconWidget:setImageSource(meta.icon)
     local tabLabel = tab:getChildById('tabLabel')
-    tabLabel:setText(category.name)
-    
-    tab.categoryId = category.id
-    tab.onClick = function()
-      selectCategory(category.id)
-    end
+    tabLabel:setText(meta.name)
+    tab.categoryId = catId
+    tab.onClick = function() selectCategory(catId) end
   end
+
   selectCategory('all')
 end
 
@@ -215,6 +239,7 @@ end
 function canPurchaseItem(item)
   if not item then return false end
   if playerFameLevel < item.fameLevel then return false end
+  if (item.paragonLevel or 0) > 0 and playerParagonLevel < item.paragonLevel then return false end
   
   -- Check if player can afford fame currency (only currency we can validate client-side)
   if item.currencies and #item.currencies > 0 then
@@ -265,13 +290,21 @@ function showItemDetails(item)
     priceLabel:setText(priceText)
   end
   
-  levelLabel:setText('Fame Level Required: ' .. item.fameLevel)
+  local reqText = 'Fame Level Required: ' .. item.fameLevel
+  if (item.paragonLevel or 0) > 0 then
+    reqText = reqText .. '  |  Paragon Level: ' .. item.paragonLevel
+  end
+  levelLabel:setText(reqText)
   descLabel:setText(item.famedesc or '')
   
   -- Type label
   local typeText = ''
   if item.type == 'mount' or item.type == 'outfit' or item.type == 'pet' then
     typeText = 'Cosmetic / Account-wide'
+  elseif item.type == 'wings' then
+    typeText = 'Wings / Account-wide'
+  elseif item.type == 'effect' then
+    typeText = 'Effect / Account-wide'
   elseif item.type == 'item' then
     typeText = 'Consumable'
   end
@@ -281,16 +314,85 @@ function showItemDetails(item)
   local isOwned = item.owned or false
   ownedIcon:setVisible(isOwned)
   
-  -- Show creature or item
-  if item.type == 'item' then
-    itemWidget:setVisible(true)
-    creatureWidget:setVisible(false)
-    itemWidget:setItemId(item.clientId)
-    itemWidget:setVirtual(true)
-  else
+  -- Cosmetic shop [2]: use game_outfit-style floor preview
+  if currentShopId == 2 then
+    -- Hide normal preview widgets
     itemWidget:setVisible(false)
-    creatureWidget:setVisible(true)
-    creatureWidget:setOutfit({type = item.clientId})
+    creatureWidget:setVisible(false)
+    cosmeticPreview:setVisible(true)
+    
+    -- Clear previous effects from cosmetic creature
+    local creature = cosmeticCreature:getCreature()
+    if creature then
+      creature:clearAttachedEffects()
+    end
+    
+    -- Set player outfit on cosmetic creature
+    local localPlayer = g_game.getLocalPlayer()
+    if localPlayer then
+      cosmeticCreature:setOutfit(localPlayer:getOutfit())
+    else
+      cosmeticCreature:setOutfit({type = 128})
+    end
+    
+    -- Attach the selected effect/wing using game_outfit pattern
+    if item.type == 'wings' or item.type == 'effect' then
+      local effectObj = g_attachedEffects.getById(item.id)
+      if effectObj then
+        cosmeticCreature:getCreature():attachEffect(effectObj:clone())
+      end
+    elseif item.type == 'mount' then
+      local outfit = cosmeticCreature:getCreature():getOutfit()
+      outfit.mount = item.clientId
+      cosmeticCreature:setOutfit(outfit)
+    elseif item.type == 'outfit' then
+      cosmeticCreature:setOutfit({type = item.clientId, addons = 3})
+    end
+  else
+    -- Normal shop: hide cosmetic preview, show normal widgets
+    cosmeticPreview:setVisible(false)
+    
+    -- Clear previous attached effects from the detail creature
+    local detailCreature = creatureWidget:getCreature()
+    if detailCreature then
+      detailCreature:clearAttachedEffects()
+    end
+    creatureWidget:setImageSource('')
+
+    -- Show creature or item
+    if item.type == 'item' then
+      itemWidget:setVisible(true)
+      creatureWidget:setVisible(false)
+      itemWidget:setItemId(item.clientId)
+      itemWidget:setVirtual(true)
+    elseif item.type == 'wings' or item.type == 'effect' then
+      itemWidget:setVisible(false)
+      creatureWidget:setVisible(true)
+      local category = modules.game_attachedeffects.getCategory(item.id)
+      if category == ThingCategoryCreature then
+        local localPlayer = g_game.getLocalPlayer()
+        if localPlayer then
+          creatureWidget:setOutfit(localPlayer:getOutfit())
+        else
+          creatureWidget:setOutfit({type = 128})
+        end
+        detailCreature:attachEffect(g_attachedEffects.getById(item.id):clone())
+      elseif category == ThingCategoryEffect then
+        local localPlayer = g_game.getLocalPlayer()
+        if localPlayer then
+          creatureWidget:setOutfit(localPlayer:getOutfit())
+        else
+          creatureWidget:setOutfit({type = 128})
+        end
+        detailCreature:attachEffect(g_attachedEffects.getById(item.id):clone())
+      elseif category == ThingExternalTexture then
+        creatureWidget:setImageSource(modules.game_attachedeffects.getTexture(item.id))
+      end
+    else
+      itemWidget:setVisible(false)
+      creatureWidget:setVisible(true)
+      creatureWidget:setOutfit({type = item.clientId})
+    end
   end
   
   -- Quantity - calculate based on fame currency if present
@@ -422,7 +524,11 @@ function createItemCard(item)
     end
   end
   
-  levelLabel:setText('Lvl ' .. item.fameLevel)
+  if (item.paragonLevel or 0) > 0 then
+    levelLabel:setText('Lvl ' .. item.fameLevel .. ' | P' .. item.paragonLevel)
+  else
+    levelLabel:setText('Lvl ' .. item.fameLevel)
+  end
   
   -- Check if player owns this item (from server)
   local isOwned = item.owned or false
@@ -432,12 +538,16 @@ function createItemCard(item)
     ownedIcon:setVisible(true)
     ownedIcon:breakAnchors()
     ownedIcon:centerIn('parent')
-    card:setOn(false) -- Disable opacity for owned items
+    card:setOpacity(0.5)
   else
     ownedIcon:setVisible(false)
     -- Show lock if can't purchase
     local canPurchase = canPurchaseItem(item)
-    card:setOn(canPurchase)
+    if canPurchase then
+      card:setOpacity(1.0)
+    else
+      card:setOpacity(0.5)
+    end
     lockIcon:setVisible(not canPurchase)
   end
   
@@ -447,6 +557,23 @@ function createItemCard(item)
     creatureWidget:setVisible(false)
     itemWidget:setItemId(item.clientId)
     itemWidget:setVirtual(true)
+  elseif item.type == 'wings' or item.type == 'effect' then
+    itemWidget:setVisible(false)
+    creatureWidget:setVisible(true)
+    local category = modules.game_attachedeffects.getCategory(item.id)
+    if category == ThingCategoryCreature then
+      creatureWidget:setOutfit({type = modules.game_attachedeffects.thingId(item.id)})
+    elseif category == ThingCategoryEffect then
+      local localPlayer = g_game.getLocalPlayer()
+      if localPlayer then
+        creatureWidget:setOutfit(localPlayer:getOutfit())
+      else
+        creatureWidget:setOutfit({type = 128})
+      end
+      creatureWidget:getCreature():attachEffect(g_attachedEffects.getById(item.id):clone())
+    elseif category == ThingExternalTexture then
+      creatureWidget:setImageSource(modules.game_attachedeffects.getTexture(item.id))
+    end
   else
     itemWidget:setVisible(false)
     creatureWidget:setVisible(true)
@@ -460,6 +587,10 @@ function updateFameDisplay()
   famePointsLabel:setText('Fame: ' .. playerFamePoints .. ' pts')
   fameLevelLabel:setText('Level: ' .. playerFameLevel)
   refreshItems()
+end
+
+function getPlayerParagonLevel()
+  return playerParagonLevel
 end
 
 function updateGoldAndTokens(gold, tokens)
@@ -476,9 +607,19 @@ end
 function parseNpcShop(protocol, msg)
   allItems = {}
   
+  -- Read shop table id (1 = normal, 2 = cosmetics)
+  currentShopId = msg:getU8()
+  
   -- Read player's gold and tokens from server
   local playerGold = msg:getU32()
   local playerTokens = msg:getU32()
+
+  -- Read dynamic categories from server
+  activeCategories = {}
+  local catCount = msg:getU8()
+  for i = 1, catCount do
+    table.insert(activeCategories, msg:getString())
+  end
   
   local size = msg:getU16()
   for i = 1, size do
@@ -489,6 +630,7 @@ function parseNpcShop(protocol, msg)
     item.price = msg:getU32()
     item.amount = msg:getU16()
     item.fameLevel = msg:getU32()
+    item.paragonLevel = msg:getU32()
     item.weight = msg:getU32()
     item.name = msg:getString()
     item.famedesc = msg:getString()
@@ -514,9 +656,11 @@ function parseNpcShop(protocol, msg)
   
   playerFamePoints = msg:getU32()
   playerFameLevel = msg:getU32()
+  playerParagonLevel = msg:getU32()
   
   updateFameDisplay()
   updateGoldAndTokens(playerGold, playerTokens)
+  createTabs()
   show()
   
   -- Re-select previously selected item after refresh

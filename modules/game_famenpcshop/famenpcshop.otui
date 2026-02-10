@@ -104,9 +104,6 @@ FameItemCard < UICheckBox
     border-color: #ffd700
     background-color: #2a2a2a
 
-  $!on:
-    opacity: 0.5
-
 MainWindow
   id: famenpcWindow
   size: 700 580
@@ -317,12 +314,13 @@ MainWindow
         text-align: center
         text-auto-resize: true
 
+      // Normal preview (non-cosmetic shops)
       UICreature
         id: detailCreatureWidget
-        anchors.top: prev.bottom
+        anchors.top: detailNameLabel.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         margin-top: 10
-        size: 90 90
+        size: 128 128
 
       Item
         id: detailItemWidget
@@ -330,6 +328,31 @@ MainWindow
         anchors.horizontalCenter: parent.horizontalCenter
         margin-top: 32
         size: 64 64
+
+      // Cosmetic floor preview (shop 2 only)
+      Panel
+        id: cosmeticPreview
+        anchors.top: detailNameLabel.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 5
+        size: 224 224
+        visible: false
+        phantom: true
+
+        Panel
+          id: cosmeticFloor
+          anchors.fill: parent
+          phantom: true
+          layout:
+            type: grid
+            cell-size: 32 32
+            num-columns: 7
+            num-lines: 7
+
+        UICreature
+          id: cosmeticCreature
+          anchors.fill: parent
+          phantom: true
 
       UIWidget
         id: detailOwnedIcon
@@ -344,10 +367,10 @@ MainWindow
       Label
         id: detailPriceLabel
         text: Price: 0 Fame
-        anchors.top: prev.bottom
+        anchors.top: cosmeticPreview.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        margin: 10 10 0 10
+        margin: 5 10 0 10
         font: verdana-11px-rounded
         color: #ffd700
         text-align: center
@@ -358,7 +381,7 @@ MainWindow
         anchors.top: prev.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        margin: 5 10 0 10
+        margin: 3 10 0 10
         color: #aaaaaa
         text-align: center
 
@@ -368,7 +391,7 @@ MainWindow
         anchors.top: prev.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        margin: 5 10 0 10
+        margin: 3 10 0 10
         color: #88ccff
         text-align: center
 
@@ -377,8 +400,8 @@ MainWindow
         anchors.top: prev.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        margin: 10
-        height: 60
+        margin: 5 10 0 10
+        height: 45
         text-wrap: true
         editable: false
         multiline: true
@@ -393,7 +416,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: prev.bottom
-        margin: 10 10 0 10
+        margin: 5 10 0 10
         show-value: true
         minimum: 1
         maximum: 1
@@ -407,7 +430,7 @@ MainWindow
         height: 30
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: prev.bottom
-        margin-top: 15
+        margin-top: 8
         @onClick: modules.game_famenpcshop.onBuyClick()
 
       UIWidget
