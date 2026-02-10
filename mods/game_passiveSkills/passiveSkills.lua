@@ -245,6 +245,21 @@ function PassiveSkills.buildAscensionUI()
 
 	local data = PassiveSkills.paragonData
 
+	-- Show locked message if Paragon is not active
+	if not data.isActive then
+		local lockedLabel = g_ui.createWidget("Label", panel)
+		lockedLabel:addAnchor(AnchorHorizontalCenter, 'parent', AnchorHorizontalCenter)
+		lockedLabel:addAnchor(AnchorTop, 'parent', AnchorTop)
+		lockedLabel:setMarginTop(80)
+		lockedLabel:setText("Reach Level 300 to unlock the Paragon System.")
+		lockedLabel:setColor('#665e78')
+		lockedLabel:setTextAutoResize(true)
+		if PassiveSkills.UI.ascensionParagonLevel then
+			PassiveSkills.UI.ascensionParagonLevel:setText("Paragon Locked")
+		end
+		return
+	end
+
 	-- Header: Paragon Level
 	local header = g_ui.createWidget("Panel", panel)
 	header:setId("paragonHeader")
@@ -982,12 +997,14 @@ function PassiveSkills.onExtendedOpcode(protocol, opcode, buffer)
 	elseif data.topic == "paragon-data-reply" then
 		PassiveSkills.paragonData = data
 		PassiveSkills.buildAscensionUI()
+		-- Update skills window Paragon display
+		if modules.game_skills and modules.game_skills.updateParagonDisplay then
+			modules.game_skills.updateParagonDisplay(data.paragonLevel or 0, data.paragonXP or 0, data.xpNeeded or 0, data.isActive or false)
+		end
 	elseif data.topic == "paragon-allocate-reply" then
-		if data.success then
-			-- Request fresh data to rebuild UI
-			PassiveSkills.sendOpcode({ topic = "paragon-data-request" })
-		else
+		if not data.success then
 			PassiveSkills.setupMessage("Failed", data.message or "Could not allocate point.")
 		end
+		-- On success, server already sends paragon-data-reply via sendDataToClient
 	end
 end

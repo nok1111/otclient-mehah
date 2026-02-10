@@ -153,7 +153,8 @@ MainWindow
     anchors.right: totalBuffsScrollBar.right
     text-auto-resize: true
     text-align: center
-    margin-bottom: 5
+    margin-bottom: 20
+    margin-left: 300
     color: #f4ca16
 
   UIScrollArea
