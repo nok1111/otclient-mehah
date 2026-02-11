@@ -106,24 +106,99 @@ local mountOffsets = {
     [2204] = {x = 10, y = 15},  -- COHETE
 
     [1682] = {x = 10, y = 9},  -- GLOBOS
-    [1686] = {x = 0, y = 0},  -- GLOBOS
-    [1689] = {x = 0, y = 0},  -- GLOBOS
+   
 
-    [1504] = {x = 9, y = 9},  -- GLOBOS
     [1506] = {
         [Directions.North] = {x = 24, y = 2},
         [Directions.South] = {x = 15, y = 15},
-        [Directions.East] = {x = 8, y = 15}, --DERECHA
+        [Directions.East] = {x = 15, y = 15}, --DERECHA
         [Directions.West] = {x = 2, y = 22} --IZQUIERDA
     },
-    [1508] = {x = 0, y = 0},  -- GLOBOS
-    [1509] = {x = 0, y = 0},  -- GLOBOS
+
+    [1508] = {
+        [Directions.North] = {x = 4, y = 6},
+        [Directions.South] = {x = 2, y = 8},
+        [Directions.East] = {x = 6, y = 0}, --DERECHA
+        [Directions.West] = {x = 2, y = 3} --IZQUIERDA
+    },
+    
+    [1509] = {
+        [Directions.North] = {x = 6, y = 10},
+        [Directions.South] = {x = 6, y = 10},
+        [Directions.East] = {x = 6, y = 3}, --DERECHA
+        [Directions.West] = {x = 2, y = 3} --IZQUIERDA
+    },
     [1259] = {
         [Directions.North] = {x = 0, y = 5},
         [Directions.South] = {x = 0, y = -8},
         [Directions.East] = {x = -6, y = 0}, --DERECHA
         [Directions.West] = {x = 0, y = 0} --IZQUIERDA
     },
+     [2361] = {
+        [Directions.North] = {x = 8, y = 12},
+        [Directions.South] = {x = 9, y = 6},
+        [Directions.East] = {x = 12, y = 6}, --DERECHA
+        [Directions.West] = {x = 8, y = 10} --IZQUIERDA
+    },
+     [2362] = {
+        [Directions.North] = {x = 8, y = 12},
+        [Directions.South] = {x = 9, y = 6},
+        [Directions.East] = {x = 12, y = 6}, --DERECHA
+        [Directions.West] = {x = 8, y = 10} --IZQUIERDA
+    },
+     [2363] = {
+        [Directions.North] = {x = 8, y = 12},
+        [Directions.South] = {x = 9, y = 6},
+        [Directions.East] = {x = 12, y = 6}, --DERECHA
+        [Directions.West] = {x = 8, y = 10} --IZQUIERDA
+    },
+    [2581] = {
+        [Directions.North] = {x = 9, y = 6},
+        [Directions.South] = {x = 9, y = 3},
+        [Directions.East] = {x = 1, y = 6}, --DERECHA
+        [Directions.West] = {x = 8, y = 10} --IZQUIERDA
+    },
+     [1686] = {
+        [Directions.North] = {x = 2, y = 2},
+        [Directions.South] = {x = 2, y = 3},
+        [Directions.East] = {x = 1, y = 6}, --DERECHA
+        [Directions.West] = {x = 0, y = 3} --IZQUIERDA
+    },
+    [1689] = {
+        [Directions.North] = {x = 6, y = 8},
+        [Directions.South] = {x = 2, y = 3},
+        [Directions.East] = {x = 1, y = 6}, --DERECHA
+        [Directions.West] = {x = 5, y = 8} --IZQUIERDA
+    },
+    [1504] = {
+        [Directions.North] = {x = 16, y = 9},
+        [Directions.South] = {x = 9, y = 9},
+        [Directions.East] = {x = 9, y = 9}, --DERECHA
+        [Directions.West] = {x = 5, y = 16} --IZQUIERDA
+    },
+
+    [2391] = {
+        [Directions.North] = {x = -4, y = -4},
+        [Directions.South] = {x = -8, y = -2},
+        [Directions.East] = {x = -2, y = -8}, --DERECHA
+        [Directions.West] = {x = 2, y = -2} --IZQUIERDA
+    },
+    [2665] = {
+        [Directions.North] = {x = 41, y = 40},
+        [Directions.South] = {x = 41, y = 38},
+        [Directions.East] = {x = 37, y = 40}, --DERECHA
+        [Directions.West] = {x = 41, y = 40} --IZQUIERDA
+    },
+
+   [2717] = {
+        [Directions.North] = {x = 36, y = 34},
+        [Directions.South] = {x = 36, y = 32},
+        [Directions.East] = {x = 32, y = 38}, --DERECHA
+        [Directions.West] = {x = 32, y = 36} --IZQUIERDA
+    },
+
+  
+    
 }
 
 local titleFont = "verdana-11px-rounded"
