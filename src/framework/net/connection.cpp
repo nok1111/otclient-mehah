@@ -170,7 +170,7 @@ void Connection::internal_write()
     });
 }
 
-void Connection::read(const uint16_t bytes, const RecvCallback& callback)
+void Connection::read(const uint32_t bytes, const RecvCallback& callback)
 {
     if (!m_connected)
         return;

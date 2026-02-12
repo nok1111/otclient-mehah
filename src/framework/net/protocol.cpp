@@ -171,26 +171,26 @@ void Protocol::recv()
     m_inputMessage->reset();
 
     // first update message header size
-    int headerSize = 2; // 2 bytes for message size
+    int headerSize = 4; // 4 bytes for message size
     if (m_checksumEnabled)
         headerSize += 4; // 4 bytes for checksum
     if (m_xteaEncryptionEnabled)
-        headerSize += 2; // 2 bytes for XTEA encrypted message size
+        headerSize += 4; // 4 bytes for XTEA encrypted message size
     m_inputMessage->setHeaderSize(headerSize);
 
-    // read the first 2 bytes which contain the message size
+    // read the first 4 bytes which contain the message size
     if (m_connection)
-        m_connection->read(2, [capture0 = asProtocol()](auto&& PH1, auto&& PH2) {
+        m_connection->read(4, [capture0 = asProtocol()](auto&& PH1, auto&& PH2) {
         capture0->internalRecvHeader(std::forward<decltype(PH1)>(PH1),
         std::forward<decltype(PH2)>(PH2));
     });
 }
 
-void Protocol::internalRecvHeader(const uint8_t* buffer, const uint16_t size)
+void Protocol::internalRecvHeader(const uint8_t* buffer, const uint32_t size)
 {
     // read message size
     m_inputMessage->fillBuffer(buffer, size);
-    const uint16_t remainingSize = m_inputMessage->readSize();
+    const uint32_t remainingSize = m_inputMessage->readSize();
 
     // read remaining message data
     if (m_connection)
@@ -200,7 +200,7 @@ void Protocol::internalRecvHeader(const uint8_t* buffer, const uint16_t size)
     });
 }
 
-void Protocol::internalRecvData(const uint8_t* buffer, const uint16_t size)
+void Protocol::internalRecvData(const uint8_t* buffer, const uint32_t size)
 {
     // process data only if really connected
     if (!isConnected()) {
@@ -293,7 +293,7 @@ namespace
 
 bool Protocol::xteaDecrypt(const InputMessagePtr& inputMessage) const
 {
-    const uint16_t encryptedSize = inputMessage->getUnreadSize();
+    const uint32_t encryptedSize = inputMessage->getUnreadSize();
     if (encryptedSize % 8 != 0) {
         g_logger.traceError("invalid encrypted network message");
         return false;
@@ -306,9 +306,9 @@ bool Protocol::xteaDecrypt(const InputMessagePtr& inputMessage) const
         });
     }
 
-    const uint16_t decryptedSize = inputMessage->getU16() + 2;
-    const int sizeDelta = decryptedSize - encryptedSize;
-    if (sizeDelta > 0 || -sizeDelta > encryptedSize) {
+    const uint32_t decryptedSize = inputMessage->getU32() + 4;
+    const int sizeDelta = static_cast<int>(decryptedSize) - static_cast<int>(encryptedSize);
+    if (sizeDelta > 0 || -sizeDelta > static_cast<int>(encryptedSize)) {
         g_logger.traceError("invalid decrypted network message");
         return false;
     }
@@ -320,17 +320,17 @@ bool Protocol::xteaDecrypt(const InputMessagePtr& inputMessage) const
 void Protocol::xteaEncrypt(const OutputMessagePtr& outputMessage) const
 {
     outputMessage->writeMessageSize();
-    uint16_t encryptedSize = outputMessage->getMessageSize();
+    uint32_t encryptedSize = outputMessage->getMessageSize();
 
     //add bytes until reach 8 multiple
     if ((encryptedSize % 8) != 0) {
-        const uint16_t n = 8 - (encryptedSize % 8);
+        const uint32_t n = 8 - (encryptedSize % 8);
         outputMessage->addPaddingBytes(n);
         encryptedSize += n;
     }
 
     for (uint32_t i = 0, sum = 0, next_sum = sum + delta; i < 32; ++i, sum = next_sum, next_sum += delta) {
-        apply_rounds(outputMessage->getDataBuffer() - 2, encryptedSize, [&](uint32_t& left, uint32_t& right) {
+        apply_rounds(outputMessage->getDataBuffer() - 4, encryptedSize, [&](uint32_t& left, uint32_t& right) {
             left += ((right << 4 ^ right >> 5) + right) ^ (sum + m_xteaKey[sum & 3]);
             right += ((left << 4 ^ left >> 5) + left) ^ (next_sum + m_xteaKey[(next_sum >> 11) & 3]);
         });
@@ -361,15 +361,15 @@ void Protocol::onProxyPacket(const std::shared_ptr<std::vector<uint8_t>>& packet
         m_inputMessage->reset();
 
         // first update message header size
-        int headerSize = 2; // 2 bytes for message size
+        int headerSize = 4; // 4 bytes for message size
         if (m_checksumEnabled)
             headerSize += 4; // 4 bytes for checksum
         if (m_xteaEncryptionEnabled)
-            headerSize += 2; // 2 bytes for XTEA encrypted message size
+            headerSize += 4; // 4 bytes for XTEA encrypted message size
         m_inputMessage->setHeaderSize(headerSize);
-        m_inputMessage->fillBuffer(packet->data(), 2);
+        m_inputMessage->fillBuffer(packet->data(), 4);
         m_inputMessage->readSize();
-        internalRecvData(packet->data() + 2, packet->size() - 2);
+        internalRecvData(packet->data() + 4, packet->size() - 4);
     });
 }
 

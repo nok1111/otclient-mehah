@@ -272,7 +272,7 @@ function show()
             gameMapPanel:setLimitVisibleRange(false)
             setupViewMode(1)
         else
-            gameMapPanel:setMaxZoomOut(13)
+            gameMapPanel:setMaxZoomOut(15)
             gameMapPanel:setLimitVisibleRange(true)
             setupViewMode(1)
         end
@@ -430,8 +430,8 @@ end
 function updateStretchShrink()
     if modules.client_options.getOption('dontStretchShrink') and not alternativeView then
         gameMapPanel:setVisibleDimension({
-            width = 15,
-            height = 11
+            width = 19,
+            height = 13
         })
 
         -- Set gameMapPanel size to height = 11 * 32 + 2
@@ -1223,10 +1223,10 @@ function setupViewMode(mode)
 
         gameMapPanel:setKeepAspectRatio(true)
         gameMapPanel:setLimitVisibleRange(limit)
-        gameMapPanel:setZoom(13)
+        gameMapPanel:setZoom(15)
         gameMapPanel:setVisibleDimension({
-            width = 15,
-            height = 11
+            width = 19,
+            height = 13
         })     
 
     currentViewMode = 1
@@ -1358,7 +1358,7 @@ function testExtendedView(mode)
         end
         gameBottomPanel:getChildById('bottomResizeBorder'):disable()
         gameBottomPanel:getChildById('rightResizeBorder'):disable()
-        gameMapPanel:setZoom(13)
+        gameMapPanel:setZoom(15)
         
             -- Move children back to gameMainRightPanel
             local children = gameMainRightPanel:getChildren()

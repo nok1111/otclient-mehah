@@ -103,14 +103,14 @@ bool InputMessage::decryptRsa(const int size)
     return (getU8() == 0x00);
 }
 
-void InputMessage::fillBuffer(const uint8_t* buffer, const uint16_t size)
+void InputMessage::fillBuffer(const uint8_t* buffer, const uint32_t size)
 {
     checkWrite(m_readPos + size);
     memcpy(m_buffer + m_readPos, buffer, size);
     m_messageSize += size;
 }
 
-void InputMessage::setHeaderSize(const uint16_t size)
+void InputMessage::setHeaderSize(const uint32_t size)
 {
     assert(MAX_HEADER_SIZE - size >= 0);
     m_headerPos = MAX_HEADER_SIZE - size;

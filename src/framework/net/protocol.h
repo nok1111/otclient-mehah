@@ -94,8 +94,8 @@ protected:
     PacketPlayerPtr m_player;
     PacketRecorderPtr m_recorder;
 private:
-    void internalRecvHeader(const uint8_t* buffer, uint16_t size);
-    void internalRecvData(const uint8_t* buffer, uint16_t size);
+    void internalRecvHeader(const uint8_t* buffer, uint32_t size);
+    void internalRecvData(const uint8_t* buffer, uint32_t size);
 
     bool xteaDecrypt(const InputMessagePtr& inputMessage) const;
     void xteaEncrypt(const OutputMessagePtr& outputMessage) const;

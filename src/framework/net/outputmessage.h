@@ -31,9 +31,9 @@ class OutputMessage final : public LuaObject
 public:
     enum
     {
-        BUFFER_MAXSIZE = 65536,
+        BUFFER_MAXSIZE = 150000,
         MAX_STRING_LENGTH = 65536,
-        MAX_HEADER_SIZE = 8
+        MAX_HEADER_SIZE = 12
     };
 
     void reset();
@@ -50,11 +50,11 @@ public:
 
     void encryptRsa();
 
-    uint16_t getWritePos() { return m_writePos; }
-    uint16_t getMessageSize() { return m_messageSize; }
+    uint32_t getWritePos() { return m_writePos; }
+    uint32_t getMessageSize() { return m_messageSize; }
 
-    void setWritePos(const uint16_t writePos) { m_writePos = writePos; }
-    void setMessageSize(const uint16_t messageSize) { m_messageSize = messageSize; }
+    void setWritePos(const uint32_t writePos) { m_writePos = writePos; }
+    void setMessageSize(const uint32_t messageSize) { m_messageSize = messageSize; }
 
 protected:
     uint8_t* getWriteBuffer() { return m_buffer + m_writePos; }
@@ -72,8 +72,8 @@ private:
     bool canWrite(int bytes) const;
     void checkWrite(int bytes);
 
-    uint16_t m_headerPos{ MAX_HEADER_SIZE };
-    uint16_t m_writePos{ MAX_HEADER_SIZE };
-    uint16_t m_messageSize{ 0 };
+    uint32_t m_headerPos{ MAX_HEADER_SIZE };
+    uint32_t m_writePos{ MAX_HEADER_SIZE };
+    uint32_t m_messageSize{ 0 };
     uint8_t m_buffer[BUFFER_MAXSIZE];
 };
