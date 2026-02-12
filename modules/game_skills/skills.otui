@@ -260,7 +260,7 @@ MiniWindow
         margin-top: 2
         margin-left: 2
       SkillNameLabel
-        !text: tr('Strenght')
+        !text: tr('Melee')
         color: #a098b0
         anchors.bottom: none
         margin-left: 30
