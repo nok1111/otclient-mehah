@@ -22,6 +22,8 @@ local achievements = {}
 local rewardsData = {}
 local rewardsAvailablePoints = 0
 local rewardsPlayerSex = 0
+local rewardsCurrentPage = 1
+local rewardsTotalPages = 1
 local currentTab = "achievements"
 local categories = {
   {id = "all", name = "All", color = "#FFFFFF", icon = "all"},
@@ -510,12 +512,13 @@ function requestAchievementData()
   end
 end
 
-function requestRewardsData()
+function requestRewardsData(page)
   if not g_game.isOnline() then return end
+  page = page or 1
   
   local protocolGame = g_game.getProtocolGame()
   if protocolGame then
-    local data = json.encode({action = "list"})
+    local data = json.encode({action = "list", page = page})
     protocolGame:sendExtendedOpcode(OPCODE_ACHIEVEMENT_REWARDS, data)
     protocolGame:sendExtendedOpcode(OPCODE_ACHIEVEMENT_STATS, "")
   end
@@ -526,7 +529,7 @@ function purchaseReward(rewardId)
   
   local protocolGame = g_game.getProtocolGame()
   if protocolGame then
-    local data = json.encode({action = "buy", id = rewardId})
+    local data = json.encode({action = "buy", id = rewardId, page = rewardsCurrentPage})
     protocolGame:sendExtendedOpcode(OPCODE_ACHIEVEMENT_REWARDS, data)
   end
 end
@@ -721,6 +724,13 @@ function onReceiveRewards(protocol, opcode, buffer)
     playerStats.availablePoints = data.availablePoints
   end
   
+  if data.page then
+    rewardsCurrentPage = data.page
+  end
+  if data.totalPages then
+    rewardsTotalPages = data.totalPages
+  end
+  
   -- Update rewards display if window is open and on rewards tab
   if achievementWindow and achievementWindow:isVisible() and currentTab == "rewards" then
     updateRewardsList()
@@ -751,13 +761,45 @@ function updateRewardsList()
   for _, reward in ipairs(rewardsData) do
     createRewardWidget(rewardsList, reward)
   end
+  
+  -- Page navigation
+  if rewardsTotalPages > 1 then
+    local navWidget = g_ui.createWidget('Panel', rewardsList)
+    navWidget:setHeight(40)
+    navWidget:setLayout(UIHorizontalLayout.create(navWidget))
+    navWidget:getLayout():setSpacing(10)
+    navWidget:getLayout():setAlign(AlignCenter)
+    
+    if rewardsCurrentPage > 1 then
+      local prevBtn = g_ui.createWidget('Button', navWidget)
+      prevBtn:setText('< Prev')
+      prevBtn:setWidth(80)
+      prevBtn:setHeight(30)
+      prevBtn.onClick = function() requestRewardsData(rewardsCurrentPage - 1) end
+    end
+    
+    local pageLabel = g_ui.createWidget('Label', navWidget)
+    pageLabel:setText('Page ' .. rewardsCurrentPage .. ' / ' .. rewardsTotalPages)
+    pageLabel:setColor('#FFFFFF')
+    pageLabel:setTextAlign(AlignCenter)
+    pageLabel:setWidth(120)
+    pageLabel:setHeight(30)
+    
+    if rewardsCurrentPage < rewardsTotalPages then
+      local nextBtn = g_ui.createWidget('Button', navWidget)
+      nextBtn:setText('Next >')
+      nextBtn:setWidth(80)
+      nextBtn:setHeight(30)
+      nextBtn.onClick = function() requestRewardsData(rewardsCurrentPage + 1) end
+    end
+  end
 end
 
 function createRewardWidget(parent, reward)
   local widget = g_ui.createWidget('RewardItem', parent)
   if not widget then return end
   
-  -- Set outfit preview with player colors, full addons, and correct sex
+  -- Set outfit preview with player colors and full addons
   local outfitPreview = widget:getChildById('outfitPreview')
   if outfitPreview then
     local success, err = pcall(function()
@@ -777,14 +819,14 @@ function createRewardWidget(parent, reward)
       outfitPreview:setOutfit(outfitTable)
     end)
     if not success then
-      g_logger.warning('[Achievements] Failed to set outfit preview: ' .. tostring(err))
+      g_logger.warning('[Achievements] Failed to set preview: ' .. tostring(err))
     end
   end
   
   -- Set name
   local nameLabel = widget:recursiveGetChildById('rewardName')
   if nameLabel then
-    nameLabel:setText(reward.name or "Unknown Outfit")
+    nameLabel:setText(reward.name or "Unknown")
   end
   
   -- Set description
@@ -811,14 +853,26 @@ function createRewardWidget(parent, reward)
   local ownedLabel = widget:recursiveGetChildById('ownedLabel')
   
   if reward.owned then
-    -- Already owned
+    -- Already owned - green theme
     if buyButton then
       buyButton:setVisible(false)
     end
     if ownedLabel then
       ownedLabel:setVisible(true)
     end
-    widget:setBackgroundColor('#003300')
+    widget:setBackgroundColor('#1a3320')
+    widget:setBorderColor('#44FF44')
+    if nameLabel then
+      nameLabel:setColor('#44FF44')
+    end
+    if descLabel then
+      descLabel:setText('You already own this outfit.')
+      descLabel:setColor('#88CC88')
+    end
+    if costLabel then
+      costLabel:setText('Purchased')
+      costLabel:setColor('#44FF44')
+    end
   else
     -- Not owned
     if ownedLabel then
@@ -832,6 +886,8 @@ function createRewardWidget(parent, reward)
         buyButton:setEnabled(false)
       end
       buyButton.onClick = function()
+        buyButton:setEnabled(false)
+        buyButton:setText('...')
         purchaseReward(reward.id)
       end
     end

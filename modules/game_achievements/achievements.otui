@@ -204,11 +204,10 @@ RewardItem < Panel
 
     Label
       id: ownedLabel
-      anchors.top: rewardCost.top
+      anchors.verticalCenter: parent.verticalCenter
       anchors.right: parent.right
       margin-right: 10
-      margin-top: 2
-      text: OWNED
+      text: ✓ OWNED
       font: verdana-11px-rounded
       color: #44FF44
       visible: false
