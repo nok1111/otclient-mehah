@@ -15,9 +15,14 @@ local OPCODE_ACHIEVEMENT_COMPLETE = 83  -- ExtendedIds.AchievementComplete
 local OPCODE_ACHIEVEMENT_CLAIM = 84     -- ExtendedIds.AchievementClaim
 local OPCODE_ACHIEVEMENT_DETAILS = 85   -- ExtendedIds.AchievementDetails
 local OPCODE_ACHIEVEMENT_STATS = 86     -- ExtendedIds.AchievementStats
+local OPCODE_ACHIEVEMENT_REWARDS = 87   -- ExtendedIds.AchievementRewards
 
 -- Achievement data cache
 local achievements = {}
+local rewardsData = {}
+local rewardsAvailablePoints = 0
+local rewardsPlayerSex = 0
+local currentTab = "achievements"
 local categories = {
   {id = "all", name = "All", color = "#FFFFFF", icon = "all"},
   {id = "combat", name = "Combat", color = "#FFFFFF", icon = "sword"},
@@ -38,7 +43,8 @@ local currentCategory = "all"
 local playerStats = {
   completed = 0,
   claimed = 0,
-  totalPoints = 0
+  totalPoints = 0,
+  availablePoints = 0
 }
 
 function init()
@@ -51,6 +57,7 @@ function init()
   ProtocolGame.registerExtendedOpcode(OPCODE_ACHIEVEMENT_UPDATE, onReceiveAchievementUpdate)
   ProtocolGame.registerExtendedOpcode(OPCODE_ACHIEVEMENT_COMPLETE, onReceiveAchievementComplete)
   ProtocolGame.registerExtendedOpcode(OPCODE_ACHIEVEMENT_STATS, onReceiveStats)
+  ProtocolGame.registerExtendedOpcode(OPCODE_ACHIEVEMENT_REWARDS, onReceiveRewards)
 
   achievementButton = modules.game_mainpanel.addStoreButton('achievementButton',
     tr('Achievements'), '/images/topbuttons/achievements',
@@ -74,6 +81,7 @@ function terminate()
   ProtocolGame.unregisterExtendedOpcode(OPCODE_ACHIEVEMENT_UPDATE)
   ProtocolGame.unregisterExtendedOpcode(OPCODE_ACHIEVEMENT_COMPLETE)
   ProtocolGame.unregisterExtendedOpcode(OPCODE_ACHIEVEMENT_STATS)
+  ProtocolGame.unregisterExtendedOpcode(OPCODE_ACHIEVEMENT_REWARDS)
 
   g_keyboard.unbindKeyDown('Ctrl+H')
   
@@ -101,7 +109,10 @@ function onGameEnd()
   
   -- Clear data
   achievements = {}
-  playerStats = {completed = 0, claimed = 0, totalPoints = 0}
+  rewardsData = {}
+  rewardsAvailablePoints = 0
+  currentTab = "achievements"
+  playerStats = {completed = 0, claimed = 0, totalPoints = 0, availablePoints = 0}
 end
 
 function toggle()
@@ -127,12 +138,31 @@ function toggle()
     achievementButton:setOn(true)
     
     -- Request fresh data when opening
-    requestAchievementData()
+    if currentTab == "achievements" then
+      requestAchievementData()
+    else
+      requestRewardsData()
+    end
   end
 end
 
 function setupWindow()
   if not achievementWindow then return end
+  
+  -- Setup tab buttons
+  local tabAchievements = achievementWindow:recursiveGetChildById('tabAchievements')
+  if tabAchievements then
+    tabAchievements.onClick = function()
+      showAchievementsTab()
+    end
+  end
+  
+  local tabRewards = achievementWindow:recursiveGetChildById('tabRewards')
+  if tabRewards then
+    tabRewards.onClick = function()
+      showRewardsTab()
+    end
+  end
   
   -- Setup category buttons
   local categoryPanel = achievementWindow:getChildById('categoryPanel')
@@ -157,6 +187,63 @@ function setupWindow()
   
   -- Select first category (All)
   selectCategory("all")
+  showAchievementsTab()
+end
+
+function showAchievementsTab()
+  if not achievementWindow then return end
+  currentTab = "achievements"
+  
+  -- Show achievement panels
+  local categoryPanel = achievementWindow:getChildById('categoryPanel')
+  local achievementListPanel = achievementWindow:getChildById('achievementListPanel')
+  local rewardsContent = achievementWindow:getChildById('rewardsContent')
+  
+  if categoryPanel then categoryPanel:setVisible(true) end
+  if achievementListPanel then achievementListPanel:setVisible(true) end
+  if rewardsContent then rewardsContent:setVisible(false) end
+  
+  -- Update tab button styles
+  local tabAchievements = achievementWindow:recursiveGetChildById('tabAchievements')
+  local tabRewards = achievementWindow:recursiveGetChildById('tabRewards')
+  if tabAchievements then
+    tabAchievements:setImageClip(torect('0 68 116 34'))
+    tabAchievements:setColor('#FFD700')
+  end
+  if tabRewards then
+    tabRewards:setImageClip(torect('0 0 116 34'))
+    tabRewards:setColor('#dfdfdf')
+  end
+  
+  requestAchievementData()
+end
+
+function showRewardsTab()
+  if not achievementWindow then return end
+  currentTab = "rewards"
+  
+  -- Hide achievement panels, show rewards
+  local categoryPanel = achievementWindow:getChildById('categoryPanel')
+  local achievementListPanel = achievementWindow:getChildById('achievementListPanel')
+  local rewardsContent = achievementWindow:getChildById('rewardsContent')
+  
+  if categoryPanel then categoryPanel:setVisible(false) end
+  if achievementListPanel then achievementListPanel:setVisible(false) end
+  if rewardsContent then rewardsContent:setVisible(true) end
+  
+  -- Update tab button styles
+  local tabAchievements = achievementWindow:recursiveGetChildById('tabAchievements')
+  local tabRewards = achievementWindow:recursiveGetChildById('tabRewards')
+  if tabAchievements then
+    tabAchievements:setImageClip(torect('0 0 116 34'))
+    tabAchievements:setColor('#dfdfdf')
+  end
+  if tabRewards then
+    tabRewards:setImageClip(torect('0 68 116 34'))
+    tabRewards:setColor('#FFD700')
+  end
+  
+  requestRewardsData()
 end
 
 function selectCategory(categoryId)
@@ -394,13 +481,14 @@ end
 function updateStatsDisplay()
   if not achievementWindow then return end
   
-  local statsLabel = achievementWindow:getChildById('statsLabel')
+  local statsLabel = achievementWindow:recursiveGetChildById('statsLabel')
   if statsLabel then
     statsLabel:setText(string.format(
-      'Completed: %d | Claimed: %d | Points: %d',
+      'Completed: %d | Claimed: %d | Points: %d | Available: %d',
       playerStats.completed,
       playerStats.claimed,
-      playerStats.totalPoints
+      playerStats.totalPoints,
+      playerStats.availablePoints
     ))
   end
 end
@@ -419,6 +507,27 @@ function requestAchievementData()
     if currentCategory ~= "all" then
       protocolGame:sendExtendedOpcode(OPCODE_ACHIEVEMENT_DETAILS, currentCategory)
     end
+  end
+end
+
+function requestRewardsData()
+  if not g_game.isOnline() then return end
+  
+  local protocolGame = g_game.getProtocolGame()
+  if protocolGame then
+    local data = json.encode({action = "list"})
+    protocolGame:sendExtendedOpcode(OPCODE_ACHIEVEMENT_REWARDS, data)
+    protocolGame:sendExtendedOpcode(OPCODE_ACHIEVEMENT_STATS, "")
+  end
+end
+
+function purchaseReward(rewardId)
+  if not g_game.isOnline() then return end
+  
+  local protocolGame = g_game.getProtocolGame()
+  if protocolGame then
+    local data = json.encode({action = "buy", id = rewardId})
+    protocolGame:sendExtendedOpcode(OPCODE_ACHIEVEMENT_REWARDS, data)
   end
 end
 
@@ -504,7 +613,8 @@ function onReceiveStats(protocol, opcode, buffer)
   playerStats = {
     completed = data.completed or 0,
     claimed = data.claimed or 0,
-    totalPoints = data.points or 0
+    totalPoints = data.points or 0,
+    availablePoints = data.availablePoints or 0
   }
   
   -- Update display
@@ -588,4 +698,142 @@ function fadeOutPopup()
   end
   
   fadeOut()
+end
+
+-- =============================================
+-- REWARDS SHOP FUNCTIONS
+-- =============================================
+
+function onReceiveRewards(protocol, opcode, buffer)
+  local data = json.decode(buffer)
+  if not data then return end
+  
+  if data.rewards then
+    rewardsData = data.rewards
+  end
+  
+  if data.playerSex ~= nil then
+    rewardsPlayerSex = data.playerSex
+  end
+  
+  if data.availablePoints then
+    rewardsAvailablePoints = data.availablePoints
+    playerStats.availablePoints = data.availablePoints
+  end
+  
+  -- Update rewards display if window is open and on rewards tab
+  if achievementWindow and achievementWindow:isVisible() and currentTab == "rewards" then
+    updateRewardsList()
+    updateStatsDisplay()
+  end
+end
+
+function updateRewardsList()
+  if not achievementWindow then return end
+  
+  local rewardsContent = achievementWindow:getChildById('rewardsContent')
+  if not rewardsContent then return end
+  
+  -- Update points label
+  local rewardsPointsLabel = rewardsContent:recursiveGetChildById('rewardsPointsLabel')
+  if rewardsPointsLabel then
+    rewardsPointsLabel:setText('Available Points: ' .. rewardsAvailablePoints)
+  end
+  
+  -- Get the list panel
+  local rewardsList = rewardsContent:recursiveGetChildById('rewardsList')
+  if not rewardsList then return end
+  
+  -- Clear current list
+  rewardsList:destroyChildren()
+  
+  -- Create reward widgets
+  for _, reward in ipairs(rewardsData) do
+    createRewardWidget(rewardsList, reward)
+  end
+end
+
+function createRewardWidget(parent, reward)
+  local widget = g_ui.createWidget('RewardItem', parent)
+  if not widget then return end
+  
+  -- Set outfit preview with player colors, full addons, and correct sex
+  local outfitPreview = widget:getChildById('outfitPreview')
+  if outfitPreview then
+    local success, err = pcall(function()
+      local looktype = reward.looktype
+      if rewardsPlayerSex == 1 and reward.looktype_female then
+        looktype = reward.looktype_female
+      end
+      local outfitTable = {type = looktype, addons = 3}
+      local localPlayer = g_game.getLocalPlayer()
+      if localPlayer then
+        local playerOutfit = localPlayer:getOutfit()
+        outfitTable.head = playerOutfit.head
+        outfitTable.body = playerOutfit.body
+        outfitTable.legs = playerOutfit.legs
+        outfitTable.feet = playerOutfit.feet
+      end
+      outfitPreview:setOutfit(outfitTable)
+    end)
+    if not success then
+      g_logger.warning('[Achievements] Failed to set outfit preview: ' .. tostring(err))
+    end
+  end
+  
+  -- Set name
+  local nameLabel = widget:recursiveGetChildById('rewardName')
+  if nameLabel then
+    nameLabel:setText(reward.name or "Unknown Outfit")
+  end
+  
+  -- Set description
+  local descLabel = widget:recursiveGetChildById('rewardDesc')
+  if descLabel then
+    descLabel:setText(reward.description or "")
+  end
+  
+  -- Set cost
+  local costLabel = widget:recursiveGetChildById('rewardCost')
+  if costLabel then
+    costLabel:setText('Cost: ' .. (reward.cost or 0) .. ' pts')
+    if rewardsAvailablePoints >= (reward.cost or 0) and not reward.owned then
+      costLabel:setColor('#00FF00')
+    elseif reward.owned then
+      costLabel:setColor('#888888')
+    else
+      costLabel:setColor('#FF4444')
+    end
+  end
+  
+  -- Buy button / Owned label
+  local buyButton = widget:recursiveGetChildById('buyButton')
+  local ownedLabel = widget:recursiveGetChildById('ownedLabel')
+  
+  if reward.owned then
+    -- Already owned
+    if buyButton then
+      buyButton:setVisible(false)
+    end
+    if ownedLabel then
+      ownedLabel:setVisible(true)
+    end
+    widget:setBackgroundColor('#003300')
+  else
+    -- Not owned
+    if ownedLabel then
+      ownedLabel:setVisible(false)
+    end
+    if buyButton then
+      buyButton:setVisible(true)
+      if rewardsAvailablePoints >= (reward.cost or 0) then
+        buyButton:setEnabled(true)
+      else
+        buyButton:setEnabled(false)
+      end
+      buyButton.onClick = function()
+        purchaseReward(reward.id)
+      end
+    end
+  end
 end

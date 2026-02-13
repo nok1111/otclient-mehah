@@ -135,12 +135,90 @@ AchievementItem < Panel
       color: #888888
       text-wrap: true
 
+// Reward Item Widget (outfit card for rewards shop)
+RewardItem < Panel
+  height: 120
+  background-color: #2a2a2a
+  border-width: 1
+  border-color: #444444
+
+  // Outfit Preview
+  UICreature
+    id: outfitPreview
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    width: 80
+    margin: 8
+    phantom: true
+
+  // Content
+  Panel
+    id: rewardContent
+    anchors.top: parent.top
+    anchors.left: outfitPreview.right
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-left: 8
+    margin-right: 8
+
+    Label
+      id: rewardName
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 8
+      text: Outfit Name
+      font: verdana-11px-rounded
+      color: #FFD700
+
+    Label
+      id: rewardDesc
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 4
+      text: Description
+      font: verdana-11px-rounded
+      color: #CCCCCC
+      text-wrap: true
+
+    Label
+      id: rewardCost
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      margin-top: 6
+      text: Cost: 0 pts
+      font: verdana-11px-rounded
+      color: #00FF00
+
+    Button
+      id: buyButton
+      anchors.top: rewardCost.top
+      anchors.right: parent.right
+      width: 80
+      height: 22
+      margin-right: 5
+      !text: tr('Buy')
+      enabled: true
+
+    Label
+      id: ownedLabel
+      anchors.top: rewardCost.top
+      anchors.right: parent.right
+      margin-right: 10
+      margin-top: 2
+      text: OWNED
+      font: verdana-11px-rounded
+      color: #44FF44
+      visible: false
+
 MainWindow
   !text: tr('Achievements')
   size: 800 600
   @onEscape: self:hide()
 
-  // Header with stats
+  // Header with tabs and stats
   Panel
     id: headerPanel
     anchors.top: parent.top
@@ -151,15 +229,50 @@ MainWindow
     border-width: 1
     border-color: #333333
 
-    Label
-      id: titleLabel
+    // Tab: Achievements
+    Button
+      id: tabAchievements
       anchors.top: parent.top
       anchors.left: parent.left
-      margin-top: 10
-      margin-left: 15
-      text: Achievements
+      width: 120
+      height: 28
+      margin-top: 6
+      margin-left: 10
+      !text: tr('Achievements')
       font: verdana-11px-rounded
       color: #FFD700
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 68 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+    // Tab: Rewards
+    Button
+      id: tabRewards
+      anchors.top: parent.top
+      anchors.left: prev.right
+      width: 120
+      height: 28
+      margin-top: 6
+      margin-left: 5
+      !text: tr('Rewards')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-align: center
+      image-source: /images/ui/buttons/tabbar_button
+      image-clip: 0 0 116 34
+      image-border: 12
+      padding: 2 6 2 6
+
+      $hover !disabled:
+        image-clip: 0 34 116 34
+
+      $pressed:
+        image-clip: 0 68 116 34
+
+      $disabled:
+        color: #dfdfdf88
 
     Label
       id: statsLabel
@@ -536,6 +649,73 @@ MainWindow
       anchors.bottom: parent.bottom
       margin: 5
       vertical-scrollbar: achievementScrollBar
+      layout:
+        type: verticalBox
+        spacing: 5
+
+  // ===== REWARDS TAB CONTENT =====
+  Panel
+    id: rewardsContent
+    anchors.top: headerPanel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 5
+    margin-left: 5
+    margin-right: 5
+    margin-bottom: 5
+    background-color: #1a1a1a
+    border-width: 1
+    border-color: #333333
+    visible: false
+
+    // Points display at top
+    Panel
+      id: rewardsHeader
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 35
+      background-color: #222222
+      border-width: 1
+      border-color: #333333
+
+      Label
+        id: rewardsTitle
+        anchors.top: parent.top
+        anchors.left: parent.left
+        margin-top: 8
+        margin-left: 15
+        text: Outfit Rewards Shop
+        font: verdana-11px-rounded
+        color: #FFD700
+
+      Label
+        id: rewardsPointsLabel
+        anchors.top: parent.top
+        anchors.right: parent.right
+        margin-top: 8
+        margin-right: 15
+        text: Available Points: 0
+        font: verdana-11px-rounded
+        color: #00FF00
+
+    VerticalScrollBar
+      id: rewardsScrollBar
+      anchors.top: rewardsHeader.bottom
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      step: 28
+      pixels-scroll: true
+
+    ScrollablePanel
+      id: rewardsList
+      anchors.top: rewardsHeader.bottom
+      anchors.left: parent.left
+      anchors.right: prev.left
+      anchors.bottom: parent.bottom
+      margin: 5
+      vertical-scrollbar: rewardsScrollBar
       layout:
         type: verticalBox
         spacing: 5
