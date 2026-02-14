@@ -223,6 +223,17 @@ function ProtocolLogin:parseCharacterList(msg)
             local character = {}
             local worldId = msg:getU8()
             character.name = msg:getString()
+            -- Extended character data (level, outfit, paragon)
+            character.level = msg:getU16()
+            character.looktype = msg:getU16()
+            character.lookhead = msg:getU8()
+            character.lookbody = msg:getU8()
+            character.looklegs = msg:getU8()
+            character.lookfeet = msg:getU8()
+            character.lookaddons = msg:getU8()
+            character.vocation = msg:getU8()
+            character.paragonLevel = msg:getU16()
+
             character.worldName = worlds[worldId].worldName
             character.worldIp = worlds[worldId].worldIp
             character.worldPort = worlds[worldId].worldPort

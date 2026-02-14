@@ -282,6 +282,15 @@ function CharacterList.create(characters, account, otui)
     characterList = charactersWindow:getChildById('characters')
     autoReconnectButton = charactersWindow:getChildById('autoReconnect')
 
+    -- Enhanced Graphics checkbox
+    local enhanceCheck = charactersWindow:getChildById('enhanceGraphics')
+    if enhanceCheck then
+        enhanceCheck:setChecked(g_settings.getBoolean('enhance-graphics', true))
+        enhanceCheck.onCheckChange = function(widget, checked)
+            g_settings.set('enhance-graphics', checked)
+        end
+    end
+
     -- characters
     G.characters = characters
     G.characterAccount = account
@@ -291,6 +300,18 @@ function CharacterList.create(characters, account, otui)
     local accountStatusIcon = nil
     if g_game.getFeature(GameEnterGameShowAppearance) then
         accountStatusIcon = charactersWindow:getChildById('accountStatusIcon')
+    end
+
+    -- Auto-size window to fit character cards horizontally
+    if not g_game.getFeature(GameEnterGameShowAppearance) then
+        local cardWidth = 100
+        local cardSpacing = 6
+        local padding = 16
+        local windowPadding = 36
+        local numChars = #characters
+        local contentWidth = numChars * cardWidth + (numChars - 1) * cardSpacing + padding
+        local totalWidth = math.max(320, math.min(contentWidth + windowPadding, 900))
+        charactersWindow:setWidth(totalWidth)
     end
 
     local focusLabel
@@ -341,6 +362,47 @@ function CharacterList.create(characters, account, otui)
                 statusHidden:setImageSource('/images/game/entergame/hidden')
             else
                 statusHidden:setImageSource('')
+            end
+        else
+            -- Card mode: show walking outfit
+            if characterInfo.looktype and characterInfo.looktype > 0 then
+                local creatureDisplay = widget:getChildById('outfitCreatureBox')
+                local creature = Creature.create()
+                local outfit = {
+                    type = characterInfo.looktype,
+                    head = characterInfo.lookhead or 0,
+                    body = characterInfo.lookbody or 0,
+                    legs = characterInfo.looklegs or 0,
+                    feet = characterInfo.lookfeet or 0,
+                    addons = characterInfo.lookaddons or 0
+                }
+                creature:setOutfit(outfit)
+                creature:setDirection(2)
+                creatureDisplay:setCreature(creature)
+                creature:setStaticWalking(1000)
+            end
+
+            -- Build info lines for card
+            local vocationNames = {
+                [0] = 'None', [1] = 'Magician', [2] = 'Templar', [3] = 'Nightblade',
+                [4] = 'Dragon Knight', [5] = 'Warlock', [6] = 'Stellar', [7] = 'Monk',
+                [8] = 'Druid', [9] = 'Light Dancer', [10] = 'Archer'
+            }
+
+            local infoLines = {}
+            if characterInfo.level then
+                table.insert(infoLines, 'Lv. ' .. characterInfo.level)
+            end
+            if characterInfo.vocation and vocationNames[characterInfo.vocation] then
+                table.insert(infoLines, vocationNames[characterInfo.vocation])
+            end
+            if characterInfo.paragonLevel and characterInfo.paragonLevel > 0 then
+                table.insert(infoLines, 'P' .. characterInfo.paragonLevel)
+            end
+
+            local infoLabel = widget:getChildById('charInfo')
+            if infoLabel then
+                infoLabel:setText(table.concat(infoLines, '\n'))
             end
         end
 
