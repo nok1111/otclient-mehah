@@ -5483,10 +5483,7 @@ void ProtocolGame::parseMapShader(const InputMessagePtr& msg)
 {
     const auto& shaderName = msg->getString();
 
-    const auto& mapView = g_map.getMapView(0);
-    if (mapView) {
-        mapView->setShader(shaderName, 0.f, 0.f);
-    }
+    g_lua.callGlobalField("g_game", "onMapShaderChange", shaderName);
 }
 
 

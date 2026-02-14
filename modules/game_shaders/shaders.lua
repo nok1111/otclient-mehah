@@ -48,6 +48,10 @@ local MAP_SHADERS = { {
     name = 'Map - Noise',
     frag = 'shaders/fragment/noise.frag'
 },
+{
+    name = 'Map - Enhance',
+    frag = 'shaders/fragment/enhance.frag'
+},
 
 {name = 'Desert', frag = 'shaders/fragment/desert.frag', tex1 = 'images/clouds' },
 {name = 'Desert3', frag = 'shaders/fragment/desert.frag', tex1 = 'images/sandstorm' },
@@ -159,9 +163,79 @@ MOUNT_SHADERS = { {
     frag = 'shaders/fragment/party.frag'
 } }
 
+ENHANCE_SHADER_NAME = 'Map - Enhance'
+
+-- GLSL post-process function: color enhancements applied after any weather shader
+local ENHANCE_POST_GLSL = [=[
+vec3 _enhancePost(vec3 color, vec2 uv) {
+    vec3 curved = color * color * (3.0 - 2.0 * color);
+    color = mix(color, curved, 0.5);
+    float luma = dot(color, vec3(0.299, 0.587, 0.114));
+    float mx = max(color.r, max(color.g, color.b));
+    float mn = min(color.r, min(color.g, color.b));
+    float sat = mx - mn;
+    color = mix(vec3(luma), color, 1.0 + 0.15 * (1.0 - sat));
+    luma = dot(color, vec3(0.299, 0.587, 0.114));
+    color = mix(vec3(luma), color, 1.08);
+    color.r += 0.005;
+    color.b -= 0.0025;
+    vec2 d = uv - 0.5;
+    color *= 1.0 - dot(d, d) * 0.8;
+    return clamp(color, 0.0, 1.0);
+}
+]=]
+
+-- Maps original shader name -> combined enhanced name
+local enhancedShaderMap = {}
+-- Maps shader name -> its options (for drawViewportEdge etc.)
+local mapShaderOpts = {}
+
+function isEnhanceEnabled()
+    return g_settings.getBoolean('enhance-graphics', true)
+end
+
+function setEnhanceEnabled(enabled)
+    g_settings.set('enhance-graphics', enabled)
+    local map = modules.game_interface.getMapPanel()
+    if map then
+        if enabled then
+            map:setShader(ENHANCE_SHADER_NAME)
+        else
+            map:setShader('Map - Default')
+        end
+    end
+end
+
+function getDefaultMapShader()
+    if isEnhanceEnabled() then
+        return ENHANCE_SHADER_NAME
+    end
+    return 'Map - Default'
+end
+
+function setMapShaderSafe(shaderName)
+    local map = modules.game_interface.getMapPanel()
+    if not map then return end
+
+    local opts = mapShaderOpts[shaderName]
+
+    if isEnhanceEnabled() then
+        if shaderName == 'Map - Default' then
+            shaderName = ENHANCE_SHADER_NAME
+        elseif enhancedShaderMap[shaderName] then
+            shaderName = enhancedShaderMap[shaderName]
+        end
+    end
+
+    map:setShader(shaderName)
+    if opts then
+        map:setDrawViewportEdge(opts.drawViewportEdge == true)
+    end
+end
+
 local function attachShaders()
     local map = modules.game_interface.getMapPanel()
-    map:setShader('Default')
+    map:setShader(getDefaultMapShader())
 
     local player = g_game.getLocalPlayer()
     player:setShader('Default')
@@ -192,6 +266,36 @@ ShaderController = Controller:new()
 function ShaderController:onInit()
     for _, opts in pairs(MAP_SHADERS) do
         registerShader(opts, 'setupMapShader')
+        mapShaderOpts[opts.name] = opts
+    end
+
+    -- Create combined enhance + weather shaders
+    for _, opts in pairs(MAP_SHADERS) do
+        if opts.frag and opts.name ~= ENHANCE_SHADER_NAME then
+            local ok, source = pcall(function()
+                return g_resources.readFileContents(resolvepath(opts.frag))
+            end)
+            if ok and source and #source > 0 then
+                -- Rename void main() -> void _weatherMain()
+                local modified = source:gsub('void%s+main%s*%(', 'void _weatherMain(')
+                local combined = modified .. '\n' .. ENHANCE_POST_GLSL .. '\n' ..
+                    'void main() {\n' ..
+                    '    _weatherMain();\n' ..
+                    '    gl_FragColor = vec4(_enhancePost(gl_FragColor.rgb, v_TexCoord), gl_FragColor.a);\n' ..
+                    '}\n'
+
+                local combinedName = opts.name .. ' + Enhance'
+                g_shaders.createFragmentShaderFromCode(combinedName, combined, opts.useFramebuffer or false)
+                g_shaders.setupMapShader(combinedName)
+                if opts.tex1 then
+                    g_shaders.addMultiTexture(combinedName, opts.tex1)
+                end
+                if opts.tex2 then
+                    g_shaders.addMultiTexture(combinedName, opts.tex2)
+                end
+                enhancedShaderMap[opts.name] = combinedName
+            end
+        end
     end
 
     for _, opts in pairs(OUTFIT_SHADERS) do
@@ -231,11 +335,27 @@ function ShaderController:onGameStart()
     for _, opts in pairs(MOUNT_SHADERS) do
         self.ui.mountComboBox:addOption(opts.name, opts)
     end
+
+    -- Handle server-side map shader changes (from parseMapShader C++ -> Lua event)
+    connect(g_game, { onMapShaderChange = setMapShaderSafe })
+end
+
+function ShaderController:onGameEnd()
+    disconnect(g_game, { onMapShaderChange = setMapShaderSafe })
 end
 
 function ShaderController:onMapComboBoxChange(event)
+    local shaderName = event.text
+    if isEnhanceEnabled() then
+        if shaderName == 'Map - Default' then
+            shaderName = ENHANCE_SHADER_NAME
+        elseif enhancedShaderMap[shaderName] then
+            shaderName = enhancedShaderMap[shaderName]
+        end
+    end
+
     local map = modules.game_interface.getMapPanel()
-    map:setShader(event.text)
+    map:setShader(shaderName)
 
     local data = event.target:getCurrentOption().data
     map:setDrawViewportEdge(data.drawViewportEdge == true)
