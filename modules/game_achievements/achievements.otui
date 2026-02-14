@@ -207,7 +207,7 @@ RewardItem < Panel
       anchors.verticalCenter: parent.verticalCenter
       anchors.right: parent.right
       margin-right: 10
-      text: ✓ OWNED
+      text: OWNED
       font: verdana-11px-rounded
       color: #44FF44
       visible: false
@@ -279,6 +279,7 @@ MainWindow
       anchors.right: parent.right
       margin-top: 10
       margin-right: 15
+      width: 300
       text: Completed: 0 | Claimed: 0 | Points: 0
       font: verdana-11px-rounded
       color: #CCCCCC
@@ -696,6 +697,7 @@ MainWindow
         margin-top: 8
         margin-right: 15
         text: Available Points: 0
+        width: 200
         font: verdana-11px-rounded
         color: #00FF00
 

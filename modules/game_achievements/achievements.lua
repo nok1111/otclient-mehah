@@ -711,6 +711,16 @@ function onReceiveRewards(protocol, opcode, buffer)
   local data = json.decode(buffer)
   if not data then return end
   
+  -- Handle purchase result message
+  if data.type == "purchaseResult" then
+    if data.success then
+      modules.game_textmessage.displayGameMessage('Purchase successful!')
+    else
+      modules.game_textmessage.displayGameMessage(data.message or 'Purchase failed.')
+    end
+    return
+  end
+  
   if data.rewards then
     rewardsData = data.rewards
   end
@@ -768,7 +778,6 @@ function updateRewardsList()
     navWidget:setHeight(40)
     navWidget:setLayout(UIHorizontalLayout.create(navWidget))
     navWidget:getLayout():setSpacing(10)
-    navWidget:getLayout():setAlign(AlignCenter)
     
     if rewardsCurrentPage > 1 then
       local prevBtn = g_ui.createWidget('Button', navWidget)
@@ -804,7 +813,7 @@ function createRewardWidget(parent, reward)
   if outfitPreview then
     local success, err = pcall(function()
       local looktype = reward.looktype
-      if rewardsPlayerSex == 1 and reward.looktype_female then
+      if rewardsPlayerSex == 0 and reward.looktype_female then
         looktype = reward.looktype_female
       end
       local outfitTable = {type = looktype, addons = 3}
