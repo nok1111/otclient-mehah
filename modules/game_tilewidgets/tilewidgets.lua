@@ -147,7 +147,7 @@ function M.attachForCurrentFloor()
       -- distance-based culling
       local dx = math.abs((p.x or 0) - playerPos.x)
       local dy = math.abs((p.y or 0) - playerPos.y)
-      local RADIUS = 8
+      local RADIUS = 16
       if dx <= RADIUS and dy <= RADIUS then
         -- try to attach (silently skips if tile not ready)
         attachIfReady(p, e.text, e.opts)

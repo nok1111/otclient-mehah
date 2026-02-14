@@ -374,8 +374,97 @@ TileWidgetsConfig = {
     },
 
 
+    {
+      pos = {x = 2225, y = 3281, z = 3},
+      text = "Enchanting Station",
+      opts = {
+        width = 130, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40,
+        marginRight = 30
+      }
+    },
 
+    {
+      pos = {x = 2228, y = 3281, z = 3},
+      text = "Alchemy Station",
+      opts = {
+        width = 130, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40,
+        marginRight = 30
+      }
+    },
 
+    {
+      pos = {x = 2228, y = 3285, z = 3},
+      text = "Blacksmith Station",
+      opts = {
+        width = 130, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40,
+        marginRight = 30
+      }
+    },
+
+    {
+      pos = {x = 2231, y = 3273, z = 3},
+      text = "Teleporter",
+      opts = {
+        width = 130, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40
+      }
+    },
+
+    
+    {
+      pos = {x = 2086, y = 3463, z = 5},
+      text = "level 90-200",
+      opts = {
+        width = 130, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40
+      }
+    },
+
+    {
+      pos = {x = 2090, y = 3463, z = 5},
+      text = "level 150-230",
+      opts = {
+        width = 130, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40
+      }
+    },
+
+    {
+      pos = {x = 2094, y = 3463, z = 5},
+      text = "level 210-270",
+      opts = {
+        width = 130, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40
+      }
+    },
+
+     {
+      pos = {x = 2087, y = 3482, z = 5},
+      text = "level 250-300+",
+      opts = {
+        width = 130, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40
+      }
+    },
 
 
 
