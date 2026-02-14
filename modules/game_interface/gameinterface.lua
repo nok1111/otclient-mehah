@@ -430,8 +430,8 @@ end
 function updateStretchShrink()
     if modules.client_options.getOption('dontStretchShrink') and not alternativeView then
         gameMapPanel:setVisibleDimension({
-            width = 19,
-            height = 13
+            width = 21,
+            height = 15
         })
 
         -- Set gameMapPanel size to height = 11 * 32 + 2
@@ -1225,8 +1225,8 @@ function setupViewMode(mode)
         gameMapPanel:setLimitVisibleRange(limit)
         gameMapPanel:setZoom(15)
         gameMapPanel:setVisibleDimension({
-            width = 19,
-            height = 13
+            width = 21,
+            height = 15
         })     
 
     currentViewMode = 1
