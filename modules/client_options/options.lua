@@ -310,11 +310,14 @@ end
 
 function setupOptionsMainButton()
     if extraWidgets.optionsButtons then
-        return
+        if not extraWidgets.optionsButtons:isDestroyed() then
+            extraWidgets.optionsButtons:destroy()
+        end
+        extraWidgets.optionsButtons = nil
     end
 
     extraWidgets.optionsButtons = modules.game_mainpanel.addStoreButton('optionsMainButton', tr('Options'),
-        '/images/options/button_options', toggle, false)
+        '/images/ui/buttons/customize', toggle, false, 98)
 end
 
 function getOption(key)

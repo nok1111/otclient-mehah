@@ -63,7 +63,7 @@ function init()
 
   achievementButton = modules.game_mainpanel.addStoreButton('achievementButton',
     tr('Achievements'), '/images/topbuttons/achievements',
-    toggle, false, 5)
+    toggle, false, 6)
   achievementButton:setOn(false)
   
   g_keyboard.bindKeyDown('Ctrl+H', toggle)

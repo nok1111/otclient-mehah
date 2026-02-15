@@ -117,7 +117,7 @@ function Dungeons.create()
 	Dungeons.listUI = g_ui.displayUI("dungeonList")
 	Dungeons.listUI:hide()
 	Dungeons.listUI:recursiveGetChildById("closeButton").onClick = function()
-		Dungeons.listUI:hide()
+		Dungeons.hideList()
 	end
 
 	Dungeons.killCounter = g_ui.loadUI("killcounter", modules.game_interface.getMapPanel())
@@ -160,12 +160,17 @@ function Dungeons.create()
 	-- Request dungeon list from server
 	Dungeons.sendOpcode({topic = "requestDungeonList"})
 	
-	-- Add dungeon button to game interface
-	if modules.client_topmenu then
-		Dungeons.dungeonButton = modules.client_topmenu.addRightGameToggleButton('dungeonsButton', 
-			'Dungeons', 
-			'/images/topbuttons/dungeon', 
-			Dungeons.showList)
+	-- Add dungeon button to main panel (store-style)
+	if modules.game_mainpanel then
+		Dungeons.dungeonButton = modules.game_mainpanel.addStoreButton('dungeonsButton',
+			tr('Dungeons'),
+			'/images/topbuttons/dungeon',
+			Dungeons.showList,
+			false,
+			5)
+		if Dungeons.dungeonButton and Dungeons.dungeonButton.setOn then
+			Dungeons.dungeonButton:setOn(false)
+		end
 	end
 end
 
@@ -264,6 +269,9 @@ function Dungeons.showList()
 	Dungeons.listUI:show()
 	Dungeons.listUI:raise()
 	Dungeons.listUI:focus()
+	if Dungeons.dungeonButton and Dungeons.dungeonButton.setOn then
+		Dungeons.dungeonButton:setOn(true)
+	end
 end
 
 function Dungeons.hideList()
@@ -271,6 +279,9 @@ function Dungeons.hideList()
 		return
 	end
 	Dungeons.listUI:hide()
+	if Dungeons.dungeonButton and Dungeons.dungeonButton.setOn then
+		Dungeons.dungeonButton:setOn(false)
+	end
 end
 
 function Dungeons.onDungeonList(data)

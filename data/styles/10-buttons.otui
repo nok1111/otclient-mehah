@@ -16,6 +16,29 @@ Button < UIButton
 
   $disabled:
     color: #dfdfdf88
+
+# Square icon-only action button for important controls in game_mainpanel
+MainPanelSquareIconButton < UIButton
+  size: 68 40
+  image-source: /images/ui/buttons/tabbar_button
+  image-clip: 0 0 116 34
+  image-border: 12
+  padding: 0
+  text-offset: 0 0
+  icon-align: center
+  icon-offset: 26 8
+  icon-size: 16 16
+  text-align: center
+
+  $hover !disabled:
+    image-clip: 0 34 116 34
+
+  $pressed !disabled:
+    image-clip: 0 68 116 34
+    text-offset: 0 0
+    icon-offset: 26 8
+
+  $disabled:
     opacity: 0.8
 
 TaskButton < UIButton

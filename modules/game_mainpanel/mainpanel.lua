@@ -8,6 +8,10 @@ local controlButton1400 = nil
 local optionPanel = nil
 local buttonConfigs = {}
 local buttonOrder = {}
+local ICON_ONLY_MAIN_BUTTONS = {
+    optionsMainButton = true,
+    logoutButton = true,
+}
 local COLORS = {
     BASE_1 = "#484848",
     BASE_2 = "#414141"
@@ -35,29 +39,40 @@ function reloadMainPanelSizes()
 
                 if panel:getId() == 'mainoptionspanel' and panel:isOn() then
              
-                    local function calculatePanelHeightFromPanel(panel, icon_width, icon_height, max_icons_per_row)
+                    local function calculatePanelHeightFromPanel(panel, max_icons_per_row)
                         local icon_count = 0
+                        local max_icon_height = 18
                         for _, icon in ipairs(panel:getChildren()) do
                             if icon:isVisible() then
                                 icon_count = icon_count + 1
+                                if icon.getHeight then
+                                    max_icon_height = math.max(max_icon_height, icon:getHeight())
+                                end
                             end
                         end
 
                         local rows = math.ceil(icon_count / max_icons_per_row)
-                        return (rows * icon_height) + (rows * 3) 
+                        return (rows * max_icon_height) + (rows * 3)
                     end
 
                     local options_panel = optionsController.ui.onPanel.options
-                    local options_height = calculatePanelHeightFromPanel(options_panel, 18, 18, 5) 
+                    local options_height = calculatePanelHeightFromPanel(options_panel, 5)
 
                     panel:setHeight(panel:getHeight() + options_height)
                     height = height + options_height
 
                     local store_panel = panel.onPanel.store
-                    local store_height = calculatePanelHeightFromPanel(store_panel, 18, 18, 1) 
+                    local store_height = calculatePanelHeightFromPanel(store_panel, 1)
 
                     store_panel:setHeight(store_height)
                     height = height + store_height
+
+                    local top_controls_panel = panel.onPanel.topControls
+                    if top_controls_panel then
+                        local top_controls_height = 30
+                        top_controls_panel:setHeight(top_controls_height)
+                        height = height + top_controls_height
+                    end
 
                     if store_panel:getChildCount() >= 2 then
                         height = height + 15 
@@ -88,37 +103,74 @@ local function refreshOptionsSizes()
     reloadMainPanelSizes()
 end
 
-local function createButton_large(id, description, image, callback, special, front)
+local function createButton_large(id, description, image, callback, special, front, index, customStyle)
     -- fast version
-    local panel = optionsController.ui.onPanel.store
+    local isIconOnly = ICON_ONLY_MAIN_BUTTONS[id]
+    local storePanel = optionsController.ui.onPanel.store
+    local topControlsPanel = optionsController.ui.onPanel.topControls
+    local panel = (isIconOnly and topControlsPanel) or storePanel
+    if not panel then
+        return nil
+    end
 
     storeAmount = storeAmount + 1
 
     local button = panel:getChildById(id)
+    local styleName = customStyle or (ICON_ONLY_MAIN_BUTTONS[id] and 'MainPanelSquareIconButton') or 'MainPanelLargeButton'
+
+    if isIconOnly then
+        local allPanels = { topControlsPanel, storePanel }
+        for _, currentPanel in ipairs(allPanels) do
+            if currentPanel then
+                local children = currentPanel:getChildren()
+                for i = #children, 1, -1 do
+                    local child = children[i]
+                    if child and child:getId() == id then
+                        child:destroy()
+                    end
+                end
+            end
+        end
+
+        button = nil
+    end
+
     if not button then
-        button = g_ui.createWidget('MainPanelLargeButton')
+        button = g_ui.createWidget(styleName)
         if front then
             panel:insertChild(1, button)
         else
             panel:addChild(button)
         end
+    end
+
+    button:setId(id)
+    button:setTooltip(description)
+
+    if ICON_ONLY_MAIN_BUTTONS[id] then
+        if button.setSize then button:setSize({ width = 68, height = 28 }) end
+        if button.setWidth then button:setWidth(68) end
+        if button.setHeight then button:setHeight(28) end
+        if button.setMinimumSize then button:setMinimumSize({ width = 68, height = 28 }) end
+        if button.setMaximumSize then button:setMaximumSize({ width = 68, height = 28 }) end
+        if button.setText then button:setText('') end
+        if button.setIcon then button:setIcon(image or '') end
+        if button.setIconAlign then button:setIconAlign(AlignCenter) end
     else
-        -- If the button already existed from a previous session, it may carry a custom image.
-        -- Reapply style and clear custom image/clip to use the styled background (tabbar_button).
-        if button.setStyle then button:setStyle('MainPanelLargeButton') end
+        if button.setText then button:setText(description) end
         -- Ensure the proper sprite is used (avoid legacy /images/options/store_large)
         if button.setImageSource then button:setImageSource('/images/ui/buttons/tabbar_button') end
     end
-    button:setId(id)
-    button:setTooltip(description)
-    button:setText(description)
-    -- Ensure the proper sprite is used (avoid legacy /images/options/store_large)
-    if button.setImageSource then button:setImageSource('/images/ui/buttons/tabbar_button') end
+
     button.onMouseRelease = function(widget, mousePos, mouseButton)
         if widget:containsPoint(mousePos) and mouseButton ~= MouseMidButton then
             callback()
             return true
         end
+    end
+
+    if not button.index and type(index) == 'number' then
+        button.index = index
     end
 
     return button
@@ -171,8 +223,8 @@ optionsController = Controller:new()
 optionsController:setUI('mainoptionspanel', modules.game_interface.getLeftPanel())
 
 function optionsController:onInit()
-    createButton_large('Store shop', tr('Store shop'), '', toggleStore,
-    false, 8)
+   -- createButton_large('Store shop', tr('Store shop'), '', toggleStore,
+   -- false, 8)
 
     if not optionPanel then
         optionPanel = g_ui.loadUI('option_control_buttons', modules.client_options:getPanel())
@@ -211,6 +263,24 @@ function optionsController:onGameStart()
         return (a.index or 1000) < (b.index or 1000)
     end)
     getOptionsPanel:reorderChildren(children)
+
+    local topControlsPanel = optionsController.ui.onPanel.topControls
+    if topControlsPanel then
+        local topChildren = topControlsPanel:getChildren()
+        table.sort(topChildren, function(a, b)
+            return (a.index or 1000) < (b.index or 1000)
+        end)
+        topControlsPanel:reorderChildren(topChildren)
+    end
+
+    local storePanel = optionsController.ui.onPanel.store
+    if storePanel then
+        local storeChildren = storePanel:getChildren()
+        table.sort(storeChildren, function(a, b)
+            return (a.index or 1000) < (b.index or 1000)
+        end)
+        storePanel:reorderChildren(storeChildren)
+    end
     optionsController:scheduleEvent(function()
         if optionPanel then
             local config = loadButtonConfig()
@@ -252,8 +322,8 @@ function addToggleButton(id, description, image, callback, front, index)
     return createButton(id, description, image, callback, false, front, index)
 end
 
-function addStoreButton(id, description, image, callback, front)
-    return createButton_large(id, description, image, callback, true, front)
+function addStoreButton(id, description, image, callback, front, index, customStyle)
+    return createButton_large(id, description, image, callback, true, front, index, customStyle)
 end
 
 function getButton(id)

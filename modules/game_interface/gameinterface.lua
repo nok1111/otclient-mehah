@@ -1310,12 +1310,15 @@ end
 
 function setupOptionsMainButton()
     if logOutMainButton then
-        return
+        if not logOutMainButton:isDestroyed() then
+            logOutMainButton:destroy()
+        end
+        logOutMainButton = nil
     end
 
     logOutMainButton = modules.game_mainpanel.addStoreButton('logoutButton', tr('Exit'),
-        '/images/options/button_logout',
-        tryLogout, false)
+        '/images/ui/buttons/logout',
+        tryLogout, false, 99)
 end
 
 function checkAndOpenLeftPanel()
