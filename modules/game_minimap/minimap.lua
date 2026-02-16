@@ -15,13 +15,13 @@ local function refreshVirtualFloors()
     return
 end
 
-local function onPositionChange()
+local function syncMinimapPosition(pos)
     local player = g_game.getLocalPlayer()
     if not player then
         return
     end
 
-    local pos = player:getPosition()
+    pos = pos or player:getPosition()
     if not pos then
         return
     end
@@ -39,6 +39,24 @@ local function onPositionChange()
     virtualFloor = pos.z
     refreshVirtualFloors()
 end
+
+local function onPositionChange()
+    syncMinimapPosition()
+end
+
+local function onWalk(oldPos, newPos)
+    syncMinimapPosition(newPos)
+end
+
+local function onTeleport(player, newPos, oldPos)
+    local localPlayer = g_game.getLocalPlayer()
+    if localPlayer and player and player ~= localPlayer then
+        return
+    end
+
+    syncMinimapPosition(newPos)
+end
+
 mapController = Controller:new()
 -- Mount minimap under RightPanel (consistent with main panel)
 mapController:setUI('minimap', modules.game_interface.getMainRightPanel())
@@ -64,8 +82,13 @@ end
 function mapController:onGameStart()
 
     mapController:registerEvents(LocalPlayer, {
-        onPositionChange = onPositionChange
+        onPositionChange = onPositionChange,
+        onWalk = onWalk
     }):execute()
+
+    mapController:registerEvents(g_game, {
+        onTeleport = onTeleport
+    })
 
     -- Load Map
     g_minimap.clean()
@@ -86,6 +109,7 @@ function mapController:onGameStart()
     end
 
     self.ui.minimapBorder.minimap:load()
+    syncMinimapPosition()
 end
 
 function mapController:onGameEnd()
