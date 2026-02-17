@@ -4749,3 +4749,23 @@ AttachedEffectManager.register(392, 'overcharged', 2160, ThingCategoryCreature, 
     speed = 1,
     offset = { 0, 0, true},
 })
+
+AttachedEffectManager.register(393, 'racing match outfit', 2186, ThingCategoryCreature, {
+    transform = true,
+    duration = 2000,
+
+})
+
+AttachedEffectManager.register(394, 'racing match outfit', 2204, ThingCategoryCreature, {
+    transform = true,
+    duration = 2000,
+
+    shader = 'Outfit - Rainbow',
+    dirOffset = {
+        [North] = { -5, -20, true },
+        [East] = { -20, -5 },
+        [South] = { -10, -20 },
+        [West] = { -20, -5, true }
+    },
+
+})
