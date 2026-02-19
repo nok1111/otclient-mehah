@@ -216,6 +216,7 @@ MainWindow
       anchors.left: prev.right
       anchors.verticalCenter: parent.verticalCenter
       margin-left: 6
+      width: 80
       font: verdana-11px-rounded
       color: #00ffaa
       text-auto-resize: true
@@ -233,7 +234,7 @@ MainWindow
     // Search Input
     TextEdit
       id: searchInput
-      width: 130
+      width: 100
       height: 25
       anchors.right: parent.right
       anchors.verticalCenter: parent.verticalCenter

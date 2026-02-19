@@ -20,6 +20,8 @@ local FLOOR_TILES = 3
 local playerFamePoints = 0
 local playerFameLevel = 0
 local playerParagonLevel = 0
+local playerGold = 0
+local playerTokens = 0
 local currentShopId = 1
 local allItems = {}
 local selectedItem = nil
@@ -236,20 +238,35 @@ function clearSelection()
   detailsPanel:setVisible(false)
 end
 
+local function hasEnoughCurrency(item, quantity)
+  if not item then return false end
+
+  local qty = math.max(1, tonumber(quantity) or 1)
+  if not item.currencies or #item.currencies == 0 then
+    return true
+  end
+
+  for _, currency in ipairs(item.currencies) do
+    local required = (tonumber(currency.amount) or 0) * qty
+    if currency.type == 'fame' and playerFamePoints < required then
+      return false
+    elseif currency.type == 'gold' and playerGold < required then
+      return false
+    elseif currency.type == 'token' and playerTokens < required then
+      return false
+    end
+    -- item currency is validated server-side
+  end
+
+  return true
+end
+
 function canPurchaseItem(item)
   if not item then return false end
   if playerFameLevel < item.fameLevel then return false end
   if (item.paragonLevel or 0) > 0 and playerParagonLevel < item.paragonLevel then return false end
-  
-  -- Check if player can afford fame currency (only currency we can validate client-side)
-  if item.currencies and #item.currencies > 0 then
-    for _, currency in ipairs(item.currencies) do
-      if currency.type == 'fame' then
-        if playerFamePoints < currency.amount then return false end
-      end
-      -- gold, token, and item currencies will be validated server-side
-    end
-  end
+
+  if not hasEnoughCurrency(item, 1) then return false end
   
   return true
 end
@@ -543,12 +560,13 @@ function createItemCard(item)
     ownedIcon:setVisible(false)
     -- Show lock if can't purchase
     local canPurchase = canPurchaseItem(item)
-    if canPurchase then
+    local notcurrency = not hasEnoughCurrency(item, 1)
+    if canPurchase and not notcurrency then
       card:setOpacity(1.0)
     else
       card:setOpacity(0.5)
     end
-    lockIcon:setVisible(not canPurchase)
+    lockIcon:setVisible((not canPurchase) or notcurrency)
   end
   
   -- Show item or creature
@@ -594,6 +612,9 @@ function getPlayerParagonLevel()
 end
 
 function updateGoldAndTokens(gold, tokens)
+  playerGold = tonumber(gold) or 0
+  playerTokens = tonumber(tokens) or 0
+
   if goldLabel then
     goldLabel:setText('Gold: ' .. gold)
     refreshItems()
