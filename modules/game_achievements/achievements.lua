@@ -50,6 +50,8 @@ local playerStats = {
 }
 
 function init()
+  g_ui.importStyle('achievements')
+
   connect(g_game, {
     onGameStart = onGameStart,
     onGameEnd = onGameEnd
@@ -95,6 +97,16 @@ function terminate()
   if achievementWindow then
     achievementWindow:destroy()
     achievementWindow = nil
+  end
+
+  if activePopupEvent then
+    removeEvent(activePopupEvent)
+    activePopupEvent = nil
+  end
+
+  if achievementPopup then
+    achievementPopup:destroy()
+    achievementPopup = nil
   end
 end
 
