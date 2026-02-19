@@ -1833,41 +1833,10 @@ AttachedEffectManager.register(208, 'damaged', 0, 0, {
     opacity = 1,
     duration = 200,
     onAttach = function(effect, owner)
-        local hasOtherShader = owner:getAttachedEffectById(70) 
-        or owner:getAttachedEffectById(120) 
-        or owner:getAttachedEffectById(164)
-        or owner:getAttachedEffectById(190)
-        or owner:getAttachedEffectById(203)
-        or owner:getAttachedEffectById(207)
-        or owner:getAttachedEffectById(214)
-        or owner:getAttachedEffectById(251)
-        or owner:getAttachedEffectById(316)
-        or owner:getAttachedEffectById(354)
-        or owner:getAttachedEffectById(357)
-
-        
-
-        if not hasOtherShader then
-            owner:setShader('Damaged')
-        end
+     owner:setShader('Damaged')
     end,
     onDetach = function(effect, oldOwner)
-        if oldOwner then
-            local hasOtherShader = oldOwner:getAttachedEffectById(70) 
-            or oldOwner:getAttachedEffectById(120) 
-            or oldOwner:getAttachedEffectById(164)
-            or oldOwner:getAttachedEffectById(190)
-            or oldOwner:getAttachedEffectById(203)
-            or oldOwner:getAttachedEffectById(207)
-            or oldOwner:getAttachedEffectById(214)
-            or oldOwner:getAttachedEffectById(251)
-            or oldOwner:getAttachedEffectById(316)
-            or oldOwner:getAttachedEffectById(354)
-            or oldOwner:getAttachedEffectById(357)
-            if not hasOtherShader then
-                oldOwner:setShader('Outfit - Default')
-            end
-        end
+     oldOwner:setShader('Outfit - Default')
     end
 })  
 

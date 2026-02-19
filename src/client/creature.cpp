@@ -1281,6 +1281,8 @@ void Creature::onStartAttachEffect(const AttachedEffectPtr& effect) {
 }
 
 void Creature::onDispatcherAttachEffect(const AttachedEffectPtr& effect) {
+    Thing::onDispatcherAttachEffect(effect);
+
     if (effect->isTransform() && effect->getThingType()) {
         const auto& outfit = getOutfit();
         if (outfit.isTemp())

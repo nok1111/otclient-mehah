@@ -100,6 +100,10 @@ onTop,
         };
     }
     void setShader(std::string_view name);
+    void setOwnerShader(std::string_view name) { m_ownerShader = name.data(); }
+    std::string getOwnerShader() const { return m_ownerShader; }
+    void setShaderPriority(int16_t priority) { m_shaderPriority = priority; }
+    int16_t getShaderPriority() const { return m_shaderPriority; }
     void setCanDrawOnUI(const bool canDraw) { m_canDrawOnUI = canDraw; }
     bool canDrawOnUI() { return m_canDrawOnUI; }
 
@@ -164,6 +168,7 @@ private:
 
     std::array<DirControl, Otc::Direction::NorthWest + 1> m_offsetDirections;
     std::string m_texturePath;
+    std::string m_ownerShader;
 
     Bounce m_bounce;
     Bounce m_pulse;
@@ -173,6 +178,7 @@ private:
     TexturePtr m_texture;
 
     std::string m_name;
+    int16_t m_shaderPriority{ 0 };
 
     std::vector<AttachedEffectPtr> m_effects;
 

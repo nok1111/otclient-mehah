@@ -71,6 +71,12 @@ public:
     UIWidgetPtr getAttachedWidgetById(const std::string& id);
 
 protected:
+    enum class EffectCallbackPhase : uint8_t {
+        None,
+        Attach,
+        Detach,
+    };
+
     struct Data
     {
         std::vector<AttachedEffectPtr> attachedEffects;
@@ -82,7 +88,11 @@ protected:
     void drawAttachedLightEffect(const Point& dest, const LightViewPtr& lightView);
 
     void onDetachEffect(const AttachedEffectPtr& effect, bool callEvent = true);
+    virtual void onAutoDetachEffect(const AttachedEffectPtr& /*effect*/) {}
     void drawAttachedParticlesEffect(const Point& dest);
+
+    const AttachedEffect* getEffectCallbackSource() const { return m_effectCallbackSource; }
+    EffectCallbackPhase getEffectCallbackPhase() const { return m_effectCallbackPhase; }
 
     auto getData() {
         if (!m_data)
@@ -93,4 +103,6 @@ protected:
     std::shared_ptr<Data> m_data;
 
     uint8_t m_ownerHidden{ 0 };
+    const AttachedEffect* m_effectCallbackSource{ nullptr };
+    EffectCallbackPhase m_effectCallbackPhase{ EffectCallbackPhase::None };
 };

@@ -30,6 +30,7 @@
 #include <framework/core/clock.h>
 #include <framework/graphics/drawpool.h>
 #include <framework/luaengine/luaobject.h>
+#include <cstdint>
 
  // @bindclass
 #pragma pack(push,1) // disable memory alignment
@@ -228,6 +229,8 @@ public:
 
 protected:
     virtual ThingType* getThingType() const = 0;
+    void onDispatcherAttachEffect(const AttachedEffectPtr& effect) override;
+    void onAutoDetachEffect(const AttachedEffectPtr& effect) override;
 
     void setAttachedEffectDirection(const Otc::Direction dir) const
     {
@@ -259,7 +262,23 @@ protected:
     uint8_t m_numPatternZ{ 0 };
 
     // Shader
+    struct ShaderOverride
+    {
+        const AttachedEffect* source{ nullptr };
+        uint8_t shaderId{ 0 };
+        int16_t priority{ 0 };
+        uint64_t order{ 0 };
+    };
+
     uint8_t m_shaderId{ 0 };
+    uint8_t m_baseShaderId{ 0 };
+    uint64_t m_shaderOrderSeq{ 0 };
+    std::vector<ShaderOverride> m_shaderOverrides;
+
+    void refreshShaderSelection();
+    uint8_t resolveShaderId(std::string_view name) const;
+    void setShaderOverride(const AttachedEffect* source, std::string_view name, int16_t priority = 0);
+    void clearShaderOverride(const AttachedEffect* source);
 
 private:
     void lua_setMarked(const std::string_view color) { setMarked(Color(color)); }

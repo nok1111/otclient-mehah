@@ -22,6 +22,14 @@ local executeConfig = function(attachedEffect, config)
         attachedEffect:setShader(config.shader)
     end
 
+    if config.ownerShader then
+        attachedEffect:setOwnerShader(config.ownerShader)
+    end
+
+    if config.shaderPriority ~= nil then
+        attachedEffect:setShaderPriority(config.shaderPriority)
+    end
+
     if config.opacity ~= nil and config.opacity < 1.0 then
         attachedEffect:setOpacity(config.opacity)
     end

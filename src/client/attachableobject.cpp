@@ -63,7 +63,11 @@ void AttachableObject::attachEffect(const AttachedEffectPtr& obj)
     getData()->attachedEffects.emplace_back(obj);
     g_dispatcher.addEvent([effect = obj, self = std::static_pointer_cast<AttachableObject>(shared_from_this())] {
         self->onDispatcherAttachEffect(effect);
+        self->m_effectCallbackSource = effect.get();
+        self->m_effectCallbackPhase = EffectCallbackPhase::Attach;
         effect->callLuaField("onAttach", self->attachedObjectToLuaObject());
+        self->m_effectCallbackSource = nullptr;
+        self->m_effectCallbackPhase = EffectCallbackPhase::None;
     });
 }
 
@@ -102,8 +106,15 @@ void AttachableObject::onDetachEffect(const AttachedEffectPtr& effect, const boo
 
     onStartDetachEffect(effect);
 
-    if (callEvent)
+    if (callEvent) {
+        m_effectCallbackSource = effect.get();
+        m_effectCallbackPhase = EffectCallbackPhase::Detach;
         effect->callLuaField("onDetach", attachedObjectToLuaObject());
+        m_effectCallbackSource = nullptr;
+        m_effectCallbackPhase = EffectCallbackPhase::None;
+    }
+
+    onAutoDetachEffect(effect);
 }
 
 void AttachableObject::clearAttachedEffects(const bool ignoreLuaEvent)

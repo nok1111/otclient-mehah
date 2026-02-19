@@ -26,6 +26,8 @@
 
 #include <framework/graphics/shadermanager.h>
 
+#include <algorithm>
+
 void Thing::setPosition(const Position& position, uint8_t /*stackPos*/)
 {
     if (m_position == position)
@@ -93,10 +95,112 @@ PainterShaderProgramPtr Thing::getShader() const {
 }
 
 void Thing::setShader(const std::string_view name) {
-    m_shaderId = 0;
-    if (name.empty())
-        return;
+    if (const auto* source = getEffectCallbackSource()) {
+        if (getEffectCallbackPhase() == EffectCallbackPhase::Attach || getEffectCallbackPhase() == EffectCallbackPhase::Detach) {
+            setShaderOverride(source, name, source->getShaderPriority());
+            return;
+        }
+    }
 
-    if (const auto& shader = g_shaders.getShader(name))
-        m_shaderId = shader->getId();
+    m_baseShaderId = resolveShaderId(name);
+    refreshShaderSelection();
+}
+
+void Thing::onDispatcherAttachEffect(const AttachedEffectPtr& effect)
+{
+    if (!effect || effect->getOwnerShader().empty()) {
+        return;
+    }
+
+    setShaderOverride(effect.get(), effect->getOwnerShader(), effect->getShaderPriority());
+}
+
+void Thing::onAutoDetachEffect(const AttachedEffectPtr& effect)
+{
+    if (!effect) {
+        return;
+    }
+
+    clearShaderOverride(effect.get());
+}
+
+uint8_t Thing::resolveShaderId(const std::string_view name) const
+{
+    if (name.empty()) {
+        return 0;
+    }
+
+    if (const auto& shader = g_shaders.getShader(name)) {
+        return shader->getId();
+    }
+
+    return 0;
+}
+
+void Thing::refreshShaderSelection()
+{
+    if (m_shaderOverrides.empty()) {
+        m_shaderId = m_baseShaderId;
+        return;
+    }
+
+    const auto it = std::max_element(m_shaderOverrides.begin(), m_shaderOverrides.end(), [](const ShaderOverride& a, const ShaderOverride& b) {
+        if (a.priority != b.priority) {
+            return a.priority < b.priority;
+        }
+        return a.order < b.order;
+    });
+
+    m_shaderId = (it != m_shaderOverrides.end() ? it->shaderId : m_baseShaderId);
+}
+
+void Thing::setShaderOverride(const AttachedEffect* source, const std::string_view name, const int16_t priority)
+{
+    if (!source) {
+        return;
+    }
+
+    const uint8_t shaderId = resolveShaderId(name);
+    auto it = std::find_if(m_shaderOverrides.begin(), m_shaderOverrides.end(), [source](const ShaderOverride& entry) {
+        return entry.source == source;
+    });
+
+    if (shaderId == 0) {
+        if (it != m_shaderOverrides.end()) {
+            m_shaderOverrides.erase(it);
+            refreshShaderSelection();
+        }
+        return;
+    }
+
+    const uint64_t order = ++m_shaderOrderSeq;
+    if (it == m_shaderOverrides.end()) {
+        ShaderOverride entry;
+        entry.source = source;
+        entry.shaderId = shaderId;
+        entry.priority = priority;
+        entry.order = order;
+        m_shaderOverrides.emplace_back(entry);
+    } else {
+        it->shaderId = shaderId;
+        it->priority = priority;
+        it->order = order;
+    }
+
+    refreshShaderSelection();
+}
+
+void Thing::clearShaderOverride(const AttachedEffect* source)
+{
+    if (!source || m_shaderOverrides.empty()) {
+        return;
+    }
+
+    const auto it = std::remove_if(m_shaderOverrides.begin(), m_shaderOverrides.end(), [source](const ShaderOverride& entry) {
+        return entry.source == source;
+    });
+    if (it != m_shaderOverrides.end()) {
+        m_shaderOverrides.erase(it, m_shaderOverrides.end());
+        refreshShaderSelection();
+    }
 }
