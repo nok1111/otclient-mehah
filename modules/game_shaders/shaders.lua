@@ -14,6 +14,10 @@ local MAP_SHADERS = { {
     frag = 'shaders/fragment/snow.frag',
     tex1 = 'images/snow'
 }, {
+    name = 'Map - Sample Texture',
+    frag = 'shaders/fragment/sample_texture.frag',
+    tex1 = 'images/shaders/stars'
+}, {
     name = 'Map - Gray Scale',
     frag = 'shaders/fragment/grayscale.frag'
 }, {
@@ -150,6 +154,13 @@ OUTFIT_SHADERS = { {
 
     {name = 'Damaged', useFramebuffer = true, frag = 'shaders/fragment/damaged.frag', drawColor = true},
 
+    {name = 'Outfit - Texture Brazil', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/brazil.png', drawColor = false},
+    {name = 'Outfit - Texture galaxy', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/galaxy.png', drawColor = false},
+    {name = 'Outfit - Texture Rainbow', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/rainbow.png', drawColor = false},
+    {name = 'Outfit - Texture Snow', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/snow.png', drawColor = false},
+    {name = 'Outfit - Texture Stars', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/stars.png', drawColor = false},
+    {name = 'Outfit - Texture Sweden', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/sweden.png', drawColor = false},
+
     
 
 
@@ -242,19 +253,43 @@ local function attachShaders()
     player:setMountShader('Default')
 end
 
+local function addShaderTextures(shaderName, opts)
+    if not opts then
+        return
+    end
+
+    local addTexture = g_shaders.addTexture or g_shaders.addMultiTexture
+    if not addTexture then
+        return
+    end
+
+    if opts.tex1 then
+        addTexture(shaderName, opts.tex1)
+    end
+    if opts.tex2 then
+        addTexture(shaderName, opts.tex2)
+    end
+
+    if opts.texture then
+        addTexture(shaderName, opts.texture)
+    end
+
+    if type(opts.textures) == 'table' then
+        for _, texture in ipairs(opts.textures) do
+            if texture then
+                addTexture(shaderName, texture)
+            end
+        end
+    end
+end
+
 local registerShader = function(opts, method)
     local fragmentShaderPath = resolvepath(opts.frag)
 
     if fragmentShaderPath ~= nil then
         --  local shader = g_shaders.createShader()
         g_shaders.createFragmentShader(opts.name, opts.frag, opts.useFramebuffer or false)
-
-        if opts.tex1 then
-            g_shaders.addMultiTexture(opts.name, opts.tex1)
-        end
-        if opts.tex2 then
-            g_shaders.addMultiTexture(opts.name, opts.tex2)
-        end
+        addShaderTextures(opts.name, opts)
 
         -- Setup proper uniforms
         g_shaders[method](opts.name)
@@ -287,12 +322,7 @@ function ShaderController:onInit()
                 local combinedName = opts.name .. ' + Enhance'
                 g_shaders.createFragmentShaderFromCode(combinedName, combined, opts.useFramebuffer or false)
                 g_shaders.setupMapShader(combinedName)
-                if opts.tex1 then
-                    g_shaders.addMultiTexture(combinedName, opts.tex1)
-                end
-                if opts.tex2 then
-                    g_shaders.addMultiTexture(combinedName, opts.tex2)
-                end
+                addShaderTextures(combinedName, opts)
                 enhancedShaderMap[opts.name] = combinedName
             end
         end

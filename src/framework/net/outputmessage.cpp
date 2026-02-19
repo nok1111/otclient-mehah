@@ -97,7 +97,7 @@ void OutputMessage::addPaddingBytes(const int bytes, const uint8_t byte)
 void OutputMessage::encryptRsa()
 {
     const int size = g_crypt.rsaGetSize();
-    if (m_messageSize < size)
+    if (size <= 0 || m_messageSize < static_cast<uint32_t>(size))
         throw stdext::exception("insufficient bytes in buffer to encrypt");
 
     if (!g_crypt.rsaEncrypt(static_cast<uint8_t*>(m_buffer) + m_writePos - size, size))
