@@ -36,8 +36,26 @@ local CATEGORY_META = {
   pet     = {name = 'Pets',     icon = '/images/icons/pets'},
   wings   = {name = 'Wings',    icon = '/images/icons/wings'},
   effect  = {name = 'Effects',  icon = '/images/icons/effect'},
+  shader  = {name = 'Shaders',  icon = '/images/icons/star'},
 }
 local activeCategories = {}
+
+local function getShaderPreviewOutfit()
+  local localPlayer = g_game.getLocalPlayer()
+  local outfit = localPlayer and table.copy(localPlayer:getOutfit()) or {type = 128}
+  outfit.mount = 0
+  outfit.familiar = 0
+  outfit.wings = 0
+  outfit.auras = 0
+  outfit.effects = 0
+  outfit.addons = outfit.addons or 3
+  outfit.head = 0
+  outfit.body = 0
+  outfit.legs = 0
+  outfit.feet = 0
+  outfit.shader = 'Outfit - Default'
+  return outfit
+end
 
 function init()
   window = g_ui.displayUI('famenpcshop')
@@ -322,6 +340,8 @@ function showItemDetails(item)
     typeText = 'Wings / Account-wide'
   elseif item.type == 'effect' then
     typeText = 'Effect / Account-wide'
+  elseif item.type == 'shader' then
+    typeText = 'Shader / Account-wide'
   elseif item.type == 'item' then
     typeText = 'Consumable'
   end
@@ -342,14 +362,20 @@ function showItemDetails(item)
     local creature = cosmeticCreature:getCreature()
     if creature then
       creature:clearAttachedEffects()
+      creature:setShader('Outfit - Default')
+      creature:setDrawOutfitColor(true)
     end
     
     -- Set player outfit on cosmetic creature
-    local localPlayer = g_game.getLocalPlayer()
-    if localPlayer then
-      cosmeticCreature:setOutfit(localPlayer:getOutfit())
+    if item.type == 'shader' then
+      cosmeticCreature:setOutfit(getShaderPreviewOutfit())
     else
-      cosmeticCreature:setOutfit({type = 128})
+      local localPlayer = g_game.getLocalPlayer()
+      if localPlayer then
+        cosmeticCreature:setOutfit(localPlayer:getOutfit())
+      else
+        cosmeticCreature:setOutfit({type = 128})
+      end
     end
     
     -- Attach the selected effect/wing using game_outfit pattern
@@ -364,6 +390,12 @@ function showItemDetails(item)
       cosmeticCreature:setOutfit(outfit)
     elseif item.type == 'outfit' then
       cosmeticCreature:setOutfit({type = item.clientId, addons = 3})
+    elseif item.type == 'shader' then
+      local shaderCreature = cosmeticCreature:getCreature()
+      if shaderCreature then
+        shaderCreature:setDrawOutfitColor(false)
+        shaderCreature:setShader(item.name or 'Outfit - Default')
+      end
     end
   else
     -- Normal shop: hide cosmetic preview, show normal widgets
@@ -373,6 +405,8 @@ function showItemDetails(item)
     local detailCreature = creatureWidget:getCreature()
     if detailCreature then
       detailCreature:clearAttachedEffects()
+      detailCreature:setShader('Outfit - Default')
+      detailCreature:setDrawOutfitColor(true)
     end
     creatureWidget:setImageSource('')
 
@@ -405,6 +439,12 @@ function showItemDetails(item)
       elseif category == ThingExternalTexture then
         creatureWidget:setImageSource(modules.game_attachedeffects.getTexture(item.id))
       end
+    elseif item.type == 'shader' then
+      itemWidget:setVisible(false)
+      creatureWidget:setVisible(true)
+      creatureWidget:setOutfit(getShaderPreviewOutfit())
+      detailCreature:setDrawOutfitColor(false)
+      detailCreature:setShader(item.name or '')
     else
       itemWidget:setVisible(false)
       creatureWidget:setVisible(true)
@@ -592,6 +632,12 @@ function createItemCard(item)
     elseif category == ThingExternalTexture then
       creatureWidget:setImageSource(modules.game_attachedeffects.getTexture(item.id))
     end
+  elseif item.type == 'shader' then
+    itemWidget:setVisible(false)
+    creatureWidget:setVisible(true)
+    creatureWidget:setOutfit(getShaderPreviewOutfit())
+    creatureWidget:getCreature():setDrawOutfitColor(false)
+    creatureWidget:getCreature():setShader(item.name or '')
   else
     itemWidget:setVisible(false)
     creatureWidget:setVisible(true)
