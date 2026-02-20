@@ -100,7 +100,12 @@ bool luavalue_cast(const int index, Outfit& outfit)
         g_lua.getField("auras", index);
         outfit.setAura(g_lua.popInteger());
         g_lua.getField("shaders", index);
-        outfit.setShader(g_lua.popString());
+        auto shaderName = g_lua.popString();
+        if (shaderName.empty()) {
+            g_lua.getField("shader", index);
+            shaderName = g_lua.popString();
+        }
+        outfit.setShader(shaderName);
     }
 
     return true;

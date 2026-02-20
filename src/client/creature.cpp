@@ -917,12 +917,16 @@ void Creature::setOutfit(const Outfit& outfit)
         m_numPatternZ = std::min<int>(1, getNumPatternZ() - 1);
     }
 
-    if ((g_game.getFeature(Otc::GameWingsAurasEffectsShader))) {
+    if (!g_game.getFeature(Otc::GameWingsAurasEffectsShader)) {
         m_outfit.setWing(0);
         m_outfit.setAura(0);
         m_outfit.setEffect(0);
         m_outfit.setShader("Outfit - Default");
     }
+
+    // Keep Thing shader id synchronized with the shader string carried by outfit packets.
+    // Without this, outfit changes can update m_outfit shader text but not the active visual shader.
+    setShader(m_outfit.getShader());
 
     if (const auto& tile = getTile())
         tile->checkForDetachableThing();

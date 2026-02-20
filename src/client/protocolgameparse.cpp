@@ -3613,7 +3613,11 @@ CreaturePtr ProtocolGame::getCreature(const InputMessagePtr& msg, int type) cons
             creature->setPassable(!unpass);
             creature->setLight(light);
             creature->setMasterId(masterId);
-            creature->setShader(shader);
+            if (!shader.empty()) {
+                creature->setShader(shader);
+            } else {
+                creature->setShader(outfit.getShader());
+            }
             creature->clearTemporaryAttachedEffects();
             std::unordered_set<uint16_t> currentAttachedEffectIds;
             for (const auto& attachedEffect : creature->getAttachedEffects()) {

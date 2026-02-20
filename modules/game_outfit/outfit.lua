@@ -54,6 +54,35 @@ local lastSelectEffects = "None"
 local lastSelectShader = "Outfit - Default"
 local lastSelectTitle = "None"
 
+local function normalizeShaderName(value)
+    if value == nil or value == "" or value == "None" or value == 0 or value == "0" then
+        return "Outfit - Default"
+    end
+
+    if value == "Outfit - Default" then
+        return value
+    end
+
+    if ServerData and ServerData.shaders then
+        local numericValue = tonumber(value)
+        for _, shaderData in ipairs(ServerData.shaders) do
+            if shaderData[2] == value or (numericValue and shaderData[1] == numericValue) or tostring(shaderData[1]) == tostring(value) then
+                return shaderData[2]
+            end
+        end
+    end
+
+    return value
+end
+
+local function getPresetShaderName(preset)
+    if not preset then
+        return "Outfit - Default"
+    end
+    local shaderName = preset.shaders or preset.shader
+    return normalizeShaderName(shaderName)
+end
+
 local function checkPresetsValidity(presets)
     for i, preset in ipairs(presets) do
         if type(preset) == "number" and preset > 0 then
@@ -325,12 +354,13 @@ function create(player, outfitList, creatureMount, mountList, familiarList, wing
         return
     end
     local currentOutfit = player:getOutfit()
+
     if window then
         destroy()
     end
 
-    if currentOutfit.shader == "" then
-        currentOutfit.shader = "Outfit - Default"
+    if currentOutfit.shaders == "" then
+        currentOutfit.shaders = "Outfit - Default"
     end
 
     loadSettings()
@@ -383,6 +413,13 @@ function create(player, outfitList, creatureMount, mountList, familiarList, wing
     else
         tempOutfit = currentOutfit
     end
+
+    if not tempOutfit.shaders or tempOutfit.shaders == "" then
+        tempOutfit.shaders = tempOutfit.shader or "Outfit - Default"
+    end
+    tempOutfit.shaders = normalizeShaderName(tempOutfit.shaders)
+    tempOutfit.shader = tempOutfit.shaders
+    lastSelectShader = tempOutfit.shaders or "Outfit - Default"
 
     updatePreview()
 
@@ -699,7 +736,7 @@ function savePreset()
     settings.presets[presetId].outfit = outfitCopy
     settings.presets[presetId].mounted = window.configure.mount.check:isChecked()
     settings.presets[presetId].familiar = tempOutfit.familiar or 0
-    settings.presets[presetId].shader = "Outfit - Default"
+    settings.presets[presetId].shader = lastSelectShader or "Outfit - Default"
     settings.presets[presetId].auras = lastSelectAura or "None"
     settings.presets[presetId].effects = lastSelectEffects or "None"
     settings.presets[presetId].wings = lastSelectWings or "None"
@@ -723,7 +760,7 @@ function savePreset()
         window.presetsList[presetId].creature:setCreatureSize(0)
         window.presetsList[presetId].creature:setCenter(false)
     end
-    if lastSelectShader ~= "None" or lastSelectShader ~= "Outfit - Default" then
+    if lastSelectShader ~= "None" and lastSelectShader ~= "Outfit - Default" then
         window.presetsList[presetId].creature:getCreature():setShader(lastSelectShader)
     end
 
@@ -831,9 +868,10 @@ function showPresets()
 
             end
 
-            if preset.shaders ~= "None" then
-                presetWidget.creature:getCreature():setShader(preset.shaders)
-                lastSelectShader = preset.shaders
+            local presetShader = getPresetShaderName(preset)
+            if presetShader ~= "Outfit - Default" then
+                presetWidget.creature:getCreature():setShader(presetShader)
+                lastSelectShader = presetShader
             end
 
             if presetId == settings.currentPreset then
@@ -1047,7 +1085,7 @@ function showShaders()
     local focused = nil
     do
         local button = g_ui.createWidget("SelectionButton", window.selectionList)
-        button:setId("Outfit - Default")
+        button:setId("0")
 
         button.outfit:setOutfit({
             type = tempOutfit.type,
@@ -1056,14 +1094,14 @@ function showShaders()
         button.outfit:getCreature():setShader("Outfit - Default")
         button.name:setText("Outfit - Default")
         if tempOutfit.shaders == "Outfit - Default" then
-            focused = "Outfit - Default"
+            focused = "0"
         end
     end
 
     if ServerData.shaders and #ServerData.shaders > 0 then
         for _, shaderData in ipairs(ServerData.shaders) do
             local button = g_ui.createWidget("SelectionButton", window.selectionList)
-            button:setId(shaderData[2])
+            button:setId(tostring(shaderData[1]))
 
             button.outfit:setOutfit({
                 type = tempOutfit.type,
@@ -1076,7 +1114,7 @@ function showShaders()
 
             if tempOutfit.shaders == shaderData[2] then
 
-                focused = shaderData[2]
+                focused = tostring(shaderData[1])
             end
         end
     end
@@ -1228,7 +1266,8 @@ function onPresetSelect(list, focusedChild, unfocusedChild, reason)
         updateAppearanceText("preset", preset.title)
         updateAppearanceText("aura", modules.game_attachedeffects.getName(preset.auras))
         updateAppearanceText("wings", modules.game_attachedeffects.getName(preset.wings))
-        updateAppearanceText("shader", preset.shaders or "Outfit - Default")
+        local presetShader = getPresetShaderName(preset)
+        updateAppearanceText("shader", presetShader)
         updateAppearanceText("effects", modules.game_attachedeffects.getName(preset.effects))
 
         previewCreature:getCreature():clearAttachedEffects()
@@ -1245,20 +1284,20 @@ function onPresetSelect(list, focusedChild, unfocusedChild, reason)
             attachEffectIfValid(previewCreature, preset.auras)
         end
 
-        if not settings.showShader or preset.shaders == "None" then
+        if not settings.showShader or presetShader == "Outfit - Default" then
             previewCreature:getCreature():setShader("Outfit - Default")
         else
-            previewCreature:getCreature():setShader(preset.shaders)
+            previewCreature:getCreature():setShader(presetShader)
         end
 
         tempOutfit.wings = preset.wings
         tempOutfit.auras = preset.auras
-        tempOutfit.shaders = preset.shaders
+        tempOutfit.shaders = presetShader
         tempOutfit.effects = preset.effects
         lastSelectAura = preset.auras
         lastSelectWings = preset.wings
         lastSelectEffects = preset.effects
-        lastSelectShader = preset.shaders
+        lastSelectShader = presetShader
 
     end
 end
@@ -1383,8 +1422,17 @@ end
 
 function onShaderSelect(list, focusedChild, unfocusedChild, reason)
     if focusedChild then
-        local shaderType = focusedChild:getId()
-        if shaderType ~= "None" then
+        if not settings.showShader then
+            settings.showShader = true
+            if showShaderCheck then
+                showShaderCheck:setChecked(true)
+            end
+        end
+
+        local rawShaderSelection = focusedChild:getId()
+        local shaderType = normalizeShaderName(rawShaderSelection)
+
+        if shaderType ~= "Outfit - Default" then
             previewCreature:getCreature():setShader(shaderType)
             lastSelectShader = shaderType
             tempOutfit.shaders = shaderType
@@ -1393,12 +1441,13 @@ function onShaderSelect(list, focusedChild, unfocusedChild, reason)
             lastSelectShader = "Outfit - Default"
             tempOutfit.shaders = "Outfit - Default"
         end
+        tempOutfit.shader = tempOutfit.shaders
 
         updatePreview()
 
         deselectPreset()
 
-        updateAppearanceText("shader", focusedChild.name:getText())
+        updateAppearanceText("shader", shaderType)
     end
 end
 
@@ -1604,20 +1653,15 @@ function updatePreview()
     end
 
     if not settings.showShader then
-        if previewCreature and lastSelectShader and lastSelectShader ~= "Outfit - Default" then
-            local creature = previewCreature:getCreature()
-            if creature then
-                creature:setShader("Outfit - Default")
-            end
-        end
+        previewOutfit.shaders = "Outfit - Default"
+    elseif lastSelectShader and lastSelectShader ~= "None" then
+        previewOutfit.shaders = normalizeShaderName(lastSelectShader)
+    elseif not previewOutfit.shaders or previewOutfit.shaders == "" then
+        previewOutfit.shaders = "Outfit - Default"
     else
-        if previewCreature and lastSelectShader and lastSelectShader ~= "Outfit - Default" then
-            local creature = previewCreature:getCreature()
-            if creature then
-                creature:setShader(lastSelectShader)
-            end
-        end
+        previewOutfit.shaders = normalizeShaderName(previewOutfit.shaders)
     end
+    previewOutfit.shader = previewOutfit.shaders
 
     if not settings.showBars then
         previewOutfit.healthBar = 0
@@ -1653,6 +1697,15 @@ function updatePreview()
 
     previewCreature:setOutfit(previewOutfit)
     previewCreature:getCreature():setDirection(direction)
+
+    local creature = previewCreature:getCreature()
+    if creature then
+        if settings.showShader and lastSelectShader and lastSelectShader ~= "None" then
+            creature:setShader(normalizeShaderName(lastSelectShader))
+        else
+            creature:setShader("Outfit - Default")
+        end
+    end
 
 end
 
@@ -1821,12 +1874,20 @@ function accept()
             settings.presets[settings.currentPreset].familiar = window.configure.familiar.check:isChecked()
         end
     end
+    if settings.showShader then
+        tempOutfit.shaders = normalizeShaderName(lastSelectShader or tempOutfit.shaders or tempOutfit.shader)
+    else
+        tempOutfit.shaders = "Outfit - Default"
+    end
+    tempOutfit.shader = tempOutfit.shaders
+
     g_game.changeOutfit(tempOutfit)
     if opcodeSystem.enable then
+        local opcodeShaderName = normalizeShaderName(tempOutfit.shaders or lastSelectShader)
         sendAction("changeOutfit", {
             wingsName = lastSelectWings,
             auraName = lastSelectAura,
-            shaderName = lastSelectShader,
+            shaderName = opcodeShaderName,
             titleName = lastSelectTitle,
             EffectName = lastSelectEffects
         })
