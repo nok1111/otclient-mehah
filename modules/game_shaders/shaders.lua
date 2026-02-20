@@ -124,7 +124,7 @@ OUTFIT_SHADERS = { {
     {name = 'Zomg', useFramebuffer = true, frag = 'shaders/fragment/zomg.frag'},
     {name = 'Rainbowgpt', frag = 'shaders/fragment/rainbowgpt.frag' , drawColor = false},
     {name = 'Lava', frag = 'shaders/fragment/flames.frag', drawColor = true},
-    {name = 'Galaxy',  frag = 'shaders/fragment/galaxy.frag', drawColor = false},
+    --{name = 'Galaxy2',  frag = 'shaders/fragment/galaxy.frag', drawColor = false},
     {name = 'Ghost', frag = 'shaders/fragment/ghost.frag'},
     {name = 'Metallic', frag = 'shaders/fragment/metallic.frag', drawColor = false},
     {name = 'Golden', frag = 'shaders/fragment/outline_golden.frag', drawColor = false},
@@ -154,17 +154,48 @@ OUTFIT_SHADERS = { {
 
     {name = 'Damaged', useFramebuffer = true, frag = 'shaders/fragment/damaged.frag', drawColor = true},
 
-    {name = 'Outfit - Texture Brazil', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/brazil.png', drawColor = false},
-    {name = 'Outfit - Texture galaxy', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/galaxy.png', drawColor = false},
-    {name = 'Outfit - Texture Rainbow', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/rainbow.png', drawColor = false},
-    {name = 'Outfit - Texture Snow', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/snow.png', drawColor = false},
-    {name = 'Outfit - Texture Stars', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/stars.png', drawColor = false},
-    {name = 'Outfit - Texture Sweden', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/sweden.png', drawColor = false},
+    {name = 'Zaphire', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/zaphire.png', drawColor = false},
+    {name = 'Galaxy', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/galaxy.png', drawColor = false},
+    {name = 'Blue Flames', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/blueflames.png', drawColor = false},
+    {name = 'Prismatic', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/prismatic.png', drawColor = false},
+    {name = 'Blueveins', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/blueveins.png', drawColor = false},
+    {name = 'Diamond', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/diamond.png', drawColor = false},
+    {name = 'Red Flames', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/redflames.png', drawColor = false},
+    {name = 'Aqua', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/aqua.png', drawColor = false},
+    {name = 'Fire Spiral', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/firespiral.png', drawColor = false},
+    {name = 'Purple Aqua', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/purpleaqua.png', drawColor = false},
+    {name = 'Ashes', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/ashes.png', drawColor = false},
+    {name = 'Storm', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/storm.png', drawColor = false},
+    {name = 'Mercury', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/mercury.png', drawColor = false},
+    {name = 'Abstract', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/abstract.png', drawColor = false},
+    {name = 'Circuit', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/circuit.png', drawColor = false},
+    {name = 'Glitch', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/glitch.png', drawColor = false},
+    {name = 'Waves', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/waves.png', drawColor = false},
+    {name = 'Ruby', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/ruby.png', drawColor = false},
+    {name = 'Prisma', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/prisma.png', drawColor = false},
+    {name = 'Vortex', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/vortex.png', drawColor = false},
+    {name = 'Purple Wave', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/purplewave.png', drawColor = false},
+    {name = 'Abstract Solid', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/abstractsolid.png', drawColor = false},
+    {name = 'Balloons', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/balloons.png', drawColor = false},
+    {name = 'Clouds White', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/clouds_white.png', drawColor = false},
+    {name = 'Clouds Gray', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/clouds_gray.png', drawColor = false},
+    {name = 'Cyborg', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/cyborg.png', drawColor = false},
+    {name = 'Glitch 2', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/glitch2.png', drawColor = false},
+    {name = 'Majestic', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/majestic.png', drawColor = false},
+    {name = 'Golden', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/golden.png', drawColor = false},
+    {name = 'Slime', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/slime.png', drawColor = false},
+    {name = 'Sky', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/sky.png', drawColor = false}
 
-    
 
 
  }
+
+TEXTURE_OUTFIT_SHADERS = {}
+for _, opts in ipairs(OUTFIT_SHADERS) do
+    if opts.frag == 'shaders/fragment/creature_texture_sample.frag' and opts.tex1 then
+        table.insert(TEXTURE_OUTFIT_SHADERS, opts)
+    end
+end
 
 MOUNT_SHADERS = { {
     name = 'Mount - Default',
@@ -200,6 +231,7 @@ vec3 _enhancePost(vec3 color, vec2 uv) {
 local enhancedShaderMap = {}
 -- Maps shader name -> its options (for drawViewportEdge etc.)
 local mapShaderOpts = {}
+local suppressShaderComboCallbacks = false
 
 function isEnhanceEnabled()
     return g_settings.getBoolean('enhance-graphics', true)
@@ -247,10 +279,6 @@ end
 local function attachShaders()
     local map = modules.game_interface.getMapPanel()
     map:setShader(getDefaultMapShader())
-
-    local player = g_game.getLocalPlayer()
-    player:setShader('Default')
-    player:setMountShader('Default')
 end
 
 local function addShaderTextures(shaderName, opts)
@@ -354,6 +382,8 @@ function ShaderController:onGameStart()
 
     self:loadHtml('shaders.html', modules.game_interface.getMapPanel())
 
+    suppressShaderComboCallbacks = true
+
     for _, opts in pairs(MAP_SHADERS) do
         self.ui.mapComboBox:addOption(opts.name, opts)
     end
@@ -362,9 +392,32 @@ function ShaderController:onGameStart()
         self.ui.outfitComboBox:addOption(opts.name, opts)
     end
 
+    if self.ui.textureComboBox then
+        for _, opts in ipairs(TEXTURE_OUTFIT_SHADERS) do
+            self.ui.textureComboBox:addOption(opts.name, opts)
+        end
+    end
+
     for _, opts in pairs(MOUNT_SHADERS) do
         self.ui.mountComboBox:addOption(opts.name, opts)
     end
+
+    local player = g_game.getLocalPlayer()
+    if player and self.ui.outfitComboBox then
+        local currentOutfit = player:getOutfit()
+        local currentShader = (currentOutfit and (currentOutfit.shaders or currentOutfit.shader)) or 'Outfit - Default'
+        if currentShader == '' then
+            currentShader = 'Outfit - Default'
+        end
+        self.ui.outfitComboBox:setCurrentOption(currentShader)
+
+        local selected = self.ui.outfitComboBox:getCurrentOption()
+        if selected and selected.data then
+            player:setDrawOutfitColor(selected.data.drawColor ~= false)
+        end
+    end
+
+    suppressShaderComboCallbacks = false
 
     -- Handle server-side map shader changes (from parseMapShader C++ -> Lua event)
     connect(g_game, { onMapShaderChange = setMapShaderSafe })
@@ -392,6 +445,23 @@ function ShaderController:onMapComboBoxChange(event)
 end
 
 function ShaderController:onOutfitComboBoxChange(event)
+    if suppressShaderComboCallbacks then
+        return
+    end
+
+    local player = g_game.getLocalPlayer()
+    if player then
+        player:setShader(event.text)
+        local data = event.target:getCurrentOption().data
+        player:setDrawOutfitColor(data.drawColor ~= false)
+    end
+end
+
+function ShaderController:onTextureComboBoxChange(event)
+    if suppressShaderComboCallbacks then
+        return
+    end
+
     local player = g_game.getLocalPlayer()
     if player then
         player:setShader(event.text)
