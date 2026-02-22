@@ -1901,7 +1901,7 @@ function UpdateNpcTaskDescription()
     if npcRewardItemPanel and npcRewardItemPanel.show then npcRewardItemPanel:show() end
     for i = 1, #items do
       local it = items[i]
-      local rewardItem = g_ui.createWidget('RewardItem', npcRewardTarget)
+      local rewardItem = g_ui.createWidget('TasklistRewardItem', npcRewardTarget)
       -- Do not persist NPC reward item widgets in localRewardItemList to prevent holding references after destroy
       rewardItem:getChildById('rewardItem'):setItemId(it.itemCid)
       rewardItem:getChildById('rewardItem'):setVirtual(true)
@@ -2282,7 +2282,7 @@ function updateTaskDescription(taskNumber)
     local items = localTaskList[taskNumber].taskRewards.items
     if #items > 0 then
       for i = 1, #items do
-        local rewardItem = g_ui.createWidget('RewardItem', basicItems)
+        local rewardItem = g_ui.createWidget('TasklistRewardItem', basicItems)
         table.insert(localRewardItemList, rewardItem)
         local iid = items[i].itemCid or items[i].itemSid or 0
         rewardItem:getChildById('rewardItem'):setItemId(iid)

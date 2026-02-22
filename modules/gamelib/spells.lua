@@ -319,7 +319,7 @@ SpellInfo = {
     ['Party Vitality'] = {id = 67, words = 'Party Vitality', icon_id = 67, description = 'increase the max health of you and your party members by 10% for 20 minutes.', exhaustion = 8000, premium = false, type = 'Instant', icon = 67, mana = 200, level = 50, soul = 0, group = {[3] = 1900}, vocations = {5}},
     ['Summon Void Guard'] = {id = 68, words = 'summon void guard', icon_id = 68, description = 'summon a void guard taunts nearby enemies and has a larger health pool.', exhaustion = 4000, premium = false, type = 'Instant', icon = 68, mana = 480, level = 1, soul = 0, group = {[3] = 1900}, vocations = {5}, needLearn = true},
     ['Summon Void Sentinel'] = {id = 69, words = 'summon void sentinel', icon_id = 69, description = 'summon a void sentinel wich damages enemies from the distance.', exhaustion = 60000, premium = false, type = 'Instant', icon = 69, mana = 300, level = 60, soul = 0, group = {[3] = 1900}, vocations = {5}, needLearn = false},
-    ['Blood Wall'] = {id = 70, words = 'blood Wall', icon_id = 70, description = 'increase your defense stat and max hitpoints for 15 seconds.', exhaustion = 50000, premium = false, type = 'Instant', icon = 70, mana = 0, level = 1, soul = 0, group = {[3] = 1900}, vocations = {5}},
+    ['Blood Wall'] = {id = 70, words = 'blood wall', icon_id = 70, description = 'increase your defense stat and max hitpoints for 15 seconds.', exhaustion = 50000, premium = false, type = 'Instant', icon = 70, mana = 0, level = 1, soul = 0, group = {[3] = 1900}, vocations = {5}},
     ['Dark Plague'] = {id = 71, words = 'dark plague', icon_id = 71, description = 'curse your target and all nearby enemies dealing death damage over 15 seconds.', exhaustion = 50000, premium = false, type = 'Instant', icon = 71, mana = 300, level = 1, soul = 0, group = {[1] = 2000}, vocations = {5}, needLearn = true},
     ['Soul Rain'] = {id = 74, words = 'soul rain', icon_id = 74, description = 'cast a rain of death over your target position dealing death damage over 8 seconds.', exhaustion = 45000, premium = false, type = 'Instant', icon = 74, mana = 200, level = 85, soul = 0, group = {[1] = 2000}, vocations = {5}},
     ['Drain Soul'] = {id = 75, words = 'drain soul', icon_id = 75, description = 'drain the souls of nearby enemies healing yourself and dealing death damage.', exhaustion = 15000, premium = false, type = 'Instant', icon = 75, mana = 150, level = 53, soul = 0, group = {[1] = 2000}, vocations = {5}},
@@ -418,7 +418,7 @@ SpellInfo = {
     ['Falcon Shot'] =               {id = 194, icon_id = 194, words = 'falcon shot', exhaustion = 13000, premium = false, type = 'Instant', icon = 194, mana = 120, level = 1, soul = 0, group = {[1] = 1900}, parameter = false, vocations = {10}, description = 'shoots a falcon shot at the target, dealing high damage. [Weapon Damage, DISTANCE]',needLearn = true},
     
     --others
-    ['Shield Wall'] = {id = 204, words = 'Shield Wall', icon_id = 204, description = 'Increase your defense skill and block value by 30%, requires a shield or offhand to be equiped.', exhaustion = 2000, premium = false, type = 'Instant', icon = 204, mana = 0, level = 1, soul = 0, group = {[2] = 2000}, vocations = {2,4,7,8}},
+    ['Shield Wall'] = {id = 203, words = 'shield wall', icon_id = 204, description = 'Increase your defense skill and block value by 30%, requires a shield or offhand to be equiped.', exhaustion = 2000, premium = false, type = 'Instant', icon = 204, mana = 0, level = 1, soul = 0, group = {[2] = 2000}, vocations = {2,4,7,8}},
     ['Taunt'] = {id = 220, words = 'taunt', icon_id = 220, description = 'Taunt all nearby enemies forcing them to attack you.', exhaustion = 2000, premium = false, type = 'Instant', icon = 220, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {2,4,7,8}},
 
 
@@ -426,7 +426,7 @@ SpellInfo = {
     ['Strong Heal'] = {id = 201, words = 'strong heal', icon_id = 201, description = 'personal strong heal', exhaustion = 2000, premium = false, type = 'Instant', icon = 201, mana = 65, level = 50, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
     ['Great Heal'] = {id = 202, words = 'great heal', icon_id = 202, description = 'personal great heal', exhaustion = 2000, premium = false, type = 'Instant', icon = 202, mana = 120, level = 100, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
 
-    ['Magic Shield'] = {id = 208, words = 'Magic Shield', icon_id = 208, description = 'Creates a protective barrier that absorbs damage.', exhaustion = 2000, premium = false, type = 'Instant', icon = 208, mana = 0, level = 1, soul = 0, group = {[2] = 2000}, vocations = {1,5,8,6}},
+    ['Magic Shield'] = {id = 208, words = 'magic shield', icon_id = 208, description = 'Creates a protective barrier that absorbs damage.', exhaustion = 2000, premium = false, type = 'Instant', icon = 208, mana = 0, level = 1, soul = 0, group = {[2] = 2000}, vocations = {1,5,8,6}},
     ['Find Person'] = {id = 209, words = 'exiva', icon_id = 209, description = 'Reveals the location of a player.', exhaustion = 1000, premium = false, type = 'Instant', icon = 209, mana = 20, level = 8, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
     ['Food'] = {id = 210, words = 'exevo pan', icon_id = 210, description = 'Creates food to restore hunger.', exhaustion = 2000, premium = false, type = 'Instant', icon = 210, mana = 15, level = 8, soul = 1, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10}},
     ['Haste'] = {id = 211, words = 'utani hur', icon_id = 211, description = 'Increases movement speed for a short duration.', exhaustion = 2000, premium = false, type = 'Instant', icon = 211, mana = 60, level = 14, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10}},
@@ -472,9 +472,10 @@ SpellGroups = {
 Spells = {}
 
 function Spells.getClientId(spellName)
-    local profile = Spells.getSpellProfileByName(spellName)
+    local spell = Spells.getSpellByName(spellName)
+    if not spell then return nil end
 
-    local id = SpellInfo[profile][spellName].icon
+    local id = spell.icon
     if not tonumber(id) and SpellIcons[id] then
         return SpellIcons[id][1]
     end
@@ -493,9 +494,10 @@ function Spells.getSpellByClientId(id)
 end
 
 function Spells.getServerId(spellName)
-    local profile = Spells.getSpellProfileByName(spellName)
-
-    local id = SpellInfo[profile][spellName].icon
+    local spell = Spells.getSpellByName(spellName)
+    if not spell then return nil end
+    
+    local id = spell.icon
     if not tonumber(id) and SpellIcons[id] then
         return SpellIcons[id][2]
     end
@@ -503,14 +505,22 @@ function Spells.getServerId(spellName)
 end
 
 function Spells.getSpellByName(name)
-    return SpellInfo[Spells.getSpellProfileByName(name)][name]
+    local nameLower = name:lower():trim()
+    for profile, data in pairs(SpellInfo) do
+        for k, spell in pairs(data) do
+            if k:lower() == nameLower then
+                return spell
+            end
+        end
+    end
+    return nil
 end
 
 function Spells.getSpellByWords(words)
     local words = words:lower():trim()
     for profile, data in pairs(SpellInfo) do
         for k, spell in pairs(data) do
-            if spell.words == words then
+            if spell.words:lower() == words then
                 return spell, profile, k
             end
         end
@@ -551,9 +561,10 @@ function Spells.getSpellProfileById(id)
 end
 
 function Spells.getSpellProfileByWords(words)
+    local wordsLower = words:lower():trim()
     for profile, data in pairs(SpellInfo) do
         for k, spell in pairs(data) do
-            if spell.words == words then
+            if spell.words:lower() == wordsLower then
                 return profile
             end
         end
@@ -562,9 +573,12 @@ function Spells.getSpellProfileByWords(words)
 end
 
 function Spells.getSpellProfileByName(spellName)
+    local nameLower = spellName:lower():trim()
     for profile, data in pairs(SpellInfo) do
-        if table.findbykey(data, spellName:trim(), true) then
-            return profile
+        for k, spell in pairs(data) do
+            if k:lower() == nameLower then
+                return profile
+            end
         end
     end
     return nil
@@ -605,7 +619,7 @@ function Spells.getIconId(iconid, profile)
     --use iconid as SpellInfo[profile].id to finde SpellInfo[profile].iconid
     --print(iconid)
     for k, v in pairs(SpellInfo[profile]) do
-        if v.id == iconid then
+        if v.id == iconid or v.icon_id == iconid or tonumber(v.icon) == iconid then
             return SpelllistSettings[profile].iconFile .. '/' .. tostring(v.icon_id) .. '.png'
         end
     end

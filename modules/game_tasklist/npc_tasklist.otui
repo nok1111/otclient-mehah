@@ -1,4 +1,4 @@
-RewardItem < UIWidget
+TasklistRewardItem < UIWidget
   size: 218 34
   # match main UI spacing (no extra padding)
 

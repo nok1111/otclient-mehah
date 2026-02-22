@@ -59,7 +59,7 @@ end
 
 mapController = Controller:new()
 -- Mount minimap under RightPanel (consistent with main panel)
-mapController:setUI('minimap', modules.game_interface.getMainRightPanel())
+mapController:setUI('minimap', modules.game_interface.getRightPanel())
 
 function onChangeWorldTime(hour, minute)
     -- Day/night UI removed; keep stub to avoid nil references

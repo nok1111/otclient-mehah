@@ -15,7 +15,7 @@ local function healthManaEvent()
 end
 
 healthManaController = Controller:new()
-healthManaController:setUI('healthinfo', modules.game_interface.getMainRightPanel())
+healthManaController:setUI('healthinfo', modules.game_interface.getRightPanel())
 
 function healthManaController:onInit()
 end
@@ -50,13 +50,13 @@ function extendedView(extendedView)
         end
         healthManaController.ui:setBorderColor('alpha')
         healthManaController.ui:setBorderWidth(0)
-        local mainRightPanel = modules.game_interface.getMainRightPanel()
-        if not mainRightPanel:hasChild(healthManaController.ui) then
-            mainRightPanel:insertChild(2, healthManaController.ui)
+        local rightPanel = modules.game_interface.getRightPanel()
+        if not rightPanel:hasChild(healthManaController.ui) then
+            rightPanel:insertChild(2, healthManaController.ui)
         end
         healthManaController.ui:show()
     end
-    healthManaController.ui.moveOnlyToMain = not extendedView
+    healthManaController.ui.moveOnlyToMain = false
 end
 
 function toggle()

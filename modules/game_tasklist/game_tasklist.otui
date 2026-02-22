@@ -32,7 +32,7 @@ AskWidget < MainWindow
     margin-bottom: -5
     @onClick: modules.game_tasklist.no()
 
-RewardItem < UIWidget
+TasklistRewardItem < UIWidget
   size: 218 34
 
   Item

@@ -31,14 +31,14 @@
 
 // ENCRYPTION SYSTEM
 // Enable client encryption
-#define ENABLE_ENCRYPTION 0
+#define ENABLE_ENCRYPTION 1
 // Enable client encryption maker/builder.
 // You can compile it once and use this executable to only encrypt client files once with command --encrypt which will be using password below.
-#define ENABLE_ENCRYPTION_BUILDER 0
+#define ENABLE_ENCRYPTION_BUILDER 1
 // for security reasons make sure you are using password with at last 100+ characters
-#define ENCRYPTION_PASSWORD AY_OBFUSCATE("SET_YOUR_PASSWORD_HERE")
+#define ENCRYPTION_PASSWORD AY_OBFUSCATE("sP9vK2nQ7xL4mT8rY1cD6hJ3uF0aW5eR2tG9bN4zX7qM1kV6pS3dH8jC5yU0iO2lA7wE4rT9uI1oP6sD3fG8hJ5kL0zX2cV7bN4mQ9")
 // do not insert special characters in the header (ONLY UPPERCASE LETTERS, LOWERCASE LETTERS AND NUMBERS) | example: #define ENCRYPTION_HEADER AY_OBFUSCATE("21UsO5ARfRnIScs415BNMab")
-#define ENCRYPTION_HEADER AY_OBFUSCATE("SET_YOUR_HEADER_HERE")
+#define ENCRYPTION_HEADER AY_OBFUSCATE("X7mQ2aL9vR4nK8tP1cD5hJ3uF6sB0wE")
 
 // DISCORD RPC (https://discord.com/developers/applications)
 // Enable Discord Rich Presence

@@ -118,14 +118,15 @@ UIWidget
     anchors.top: parent.top
     &ignoreFillAll: true
     &onlyPhantomDrop: true
-    height: 400
+    height: 0
     focusable: false
-    on: true
+    visible: false
+    on: false
 
   GameSidePanel
     id: gameRightPanel
     anchors.right: parent.right
-    anchors.top: gameMainRightPanel.bottom
+    anchors.top: parent.top
     anchors.bottom: parent.bottom
     focusable: false
     on: true
