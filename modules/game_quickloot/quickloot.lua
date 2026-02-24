@@ -8,6 +8,8 @@ local function getFilter(id)
     return filter[id]
 end
 
+local quickLootButton = nil
+
 quickLootController = Controller:new()
 quickLootController:setUI('quickloot')
 function quickLootController:onInit()
@@ -17,8 +19,8 @@ function quickLootController:onInit()
     QuickLoot.data = {
         filter = 1,
         loots = {
-            [0] = {},
-            {}
+            [1] = {},
+            [2] = {}
         }
     }
 
@@ -35,6 +37,18 @@ function quickLootController:onInit()
       }
     })
 
+    quickLootButton = modules.game_mainpanel.addToggleButton(
+        'quickLootButton',
+        tr('Loot'),
+        '/images/topbuttons/autoloot',
+        function()
+            QuickLoot.toggle()
+            if quickLootButton then
+                quickLootButton:setOn(quickLootController.ui:isVisible())
+            end
+        end,
+        false, 10)
+
 end
 
 function quickLootController:onTerminate()
@@ -43,7 +57,10 @@ function quickLootController:onTerminate()
         QuickLoot.mouseGrabberWidget:destroy()
         QuickLoot.mouseGrabberWidget = nil
     end
-
+    if quickLootButton then
+        quickLootButton:destroy()
+        quickLootButton = nil
+    end
     QuickLoot = {}
 end
 
@@ -105,6 +122,10 @@ function QuickLoot.Define()
 
             QuickLoot.data.filter = 2
         end
+
+        if type(QuickLoot.data.loots) ~= "table" then QuickLoot.data.loots = {{}, {}} end
+        if type(QuickLoot.data.loots[1]) ~= "table" then QuickLoot.data.loots[1] = {} end
+        if type(QuickLoot.data.loots[2]) ~= "table" then QuickLoot.data.loots[2] = {} end
 
         g_game.requestQuickLootBlackWhiteList(getFilter(QuickLoot.data.filter),
             #QuickLoot.data.loots[QuickLoot.data.filter], QuickLoot.data.loots[QuickLoot.data.filter])
@@ -187,6 +208,13 @@ function QuickLoot.Define()
                 loots = {{}, {}}
             }
         end
+
+        -- Failsafe: ensure loots[1] and loots[2] exist regardless of what was loaded
+        if type(QuickLoot.data.loots) ~= "table" then
+            QuickLoot.data.loots = {{}, {}}
+        end
+        if type(QuickLoot.data.loots[1]) ~= "table" then QuickLoot.data.loots[1] = {} end
+        if type(QuickLoot.data.loots[2]) ~= "table" then QuickLoot.data.loots[2] = {} end
     end
 
     function QuickLoot.save()
@@ -382,6 +410,58 @@ function QuickLoot.Define()
 
         g_mouse.popCursor("target")
         self:ungrabMouse()
+
+        return true
+    end
+
+    function QuickLoot.chooseLootItem()
+        if QuickLoot.mouseGrabberWidget then
+            QuickLoot.mouseGrabberWidget.onMouseRelease = QuickLoot.onChooseLootItem
+            QuickLoot.mouseGrabberWidget:grabMouse()
+            g_mouse.pushCursor("target")
+            quickLootController.ui:hide()
+        end
+    end
+
+    function QuickLoot.onChooseLootItem(mouseGrabber, mousePosition, mouseButton)
+        local item
+
+        if mouseButton == MouseLeftButton then
+            local clickedWidget = modules.game_interface.getRootPanel():recursiveGetChildByPos(mousePosition, false)
+
+            if clickedWidget then
+                if clickedWidget:getClassName() == "UIGameMap" then
+                    local tile = clickedWidget:getTile(mousePosition)
+                    if tile then
+                        local thing = tile:getTopMoveThing()
+                        if thing and thing:isPickupable() and not thing:isCreature() then
+                            item = thing
+                        else
+                            QuickLoot.ErrorWindow = displayGeneralBox(tr("Invalid Item"), tr("You can only select physical items to add to the QuickLoot list."), {
+                                {text = tr("Ok"), callback = QuickLoot.confirmError}, anchor = AnchorHorizontalCenter})
+                        end
+                    end
+                elseif clickedWidget:getClassName() == "UIItem" and not clickedWidget:isVirtual() then
+                    if clickedWidget:getItem() and clickedWidget:getItem():isPickupable() then
+                        item = clickedWidget:getItem()
+                    else
+                        QuickLoot.ErrorWindow = displayGeneralBox(tr("Invalid Item"), tr("You can only select physical items to add to the QuickLoot list."), {
+                            {text = tr("Ok"), callback = QuickLoot.confirmError}, anchor = AnchorHorizontalCenter})
+                    end
+                end
+            end
+        end
+
+        if item then
+            QuickLoot.addLootList(item:getId())
+            quickLootController.ui:show()
+        else
+            quickLootController.ui:show()
+        end
+
+        g_mouse.popCursor("target")
+        mouseGrabber.onMouseRelease = QuickLoot.onChooseItem -- restore original container crosshair
+        mouseGrabber:ungrabMouse()
 
         return true
     end

@@ -11,6 +11,8 @@ local buttonOrder = {}
 local ICON_ONLY_MAIN_BUTTONS = {
     optionsMainButton = true,
     logoutButton = true,
+    minimapButton = true,
+    inventoryButton = true,
 }
 local COLORS = {
     BASE_1 = "#484848",
@@ -69,7 +71,8 @@ function reloadMainPanelSizes()
 
                     local top_controls_panel = panel.onPanel.topControls
                     if top_controls_panel then
-                        local top_controls_height = 30
+                        local top_controls_height = calculatePanelHeightFromPanel(top_controls_panel, 2)
+                        if top_controls_height < 30 then top_controls_height = 30 end
                         top_controls_panel:setHeight(top_controls_height)
                         height = height + top_controls_height
                     end
@@ -720,6 +723,9 @@ function initControlButtons()
                     table.insert(buttonOrder, id)
                 end
             else
+                if buttonConfigs[id].visible == nil then
+                    buttonConfigs[id].visible = true
+                end
                 button:setVisible(buttonConfigs[id].visible)
             end
         end

@@ -1,14 +1,14 @@
--- Simplified Bot Module
+﻿-- Simplified Bot Module
 -- Version 2.0 by nok1111
 -- All-in-one: Bot logic + UI in single file
 
-botButton = nil
-botMainLoop = nil
-botWindow = nil
-contentsPanel = nil
-enableButton = nil
-statusLabel = nil
-botTabs = nil
+local botButton = nil
+local botMainLoop = nil
+local botWindow = nil
+local contentsPanel = nil
+local enableButton = nil
+local statusLabel = nil
+local botTabs = nil
 
 -- Bot panels
 local combatPanel = nil
@@ -62,7 +62,6 @@ function startChoosePotionItem(potionType)
   potionTypeToSet = potionType
   mouseGrabberWidget:grabMouse()
   g_mouse.pushCursor('target')
-  print("[Bot] Crosshair active - click on", potionType, "potion item")
 end
 
 function onChoosePotionItemRelease(self, mousePosition, mouseButton)
@@ -78,7 +77,6 @@ function onChoosePotionItemRelease(self, mousePosition, mouseButton)
 
   if item and item:getPosition().x == 65535 and potionTypeToSet then
     local itemId = item:getId()
-    print("[Bot] Selected item ID:", itemId, "for", potionTypeToSet)
     
     if potionTypeToSet == 'health' then
       storage.healing.healthPotion.itemId = itemId
@@ -110,11 +108,9 @@ function onChoosePotionItemRelease(self, mousePosition, mouseButton)
 end
 
 function debugInput()
-  print("[DEBUG] Setting up input debugging...")
   
   connect(g_keyboard, {
     onKeyPress = function(keyCode, keyboardModifiers)
-      print("[DEBUG] g_keyboard Key pressed:", keyCode, "Modifiers:", keyboardModifiers)
       return false
     end
   })
@@ -123,30 +119,22 @@ function debugInput()
   if rootWidget then
     connect(rootWidget, {
       onKeyPress = function(self, keyCode, keyboardModifiers)
-        print("[DEBUG] Root widget key pressed:", keyCode)
         return false
       end
     })
-    print("[DEBUG] Root widget connected")
   else
-    print("[DEBUG] WARNING: rootWidget not found")
   end
-  
-  print("[DEBUG] Input debugging active")
 end
 
 function init()
-  print("[Bot] Module initializing...")
   
   -- TEMPORARY: Debug input
   debugInput()
   
   -- Storage will be initialized when character logs in (onlineSimple)
-  print("[Bot] Module loaded, waiting for character login...")
   
   -- STEP 3: Create UI (like original mehah)
   if modules.game_interface then
-    print("[Bot] Creating bot UI...")
     status, err = pcall(function()
       -- Import UI styles first
       g_ui.importStyle('ui/basic')
@@ -182,66 +170,54 @@ function init()
       contentsPanel = botWindow:recursiveGetChildById('miniwindowContents')
       
       if not enableButton or not statusLabel or not botTabs then
-        print("[Bot] WARNING: Some UI components not found")
-        print("[Bot] enableButton:", enableButton)
-        print("[Bot] statusLabel:", statusLabel)
-        print("[Bot] botTabs:", botTabs)
       else
-        print("[Bot] UI components found successfully")
       end
       
-      -- Setup enable button
       enableButton.onClick = function()
-        print("[Bot] Enable button clicked!")
         if SimplifiedBot.isEnabled() then
           SimplifiedBot.setOff()
           if botMainLoop then botMainLoop.setOff() end
           enableButton:setOn(false)
           statusLabel:setText('Status: Stopped')
+          statusLabel:setColor("#FF0000")
+          storage.globalEnabled = false
+          SimplifiedBot.saveStorage()
         else
           SimplifiedBot.setOn()
           if botMainLoop then botMainLoop.setOn() end
           enableButton:setOn(true)
           statusLabel:setText('Status: Running')
+          statusLabel:setColor("#00FF00")
+          storage.globalEnabled = true
+          SimplifiedBot.saveStorage()
         end
       end
       
       -- Initialize tabs (storage is ready now)
-      print("[Bot] Initializing UI tabs...")
       local uiSuccess = initTabs()
       if not uiSuccess then
-        print("[Bot] WARNING: initTabs() failed, but continuing...")
       end
     end)
     
     if not status then
-      print("[Bot] ERROR creating UI: " .. tostring(err))
       return
     end
-    print("[Bot] UI created successfully with tabs")
   end
   
   -- STEP 5: Connect game events
-  print("[Bot] Connecting game events...")
   connect(g_game, {
     onGameStart = onlineSimple,
     onGameEnd = offlineSimple,
   })
-  print("[Bot] Game events connected")
   
   if g_game.isOnline() then
-    print("[Bot] Player is already online, calling onlineSimple()...")
     local success, error = pcall(onlineSimple)
     if not success then
-      print("[Bot] ERROR in onlineSimple: " .. tostring(error))
     end
   end
-  
-  print("[Bot] Module initialized successfully")
 end
 
 function terminate()
-  print("[Bot] Module terminating...")
   
   disconnect(g_keyboard)
   
@@ -267,15 +243,11 @@ function terminate()
     botButton:destroy()
     botButton = nil
   end
-  
-  print("[Bot] Module terminated successfully")
 end
 
 function toggleSimple()
-  print("[Bot] toggleSimple() called")
   
   if not botWindow then
-    print("[Bot] ERROR: botWindow not created")
     return
   end
   
@@ -292,7 +264,6 @@ function toggleSimple()
     
     -- If storage was loaded and UI needs refresh, force setup of all panels
     if needsUIRefresh then
-      print("[Bot] Refreshing UI with loaded storage...")
       
       -- Reset all setup flags
       combatSetup = false
@@ -318,21 +289,17 @@ function toggleSimple()
 end
 
 function onlineSimple()
-  print("[Bot] onlineSimple() called")
   
   if not SimplifiedBot then
-    print("[Bot] ERROR: SimplifiedBot is nil!")
     return
   end
   
   -- Load storage now that character name is available
-  print("[Bot] Loading storage for character:", g_game.getCharacterName())
   SimplifiedBot.loadStorage()
   SimplifiedBot.init()
   
   -- Force UI refresh immediately if window is already open (character switch without closing client)
   if botWindow and botWindow:isVisible() then
-    print("[Bot] Bot window is open - refreshing UI immediately...")
     
     -- Reset all setup flags
     combatSetup = false
@@ -354,24 +321,19 @@ function onlineSimple()
   else
     -- Mark that UI needs refresh when window is opened later
     needsUIRefresh = true
-    print("[Bot] Storage loaded - UI will refresh when bot window is opened")
   end
-  
-  print("[Bot] SimplifiedBot ready for online mode")
 
   
   
   -- Create button if it doesn't exist
   if not botButton then
     local status, err = pcall(function()
-      print("[Bot] Creating bot button...")
       botButton = modules.game_mainpanel.addToggleButton('botButton', tr('Bot'), '/images/options/bot', toggleSimple, false, 99999)
       botButton:setOn(false)
       botButton:show()
     end)
     
     if not status then
-      print("[Bot] ERROR creating button: " .. tostring(err))
       return
     end
   end
@@ -379,18 +341,15 @@ function onlineSimple()
   -- Create main loop
   if not botMainLoop then
     status, err = pcall(function()
-      print("[Bot] Creating main loop...")
       botMainLoop = {
         event = nil,
         enabled = false,
         setOn = function()
           if botMainLoop.enabled then return end
-          print("[Bot] Main loop STARTING...")
           botMainLoop.enabled = true
           botMainLoop.loop()
         end,
         setOff = function()
-          print("[Bot] Main loop STOPPING...")
           botMainLoop.enabled = false
           if botMainLoop.event then
             removeEvent(botMainLoop.event)
@@ -400,52 +359,54 @@ function onlineSimple()
         loop = function()
           if not botMainLoop.enabled then return end
           if SimplifiedBot and SimplifiedBot.mainLoop then
-            SimplifiedBot.mainLoop()
+            local success, err = pcall(SimplifiedBot.mainLoop)
+            if not success then
+            end
           end
-          botMainLoop.event = scheduleEvent(botMainLoop.loop, 1000)
+          botMainLoop.event = scheduleEvent(botMainLoop.loop, 200)
         end
       }
       modules.game_bot.botMainLoop = botMainLoop
     end)
     
     if not status then
-      print("[Bot] ERROR creating main loop: " .. tostring(err))
       return
     end
   end
   
   
-  -- Load storage
+  -- Enable main loop if bot is already enabled from profile
   status, err = pcall(function()
-    print("[Bot] Loading storage...")
-    SimplifiedBot.loadStorage()
     if SimplifiedBot.isEnabled() and botMainLoop then
       botMainLoop.setOn()
+    end
+    
+    -- Auto start UI toggle and the actual loop if bot is globally enabled
+    if storage.globalEnabled then
+      SimplifiedBot.setOn()
+      if botMainLoop then botMainLoop.setOn() end
+      if enableButton and statusLabel then
+        enableButton:setOn(true)
+        statusLabel:setText('Status: Running')
+        statusLabel:setColor("#00FF00")
+      end
     end
   end)
   
   if not status then
-    print("[Bot] ERROR loading storage: " .. tostring(err))
   end
-  
-  print("[Bot] onlineSimple() completed")
 end
 
 function offlineSimple()
-  print("[Bot] offlineSimple() - Character going offline")
   
   if SimplifiedBot and SimplifiedBot.saveStorage then
     SimplifiedBot.saveStorage()
-  end
-  if SimplifiedBot and SimplifiedBot.setOff then
-    SimplifiedBot.setOff()
   end
   if botMainLoop then
     botMainLoop.setOff()
   end
   
   -- Clear storage and storageFile to prevent transfer between characters
-  print("[Bot] Clearing storage for next character login")
   storage = {}
   storageFile = nil
   
@@ -454,32 +415,46 @@ function offlineSimple()
   healingSetup = false
   supportSetup = false
   needsUIRefresh = false
-  print("[Bot] UI setup flags reset")
 end
 
 -- SimplifiedBot Functions (integrated from bot_simple.lua)
 
 function SimplifiedBot.init()
-  print("[Bot] SimplifiedBot.init() called")
   -- Storage will be loaded in onlineSimple() when character name is available
   
+  if storage.globalEnabled == nil then
+    storage.globalEnabled = false
+  end
+  
   if not storage.combat then
-    print("[Bot] storage.combat is NIL - creating new with defaults")
     storage.combat = {
       enabled = false,
       attackAll = false,
       attackSummons = false,
+      attackPlayers = false,
+      holdTargetPvE = false,
+      maxDistance = 10,
+      priority = "Closest",
       monsterList = {},
       spells = {"", "", ""}
     }
   else
-    print("[Bot] storage.combat EXISTS - keeping saved values")
-    print("[Bot] - enabled:", storage.combat.enabled)
-    print("[Bot] - attackAll:", storage.combat.attackAll)
     
     -- Only set defaults for missing fields
     if storage.combat.attackSummons == nil then
       storage.combat.attackSummons = false
+    end
+    if storage.combat.attackPlayers == nil then
+      storage.combat.attackPlayers = false
+    end
+    if storage.combat.holdTargetPvE == nil then
+      storage.combat.holdTargetPvE = false
+    end
+    if storage.combat.maxDistance == nil then
+      storage.combat.maxDistance = 10
+    end
+    if storage.combat.priority == nil then
+      storage.combat.priority = "Closest"
     end
     if not storage.combat.spells or #storage.combat.spells == 0 then
       storage.combat.spells = {"", "", ""}
@@ -501,8 +476,13 @@ function SimplifiedBot.init()
     storage.support = {
       spell1 = {enabled = false, text = "utamo vita", cooldown = 90},
       spell2 = {enabled = false, text = "utani hur", cooldown = 60},
-      autoEat = {enabled = false, itemId = 3577, interval = 10}
+      autoEat = {enabled = false, itemId = 3577, interval = 10},
+      antiIdle = {enabled = false}
     }
+  else
+    if not storage.support.antiIdle then
+      storage.support.antiIdle = {enabled = false}
+    end
   end
 end
 
@@ -526,32 +506,38 @@ function SimplifiedBot.loadStorage()
   charName = charName:gsub("[^%w_-]", "_")
   
   storageFile = path .. "settings_" .. g_settings.getNumber('profile') .. "_" .. charName .. ".json"
-  print("[Bot] Storage file: " .. storageFile)
   
   if g_resources.fileExists(storageFile) then
-    print("[Bot] Loading existing storage...")
     local status, result = pcall(function()
       return json.decode(g_resources.readFileContents(storageFile))
     end)
     
     if status then
       storage = result
-      print("[Bot] Storage loaded successfully")
     else
-      print("[Bot] Failed to load storage")
     end
   else
-    print("[Bot] No storage file found, using defaults")
   end
+  
+  -- Force init to populate missing fields whenever storage is loaded
+  SimplifiedBot.init()
+end
+
+local saveEvent = nil
+function SimplifiedBot.delayedSave()
+  if saveEvent then
+    removeEvent(saveEvent)
+  end
+  saveEvent = scheduleEvent(function()
+    SimplifiedBot.saveStorage()
+    saveEvent = nil
+  end, 500)
 end
 
 function SimplifiedBot.saveStorage()
   if not storageFile then
-    print("[Bot] saveStorage: No storageFile set!")
     return
   end
-  
-  print("[Bot] Saving to file:", storageFile)
   
   local status, result = pcall(function()
     return json.encode(storage, 2)
@@ -559,14 +545,11 @@ function SimplifiedBot.saveStorage()
   
   if status then
     g_resources.writeFileContents(storageFile, result)
-    print("[Bot] Storage saved successfully")
   else
-    print("[Bot] ERROR saving storage:", result)
   end
 end
 
 function SimplifiedBot.setOn()
-  if not g_game.isOnline() then return end
   botEnabled = true
   SimplifiedBot.updateStatus()
 end
@@ -624,13 +607,11 @@ end
 
 function SimplifiedBot.processCombat()
   if not storage.combat then 
-    print("[Bot Combat] ERROR: storage.combat is nil")
     return 
   end
   
   -- Check if combat is enabled
   if not storage.combat.enabled then
-    print("[Bot Combat] Combat is disabled - skipping")
     -- Cancel any existing attack
     if g_game.getAttackingCreature() then
       g_game.cancelAttack()
@@ -644,38 +625,69 @@ function SimplifiedBot.processCombat()
   if not player then return end
   
   local pos = player:getPosition()
-  local creatures = g_map.getSpectators(pos, false)
   
-  print("[Bot Combat] Found", #creatures, "creatures nearby")
-  print("[Bot Combat] storage.combat.attackAll =", storage.combat.attackAll)
+  -- PvP / PvE Hold Target logic
+  local currentAttack = g_game.getAttackingCreature()
+  
+  if currentAttack then
+    if currentAttack:isPlayer() and currentAttack:getName() ~= player:getName() and storage.combat.attackPlayers then
+      currentTarget = currentAttack
+      SimplifiedBot.castAttackSpell()
+      return
+    elseif currentAttack:isMonster() and storage.combat.holdTargetPvE then
+      -- Verify if current monster is still a valid target
+      local cPos = currentAttack:getPosition()
+      if cPos and cPos.z == pos.z and g_map.isSightClear(pos, cPos) then
+        local distance = math.max(math.abs(pos.x - cPos.x), math.abs(pos.y - cPos.y))
+        local maxDist = tonumber(storage.combat.maxDistance) or 10
+        if distance <= maxDist then
+          -- Target is still valid, hold it
+          currentTarget = currentAttack
+          SimplifiedBot.castAttackSpell()
+          return
+        end
+      end
+      -- If it's no longer valid (out of range/sight), let it fall through and find a new target
+    end
+  end
+  
+  local creatures = g_map.getSpectators(pos, false)
   if storage.combat.monsterList and #storage.combat.monsterList > 0 then
-    print("[Bot Combat] Monster list:", table.concat(storage.combat.monsterList, ", "))
   else
-    print("[Bot Combat] Monster list: EMPTY")
   end
   
   local bestTarget = nil
-  local closestDistance = 999
+  local bestValue = 999 -- Distance or Health depending on priority
   local monstersFound = 0
   local summonsSkipped = 0
+  local playersFound = 0
   
   for _, creature in ipairs(creatures) do
-    if creature:isMonster() then
+    local isMonster = creature:isMonster()
+    
+    if isMonster then
       monstersFound = monstersFound + 1
       
       -- Check if should skip summons
       local isSummon = creature:isSummon()
       if isSummon and not storage.combat.attackSummons then
         summonsSkipped = summonsSkipped + 1
-        print("[Bot Combat] Skipping summon:", creature:getName())
         goto continue
       end
       
-      local shouldAttack = false
+      local creaturePos = creature:getPosition()
+      if creaturePos.z ~= pos.z then
+        goto continue
+      end
+      
+      if not g_map.isSightClear(pos, creaturePos) then
+        goto continue
+      end
+      
+      local shouldAttack = true
       
       if storage.combat.attackAll then
         -- Attack all monsters EXCEPT those in exclusion list
-        shouldAttack = true
         
         -- Check if monster is in exclusion list (blacklist)
         if storage.combat.monsterList and #storage.combat.monsterList > 0 then
@@ -683,24 +695,50 @@ function SimplifiedBot.processCombat()
           for _, excludedName in ipairs(storage.combat.monsterList) do
             if monsterName:find(excludedName:lower(), 1, true) then
               shouldAttack = false
-              print("[Bot Combat] Monster excluded from attack:", creature:getName())
               break
             end
           end
         end
         
         if shouldAttack then
-          print("[Bot Combat] AttackAll enabled - will attack:", creature:getName())
+        end
+      else
+        -- Only attack monsters IN the inclusion list (whitelist behavior)
+        -- Support old compatibility if they don't have attackAll enabled but list is empty (fallback to true)
+        if storage.combat.monsterList and #storage.combat.monsterList > 0 then
+          shouldAttack = false
+          local monsterName = creature:getName():lower()
+          for _, includedName in ipairs(storage.combat.monsterList) do
+            if monsterName:find(includedName:lower(), 1, true) then
+              shouldAttack = true
+              break
+            end
+          end
         end
       end
       
       if shouldAttack then
-        local creaturePos = creature:getPosition()
         local distance = math.max(math.abs(pos.x - creaturePos.x), math.abs(pos.y - creaturePos.y))
-        print("[Bot Combat] Monster", creature:getName(), "at distance", distance)
-        if distance < closestDistance then
-          closestDistance = distance
-          bestTarget = creature
+        local maxDist = tonumber(storage.combat.maxDistance) or 10
+        
+        -- Filter out targets that are too far
+        if distance > maxDist then
+          shouldAttack = false
+        end
+        
+        if shouldAttack then
+          if storage.combat.priority == "Lowest Health" then
+            local hp = creature:getHealthPercent()
+            if hp < bestValue then
+              bestValue = hp
+              bestTarget = creature
+            end
+          else -- Default to Closest
+            if distance < bestValue then
+              bestValue = distance
+              bestTarget = creature
+            end
+          end
         end
       end
       
@@ -708,12 +746,9 @@ function SimplifiedBot.processCombat()
     end
   end
   
-  print("[Bot Combat] Summary - Monsters:", monstersFound, "Summons skipped:", summonsSkipped, "Best target:", bestTarget and bestTarget:getName() or "none")
-  
   if bestTarget then
     currentTarget = bestTarget
     if g_game.getAttackingCreature() ~= bestTarget then
-      print("[Bot Combat] Attacking:", bestTarget:getName())
       g_game.attack(bestTarget)
     end
     SimplifiedBot.castAttackSpell()
@@ -725,16 +760,17 @@ function SimplifiedBot.processCombat()
   end
 end
 
+local lastSpellTime = 0
 function SimplifiedBot.castAttackSpell()
   if not storage.combat or not storage.combat.spells then
-    print("[Bot Spell] ERROR: storage.combat.spells is nil")
     return
   end
   
+  local now = g_clock.millis()
+  if now - lastSpellTime < 2000 then return end -- Basic exhaust protection
+  
   local spells = storage.combat.spells
   local validSpells = {}
-  
-  print("[Bot Spell] Raw spells from storage:", table.concat(spells or {}, ", "))
   
   for _, spell in ipairs(spells) do
     if spell and spell:len() > 0 then
@@ -742,17 +778,14 @@ function SimplifiedBot.castAttackSpell()
     end
   end
   
-  print("[Bot Spell] Valid spells:", #validSpells, "spells -", table.concat(validSpells, ", "))
-  
   if #validSpells == 0 then
-    print("[Bot Spell] No valid spells to cast")
     return
   end
   
   local spell = validSpells[lastAttackSpell]
   if spell then
-    print("[Bot Spell] Casting:", spell)
     g_game.talk(spell)
+    lastSpellTime = now
   end
   
   lastAttackSpell = lastAttackSpell + 1
@@ -774,7 +807,7 @@ function SimplifiedBot.processHealing()
   local maxMana = player:getMaxMana()
   local mp = maxMana > 0 and math.floor(100 * player:getMana() / maxMana) or 100
   
-  if storage.healing.spell.enabled and hp < storage.healing.spell.hpPercent then
+  if storage.healing.spell.enabled and hp < (tonumber(storage.healing.spell.hpPercent) or 90) then
     if storage.healing.spell.text:len() > 0 then
       g_game.talk(storage.healing.spell.text)
       lastHealTime = now
@@ -782,23 +815,34 @@ function SimplifiedBot.processHealing()
     end
   end
   
-  if storage.healing.healthPotion.enabled and hp < storage.healing.healthPotion.hpPercent then
+  if storage.healing.healthPotion.enabled and hp < (tonumber(storage.healing.healthPotion.hpPercent) or 50) then
     g_game.useInventoryItemWith(storage.healing.healthPotion.itemId, player)
     lastHealTime = now
     return
   end
   
-  if storage.healing.manaPotion.enabled and mp < storage.healing.manaPotion.mpPercent then
+  if storage.healing.manaPotion.enabled and mp < (tonumber(storage.healing.manaPotion.mpPercent) or 50) then
     g_game.useInventoryItemWith(storage.healing.manaPotion.itemId, player)
     lastHealTime = now
     return
   end
 end
 
+local lastAntiIdle = 0
+
 function SimplifiedBot.processSupport()
   if not g_game.isOnline() then return end
   
   local now = g_clock.millis()
+  local player = g_game.getLocalPlayer()
+  
+  if storage.support.antiIdle and storage.support.antiIdle.enabled and player then
+    -- Turn every 14 minutes (840,000 ms)
+    if now - lastAntiIdle >= 840000 then
+      g_game.turn(player:getDirection())
+      lastAntiIdle = now
+    end
+  end
   
   if storage.support.spell1.enabled then
     local cooldown = storage.support.spell1.cooldown * 1000
@@ -849,15 +893,11 @@ end
 
 function SimplifiedBot.mainLoop()
   if not botEnabled then 
-    print("[Bot MainLoop] botEnabled is false - not running")
     return 
   end
   if not g_game.isOnline() then 
-    print("[Bot MainLoop] Not online - not running")
     return 
   end
-  
-  print("[Bot MainLoop] Executing... botEnabled:", botEnabled)
   SimplifiedBot.processHealing()
   SimplifiedBot.processCombat()
   SimplifiedBot.processSupport()
@@ -938,7 +978,6 @@ function showTextInputModal(title, currentText, callback)
 end
 
 function initTabs()
-  print("[Bot] Initializing tabs...")
   
   if not botWindow or not botTabs then
     g_logger.error("[Bot] Required UI components not found")
@@ -1033,31 +1072,23 @@ function showPanel(panel)
 end
 
 function setupCombatPanel()
-  print("[Bot Setup] setupCombatPanel() called - combatSetup:", combatSetup)
   if combatSetup then 
-    print("[Bot Setup] Combat panel already setup - skipping")
     return 
   end
   if not combatPanel then 
-    print("[Bot Setup] ERROR: combatPanel is nil")
     return 
   end
   
   local storage = SimplifiedBot.getStorage()
   if not storage or not storage.combat then 
-    print("[Bot Setup] ERROR: storage or storage.combat is nil")
     return 
   end
-  
-  print("[Bot Setup] Setting up combat panel...")
   combatSetup = true
   
   local attackAllCheckbox = combatPanel:recursiveGetChildById('attackAllCheckbox')
   if attackAllCheckbox then
-    print("[Bot Setup] Loading attackAll from storage:", storage.combat.attackAll)
     attackAllCheckbox:setChecked(storage.combat.attackAll)
     attackAllCheckbox.onCheckChange = function(widget, checked)
-      print("[Bot Setup] attackAll checkbox changed to:", checked)
       storage.combat.attackAll = checked
       SimplifiedBot.saveStorage()
     end
@@ -1065,11 +1096,58 @@ function setupCombatPanel()
   
   local attackSummonsCheckbox = combatPanel:recursiveGetChildById('attackSummonsCheckbox')
   if attackSummonsCheckbox then
-    print("[Bot Setup] Loading attackSummons from storage:", storage.combat.attackSummons)
     attackSummonsCheckbox:setChecked(storage.combat.attackSummons)
     attackSummonsCheckbox.onCheckChange = function(widget, checked)
-      print("[Bot Setup] attackSummons checkbox changed to:", checked)
       storage.combat.attackSummons = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  local attackPlayersCheckbox = combatPanel:recursiveGetChildById('attackPlayersCheckbox')
+  if attackPlayersCheckbox then
+    attackPlayersCheckbox:setChecked(storage.combat.attackPlayers)
+    attackPlayersCheckbox.onCheckChange = function(widget, checked)
+      storage.combat.attackPlayers = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  local holdTargetPvECheckbox = combatPanel:recursiveGetChildById('holdTargetPvECheckbox')
+  if holdTargetPvECheckbox then
+    holdTargetPvECheckbox:setChecked(storage.combat.holdTargetPvE)
+    holdTargetPvECheckbox.onCheckChange = function(widget, checked)
+      storage.combat.holdTargetPvE = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
+  
+  local distanceSlider = combatPanel:recursiveGetChildById('distanceSlider')
+  local distanceLabel = combatPanel:recursiveGetChildById('distanceLabel')
+  if distanceSlider and distanceLabel then
+    distanceSlider:setValue(storage.combat.maxDistance)
+    distanceLabel:setText("Max Attack Distance: " .. storage.combat.maxDistance .. " sqm")
+    
+    distanceSlider.onValueChange = function()
+      local value = distanceSlider:getValue()
+      storage.combat.maxDistance = value
+      distanceLabel:setText("Max Attack Distance: " .. value .. " sqm")
+      SimplifiedBot.delayedSave()
+    end
+  end
+  
+  local priorityComboBox = combatPanel:recursiveGetChildById('priorityComboBox')
+  if priorityComboBox then
+    priorityComboBox:clearOptions()
+    priorityComboBox:addOption("Closest")
+    priorityComboBox:addOption("Lowest Health")
+    
+    -- Set current option from storage
+    if storage.combat.priority then
+      priorityComboBox:setCurrentOption(storage.combat.priority)
+    end
+    
+    priorityComboBox.onOptionChange = function(widget, option, data)
+      storage.combat.priority = option
       SimplifiedBot.saveStorage()
     end
   end
@@ -1144,10 +1222,8 @@ function setupCombatPanel()
   
   local combatEnabledCheckbox = combatPanel:recursiveGetChildById('combatEnabledCheckbox')
   if combatEnabledCheckbox then
-    print("[Bot Setup] Combat Enabled from storage:", storage.combat.enabled)
     combatEnabledCheckbox:setChecked(storage.combat.enabled)
     combatEnabledCheckbox.onCheckChange = function(widget, checked)
-      print("[Bot Setup] Combat Enabled changed to:", checked)
       storage.combat.enabled = checked
       SimplifiedBot.saveStorage()
     end
@@ -1242,7 +1318,7 @@ function setupHealingPanel()
       local value = healSpellHpSlider:getValue()
       storage.healing.spell.hpPercent = value
       healSpellHpLabel:setText(value .. "%")
-      SimplifiedBot.saveStorage()
+      SimplifiedBot.delayedSave()
     end
     
     -- Add tooltips to slider buttons
@@ -1296,7 +1372,7 @@ function setupHealingPanel()
       local value = healthPotionHpSlider:getValue()
       storage.healing.healthPotion.hpPercent = value
       healthPotionHpLabel:setText(value .. "%")
-      SimplifiedBot.saveStorage()
+      SimplifiedBot.delayedSave()
     end
   end
   
@@ -1341,7 +1417,7 @@ function setupHealingPanel()
       local value = manaPotionMpSlider:getValue()
       storage.healing.manaPotion.mpPercent = value
       manaPotionMpLabel:setText(value .. "%")
-      SimplifiedBot.saveStorage()
+      SimplifiedBot.delayedSave()
     end
   end
 end
@@ -1386,7 +1462,7 @@ function setupSupportPanel()
       local value = spell1CooldownSlider:getValue()
       storage.support.spell1.cooldown = value
       spell1CooldownLabel:setText(value .. "s")
-      SimplifiedBot.saveStorage()
+      SimplifiedBot.delayedSave()
     end
     
     -- Add tooltips to slider buttons
@@ -1436,7 +1512,7 @@ function setupSupportPanel()
       local value = spell2CooldownSlider:getValue()
       storage.support.spell2.cooldown = value
       spell2CooldownLabel:setText(value .. "s")
-      SimplifiedBot.saveStorage()
+      SimplifiedBot.delayedSave()
     end
     
     -- Add tooltips to slider buttons
@@ -1481,7 +1557,7 @@ function setupSupportPanel()
       local value = autoEatIntervalSlider:getValue()
       storage.support.autoEat.interval = value
       autoEatIntervalLabel:setText(value .. "s")
-      SimplifiedBot.saveStorage()
+      SimplifiedBot.delayedSave()
     end
     
     -- Add tooltips to slider buttons
@@ -1494,4 +1570,14 @@ function setupSupportPanel()
       incrementButton:setTooltip('Increase interval')
     end
   end
+  
+  local antiIdleEnabled = supportPanel:recursiveGetChildById('antiIdleEnabled')
+  if antiIdleEnabled then
+    antiIdleEnabled:setChecked(storage.support.antiIdle.enabled)
+    antiIdleEnabled.onCheckChange = function(widget, checked)
+      storage.support.antiIdle.enabled = checked
+      SimplifiedBot.saveStorage()
+    end
+  end
 end
+

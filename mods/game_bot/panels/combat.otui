@@ -43,6 +43,69 @@ BotPanel
     margin-left: 5
     margin-right: 5
     
+  CheckBox
+    id: holdTargetPvECheckbox
+    text: Hold Target (PvE)
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 5
+    margin-right: 5
+    
+  CheckBox
+    id: attackPlayersCheckbox
+    text: Hold Target (PvP)
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 5
+    margin-right: 5
+    
+  Label
+    id: distanceLabel
+    text: Max Attack Distance: 10 sqm
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 5
+    margin-right: 5
+    font: verdana-11px-rounded
+    
+  HorizontalScrollBar
+    id: distanceSlider
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 10
+    minimum: 1
+    maximum: 10
+    step: 1
+    
+  Label
+    text: Target Priority:
+    text-auto-resize: true
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 5
+    margin-right: 5
+    font: verdana-11px-rounded
+    
+  ComboBox
+    id: priorityComboBox
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    margin-left: 10
+    margin-right: 10
+    
   Label
     text: Exclude monsters from attacking:
     text-wrap: true

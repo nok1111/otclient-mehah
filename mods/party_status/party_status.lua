@@ -93,7 +93,8 @@ function onGameEnd()
     updateEvent = nil
   end
   if partyWindow then
-    partyWindow:hide()
+    -- Force-save closed=true so setupOnStart won't reopen it next session
+    partyWindow:close()
   end
   if partyButton then
     partyButton:setOn(false)
@@ -136,7 +137,10 @@ function onPartyData(protocol, opcode, buffer)
       scrollbar:mergeStyle({ ['$!on'] = {} })
     end
 
-    partyWindow:open()
+    -- Only auto-open if the user already had the button toggled on
+    if partyButton and partyButton:isOn() then
+      partyWindow:open()
+    end
   end
 
   membersPanel:destroyChildren()

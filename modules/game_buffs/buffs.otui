@@ -41,6 +41,7 @@ UIWindow
   height: 62
   width: 62
   padding: 5
+  &save: true
   opacity: 0.9
   border: 0 #ffffffff
   //border: 1 #FF0000

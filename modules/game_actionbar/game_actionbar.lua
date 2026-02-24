@@ -447,6 +447,9 @@ function createMenu(slotId)
 end
 
 function openSpellAssignWindow()
+    if spellAssignWindow ~= nil then
+        spellAssignWindow:destroy()
+    end
     spellAssignWindow = g_ui.loadUI('assign_spell', g_ui.getRootWidget())
     spellsPanel = spellAssignWindow:getChildById('spellsPanel')
     addEvent(function()
@@ -592,6 +595,8 @@ function clearSlot()
     slot.text = nil
     slot.useType = nil
     slot.getTier = nil
+    slot.autoSend = nil
+    slot.parameter = nil
     slot:getChildById('tier'):setVisible(false)
     slot:getChildById('text'):setText('')
     slot:setTooltip('')
@@ -609,6 +614,8 @@ function clearSlotById(slotId)
     slot.text = nil
     slot.useType = nil
     slot.getTier = nil
+    slot.autoSend = nil
+    slot.parameter = nil
     slot:getChildById('tier'):setVisible(false)
     slot:getChildById('text'):setText('')
     slot:setTooltip('')
@@ -621,6 +628,9 @@ function clearHotkey()
 end
 
 function openTextAssignWindow()
+    if textAssignWindow ~= nil then
+        textAssignWindow:destroy()
+    end
     textAssignWindow = g_ui.loadUI('assign_text', g_ui.getRootWidget())
     textAssignWindow:raise()
     textAssignWindow:focus()
@@ -857,6 +867,9 @@ function onDragReassign(self, item)
 end
 
 function openEditHotkeyWindow()
+    if editHotkeyWindow ~= nil then
+        editHotkeyWindow:destroy()
+    end
     editHotkeyWindow = g_ui.loadUI('edit_hotkey', g_ui.getRootWidget())
     editHotkeyWindow:grabKeyboard()
 

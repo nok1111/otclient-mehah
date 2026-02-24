@@ -296,6 +296,8 @@ inventoryController:setUI('inventory', modules.game_interface.getRightPanel())
 function inventoryController:onInit()
     refreshInventory_panel()
     local ui = getInventoryUi()
+
+    iconTopMenu = modules.game_mainpanel.addStoreButton('inventoryButton', tr('Inventory'), '/images/icons/icon_misc', toggle, false, 3)
 end
 
 local slotTooltips = {
@@ -367,6 +369,10 @@ function inventoryController:onGameStart()
     
     -- Setup tooltips after UI is loaded with delay
     addEvent(setupTooltips, 500)
+
+    if iconTopMenu then
+        iconTopMenu:setOn(inventoryController.ui:isVisible())
+    end
 end
 
 function inventoryController:onGameEnd()
@@ -499,10 +505,6 @@ end
 function extendedView(extendedView)
 
         print("not extendedView inventory")
-        if iconTopMenu then
-            iconTopMenu:destroy()
-            iconTopMenu = nil
-        end
         --inventoryController.ui:setBorderColor('alpha')
         inventoryController.ui:setBorderWidth(0)
         local mainRightPanel = modules.game_interface.getRightPanel()

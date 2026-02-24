@@ -57,6 +57,7 @@ function init()
   if g_game.isOnline() then
     online()
   end
+  buffsWindow:setup()
 end
 
 function terminate()
@@ -155,43 +156,14 @@ end
 
 function online()
   if buffsWindow and not buffsWindow:isVisible() then
-    local defaultPos = { x = modules.game_interface.gameMapPanel:getMapRect().x,
-                         y = modules.game_interface.gameMapPanel:getMapRect().y}
-    local pos = defaultPos
-    local offsetX = 25
-    if gameLeftPanel then
-      -- Anchor to the right of the left panel
-      local leftPanelRect = gameLeftPanel:getRect()
-      pos.x = leftPanelRect.x + leftPanelRect.width + offsetX -- 10px gap
-    else
-      pos.x = math.max(pos.x + offsetX, 0)
-        end
-    pos.y = math.max(pos.y, 0)
-    buffsWindow:setX(pos.x)
-    buffsWindow:setY(pos.y)
     buffsWindow:setPhantom(g_settings.getBoolean('phantomBuffs'))
     local childs = buffsWindow:recursiveGetChildren()
     for _, child in ipairs(childs) do
       child:setPhantom(g_settings.getBoolean('phantomBuffs'))
     end
     buffsWindow:show()
-  elseif buffsWindow and buffsWindow:isVisible() then
-    local defaultPos = { x = modules.game_interface.gameMapPanel:getMapRect().x,
-                         y = modules.game_interface.gameMapPanel:getMapRect().y}
-    local pos = defaultPos
-    local offsetX = 25
-    if gameLeftPanel then
-      -- Anchor to the right of the left panel
-      local leftPanelRect = gameLeftPanel:getRect()
-      pos.x = leftPanelRect.x + leftPanelRect.width + offsetX -- 10px gap
-    else
-      pos.x = math.max(pos.x + offsetX, 0)
-    end
-    pos.y = math.max(pos.y, 0)
-    buffsWindow:setX(pos.x)
-    buffsWindow:setY(pos.y)
-    
   end
+
   if not lastPlayer or lastPlayer ~= g_game.getCharacterName() then
     refresh()
     lastPlayer = g_game.getCharacterName()

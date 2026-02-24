@@ -212,3 +212,21 @@ BotPanel
     anchors.top: prev.bottom
     anchors.horizontalCenter: parent.horizontalCenter
     margin-top: 2
+    
+  HorizontalSeparator
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 2
+    margin-right: 2
+    
+  CheckBox
+    id: antiIdleEnabled
+    text: Auto Anti-Idle (Turns every 14 mins)
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 10
+    margin-right: 5

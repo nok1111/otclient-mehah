@@ -379,51 +379,6 @@ InventoryWindow
         margin-left: 10
         &slotPosition: {x = 65535, y = 14, z = 0}
 
-    Panel
-      id: statsPanel
-      image-source: /images/ui/panel_flat
-      image-border: 3
-      image-color: #222222dd
-      anchors.top: craftingPanel.bottom
-      anchors.left: activePanel.left
-      anchors.right: combatPanel.right
-      margin-top: 10
-      height: 22
-
-      Label
-        !text: tr('Soul:')
-        font: cipsoftFont
-        anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 5
-        color: #aaaaff
-
-      Label
-        id: soul
-        !text: '100000'
-        font: cipsoftFont
-        anchors.left: prev.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 3
-        color: #ffffff
-
-      Label
-        !text: tr('Cap:')
-        font: cipsoftFont
-        anchors.right: capacity.left
-        anchors.verticalCenter: parent.verticalCenter
-        margin-right: 3
-        color: #ffaa55
-
-      Label
-        id: capacity
-        !text: '10000'
-        font: cipsoftFont
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-right: 5
-        color: #ffffff
-
     MainInventoryItem
       id: soulPanel
       visible: false
@@ -438,11 +393,11 @@ InventoryWindow
 
     MainInventoryItem
       id: legs
-      anchors.top: statsPanel.bottom
-      anchors.left: statsPanel.left
+      anchors.top: craftingPanel.bottom
+      anchors.left: craftingPanel.left
       enabled: false
       visible: false
-      margin-top: 3
+      margin-top: 10
       &slotPosition: {x = 65535, y = 7, z = 0}
 
   UIWidget
@@ -464,60 +419,13 @@ InventoryWindow
       $pressed !disabled:
         image-clip: 12 0 12 12
 
-    MainInventoryItem
-      id: soulAndCapacity
-      anchors.left: changeSize.right
-      anchors.top: changeSize.top
-      margin-left: 4
-      size: 30 44
-
-      Label
-        !text: tr('Cap')
-        text.align: center
-        font: cipsoftFont
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top
-        color: #c0c0c0ff
-        margin-top: 1
-        height: 10
-
-      Label
-        id: capacity
-        !text: '10000'
-        font: cipsoftFont
-        text-align: center
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top
-        margin-top: 8
-        color: #c0c0c0ff
-
-      Label
-        !text: tr('Soul')
-        text.align: center
-        font: cipsoftFont
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        color: #c0c0c0ff
-        margin-bottom: 4
-        height: 10
-
-      Label
-        id: soul
-        !text: '100000'
-        font: cipsoftFont
-        text-align: center
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        margin-bottom: -2
-        color: #c0c0c0ff
-
     TopToggleButton
       id: attack
       image-source: /images/game/combatmodes/fightoffensive
       image-clip: 0 0 20 20
-      anchors.left: soulAndCapacity.right
+      anchors.left: changeSize.right
       anchors.top: changeSize.top
-      margin-left: 3
+      margin-left: 10
       size: 20 20
       @onClick: |
         selectCombat('attack')

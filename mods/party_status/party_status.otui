@@ -3,6 +3,7 @@ MiniWindow
   !text: tr('Party Members')
   icon: /images/topbuttons/viplist
   &save: true
+  visible: false
   @onOpen: onMiniWindowOpen()
   @onClose: onMiniWindowClose()
 

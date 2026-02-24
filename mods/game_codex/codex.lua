@@ -1028,34 +1028,27 @@ function Codex.setupCratesUI()
 	if bronzeButton then
 		bronzeButton:setText("\n\n\n" .. "     BRONZE CRATE\nx" .. Codex.cachedBronzeCrates)
 		
-		
-		connect(bronzeButton, { onClick = function()
-			print("[Codex] Bronze button clicked")
+		bronzeButton.onClick = function()
 			Codex.selectCrateType(1)
-		end })
-		print("[Codex] Bronze button configured")
+		end
 	else
 		print("[Codex ERROR] Bronze button not found!")
 	end
 
 	if silverButton then
 		silverButton:setText("\n\n\n" .. "     SILVER CRATE\nx" .. Codex.cachedSilverCrates)
-		connect(silverButton, { onClick = function()
-			print("[Codex] Silver button clicked")
+		silverButton.onClick = function()
 			Codex.selectCrateType(2)
-		end })
-		print("[Codex] Silver button configured")
+		end
 	else
 		print("[Codex ERROR] Silver button not found!")
 	end
 
 	if goldenButton then
 		goldenButton:setText("\n\n\n" .. "     GOLDEN CRATE\nx" .. Codex.cachedGoldenCrates)
-		connect(goldenButton, { onClick = function()
-			print("[Codex] Golden button clicked")
+		goldenButton.onClick = function()
 			Codex.selectCrateType(3)
-		end })
-		print("[Codex] Golden button configured")
+		end
 	else
 		print("[Codex ERROR] Golden button not found!")
 	end
@@ -1316,11 +1309,10 @@ function Codex.craftCrate(crateId)
 		crateId = crateId
 	})
 	
-	-- Reset flag after a short delay
+	-- Reset flag after a generous delay to allow server to respond
 	scheduleEvent(function()
 		Codex.craftingInProgress = false
-		print("[Codex] Craft cooldown reset")
-	end, 500)
+	end, 1000)
 end
 
 function Codex.showEssencesBonusOverlay(amount, crateId)
@@ -2145,6 +2137,8 @@ function Codex.onExtendedOpcode(protocol, opcode, buffer)
 		Codex.cachedGoldenCrates = data.goldenCrates or 0
 		-- Refresh crates UI if visible
 		if Codex.currentTab == Codex.TAB_CRATES then
+			-- Reset handler flag so crate selectors get fresh onClick (no stacking)
+			Codex.cratesHandlersConnected = false
 			Codex.setupCratesUI()
 		end
 

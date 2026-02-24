@@ -198,7 +198,7 @@ end
 function UIMiniWindowContainer:order()
     local children = self:getChildren()
     for i = 1, #children do
-        if not children[i].miniLoaded then
+        if children[i].save and not children[i].miniLoaded then
             return
         end
     end

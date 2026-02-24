@@ -230,9 +230,7 @@ Window
       font: small-9px
       anchors.bottom: parent.bottom
       anchors.left: parent.left
-      @onClick: |
-        QuickLoot.hide()
-        modules.game_cyclopedia.toggle()
+      @onClick: QuickLoot.chooseLootItem()
         
   Panel
     id: information

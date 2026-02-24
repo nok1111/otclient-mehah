@@ -1,7 +1,7 @@
 InventoryWindow
   id: mainoptionspanel
-  height: 280
-  &panelHeight: 280
+  height: 310
+  &panelHeight: 310
   image-source: /images/ui/windows/panel_border
   margin-top: 2
   image-border: 50
@@ -19,12 +19,14 @@ InventoryWindow
       id: topControls
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
-      size: 140 30
+      size: 140 60
       phantom: true
       layout:
-        type: horizontalBox
+        type: grid
         cell-size: 68 28
         cell-spacing: 4
+        num-columns: 2
+        flow: true
 
     UIWidget
       id: store
