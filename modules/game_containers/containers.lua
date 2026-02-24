@@ -182,6 +182,22 @@ function onContainerOpen(container, previousContainer)
     container.window = containerWindow
     container.itemsPanel = containerPanel
 
+    containerPanel.onDrop = function(self, widget, mousePos)
+        if not widget or not widget.currentDragThing then return false end
+
+        local item = widget.currentDragThing
+        if not item:isItem() then return false end
+
+        local toPos = container:getSlotPosition(255)
+
+        if item:getCount() > 1 then
+            modules.game_interface.moveStackableItem(item, toPos)
+        else
+            g_game.move(item, toPos, 1)
+        end
+        return true
+    end
+
     toggleContainerPages(containerWindow, container:hasPages())
     refreshContainerPages(container)
 

@@ -188,6 +188,7 @@ function onDropFunc(slotId)
         missedSlotToEdit = nil
     end
     setupHotkeys()
+    focusRootPanel()
 end
 
 function setupActionBar()
@@ -443,6 +444,15 @@ function createMenu(slotId)
             focusRootPanel()
         end)
     end
+    
+    local originalDestroy = menu.onDestroy
+    menu.onDestroy = function(self)
+        if originalDestroy then
+            originalDestroy(self)
+        end
+        focusRootPanel()
+    end
+    
     menu:display()
 end
 
@@ -465,6 +475,7 @@ function closeSpellAssignWindow()
     spellAssignWindow:destroy()
     spellAssignWindow = nil
     spellsPanel = nil
+    focusRootPanel()
 end
 
 function initializeSpelllist()
@@ -640,6 +651,7 @@ end
 function closeTextAssignWindow()
     textAssignWindow:destroy()
     textAssignWindow = nil
+    focusRootPanel()
 end
 
 function textAssignAccept()
@@ -719,6 +731,7 @@ function closeObjectAssignWindow()
     objectAssignWindow:destroy()
     objectAssignWindow = nil
     actionRadioGroup = nil
+    focusRootPanel()
 end
 
 function startChooseItem()
@@ -884,6 +897,7 @@ end
 function closeEditHotkeyWindow()
     editHotkeyWindow:destroy()
     editHotkeyWindow = nil
+    focusRootPanel()
 end
 
 function unbindHotkeys()

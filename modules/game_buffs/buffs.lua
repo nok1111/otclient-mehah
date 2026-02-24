@@ -40,6 +40,12 @@ function init()
   ProtocolGame.registerExtendedOpcode(66, parseremoveBuff) -- parsenewcooldown
 
   buffsWindow = g_ui.displayUI('buffs')
+
+  local pos = g_settings.getPoint('cooldowns-window-position')
+  if pos and pos.x then
+    buffsWindow:setPosition(pos)
+  end
+
   buffsWindow:hide()
 
   buffsPanel = buffsWindow:getChildById('buffsPanel')
@@ -66,7 +72,11 @@ function terminate()
                        --onBuffCooldown     = onBuffCooldown    ]]-- })
   --ProtocolGame.unregisterExtendedOpcode(57, true) 
   ProtocolGame.unregisterExtendedOpcode(66, true) 
-  buffsWindow:destroy()
+  
+  if buffsWindow then
+    g_settings.set('cooldowns-window-position', buffsWindow:getPosition())
+    buffsWindow:destroy()
+  end
 end
 
 --modules.game_cooldown.parseAddCooldown(true, true, json.encode({buffId = 1, timeSeconds = 120, tooltipText = 'Elo', bgId = 1}))
