@@ -863,6 +863,13 @@ end
 function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, useThing, creatureThing, attackCreature)
     local keyboardModifiers = g_keyboard.getModifiers()
 
+    if keyboardModifiers == KeyboardNoModifier and mouseButton == MouseRightButton then
+        if creatureThing and creatureThing:isNpc() then
+            g_game.talk('hi')
+            return true
+        end
+    end
+
     if g_platform.isMobile() then
         if mouseButton == MouseRightButton then
             createThingMenu(menuPosition, lookThing, useThing, creatureThing)
@@ -923,6 +930,10 @@ function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, u
         end
     elseif not modules.client_options.getOption('classicControl') then
         if keyboardModifiers == KeyboardNoModifier and mouseButton == MouseRightButton then
+            if creatureThing and creatureThing:isNpc() then
+                g_game.talk('hi')
+                return true
+            end
             createThingMenu(menuPosition, lookThing, useThing, creatureThing)
             return true
         elseif lookThing and keyboardModifiers == KeyboardShiftModifier and
