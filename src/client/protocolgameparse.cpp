@@ -3743,7 +3743,7 @@ ItemPtr ProtocolGame::getItem(const InputMessagePtr& msg, int id)
                     break;
             }
         } else {
-            if (g_game.getFeature(Otc::GameThingQuickLoot)) {
+            if (g_game.getFeature(Otc::GameThingQuickLoot) && g_game.getClientVersion() >= 1200) {
                 const bool hasQuickLootFlags = static_cast<bool>(msg->getU8());
                 if (hasQuickLootFlags) {
                     msg->getU32(); // quick loot flags
