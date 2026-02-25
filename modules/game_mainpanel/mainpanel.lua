@@ -618,23 +618,7 @@ function reorderButtons()
     optionsPanel:reorderChildren(children)
 end
 
-function listAllButtons()
-    print("========== LISTA DE BOTONES DEL MAINPANEL ==========")
-    local optionsPanel = optionsController.ui.onPanel.options
-    if optionsPanel then
-        local buttons = optionsPanel:getChildren()
-        print("Total de botones: " .. #buttons)
-        for i, button in ipairs(buttons) do
-            local id = button:getId()
-            local visible = button:isVisible()
-            local tooltip = button:getTooltip()
-            print(string.format("[%d] ID: %s | Visible: %s | Tooltip: %s", i, tostring(id), tostring(visible), tostring(tooltip)))
-        end
-    else
-        print("ERROR: optionsPanel es nil")
-    end
-    print("=====================================================")
-end
+
 
 function showButton(buttonId)
     local optionsPanel = optionsController.ui.onPanel.options

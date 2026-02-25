@@ -36,8 +36,11 @@ MessageBoxWindow < UIMessageBox
 
   Label
     id: content
-    anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-left: 16
+    margin-right: 16
     text-wrap: true
     text-auto-resize: true
     color: #c0c0c0ff

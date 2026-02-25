@@ -129,9 +129,11 @@ function UIItem:onClick(mousePos)
 end
 
 function UIItem:onItemChange()
+  --[[ Disable native tooltip assignment as we use custom tooltips mod
   local tooltip = nil
   if self:getItem() and self:getItem():getTooltip():len() > 0 then
     tooltip = self:getItem():getTooltip()
   end
   self:setTooltip(tooltip)
+  ]]
 end

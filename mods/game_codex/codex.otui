@@ -21,6 +21,87 @@ CardEntry < UIWidget
     anchors.fill: parent
     phantom: true
 
+CollectionCardEntry < CardEntry
+  UIWidget
+    id: lockIcon
+    size: 32 32
+    image-source: /images/ui/icon-lock
+    anchors.centerIn: parent
+    phantom: true
+    visible: false
+
+  Label
+    id: cardNameLabel
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 17
+    text-align: bottom
+    font: verdana-11px-rounded
+    text-auto-resize: true
+
+  Label
+    id: cardLevelLabel
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    margin-bottom: 17
+    margin-left: 19
+    font: verdana-11px-rounded
+    color: #A020F0
+    text-auto-resize: true
+
+  ProgressBar
+    id: expBar
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 20
+    margin-left: 2
+    margin-right: 2
+    height: 10
+    background-color: #A020F0
+    visible: false
+
+  Label
+    id: expLabel
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: -2
+    font: verdana-11px-rounded
+    color: #fdfdfcff
+    text-auto-resize: true
+    visible: false
+
+UpgradeCardEntry < CardEntry
+  Label
+    id: cardNameLabel
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 10
+    text-align: bottom
+    font: verdana-11px-rounded
+    text-auto-resize: true
+
+  Label
+    id: cardLevelLabel
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: -12
+    font: verdana-11px-rounded
+    color: #A020F0
+    text-auto-resize: true
+
+  ProgressBar
+    id: miniExpBar
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-left: 4
+    margin-right: 4
+    margin-bottom: 2
+    height: 6
+    background-color: #A020F0
+    visible: false
+
 CardLockIcon < UIWidget
   size: 32 32
   image-source: /images/ui/icon-lock
@@ -71,6 +152,28 @@ DeckCardEntry < Panel
     margin-right: 5
     width: 60
     !text: tr('Equip')
+
+  ProgressBar
+    id: expBar
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 3
+    margin-bottom: 1
+    margin-left: 5
+    margin-right: 5
+    background-color: #A020F0
+    visible: false
+
+  Label
+    id: expLabel
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 3
+    font: verdana-11px-rounded
+    color: #A020F0
+    text-auto-resize: true
+    visible: false
 
 ActiveSlot < Panel
   size: 190 230
@@ -534,8 +637,7 @@ MainWindow
         margin-left: 20
         margin-right: 20
         height: 20
-        background-color: #2a2a2a
-        foreground-color: #A020F0
+        background-color: #A020F0
         percent: 0
         
       Label
@@ -565,7 +667,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: CardStatus.top
-        margin-top: 15
+        margin-top: 30
         margin-bottom: 10
         padding: 5
         layout:
@@ -929,8 +1031,7 @@ MainWindow
         margin-left: 30
         margin-right: 30
         height: 25
-        background-color: #2a2a2a
-        foreground-color: #A020F0
+        background-color: #A020F0
         percent: 0
 
       Label

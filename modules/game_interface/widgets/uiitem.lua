@@ -118,6 +118,7 @@ function UIItem:onHoverChange(hovered)
         end
     end
 
+    --[[ Disable native text tooltips as we use the custom game_tooltips mod
     if g_game.getFeature(GameItemTooltipV8) then
         local tooltip = ""
         local function splitTextIntoLines(text, maxLineLength)
@@ -148,6 +149,7 @@ function UIItem:onHoverChange(hovered)
             end
         end
     end
+    ]]
 end
 
 function UIItem:onMouseRelease(mousePosition, mouseButton)

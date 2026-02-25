@@ -1,4 +1,4 @@
-SpellTooltipWindow < UIWidget
+UIWidget
   id: spellTooltip
   size: 280 10
   image-source: /images/ui/tooltip-blue

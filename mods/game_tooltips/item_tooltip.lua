@@ -198,7 +198,6 @@ function showTooltipByClientId(clientId)
     cachedItem.count = 1
   end
 
-  g_logger.info(string.format("[tooltips] showTooltipByClientId clientId=%d name='%s' count=%d", tonumber(clientId) or -1, tostring(cachedItem.name), tonumber(cachedItem.count) or 0))
   buildItemTooltip(cachedItem)
 end
 
@@ -242,7 +241,6 @@ function onExtendedOpcode(protocol, code, buffer)
     return
   end
   if action == "new" or action == "newByClientId" then
-    g_logger.info(string.format("[tooltips] onExtendedOpcode action='%s'", tostring(action)))
     newTooltip(data)
   end
 end
@@ -258,7 +256,6 @@ function newTooltip(data)
     end
   end
   
-  g_logger.info("Tooltip Data Received - HP Ticks: "..(data.imp and data.imp.hpticks or "nil").." MP Ticks: "..(data.imp and data.imp.mpticks or "nil"))
   
   local _itemUId = data.uid
   local _itemName = data.itemName
@@ -293,14 +290,12 @@ function newTooltip(data)
   local _baseArmor = data.baseArmor or nil
   local _baseExtraDefense = data.baseExtraDefense or nil
   
-  g_logger.info(string.format("[tooltips] newTooltip: uid=%s clientId=%s name='%s'", tostring(_itemUId), tostring(_itemId), tostring(_itemName)))
   -- Source Quality data
   local _sourceQuality = data.sourceQuality or nil
   local _sourceType = data.sourceType or nil
   local _qualityTier = data.qualityTier or nil
   local _qualityBonuses = data.qualityBonuses or nil
   
-  g_logger.info(string.format("[tooltips] newTooltip: uid=%s clientId=%s name='%s'", tostring(_itemUId), tostring(_itemId), tostring(_itemName)))
   
   -- Cache by real item UID only if available (server 'new' path). Virtual items ('newByClientId') have no uid.
   if type(_itemUId) == 'number' and _itemUId > 0 then
@@ -334,7 +329,6 @@ function newTooltip(data)
       baseExtraDefense = _baseExtraDefense
     }
   else
-    g_logger.info("[tooltips] skip uid cache (virtual item; no uid)")
   end
 
   -- Also cache by clientId for virtual widgets to reuse
@@ -369,12 +363,10 @@ function newTooltip(data)
       baseExtraDefense = _baseExtraDefense
     }
   else
-    g_logger.warning(string.format("[tooltips] skip clientId cache: invalid clientId=%s", tostring(_itemId)))
   end
 
   if hoveredItem and _itemId == hoveredItem:getId() then
     -- Prefer showing by clientId for virtual items
-    g_logger.info(string.format("[tooltips] caching by clientId=%d name='%s' rarity=%s", tonumber(_itemId) or -1, tostring(_itemName), tostring(_itemRarity)))
     showTooltipByClientId(_itemId)
   end
 end
@@ -417,14 +409,11 @@ function onHoverChange(widget, hovered)
     -- If this is a virtual widget, request by clientId and show like real items
     if widget:isVirtual() then
       local clientId = item:getId()
-      g_logger.info(string.format("[tooltips] hover virtual item: clientId=%d", tonumber(clientId) or -1))
       if cachedByClientId[clientId] then
-        g_logger.info("[tooltips] cache hit by clientId; showing tooltip")
         showTooltipByClientId(clientId)
       else
         if protocolGame then
           local payload = { action = "requestByClientId", data = { clientId = clientId } }
-          g_logger.info(string.format("[tooltips] cache miss; sending opcode %d payload=%s", CODE_TOOLTIPS, tostring(json.encode(payload))))
           protocolGame:sendExtendedOpcode(CODE_TOOLTIPS, json.encode(payload))
         end
       end
@@ -668,6 +657,57 @@ function buildItemTooltip(item)
     if item.sourceType then
       local sourceText = "Source: " .. item.sourceType:gsub("_", " "):gsub("(%a)([%w_']*)", function(a, b) return string.upper(a) .. b end)
       addString(sourceText, "#888888")
+    end
+  end
+
+  -- Append original text tooltip to the bottom
+  if hoveredItem and hoveredItem.getTooltip and hoveredItem:getTooltip():len() > 0 then
+    local nativeTooltip = hoveredItem:getTooltip()
+
+    -- Helper function to wrap text without breaking words
+    local function splitTextIntoLines(text, maxLineLength)
+        local words = {}
+        for word in text:gmatch("%S+") do
+            table.insert(words, word)
+        end
+
+        local lines = {}
+        local currentLine = words[1] or ""
+        for i = 2, #words do
+            if currentLine:len() + 1 + words[i]:len() > maxLineLength then
+                table.insert(lines, currentLine)
+                currentLine = words[i]
+            else
+                currentLine = currentLine .. " " .. words[i]
+            end
+        end
+        if currentLine ~= "" then table.insert(lines, currentLine) end
+
+        return table.concat(lines, "\n")
+    end
+
+    -- Strip overlapping native information that is already handled by custom UI
+    -- 1. Remove "a [itemName] (Arm/Atk/Def: X)." OR "a [itemName]."
+    -- The server sends things like:
+    -- "a Orbital Dragonscale Plate (Arm:24)."
+    -- "a Fangblade Greatsword (Atk:85, Def:13)."
+    -- "You see a gold coin." -> "a gold coin."
+    nativeTooltip = nativeTooltip:gsub("You see a .-\n", "")
+    nativeTooltip = nativeTooltip:gsub("^[aAnN]+ [^\n]+%([^%)]+%).? *", "")
+    nativeTooltip = nativeTooltip:gsub("^[aAnN]+ [^\n]+.? *", "")
+
+    -- 2. Remove the "It weighs X.XX oz." completely
+    nativeTooltip = nativeTooltip:gsub("It weighs [%d%.]+ oz%. *", "")
+    
+    -- Clean up leading/trailing whitespaces and newlines that may have been left behind
+    nativeTooltip = nativeTooltip:match("^%s*(.-)%s*$")
+
+    if nativeTooltip and nativeTooltip:len() > 0 then
+      local cleanTooltip = splitTextIntoLines(nativeTooltip, 50)
+      
+      addSeparator()
+      addEmpty(5)
+      addString(cleanTooltip, "#a0a0a0", true)
     end
   end
 

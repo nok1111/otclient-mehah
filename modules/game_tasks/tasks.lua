@@ -181,54 +181,23 @@ function onTaskBoardInit(data)
     maxRerolls = data.max_rerolls or 5
     
     -- Copy outfits from availableTasks to activeTask (server doesn't send them in active_task)
-    print("[INIT] Attempting to copy outfits to activeTask...")
-    print("[INIT] activeTask exists: " .. tostring(activeTask ~= nil))
-    
-    -- Debug: print ALL keys in availableTasks
-    print("[INIT] availableTasks keys:")
-    for key, value in pairs(availableTasks) do
-        print("[INIT]   key: " .. tostring(key) .. " = " .. tostring(value.name or "unknown"))
-    end
+
     
     if activeTask then
-        print("[INIT] activeTask.slot: " .. tostring(activeTask.slot))
-        print("[INIT] activeTask.slot type: " .. type(activeTask.slot))
         
-        -- Try to find the task by iterating
         local foundTask = nil
         for slot, task in pairs(availableTasks) do
-            print("[INIT] Comparing slot " .. tostring(slot) .. " (type: " .. type(slot) .. ") with activeTask.slot " .. tostring(activeTask.slot))
             if tostring(slot) == tostring(activeTask.slot) then
                 foundTask = task
-                print("[INIT] Found matching task!")
                 break
             end
         end
         
         if foundTask and foundTask.outfits then
-            print("[INIT] foundTask.outfits count: " .. #foundTask.outfits)
             activeTask.outfits = foundTask.outfits
-            print("[INIT] Copied outfits to activeTask from slot " .. activeTask.slot)
-        else
-            print("[INIT] Could not find task or outfits for slot " .. tostring(activeTask.slot))
-        end
-    else
-        print("[INIT] No activeTask")
-    end
-    
-    print("[Task Board] Init received:")
-    print("  - Available tasks count: " .. table.size(availableTasks))
-    print("  - Active task: " .. (activeTask and activeTask.name or "None"))
-    if activeTask then
-        print("    Active task slot: " .. (activeTask.slot or "NO SLOT"))
-        print("    Active task outfits: " .. tostring(activeTask.outfits ~= nil))
-        if activeTask.outfits then
-            print("    Outfits count: " .. #activeTask.outfits)
         end
     end
-    for slot, task in pairs(availableTasks) do
-        print("  - Slot " .. slot .. ": " .. (task.name or "NO NAME"))
-    end
+
     
     if tasksWindow and tasksWindow:isVisible() then
         refreshTaskBoard()
@@ -247,29 +216,11 @@ function onTaskBoardInit(data)
 end
 
 function onTaskProgress(data)
-    print("[DEBUG] onTaskProgress called")
-    print("[DEBUG] activeTask exists before: " .. tostring(activeTask ~= nil))
-    if activeTask then
-        print("[DEBUG] activeTask.outfits before: " .. tostring(activeTask.outfits ~= nil))
-        if activeTask.outfits then
-            print("[DEBUG] activeTask.outfits count before: " .. #activeTask.outfits)
-        end
-    end
     
-    -- Preserve outfits when updating progress
     if activeTask and activeTask.outfits then
         data.outfits = activeTask.outfits
-        print("[DEBUG] Outfits preserved: " .. #data.outfits)
-    else
-        print("[DEBUG] No outfits to preserve")
     end
-    
     activeTask = data
-    
-    print("[DEBUG] activeTask.outfits after assignment: " .. tostring(activeTask.outfits ~= nil))
-    if activeTask.outfits then
-        print("[DEBUG] activeTask.outfits count after: " .. #activeTask.outfits)
-    end
     
     if tasksWindow and tasksWindow:isVisible() then
         refreshActiveTask()
@@ -379,32 +330,13 @@ function refreshAvailableTasks()
     
     taskCardsContainer:destroyChildren()
     
-    -- Debug: printear info de todas las tasks disponibles
-    print("[Tasks Client] Refreshing available tasks:")
-    print("  Total tasks in availableTasks table: " .. table.size(availableTasks))
-    
     for slot = 1, 3 do
         local task = availableTasks[tostring(slot)]
         if task then
-            -- Debug print detallado
-            print(string.format("[Tasks Client] Slot %d: tier=%s, level_range=%s, zone=%s",
-                slot, task.tier or "?", task.level_range or "?", task.zone_name or "?"))
-            if task.monsters then
-                print(string.format("  Monsters: %d total", #task.monsters))
-                for _, m in ipairs(task.monsters) do
-                    print(string.format("    - %s: %d kills", m.name, m.kills))
-                end
-            end
-            if task.main_creature then
-                print(string.format("  Main creature outfit_id: %d", task.main_creature.outfit_id))
-            end
-            
             local taskCard = createTaskCard(task, slot)
             if taskCard then
                 taskCardsContainer:addChild(taskCard)
             end
-        else
-            print(string.format("[Tasks Client] Slot %d: NO TASK FOUND", slot))
         end
     end
 end
@@ -426,11 +358,6 @@ function createTaskCard(task, slot)
     
     -- Check if this card is the active task
     local isActiveTask = activeTask and activeTask.slot == slot
-    
-    print("[Task Board] Creating card for slot " .. slot .. " - Task: " .. task.name)
-    print("  - Active task: " .. (activeTask and activeTask.name or "None"))
-    print("  - Active task slot: " .. (activeTask and tostring(activeTask.slot) or "None"))
-    print("  - isActiveTask: " .. tostring(isActiveTask))
     
     -- Set tier-specific card window background
     local cardWindowImages = {
@@ -478,14 +405,6 @@ function createTaskCard(task, slot)
     
     -- Crear y posicionar creatures según cantidad (1-3)
     if task.outfits and #task.outfits > 0 and headerImagePanel then
-        print("[CLIENT DEBUG] task.outfits count: " .. #task.outfits)
-        for i, outfit in ipairs(task.outfits) do
-            print(string.format("[CLIENT DEBUG] outfit[%d]: type=%s, name=%s, level=%s", 
-                i, 
-                tostring(outfit.type), 
-                tostring(outfit.name), 
-                tostring(outfit.level)))
-        end
         local outfitCount = #task.outfits
         
         if outfitCount == 1 then
@@ -557,9 +476,6 @@ function createTaskCard(task, slot)
                     tooltipText = tooltipText
                 end
                 creature2:setTooltip(tooltipText)
-                print("------Tooltip para creature2: " .. tooltipText)
-            else
-                print("------No se encontró nombre para creature2")
             end
 
             local creature1 = g_ui.createWidget('Creature', headerImagePanel)
@@ -1043,7 +959,12 @@ function onRerollClick()
             {text = 'No', callback = function()
                 dialog:destroy()
             end}
-        }, function() end)
+        }, function() 
+            sendTaskBoardRequest('reroll', {use_free = false})
+            dialog:destroy()
+        end, function() 
+            dialog:destroy()
+        end)
         table.insert(activeDialogs, dialog)
     end
 end
@@ -1083,7 +1004,12 @@ function onLockClick(slot, lockState)
             {text = 'No', callback = function()
                 dialog:destroy()
             end}
-        }, function() end)
+        }, function()
+            sendTaskBoardRequest('lock', {slot = slot, lock_state = true})
+            dialog:destroy()
+        end, function()
+            dialog:destroy()
+        end)
         table.insert(activeDialogs, dialog)
     else
         sendTaskBoardRequest('lock', {slot = slot, lock_state = false})
@@ -1122,7 +1048,16 @@ function onAbandonClick()
                 dialog:destroy()
             end}
         },
-        function() end
+        function()
+            if taskTrackerWindow then
+                taskTrackerWindow:hide()
+            end
+            sendTaskBoardRequest('abandon')
+            dialog:destroy()
+        end,
+        function()
+            dialog:destroy()
+        end
     )
     table.insert(activeDialogs, dialog)
 end
@@ -1158,16 +1093,12 @@ function updateTaskTracker()
         progressContainer:destroyChildren()
         
         if activeTask.monsters then
-            print("[TRACKER] Building outfit lookup...")
             -- Build outfit lookup table
             local outfitLookup = {}
             if activeTask.outfits then
                 for idx, outfit in ipairs(activeTask.outfits) do
                     outfitLookup[idx] = outfit
-                    print("[TRACKER] outfitLookup[" .. idx .. "] = " .. json.encode(outfit))
                 end
-            else
-                print("[TRACKER] No activeTask.outfits to build lookup")
             end
             
             for i, monster in ipairs(activeTask.monsters) do
@@ -1178,22 +1109,15 @@ function updateTaskTracker()
                 -- Create monster entry using predefined widget
                 local entry = g_ui.createWidget('MonsterProgressEntry', progressContainer)
                 
-                -- Set creature outfit - try multiple access methods
                 local creatureWidget = entry:getChildById('creature')
                 if creatureWidget then
                     local outfit = outfitLookup[i]
-                    print("[TRACKER] Monster " .. i .. " (" .. monster.name .. ") outfit: " .. tostring(outfit ~= nil))
                     if outfit then
-                        print("[TRACKER] Setting outfit: " .. json.encode(outfit))
                         creatureWidget:setOutfit(outfit)
                         if monster.name then
                             creatureWidget:setTooltip(monster.name)
                         end
-                    else
-                        print("[TRACKER] No outfit for monster " .. i)
                     end
-                else
-                    print("[TRACKER] creatureWidget not found")
                 end
                 
                 -- Set name label
@@ -1225,5 +1149,3 @@ function formatNumber(num)
         return tostring(num)
     end
 end
-
-print("[Task Board V2] Loaded successfully")

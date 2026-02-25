@@ -15,7 +15,7 @@ Panel
     text-offset: 0 0
     margin-top: 6
     text-auto-resize: true
-    color: #000000
+    color: #FFCC00
 
   ProgressBar
     id: special

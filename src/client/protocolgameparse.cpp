@@ -2318,12 +2318,9 @@ void ProtocolGame::parsePlayerSkills(const InputMessagePtr& msg) const
     }
 
     // Additional skill stats (Dodge, Block, CooldownReduction, Barrier)
-    g_logger.info("[DEBUG] Reading additional skills from Dodge ({}) to LastSkill ({})", static_cast<int>(Otc::Dodge), static_cast<int>(Otc::LastSkill));
     for (int_fast32_t skill = Otc::Dodge; skill < Otc::LastSkill; ++skill) {
-        g_logger.info("[DEBUG] Reading skill ID: {}", static_cast<int>(skill));
         const uint16_t level = msg->getU16();
         const uint16_t baseLevel = msg->getU16();
-        g_logger.info("[DEBUG] Skill {} - Level: {}, BaseLevel: {}", static_cast<int>(skill), level, baseLevel);
         m_localPlayer->setSkill(static_cast<Otc::Skill>(skill), level, 0);
         m_localPlayer->setBaseSkill(static_cast<Otc::Skill>(skill), baseLevel);
     }
@@ -4399,12 +4396,9 @@ void ProtocolGame::parseCyclopediaCharacterInfo(const InputMessagePtr& msg)
             std::vector<std::vector<uint16_t>> forgeSkillsArray;
 
             // Additional skill stats (Dodge, Block, CooldownReduction, Barrier)
-            g_logger.info("[DEBUG CYCLOPEDIA] Reading additional skills from Dodge ({}) to LastSkill ({})", static_cast<int>(Otc::Dodge), static_cast<int>(Otc::LastSkill));
             for (uint16_t skill = Otc::Dodge; skill < Otc::LastSkill; ++skill) {
-                g_logger.info("[DEBUG CYCLOPEDIA] Reading skill ID: {}", static_cast<int>(skill));
                 const uint16_t skillLevel = msg->getU16();
                 const uint16_t baseLevel = msg->getU16();
-                g_logger.info("[DEBUG CYCLOPEDIA] Skill {} - Level: {}, BaseLevel: {}", static_cast<int>(skill), skillLevel, baseLevel);
                 forgeSkillsArray.push_back({ skill, skillLevel });
             }
 

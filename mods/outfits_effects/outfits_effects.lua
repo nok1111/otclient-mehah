@@ -224,7 +224,6 @@ local function applyOutfitOffsets(creature)
     
     if offsets then
         creature:setOutfitOffset(offsets.x, offsets.y)
-        print("[OutfitsEffects] Offset applied to " .. creature:getName() .. " (outfit ID: " .. outfitId .. ")")
         return true
     end
     return false
@@ -237,7 +236,6 @@ local function applyMountOffsets(creature, mountId)
     if not mountConfig then
         -- Reset mount offset if no offset defined
         creature:setMountOffset(0, 0)
-        print("[OutfitsEffects] Mount detected but no offset defined for mount ID: " .. mountId)
         return false
     end
     
@@ -254,12 +252,10 @@ local function applyMountOffsets(creature, mountId)
         if not offsets then
             -- Fallback to North if specific direction not found
             offsets = mountConfig[Directions.North] or {x = 0, y = 0}
-            print("[OutfitsEffects] No offset for direction " .. direction .. ", using fallback")
         end
     end
     
     creature:setMountOffset(offsets.x, offsets.y)
-    print("[OutfitsEffects] >>> MOUNT OFFSET APPLIED <<< " .. creature:getName() .. " (mount ID: " .. mountId .. " | dir: " .. creature:getDirection() .. " | offset: X=" .. offsets.x .. ", Y=" .. offsets.y .. ")")
     return true
 end
 
@@ -268,12 +264,7 @@ local function setCreatureTitle(creature)
     local name = creature:getName()
     local creatureId = creature:getId()
     
-    print("[OutfitsEffects] Processing title for: " .. name)
-    
     local outfit = creature:getOutfit()
-    if outfit then
-        print("[OutfitsEffects] Outfit ID: " .. (outfit.type or "nil"))
-    end
     
     -- Clean up old widget if exists
     if creatureWidgets[creatureId] then
@@ -317,7 +308,6 @@ local function setCreatureTitle(creature)
         titleWidget:setMarginLeft(offsetX)
         titleWidget:setMarginBottom(offsetY)
         creatureWidgets[creatureId] = titleWidget
-        print("[OutfitsEffects] Player title applied: " .. config.title .. " (offset: X=" .. offsetX .. ", Y=" .. offsetY .. ")")
         
     elseif creature:isNpc() and npcTitles[name] then
         local config = npcTitles[name]
@@ -338,8 +328,6 @@ local function setCreatureTitle(creature)
             titleWidget:setMarginLeft(offsetX)
             titleWidget:setMarginBottom(offsetY)
             creatureWidgets[creatureId] = titleWidget
-            
-            print("[OutfitsEffects] NPC title applied: " .. config.title .. " (offset: X=" .. offsetX .. ", Y=" .. offsetY .. ")")
         else
             titleWidget:destroy()
         end
@@ -347,7 +335,6 @@ local function setCreatureTitle(creature)
         -- Add quest effect if applicable (independent of title)
         if config.quest then
             creature:attachEffect(g_attachedEffects.getById(31))
-            print("[OutfitsEffects] Quest effect attached to: " .. name)
         end
         
     elseif creatureTitles[name] then
@@ -366,7 +353,6 @@ local function setCreatureTitle(creature)
         titleWidget:setMarginLeft(offsetX)
         titleWidget:setMarginBottom(offsetY)
         creatureWidgets[creatureId] = titleWidget
-        print("[OutfitsEffects] Creature title applied: " .. config.title .. " (offset: X=" .. offsetX .. ", Y=" .. offsetY .. ")")
         
     else
         titleWidget:destroy()
@@ -383,7 +369,6 @@ local function onDisappear(creature)
     if creatureWidgets[creatureId] then
         creatureWidgets[creatureId]:destroy()
         creatureWidgets[creatureId] = nil
-        print("[OutfitsEffects] Widget cleaned for: " .. creature:getName())
     end
 end
 
@@ -399,10 +384,8 @@ local function onMountChange(creature, newMountId, oldMountId)
     local creatureName = creature:getName()
     
     if newMountId > 0 then
-        print("[OutfitsEffects] >>> MOUNTED <<< " .. creatureName .. " mounted on mount ID: " .. newMountId)
         applyMountOffsets(creature, newMountId)
     else
-        print("[OutfitsEffects] >>> DISMOUNTED <<< " .. creatureName .. " dismounted (was mount ID: " .. oldMountId .. ")")
         -- Reset mount offset to 0 when dismounted
         creature:setMountOffset(0, 0)
     end
@@ -415,7 +398,6 @@ local function onDirectionChange(creature, newDirection, oldDirection)
     local outfit = creature:getOutfit()
     if outfit and outfit.mount and outfit.mount > 0 then
         local mountId = outfit.mount
-        print("[OutfitsEffects] >>> DIRECTION CHANGE <<< " .. creature:getName() .. " turned from " .. oldDirection .. " to " .. newDirection)
         applyMountOffsets(creature, mountId)
     end
 end
@@ -427,7 +409,6 @@ local function refreshAllTitles()
         local mapPanel = modules.game_interface.getMapPanel()
         if mapPanel then
             local spectators = mapPanel:getSpectators()
-            print("[OutfitsEffects] Refreshing " .. #spectators .. " creatures...")
             for _, creature in ipairs(spectators) do
                 onAppear(creature)
             end
@@ -437,7 +418,6 @@ end
 
 -- Called when game starts/enters world
 local function onGameStart()
-    print("[OutfitsEffects] Game started, applying titles...")
     -- Delay slightly to ensure creatures are fully loaded
     scheduleEvent(function()
         refreshAllTitles()
@@ -449,7 +429,6 @@ local originalMount = Player.mount
 
 -- Module initialization
 function init()
-    print("[OutfitsEffects] Module initializing...")
     
     -- Override Player:mount() to check blocked outfits
     Player.mount = function(self)
@@ -462,7 +441,6 @@ function init()
                 -- Display warning message
                 local textMessage = "This outfit cannot use mounts (no mount animations)"
                 modules.game_textmessage.displayGameMessage(textMessage)
-                print("[OutfitsEffects] >>> MOUNT BLOCKED <<< Outfit ID " .. outfitId .. " cannot use mounts")
                 return false
             end
         end
@@ -487,12 +465,9 @@ function init()
     if g_game.isOnline() then
         refreshAllTitles()
     end
-    
-    print("[OutfitsEffects] Module loaded successfully!")
 end
 
 function terminate()
-    print("[OutfitsEffects] Module terminating...")
     
     -- Restore original mount function
     Player.mount = originalMount
@@ -516,6 +491,4 @@ function terminate()
         end
     end
     creatureWidgets = {}
-    
-    print("[OutfitsEffects] Module unloaded successfully!")
 end
