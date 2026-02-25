@@ -590,14 +590,26 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
         if useThing:isContainer() then
             if useThing:getParentContainer() then
                 menu:addOption(tr('Open'), function()
-                    g_game.open(useThing, useThing:getParentContainer())
+                    if useThing:isLyingCorpse() and g_game.getFeature(GameThingQuickLoot) and modules.game_quickloot and useThing:getPosition().x ~= 0xffff then
+                        g_game.sendQuickLoot(1, useThing)
+                    else
+                        g_game.open(useThing, useThing:getParentContainer())
+                    end
                 end, shortcut)
                 menu:addOption(tr('Open in new window'), function()
-                    g_game.open(useThing)
+                    if useThing:isLyingCorpse() and g_game.getFeature(GameThingQuickLoot) and modules.game_quickloot and useThing:getPosition().x ~= 0xffff then
+                        g_game.sendQuickLoot(1, useThing)
+                    else
+                        g_game.open(useThing)
+                    end
                 end)
             else
                 menu:addOption(tr('Open'), function()
-                    g_game.open(useThing)
+                    if useThing:isLyingCorpse() and g_game.getFeature(GameThingQuickLoot) and modules.game_quickloot and useThing:getPosition().x ~= 0xffff then
+                        g_game.sendQuickLoot(1, useThing)
+                    else
+                        g_game.open(useThing)
+                    end
                 end, shortcut)
             end
         else
@@ -862,6 +874,19 @@ end
 
 function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, useThing, creatureThing, attackCreature)
     local keyboardModifiers = g_keyboard.getModifiers()
+    local tryQuickLootCorpse = function(thing)
+        if thing and thing:isLyingCorpse() and g_game.getFeature(GameThingQuickLoot) and modules.game_quickloot and thing:getPosition().x ~= 0xffff then
+            g_game.sendQuickLoot(1, thing)
+            return true
+        end
+        return false
+    end
+
+    if useThing and useThing:isLyingCorpse() and g_game.getFeature(GameThingQuickLoot) and modules.game_quickloot and
+        useThing:getPosition().x ~= 0xffff and keyboardModifiers == KeyboardNoModifier and mouseButton == MouseRightButton then
+        g_game.sendQuickLoot(1, useThing)
+        return true
+    end
 
     if keyboardModifiers == KeyboardNoModifier and mouseButton == MouseRightButton then
         if creatureThing and creatureThing:isNpc() then
@@ -887,6 +912,9 @@ function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, u
             if useThing then
                 modules.game_shortcuts.resetShortcuts()
                 if useThing:isContainer() then
+                    if tryQuickLootCorpse(useThing) then
+                        return true
+                    end
                     if useThing:getParentContainer() then
                         g_game.open(useThing, useThing:getParentContainer())
                     else
@@ -943,6 +971,9 @@ function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, u
         elseif useThing and keyboardModifiers == KeyboardCtrlModifier and
             (mouseButton == MouseLeftButton or mouseButton == MouseRightButton) then
             if useThing:isContainer() then
+                if tryQuickLootCorpse(useThing) then
+                    return true
+                end
                 if useThing:getParentContainer() then
                     g_game.open(useThing, useThing:getParentContainer())
                 else
@@ -983,6 +1014,9 @@ function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, u
                 g_game.attack(creatureThing)
                 return true
             elseif useThing:isContainer() then
+                if tryQuickLootCorpse(useThing) then
+                    return true
+                end
                 if useThing:getParentContainer() then
                     g_game.open(useThing, useThing:getParentContainer())
                     return true
