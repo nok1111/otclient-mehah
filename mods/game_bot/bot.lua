@@ -761,6 +761,34 @@ function SimplifiedBot.processCombat()
 end
 
 local lastSpellTime = 0
+local globalCastDelay = 0
+
+function SimplifiedBot.canCastSpell(spellText)
+  if not spellText or spellText:len() == 0 then return false end
+  
+  -- Prevent sending multiple spells in less than 250ms (global anti-exhaust)
+  local now = g_clock.millis()
+  if now - globalCastDelay < 250 then return false end
+
+  if not modules.game_cooldown then return true end
+  
+  -- Extract spell data from Game's internal spellbook
+  local spell, profile, spellName = Spells.getSpellByWords(spellText)
+  if spell then
+    -- Check individual spell cooldown
+    if modules.game_cooldown.isCooldownIconActive(spell.id) then
+      return false
+    end
+    -- Check group cooldown (e.g. Healing group vs Attack group)
+    for groupId, _ in pairs(spell.group) do
+      if modules.game_cooldown.isGroupCooldownIconActive(groupId) then
+        return false
+      end
+    end
+  end
+  return true
+end
+
 function SimplifiedBot.castAttackSpell()
   if not storage.combat or not storage.combat.spells then
     return
@@ -782,16 +810,29 @@ function SimplifiedBot.castAttackSpell()
     return
   end
   
-  local spell = validSpells[lastAttackSpell]
-  if spell then
-    g_game.talk(spell)
-    lastSpellTime = now
-  end
-  
-  lastAttackSpell = lastAttackSpell + 1
-  if lastAttackSpell > #validSpells then
-    lastAttackSpell = 1
-  end
+  -- Iterate through available spells to find the first one that is truly off-cooldown
+  local startingSpell = lastAttackSpell
+  repeat
+    local spell = validSpells[lastAttackSpell]
+    if spell and SimplifiedBot.canCastSpell(spell) then
+      g_game.talk(spell)
+      lastSpellTime = now
+      globalCastDelay = now
+      
+      -- Advance to next spell for next cycle
+      lastAttackSpell = lastAttackSpell + 1
+      if lastAttackSpell > #validSpells then
+        lastAttackSpell = 1
+      end
+      return
+    end
+    
+    -- If current was exhausted, check the next one immediately
+    lastAttackSpell = lastAttackSpell + 1
+    if lastAttackSpell > #validSpells then
+      lastAttackSpell = 1
+    end
+  until lastAttackSpell == startingSpell
 end
 
 function SimplifiedBot.processHealing()
@@ -808,9 +849,10 @@ function SimplifiedBot.processHealing()
   local mp = maxMana > 0 and math.floor(100 * player:getMana() / maxMana) or 100
   
   if storage.healing.spell.enabled and hp < (tonumber(storage.healing.spell.hpPercent) or 90) then
-    if storage.healing.spell.text:len() > 0 then
+    if storage.healing.spell.text:len() > 0 and SimplifiedBot.canCastSpell(storage.healing.spell.text) then
       g_game.talk(storage.healing.spell.text)
       lastHealTime = now
+      globalCastDelay = now
       return
     end
   end
@@ -847,9 +889,10 @@ function SimplifiedBot.processSupport()
   if storage.support.spell1.enabled then
     local cooldown = storage.support.spell1.cooldown * 1000
     if now - lastSupport1 >= cooldown then
-      if storage.support.spell1.text:len() > 0 then
+      if storage.support.spell1.text:len() > 0 and SimplifiedBot.canCastSpell(storage.support.spell1.text) then
         g_game.talk(storage.support.spell1.text)
         lastSupport1 = now
+        globalCastDelay = now
       end
     end
   end
@@ -857,9 +900,10 @@ function SimplifiedBot.processSupport()
   if storage.support.spell2.enabled then
     local cooldown = storage.support.spell2.cooldown * 1000
     if now - lastSupport2 >= cooldown then
-      if storage.support.spell2.text:len() > 0 then
+      if storage.support.spell2.text:len() > 0 and SimplifiedBot.canCastSpell(storage.support.spell2.text) then
         g_game.talk(storage.support.spell2.text)
         lastSupport2 = now
+        globalCastDelay = now
       end
     end
   end

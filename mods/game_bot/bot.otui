@@ -20,6 +20,22 @@ BotTabBarButton < TabBarButton
   $!first:
     margin-left: 0
 
+BotPanel < ScrollablePanel
+  padding-right: 14
+  padding-bottom: 5
+  vertical-scrollbar: botTabBarScrollBar
+
+  VerticalScrollBar
+    id: botTabBarScrollBar
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    step: 14
+    margin-top: 5
+    margin-bottom: 5
+    margin-right: 2
+    pixels-scroll: true
+
 MiniWindow
   id: botWindow
   !text: tr('Bot')

@@ -1,233 +1,254 @@
-BotPanel
-  id: combatPanel
+Panel
+  id: combatPanelTab
   anchors.fill: parent
-  focusable: true
-  enabled: true
-  phantom: false
-  
-  Label
-    text: Combat Settings
-    font: verdana-11px-rounded
-    text-align: center
-    text-auto-resize: true
+
+  ScrollablePanel
+    id: combatPanel
     anchors.top: parent.top
+    anchors.bottom: parent.bottom
     anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
+    anchors.right: combatPanelScrollBar.left
+    vertical-scrollbar: combatPanelScrollBar
+    margin-bottom: 5
+    padding-right: 5
+    focusable: true
+    enabled: true
+    phantom: false
+  
+    Label
+      text: Combat Settings
+      font: verdana-11px-rounded
+      text-align: center
+      text-auto-resize: true
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
     
-  HorizontalSeparator
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
-    margin-left: 2
-    margin-right: 2
+    HorizontalSeparator
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 2
+      margin-right: 2
     
-  CheckBox
-    id: attackAllCheckbox
-    text: Attack All Monsters
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 8
-    margin-left: 5
-    margin-right: 5
+    CheckBox
+      id: attackAllCheckbox
+      text: Attack All Monsters
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 8
+      margin-left: 5
+      margin-right: 5
     
-  CheckBox
-    id: attackSummonsCheckbox
-    text: Attack Summons
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
-    margin-left: 5
-    margin-right: 5
+    CheckBox
+      id: attackSummonsCheckbox
+      text: Attack Summons
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 5
+      margin-right: 5
     
-  CheckBox
-    id: holdTargetPvECheckbox
-    text: Hold Target (PvE)
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
-    margin-left: 5
-    margin-right: 5
+    CheckBox
+      id: holdTargetPvECheckbox
+      text: Hold Target (PvE)
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 5
+      margin-right: 5
     
-  CheckBox
-    id: attackPlayersCheckbox
-    text: Hold Target (PvP)
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
-    margin-left: 5
-    margin-right: 5
+    CheckBox
+      id: attackPlayersCheckbox
+      text: Hold Target (PvP)
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 5
+      margin-right: 5
     
-  Label
-    id: distanceLabel
-    text: Max Attack Distance: 10 sqm
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 10
-    margin-left: 5
-    margin-right: 5
-    font: verdana-11px-rounded
+    Label
+      id: distanceLabel
+      text: Max Attack Distance: 10 sqm
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 10
+      margin-left: 5
+      margin-right: 5
+      font: verdana-11px-rounded
     
-  HorizontalScrollBar
-    id: distanceSlider
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
-    margin-left: 10
-    margin-right: 10
-    minimum: 1
-    maximum: 10
-    step: 1
+    HorizontalScrollBar
+      id: distanceSlider
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 10
+      margin-right: 10
+      minimum: 1
+      maximum: 10
+      step: 1
     
-  Label
-    text: Target Priority:
-    text-auto-resize: true
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 10
-    margin-left: 5
-    margin-right: 5
-    font: verdana-11px-rounded
+    Label
+      text: Target Priority:
+      text-auto-resize: true
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 10
+      margin-left: 5
+      margin-right: 5
+      font: verdana-11px-rounded
     
-  ComboBox
-    id: priorityComboBox
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
-    margin-left: 10
-    margin-right: 10
+    ComboBox
+      id: priorityComboBox
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 10
+      margin-right: 10
     
-  Label
-    text: Exclude monsters from attacking:
-    text-wrap: true
-    text-align: center
-    text-auto-resize: true
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 10
-    margin-left: 5
-    margin-right: 5
-    height: 25
-    width: 70
-    font: verdana-11px-rounded
+    Label
+      text: Exclude monsters from attacking:
+      text-wrap: true
+      text-align: center
+      text-auto-resize: true
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 10
+      margin-left: 5
+      margin-right: 5
+      height: 25
+      width: 70
+      font: verdana-11px-rounded
     
-  Button
-    id: addMonsterButton
-    text: Exclude Monster
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
-    margin-left: 10
-    margin-right: 5
-    height: 25
+    Button
+      id: addMonsterButton
+      text: Exclude Monster
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 10
+      margin-right: 5
+      height: 25
     
-  Button
-    id: clearMonstersButton
-    text: Clear Exclusions
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 3
-    margin-left: 10
-    margin-right: 5
-    height: 25
+    Button
+      id: clearMonstersButton
+      text: Clear Exclusions
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 3
+      margin-left: 10
+      margin-right: 5
+      height: 25
     
-  TextList
-    id: monsterList
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
-    margin-left: 5
-    margin-right: 5
-    height: 80
-    vertical-scrollbar: monsterListScrollBar
+    TextList
+      id: monsterList
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 5
+      margin-right: 5
+      height: 80
+      vertical-scrollbar: monsterListScrollBar
     
+    VerticalScrollBar
+      id: monsterListScrollBar
+      anchors.top: monsterList.top
+      anchors.bottom: monsterList.bottom
+      anchors.right: monsterList.right
+      step: 14
+      pixels-scroll: true
+    
+    HorizontalSeparator
+      anchors.top: monsterList.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 2
+      margin-right: 2
+    
+    Label
+      text: Attack Spells (max 3):
+      text-auto-resize: true
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 8
+      margin-left: 5
+      margin-right: 5
+      font: verdana-11px-rounded
+    
+    Button
+      id: spell1Button
+      text: Click to add spell 1
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 10
+      margin-right: 5
+      height: 25
+    
+    Button
+      id: spell2Button
+      text: Click to add spell 2
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 10
+      margin-right: 5
+      height: 25
+    
+    Button
+      id: spell3Button
+      text: Click to add spell 3
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 10
+      margin-right: 5
+      height: 25
+    
+    HorizontalSeparator
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 8
+      margin-left: 2
+      margin-right: 2
+    
+    CheckBox
+      id: combatEnabledCheckbox
+      text: Combat Enabled
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 8
+      margin-left: 5
+      margin-right: 5
+
   VerticalScrollBar
-    id: monsterListScrollBar
-    anchors.top: monsterList.top
-    anchors.bottom: monsterList.bottom
-    anchors.right: monsterList.right
+    id: combatPanelScrollBar
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
     step: 14
+    margin-top: 5
+    margin-bottom: 5
+    margin-right: 2
     pixels-scroll: true
-    
-  HorizontalSeparator
-    anchors.top: monsterList.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
-    margin-left: 2
-    margin-right: 2
-    
-  Label
-    text: Attack Spells (max 3):
-    text-auto-resize: true
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 8
-    margin-left: 5
-    margin-right: 5
-    font: verdana-11px-rounded
-    
-  Button
-    id: spell1Button
-    text: Click to add spell 1
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
-    margin-left: 10
-    margin-right: 5
-    height: 25
-    
-  Button
-    id: spell2Button
-    text: Click to add spell 2
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
-    margin-left: 10
-    margin-right: 5
-    height: 25
-    
-  Button
-    id: spell3Button
-    text: Click to add spell 3
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 5
-    margin-left: 10
-    margin-right: 5
-    height: 25
-    
-  HorizontalSeparator
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 8
-    margin-left: 2
-    margin-right: 2
-    
-  CheckBox
-    id: combatEnabledCheckbox
-    text: Combat Enabled
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 8
-    margin-left: 5
-    margin-right: 5
