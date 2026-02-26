@@ -24,6 +24,7 @@ end
 function Codex.hide()
 	Codex.UI:hide()
 	Codex.Button:setOn(false)
+	modules.game_interface.getRootPanel():focus()
 end
 
 ------ Tab Management ------

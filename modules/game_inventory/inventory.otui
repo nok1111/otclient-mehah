@@ -510,9 +510,9 @@ InventoryWindow
       id: blessings
       image-source: /images/inventory/button_blessings_grey
       image-clip: 0 0 12 12
-      anchors.top: expert.bottom
+      anchors.top: changeSize.bottom
       anchors.left: changeSize.left
-      margin-top: 3
+      margin-top: 5
       size: 12 12
       @onClick: modules.game_blessing.toggle()
       $pressed !disabled:
@@ -520,10 +520,13 @@ InventoryWindow
 
     Panel
       id: icons
-      anchors.left: soulAndCapacity.left
-      anchors.right: pvp.right
+      anchors.left: blessings.right
+      anchors.right: stop.left
       anchors.bottom: parent.bottom
       anchors.top: blessings.top
+      margin-left: 5
+      margin-right: 5
+      margin-bottom: 5
       phantom: false
       image-source: /images/ui/containerslot
       image-border: 3
@@ -535,7 +538,8 @@ InventoryWindow
       !text: tr('Stop')
       anchors.right: parent.right
       margin-right: 7
-      anchors.bottom: icons.bottom
+      anchors.bottom: parent.bottom
+      margin-bottom: 5
       font: cipsoftFont
       color: #c0c0c0ff
       size: 44 13

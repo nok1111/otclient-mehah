@@ -42,6 +42,9 @@ function Codex.onGameStart()
 	end
 	
 	Codex.UI:hide()
+	Codex.UI.onEscape = Codex.hide
+	Codex.UI.onClose = Codex.hide
+
 	
 	print("[Codex MVC] UI loaded successfully")
 
