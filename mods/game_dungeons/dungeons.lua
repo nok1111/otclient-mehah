@@ -90,7 +90,7 @@ function Dungeons.init()
 	end
 	
 	Keybind.new("Dungeons", "Dungeons List", "Ctrl+Shift+D", "")
-	Keybind.bind("Dungeons", "Dungeons List", {{type = KEY_DOWN, callback = Dungeons.showList}})
+	Keybind.bind("Dungeons", "Dungeons List", {{type = KEY_DOWN, callback = Dungeons.toggleList}})
 end
 
 function Dungeons.terminate()
@@ -113,9 +113,11 @@ function Dungeons.create()
 	end
 	Dungeons.UI = g_ui.displayUI("dungeons")
 	Dungeons.UI:hide()
+	Dungeons.UI.onEscape = Dungeons.hide
 
 	Dungeons.listUI = g_ui.displayUI("dungeonList")
 	Dungeons.listUI:hide()
+	Dungeons.listUI.onEscape = Dungeons.hideList
 	Dungeons.listUI:recursiveGetChildById("closeButton").onClick = function()
 		Dungeons.hideList()
 	end
@@ -165,7 +167,7 @@ function Dungeons.create()
 		Dungeons.dungeonButton = modules.game_mainpanel.addStoreButton('dungeonsButton',
 			tr('Dungeons'),
 			'/images/topbuttons/dungeon',
-			Dungeons.showList,
+			Dungeons.toggleList,
 			false,
 			5)
 		if Dungeons.dungeonButton and Dungeons.dungeonButton.setOn then
@@ -260,6 +262,18 @@ function Dungeons.hide()
 		return
 	end
 	Dungeons.UI:hide()
+	modules.game_interface.getRootPanel():focus()
+end
+
+function Dungeons.toggleList()
+	if not Dungeons.listUI then
+		return
+	end
+	if Dungeons.listUI:isVisible() then
+		Dungeons.hideList()
+	else
+		Dungeons.showList()
+	end
 end
 
 function Dungeons.showList()
@@ -282,6 +296,7 @@ function Dungeons.hideList()
 	if Dungeons.dungeonButton and Dungeons.dungeonButton.setOn then
 		Dungeons.dungeonButton:setOn(false)
 	end
+	modules.game_interface.getRootPanel():focus()
 end
 
 function Dungeons.onDungeonList(data)

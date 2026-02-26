@@ -538,7 +538,8 @@ InventoryWindow
       !text: tr('Stop')
       anchors.right: parent.right
       margin-right: 7
-      anchors.bottom: icons.bottom
+      anchors.bottom: parent.bottom
+      margin-bottom: 5
       font: cipsoftFont
       color: #c0c0c0ff
       size: 44 13
