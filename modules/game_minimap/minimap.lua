@@ -292,7 +292,7 @@ function openWaypointsView()
 end
 
 function extendedView(extendedView)
- 
+    mapController.ui.moveOnlyToMain = false
 end
 
 function toggle()

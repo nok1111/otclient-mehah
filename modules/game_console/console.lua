@@ -519,8 +519,10 @@ function load()
         consoleToggleChat.isChecked = settings.wasdMode or false
         if consoleToggleChat.isChecked then
             consoleToggleChat:setText(tr('Chat Off'))
+            unbindMovingKeys()
         else
             consoleToggleChat:setText(tr('Chat On'))
+            bindMovingKeys()
         end
         updateChatMode()
     end
@@ -2119,6 +2121,12 @@ function online()
     scheduleEvent(function()
         ignoredChannels = {}
     end, 3000)
+
+    if consoleToggleChat.isChecked then
+        modules.game_interface.getRootPanel():focus()
+    else
+        consoleTextEdit:focus()
+    end
 end
 
 function offline()

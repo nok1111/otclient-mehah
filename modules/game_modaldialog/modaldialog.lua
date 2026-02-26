@@ -98,14 +98,14 @@ function onModalDialog(id, title, message, buttons, enterButton, escapeButton, c
     local horizontalPadding = modalDialog:getPaddingLeft() + modalDialog:getPaddingRight()
     buttonsWidth = buttonsWidth + horizontalPadding
 
-    modalDialog:setWidth(math.min(modalDialog.maximumWidth,
-                                  math.max(buttonsWidth, messageLabel:getWidth(), modalDialog.minimumWidth)))
-    messageLabel:setWidth(math.min(modalDialog.maximumWidth,
-                                   math.max(buttonsWidth, messageLabel:getWidth(), modalDialog.minimumWidth)) -
-                              horizontalPadding)
-                              
-    messageLabel:resizeToText()
-    modalDialog:setHeight(97 + additionalHeight + messageLabel:getHeight() - 8)
+    local textWidth = messageLabel:getTextSize().width
+    local dialogWidth = math.min(modalDialog.maximumWidth, math.max(buttonsWidth, textWidth + horizontalPadding, modalDialog.minimumWidth))
+    
+    modalDialog:setWidth(dialogWidth)
+    messageLabel:setWidth(dialogWidth - horizontalPadding)
+    
+    local wrappedTextHeight = messageLabel:getTextSize().height
+    modalDialog:setHeight(97 + additionalHeight + wrappedTextHeight - 8)
 
     local enterFunc = function()
         local focusedChoice = choiceList:getFocusedChild()

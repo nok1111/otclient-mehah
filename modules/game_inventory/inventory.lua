@@ -513,7 +513,7 @@ function extendedView(extendedView)
         end
         inventoryController.ui:show()
 
-    inventoryController.ui.moveOnlyToMain = not extendedView
+    inventoryController.ui.moveOnlyToMain = false
 
 end
 

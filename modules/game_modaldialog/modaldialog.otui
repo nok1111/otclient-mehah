@@ -50,7 +50,7 @@ ModalDialog < MainWindow
     anchors.top: parent.top
     anchors.left: parent.left
     text-align: left
-    text-auto-resize: true
+    text-vertical-auto-resize: true
     text-wrap: true
 
   ChoiceList

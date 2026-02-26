@@ -334,7 +334,16 @@ local function setCreatureTitle(creature)
         
         -- Add quest effect if applicable (independent of title)
         if config.quest then
-            creature:attachEffect(g_attachedEffects.getById(31))
+            local hasQuestEffect = false
+            for _, effect in pairs(creature:getAttachedEffects()) do
+                if effect:getId() == 31 then
+                    hasQuestEffect = true
+                    break
+                end
+            end
+            if not hasQuestEffect then
+                creature:attachEffect(g_attachedEffects.getById(31))
+            end
         end
         
     elseif creatureTitles[name] then
