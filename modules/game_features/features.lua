@@ -193,6 +193,10 @@ controller:registerEvents(g_game, {
             g_game.enableFeature(GameLeechAmount)
         end
 
+        if version >= 1098 then
+            g_game.enableFeature(GameThingQuickLoot)
+        end
+        
         if version >= 1100 then
             g_game.enableFeature(GamePrey)
         end
