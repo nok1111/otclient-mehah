@@ -47,6 +47,10 @@ function Codex.onExtendedOpcode(protocol, opcode, buffer)
 
 		Codex.cachedEssences = data.essences or 0
 		Codex.cachedMaxSlots = data.maxSlots or 3
+		Codex.cachedParagonLevel = data.paragonLevel or 0
+		Codex.cachedEarlySlotUnlocks = data.earlySlotUnlocks or 0
+		Codex.cachedNextEarlySlotUnlockCost = data.nextEarlySlotUnlockCost
+			or Codex.getEarlySlotUnlockCost(Codex.cachedEarlySlotUnlocks)
 		Codex.cachedBronzeCrates = data.bronzeCrates or 0
 		Codex.cachedSilverCrates = data.silverCrates or 0
 		Codex.cachedGoldenCrates = data.goldenCrates or 0

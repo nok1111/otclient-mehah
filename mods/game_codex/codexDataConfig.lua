@@ -32,6 +32,16 @@ Codex.TAB_DECK = 2
 Codex.TAB_CRATES = 3
 Codex.TAB_UPGRADE = 4
 
+-- Early slot unlock cost (must match server CodexUpgrade.lua)
+function Codex.getEarlySlotUnlockCost(earlyUnlocks)
+	earlyUnlocks = tonumber(earlyUnlocks) or 0
+	if earlyUnlocks < 0 then
+		earlyUnlocks = 0
+	end
+	local baseCost = 500
+	return math.floor(baseCost * math.pow(2, earlyUnlocks))
+end
+
 -- Pagination Constants
 Codex.cardsPerPage = 20
 Codex.currentCollectionPage = 1

@@ -35,6 +35,12 @@ function Codex.terminate()
 end
 
 function Codex.onGameStart()
+	-- Reset transient runtime state every login to avoid stale client cache/flags.
+	Codex.tempCardDatabase = {}
+	Codex.baseDataReceived = false
+	Codex.craftingInProgress = false
+	Codex.cratesHandlersConnected = false
+
 	Codex.UI = g_ui.displayUI("codex")
 	if not Codex.UI then
 		print("[Codex] ERROR: Failed to load codex.otui")
@@ -66,6 +72,11 @@ function Codex.onGameStart()
 end
 
 function Codex.onGameEnd()
+	Codex.craftingInProgress = false
+	Codex.cratesHandlersConnected = false
+	Codex.baseDataReceived = false
+	Codex.tempCardDatabase = {}
+
 	if Codex.Tooltip then
 		Codex.Tooltip:destroy()
 		Codex.Tooltip = nil

@@ -619,12 +619,10 @@ function Codex.setupCratesUI()
 	local craftSilver = craftingPanel:getChildById("CraftSilverButton")
 	local craftGolden = craftingPanel:getChildById("CraftGoldenButton")
 
-	if not Codex.cratesHandlersConnected then
-		if craftBronze then craftBronze.onClick = function() Codex.craftCrate(craftBronze, 1) end end
-		if craftSilver then craftSilver.onClick = function() Codex.craftCrate(craftSilver, 2) end end
-		if craftGolden then craftGolden.onClick = function() Codex.craftCrate(craftGolden, 3) end end
-		Codex.cratesHandlersConnected = true
-	end
+	if craftBronze then craftBronze.onClick = function() Codex.craftCrate(craftBronze, 1) end end
+	if craftSilver then craftSilver.onClick = function() Codex.craftCrate(craftSilver, 2) end end
+	if craftGolden then craftGolden.onClick = function() Codex.craftCrate(craftGolden, 3) end end
+	Codex.cratesHandlersConnected = true
 
 	Codex.selectCrateType(Codex.selectedCrateId or 1)
 end
