@@ -3945,6 +3945,7 @@ void ProtocolGame::parseLootContainers(const InputMessagePtr& msg)
 
     const uint8_t containersCount = msg->getU8();
     std::vector<std::tuple<uint8_t, uint16_t, uint16_t>> lootList;
+    std::vector<std::tuple<uint8_t, uint16_t, std::string>> categoryItems;
 
     for (auto i = 0; i < containersCount; ++i) {
         const uint8_t categoryType = msg->getU8();
@@ -3957,7 +3958,21 @@ void ProtocolGame::parseLootContainers(const InputMessagePtr& msg)
         lootList.emplace_back(categoryType, lootContainerId, obtainerContainerId);
     }
 
-    g_lua.callGlobalField("g_game", "onQuickLootContainers", quickLootFallbackToMainContainer, lootList);
+    if (msg->getUnreadSize() >= 2) {
+        const uint16_t mappingsCount = msg->getU16();
+        for (auto i = 0; i < mappingsCount; ++i) {
+            if (msg->getUnreadSize() < 5) {
+                break;
+            }
+
+            const uint8_t categoryType = msg->getU8();
+            const uint16_t itemClientId = msg->getU16();
+            const std::string itemName = msg->getString();
+            categoryItems.emplace_back(categoryType, itemClientId, itemName);
+        }
+    }
+
+    g_lua.callGlobalField("g_game", "onQuickLootContainers", quickLootFallbackToMainContainer, lootList, categoryItems);
 }
 
 void ProtocolGame::parseCyclopediaHouseAuctionMessage(const InputMessagePtr& msg)

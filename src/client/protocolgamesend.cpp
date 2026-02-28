@@ -1494,6 +1494,9 @@ void ProtocolGame::openContainerQuickLoot(const uint8_t action, const uint8_t ca
         addPosition(msg, pos);
         msg->addU16(itemId);
         msg->addU8(stackpos);
+    } else if (action == 7 || action == 8) {
+        msg->addU8(category);
+        msg->addU16(itemId);
     } else if (action == 3) {
         msg->addU8(useMainAsFallback);
     } else if (action == 1 || action == 2 || action == 5 || action == 6) {
