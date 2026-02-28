@@ -8,15 +8,15 @@ Codex.crateImagesPath = "/images/codex/crates/"
 
 -- Card Experience Table (Level 1-10)
 Codex.cardExpTable = {
-	[1] = 100,    -- Level 1 -> 2
-	[2] = 250,    -- Level 2 -> 3
-	[3] = 500,    -- Level 3 -> 4
-	[4] = 1000,   -- Level 4 -> 5
-	[5] = 2000,   -- Level 5 -> 6
-	[6] = 4000,   -- Level 6 -> 7
-	[7] = 8000,   -- Level 7 -> 8
-	[8] = 15000,  -- Level 8 -> 9
-	[9] = 25000,  -- Level 9 -> 10
+	[1] = 500,    -- Level 1 -> 2
+	[2] = 700,    -- Level 2 -> 3
+	[3] = 1000,    -- Level 3 -> 4
+	[4] = 1300,   -- Level 4 -> 5
+	[5] = 1600,   -- Level 5 -> 6
+	[6] = 1900,   -- Level 6 -> 7
+	[7] = 2200,   -- Level 7 -> 8
+	[8] = 2500,  -- Level 8 -> 9
+	[9] = 3000,  -- Level 9 -> 10
 	[10] = 0      -- Max level (no more exp needed)
 }
 
