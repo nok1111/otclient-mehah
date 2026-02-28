@@ -235,43 +235,20 @@ Window
       color: #C0C0C0
       anchors.top: parent.top
       anchors.left: parent.left
-    CheckBox
-      id: skipped
-      image-source: /images/ui/outfits/checkbox_round
-      text-auto-resize: true
-      margin-top: 5
-      anchors.top: label.bottom
-      anchors.left: parent.left
-      text: Skipped Loot
-      color: #C0C0C0
-      width: 84
-      checked: true
-      @onClick: QuickLoot.filter(self, self:isChecked())
-    CheckBox
-      id: accepted
-      image-source: /images/ui/outfits/checkbox_round
-      text-auto-resize: true
-      margin-top: 5
-      anchors.top: skipped.bottom
-      anchors.left: parent.left
-      text: Accepted Loot
-      color: #C0C0C0
-      width: 84
-      @onClick: QuickLoot.filter(self, self:isChecked())
     QtButton
       id: clear
       size: 128 20
-      !text: tr('Clear Skipped Loot List')
+      !text: tr('Clear Accepted Loot List')
       color: #C0C0C0
       font: small-9px
-      anchors.top: accepted.bottom
+      anchors.top: label.bottom
       anchors.left: parent.left
-      margin-top: 5
+      margin-top: 10
       @onClick: QuickLoot.clearFilterItems()
     QtButton
       id: add
       size: 128 20
-      !text: tr('Add to Skipped Loot List')
+      !text: tr('Add to Accepted Loot List')
       color: #C0C0C0
       font: small-9px
       anchors.bottom: parent.bottom

@@ -1339,6 +1339,41 @@ function getEnglishData()
             }
           }
         }
+      },
+      ascension_guide = {
+        name = 'Ascension Guide',
+        subcategories = {
+          getting_started = {
+            name = 'First Steps',
+            type = 'text',
+            content = 'Welcome to Ascension! This is an ARPG style server with deep progression systems.\n\n**Your Priorities:**\n1. Level up and complete Tasks v2.\n2. Collect everything. Use Stash System and Quick Loot to manage items.\n3. Do not vendor trash items! Use the Recycler or Upgrade System to extract materials.'
+          },
+          passive_tree = {
+            name = 'Passive Tree',
+            type = 'text',
+            content = 'Like Path of Exile, you can invest points into a massive talent tree.\n\n- Specialize your character (e.g. Pure Crit, Pure Tank with Life Leech).\n- Read carefully to ensure your gear synergizes with your chosen branches.'
+          },
+          paragon_reborn = {
+            name = 'Paragon & Reborn',
+            type = 'text',
+            content = '**Paragon:** At high levels, you earn Paragon levels which grant small multiplicative stats.\n\n**Reborn:** Rebirth your character to level 1 for permanent damage multipliers. More reborns make leveling easier the next time!'
+          },
+          codex = {
+            name = 'Codex System',
+            type = 'text',
+            content = 'Monsters drop cards that you can collect in your Codex.\n\n- Activating cards grants passive bonuses and global announcements.\n- Collecting the right cards is vital for End-Game damage.'
+          },
+          gear_meta = {
+            name = 'Gear & Tiers',
+            type = 'text',
+            content = 'Flat Armor is less important than Secondary Attributes. \n\n**Key Stats:**\n1. Critical Hit Chance\n2. % Max HP / Max Mana (Scales exponentially!)\n3. Life/Mana Leech (Crucial for high HP pools)\n4. Cooldown Reduction\n\n**Golden Rule:** Nobody uses permanent rings. Keep 3-4 rings in your backpack and swap them for bosses, speed farming, or tanking.'
+          },
+          endgame = {
+            name = 'End Game',
+            type = 'text',
+            content = '**Dungeons & Expeditions:** Instanced content with rare loot and challenging bosses.\n\n**Zones:** Grind specific areas for Zone Buffs.\n\n**Upgrade System:** Use extracted stones and dust to push your Tier 3 weapons to godly damage limits.'
+          }
+        }
       }
     }
   }
@@ -1650,6 +1685,41 @@ function getSpanishData()
                 }
               }
             }
+          }
+        }
+      },
+      ascension_guide = {
+        name = 'Guía de Ascension',
+        subcategories = {
+          getting_started = {
+            name = 'Primeros Pasos',
+            type = 'text',
+            content = '¡Bienvenido a Ascension! Este servidor funciona estilo ARPG con varios sistemas de progresión.\n\n**Tus Prioridades:**\n1. Sube de nivel y completa Tasks v2.\n2. Recoge todo el botín. Usa el Stash System y el Quick Loot para organizar todo.\n3. ¡No vendas los ítems basura al NPC! Usa el Recycler o el Upgrade System para extraer minerales y gemas.'
+          },
+          passive_tree = {
+            name = 'Árbol de Pasivas (Tree)',
+            type = 'text',
+            content = 'Similar a Path of Exile, puedes invertir puntos en un árbol de talentos masivo.\n\n- Especializa a tu personaje (Ej. Crítico Puro, o Tanque con Life Leech).\n- Lee cuidadosamente para asegurar que tu equipo haga sinergia con la rama que elegiste.'
+          },
+          paragon_reborn = {
+            name = 'Paragon y Reborn',
+            type = 'text',
+            content = '**Paragon:** En los niveles más altos, ganarás niveles de Paragon que otorgan pequeños multiplicadores de estadísticas.\n\n**Reborn:** Puedes "Renacer" a tu personaje de vuelta a nivel 1 a cambio de multiplicadores de daño permanentes. ¡Cada Reborn hace que tu próxima subida de nivel sea más fácil!'
+          },
+          codex = {
+            name = 'Sistema Codex',
+            type = 'text',
+            content = 'Los monstruos sueltan cartas que puedes coleccionar en tu Codex.\n\n- Activar cartas enteras otorga bonificaciones pasivas y mensajes globales.\n- Coleccionar las cartas correctas es vital para tener daño suficiente en el juego tardío (End-Game).'
+          },
+          gear_meta = {
+            name = 'Equipo y Tiers',
+            type = 'text',
+            content = 'La Armadura plana importa mucho menos que los Atributos Secundarios.\n\n**Estadísticas Clave (Stats):**\n1. Critical Hit Chance (Probabilidad de Crítico)\n2. % Max HP / Max Mana (¡Los porcentajes escalan de forma masiva!)\n3. Life/Mana Leech (Crucial para curarte cuando tienes demasiada HP)\n4. Cooldown Reduction\n\n**Regla de Oro:** Nadie usa anillos permanentes. Mantén 3 o 4 anillos en tu mochila y cámbialos según vayas a un Jefe (Boss), a farmear rápido o a aguantar daño.'
+          },
+          endgame = {
+            name = 'End Game',
+            type = 'text',
+            content = '**Dungeons y Expeditions:** Instancias y mazmorras con botín raro y Jefes complejos.\n\n**Zones (Zonas):** Áreas específicas donde puedes ganar Mejoras de Zona (Zone Buffs) mientras cazas.\n\n**Upgrade System:** Usa polvos y piedras extraídas para mejorar tus armas Tier 3 hasta límites inalcanzables.'
           }
         }
       }

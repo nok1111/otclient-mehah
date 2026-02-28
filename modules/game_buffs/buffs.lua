@@ -120,7 +120,7 @@ function parseremoveBuff(protocol, opcode, buffer)
     print('parseremoveBuff - table is not complete.')
   end
 
-  local buffId = tonumber(json_data.buffId)
+  local buffId = json_data.buffId
   if buffId then
 		local icon = buffsPanel:getChildById(buffId) 
 		if icon then

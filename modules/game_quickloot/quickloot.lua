@@ -104,30 +104,7 @@ end
 
 function QuickLoot.Define()
     function QuickLoot.filter(widget, isChecked)
-        widget:setChecked(true)
-
-        isChecked = true
-
-        local accepted = quickLootController.ui.filters.accepted
-        local skipped = quickLootController.ui.filters.skipped
-        local add_text = string.format("Add to %s Loot List", widget:getId():gsub("^%l", string.upper))
-        local clear_text = string.format("Clear %s Loot List", widget:getId():gsub("^%l", string.upper))
-
-        if widget == skipped and isChecked then
-            quickLootController.ui.filters.accepted:setChecked(false)
-            quickLootController.ui.filters.add:setText(add_text)
-            quickLootController.ui.filters.clear:setText(clear_text)
-
-            QuickLoot.data.filter = 1
-        end
-
-        if widget == accepted and isChecked then
-            quickLootController.ui.filters.skipped:setChecked(false)
-            quickLootController.ui.filters.add:setText(add_text)
-            quickLootController.ui.filters.clear:setText(clear_text)
-
-            QuickLoot.data.filter = 2
-        end
+        QuickLoot.data.filter = 2
 
         if not QuickLoot.suppressFilterSyncRequest then
             g_game.requestQuickLootBlackWhiteList(getFilter(QuickLoot.data.filter),
@@ -199,7 +176,7 @@ function QuickLoot.Define()
 
             if result == nil then
                 QuickLoot.data = {
-                    filter = 1,
+                    filter = 2,
                     selectedCategoryId = 1,
                     categories = {
                         { id = 1, name = "General" }
@@ -210,11 +187,12 @@ function QuickLoot.Define()
                 }
             else
                 QuickLoot.data = result
+                QuickLoot.data.filter = 2 -- Force accepted loot
             end
 
         else
             QuickLoot.data = {
-                filter = 1,
+                filter = 2,
                 selectedCategoryId = 1,
                 categories = {
                     { id = 1, name = "General" }
@@ -723,13 +701,9 @@ function QuickLoot.Define()
 
         QuickLoot.loadFilterItems()
 
-        local filter = {
-            [1] = "skipped",
-            [2] = "accepted"
-        }
-
+        QuickLoot.data.filter = 2
         QuickLoot.suppressFilterSyncRequest = true
-        QuickLoot.filter(quickLootController.ui.filters[filter[QuickLoot.data.filter]], true)
+        QuickLoot.filter()
         QuickLoot.suppressFilterSyncRequest = false
         quickLootController.ui.list:getLayout():disableUpdates()
         quickLootController.ui.list:destroyChildren()
@@ -1036,7 +1010,10 @@ function QuickLoot.Define()
         end
         QuickLoot.show()
         QuickLoot.loadFilterItems()
-        if QuickLoot.data.filter == 2 and not quickLootController.ui.filters.accepted:isChecked() then
+        if QuickLoot.data.filter == 2
+            and quickLootController.ui.filters
+            and quickLootController.ui.filters.accepted
+            and not quickLootController.ui.filters.accepted:isChecked() then
             quickLootController.ui.filters.accepted:onClick()
         end
     end
