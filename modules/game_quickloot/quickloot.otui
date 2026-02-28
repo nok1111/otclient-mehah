@@ -30,6 +30,7 @@ QuicLootIgnoreItem < UIWidget
     @onClick: modules.game_quickloot.QuickLoot.clearFilterItem(self)
   Item
     id: item
+    !tooltip: tr('Preview listed item')
     anchors.verticalCenter: parent.verticalCenter
     anchors.right: removeBag.left
     margin-right: 5
@@ -39,16 +40,26 @@ QuicLootIgnoreItem < UIWidget
 QuicklootBagLabel < UIWidget
   background-color: #484848
 
+  QtButton
+    id: collapse
+    !text: '-'
+    !tooltip: tr('Collapse or expand this category item list')
+    size: 18 18
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent.left
+    margin-left: 2
+
   Label
     id: label
     !text: tr('Unassigned Loot')
     color: #C0C0C0
     anchors.verticalCenter: parent.verticalCenter
-    anchors.left: parent.left
+    anchors.left: collapse.right
     text-auto-resize: true
-    margin-left: 2
+    margin-left: 6
   SelectBagButton
     id: selectBag
+    !tooltip: tr('Choose the destination container for this category')
     &click: 2
     &Select:4
     &borrar:5
@@ -58,6 +69,7 @@ QuicklootBagLabel < UIWidget
     @onClick: modules.game_quickloot.QuickLoot.chooseItem(self)
   RemoveBagButton
     id: removeBag
+    !tooltip: tr('Clear the destination container for this category')
     anchors.verticalCenter: parent.verticalCenter
     anchors.right: selectBag.left
     margin-right: 5
@@ -67,6 +79,7 @@ QuicklootBagLabel < UIWidget
     @onClick: modules.game_quickloot.QuickLoot.clearItem(self)
   Item
     id: item
+    !tooltip: tr('Open this assigned container')
     anchors.verticalCenter: parent.verticalCenter
     anchors.right: removeBag.left
     margin-right: 5
@@ -77,46 +90,55 @@ QuicklootBagLabel < UIWidget
     @onClick: modules.game_quickloot.QuickLoot.openContainer(self)
     $pressed:
       opacity: 0.5
-
   SelectBagButton
-    id: selectBag2
-    &click: 6
-    &Select:0
-    &borrar:1
+    id: addCategoryItem
+    !tooltip: tr('Add item to this category')
     anchors.verticalCenter: parent.verticalCenter
     anchors.right: item.left
     margin-right: 5
-    @onClick: modules.game_quickloot.QuickLoot.chooseItem(self)
+    @onClick: modules.game_quickloot.QuickLoot.chooseCategoryItem(self)
   RemoveBagButton
-    id: removeBag2
+    id: clearCategoryItems
+    !tooltip: tr('Clear category item bindings')
     anchors.verticalCenter: parent.verticalCenter
-    anchors.right: selectBag2.left
+    anchors.right: addCategoryItem.left
     margin-right: 5
-    &click: 6
-    &Select:0
-    &borrar:1
-    @onClick: modules.game_quickloot.QuickLoot.clearItem(self)
+    @onClick: modules.game_quickloot.QuickLoot.clearCategoryItems(self)
+
+QuickLootCategoryMappedItem < UIWidget
+  background-color: #3a3a3a
+
+  Label
+    id: label
+    color: #C0C0C0
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent.left
+    margin-left: 28
+    text-auto-resize: true
+
   Item
-    id: item2
+    id: item
     anchors.verticalCenter: parent.verticalCenter
-    anchors.right: removeBag2.left
-    margin-right: 5
-    &click: 6
-    &Select:0
-    &borrar:1
-    opacity: 1.0
-    @onClick: modules.game_quickloot.QuickLoot.openContainer(self)
-    $pressed:
-      opacity: 0.5
+    anchors.right: remove.left
+    margin-right: 6
+
+  QtButton
+    id: remove
+    !text: tr('Remove')
+    !tooltip: tr('Remove this item from the selected category')
+    size: 58 20
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.right: parent.right
+    margin-right: 4
 Window
   id: main
   !text: tr('Manage Containers')
   color: #C0C0C0
-  size: 700 425
+  size: 980 500
   anchors.centerIn: parent
   SmallReversedQtPanel
     id: fallbackPanel
-    size: 255 20
+    size: 520 20
     image-border: 15
     anchors.top: parent.top
     anchors.left: parent.left
@@ -131,20 +153,44 @@ Window
       !tooltip: tr('Tick this check box to loot into your main container if you cannot \nloot into the container for the particular loot category and \nunassigned loot. Note that "Auto-Sort \nPurchases" and "Auto-Sort Stash into Containers" are not afflected by this option.')
 
   Label
-
-    !text: tr('Loot')
+    !text: tr('Category / Container')
     color: #C0C0C0
     anchors.top: fallbackPanel.bottom
     anchors.left: parent.left
-    margin-left: 85
+    margin-left: 50
 
-  Label
+  QtButton
+    id: createCategory
+    size: 115 20
+    !text: tr('Create Category')
+    !tooltip: tr('Create a new quick loot category')
+    anchors.top: fallbackPanel.bottom
+    anchors.right: renameCategory.left
+    margin-top: 2
+    margin-right: 4
+    @onClick: QuickLoot.createCategory()
 
-    !text: tr('Obtain')
-    color: #C0C0C0
-    margin-right: 15
+  QtButton
+    id: renameCategory
+    size: 115 20
+    !text: tr('Rename Selected')
+    !tooltip: tr('Rename the currently selected category')
+    anchors.top: fallbackPanel.bottom
+    anchors.right: deleteCategory.left
+    margin-top: 2
+    margin-right: 4
+    @onClick: QuickLoot.renameSelectedCategory()
+
+  QtButton
+    id: deleteCategory
+    size: 115 20
+    !text: tr('Delete Selected')
+    !tooltip: tr('Delete the selected category and its assignments')
     anchors.top: fallbackPanel.bottom
     anchors.right: fallbackPanel.right
+    margin-top: 2
+    @onClick: QuickLoot.deleteSelectedCategory()
+
   ScrollablePanel
     id: list
     focusable: false
@@ -157,13 +203,13 @@ Window
     anchors.right: fallbackPanel.right
     padding-left: 1
     padding-top: 1
-    margin-top: 25
+    margin-top: 30
     margin-bottom: 32
     padding-bottom: 3
     vertical-scrollbar: scrollbar
     layout:
       type: grid
-      cell-size: 240 36
+      cell-size: 500 36
       cell-spacing: 0
       flow: true
   VerticalScrollBar
@@ -263,11 +309,7 @@ Window
         image-clip: 0 0 128 37
         image-border: 3
         @onClick: |
-          if g_game.getClientVersion() >= 1332 then
-            modules.game_store.toggle()
-          else
-            modules.game_shop.toggle()
-          end
+          g_platform.openUrl('https://ascension-project.online/shop.php')
 
         $pressed:
           image-clip: 0 37 128 37
