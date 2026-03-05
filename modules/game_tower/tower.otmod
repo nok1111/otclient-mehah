@@ -1,0 +1,11 @@
+Module
+  name: game_tower
+  description: Tower progress tracker
+  author: Custom
+  version: 1.0.0
+
+  autoload: true
+  sandboxed: true
+  scripts: [ tower ]
+  @onLoad: init()
+  @onUnload: terminate()

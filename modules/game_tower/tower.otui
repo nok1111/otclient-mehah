@@ -1,0 +1,339 @@
+TowerTracker < Panel
+  id: towerTracker
+  width: 260
+  height: 112
+  anchors.top: parent.top
+  anchors.right: parent.right
+  margin-top: 36
+  margin-right: 8
+  visible: false
+  image-source: /images/ui/windows/miniwindow
+  image-border: 5
+  padding: 8
+
+  Label
+    id: titleLabel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    text: Tower Progress
+    color: #E7CF7A
+    font: verdana-11px-rounded
+    text-auto-resize: true
+
+  Label
+    id: floorLabel
+    anchors.top: titleLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 4
+    text: Floor: 0
+    color: #FFFFFF
+    font: verdana-11px-antialised
+
+  Label
+    id: objectiveLabel
+    anchors.top: floorLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 2
+    text: Objective: none 0/0
+    color: #C5E1FF
+    font: verdana-11px-antialised
+
+  ProgressBar
+    id: objectiveProgressBar
+    anchors.top: objectiveLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    height: 10
+    background-color: #4AA3FF
+
+  Label
+    id: metaLabel
+    anchors.top: objectiveProgressBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    text: Best: 0 | Shards: 0
+    color: #9FD49F
+    font: verdana-11px-antialised
+
+TowerLobbyWindow < MainWindow
+  id: towerLobbyWindow
+  !text: tr('Tower Lobby')
+  size: 684 560
+  visible: false
+  @onEscape: TowerTracker.hideLobby()
+
+  Label
+    id: summaryLabel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 12
+    text: Weekly Best: 0 | Shards: 0
+    color: #E7CF7A
+    text-align: center
+    font: verdana-11px-rounded
+
+  Panel
+    id: mutatorPanel
+    anchors.top: summaryLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 14
+    margin-right: 14
+    height: 56
+    image-source: /images/ui/windows/miniwindow
+    image-border: 5
+    padding: 8
+
+    Label
+      id: mutatorTitleLabel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      text: Weekly Mutation
+      color: #E7CF7A
+      font: verdana-11px-rounded
+
+    Label
+      id: mutatorNameLabel
+      anchors.top: mutatorTitleLabel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 2
+      text: No mutator
+      color: #FFCC66
+      font: verdana-11px-antialised
+
+    Label
+      id: mutatorDescLabel
+      anchors.top: mutatorNameLabel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 1
+      text: 
+      color: #C5E1FF
+      font: verdana-11px-antialised
+      text-wrap: true
+      height: 18
+
+  Panel
+    id: cardsContainer
+    anchors.top: mutatorPanel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 14
+    margin-right: 14
+    height: 194
+    background-color: #00000000
+    layout:
+      type: horizontalBox
+      spacing: 14
+
+    TowerModeCard
+      id: soloCard
+
+    TowerModeCard
+      id: trioCard
+
+  Panel
+    id: trioPanel
+    anchors.top: cardsContainer.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 14
+    margin-right: 14
+    height: 132
+    image-source: /images/ui/windows/miniwindow
+    image-border: 5
+    padding: 10
+    visible: false
+
+    Label
+      id: partyCodeLabel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      text: Party Code: ----
+      color: #C5E1FF
+      font: verdana-11px-antialised
+
+    Label
+      id: membersLabel
+      anchors.top: partyCodeLabel.bottom
+      anchors.left: parent.left
+      margin-top: 4
+      text: Members: [1] Empty [2] Empty [3] Empty
+      color: #FFFFFF
+      font: verdana-11px-antialised
+      text-wrap: true
+      height: 28
+
+    TextEdit
+      id: joinCodeEdit
+      anchors.top: membersLabel.bottom
+      anchors.left: parent.left
+      margin-top: 8
+      width: 98
+      height: 20
+      text: 
+
+    Button
+      id: createPartyButton
+      anchors.top: membersLabel.bottom
+      anchors.left: joinCodeEdit.right
+      margin-top: 8
+      margin-left: 8
+      width: 94
+      !text: tr('Create Trio')
+
+    Button
+      id: joinPartyButton
+      anchors.top: membersLabel.bottom
+      anchors.left: createPartyButton.right
+      margin-top: 8
+      margin-left: 8
+      width: 72
+      !text: tr('Join')
+
+    Button
+      id: readyButton
+      anchors.top: createPartyButton.bottom
+      anchors.left: parent.left
+      margin-top: 8
+      width: 94
+      !text: tr('Ready')
+
+    Button
+      id: startTrioButton
+      anchors.top: createPartyButton.bottom
+      anchors.left: readyButton.right
+      margin-top: 8
+      margin-left: 8
+      width: 116
+      !text: tr('Start Trio Run')
+
+    Button
+      id: leavePartyButton
+      anchors.top: createPartyButton.bottom
+      anchors.left: startTrioButton.right
+      margin-top: 8
+      margin-left: 8
+      width: 72
+      !text: tr('Leave')
+
+  Panel
+    id: infoPanel
+    anchors.top: trioPanel.bottom
+    anchors.bottom: closeLobbyButton.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 14
+    margin-right: 14
+    margin-bottom: 10
+    image-source: /images/ui/windows/miniwindow
+    image-border: 5
+    padding: 10
+
+    Label
+      id: systemInfoTitleLabel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      text: System Info
+      color: #E7CF7A
+      font: verdana-11px-rounded
+
+    Label
+      id: systemInfoTextLabel
+      anchors.top: systemInfoTitleLabel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 3
+      text: - Enter solo or trio\n- Clear objectives each floor\n- Push best weekly floor
+      color: #C5E1FF
+      font: verdana-11px-antialised
+      text-wrap: true
+      height: 52
+
+    Label
+      id: rewardsTitleLabel
+      anchors.top: systemInfoTextLabel.bottom
+      anchors.left: parent.left
+      margin-top: 4
+      text: Rewards Preview
+      color: #9FD49F
+      font: verdana-11px-rounded
+
+    Label
+      id: rewardsTextLabel
+      anchors.top: rewardsTitleLabel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 3
+      text: - Shards per floor clear\n- Weekly chest by best floor
+      color: #FFFFFF
+      font: verdana-11px-antialised
+      text-wrap: true
+      height: 44
+
+  Button
+    id: closeLobbyButton
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 14
+    width: 128
+    !text: tr('Close')
+
+TowerModeCard < Panel
+  width: 321
+  height: 194
+  image-source: /images/ui/windows/miniwindow
+  image-border: 5
+  padding: 10
+  layout:
+    type: verticalBox
+    spacing: 5
+
+  Label
+    id: modeTitle
+    text: Mode
+    color: #E7CF7A
+    font: verdana-11px-rounded
+    text-align: center
+
+  Label
+    id: modeDesc
+    text: Description
+    color: #C5E1FF
+    font: verdana-11px-antialised
+    text-wrap: true
+    height: 40
+
+  Label
+    id: modeStatus
+    text: Status
+    color: #7FE4B7
+    font: verdana-11px-antialised
+
+  Label
+    id: floorTextLabel
+    text: Start Floor
+    color: #FFFFFF
+    font: verdana-11px-antialised
+
+  ComboBox
+    id: floorDropdown
+    width: 186
+    height: 20
+    currentIndex: 0
+
+  Button
+    id: actionButton
+    width: 186
+    !text: tr('Select')
