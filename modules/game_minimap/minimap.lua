@@ -78,7 +78,7 @@ function mapController:onInit()
     hideIfExists('zoomOutButton')
     hideIfExists('resetButton')
 
-    iconTopMenu = modules.game_mainpanel.addStoreButton('minimapButton', tr('Minimap'), '/images/icons/search', toggle, false, 2)
+    iconTopMenu = modules.game_mainpanel.addStoreButton('minimapButton', tr('Minimap'), '/images/icons/minimap', toggle, false, 2)
 end
 
 function mapController:onGameStart()
