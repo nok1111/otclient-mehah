@@ -10,6 +10,18 @@ local function getFilter(id)
     return filter[id]
 end
 
+local function ensureLootFilterList(filter)
+    QuickLoot.data = QuickLoot.data or {}
+    QuickLoot.data.loots = QuickLoot.data.loots or {}
+
+    local normalizedFilter = tonumber(filter) or tonumber(QuickLoot.data.filter) or 2
+    if type(QuickLoot.data.loots[normalizedFilter]) ~= "table" then
+        QuickLoot.data.loots[normalizedFilter] = {}
+    end
+
+    return QuickLoot.data.loots[normalizedFilter]
+end
+
 quickLootController = Controller:new()
 quickLootController:setUI('quickloot')
 function quickLootController:onInit()
@@ -23,6 +35,7 @@ function quickLootController:onInit()
             { id = 1, name = "General" }
         },
         categoryItems = {},
+        itemNames = {},
         collapsedCategories = {},
         loots = {
             [0] = {},
@@ -87,8 +100,8 @@ function quickLootController:onGameStart()
         QuickLoot.cacheItemName(itemId, itemName)
     end
 
-    g_game.requestQuickLootBlackWhiteList(getFilter(QuickLoot.data.filter),
-        #QuickLoot.data.loots[QuickLoot.data.filter], QuickLoot.data.loots[QuickLoot.data.filter])
+    local currentLootList = ensureLootFilterList(QuickLoot.data.filter)
+    g_game.requestQuickLootBlackWhiteList(getFilter(QuickLoot.data.filter), #currentLootList, currentLootList)
 end
 
 function quickLootController:onGameEnd()
@@ -105,10 +118,10 @@ end
 function QuickLoot.Define()
     function QuickLoot.filter(widget, isChecked)
         QuickLoot.data.filter = 2
+        local lootList = ensureLootFilterList(QuickLoot.data.filter)
 
         if not QuickLoot.suppressFilterSyncRequest then
-            g_game.requestQuickLootBlackWhiteList(getFilter(QuickLoot.data.filter),
-                #QuickLoot.data.loots[QuickLoot.data.filter], QuickLoot.data.loots[QuickLoot.data.filter])
+            g_game.requestQuickLootBlackWhiteList(getFilter(QuickLoot.data.filter), #lootList, lootList)
         end
         QuickLoot.loadFilterItems()
     end
@@ -117,30 +130,32 @@ function QuickLoot.Define()
         if not filter then
             filter = QuickLoot.data.filter
         end
-        return table.contains(QuickLoot.data.loots[filter], itemId)
+        return table.contains(ensureLootFilterList(filter), itemId)
     end
 
     function QuickLoot.addLootList(itemId,filter)
         if not filter then
             filter = QuickLoot.data.filter
         end
-        if table.contains(QuickLoot.data.loots[filter], itemId) then
+        local lootList = ensureLootFilterList(filter)
+        if table.contains(lootList, itemId) then
             return
         end
 
-        table.insert(QuickLoot.data.loots[filter], itemId)
+        table.insert(lootList, itemId)
 
-        g_game.requestQuickLootBlackWhiteList(getFilter(filter),
-            #QuickLoot.data.loots[filter], QuickLoot.data.loots[filter])
+        g_game.requestQuickLootBlackWhiteList(getFilter(filter), #lootList, lootList)
         if quickLootController.ui:isVisible() then
             QuickLoot.loadFilterItems()
         end
     end
     function QuickLoot.clearFilterItems()
-        QuickLoot.data.loots[QuickLoot.data.filter] = {}
+        local lootList = ensureLootFilterList(QuickLoot.data.filter)
+        for i = #lootList, 1, -1 do
+            table.remove(lootList, i)
+        end
 
-        g_game.requestQuickLootBlackWhiteList(getFilter(QuickLoot.data.filter),
-            #QuickLoot.data.loots[QuickLoot.data.filter], QuickLoot.data.loots[QuickLoot.data.filter])
+        g_game.requestQuickLootBlackWhiteList(getFilter(QuickLoot.data.filter), #lootList, lootList)
         QuickLoot.loadFilterItems()
     end
 
@@ -148,14 +163,14 @@ function QuickLoot.Define()
         if not filter then
             filter = QuickLoot.data.filter
         end
-        if not table.contains(QuickLoot.data.loots[filter], itemId) then
+        local lootList = ensureLootFilterList(filter)
+        if not table.contains(lootList, itemId) then
             return
         end
 
-        table.removevalue(QuickLoot.data.loots[filter], itemId)
+        table.removevalue(lootList, itemId)
 
-        g_game.requestQuickLootBlackWhiteList(getFilter(filter),
-            #QuickLoot.data.loots[filter], QuickLoot.data.loots[filter])
+        g_game.requestQuickLootBlackWhiteList(getFilter(filter), #lootList, lootList)
         if quickLootController.ui:isVisible() then
             QuickLoot.loadFilterItems()
         end
@@ -259,6 +274,9 @@ function QuickLoot.Define()
         elseif not QuickLoot.getCategoryById(QuickLoot.data.selectedCategoryId) then
             QuickLoot.data.selectedCategoryId = tonumber(QuickLoot.data.categories[1].id) or 1
         end
+
+        ensureLootFilterList(1)
+        ensureLootFilterList(2)
     end
 
     function QuickLoot.refreshCategoryView()
@@ -386,6 +404,10 @@ function QuickLoot.Define()
         if normalizedId <= 0 or normalizedName == "" or normalizedName == "Unknown Item" then
             return
         end
+
+        QuickLoot.data = QuickLoot.data or {}
+        QuickLoot.data.itemNames = QuickLoot.data.itemNames or {}
+        QuickLoot.serverCategoryItemNames = QuickLoot.serverCategoryItemNames or {}
 
         QuickLoot.serverCategoryItemNames[normalizedId] = normalizedName
         QuickLoot.data.itemNames[tostring(normalizedId)] = normalizedName
@@ -766,7 +788,7 @@ function QuickLoot.Define()
 
         local color = "#484848"
 
-        for _, itemId in ipairs(QuickLoot.data.loots[QuickLoot.data.filter]) do
+        for _, itemId in ipairs(ensureLootFilterList(QuickLoot.data.filter)) do
             local widget = g_ui.createWidget("QuicLootIgnoreItem", quickLootController.ui.ignoreList)
 
             widget:setId(itemId)

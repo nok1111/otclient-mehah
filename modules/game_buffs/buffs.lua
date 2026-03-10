@@ -63,7 +63,9 @@ function init()
   if g_game.isOnline() then
     online()
   end
-  buffsWindow:setup()
+  if buffsWindow.setup then
+    buffsWindow:setup()
+  end
 end
 
 function terminate()

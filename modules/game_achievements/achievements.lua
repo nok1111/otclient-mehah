@@ -50,8 +50,6 @@ local playerStats = {
 }
 
 function init()
-  g_ui.importStyle('achievements')
-
   connect(g_game, {
     onGameStart = onGameStart,
     onGameEnd = onGameEnd

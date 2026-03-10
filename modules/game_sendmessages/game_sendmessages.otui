@@ -31,7 +31,7 @@ HeadlessWindow
     id: messageTitle
     !text: tr('Title')
     color: #FFD700
-    font: verdana-14px-bold
+    font: verdana-14px
     text-wrap: true
     text-auto-resize: true
     anchors.top: parent.top
