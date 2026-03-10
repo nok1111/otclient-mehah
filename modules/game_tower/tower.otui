@@ -1,7 +1,7 @@
 TowerTracker < Panel
   id: towerTracker
   width: 260
-  height: 112
+  height: 126
   anchors.top: parent.top
   anchors.right: parent.right
   margin-top: 36
@@ -41,12 +41,22 @@ TowerTracker < Panel
     color: #C5E1FF
     font: verdana-11px-antialised
 
-  ProgressBar
-    id: objectiveProgressBar
+  Label
+    id: timerLabel
     anchors.top: objectiveLabel.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    margin-top: 5
+    margin-top: 2
+    text: Time Left: --:--
+    color: #FFD27D
+    font: verdana-11px-antialised
+
+  ProgressBar
+    id: objectiveProgressBar
+    anchors.top: timerLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 4
     height: 10
     background-color: #4AA3FF
 
@@ -319,6 +329,12 @@ TowerModeCard < Panel
     id: modeStatus
     text: Status
     color: #7FE4B7
+    font: verdana-11px-antialised
+
+  Label
+    id: modeTimer
+    text: Floor Timer: --:--
+    color: #FFD27D
     font: verdana-11px-antialised
 
   Label

@@ -297,7 +297,7 @@ function inventoryController:onInit()
     refreshInventory_panel()
     local ui = getInventoryUi()
 
-    iconTopMenu = modules.game_mainpanel.addStoreButton('inventoryButton', tr('Inventory'), '/images/icons/icon_misc', toggle, false, 3)
+    iconTopMenu = modules.game_mainpanel.addStoreButton('inventoryButton', tr('Inventory'), '/images/icons/bag', toggle, false, 3)
 end
 
 local slotTooltips = {

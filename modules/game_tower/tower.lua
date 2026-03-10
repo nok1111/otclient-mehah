@@ -5,6 +5,8 @@ local trackerWidget = nil
 local trackerData = nil
 local trackerToggleButton = nil
 local trackerHiddenByUser = false
+local trackerTimerEvent = nil
+local trackerTimerSync = nil
 local lobbyButton = nil
 local lobbyWindow = nil
 local lobbyState = nil
@@ -40,6 +42,93 @@ local OBJECTIVE_COLORS = {
   survive = '#A8E6A1',
   sigil = '#D2A8FF'
 }
+
+local function clearTrackerTimerEvent()
+  if trackerTimerEvent then
+    removeEvent(trackerTimerEvent)
+    trackerTimerEvent = nil
+  end
+end
+
+local function formatRemainingTime(seconds)
+  local value = math.max(0, math.floor(tonumber(seconds) or 0))
+  local hours = math.floor(value / 3600)
+  local minutes = math.floor((value % 3600) / 60)
+  local secs = value % 60
+
+  if hours > 0 then
+    return string.format('%d:%02d:%02d', hours, minutes, secs)
+  end
+
+  return string.format('%02d:%02d', minutes, secs)
+end
+
+local function getRemainingFloorSeconds()
+  if not trackerData or trackerData.active ~= true then
+    return nil
+  end
+
+  local deadlineAt = tonumber(trackerData.floorDeadlineAt) or 0
+  if deadlineAt <= 0 then
+    return nil
+  end
+
+  local sync = trackerTimerSync
+  if not sync then
+    sync = {
+      serverNow = tonumber(trackerData.serverNow) or os.time(),
+      clientMs = g_clock.millis()
+    }
+    trackerTimerSync = sync
+  end
+
+  local elapsed = math.max(0, (g_clock.millis() - sync.clientMs) / 1000)
+  local estimatedNow = sync.serverNow + elapsed
+  return math.max(0, math.floor((deadlineAt - estimatedNow) + 0.5))
+end
+
+local function refreshTrackerTimerLabel()
+  if not trackerWidget or trackerWidget:isDestroyed() then
+    return
+  end
+
+  local timerLabel = trackerWidget:getChildById('timerLabel')
+  if not timerLabel then
+    return
+  end
+
+  local remaining = getRemainingFloorSeconds()
+  if remaining == nil then
+    timerLabel:setText('Time Left: --:--')
+    timerLabel:setColor('#C5E1FF')
+    return
+  end
+
+  timerLabel:setText(string.format('Time Left: %s', formatRemainingTime(remaining)))
+  if remaining <= 30 then
+    timerLabel:setColor('#FF8A8A')
+  elseif remaining <= 120 then
+    timerLabel:setColor('#FFD27D')
+  else
+    timerLabel:setColor('#9FD49F')
+  end
+end
+
+local function startTrackerTimerLoop()
+  clearTrackerTimerEvent()
+  local function tick()
+    refreshTrackerTimerLabel()
+
+    if not trackerData or trackerData.active ~= true or trackerHiddenByUser then
+      trackerTimerEvent = nil
+      return
+    end
+
+    trackerTimerEvent = scheduleEvent(tick, 250)
+  end
+
+  trackerTimerEvent = scheduleEvent(tick, 50)
+end
 
 local function getParentWidget()
   if modules.game_interface and modules.game_interface.getRootPanel then
@@ -336,12 +425,14 @@ local function buildDefaultLobbyState()
       minFloor = 1,
       maxFloor = 1,
       selectedFloor = 1,
+      floorTimeoutSeconds = 0,
       statusText = 'Ready to start'
     },
     trio = {
       minFloor = 1,
       maxFloor = 1,
       selectedFloor = 1,
+      floorTimeoutSeconds = 0,
       statusText = 'Create or join a trio',
       partyCode = '----',
       members = {'Empty', 'Empty', 'Empty'},
@@ -376,12 +467,14 @@ local function normalizeLobbyState(state)
   merged.solo.minFloor = tonumber(solo.minFloor) or defaults.solo.minFloor
   merged.solo.maxFloor = tonumber(solo.maxFloor) or defaults.solo.maxFloor
   merged.solo.selectedFloor = tonumber(solo.selectedFloor) or merged.solo.minFloor
+  merged.solo.floorTimeoutSeconds = tonumber(solo.floorTimeoutSeconds) or defaults.solo.floorTimeoutSeconds
   merged.solo.statusText = tostring(solo.statusText or defaults.solo.statusText)
 
   local trio = type(state.trio) == 'table' and state.trio or {}
   merged.trio.minFloor = tonumber(trio.minFloor) or defaults.trio.minFloor
   merged.trio.maxFloor = tonumber(trio.maxFloor) or defaults.trio.maxFloor
   merged.trio.selectedFloor = tonumber(trio.selectedFloor) or merged.trio.minFloor
+  merged.trio.floorTimeoutSeconds = tonumber(trio.floorTimeoutSeconds) or defaults.trio.floorTimeoutSeconds
   merged.trio.statusText = tostring(trio.statusText or defaults.trio.statusText)
   merged.trio.partyCode = tostring(trio.partyCode or defaults.trio.partyCode)
   merged.trio.isReady = trio.isReady == true
@@ -405,6 +498,7 @@ local function setCardData(card, config)
   local modeTitle = card:getChildById('modeTitle')
   local modeDesc = card:getChildById('modeDesc')
   local modeStatus = card:getChildById('modeStatus')
+  local modeTimer = card:getChildById('modeTimer')
   local floorDropdown = card:getChildById('floorDropdown')
   local actionButton = card:getChildById('actionButton')
 
@@ -416,6 +510,16 @@ local function setCardData(card, config)
   end
   if modeStatus then
     modeStatus:setText(config.statusText)
+  end
+  if modeTimer then
+    local timeoutSeconds = math.max(0, math.floor(tonumber(config.floorTimeoutSeconds) or 0))
+    if timeoutSeconds > 0 then
+      modeTimer:setText(string.format('Floor Timer: %s', formatRemainingTime(timeoutSeconds)))
+      modeTimer:setColor('#FFD27D')
+    else
+      modeTimer:setText('Floor Timer: --:--')
+      modeTimer:setColor('#C5E1FF')
+    end
   end
   local canSelectFloor = hasUnlockedFloor(config.minFloor, config.maxFloor)
   if floorDropdown then
@@ -507,6 +611,7 @@ local function renderLobby(state)
     minFloor = state.solo.minFloor,
     maxFloor = state.solo.maxFloor,
     selectedFloor = state.solo.selectedFloor,
+    floorTimeoutSeconds = state.solo.floorTimeoutSeconds,
     onFloorChanged = function(selectedFloor)
       sendAction(ACTION_LOBBY_INPUT, {type = 'preview_floor', floor = selectedFloor})
     end,
@@ -528,6 +633,7 @@ local function renderLobby(state)
     minFloor = state.trio.minFloor,
     maxFloor = state.trio.maxFloor,
     selectedFloor = state.trio.selectedFloor,
+    floorTimeoutSeconds = state.trio.floorTimeoutSeconds,
     onFloorChanged = function(selectedFloor)
       sendAction(ACTION_LOBBY_INPUT, {type = 'preview_floor', floor = selectedFloor})
     end,
@@ -668,6 +774,12 @@ showPlaceholderTracker = function()
     objectiveProgressBar:setPercent(0)
   end
 
+  local timerLabel = trackerWidget:getChildById('timerLabel')
+  if timerLabel then
+    timerLabel:setText('Time Left: --:--')
+    timerLabel:setColor('#C5E1FF')
+  end
+
   local metaLabel = trackerWidget:getChildById('metaLabel')
   if metaLabel then
     metaLabel:setText('Best: 0 | Shards: 0')
@@ -684,9 +796,16 @@ applyTrackerData = function(data)
 
   local isActive = data and data.active
   if not isActive or trackerHiddenByUser then
+    clearTrackerTimerEvent()
+    trackerTimerSync = nil
     trackerWidget:hide()
     return
   end
+
+  trackerTimerSync = {
+    serverNow = tonumber(data.serverNow) or os.time(),
+    clientMs = g_clock.millis()
+  }
 
   local runId = tonumber(data.runId)
   local floor = tonumber(data.floor) or 0
@@ -740,6 +859,9 @@ applyTrackerData = function(data)
     metaLabel:setText(string.format('Best: %d | Shards: %d', bestFloorWeek, currency))
   end
 
+  refreshTrackerTimerLabel()
+  startTrackerTimerLoop()
+
   trackerWidget:show()
   trackerWidget:raise()
 
@@ -750,6 +872,8 @@ end
 
 local function onGameEnd()
   trackerData = nil
+  clearTrackerTimerEvent()
+  trackerTimerSync = nil
   lobbyState = nil
   if trackerWidget and not trackerWidget:isDestroyed() then
     trackerWidget:hide()
@@ -841,6 +965,8 @@ function terminate()
   })
 
   ProtocolGame.unregisterExtendedOpcode(OPCODE_TOWER)
+  clearTrackerTimerEvent()
+  trackerTimerSync = nil
   trackerData = nil
   lobbyState = nil
   destroyTracker()
