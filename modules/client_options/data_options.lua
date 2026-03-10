@@ -26,6 +26,7 @@ return {
     classicControl                    = true,
     smartWalk                         = false,
     autoChaseOverride                 = true,
+    talkOnRightClick                  = true,
     moveStack                         = false,
     showStatusMessagesInConsole       = true,
     showEventMessagesInConsole        = true,

@@ -723,6 +723,11 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
                 shortcut = nil
             end
             if creatureThing:getPosition().z == localPosition.z then
+                if creatureThing:isNpc() then
+                    menu:addOption(tr('Talk'), function()
+                        g_game.talk("hi")
+                    end)
+                end
                 if g_game.getAttackingCreature() ~= creatureThing then
                     menu:addOption(tr('Attack'), function()
                         g_game.attack(creatureThing)
@@ -874,6 +879,8 @@ end
 
 function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, useThing, creatureThing, attackCreature)
     local keyboardModifiers = g_keyboard.getModifiers()
+    local smartLeftClick = modules.client_options.getOption('smartLeftClick')
+    local classicControls = modules.client_options.getOption('classicControl')
     local tryQuickLootCorpse = function(thing)
         if thing and thing:isLyingCorpse() and g_game.getFeature(GameThingQuickLoot) and modules.game_quickloot and thing:getPosition().x ~= 0xffff then
             g_game.sendQuickLoot(1, thing)
@@ -888,10 +895,21 @@ function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, u
         return true
     end
 
-    if keyboardModifiers == KeyboardNoModifier and mouseButton == MouseRightButton then
-        if creatureThing and creatureThing:isNpc() then
-            g_game.talk('hi')
-            return true
+    if creatureThing and creatureThing:isNpc() and mouseButton == MouseRightButton and
+        keyboardModifiers == KeyboardNoModifier then
+        if classicControls or modules.client_options.getOption('talkOnRightClick') then
+            local player = g_game.getLocalPlayer()
+            if player then
+                local playerPos = player:getPosition()
+                local npcPos = creatureThing:getPosition()
+                if playerPos.z == npcPos.z then
+                    local dist = math.max(math.abs(playerPos.x - npcPos.x), math.abs(playerPos.y - npcPos.y))
+                    if dist <= 3 then
+                        g_game.talk("hi")
+                        return true
+                    end
+                end
+            end
         end
     end
 
@@ -958,10 +976,6 @@ function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, u
         end
     elseif not modules.client_options.getOption('classicControl') then
         if keyboardModifiers == KeyboardNoModifier and mouseButton == MouseRightButton then
-            if creatureThing and creatureThing:isNpc() then
-                g_game.talk('hi')
-                return true
-            end
             createThingMenu(menuPosition, lookThing, useThing, creatureThing)
             return true
         elseif lookThing and keyboardModifiers == KeyboardShiftModifier and
@@ -992,11 +1006,11 @@ function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, u
             (mouseButton == MouseLeftButton or mouseButton == MouseRightButton) then
             g_game.open(useThing)
             return true
-        elseif attackCreature and g_keyboard.isAltPressed() and
+        elseif attackCreature and not attackCreature:isNpc() and g_keyboard.isAltPressed() and
             (mouseButton == MouseLeftButton or mouseButton == MouseRightButton) then
             g_game.attack(attackCreature)
             return true
-        elseif creatureThing and creatureThing:getPosition().z == autoWalkPos.z and g_keyboard.isAltPressed() and
+        elseif creatureThing and not creatureThing:isNpc() and creatureThing:getPosition().z == autoWalkPos.z and g_keyboard.isAltPressed() and
             (mouseButton == MouseLeftButton or mouseButton == MouseRightButton) then
             g_game.attack(creatureThing)
             return true
@@ -1007,10 +1021,10 @@ function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, u
         if useThing and keyboardModifiers == KeyboardNoModifier and mouseButton == MouseRightButton and
             not g_mouse.isPressed(MouseLeftButton) then
             local player = g_game.getLocalPlayer()
-            if attackCreature and attackCreature ~= player then
+            if attackCreature and attackCreature ~= player and not attackCreature:isNpc() then
                 g_game.attack(attackCreature)
                 return true
-            elseif creatureThing and creatureThing ~= player and creatureThing:getPosition().z == autoWalkPos.z then
+            elseif creatureThing and creatureThing ~= player and not creatureThing:isNpc() and creatureThing:getPosition().z == autoWalkPos.z then
                 g_game.attack(creatureThing)
                 return true
             elseif useThing:isContainer() then
@@ -1048,11 +1062,11 @@ function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, u
             (mouseButton == MouseLeftButton or mouseButton == MouseRightButton) then
             createThingMenu(menuPosition, lookThing, useThing, creatureThing)
             return true
-        elseif attackCreature and g_keyboard.isAltPressed() and
+        elseif attackCreature and not attackCreature:isNpc() and g_keyboard.isAltPressed() and
             (mouseButton == MouseLeftButton or mouseButton == MouseRightButton) then
             g_game.attack(attackCreature)
             return true
-        elseif creatureThing and creatureThing:getPosition().z == autoWalkPos.z and g_keyboard.isAltPressed() and
+        elseif creatureThing and not creatureThing:isNpc() and creatureThing:getPosition().z == autoWalkPos.z and g_keyboard.isAltPressed() and
             (mouseButton == MouseLeftButton or mouseButton == MouseRightButton) then
             g_game.attack(creatureThing)
             return true
