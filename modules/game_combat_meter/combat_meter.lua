@@ -396,6 +396,18 @@ local function setTabButtonState()
   setActiveTabVisual(dpsTab, currentTab == 'dps')
 end
 
+local function getOptionsChild(id)
+  if not optionsWindow then
+    return nil
+  end
+
+  if optionsWindow.recursiveGetChildById then
+    return optionsWindow:recursiveGetChildById(id)
+  end
+
+  return optionsWindow:getChildById(id)
+end
+
 local function updateOptionsWindowState()
   if not optionsWindow then
     return
@@ -404,7 +416,7 @@ local function updateOptionsWindowState()
   local scope = normalizeScope(snapshot.options.scope)
   local autoReset = snapshot.options.autoResetOnPartyChange == true
 
-  local summary = optionsWindow:getChildById('summaryLabel')
+  local summary = getOptionsChild('summaryLabel')
   if summary then
     summary:setText(string.format(
       'Server filters\n- Scope: %s\n- Auto reset on party change: %s\n\nDisplay\n- Compact numbers: %s\n- Show percent: %s\n- Show hits in value: %s',
@@ -416,27 +428,27 @@ local function updateOptionsWindowState()
     ))
   end
 
-  local autoResetButton = optionsWindow:getChildById('autoResetButton')
+  local autoResetButton = getOptionsChild('autoResetButton')
   if autoResetButton then
     autoResetButton:setText(autoReset and 'Disable Auto Reset' or 'Enable Auto Reset')
   end
 
-  local scopeButton = optionsWindow:getChildById('scopeButton')
+  local scopeButton = getOptionsChild('scopeButton')
   if scopeButton then
     scopeButton:setText('Scope: ' .. scopeLabel(nextScope(scope)))
   end
 
-  local compactButton = optionsWindow:getChildById('compactNumbersButton')
+  local compactButton = getOptionsChild('compactNumbersButton')
   if compactButton then
     compactButton:setText(clientUiOptions.compactNumbers and 'Compact Numbers: ON' or 'Compact Numbers: OFF')
   end
 
-  local percentButton = optionsWindow:getChildById('showPercentButton')
+  local percentButton = getOptionsChild('showPercentButton')
   if percentButton then
     percentButton:setText(clientUiOptions.showPercent and 'Show Percent: ON' or 'Show Percent: OFF')
   end
 
-  local hitsButton = optionsWindow:getChildById('showHitsButton')
+  local hitsButton = getOptionsChild('showHitsButton')
   if hitsButton then
     hitsButton:setText(clientUiOptions.showHitsInValue and 'Show Hits in Value: ON' or 'Show Hits in Value: OFF')
   end
@@ -672,12 +684,12 @@ local function bindWindowEvents()
   local closeButton = combatWindow:getChildById('closeButton')
 
   if optionsWindow then
-    local autoResetButton = optionsWindow:getChildById('autoResetButton')
-    local scopeButton = optionsWindow:getChildById('scopeButton')
-    local compactNumbersButton = optionsWindow:getChildById('compactNumbersButton')
-    local showPercentButton = optionsWindow:getChildById('showPercentButton')
-    local showHitsButton = optionsWindow:getChildById('showHitsButton')
-    local closeOptionsButton = optionsWindow:getChildById('closeOptionsButton')
+    local autoResetButton = getOptionsChild('autoResetButton')
+    local scopeButton = getOptionsChild('scopeButton')
+    local compactNumbersButton = getOptionsChild('compactNumbersButton')
+    local showPercentButton = getOptionsChild('showPercentButton')
+    local showHitsButton = getOptionsChild('showHitsButton')
+    local closeOptionsButton = getOptionsChild('closeOptionsButton')
 
     if autoResetButton then
       autoResetButton.onClick = function()
