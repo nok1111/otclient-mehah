@@ -1,0 +1,202 @@
+CombatMeterRow < Panel
+  height: 22
+  margin-bottom: 4
+  background-color: #111111CC
+  border-width: 1
+  border-color: #2A2A2A
+  phantom: false
+
+  Panel
+    id: bar
+    anchors.left: parent.left
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    width: 0
+    background-color: #777777AA
+
+  Label
+    id: nameLabel
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 6
+    margin-top: 4
+    font: verdana-11px-rounded
+    color: #F0F0F0
+    text-auto-resize: false
+
+  Label
+    id: valueLabel
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-right: 6
+    margin-top: 4
+    width: 95
+    font: verdana-11px-rounded
+    color: #FFFFFF
+    text-align: right
+    text-auto-resize: false
+
+CombatMeterOptionsWindow < MainWindow
+  !text: tr('Combat Meter Options')
+  size: 360 308
+  visible: false
+  draggable: true
+  @onEscape: self:hide()
+
+  Label
+    id: summaryLabel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 12
+    margin-right: 12
+    height: 105
+    text-wrap: true
+    color: #D8D8D8
+    font: verdana-11px-rounded
+
+  Panel
+    anchors.top: summaryLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: closeOptionsButton.top
+    margin-top: 6
+    margin-left: 12
+    margin-right: 12
+    margin-bottom: 8
+    layout: verticalBox
+
+    Button
+      id: autoResetButton
+      height: 24
+      text: Enable Auto Reset
+
+    Button
+      id: scopeButton
+      height: 24
+      margin-top: 4
+      text: Scope: PARTY
+
+    Button
+      id: compactNumbersButton
+      height: 24
+      margin-top: 4
+      text: Compact Numbers: ON
+
+    Button
+      id: showPercentButton
+      height: 24
+      margin-top: 4
+      text: Show Percent: ON
+
+    Button
+      id: showHitsButton
+      height: 24
+      margin-top: 4
+      text: Show Hits in Value: OFF
+
+  Button
+    id: closeOptionsButton
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-right: 12
+    margin-bottom: 10
+    width: 72
+    text: Close
+
+MainWindow
+  id: combatMeterWindow
+  !text: tr('Combat Meter')
+  size: 360 404
+  visible: false
+  @onEscape: self:hide()
+
+  Label
+    id: modeLabel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 8
+    margin-left: 12
+    text: Mode: Solo
+    color: #E7CF7A
+    font: verdana-11px-rounded
+
+  Label
+    id: timeLabel
+    anchors.top: parent.top
+    anchors.right: closeButton.left
+    margin-top: 8
+    margin-right: 10
+    text: 00:00
+    color: #C5E1FF
+    font: verdana-11px-antialised
+
+  Button
+    id: resetButton
+    anchors.top: modeLabel.bottom
+    anchors.right: optionsButton.left
+    margin-top: 8
+    margin-right: 6
+    width: 62
+    text: Reset
+
+  Button
+    id: optionsButton
+    anchors.top: modeLabel.bottom
+    anchors.right: closeButton.left
+    margin-top: 8
+    margin-right: 6
+    width: 62
+    text: Options
+
+  Button
+    id: closeButton
+    anchors.top: modeLabel.bottom
+    anchors.right: parent.right
+    margin-top: 8
+    margin-right: 12
+    width: 28
+    text: X
+
+  Button
+    id: damageTab
+    anchors.top: resetButton.bottom
+    anchors.left: parent.left
+    margin-top: 6
+    margin-left: 12
+    width: 88
+    text: Damage
+
+  Button
+    id: healingTab
+    anchors.top: resetButton.bottom
+    anchors.left: damageTab.right
+    margin-top: 6
+    margin-left: 6
+    width: 80
+    text: Healing
+
+  Button
+    id: dpsTab
+    anchors.top: resetButton.bottom
+    anchors.left: healingTab.right
+    margin-top: 6
+    margin-left: 6
+    width: 80
+    text: DPS
+
+  Panel
+    id: listPanel
+    anchors.top: damageTab.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 8
+    margin-left: 12
+    margin-right: 12
+    margin-bottom: 12
+    image-source: /images/ui/windows/miniwindow
+    image-border: 5
+    padding: 6
+    layout: verticalBox

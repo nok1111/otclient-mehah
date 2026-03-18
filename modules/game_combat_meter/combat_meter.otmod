@@ -1,0 +1,10 @@
+Module
+  name: game_combat_meter
+  description: Combat meter tracker
+  author: Custom
+  version: 1.0.0
+
+  autoload: true
+  sandboxed: true
+  scripts: [ combat_meter ]
+  @onLoad: init()
