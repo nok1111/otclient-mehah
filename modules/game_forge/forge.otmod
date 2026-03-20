@@ -1,0 +1,11 @@
+Module
+  name: game_forge
+  description: Endgame Forge system
+  author: Custom
+  version: 1.0.0
+
+  autoload: true
+  sandboxed: true
+  scripts: [ forge ]
+  @onLoad: init()
+  @onUnload: terminate()

@@ -1,0 +1,135 @@
+ForgeWindow < MainWindow
+  id: forgeWindow
+  !text: tr('Infernal Forge')
+  size: 790 500
+  visible: false
+  @onEscape: modules.game_forge.hide()
+
+  Label
+    id: ashBonusLabel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 16
+    margin-right: 16
+    text: Ash Bonus: 0%
+    color: #E7CF7A
+    font: verdana-11px-rounded
+    text-align: center
+
+  Label
+    id: milestoneLabel
+    anchors.top: ashBonusLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 2
+    margin-left: 16
+    margin-right: 16
+    text: Milestone: 0
+    color: #C5E1FF
+    font: verdana-11px-antialised
+    text-align: center
+
+  Label
+    id: progressLabel
+    anchors.top: milestoneLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 2
+    margin-left: 16
+    margin-right: 16
+    text: Core: 0 | Progress: 0/0
+    color: #9FD49F
+    font: verdana-11px-antialised
+    text-align: center
+
+  ProgressBar
+    id: coreProgressBar
+    anchors.top: progressLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 6
+    margin-left: 18
+    margin-right: 18
+    height: 16
+    minimum: 0
+    maximum: 100
+    value: 0
+    text: Core Progress: 0/0
+
+  Panel
+    id: cardsContainer
+    anchors.top: coreProgressBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 8
+    margin-left: 16
+    margin-right: 16
+    margin-bottom: 14
+    layout:
+      type: horizontalBox
+      spacing: 12
+
+    ForgeActionCard
+      id: feedCard
+      cardImage:
+        image-source: /images/forge/feed_core
+
+    ForgeActionCard
+      id: consumeCard
+      cardImage:
+        image-source: /images/forge/consume_ash
+
+    ForgeActionCard
+      id: infuseCard
+      cardImage:
+        image-source: /images/forge/infuse_core
+
+ForgeActionCard < Panel
+  width: 230
+  image-source: /images/ui/windows/miniwindow
+  image-border: 5
+  padding: 8
+  layout:
+    type: verticalBox
+    spacing: 5
+
+  Label
+    id: cardTitle
+    text: Action
+    color: #E7CF7A
+    font: verdana-11px-rounded
+    text-align: center
+
+  UIWidget
+    id: cardImage
+    width: 136
+    height: 136
+    margin-left: 47
+
+  Label
+    id: cardDesc
+    text: Description
+    color: #C5E1FF
+    font: verdana-11px-antialised
+    text-wrap: true
+    height: 46
+
+  Label
+    id: cardCostLabel
+    text: Cost: -
+    color: #FFFFFF
+    font: verdana-11px-antialised
+
+  Label
+    id: cardValueLabel
+    text: Value: -
+    color: #9FD49F
+    font: verdana-11px-antialised
+
+  Button
+    id: cardButton
+    text: Execute
+
