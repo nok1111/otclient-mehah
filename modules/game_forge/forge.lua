@@ -108,7 +108,7 @@ local function ensureWindow()
     feedCard,
     'Feed Core',
     'Consume Demonic Ash to fill the core progress bar.',
-    '/images/forge/feed_core',
+    '/images/forge/core_feed',
     'Feed Core'
   )
 
@@ -116,7 +116,7 @@ local function ensureWindow()
     consumeCard,
     'Consume Ember',
     'Consume essence for instant experience.',
-    '/images/forge/consume_ash',
+    '/images/forge/core_consume',
     'Consume'
   )
 
@@ -124,7 +124,7 @@ local function ensureWindow()
     infuseCard,
     'Infuse Core',
     'Requires full bar. Increases core level and milestones.',
-    '/images/forge/infuse_core',
+    '/images/forge/core_infuse',
     'Infuse'
   )
 
