@@ -20,6 +20,7 @@ local combatSetup = false
 local healingSetup = false
 local supportSetup = false
 local needsUIRefresh = false  -- Flag to track when storage is loaded and UI needs update
+local BOT_BUTTON_INDEX = 11
 
 -- SimplifiedBot (integrated from bot_simple.lua)
 SimplifiedBot = {}
@@ -328,13 +329,22 @@ function onlineSimple()
   -- Create button if it doesn't exist
   if not botButton then
     local status, err = pcall(function()
-      botButton = modules.game_mainpanel.addToggleButton('botButton', tr('Bot'), '/images/options/bot', toggleSimple, false, 99999)
+      botButton = modules.game_mainpanel.addToggleButton('botButton', tr('Bot'), '/images/options/bot', toggleSimple, true, BOT_BUTTON_INDEX)
       botButton:setOn(false)
       botButton:show()
     end)
     
     if not status then
       return
+    end
+  end
+
+  if botButton and not botButton:isDestroyed() then
+    botButton.index = BOT_BUTTON_INDEX
+    botButton:show()
+    local parent = botButton:getParent()
+    if parent then
+      parent:moveChildToIndex(botButton, 1)
     end
   end
   

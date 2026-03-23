@@ -343,32 +343,9 @@ end
 
 local function ensureLobbyButton()
   if lobbyButton and not lobbyButton:isDestroyed() then
-    return
+    lobbyButton:destroy()
   end
-
-  if not modules.game_mainpanel or not modules.game_mainpanel.addToggleButton then
-    return
-  end
-
-  lobbyButton = modules.game_mainpanel.addToggleButton(
-    'towerLobbyButton',
-    tr('Tower Lobby'),
-    '/images/options/button_prey',
-    function()
-      if lobbyWindow and not lobbyWindow:isDestroyed() and lobbyWindow:isVisible() then
-        TowerTracker.hideLobby()
-      else
-        TowerTracker.showLobby(lobbyState)
-        TowerTracker.requestLobby()
-      end
-    end,
-    false,
-    1011
-  )
-
-  if lobbyButton and not lobbyButton:isDestroyed() then
-    lobbyButton:setOn(false)
-  end
+  lobbyButton = nil
 end
 
 local function formatObjectiveName(rawType)
@@ -932,7 +909,6 @@ end
 local function onGameStart()
   ensureToggleButton()
   ensureLobbyButton()
-  sendAction(ACTION_LOBBY_REQUEST, {})
 
   if trackerData then
     applyTrackerData(trackerData)

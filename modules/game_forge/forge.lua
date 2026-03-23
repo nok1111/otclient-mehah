@@ -326,16 +326,10 @@ function init()
 
   ProtocolGame.registerExtendedOpcode(OPCODE_FORGE, onExtendedOpcode)
 
-  if modules.game_mainpanel and modules.game_mainpanel.addToggleButton then
-    toggleButton = modules.game_mainpanel.addToggleButton(
-      'forgeToggleButton',
-      tr('Forge'),
-      '/images/options/button_prey',
-      toggle,
-      false,
-      1012
-    )
+  if toggleButton and not toggleButton:isDestroyed() then
+    toggleButton:destroy()
   end
+  toggleButton = nil
 
   if g_game.isOnline() then
     Forge.show()
