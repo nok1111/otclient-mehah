@@ -48,12 +48,26 @@ function Codex.onExtendedOpcode(protocol, opcode, buffer)
 		Codex.cachedEssences = data.essences or 0
 		Codex.cachedMaxSlots = data.maxSlots or 3
 		Codex.cachedParagonLevel = data.paragonLevel or 0
+		Codex.cachedPlayerLevel = data.playerLevel or 1
+		Codex.cachedIsPremium = data.isPremium or false
 		Codex.cachedEarlySlotUnlocks = data.earlySlotUnlocks or 0
 		Codex.cachedNextEarlySlotUnlockCost = data.nextEarlySlotUnlockCost
 			or Codex.getEarlySlotUnlockCost(Codex.cachedEarlySlotUnlocks)
 		Codex.cachedBronzeCrates = data.bronzeCrates or 0
 		Codex.cachedSilverCrates = data.silverCrates or 0
 		Codex.cachedGoldenCrates = data.goldenCrates or 0
+		
+		-- Cache slot unlock status
+		Codex.cachedSlotUnlockStatus = {}
+		for slotStr, slotInfo in pairs(data.slotUnlockStatus or {}) do
+			local slotIndex = tonumber(slotStr)
+			if slotIndex then
+				Codex.cachedSlotUnlockStatus[slotIndex] = {
+					unlocked = slotInfo.unlocked,
+					requirement = slotInfo.requirement
+				}
+			end
+		end
 		
 		Codex.tempCardDatabase = {}
 		Codex.baseDataReceived = true

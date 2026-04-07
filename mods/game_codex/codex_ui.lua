@@ -432,18 +432,14 @@ function Codex.setupDeckUI()
 
 	activeSlotsPanel:destroyChildren()
 	local maxSlots = 6
-	local ascensionRequirements = {
-		[4] = "Requires one ascension",
-		[5] = "Requires third ascension",
-		[6] = "Requires sixth ascension"
-	}
 	
 	for i = 1, maxSlots do
 		local slotWidget = g_ui.createWidget("ActiveSlot", activeSlotsPanel)
 		slotWidget:setId("slot_" .. i)
 		slotWidget.slotIndex = i
 		
-		local isLocked = i > Codex.cachedMaxSlots
+		local slotStatus = Codex.cachedSlotUnlockStatus and Codex.cachedSlotUnlockStatus[i]
+		local isLocked = not (slotStatus and slotStatus.unlocked)
 		local activeCardId = Codex.cachedActiveCards[i]
 		
 		local slotLabel = slotWidget:getChildById("slotLabel")
@@ -467,8 +463,8 @@ function Codex.setupDeckUI()
 			if slotCardImage then slotCardImage:hide() end
 			if removeButton then removeButton:hide() end
 			slotWidget:setOpacity(0.5)
-			if requirementLabel and ascensionRequirements[i] then
-				requirementLabel:setText(ascensionRequirements[i])
+			if requirementLabel and slotStatus then
+				requirementLabel:setText(slotStatus.requirement or "Locked")
 				requirementLabel:show()
 			end
 		elseif activeCardId and activeCardId > 0 then
@@ -503,13 +499,16 @@ function Codex.equipCard(cardId)
 		return
 	end
 	
-	for i = 1, Codex.cachedMaxSlots do
-		if not Codex.cachedActiveCards[i] or Codex.cachedActiveCards[i] == 0 then
+	-- Find first unlocked and empty slot
+	for i = 1, 6 do
+		local slotStatus = Codex.cachedSlotUnlockStatus and Codex.cachedSlotUnlockStatus[i]
+		local isUnlocked = slotStatus and slotStatus.unlocked
+		if isUnlocked and (not Codex.cachedActiveCards[i] or Codex.cachedActiveCards[i] == 0) then
 			Codex.sendOpcode({ topic = "activate-card-request", cardId = cardId, slotIndex = i })
 			return
 		end
 	end
-	Codex.setupMessage("No Free Slots", "All active slots are full!")
+	Codex.setupMessage("No Free Slots", "All unlocked slots are full!")
 end
 
 function Codex.removeCard(slotIndex)
@@ -524,7 +523,8 @@ function Codex.updateActiveSlots()
 	for i = 1, 6 do
 		local slotWidget = activeSlotsPanel:getChildById("slot_" .. i)
 		if slotWidget then
-			local isLocked = i > Codex.cachedMaxSlots
+			local slotStatus = Codex.cachedSlotUnlockStatus and Codex.cachedSlotUnlockStatus[i]
+			local isLocked = not (slotStatus and slotStatus.unlocked)
 			local activeCardId = Codex.cachedActiveCards[i]
 			
 			local slotPlaceholder = slotWidget:getChildById("slotPlaceholder")
@@ -561,6 +561,14 @@ function Codex.updateActiveSlots()
 				end
 				slotWidget.onHoverChange = nil
 				if removeButton then removeButton:hide() end
+				
+				-- Show requirement label if slot is locked
+				if isLocked and requirementLabel and slotStatus then
+					requirementLabel:setText(slotStatus.requirement or "Locked")
+					requirementLabel:show()
+				elseif requirementLabel then
+					requirementLabel:hide()
+				end
 			end
 		end
 	end
