@@ -58,5 +58,6 @@ Module
     - game_tilewidgets
     - game_achievements
     - game_expeditions
+    - game_fullmap
   @onLoad: init()
   @onUnload: terminate()
