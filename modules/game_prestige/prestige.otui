@@ -1,0 +1,267 @@
+PrestigeModeEntry < UIWidget
+  id: prestigeModeEntry
+  height: 36
+  background-color: alpha
+  focusable: true
+
+  $focus:
+    background-color: #444A58AA
+
+  $hover !focus:
+    background-color: #2E3340AA
+
+  UIWidget
+    id: modeIcon
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 6
+    size: 24 24
+    phantom: true
+
+  Label
+    id: modeName
+    anchors.left: modeIcon.right
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 8
+    margin-right: 6
+    color: #C9C9C9
+    font: verdana-11px-antialised
+    text-align: left
+    phantom: true
+
+PrestigeConfirmWindow < MainWindow
+  id: prestigeConfirmWindow
+  !text: tr('Confirm Prestige')
+  size: 420 220
+  visible: false
+  @onEscape: self:hide()
+
+  Label
+    id: confirmText
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 14
+    margin-right: 14
+    text-wrap: true
+    text-auto-resize: true
+    color: #E1D7B0
+    font: verdana-11px-antialised
+    text: Are you sure?
+
+  Button
+    id: confirmYes
+    !text: tr('YES - Prestige')
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    margin-bottom: 10
+    margin-left: 14
+    width: 180
+
+  Button
+    id: confirmNo
+    !text: tr('Cancel')
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-bottom: 10
+    margin-right: 14
+    width: 120
+
+PrestigeWindow < MainWindow
+  id: prestigeWindow
+  !text: tr('Prestige')
+  size: 860 520
+  visible: false
+  @onEscape: modules.game_prestige.hide()
+
+  Label
+    id: headerLabel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 6
+    margin-left: 14
+    margin-right: 14
+    text: Choose a prestige mode to reset your character with new challenges.
+    color: #C5E1FF
+    font: verdana-11px-antialised
+    text-align: center
+    text-wrap: true
+
+  Label
+    id: statusLabel
+    anchors.top: headerLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 4
+    margin-left: 14
+    margin-right: 14
+    text: Total prestiges: 0 | Hardcore completions: 0
+    color: #E7CF7A
+    font: verdana-11px-rounded
+    text-align: center
+
+  Panel
+    id: leftPanel
+    anchors.top: statusLabel.bottom
+    anchors.left: parent.left
+    anchors.bottom: buttonsPanel.top
+    margin-top: 10
+    margin-left: 14
+    margin-bottom: 10
+    width: 320
+    image-source: /images/ui/windows/miniwindow
+    image-border: 5
+    padding: 8
+
+    Label
+      id: listTitle
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 2
+      text: Modes
+      color: #E7CF7A
+      font: verdana-11px-rounded
+      text-align: center
+
+    VerticalScrollBar
+      id: modeListScroll
+      anchors.top: listTitle.bottom
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-top: 6
+      step: 14
+      pixels-scroll: true
+
+    ScrollablePanel
+      id: modeList
+      anchors.top: listTitle.bottom
+      anchors.left: parent.left
+      anchors.right: modeListScroll.left
+      anchors.bottom: parent.bottom
+      margin-top: 6
+      margin-right: 4
+      vertical-scrollbar: modeListScroll
+      layout:
+        type: verticalBox
+        spacing: 2
+
+  Panel
+    id: detailPanel
+    anchors.top: statusLabel.bottom
+    anchors.left: leftPanel.right
+    anchors.right: parent.right
+    anchors.bottom: buttonsPanel.top
+    margin-top: 10
+    margin-left: 10
+    margin-right: 14
+    margin-bottom: 10
+    image-source: /images/ui/windows/miniwindow
+    image-border: 5
+    padding: 10
+
+    Label
+      id: detailName
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      text: Select a mode
+      color: #E7CF7A
+      font: verdana-11px-rounded
+      text-align: center
+
+    VerticalScrollBar
+      id: detailScroll
+      anchors.top: detailName.bottom
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-top: 6
+      step: 14
+      pixels-scroll: true
+
+    ScrollablePanel
+      id: detailScrollContent
+      anchors.top: detailName.bottom
+      anchors.left: parent.left
+      anchors.right: detailScroll.left
+      anchors.bottom: parent.bottom
+      margin-top: 6
+      margin-right: 4
+      vertical-scrollbar: detailScroll
+      layout:
+        type: verticalBox
+
+      Label
+        id: detailAvailability
+        text-align: center
+        text-wrap: true
+        text-auto-resize: true
+        margin-left: 6
+        margin-right: 6
+        text: -
+        color: #9FD49F
+        font: verdana-11px-antialised
+
+      Label
+        id: detailDescriptionTitle
+        margin-top: 10
+        text: Description
+        color: #C5E1FF
+        font: verdana-11px-rounded
+        text-auto-resize: true
+
+      Label
+        id: detailDescription
+        margin-top: 2
+        text: -
+        color: #FFFFFF
+        font: verdana-11px-antialised
+        text-wrap: true
+        text-auto-resize: true
+
+      Label
+        id: detailRequirementsTitle
+        margin-top: 10
+        text: Requirements
+        color: #C5E1FF
+        font: verdana-11px-rounded
+        text-auto-resize: true
+
+      Label
+        id: detailRequirements
+        margin-top: 2
+        text: -
+        color: #FFFFFF
+        font: verdana-11px-antialised
+        text-wrap: true
+        text-auto-resize: true
+
+  Panel
+    id: buttonsPanel
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-left: 14
+    margin-right: 14
+    margin-bottom: 10
+    height: 32
+
+    Button
+      id: selectButton
+      !text: tr('Select')
+      anchors.left: parent.left
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      width: 180
+      enabled: false
+
+    Button
+      id: cancelButton
+      !text: tr('Cancel')
+      anchors.right: parent.right
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      width: 120

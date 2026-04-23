@@ -233,6 +233,9 @@ function ProtocolLogin:parseCharacterList(msg)
             character.lookaddons = msg:getU8()
             character.vocation = msg:getU8()
             character.paragonLevel = msg:getU16()
+            -- Prestige: 0=none 1=Normal 2=Hardcore 3=HighRisk / state: 0=inactive 1=active 2=failed 3=completed
+            character.prestigeMode = msg:getU8()
+            character.prestigeState = msg:getU8()
 
             character.worldName = worlds[worldId].worldName
             character.worldIp = worlds[worldId].worldIp

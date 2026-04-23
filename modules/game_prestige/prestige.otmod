@@ -1,0 +1,11 @@
+Module
+  name: game_prestige
+  description: Prestige system client UI
+  author: Custom
+  version: 1.0.0
+
+  autoload: true
+  sandboxed: true
+  scripts: [ prestige ]
+  @onLoad: init()
+  @onUnload: terminate()

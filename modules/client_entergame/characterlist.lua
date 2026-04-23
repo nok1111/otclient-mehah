@@ -389,6 +389,17 @@ function CharacterList.create(characters, account, otui)
                 [8] = 'Druid', [9] = 'Light Dancer', [10] = 'Archer'
             }
 
+            -- Prestige / Paragon badge colors (mutually exclusive — Paragon is 300+, Prestige resets below).
+            --   Prestige mode:  1 = Prestige Rebirth | 2 = Hardcore | 3 = High Risk
+            --   Prestige state: 1 = active | 2 = failed | 3 = completed
+            local PRESTIGE_MODE_NAMES  = { [1] = 'Prestige Rebirth', [2] = 'Hardcore', [3] = 'High Risk' }
+            local PRESTIGE_MODE_COLORS = {
+                [1] = '#5ED66A',  -- Prestige Rebirth → verde
+                [2] = '#E53935',  -- Hardcore          → rojo
+                [3] = '#F2C72A',  -- High Risk         → amarillo
+            }
+            local PARAGON_COLOR = '#4FA3FF' -- azul
+
             local infoLines = {}
             if characterInfo.level then
                 table.insert(infoLines, 'Lv. ' .. characterInfo.level)
@@ -396,13 +407,36 @@ function CharacterList.create(characters, account, otui)
             if characterInfo.vocation and vocationNames[characterInfo.vocation] then
                 table.insert(infoLines, vocationNames[characterInfo.vocation])
             end
-            if characterInfo.paragonLevel and characterInfo.paragonLevel > 0 then
-                table.insert(infoLines, 'P' .. characterInfo.paragonLevel)
+
+            local prestigeMode = tonumber(characterInfo.prestigeMode) or 0
+            local prestigeState = tonumber(characterInfo.prestigeState) or 0
+            local badgeText = nil
+            local badgeColor = nil
+            if prestigeMode > 0 and PRESTIGE_MODE_NAMES[prestigeMode] then
+                local name = PRESTIGE_MODE_NAMES[prestigeMode]
+                badgeColor = PRESTIGE_MODE_COLORS[prestigeMode] or '#FFFFFF'
+                if prestigeState == 3 then
+                    badgeText = name .. ' (done)'
+                elseif prestigeState == 2 then
+                    badgeText = name .. ' (failed)'
+                else
+                    badgeText = name
+                end
+            elseif characterInfo.paragonLevel and characterInfo.paragonLevel > 0 then
+                badgeText = 'Paragon ' .. characterInfo.paragonLevel
+                badgeColor = PARAGON_COLOR
+            end
+
+            if badgeText then
+                table.insert(infoLines, badgeText)
             end
 
             local infoLabel = widget:getChildById('charInfo')
             if infoLabel then
                 infoLabel:setText(table.concat(infoLines, '\n'))
+                if badgeColor then
+                    infoLabel:setColor(badgeColor)
+                end
             end
         end
 
