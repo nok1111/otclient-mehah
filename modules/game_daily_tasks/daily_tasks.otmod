@@ -1,0 +1,11 @@
+Module
+  name: game_daily_tasks
+  description: Daily Tasks board
+  author: Custom
+  version: 1.0.0
+
+  autoload: true
+  sandboxed: true
+  scripts: [ daily_tasks ]
+  @onLoad: init()
+  @onUnload: terminate()
