@@ -390,13 +390,21 @@ function CharacterList.create(characters, account, otui)
             }
 
             -- Prestige / Paragon badge colors (mutually exclusive — Paragon is 300+, Prestige resets below).
-            --   Prestige mode:  1 = Prestige Rebirth | 2 = Hardcore | 3 = High Risk
+            --   Prestige mode:  1 = Prestige Rebirth | 2 = Hardcore | 3 = High Risk | 4 = Iron Man
+            --                   5 = Nightmare I | 6 = Nightmare II | 7 = Nightmare III
             --   Prestige state: 1 = active | 2 = failed | 3 = completed
-            local PRESTIGE_MODE_NAMES  = { [1] = 'Prestige Rebirth', [2] = 'Hardcore', [3] = 'High Risk' }
+            local PRESTIGE_MODE_NAMES  = {
+                [1] = 'Prestige Rebirth', [2] = 'Hardcore', [3] = 'High Risk', [4] = 'Iron Man',
+                [5] = 'Nightmare I', [6] = 'Nightmare II', [7] = 'Nightmare III',
+            }
             local PRESTIGE_MODE_COLORS = {
                 [1] = '#5ED66A',  -- Prestige Rebirth → verde
                 [2] = '#E53935',  -- Hardcore          → rojo
                 [3] = '#F2C72A',  -- High Risk         → amarillo
+                [4] = '#B0B8C1',  -- Iron Man          → gris acero
+                [5] = '#B084E0',  -- Nightmare I       → violeta claro
+                [6] = '#8B4FCB',  -- Nightmare II      → violeta medio
+                [7] = '#5D2A99',  -- Nightmare III     → violeta oscuro
             }
             local PARAGON_COLOR = '#4FA3FF' -- azul
 
