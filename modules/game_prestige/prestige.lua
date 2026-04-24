@@ -14,6 +14,10 @@ local MODE_ICONS = {
   [1] = '/data/images/icons/repeat',   -- Prestige Normal / Reborn
   [2] = '/data/images/icons/crown',    -- Hardcore
   [3] = '/data/images/icons/treasure', -- High Risk
+  [4] = '/data/images/icons/row-3-column-3',   -- Iron Man
+  [5] = '/data/images/icons/row-5-column-3',   -- Nightmare I
+  [6] = '/data/images/icons/row-5-column-3',   -- Nightmare II
+  [7] = '/data/images/icons/row-5-column-3',   -- Nightmare III
 }
 
 local window = nil
@@ -244,6 +248,10 @@ local MODE_DISPLAY_NAMES = {
   [1] = 'Prestige Rebirth',
   [2] = 'Hardcore Challenge',
   [3] = 'High Risk',
+  [4] = 'Iron Man',
+  [5] = 'Nightmare I',
+  [6] = 'Nightmare II',
+  [7] = 'Nightmare III',
 }
 
 local function applyPayload(payload)
