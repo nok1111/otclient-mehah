@@ -4,6 +4,8 @@ local focusedMob = 0
 local monstrosIncluidos = {
     "Lucella",
     "Saranor",
+    "Doctor Pomelo",
+    "Lumelia",
     "Vael the Betrayer",
     "Malrith, the Hungering Shade",
     "Garnak the Warlord",
