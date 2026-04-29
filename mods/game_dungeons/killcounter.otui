@@ -86,6 +86,49 @@ UIWindow
     text-wrap: true
 
   Panel
+    id: mutationDisplay
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 6
+    height: 50
+    visible: false
+
+    UIWidget
+      id: icon
+      anchors.top: parent.top
+      anchors.left: parent.left
+      margin-left: 2
+      margin-top: 2
+      size: 32 32
+      image-smooth: true
+      phantom: true
+
+    Label
+      id: name
+      anchors.top: parent.top
+      anchors.left: icon.right
+      anchors.right: parent.right
+      margin-left: 8
+      margin-right: 4
+      font: verdana-11px-rounded
+      color: #FFA500
+      text-auto-resize: true
+
+    Label
+      id: description
+      anchors.top: name.bottom
+      anchors.left: icon.right
+      anchors.right: parent.right
+      margin-left: 8
+      margin-right: 4
+      margin-top: 2
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-wrap: true
+      text-auto-resize: true
+
+  Panel
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     margin-bottom: 13

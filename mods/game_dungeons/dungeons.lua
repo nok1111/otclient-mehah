@@ -609,21 +609,23 @@ function Dungeons.onDungeonData(data)
 		Dungeons.updateLootPanel(data.title, data.difficulty)
 	end
 
-	-- Challenges Panel
+	-- Daily Mutation Panel (replaces legacy challenges)
 	local challengesPanel = Dungeons.UI:recursiveGetChildById("challenges")
 	challengesPanel:destroyChildren()
-	if not data.challenges then
+	local mutation = data.dailyMutation
+	if not mutation or not mutation.key or mutation.key == "" then
 		Dungeons.UI:recursiveGetChildById("noChallangesPanel"):setVisible(true)
 	else
 		Dungeons.UI:recursiveGetChildById("noChallangesPanel"):setVisible(false)
-		for i = 1, #data.challenges do
-			local challenge = data.challenges[i]
-			local widget = g_ui.createWidget("ChallengePanel", challengesPanel)
-			widget:setText(challenge.title)
-			widget:getChildById("checkbox"):setChecked(challenge.completed)
-			widget:getChildById("description"):setText("(" .. challenge.points .. " points)\n" .. challenge.desc)
-			widget:setHeight(widget:getChildById("description"):getHeight()+28)
-		end
+		local widget = g_ui.createWidget("MutationPanel", challengesPanel)
+
+		local iconWidget = widget:getChildById("icon")
+		local iconPath = "/images/dungeons/mutations/" .. (mutation.icon or mutation.key)
+		iconWidget:setImageSource(iconPath)
+
+		widget:getChildById("name"):setText(mutation.name or mutation.key)
+		widget:getChildById("description"):setText(mutation.description or "")
+		widget:setTooltip(mutation.description or "")
 	end
 
 	-- Party Panel
@@ -687,26 +689,6 @@ function Dungeons.onDungeonBaseData(data)
 			end
 		end
 		Dungeons.UI:recursiveGetChildById("questsRequirement"):setText(txt)
-	end
-
-	local maxSlots = 6
-	local hasItems = data.req.items and #data.req.items > 0
-	Dungeons.UI:recursiveGetChildById("noItemsPanel"):setVisible(not hasItems)
-	for i = 1, maxSlots do
-		local slot = Dungeons.UI:recursiveGetChildById("itemRequirement" .. i)
-		if slot then
-			slot:setItemId(0)
-		end
-	end
-	if hasItems then
-		local maxItems = math.min(#data.req.items, maxSlots)
-		for i = 1, maxItems do
-			local slot = Dungeons.UI:recursiveGetChildById("itemRequirement" .. i)
-			local reqItem = data.req.items[i]
-			slot:setItemId(reqItem.clientId)
-			slot:setItemCount(reqItem.count)
-			slot:setVisible(true)
-		end
 	end
 
 	-- Monsters Panel
@@ -859,6 +841,7 @@ function Dungeons.onDungeonStart(data)
 	for i = bonusObjectives:getChildCount(), 2, -1 do
 		bonusObjectives:getChildByIndex(i):destroy()
 	end
+	local objectivesHeight = 0
 	if data.objectives then
 		local h = 16
 		for _, obj in ipairs(data.objectives) do
@@ -870,12 +853,27 @@ function Dungeons.onDungeonStart(data)
 		end
 		bonusObjectives:setHeight(h)
 		bonusObjectives:setMarginTop(5)
-		Dungeons.killCounter:setHeight(170 + h)
+		objectivesHeight = h
 	else
 		bonusObjectives:setHeight(0)
 		bonusObjectives:setMarginTop(0)
-		Dungeons.killCounter:setHeight(170)
 	end
+
+	-- Daily Mutation display
+	local mutationDisplay = Dungeons.killCounter:getChildById("mutationDisplay")
+	local mutationHeight = 0
+	if data.mutation and data.mutation.key and data.mutation.key ~= "" then
+		local iconWidget = mutationDisplay:getChildById("icon")
+		iconWidget:setImageSource("/images/dungeons/mutations/" .. tostring(data.mutation.icon or data.mutation.key))
+		mutationDisplay:getChildById("name"):setText(tostring(data.mutation.name or ""))
+		mutationDisplay:getChildById("description"):setText(tostring(data.mutation.description or ""))
+		mutationDisplay:setVisible(true)
+		mutationHeight = mutationDisplay:getHeight() + 6
+	else
+		mutationDisplay:setVisible(false)
+	end
+
+	Dungeons.killCounter:setHeight(170 + objectivesHeight + mutationHeight)
 
 	local bar = Dungeons.killCounter:getChildById("bar")
 	bar:setVisible(false)

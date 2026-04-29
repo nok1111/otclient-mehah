@@ -253,6 +253,42 @@ ChallengePanel < DungeonMiniPanel
     text-auto-resize: true
     margin: 3
 
+MutationPanel < Panel
+  height: 150
+
+  UIWidget
+    id: icon
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    size: 24 24
+    margin-top: 24
+    image-smooth: true
+    phantom: true
+
+  Label
+    id: name
+    anchors.top: icon.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 6
+    text-align: center
+    text-auto-resize: true
+    color: #ffd27f
+    font: verdana-11px-rounded
+
+  Label
+    id: description
+    anchors.top: name.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 3
+    margin-left: 4
+    margin-right: 4
+    text-align: center
+    text-wrap: true
+    text-auto-resize: true
+    color: #cccccc
+
 MainWindow
   text: Dungeon
   size: 910 650
@@ -283,7 +319,7 @@ MainWindow
     anchors.top: banner.bottom
     anchors.left: parent.left
     margin-top: 7
-    size: 222 185
+    size: 222 125
     margin-top: 10
     text: Requirements
 
@@ -366,45 +402,6 @@ MainWindow
       text-align: center
       visible: false
 
-    DungeonMiniPanel
-      id: items
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 60
-      margin-top: 2
-      margin-left: 0
-      margin-right: 0
-      text: Items
-      padding-left: 5
-      padding-top: 20
-      layout:
-        type: grid
-        cell-size: 34 34
-        flow: true
-
-      DungeonItem
-        id: itemRequirement1
-      DungeonItem
-        id: itemRequirement2
-      DungeonItem
-        id: itemRequirement3
-      DungeonItem
-        id: itemRequirement4
-      DungeonItem
-        id: itemRequirement5
-      DungeonItem
-        id: itemRequirement6
-
-    UIWidget
-      id: noItemsPanel
-      anchors.fill: items
-      background-color: #00000090
-      phantom: false
-      text: No items requirements
-      text-align: center
-      visible: false
-
   DungeonScrollablePanel
     id: challenges
     anchors.top: requirements.bottom
@@ -417,7 +414,7 @@ MainWindow
     padding-right: 5
     padding-left: 7
     padding-bottom: 5
-    text: Challenges
+    text: Daily Mutation
     vertical-scrollbar: challengesScroll
     layout:
       type: verticalBox
@@ -435,7 +432,7 @@ MainWindow
     anchors.fill: challenges
     background-color: #00000090
     phantom: false
-    text: No challenges available
+    text: No mutation today
     text-align: center
     visible: false
 
@@ -446,7 +443,7 @@ MainWindow
     anchors.left: challenges.left
     margin-top: 2
     margin-left: 2
-    tooltip: Challenges are dungeon achievements that reward challenge points
+    tooltip: Daily mutation. Re-rolls every day; affects every dungeon run.
 
   DungeonScrollablePanel
     id: party
