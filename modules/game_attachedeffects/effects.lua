@@ -4738,3 +4738,10 @@ AttachedEffectManager.register(394, 'racing match outfit', 2204, ThingCategoryCr
     },
 
 })
+
+AttachedEffectManager.register(395, 'pomelo explosion', 1132, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1.0,
+    offset = { -128, -128, true},
+})
