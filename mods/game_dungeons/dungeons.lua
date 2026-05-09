@@ -548,6 +548,8 @@ function Dungeons.onExtendedOpcode(protocol, code, buffer)
 		Dungeons.onDungeonObjective(data)
 	elseif topic == "killed" then
 		Dungeons.onDungeonKilled(data)
+	elseif topic == "wave" then
+		Dungeons.onDungeonWave(data)
 	elseif topic == "challenge" then
 		Dungeons.onChallengeCompleted(data)
 	elseif topic == "solo" then
@@ -878,15 +880,48 @@ function Dungeons.onDungeonStart(data)
 	local bar = Dungeons.killCounter:getChildById("bar")
 	bar:setVisible(false)
 
-	Dungeons.killCounter:getChildById("label"):setText("0%")
+	local label = Dungeons.killCounter:getChildById("label")
+	label:setText("0%")
 	local mainObjective = Dungeons.killCounter:getChildById("mainObjective")
-	mainObjective:setText("Kill monsters to spawn " .. data.boss)
-	mainObjective:setChecked(false)
 	local bossObjective = Dungeons.killCounter:getChildById("bossObjective")
-	bossObjective:setText("Kill " .. data.boss)
-	bossObjective:setEnabled(false)
-	bossObjective:setChecked(false)
-	Dungeons.killCounter:getChildById("monstersLeft"):setText("Monsters Remaining:  " .. data.left)
+	local monstersLeftLabel = Dungeons.killCounter:getChildById("monstersLeft")
+
+	local isOnlyBoss = data.type == "only_boss"
+	local isWaveBoss = data.type == "wave_boss"
+	Dungeons.isOnlyBoss = isOnlyBoss
+	Dungeons.isWaveBoss = isWaveBoss
+	Dungeons.totalWaves = tonumber(data.totalWaves) or 0
+	if isOnlyBoss then
+		bar:setVisible(false)
+		label:setVisible(false)
+		mainObjective:setVisible(false)
+		mainObjective:setChecked(true)
+		bossObjective:setText("Kill " .. data.boss)
+		bossObjective:setEnabled(true)
+		bossObjective:setChecked(false)
+		monstersLeftLabel:setVisible(false)
+	elseif isWaveBoss then
+		bar:setVisible(false)
+		label:setVisible(false)
+		mainObjective:setVisible(true)
+		mainObjective:setText("Survive " .. Dungeons.totalWaves .. " waves")
+		mainObjective:setChecked(false)
+		bossObjective:setText("Kill " .. data.boss)
+		bossObjective:setEnabled(false)
+		bossObjective:setChecked(false)
+		monstersLeftLabel:setVisible(true)
+		monstersLeftLabel:setText("Wave: 0 / " .. Dungeons.totalWaves)
+	else
+		label:setVisible(true)
+		mainObjective:setVisible(true)
+		mainObjective:setText("Kill monsters to spawn " .. data.boss)
+		mainObjective:setChecked(false)
+		bossObjective:setText("Kill " .. data.boss)
+		bossObjective:setEnabled(false)
+		bossObjective:setChecked(false)
+		monstersLeftLabel:setVisible(true)
+		monstersLeftLabel:setText("Monsters Remaining:  " .. data.left)
+	end
 	Dungeons.killCounter:getChildById("timeLeft"):setText("Time Left:  " .. Dungeons.MsToShortTime(data.duration))
 
 	Dungeons.timeLeft = data.duration
@@ -899,7 +934,65 @@ function Dungeons.onDungeonObjective(data)
 	objWidget:setChecked(data.finished)
 end
 
+function Dungeons.onDungeonWave(data)
+	if not Dungeons.killCounter then return end
+	local mainObjective = Dungeons.killCounter:getChildById("mainObjective")
+	local bossObjective = Dungeons.killCounter:getChildById("bossObjective")
+	local monstersLeftLabel = Dungeons.killCounter:getChildById("monstersLeft")
+
+	local current = tonumber(data.current) or 0
+	local total = tonumber(data.total) or Dungeons.totalWaves or 0
+	local left = tonumber(data.left) or 0
+
+	if data.bossSpawned then
+		if mainObjective then mainObjective:setChecked(true) end
+		if bossObjective then bossObjective:setEnabled(true) end
+		if monstersLeftLabel then
+			monstersLeftLabel:setText("Wave: " .. total .. " / " .. total .. "  (Boss!)")
+		end
+		if Dungeons.challengeNotifi then
+			local textWidget = Dungeons.challengeNotifi:getChildById("text")
+			textWidget:setText("Boss has arrived!")
+			Dungeons.challengeNotifi:setWidth(math.max(263, 96 + textWidget:getTextSize().width))
+			g_effects.fadeIn(Dungeons.challengeNotifi, 250)
+			scheduleEvent(function()
+				if Dungeons.challengeNotifi then
+					g_effects.fadeOut(Dungeons.challengeNotifi, 250)
+				end
+			end, 3000)
+		end
+		return
+	end
+
+	if monstersLeftLabel then
+		if current <= 0 then
+			monstersLeftLabel:setText("Wave: 0 / " .. total)
+		else
+			monstersLeftLabel:setText("Wave: " .. current .. " / " .. total .. "   Left: " .. left)
+		end
+	end
+end
+
 function Dungeons.onDungeonKilled(data)
+	if Dungeons.isOnlyBoss or Dungeons.isWaveBoss then
+		-- For wave_boss we still want to handle the boss-killed finish message.
+		if Dungeons.isWaveBoss and data and data.boss then
+			local bossObjective = Dungeons.killCounter:getChildById("bossObjective")
+			bossObjective:setChecked(true)
+			if Dungeons.challengeNotifi then
+				local textWidget = Dungeons.challengeNotifi:getChildById("text")
+				textWidget:setText("You completed the dungeon!")
+				Dungeons.challengeNotifi:setWidth(math.max(263, 96 + textWidget:getTextSize().width))
+				g_effects.fadeIn(Dungeons.challengeNotifi, 250)
+				scheduleEvent(function()
+					if Dungeons.challengeNotifi then
+						g_effects.fadeOut(Dungeons.challengeNotifi, 250)
+					end
+				end, 3000)
+			end
+		end
+		return
+	end
 	local bar = Dungeons.killCounter:getChildById("bar")
 	local bossObjective = Dungeons.killCounter:getChildById("bossObjective")
 	bar:setVisible(true)

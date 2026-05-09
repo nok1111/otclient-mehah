@@ -4745,3 +4745,57 @@ AttachedEffectManager.register(395, 'pomelo explosion', 1132, ThingCategoryEffec
     speed = 1.0,
     offset = { -128, -128, true},
 })
+
+AttachedEffectManager.register(396, 'stuned', 32, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 5000,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})
+
+AttachedEffectManager.register(397, 'marked charge', 56, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 5000,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})
+
+AttachedEffectManager.register(398, 'Growing Rage', 590, ThingCategoryEffect, {
+
+    onAttach = function(effect, owner)
+        
+        owner:setScaleFactor(1.5, 650)
+        owner:setShader('Monster Might')
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        oldOwner:setShader('Outfit - Default')
+    end
+})
+
+AttachedEffectManager.register(399, 'Shadow Empower', 791, ThingCategoryEffect, {
+    onAttach = function(effect, owner)
+        owner:setShader('Galaxy')  -- o el shader morado que tengas
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setShader('Outfit - Default')
+    end
+})
+
+AttachedEffectManager.register(400, 'parasite', 1013, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 7000,
+    speed = 1,
+    offset = { -64, -64, false},
+    
+})
+
+AttachedEffectManager.register(401, 'parasite', 899, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -55, -32, true},
+    
+})

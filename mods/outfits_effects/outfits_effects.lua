@@ -65,6 +65,10 @@ local outfitOffsets = {
     [2437] = {x = 18, y = 15},
     [2589] = {x = 32, y = 32},
     [2590] = {x = 32, y = 32},
+
+    --nightfiend / bloodfiend
+    [2644] = {x = 15, y = 10},
+    [2645] = {x = 15, y = 10},
 }
 
 -- Direction constants (same as in C++)
