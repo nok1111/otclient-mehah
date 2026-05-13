@@ -677,9 +677,6 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
                 g_game.requestOutfit()
             end)
 
-            menu:addOption(tr('Open Shop'), function()
-                g_game.talk('!shop')
-            end)
 
             if g_game.getFeature(GamePrey) then
                 menu:addOption(tr('Prey Dialog'), function()
@@ -755,9 +752,14 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
                 menu:addOption(tr('Message to %s', creatureName), function()
                     g_game.openPrivateChannel(creatureName)
                 end)
-                -- Open player shop (server-side talkaction)
-                menu:addOption(tr('Open %s\'s Shop', creatureName), function()
-                    g_game.talk('!shopopen ' .. creatureName)
+                
+                -- Inspect player
+                menu:addOption(tr('Inspect %s', creatureName), function()
+                    if Inspect and Inspect.openPlayerInspect then
+                        Inspect.openPlayerInspect(creatureThing:getId(), creatureName)
+                    else
+                        print("[Inspect] ERROR: Inspect module not loaded")
+                    end
                 end)
                 if modules.game_console.getOwnPrivateTab() then
                     menu:addOption(tr('Invite to private chat'), function()
