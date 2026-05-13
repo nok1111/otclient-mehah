@@ -1,0 +1,10 @@
+Module
+  name: game_inspect
+  description: Player Inspection System
+  author: Ascension
+  website: https://github.com/mehah/otclient
+  sandboxed: false
+  autoload: true
+  scripts: [ inspect ]
+  @onLoad: Inspect.init()
+  @onUnload: Inspect.terminate()

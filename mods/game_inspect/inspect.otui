@@ -1,0 +1,371 @@
+TabButton < Button
+  size: 80 24
+  color: #aaaaaa
+  background-color: #1a152080
+  border-width: 1
+  border-color: #2a2040
+
+TabButtonActive < TabButton
+  color: #f4ca16
+  border-color: #f4ca16
+
+StatRow < Panel
+  height: 22
+  margin-top: 2
+  margin-bottom: 2
+
+StatLabel < Label
+  anchors.left: parent.left
+  anchors.verticalCenter: parent.verticalCenter
+  margin-left: 8
+  color: #a098b0
+  text-auto-resize: true
+
+StatValue < Label
+  anchors.right: parent.right
+  anchors.verticalCenter: parent.verticalCenter
+  margin-right: 8
+  color: #ffffff
+  text-auto-resize: true
+
+SkillBar < ProgressBar
+  width: 100
+  height: 6
+  anchors.right: parent.right
+  anchors.verticalCenter: parent.verticalCenter
+  margin-right: 8
+  background-color: #1a1525
+  border-width: 1
+  border-color: #2a2040
+
+CardSlot < Panel
+  size: 120 180
+  background-color: #1a152040
+  border-width: 1
+  border-color: #2a2040
+
+CardImage < UIWidget
+  anchors.horizontalCenter: parent.horizontalCenter
+  anchors.top: parent.top
+  margin-top: -6
+  size: 100 140
+  image-smooth: true
+
+CardLevel < Label
+  anchors.horizontalCenter: parent.horizontalCenter
+  anchors.bottom: parent.bottom
+  margin-bottom: 4
+  text-auto-resize: true
+  color: #f4ca16
+  font: verdana-11px-rounded
+
+TalentNode < Panel
+  size: 48 48
+  image-smooth: true
+  focusable: false
+
+TalentNodeBorder < Panel
+  size: 48 48
+  image-smooth: true
+  anchors.centerIn: parent
+  phantom: false
+
+TalentNodeLevel < FlatPanel
+  margin-top: -15
+  text-auto-resize: true
+  padding: 2
+  color: #a098b0
+  background-color: #1a1525
+  border-width: 1
+  border-color: #2a2040
+  phantom: true
+
+VerticalSeparator < Panel
+  width: 2
+  background-color: #f4ca1680
+
+MainWindow
+  id: inspectWindow
+  text: Inspect Player
+  size: 700 550
+  visible: false
+
+  Panel
+    id: headerPanel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 80
+    margin: 10
+    background-color: #1a152040
+    border-width: 1
+    border-color: #2a2040
+
+    UICreature
+      id: outfitImage
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 15
+      size: 64 64
+      phantom: true
+
+    Label
+      id: playerNameLabel
+      anchors.left: outfitImage.right
+      anchors.top: parent.top
+      margin-left: 15
+      margin-top: 12
+      color: #f4ca16
+      font: verdana-14px-antialised
+      text-auto-resize: true
+
+    Label
+      id: playerLevelLabel
+      anchors.left: outfitImage.right
+      anchors.top: playerNameLabel.bottom
+      margin-left: 15
+      margin-top: 4
+      color: #a098b0
+      text-auto-resize: true
+
+    Label
+      id: playerVocationLabel
+      anchors.left: outfitImage.right
+      anchors.top: playerLevelLabel.bottom
+      margin-left: 15
+      margin-top: 4
+      color: #8878a0
+      text-auto-resize: true
+
+    Label
+      id: fameLevelLabel
+      anchors.right: parent.right
+      anchors.top: parent.top
+      margin-right: 15
+      margin-top: 12
+      color: #ffd700
+      text-auto-resize: true
+
+  TabButtonActive
+    id: tabStats
+    anchors.top: headerPanel.bottom
+    anchors.left: parent.left
+    margin-top: 8
+    margin-left: 10
+    !text: tr('Stats')
+
+  TabButton
+    id: tabTalents
+    anchors.top: headerPanel.bottom
+    anchors.left: tabStats.right
+    margin-top: 8
+    margin-left: 4
+    !text: tr('Talents')
+
+  TabButton
+    id: tabCodex
+    anchors.top: headerPanel.bottom
+    anchors.left: tabTalents.right
+    margin-top: 8
+    margin-left: 4
+    !text: tr('Codex')
+
+  Button
+    id: closeButton
+    anchors.right: parent.right
+    anchors.top: headerPanel.bottom
+    margin-top: 8
+    margin-right: 10
+    size: 70 24
+    !text: tr('Close')
+    @onClick: self:getParent():hide()
+
+  Panel
+    id: contentPanel
+    anchors.top: tabStats.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin: 10
+    margin-top: 4
+    background-color: #0f0a15
+    border-width: 1
+    border-color: #2a2040
+
+    Panel
+      id: statsTabContent
+      anchors.fill: parent
+      padding: 10
+
+      UIScrollArea
+        id: statsScrollArea
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        margin-right: 14
+        vertical-scrollbar: statsScrollBar
+
+        Panel
+          id: combatStatsSection
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-bottom: 10
+          layout:
+            type: verticalBox
+            spacing: 1
+            fit-children: true
+
+          Label
+            text: Combat Skills
+            color: #f4ca16
+            text-auto-resize: true
+            margin-bottom: 5
+
+        Panel
+          id: professionsSection
+          anchors.top: combatStatsSection.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 15
+          layout:
+            type: verticalBox
+            spacing: 1
+            fit-children: true
+
+          Label
+            text: Professions
+            color: #f4ca16
+            text-auto-resize: true
+            margin-bottom: 5
+
+        Panel
+          id: specialStatsSection
+          anchors.top: professionsSection.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 15
+          layout:
+            type: verticalBox
+            spacing: 1
+            fit-children: true
+
+          Label
+            text: Special Stats
+            color: #f4ca16
+            text-auto-resize: true
+            margin-bottom: 5
+
+      VerticalScrollBar
+        id: statsScrollBar
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        margin-top: 10
+        margin-bottom: 10
+        margin-right: 0
+        pixels-scroll: true
+
+    Panel
+      id: talentsTabContent
+      anchors.fill: parent
+      visible: false
+
+      Label
+        id: talentsTreeName
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 10
+        color: #f4ca16
+        text-auto-resize: true
+
+      UIScrollArea
+        id: talentsScrollArea
+        anchors.top: talentsTreeName.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin: 10
+        margin-top: 15
+        margin-right: 14
+        layout:
+          type: anchor
+          align-top: true
+        vertical-scrollbar: talentsScrollBar
+
+      VerticalScrollBar
+        id: talentsScrollBar
+        anchors.top: talentsScrollArea.top
+        anchors.bottom: talentsScrollArea.bottom
+        anchors.right: parent.right
+        margin-right: 0
+        pixels-scroll: true
+
+    Panel
+      id: codexTabContent
+      anchors.fill: parent
+      visible: false
+
+      Label
+        id: codexTitle
+        anchors.top: parent.top
+        anchors.left: parent.left
+        margin-top: 15
+        margin-left: 15
+        text: Equipped Cards
+        color: #f4ca16
+        text-auto-resize: true
+
+      Panel
+        id: codexSlotsPanel
+        anchors.top: codexTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin: 15
+        margin-top: 10
+
+  UIWidget
+    id: cardTooltip
+    visible: false
+    size: 280 200
+    image-source: /images/ui/backdrop-dark-grey
+    image-border: 10
+    padding: 10
+    phantom: true
+
+    Label
+      id: tooltipCardName
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      color: #ffffff
+      font: verdana-11px-antialised
+      text-align: center
+      text-auto-resize: true
+
+    Label
+      id: tooltipCardLevel
+      anchors.top: tooltipCardName.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 3
+      color: #f4ca16
+      font: verdana-9px-antialised
+      text-align: center
+      text-auto-resize: true
+
+    Label
+      id: tooltipCardDescription
+      anchors.top: tooltipCardLevel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin: 8
+      margin-top: 10
+      color: #aaaaaa
+      font: verdana-9px-antialised
+      text-wrap: true
+      text-align: center
