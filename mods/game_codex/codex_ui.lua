@@ -170,7 +170,7 @@ function Codex.setupCollectionUI()
 
 			local nameLabel = cardWidget:getChildById("cardNameLabel")
 			if nameLabel then
-				nameLabel:setText(cardData.name)
+				nameLabel:setText(tr(cardData.name))
 				nameLabel:setColor(Codex.rarityColors[cardData.rarity] or "#ffffff")
 			end
 
@@ -250,15 +250,15 @@ function Codex.updateCardDetails()
 	end
 
 	if cardDetailsPanel.CardName then
-		cardDetailsPanel.CardName:setText(cardData.name)
+		cardDetailsPanel.CardName:setText(tr(cardData.name))
 		cardDetailsPanel.CardName:setColor(Codex.rarityColors[cardData.rarity] or "#ffffff")
 	end
 
 	if cardDetailsPanel.CardLevel then
 		if isUnlocked then
-			cardDetailsPanel.CardLevel:setText("Level: " .. cardLevel .. " / " .. cardData.maxLevel)
+			cardDetailsPanel.CardLevel:setText(tr("Level: %s / %s", cardLevel, cardData.maxLevel))
 		else
-			cardDetailsPanel.CardLevel:setText("LOCKED")
+			cardDetailsPanel.CardLevel:setText(tr("LOCKED"))
 		end
 	end
 	
@@ -277,7 +277,7 @@ function Codex.updateCardDetails()
 			cardExpText:setVisible(true)
 		elseif isUnlocked and cardLevel >= cardData.maxLevel then
 			cardExpBar:setPercent(100)
-			cardExpText:setText("MAX LEVEL")
+			cardExpText:setText(tr("MAX LEVEL"))
 			cardExpBar:setVisible(true)
 			cardExpText:setVisible(true)
 		else
@@ -298,10 +298,10 @@ function Codex.updateCardDetails()
 			iconWidget:addAnchor(AnchorTop, "parent", AnchorTop)
 			iconWidget:setMarginTop(-3)
 			
-			cardDetailsPanel.CardTrigger:setText("Trigger: " .. cardData.trigger)
+			cardDetailsPanel.CardTrigger:setText(tr("Trigger: %s", tr(cardData.trigger)))
 			cardDetailsPanel.CardTrigger:setTextOffset({x = 0, y = 14})
 		else
-			cardDetailsPanel.CardTrigger:setText("Trigger: " .. cardData.trigger)
+			cardDetailsPanel.CardTrigger:setText(tr("Trigger: %s", tr(cardData.trigger)))
 			cardDetailsPanel.CardTrigger:setTextOffset({x = 0, y = 0})
 		end
 	end
@@ -310,37 +310,37 @@ function Codex.updateCardDetails()
 		cardDetailsPanel.CardDescription:destroyChildren()
 		
 		if isUnlocked and cardData.description then
-			local currentDesc = cardData.description[cardLevel] or cardData.description[1] or "No description"
-			local maxDesc = cardData.description[cardData.maxLevel] or "No description"
+			local currentDesc = cardData.description[cardLevel] or cardData.description[1] or tr("No description")
+			local maxDesc = cardData.description[cardData.maxLevel] or tr("No description")
 
 			local currentLabel = g_ui.createWidget("Label", cardDetailsPanel.CardDescription)
-			currentLabel:setText("Current (Lvl " .. cardLevel .. "):")
+			currentLabel:setText(tr("Current (Lvl %s):", cardLevel))
 			currentLabel:setColor("#00ff00")
 			currentLabel:setMarginTop(5)
 			currentLabel:setTextAutoResize(true)
 
 			local currentDescLabel = g_ui.createWidget("Label", cardDetailsPanel.CardDescription)
-			currentDescLabel:setText(currentDesc)
+			currentDescLabel:setText(tr(currentDesc))
 			currentDescLabel:setTextWrap(true)
 			currentDescLabel:setTextAutoResize(true)
 			currentDescLabel:setMarginTop(2)
 
 			if cardLevel < cardData.maxLevel then
 				local maxLabel = g_ui.createWidget("Label", cardDetailsPanel.CardDescription)
-				maxLabel:setText("Max (Lvl " .. cardData.maxLevel .. "):")
+				maxLabel:setText(tr("Max (Lvl %s):", cardData.maxLevel))
 				maxLabel:setColor("#A020F0")
 				maxLabel:setMarginTop(10)
 				maxLabel:setTextAutoResize(true)
 
 				local maxDescLabel = g_ui.createWidget("Label", cardDetailsPanel.CardDescription)
-				maxDescLabel:setText(maxDesc)
+				maxDescLabel:setText(tr(maxDesc))
 				maxDescLabel:setTextWrap(true)
 				maxDescLabel:setTextAutoResize(true)
 				maxDescLabel:setMarginTop(2)
 			end
 		else
 			local lockedLabel = g_ui.createWidget("Label", cardDetailsPanel.CardDescription)
-			lockedLabel:setText("This card is locked. Open crates to unlock it!")
+			lockedLabel:setText(tr("This card is locked. Open crates to unlock it!"))
 			lockedLabel:setTextWrap(true)
 			lockedLabel:setTextAutoResize(true)
 			lockedLabel:setColor("#888888")
@@ -394,12 +394,12 @@ function Codex.setupDeckUI()
 
 			local cardName = cardWidget:getChildById("cardName")
 			if cardName then
-				cardName:setText(cardData.name)
+				cardName:setText(tr(cardData.name))
 				cardName:setColor(Codex.rarityColors[cardData.rarity] or "#ffffff")
 			end
 
 			local cardLevelLabel = cardWidget:getChildById("cardLevel")
-			if cardLevelLabel then cardLevelLabel:setText("Level: " .. cardLevel .. "/" .. cardData.maxLevel) end
+			if cardLevelLabel then cardLevelLabel:setText(tr("Level: %s/%s", cardLevel, cardData.maxLevel)) end
 
 			if cardLevel < cardData.maxLevel then
 				local currentExp = Codex.cachedCardsExp[cardId] or 0
@@ -819,7 +819,7 @@ function Codex.showCardObtainedOverlay(cardId, cardLevel, rarityColor, bonusEsse
 
 	local nameLabel = content:getChildById("ObtainedCardName")
 	if nameLabel then
-		nameLabel:setText(cardData.name)
+		nameLabel:setText(tr(cardData.name))
 		nameLabel:setOpacity(0)
 		nameLabel:setColor(rarityColor or Codex.rarityColors[cardData.rarity] or "#FFFFFF")
 	end
@@ -905,11 +905,11 @@ function Codex.moveToolTip()
 end
 
 function Codex.applyTooltip(cardData, cardLevel)
-	Codex.Tooltip:setText(cardData.name)
+	Codex.Tooltip:setText(tr(cardData.name))
 	Codex.Tooltip:setColor(Codex.rarityColors[cardData.rarity] or "#ffffff")
 	
 	if Codex.Tooltip.description then
-		Codex.Tooltip.description:setText("Level " .. cardLevel .. "/" .. cardData.maxLevel .. " - " .. (cardData.rarity or "common"):upper())
+		Codex.Tooltip.description:setText(tr("Level %s/%s - %s", cardLevel, cardData.maxLevel, tr((cardData.rarity or "common"):upper())))
 		Codex.Tooltip.description:setColor("#ffffff")
 	end
 	
@@ -923,11 +923,11 @@ function Codex.applyTooltip(cardData, cardLevel)
 			iconWidget:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
 			iconWidget:addAnchor(AnchorTop, "parent", AnchorTop)
 			
-			Codex.Tooltip.trigger:setText(cardData.trigger)
+			Codex.Tooltip.trigger:setText(tr(cardData.trigger))
 			Codex.Tooltip.trigger:setColor("#ffaa00")
 			Codex.Tooltip.trigger:setTextOffset({x = 0, y = 14})
 		else
-			Codex.Tooltip.trigger:setText(cardData.trigger)
+			Codex.Tooltip.trigger:setText(tr(cardData.trigger))
 			Codex.Tooltip.trigger:setColor("#ffaa00")
 			Codex.Tooltip.trigger:setTextOffset({x = 0, y = 0})
 		end
@@ -935,7 +935,7 @@ function Codex.applyTooltip(cardData, cardLevel)
 	
 	if Codex.Tooltip.cardDesc then
 		local desc = cardData.description[cardLevel] or cardData.description[1] or "No description"
-		Codex.Tooltip.cardDesc:setText(desc)
+		Codex.Tooltip.cardDesc:setText(tr(desc))
 		Codex.Tooltip.cardDesc:setColor("#ffffff")
 	end
 	
@@ -1014,7 +1014,7 @@ function Codex.setupUpgradeUI()
 				
 				local nameLabel = cardWidget:getChildById("cardNameLabel")
 				if nameLabel then
-					nameLabel:setText(cardData.name)
+					nameLabel:setText(tr(cardData.name))
 					nameLabel:setColor(Codex.rarityColors[cardData.rarity] or "#ffffff")
 				end
 				
@@ -1068,12 +1068,12 @@ function Codex.selectUpgradeCard(cardId)
 	
 	local cardName = detailsPanel:getChildById("UpgradeCardName")
 	if cardName then
-		cardName:setText(cardData.name)
+		cardName:setText(tr(cardData.name))
 		cardName:setColor(Codex.rarityColors[cardData.rarity] or "#ffffff")
 	end
 	
 	local cardLevelLabel = detailsPanel:getChildById("UpgradeCardLevel")
-	if cardLevelLabel then cardLevelLabel:setText("Level: " .. cardLevel .. " / " .. cardData.maxLevel) end
+	if cardLevelLabel then cardLevelLabel:setText(tr("Level: %s / %s", cardLevel, cardData.maxLevel)) end
 	
 	local expBar = detailsPanel:getChildById("UpgradeExpBar")
 	local expText = detailsPanel:getChildById("UpgradeExpText")
@@ -1085,13 +1085,13 @@ function Codex.selectUpgradeCard(cardId)
 			expText:setText(currentExp .. " / " .. expNeeded .. " EXP")
 		else
 			expBar:setPercent(100)
-			expText:setText("MAX LEVEL")
+			expText:setText(tr("MAX LEVEL"))
 		end
 	end
 	
 	local descLabel = detailsPanel:getChildById("UpgradeCardDescription")
 	if descLabel and cardData.description then
-		descLabel:setText(cardData.description[cardLevel] or cardData.description[1] or "-")
+		descLabel:setText(tr(cardData.description[cardLevel] or cardData.description[1] or "-"))
 	end
 	
 	local nextLevelDesc = detailsPanel:getChildById("UpgradeNextLevelDescription")
@@ -1099,7 +1099,7 @@ function Codex.selectUpgradeCard(cardId)
 		if cardLevel < cardData.maxLevel then
 			local nextDesc = cardData.description[cardLevel + 1]
 			if nextDesc then
-				nextLevelDesc:setText("Next Level: " .. nextDesc)
+				nextLevelDesc:setText(tr("Next Level: %s", tr(nextDesc)))
 				nextLevelDesc:setVisible(true)
 			else nextLevelDesc:setVisible(false) end
 		else nextLevelDesc:setVisible(false) end
@@ -1131,10 +1131,10 @@ function Codex.clearUpgradeDetails()
 	if cardImage then cardImage:setVisible(false) end
 	
 	local cardName = detailsPanel:getChildById("UpgradeCardName")
-	if cardName then cardName:setText("Select a card") end
+	if cardName then cardName:setText(tr("Select a card")) end
 	
 	local cardLevel = detailsPanel:getChildById("UpgradeCardLevel")
-	if cardLevel then cardLevel:setText("Level: -") end
+	if cardLevel then cardLevel:setText(tr("Level: -")) end
 	
 	local expBar = detailsPanel:getChildById("UpgradeExpBar")
 	if expBar then expBar:setPercent(0) end

@@ -4799,3 +4799,113 @@ AttachedEffectManager.register(401, 'parasite', 899, ThingCategoryEffect, {
     offset = { -55, -32, true},
     
 })
+
+-- =============================================================
+-- Vulcanys, The Forge Tyrant - Boss Phase Scales (Pyrotheca)
+-- =============================================================
+
+AttachedEffectManager.register(600, 'Vulcanys Phase 1', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.0, 500)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+    end
+})
+
+AttachedEffectManager.register(601, 'Vulcanys Phase 2', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.4, 800)
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+    end
+})
+
+AttachedEffectManager.register(602, 'Vulcanys Phase 3', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.8, 800)
+        owner:setShader('Red Flames')
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        oldOwner:setShader('Outfit - Default')
+    end
+})
+
+AttachedEffectManager.register(603, 'Vulcanys Phase 4', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(2.3, 1000)
+        owner:setShader('Red Flames')
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        oldOwner:setShader('Outfit - Default')
+    end
+})
+
+AttachedEffectManager.register(604, 'Vulcanys Phase 5 (Enrage)', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(3.0, 1200)
+        owner:setShader('Red Flames')
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        oldOwner:setShader('Outfit - Default')
+    end
+})
+
+AttachedEffectManager.register(605, 'Vulcanys Chain Seal', 1227, ThingCategoryEffect, {
+    duration = 5000,
+    speed = 1,
+    offset = { 0, -16, true }
+})
+
+-- =============================================================
+-- Drakkomir, the Blackstone Chieftain - Boss Phases (Blackstone Depths)
+-- =============================================================
+
+AttachedEffectManager.register(610, 'Drakkomir Empowered (Phase 2)', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.3, 800)
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+    end
+})
+
+AttachedEffectManager.register(611, 'Drakkomir Enrage (Phase 3)', 0, 0, {
+    permanent = true,
+    onAttach = function(effect, owner)
+        owner:setScaleFactor(1.6, 1000)
+        owner:setShader('Blueveins')
+        local e = Effect.create()
+        e:setId(7)
+        owner:getTile():addThing(e)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setScaleFactor(1.0, 500)
+        oldOwner:setShader('Outfit - Default')
+    end
+})

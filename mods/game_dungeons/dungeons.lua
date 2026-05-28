@@ -548,6 +548,8 @@ function Dungeons.onExtendedOpcode(protocol, code, buffer)
 		Dungeons.onDungeonObjective(data)
 	elseif topic == "killed" then
 		Dungeons.onDungeonKilled(data)
+	elseif topic == "lives" then
+		Dungeons.onDungeonLives(data)
 	elseif topic == "wave" then
 		Dungeons.onDungeonWave(data)
 	elseif topic == "challenge" then
@@ -875,7 +877,7 @@ function Dungeons.onDungeonStart(data)
 		mutationDisplay:setVisible(false)
 	end
 
-	Dungeons.killCounter:setHeight(170 + objectivesHeight + mutationHeight)
+	Dungeons.killCounter:setHeight(190 + objectivesHeight + mutationHeight)
 
 	local bar = Dungeons.killCounter:getChildById("bar")
 	bar:setVisible(false)
@@ -1045,6 +1047,20 @@ function Dungeons.onDungeonFinish(data)
 	Dungeons.killCounter:hide()
 	if timeLeftEvent then
 		removeEvent(timeLeftEvent)
+	end
+end
+
+function Dungeons.onDungeonLives(data)
+	if not Dungeons.killCounter then return end
+	local label = Dungeons.killCounter:getChildById("livesLeft")
+	if not label then return end
+	local current = tonumber(data.current) or 0
+	local max = tonumber(data.max) or 0
+	label:setText(string.format("Team Lives: %d / %d", current, max))
+	if current <= 1 then
+		label:setColor("#ff3030")
+	else
+		label:setColor("#ff6464")
 	end
 end
 

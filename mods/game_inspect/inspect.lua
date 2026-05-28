@@ -489,7 +489,7 @@ function Inspect.updateTalentsTab()
     
     if not Inspect.cachedData.talents or not Inspect.cachedData.talents.treeData then
         local msg = g_ui.createWidget("Label", scrollArea)
-        msg:setText("No talent data available")
+        msg:setText(tr("No talent data available"))
         msg:setColor("#888888")
         msg:addAnchor(AnchorTop, "parent", AnchorTop)
         msg:addAnchor(AnchorHorizontalCenter, "parent", AnchorHorizontalCenter)
@@ -503,7 +503,7 @@ function Inspect.updateTalentsTab()
     
     -- Tree name
     local treeName = findWidget(Inspect.UI, "talentsTreeName")
-    if treeName then treeName:setText(treeData.name or "Talent Tree") end
+    if treeName then treeName:setText(tr(treeData.name) or tr("Talent Tree")) end
     
     -- Background (skip - causes overlap issues)
     
@@ -718,16 +718,16 @@ function Inspect.onTalentHoverChange(widget, hovered)
         local tooltipDesc = findWidget(Inspect.UI, "tooltipCardDescription")
         
         if tooltipName then
-            tooltipName:setText(node.name or "Talent Node")
+            tooltipName:setText(tr(node.name) or tr("Talent Node"))
             tooltipName:setColor("#f4ca16")
         end
         
         if tooltipLevel then
-            tooltipLevel:setText("Level " .. currentLevel .. " / " .. (node.maxLevel or 1))
+            tooltipLevel:setText(tr("Level %s / %s", currentLevel, node.maxLevel or 1))
         end
         
         if tooltipDesc then
-            local desc = node.description or "No description"
+            local desc = tr(node.description) or tr("No description")
             if type(desc) == "table" then
                 desc = desc[currentLevel > 0 and currentLevel or 1] or desc[1] or "No description"
             end

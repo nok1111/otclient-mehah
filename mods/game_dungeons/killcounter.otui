@@ -85,6 +85,17 @@ UIWindow
     font: verdana-11px-rounded
     text-wrap: true
 
+  Label
+    id: livesLeft
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    font: verdana-11px-rounded
+    color: #ff6464
+    text-wrap: true
+    text: Team Lives: -
+
   Panel
     id: mutationDisplay
     anchors.top: prev.bottom

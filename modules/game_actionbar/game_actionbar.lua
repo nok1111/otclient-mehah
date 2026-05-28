@@ -360,7 +360,7 @@ function showSpellTooltip(slot)
     end
 
     statsLbl:setText(string.format('Mana: %s    Level: %s    %s', tostring(mana), tostring(level), cdText))
-    descLbl:setText(spell.description or '')
+    descLbl:setText(tr(spell.description or ''))
 
     -- Size/position
     spellTooltipWnd:setWidth(300)

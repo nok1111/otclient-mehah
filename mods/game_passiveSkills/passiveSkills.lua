@@ -72,8 +72,8 @@ function PassiveSkills.onGameStart()
 	if PassiveSkills.UI.ascensionResetButton then
 		PassiveSkills.UI.ascensionResetButton.onClick = function()
 			PassiveSkills.setupConfirmMessage(
-				"Confirm Paragon Reset",
-				"Are you sure you want to reset all your Paragon points? All stat allocations will be refunded.",
+				tr("Confirm Paragon Reset"),
+				tr("Are you sure you want to reset all your Paragon points? All stat allocations will be refunded."),
 				function()
 					PassiveSkills.sendOpcode({ topic = "paragon-reset-request" })
 				end
@@ -251,11 +251,11 @@ function PassiveSkills.buildAscensionUI()
 		lockedLabel:addAnchor(AnchorHorizontalCenter, 'parent', AnchorHorizontalCenter)
 		lockedLabel:addAnchor(AnchorTop, 'parent', AnchorTop)
 		lockedLabel:setMarginTop(80)
-		lockedLabel:setText("Reach Level 300 to unlock the Paragon System.")
+		lockedLabel:setText(tr("Reach Level 300 to unlock the Paragon System."))
 		lockedLabel:setColor('#665e78')
 		lockedLabel:setTextAutoResize(true)
 		if PassiveSkills.UI.ascensionParagonLevel then
-			PassiveSkills.UI.ascensionParagonLevel:setText("Paragon Locked")
+			PassiveSkills.UI.ascensionParagonLevel:setText(tr("Paragon Locked"))
 		end
 		return
 	end
@@ -273,7 +273,7 @@ function PassiveSkills.buildAscensionUI()
 	levelLabel:addAnchor(AnchorTop, 'parent', AnchorTop)
 	levelLabel:addAnchor(AnchorHorizontalCenter, 'parent', AnchorHorizontalCenter)
 	levelLabel:setMarginTop(6)
-	levelLabel:setText("PARAGON LEVEL")
+	levelLabel:setText(tr("PARAGON LEVEL"))
 	levelLabel:setColor('#8878a0')
 	levelLabel:setTextAutoResize(true)
 
@@ -328,7 +328,7 @@ function PassiveSkills.buildAscensionUI()
 	nextLabel:addAnchor(AnchorTop, 'levelLabel', AnchorTop)
 	nextLabel:addAnchor(AnchorRight, 'parent', AnchorRight)
 	nextLabel:setMarginRight(10)
-	nextLabel:setText("Next: " .. nextType:sub(1,1):upper() .. nextType:sub(2))
+	nextLabel:setText(tr("Next: %s", nextType:sub(1,1):upper() .. nextType:sub(2)))
 	nextLabel:setTextAutoResize(true)
 	local typeColors = { primary = "#ff6060", secondary = "#60a0ff", utility = "#60dd60" }
 	nextLabel:setColor(typeColors[nextType] or '#ffffff')
@@ -372,7 +372,7 @@ function PassiveSkills.buildAscensionUI()
 		catHeader:addAnchor(AnchorRight, 'parent', AnchorRight)
 		catHeader:setMarginTop(6)
 		catHeader:setMarginLeft(8)
-		catHeader:setText(catConfig.name:upper() .. " (" .. totalSpent .. ")")
+		catHeader:setText(tr(catConfig.name):upper() .. " (" .. totalSpent .. ")")
 		catHeader:setColor(catConfig.color)
 		catHeader:setTextAutoResize(true)
 
@@ -424,7 +424,7 @@ function PassiveSkills.buildAscensionUI()
 			nameLabel:addAnchor(AnchorTop, 'parent', AnchorTop)
 			nameLabel:addAnchor(AnchorLeft, 'parent', AnchorLeft)
 			nameLabel:setMarginTop(4)
-			nameLabel:setText(statConfig.name)
+			nameLabel:setText(tr(statConfig.name))
 			nameLabel:setColor('#a098b0')
 			nameLabel:setTextAutoResize(true)
 
@@ -528,14 +528,14 @@ function PassiveSkills.buildAscensionUI()
 	msTitle:addAnchor(AnchorLeft, 'parent', AnchorLeft)
 	msTitle:setMarginTop(6)
 	msTitle:setMarginLeft(10)
-	msTitle:setText("MILESTONES")
+	msTitle:setText(tr("MILESTONES"))
 	msTitle:setColor('#d4a847')
 	msTitle:setTextAutoResize(true)
 
 	local milestoneData = {
-		{ key = "primary", name = "Primary", thresholds = {25, 50, 100, 200}, labels = {"Warrior", "+3% Dmg", "+5% Dmg + Aura", "Paragon of War"} },
-		{ key = "secondary", name = "Secondary", thresholds = {25, 50, 100, 200}, labels = {"Guardian", "+5% HP", "+8% HP + Aura", "Paragon of Fortitude"} },
-		{ key = "utility", name = "Utility", thresholds = {25, 50, 100, 200}, labels = {"Explorer", "+3% Gains", "+5% Gains + Aura", "Paragon of Fortune"} },
+		{ key = "primary", name = tr("Primary"), thresholds = {25, 50, 100, 200}, labels = {tr("Warrior"), tr("+3% Dmg"), tr("+5% Dmg + Aura"), tr("Paragon of War")} },
+		{ key = "secondary", name = tr("Secondary"), thresholds = {25, 50, 100, 200}, labels = {tr("Guardian"), tr("+5% HP"), tr("+8% HP + Aura"), tr("Paragon of Fortitude")} },
+		{ key = "utility", name = tr("Utility"), thresholds = {25, 50, 100, 200}, labels = {tr("Explorer"), tr("+3% Gains"), tr("+5% Gains + Aura"), tr("Paragon of Fortune")} },
 	}
 
 	local msRowY = 24
@@ -624,10 +624,10 @@ end
 
 function PassiveSkills.applyTooltip(nodeData)
 	PassiveSkills.moveToolTip()
-	PassiveSkills.Tooltip:setText(nodeData.name)
+	PassiveSkills.Tooltip:setText(tr(nodeData.name))
 	--print(nodeData.description )
-	PassiveSkills.Tooltip.description:setText(nodeData.description)
-	PassiveSkills.Tooltip.maxLevel:setText("Max Level: " .. (nodeData.maxLevel or 1))
+	PassiveSkills.Tooltip.description:setText(tr(nodeData.description or "No description"))
+	PassiveSkills.Tooltip.maxLevel:setText(tr("Max Level: %s", nodeData.maxLevel or 1))
 	local totalHeight = PassiveSkills.Tooltip.description:getHeight() +  PassiveSkills.Tooltip.maxLevel:getHeight() + 80  -- Adjust as needed
 	PassiveSkills.Tooltip:setHeight(totalHeight)
 end
@@ -705,7 +705,7 @@ function PassiveSkills.setupTreeUI()
 
 	if not PassiveSkills.cachedTreeData or PassiveSkills.cachedTreeData == 0 then
 		PassiveSkills.UI.FullLockUI:setVisible(true)
-		PassiveSkills.UI.FullLockUI:setText("Locked")
+		PassiveSkills.UI.FullLockUI:setText(tr("Locked"))
 		return
 	else
 		PassiveSkills.UI.FullLockUI:setVisible(false)
@@ -714,7 +714,7 @@ function PassiveSkills.setupTreeUI()
 	local currentTreeData = PassiveSkills.cachedTreeData
 
 	if PassiveSkills.UI.treeName then
-		PassiveSkills.UI.treeName:setText(currentTreeData.name)
+		PassiveSkills.UI.treeName:setText(tr(currentTreeData.name))
 	end
 
 	if currentTreeData.background then
@@ -803,10 +803,10 @@ end
 
 function PassiveSkills.setupPoints()
 	if PassiveSkills.UI.AvaliablePassivePoints then
-		PassiveSkills.UI.AvaliablePassivePoints:setText("Available Passive Points: " .. PassiveSkills.cachedAvailablePoints or 0)
+		PassiveSkills.UI.AvaliablePassivePoints:setText(tr("Available Passive Points: %s", PassiveSkills.cachedAvailablePoints or 0))
 	end
 	if PassiveSkills.UI.TotalPassivePoints then
-		PassiveSkills.UI.TotalPassivePoints:setText("Total Passive Points: " .. PassiveSkills.cachedTotalPoints or 0)
+		PassiveSkills.UI.TotalPassivePoints:setText(tr("Total Passive Points: %s", PassiveSkills.cachedTotalPoints or 0))
 	end
 end
 
@@ -896,7 +896,7 @@ function PassiveSkills.displayTotalBuffs()
 				local isFirst = #PassiveSkills.UI.totalBuffsPanel:getChildren() == 0
 
 				local buffLabel = g_ui.createWidget("Label", PassiveSkills.UI.totalBuffsPanel)
-				buffLabel:setText("- " .. nodeData.name .. " (" .. currentLevel .. ")")
+				buffLabel:setText("- " .. tr(nodeData.name) .. " (" .. currentLevel .. ")")
 				buffLabel:setTextWrap(true)
 				buffLabel:setTextAutoResize(true)
 				buffLabel:setPhantom(false)
@@ -921,7 +921,7 @@ function PassiveSkills.displayTotalBuffs()
 					descLabel:setColor('#60dd60')
 				else
 					local descLabel = g_ui.createWidget("Label", PassiveSkills.UI.totalBuffsPanel)
-					descLabel:setText(nodeData.description )
+					descLabel:setText(tr(nodeData.description or "No description"))
 					descLabel:setTextWrap(true)
 					descLabel:setTextAutoResize(true)
 					descLabel:setPhantom(false)

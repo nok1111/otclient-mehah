@@ -221,15 +221,58 @@ function _G.tr(text, ...)
         elseif tostring(text) then
             local translation = currentLocale.translation[text]
             if not translation then
+                local normalized = text:gsub('\n', '\\n')
+                if normalized ~= text then
+                    translation = currentLocale.translation[normalized]
+                end
+            end
+            if not translation then
                 if translation == nil then
                     if currentLocale.name ~= defaultLocaleName then
                         pdebug('Unable to translate: \"' .. text .. '\"')
+                        _G.missingTranslations = _G.missingTranslations or {}
+                        _G.missingTranslations[text] = true
                     end
                 end
                 translation = text
             end
-            return string.format(translation, ...)
+            local nargs = select('#', ...)
+            if nargs > 0 then
+                return string.format(translation, ...)
+            end
+            return translation
         end
     end
     return text
+end
+
+-- Dumps all collected missing translation keys to data/missing_translations.lua
+-- Call from terminal: dumpMissingTranslations()
+function _G.dumpMissingTranslations()
+    local missing = _G.missingTranslations or {}
+    local keys = {}
+    for k, _ in pairs(missing) do
+        table.insert(keys, k)
+    end
+    table.sort(keys)
+
+    local lines = { '-- Missing translations collected at runtime', '-- Paste these into data/locales/<lang>.lua' }
+    for _, k in ipairs(keys) do
+        local escaped = k:gsub('\\', '\\\\'):gsub('\n', '\\n'):gsub('\t', '\\t'):gsub('"', '\\"')
+        table.insert(lines, ' ["' .. escaped .. '"] = "",')
+    end
+
+    local output = table.concat(lines, '\n')
+    local path = '/missing_translations.lua'
+    local ok, err = pcall(g_resources.writeFileContents, path, output)
+    local writeDir = g_resources.getWriteDir and g_resources.getWriteDir() or '?'
+    if ok then
+        print('[Locales] Dumped ' .. #keys .. ' missing translations.')
+        print('[Locales] File written to: ' .. writeDir .. path)
+    else
+        print('[Locales] ERROR writing file: ' .. tostring(err))
+        print('[Locales] Write dir: ' .. writeDir)
+        print('[Locales] Collected keys count: ' .. #keys)
+    end
+    return #keys
 end
