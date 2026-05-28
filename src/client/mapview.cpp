@@ -833,6 +833,126 @@ uint8_t MapView::calcLastVisibleFloor() const
     return z;
 }
 
+CreaturePtr MapView::getTopCreatureAtPoint(const Point& mousePos)
+{
+    // Convert widget-local mouse point into framebuffer coordinates that
+    // match the space returned by transformPositionTo2D().
+    const auto newMousePos = mousePos * g_window.getDisplayDensity();
+    if (!m_posInfo.rect.contains(newMousePos))
+        return nullptr;
+
+    const auto& camera = m_posInfo.camera;
+    if (!camera.isValid())
+        return nullptr;
+
+    const auto& relativeMousePos = newMousePos - m_posInfo.rect.topLeft();
+    const Size mapSize = m_posInfo.rect.size();
+    if (mapSize.isEmpty())
+        return nullptr;
+
+    const auto& srcRect = calcFramebufferSource(mapSize);
+    const float sh = srcRect.width() / static_cast<float>(mapSize.width());
+    const float sv = srcRect.height() / static_cast<float>(mapSize.height());
+    const Point mousePosFb = Point(static_cast<int>(relativeMousePos.x * sh),
+                                   static_cast<int>(relativeMousePos.y * sv)) + srcRect.topLeft();
+
+    const int spriteSize = g_gameConfig.getSpriteSize();
+    if (spriteSize <= 0 || m_tileSize == 0)
+        return nullptr;
+    const float scale = m_tileSize / static_cast<float>(spriteSize);
+
+    struct Candidate {
+        CreaturePtr creature;
+        int stackPos;
+        float distSq;
+    };
+    std::vector<Candidate> candidates;
+    candidates.reserve(8);
+
+    for (const auto& [uid, creature] : g_map.getCreatures()) {
+        if (!creature || creature->isLocalPlayer()) continue;
+        if (!creature->canBeSeen()) continue;
+
+        const Position& pos = creature->getPosition();
+        if (pos.z != camera.z) continue; // camera floor only
+        if (!m_posInfo.isInRange(pos)) continue;
+
+        // Tile top-left in framebuffer coords.
+        Point dest = transformPositionTo2D(pos);
+
+        // Apply walk interpolation (source-pixel space, scaled to tile size).
+        const Point walkOff = creature->getWalkOffset();
+        dest.x += static_cast<int>(walkOff.x * scale);
+        dest.y += static_cast<int>(walkOff.y * scale);
+
+        const int dispX = creature->getDisplacementX();
+        const int dispY = creature->getDisplacementY();
+        const int elev = creature->getDrawElevation();
+
+        int exact = creature->getExactSize();
+        if (exact < spriteSize) exact = spriteSize;
+        const int sizePx = static_cast<int>(exact * scale);
+
+        // Large sprites are anchored at the bottom-right of the tile, growing
+        // up and to the left. Their displacement shifts that anchor.
+        const int brX = dest.x + static_cast<int>((spriteSize - dispX) * scale);
+        const int brY = dest.y + static_cast<int>((spriteSize - dispY - elev) * scale);
+        const Rect rect(brX - sizePx, brY - sizePx, sizePx, sizePx);
+
+        if (!rect.contains(mousePosFb))
+            continue;
+
+        const Point center((rect.left() + rect.right()) / 2, (rect.top() + rect.bottom()) / 2);
+        const int dx = mousePosFb.x - center.x;
+        const int dy = mousePosFb.y - center.y;
+
+        int stackPos = 0;
+        if (const auto& tile = creature->getTile())
+            stackPos = tile->getThingStackPos(creature);
+
+        candidates.emplace_back(Candidate{ creature, stackPos, static_cast<float>(dx * dx + dy * dy) });
+    }
+
+    if (candidates.empty()) {
+        m_lastPickedCreatureId = 0;
+        return nullptr;
+    }
+
+    // Stable ordering so cycling is deterministic.
+    std::sort(candidates.begin(), candidates.end(), [](const Candidate& a, const Candidate& b) {
+        if (a.stackPos != b.stackPos)
+            return a.stackPos > b.stackPos; // top-most stack first
+        if (a.distSq != b.distSq)
+            return a.distSq < b.distSq;     // then closest to sprite center
+        return a.creature->getId() < b.creature->getId();
+    });
+
+    // Cycling: if the click is close to the previous click (in framebuffer px)
+    // and happened recently, advance to the next overlapping candidate.
+    constexpr int CYCLE_PIXEL_RADIUS = 12;
+    constexpr int CYCLE_TIME_MS = 1500;
+
+    CreaturePtr picked = candidates.front().creature;
+    if (candidates.size() > 1 && m_lastPickedCreatureId != 0 &&
+        m_lastPickedCreatureTimer.ticksElapsed() <= CYCLE_TIME_MS) {
+        const int ddx = mousePosFb.x - m_lastPickedCreaturePoint.x;
+        const int ddy = mousePosFb.y - m_lastPickedCreaturePoint.y;
+        if (ddx * ddx + ddy * ddy <= CYCLE_PIXEL_RADIUS * CYCLE_PIXEL_RADIUS) {
+            for (size_t i = 0; i < candidates.size(); ++i) {
+                if (candidates[i].creature->getId() == m_lastPickedCreatureId) {
+                    picked = candidates[(i + 1) % candidates.size()].creature;
+                    break;
+                }
+            }
+        }
+    }
+
+    m_lastPickedCreatureId = picked->getId();
+    m_lastPickedCreaturePoint = mousePosFb;
+    m_lastPickedCreatureTimer.restart();
+    return picked;
+}
+
 TilePtr MapView::getTopTile(Position tilePos) const
 {
     if (!tilePos.isValid())

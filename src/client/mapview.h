@@ -169,6 +169,12 @@ public:
 
     TilePtr getTopTile(Position tilePos) const;
 
+    // Pixel-perfect creature picking at a widget-local mouse point.
+    // Walks creatures on the camera floor whose drawn sprite rect contains the
+    // point, ranks them (top-most stack, closest to center), and cycles between
+    // overlapping candidates when the user clicks repeatedly near the same spot.
+    CreaturePtr getTopCreatureAtPoint(const Point& mousePos);
+
     void setCrosshairTexture(const std::string& texturePath);
     void setAntiAliasingMode(AntialiasingMode mode);
 
@@ -345,6 +351,11 @@ private:
 
     TilePtr m_lastHighlightTile;
     TexturePtr m_crosshairTexture;
+
+    // State for creature pick cycling (see getTopCreatureAtPoint).
+    uint32_t m_lastPickedCreatureId{ 0 };
+    Point m_lastPickedCreaturePoint;
+    Timer m_lastPickedCreatureTimer;
 
     DrawPool* m_pool;
 };

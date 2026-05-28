@@ -119,6 +119,20 @@ function UIGameMap:onMouseRelease(mousePosition, mouseButton)
         attackCreature = autoWalkTile:getTopCreature()
     end
 
+    -- Pixel-perfect creature pick: lets the player click on the visible body
+    -- of large/displaced sprites (>32x32) instead of having to hit the exact
+    -- origin tile. Only overrides the attack/target slot; look and use still
+    -- use the tile under the mouse. Cycles through stacked creatures on
+    -- repeated clicks near the same spot (see MapView::getTopCreatureAtPoint).
+    local pickedCreature = self:getTopCreatureAtPoint(mousePosition)
+    local localPlayer = g_game.getLocalPlayer()
+    if pickedCreature and pickedCreature ~= localPlayer then
+        attackCreature = pickedCreature
+        if not creatureThing or creatureThing == localPlayer then
+            creatureThing = pickedCreature
+        end
+    end
+
     local ret = modules.game_interface.processMouseAction(mousePosition, mouseButton, autoWalkPos, lookThing, useThing,
         creatureThing, attackCreature)
     if ret then

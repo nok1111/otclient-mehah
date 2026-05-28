@@ -82,6 +82,7 @@ public:
     Position getCameraPosition() { return m_mapView->getCameraPosition(); }
     Position getPosition(const Point& mousePos) { return m_mapView->getPosition(mousePos); }
     TilePtr getTile(const Point& mousePos) { return m_mapView->getTopTile(getPosition(mousePos)); }
+    CreaturePtr getTopCreatureAtPoint(const Point& mousePos) { return m_mapView->getTopCreatureAtPoint(mousePos); }
     Size getVisibleDimension() { return m_mapView->getVisibleDimension(); }
     Rect getMapRect() { return m_mapRect; }
 

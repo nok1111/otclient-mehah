@@ -1057,6 +1057,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<UIMap>("getCameraPosition", &UIMap::getCameraPosition);
     g_lua.bindClassMemberFunction<UIMap>("getPosition", &UIMap::getPosition);
     g_lua.bindClassMemberFunction<UIMap>("getTile", &UIMap::getTile);
+    g_lua.bindClassMemberFunction<UIMap>("getTopCreatureAtPoint", &UIMap::getTopCreatureAtPoint);
     g_lua.bindClassMemberFunction<UIMap>("getMaxZoomIn", &UIMap::getMaxZoomIn);
     g_lua.bindClassMemberFunction<UIMap>("getMaxZoomOut", &UIMap::getMaxZoomOut);
     g_lua.bindClassMemberFunction<UIMap>("getZoom", &UIMap::getZoom);
