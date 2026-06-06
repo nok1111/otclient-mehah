@@ -78,6 +78,13 @@ public:
     void draw(const Point& dest, bool drawThings = true, const LightViewPtr& lightView = nullptr) override;
     void drawLight(const Point& dest, const LightViewPtr& lightView) override;
 
+    // Drop-shadow (phase 2)
+    bool shouldCastShadow();
+    void drawDropShadow(int animationPhase, const Point& dest, bool drawThings);
+
+    // Light core (extra effect: bright dot on light-emitting items)
+    void drawLightCore(const Point& dest);
+
     void setId(uint32_t id) override;
 
     void setCountOrSubType(const int value) { m_countOrSubType = value; updatePatterns(); }

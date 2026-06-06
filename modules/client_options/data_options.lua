@@ -107,6 +107,71 @@ return {
             g_map.setFloatingEffect(value)
         end
     },
+    creatureShadows                   = {
+        value = true,
+        action = function(value, options, controller, panels, extraWidgets)
+            if Creature and Creature.setDrawShadows then
+                Creature.setDrawShadows(value)
+            end
+            local slider = panels.graphicsEffectsPanel:recursiveGetChildById('creatureShadowOpacity')
+            if slider then slider:setEnabled(value) end
+            local combo = panels.graphicsEffectsPanel:recursiveGetChildById('creatureShadowType')
+            if combo then combo:setEnabled(value) end
+        end
+    },
+    creatureShadowType                = {
+        value = 0, -- 0 = mirror, 1 = blob
+        action = function(value, options, controller, panels, extraWidgets)
+            if Creature and Creature.setShadowType then
+                Creature.setShadowType(tonumber(value) or 0)
+            end
+            local combo = panels.graphicsEffectsPanel:recursiveGetChildById('creatureShadowType')
+            if combo then combo:setCurrentOptionByData(tonumber(value) or 0, true) end
+        end
+    },
+    itemShadows                       = {
+        value = true,
+        action = function(value, options, controller, panels, extraWidgets)
+            if Creature and Creature.setDrawItemShadows then
+                Creature.setDrawItemShadows(value)
+            end
+        end
+    },
+    lightCores                        = {
+        value = false,
+        action = function(value, options, controller, panels, extraWidgets)
+            if Creature and Creature.setDrawLightCores then
+                Creature.setDrawLightCores(value)
+            end
+            local slider = panels.graphicsEffectsPanel:recursiveGetChildById('lightCoreIntensity')
+            if slider then slider:setEnabled(value) end
+        end
+    },
+    lightCoreIntensity                = {
+        value = 50,
+        action = function(value, options, controller, panels, extraWidgets)
+            local widget = panels.graphicsEffectsPanel:recursiveGetChildById('lightCoreIntensity')
+            if widget then
+                widget:setText(string.format('Light Core Intensity: %s%%', value))
+            end
+            if Creature and Creature.setLightCoreIntensity then
+                Creature.setLightCoreIntensity(value)
+            end
+        end
+    },
+    creatureShadowOpacity             = {
+        value = 43,
+        action = function(value, options, controller, panels, extraWidgets)
+            local widget = panels.graphicsEffectsPanel:recursiveGetChildById('creatureShadowOpacity')
+            if widget then
+                widget:setText(string.format('Shadow Opacity: %s%%', value))
+            end
+            if Creature and Creature.setShadowAlpha then
+                -- map 0-100% to 0-255 alpha
+                Creature.setShadowAlpha(math.floor(value * 255 / 100))
+            end
+        end
+    },
     ambientLight                      = {
         value = 40,
         action = function(value, options, controller, panels, extraWidgets)

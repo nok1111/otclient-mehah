@@ -43,6 +43,32 @@ double Creature::speedA = 0;
 double Creature::speedB = 0;
 double Creature::speedC = 0;
 
+// Drop-shadow defaults (phase 1+2) — enabled by default
+bool Creature::s_drawShadows = true;
+bool Creature::s_drawItemShadows = true;
+int Creature::s_shadowAlpha = 110; // ~43% opacity at base
+int Creature::s_shadowType  = 0;   // 0 = mirror (silhouette), 1 = blob (ellipse)
+
+// Light cores defaults
+bool Creature::s_drawLightCores = true;
+int  Creature::s_lightCoreIntensity = 50; // 0-100
+
+// Fixed sun-angle: shadow stretches toward south-east (down-right).
+// Tuned to look like a low sun (~40° from east).
+namespace {
+    // ----- Mirror (silhouette streak) -----
+    constexpr float SHADOW_DIR_X = 0.55f;    // positive = east
+    constexpr float SHADOW_DIR_Y = 0.85f;    // positive = south (screen down)
+    constexpr int   SHADOW_LENGTH_PX = 22;
+    constexpr int   SHADOW_STEPS = 7;
+    constexpr float SHADOW_TIP_FADE = 1.0f;  // 1.0 = fully fades at tip
+
+    // ----- Blob (ellipse under feet) -----
+    constexpr int   BLOB_WIDTH_PX  = 26;     // ellipse horizontal diameter
+    constexpr int   BLOB_HEIGHT_PX = 8;      // ellipse vertical diameter (flat oval)
+    constexpr int   BLOB_LAYERS    = 3;      // overlapping layers to fake softness
+}
+
 
 
 Creature::Creature() :m_type(Proto::CreatureTypeUnknown)
@@ -94,6 +120,55 @@ void Creature::draw(const Point& dest, const bool drawThings, const LightViewPtr
         auto oldScaleFactor = g_drawPool.getScaleFactor();
 
         g_drawPool.setScaleFactor(getScaleFactor() + (oldScaleFactor - 1.f));
+
+        // Drop shadow: drawn before the sprite so it sits visually beneath it.
+        if (s_drawShadows && s_shadowAlpha > 0) {
+            const float scale = g_drawPool.getScaleFactor();
+
+            if (s_shadowType == 0) {
+                // ---- MIRROR: stretched silhouette streak toward SE ----
+                // Uses replace-color shader path (color != white) so attached effects skip.
+                const float stepLen = (SHADOW_LENGTH_PX * scale) / static_cast<float>(SHADOW_STEPS);
+                for (int i = 1; i <= SHADOW_STEPS; ++i) {
+                    const float t = static_cast<float>(i) / static_cast<float>(SHADOW_STEPS);
+                    const float fade = 1.0f - SHADOW_TIP_FADE * t;
+                    // Multiplier doubled (1.6 -> 3.2) to get ~2x the visual darkness
+                    // for the same slider value.
+                    int a = static_cast<int>(s_shadowAlpha * fade / static_cast<float>(SHADOW_STEPS) * 3.2f);
+                    if (a > 255) a = 255;
+                    if (a <= 0) continue;
+                    const Point off(
+                        static_cast<int>(SHADOW_DIR_X * stepLen * i),
+                        static_cast<int>(SHADOW_DIR_Y * stepLen * i)
+                    );
+                    internalDraw(_dest + off, Color(0, 0, 0, a));
+                }
+            } else {
+                // ---- BLOB: flat ellipse under the sprite's feet ----
+                // Faked with 3 concentric filled rects of decreasing size & growing
+                // alpha to approximate a soft ellipse without needing a texture asset.
+                const int sprSize2 = g_gameConfig.getSpriteSize();
+                // Feet anchor: bottom-center of the sprite tile.
+                const Point feet(
+                    _dest.x + static_cast<int>(sprSize2 * 0.5f * scale),
+                    _dest.y + static_cast<int>(sprSize2 * 0.95f * scale)
+                );
+                for (int layer = 0; layer < BLOB_LAYERS; ++layer) {
+                    // Outer layer is largest and most transparent; inner is smaller and darker.
+                    const float k = 1.0f - static_cast<float>(layer) / static_cast<float>(BLOB_LAYERS);
+                    const int w = static_cast<int>(BLOB_WIDTH_PX  * scale * k);
+                    const int h = (std::max)(2, static_cast<int>(BLOB_HEIGHT_PX * scale * k));
+                    // Doubled multipliers (0.55 -> 1.1, 0.45 -> 0.9) for x2 visual opacity.
+                    int a = static_cast<int>((s_shadowAlpha / static_cast<float>(BLOB_LAYERS)) * (1.1f + 0.9f * (1.0f - k)));
+                    if (a > 255) a = 255;
+                    if (a <= 0 || w <= 0) continue;
+                    g_drawPool.addFilledRect(
+                        Rect(feet.x - w / 2, feet.y - h / 2, w, h),
+                        Color(0, 0, 0, a)
+                    );
+                }
+            }
+        }
 
         internalDraw(_dest);
 

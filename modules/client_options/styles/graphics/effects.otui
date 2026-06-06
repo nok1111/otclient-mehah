@@ -127,3 +127,70 @@ UIWidget
       &minimumScrollValue: 10
       &maximumScrollValue: 100
       &scrollSize: 21
+
+  SmallReversedQtPanel
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 7
+    height: 104
+
+    OptionCheckBox
+      id: creatureShadows
+      !text: tr('Creature Shadows')
+      !tooltip: tr('Draws a drop shadow under each creature.')
+
+    OptionCheckBox
+      id: itemShadows
+      anchors.top: prev.bottom
+      !text: tr('Item Shadows')
+      !tooltip: tr('Draws shadows under walls, trees, furniture and other structural items. Skips ground tiles, splashes, decals and wall-attached props.')
+
+    OptionScaleScroll
+      id: creatureShadowOpacity
+      anchors.top: prev.bottom
+      &minimumScrollValue: 5
+      &maximumScrollValue: 100
+      &scrollSize: 21
+      @onSetup: |
+        local value = modules.client_options.getOption('creatureShadowOpacity')
+        self:setText(string.format('Shadow Opacity: %s%%', value))
+
+    Label
+      id: creatureShadowTypeLabel
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      margin-top: 6
+      margin-left: 18
+      color: #c0c0c0ff
+      !text: tr('Shadow Type:')
+
+    QtComboBox
+      id: creatureShadowType
+      width: 140
+      anchors.verticalCenter: prev.verticalCenter
+      anchors.left: prev.right
+      margin-left: 10
+      mouse-scroll: false
+
+  SmallReversedQtPanel
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 7
+    height: 50
+
+    OptionCheckBox
+      id: lightCores
+      !text: tr('Light Cores')
+      !tooltip: tr('Adds a small bright glow on items that emit light (torches, lamps, runes). Warm-colored lights flicker like flame.')
+
+    OptionScaleScroll
+      id: lightCoreIntensity
+      anchors.top: prev.bottom
+      &minimumScrollValue: 0
+      &maximumScrollValue: 100
+      &scrollSize: 21
+      @onSetup: |
+        local value = modules.client_options.getOption('lightCoreIntensity')
+        self:setText(string.format('Light Core Intensity: %s%%', value))

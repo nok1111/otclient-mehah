@@ -207,22 +207,46 @@ MOUNT_SHADERS = { {
 
 ENHANCE_SHADER_NAME = 'Map - Enhance'
 
--- GLSL post-process function: color enhancements applied after any weather shader
+-- GLSL post-process function: color enhancements applied after any weather shader.
+-- Lighter than the standalone enhance.frag (no bloom / no smartSmooth) because
+-- weather shaders already touch every pixel and we don't want extra taps under rain/snow.
+-- Constants kept in sync with shaders/fragment/enhance.frag.
+-- Includes: exposure, ACES tone map, S-curve, warm/cool grading, vibrance, saturation, warm tint, grain.
 local ENHANCE_POST_GLSL = [=[
+vec3 _aces(vec3 x) {
+    return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0);
+}
+float _hash21(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+}
 vec3 _enhancePost(vec3 color, vec2 uv) {
+    // 1. Exposure + ACES tone map (matches enhance.frag EXPOSURE=0.65)
+    color *= 0.65;
+    color = _aces(color);
+    // 2. S-curve contrast (CONTRAST=0.55)
     vec3 curved = color * color * (3.0 - 2.0 * color);
-    color = mix(color, curved, 0.5);
+    color = mix(color, curved, 0.55);
+    // 3. Warm highlights / cool shadows grading (GRADE_STRENGTH=0.18)
     float luma = dot(color, vec3(0.299, 0.587, 0.114));
+    vec3 graded = color * mix(vec3(0.92, 0.97, 1.06), vec3(1.10, 1.02, 0.88), luma);
+    color = mix(color, graded, 0.18);
+    // 4. Vibrance (0.18)
+    luma = dot(color, vec3(0.299, 0.587, 0.114));
     float mx = max(color.r, max(color.g, color.b));
     float mn = min(color.r, min(color.g, color.b));
     float sat = mx - mn;
-    color = mix(vec3(luma), color, 1.0 + 0.15 * (1.0 - sat));
+    color = mix(vec3(luma), color, 1.0 + 0.18 * (1.0 - sat));
+    // 5. Saturation (1.10)
     luma = dot(color, vec3(0.299, 0.587, 0.114));
-    color = mix(vec3(luma), color, 1.08);
-    color.r += 0.005;
-    color.b -= 0.0025;
-    vec2 d = uv - 0.5;
-    color *= 1.0 - dot(d, d) * 0.8;
+    color = mix(vec3(luma), color, 1.10);
+    // 6. Warm tint (WARMTH=0.008)
+    color.r += 0.008;
+    color.b -= 0.004;
+    // 7. Vignette: disabled (enhance.frag VIGNETTE=0.0). Re-enable here if needed.
+    // 8. Grain (0.025)
+    color += (_hash21(uv * u_Resolution + fract(u_Time)) - 0.5) * 0.025;
     return clamp(color, 0.0, 1.0);
 }
 ]=]
@@ -341,7 +365,17 @@ function ShaderController:onInit()
             if ok and source and #source > 0 then
                 -- Rename void main() -> void _weatherMain()
                 local modified = source:gsub('void%s+main%s*%(', 'void _weatherMain(')
-                local combined = modified .. '\n' .. ENHANCE_POST_GLSL .. '\n' ..
+
+                -- Inject uniform declarations only if the weather shader doesn't already declare them
+                local injected = ''
+                if not modified:find('uniform%s+vec2%s+u_Resolution') then
+                    injected = injected .. 'uniform vec2 u_Resolution;\n'
+                end
+                if not modified:find('uniform%s+float%s+u_Time') then
+                    injected = injected .. 'uniform float u_Time;\n'
+                end
+
+                local combined = injected .. modified .. '\n' .. ENHANCE_POST_GLSL .. '\n' ..
                     'void main() {\n' ..
                     '    _weatherMain();\n' ..
                     '    gl_FragColor = vec4(_enhancePost(gl_FragColor.rgb, v_TexCoord), gl_FragColor.a);\n' ..

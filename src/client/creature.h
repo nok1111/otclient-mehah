@@ -28,6 +28,7 @@
 #include <framework/core/declarations.h>
 #include <framework/core/timer.h>
 #include <framework/graphics/cachedtext.h>
+#include <algorithm>
 
 struct PreyMonster
 {
@@ -44,6 +45,33 @@ public:
     static double speedA;
     static double speedB;
     static double speedC;
+
+    // ===== Drop-shadow config (phase 1: creatures only) =====
+    // Fixed sun-light angle simulation. Two render modes:
+    //   0 = MIRROR : multi-tap silhouette stretched south-east
+    //   1 = BLOB   : flat dark ellipse centered under the sprite feet
+    static bool s_drawShadows;
+    static bool s_drawItemShadows; // separate gate for items
+    static int s_shadowAlpha;      // base alpha 0-255
+    static int s_shadowType;       // 0 mirror, 1 blob
+
+    static void setDrawShadows(const bool v) { s_drawShadows = v; }
+    static bool isDrawingShadows() { return s_drawShadows; }
+    static void setDrawItemShadows(const bool v) { s_drawItemShadows = v; }
+    static bool isDrawingItemShadows() { return s_drawItemShadows; }
+    static void setShadowAlpha(const int a) { s_shadowAlpha = std::clamp<int>(a, 0, 255); }
+    static int getShadowAlpha() { return s_shadowAlpha; }
+    static void setShadowType(const int t) { s_shadowType = std::clamp<int>(t, 0, 1); }
+    static int getShadowType() { return s_shadowType; }
+
+    // ===== Light cores (extra: bright dot on light-emitting items) =====
+    static bool s_drawLightCores;
+    static int  s_lightCoreIntensity; // 0-100 (% of full strength)
+
+    static void setDrawLightCores(const bool v) { s_drawLightCores = v; }
+    static bool isDrawingLightCores() { return s_drawLightCores; }
+    static void setLightCoreIntensity(const int v) { s_lightCoreIntensity = std::clamp<int>(v, 0, 100); }
+    static int  getLightCoreIntensity() { return s_lightCoreIntensity; }
 
     Creature();
     ~Creature() override;

@@ -129,6 +129,16 @@ local function setupComboBox()
         setOption('floorViewMode', comboBox:getCurrentOption().data)
     end
 
+    local shadowTypeCombo = panels.graphicsEffectsPanel:recursiveGetChildById('creatureShadowType')
+    if shadowTypeCombo then
+        for _, v in pairs({ { 'Mirror', 0 }, { 'Blob', 1 } }) do
+            shadowTypeCombo:addOption(v[1], v[2])
+        end
+        shadowTypeCombo.onOptionChange = function(comboBox, option)
+            setOption('creatureShadowType', comboBox:getCurrentOption().data)
+        end
+    end
+
     for k, v in pairs({ { 'None', 'none' }, { 'Frames', 'frames' }, { 'Corners', 'corners' } }) do
         framesRarityCombobox:addOption(v[1], v[2])
     end

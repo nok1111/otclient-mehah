@@ -565,6 +565,18 @@ void Client::registerLuaFunctions()
 
     g_lua.registerClass<Creature, Thing>();
     g_lua.bindClassStaticFunction<Creature>("create", [] { return std::make_shared<Creature>(); });
+    g_lua.bindClassStaticFunction<Creature>("setDrawShadows", &Creature::setDrawShadows);
+    g_lua.bindClassStaticFunction<Creature>("isDrawingShadows", &Creature::isDrawingShadows);
+    g_lua.bindClassStaticFunction<Creature>("setShadowAlpha", &Creature::setShadowAlpha);
+    g_lua.bindClassStaticFunction<Creature>("getShadowAlpha", &Creature::getShadowAlpha);
+    g_lua.bindClassStaticFunction<Creature>("setShadowType", &Creature::setShadowType);
+    g_lua.bindClassStaticFunction<Creature>("getShadowType", &Creature::getShadowType);
+    g_lua.bindClassStaticFunction<Creature>("setDrawItemShadows", &Creature::setDrawItemShadows);
+    g_lua.bindClassStaticFunction<Creature>("isDrawingItemShadows", &Creature::isDrawingItemShadows);
+    g_lua.bindClassStaticFunction<Creature>("setDrawLightCores", &Creature::setDrawLightCores);
+    g_lua.bindClassStaticFunction<Creature>("isDrawingLightCores", &Creature::isDrawingLightCores);
+    g_lua.bindClassStaticFunction<Creature>("setLightCoreIntensity", &Creature::setLightCoreIntensity);
+    g_lua.bindClassStaticFunction<Creature>("getLightCoreIntensity", &Creature::getLightCoreIntensity);
     g_lua.bindClassMemberFunction<Creature>("getId", &Creature::getId);
     g_lua.bindClassMemberFunction<Creature>("getMasterId", &Creature::getMasterId);
     g_lua.bindClassMemberFunction<Creature>("getName", &Creature::getName);

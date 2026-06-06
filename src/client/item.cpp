@@ -22,7 +22,9 @@
 
 #include "item.h"
 #include "container.h"
+#include "creature.h"
 #include "game.h"
+#include "gameconfig.h"
 #include "spritemanager.h"
 #include "thing.h"
 #include "thingtypemanager.h"
@@ -30,7 +32,11 @@
 
 #include <framework/core/clock.h>
 #include <framework/core/filestream.h>
+#include <framework/graphics/drawpoolmanager.h>
+#include <framework/graphics/painter.h>
 #include <framework/graphics/shadermanager.h>
+#include <algorithm>
+#include <cmath>
 #ifdef FRAMEWORK_EDITOR
 #include <framework/core/binarytree.h>
 #endif
@@ -47,6 +53,147 @@ ItemPtr Item::create(const int id)
     return item;
 }
 
+// Heuristic filter: which items should cast a drop shadow.
+// Goal: only "structural / volumetric" items (walls, pillars, trees, furniture,
+// statues, big props) — skip ground, decals, on-top overlays, wall-attached
+// items and splashes/fluids that visually have no body.
+bool Item::shouldCastShadow()
+{
+    // Hard rejects: surface or non-physical things
+    if (isGround() || isGroundBorder())   return false;
+    if (isSplash() || isFluidContainer()) return false;
+    if (isTopEffect())                    return false;
+    if (isOnTop())                        return false; // signs/decals above stuff
+    // Wall-attached props (paintings, torches, banners): hang on a vertical
+    // surface, drop shadow under them looks wrong.
+    if (isHangable() || isHookSouth() || isHookEast()) return false;
+    // Translucent: explicit author opt-out for thin/transparent objects
+    // (fences, low railings, glass, bushes, webs, curtains).
+    if (isTranslucent()) return false;
+
+    // Positive criteria: tall / blocking. Note: walls have isOnBottom()==true
+    // (stack priority 2, drawn before creatures), so we do NOT reject onBottom
+    // outright — we let the positive criteria below promote them.
+    if (hasElevation())   return true; // tables, chairs, beds, raisable furniture
+    if (isNotWalkable())  return true; // walls, pillars, trees, statues, barrels, doors
+
+    // Remaining on-bottom items (walkable, no elevation) are carpets / decals → skip.
+    return false;
+}
+
+void Item::drawDropShadow(const int animationPhase, const Point& dest, const bool drawThings)
+{
+    const int shadowAlpha = Creature::getShadowAlpha();
+    if (shadowAlpha <= 0) return;
+
+    const int shadowType = Creature::getShadowType();
+    const float scale = g_drawPool.getScaleFactor();
+
+    if (shadowType == 0) {
+        // MIRROR: stretched silhouette streak toward SE. Mirrors creature path.
+        constexpr float DIR_X = 0.55f;
+        constexpr float DIR_Y = 0.85f;
+        constexpr int   LEN   = 22;
+        constexpr int   STEPS = 7;
+        const float stepLen = (LEN * scale) / static_cast<float>(STEPS);
+        for (int i = 1; i <= STEPS; ++i) {
+            const float t = static_cast<float>(i) / static_cast<float>(STEPS);
+            const float fade = 1.0f - t;
+            int a = static_cast<int>(shadowAlpha * fade / static_cast<float>(STEPS) * 3.2f);
+            if (a > 255) a = 255;
+            if (a <= 0) continue;
+            const Point off(
+                static_cast<int>(DIR_X * stepLen * i),
+                static_cast<int>(DIR_Y * stepLen * i)
+            );
+            internalDraw(animationPhase, dest + off, Color(0, 0, 0, a), drawThings, true);
+        }
+    } else {
+        // BLOB: flat dark ellipse centered under the item's footprint.
+        const int sprSize = g_gameConfig.getSpriteSize();
+        const Point feet(
+            dest.x + static_cast<int>(sprSize * 0.5f * scale),
+            dest.y + static_cast<int>(sprSize * 0.95f * scale)
+        );
+        constexpr int W = 26;
+        constexpr int H = 8;
+        constexpr int LAYERS = 3;
+        for (int layer = 0; layer < LAYERS; ++layer) {
+            const float k = 1.0f - static_cast<float>(layer) / static_cast<float>(LAYERS);
+            const int w = static_cast<int>(W * scale * k);
+            const int h = (std::max)(2, static_cast<int>(H * scale * k));
+            int a = static_cast<int>((shadowAlpha / static_cast<float>(LAYERS)) * (1.1f + 0.9f * (1.0f - k)));
+            if (a > 255) a = 255;
+            if (a <= 0 || w <= 0) continue;
+            g_drawPool.addFilledRect(
+                Rect(feet.x - w / 2, feet.y - h / 2, w, h),
+                Color(0, 0, 0, a)
+            );
+        }
+    }
+}
+
+// Light core: a small bright additive-looking dot drawn over light-emitting
+// items, using the item's own light color. Combined with the bloom shader the
+// item visually "glows" instead of just being a flat sprite.
+void Item::drawLightCore(const Point& dest)
+{
+    auto* type = getThingType();
+    if (!type || !type->hasLight()) return;
+
+    const Light& light = type->getLight();
+    if (light.intensity == 0) return;
+
+    const float intensityCfg = Creature::getLightCoreIntensity() / 100.f;
+    if (intensityCfg <= 0.f) return;
+
+    const float scale = g_drawPool.getScaleFactor();
+
+    // Source color (Tibia 8-bit indexed). Tint white if 0/default.
+    Color baseColor = (light.color == 0) ? Color::white : Color::from8bit(light.color);
+
+    // Warm-color flicker: if R dominates B notably, modulate brightness.
+    // Cool/blue/green lights stay steady.
+    float brightness = 1.f;
+    if (static_cast<int>(baseColor.r()) > static_cast<int>(baseColor.b()) + 30) {
+        // Mix two sinusoids of different periods for organic flame feel.
+        const float t = g_clock.millis() / 1000.f;
+        brightness = 0.85f + 0.15f * (std::sin(t * 7.3f) * 0.6f + std::sin(t * 12.1f) * 0.4f);
+    }
+
+    // Size scales with light.intensity (Tibia practical range 1-8, but clamp).
+    const float intF = std::min<float>(light.intensity, 10) / 10.f;
+    const int coreSize = static_cast<int>((4.f + 12.f * intF) * scale);
+    if (coreSize <= 0) return;
+
+    // Final alpha: combine config intensity, light intensity and flicker.
+    int a = static_cast<int>(255 * intensityCfg * (0.55f + 0.45f * intF) * brightness);
+    if (a > 255) a = 255;
+    if (a <= 0) return;
+
+    const Color coreColor(baseColor.r(), baseColor.g(), baseColor.b(), static_cast<uint8_t>(a));
+
+    // Center on the sprite tile.
+    const int sprSize = g_gameConfig.getSpriteSize();
+    const Point center(
+        dest.x + static_cast<int>(sprSize * 0.5f * scale) - coreSize / 2,
+        dest.y + static_cast<int>(sprSize * 0.5f * scale) - coreSize / 2
+    );
+
+    // Stacked layers fake a soft radial gradient: outer big & dim, inner small & bright.
+    for (int layer = 0; layer < 3; ++layer) {
+        const float k = 1.f - layer * 0.30f; // 1.0, 0.7, 0.4
+        const int w = static_cast<int>(coreSize * (0.4f + layer * 0.4f)); // 0.4, 0.8, 1.2
+        const int la = static_cast<int>(a * k);
+        if (la <= 0 || w <= 0) continue;
+        const Color c(baseColor.r(), baseColor.g(), baseColor.b(), static_cast<uint8_t>(la));
+        g_drawPool.addFilledRect(
+            Rect(center.x + (coreSize - w) / 2, center.y + (coreSize - w) / 2, w, w),
+            c
+        );
+    }
+}
+
 void Item::draw(const Point& dest, const bool drawThings, const LightViewPtr& lightView)
 {
     if (!canDraw(m_color) || isHided())
@@ -55,7 +202,18 @@ void Item::draw(const Point& dest, const bool drawThings, const LightViewPtr& li
     // determine animation phase
     const int animationPhase = calculateAnimationPhase();
 
+    // Drop shadow (phase 2): only "important" structural items.
+    // Drawn BEFORE the item sprite so it sits visually beneath.
+    if (Creature::isDrawingShadows() && Creature::isDrawingItemShadows() && shouldCastShadow()) {
+        drawDropShadow(animationPhase, dest, drawThings);
+    }
+
     internalDraw(animationPhase, dest, m_color, drawThings, false, lightView);
+
+    // Light core: drawn AFTER the sprite so the bright dot sits on top.
+    if (Creature::isDrawingLightCores()) {
+        drawLightCore(dest);
+    }
 
     if (isMarked())
         internalDraw(animationPhase, dest, getMarkedColor(), drawThings, true);
