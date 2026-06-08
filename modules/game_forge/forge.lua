@@ -6,6 +6,8 @@ local OPCODE_FORGE = 217
 
 local window = nil
 local toggleButton = nil
+local perksWindow = nil
+local lastState = nil
 
 local ACTION_OPEN = 'forge_open'
 local ACTION_FEED_CORE = 'forge_feed_core'
@@ -155,6 +157,20 @@ local function ensureWindow()
     end
   end
 
+  local perksButton = window:recursiveGetChildById('perksButton')
+  if perksButton then
+    perksButton.onClick = function()
+      Forge.togglePerks()
+    end
+  end
+
+  local forgeCloseButton = window:recursiveGetChildById('forgeCloseButton')
+  if forgeCloseButton then
+    forgeCloseButton.onClick = function()
+      Forge.hide()
+    end
+  end
+
   return true
 end
 
@@ -197,12 +213,22 @@ local function applyState(data)
     coreProgressBar:setText(string.format('Core Progress: %d/%d', coreProgress, requiredProgress))
   end
 
+  local feedAshName = data.feedAshItemName
+  if not feedAshName or feedAshName == '' then
+    feedAshName = string.format('Item %d', tonumber(data.feedAshItemId) or 0)
+  end
+
+  local essenceName = data.consumeEssenceItemName
+  if not essenceName or essenceName == '' then
+    essenceName = string.format('Item %d', tonumber(data.consumeEssenceItemId) or 0)
+  end
+
   local feedCard = getForgeCard('feedCard')
   if feedCard then
     local costLabel = feedCard:getChildById('cardCostLabel')
     local valueLabel = feedCard:getChildById('cardValueLabel')
     if costLabel then
-      costLabel:setText(string.format('Cost: %dx Item %d', tonumber(data.feedAshPerAction) or 1, tonumber(data.feedAshItemId) or 0))
+      costLabel:setText(string.format('Cost: %dx %s', tonumber(data.feedAshPerAction) or 1, feedAshName))
     end
     if valueLabel then
       valueLabel:setText('Value: +1 core progress')
@@ -214,10 +240,11 @@ local function applyState(data)
     local costLabel = consumeCard:getChildById('cardCostLabel')
     local valueLabel = consumeCard:getChildById('cardValueLabel')
     if costLabel then
-      costLabel:setText(string.format('Cost: %dx Item %d', tonumber(data.consumeEssencePerAction) or 1, tonumber(data.consumeEssenceItemId) or 0))
+      costLabel:setText(string.format('Cost: %dx %s', tonumber(data.consumeEssencePerAction) or 1, essenceName))
     end
     if valueLabel then
-      valueLabel:setText(string.format('Value: +%d exp instant', consumeExp))
+      local label = data.paragonActive and 'Paragon XP' or 'exp'
+      valueLabel:setText(string.format('Value: +%d %s instant', consumeExp, label))
     end
   end
 
@@ -226,12 +253,130 @@ local function applyState(data)
     local costLabel = infuseCard:getChildById('cardCostLabel')
     local valueLabel = infuseCard:getChildById('cardValueLabel')
     if costLabel then
-      costLabel:setText(string.format('Requirement: %d/%d progress', coreProgress, requiredProgress))
+      local maxLv = tonumber(data.maxLevel) or 0
+      if maxLv > 0 and coreLevel >= maxLv then
+        costLabel:setText(string.format('Max level reached (%d)', maxLv))
+      else
+        costLabel:setText(string.format('Requirement: %d/%d progress', coreProgress, requiredProgress))
+      end
     end
     if valueLabel then
       valueLabel:setText('Value: +1 core level, milestone scaling')
     end
   end
+
+  lastState = data
+  if perksWindow and not perksWindow:isDestroyed() and perksWindow:isVisible() then
+    Forge.refreshPerks()
+  end
+end
+
+local function ensurePerksWindow()
+  if perksWindow and not perksWindow:isDestroyed() then
+    return true
+  end
+
+  local parent = rootWidget
+  if modules.game_interface and modules.game_interface.getRootPanel then
+    parent = modules.game_interface.getRootPanel() or rootWidget
+  end
+
+  perksWindow = g_ui.createWidget('ForgePerksWindow', parent)
+  perksWindow:hide()
+
+  local closeBtn = perksWindow:recursiveGetChildById('perksCloseButton')
+  if closeBtn then
+    closeBtn.onClick = function()
+      Forge.togglePerks()
+    end
+  end
+
+  return true
+end
+
+function Forge.refreshPerks()
+  if not ensurePerksWindow() then return end
+  if not lastState then return end
+
+  local list = perksWindow:recursiveGetChildById('perksList')
+  if not list then return end
+  list:destroyChildren()
+
+  local currentLevel = tonumber(lastState.coreLevel) or 0
+  local perks = lastState.perks or {}
+
+  for _, perk in ipairs(perks) do
+    local ok, row = pcall(g_ui.createWidget, 'ForgePerkRow', list)
+    if not ok or not row then
+      break
+    end
+    local lv = tonumber(perk.level) or 0
+    local title = string.format('Level %d', lv)
+    if perk.isMilestone then
+      title = title .. '  (Milestone)'
+    end
+    if lv <= currentLevel then
+      title = title .. '  [Unlocked]'
+    end
+
+    local unlocked = lv <= currentLevel
+    local lockedColor = '#6E6E6E'
+
+    local titleLabel = row:getChildById('rowTitle')
+    if titleLabel then
+      titleLabel:setText(title)
+      if not unlocked then
+        titleLabel:setColor(lockedColor)
+      elseif perk.isMilestone then
+        titleLabel:setColor('#FFD17A')
+      else
+        titleLabel:setColor('#9FD49F')
+      end
+    end
+
+    local descLabel = row:getChildById('rowDesc')
+    if descLabel then
+      local consumeExp = tonumber(perk.consumeExp) or 0
+      local lines = {}
+      table.insert(lines, string.format('-%.1f%% damage taken (Forge Zone)   |   +%.1f%% Ash drop',
+        tonumber(perk.damageReduction) or 0, tonumber(perk.ashDropBonus) or 0))
+      local secondParts = {}
+      table.insert(secondParts, string.format('Consume Ember: +%s exp', formatNumber and formatNumber(consumeExp) or tostring(consumeExp)))
+      if perk.isMilestone then
+        table.insert(secondParts, string.format('+%.1f%% damage to monsters (Forge Zone)', tonumber(perk.damageBonus) or 0))
+      end
+      table.insert(lines, table.concat(secondParts, '   |   '))
+      descLabel:setText(table.concat(lines, '\n'))
+      if unlocked then
+        descLabel:setColor('#C5E1FF')
+      else
+        descLabel:setColor(lockedColor)
+      end
+    end
+
+  end
+
+  local headerLabel = perksWindow:recursiveGetChildById('perksHeader')
+  if headerLabel then
+    local maxLv = tonumber(lastState.maxLevel) or 0
+    headerLabel:setText(string.format('Core Level: %d / %d   Zone ID: %d', currentLevel, maxLv, tonumber(lastState.forgeZoneId) or 0))
+  end
+end
+
+function Forge.togglePerks()
+  if not ensurePerksWindow() then return end
+  if perksWindow:isVisible() then
+    perksWindow:hide()
+    return
+  end
+  perksWindow:show()
+  perksWindow:raise()
+  perksWindow:focus()
+
+  if not lastState then
+    sendAction(ACTION_OPEN)
+  end
+  Forge.refreshPerks()
 end
 
 local function onExtendedOpcode(protocol, opcode, buffer)
@@ -300,6 +445,10 @@ function Forge.hide()
     window:hide()
   end
 
+  if perksWindow and not perksWindow:isDestroyed() then
+    perksWindow:hide()
+  end
+
   if toggleButton and not toggleButton:isDestroyed() then
     toggleButton:setOn(false)
   end
@@ -348,6 +497,11 @@ function terminate()
     window:destroy()
   end
   window = nil
+
+  if perksWindow and not perksWindow:isDestroyed() then
+    perksWindow:destroy()
+  end
+  perksWindow = nil
 
   if toggleButton and not toggleButton:isDestroyed() then
     toggleButton:destroy()

@@ -1,9 +1,29 @@
 ForgeWindow < MainWindow
   id: forgeWindow
   !text: tr('Infernal Forge')
-  size: 790 500
+  size: 790 540
   visible: false
   @onEscape: modules.game_forge.hide()
+
+  Button
+    id: perksButton
+    !text: tr('Perks')
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 6
+    margin-right: 12
+    width: 80
+    height: 22
+
+  Button
+    id: forgeCloseButton
+    !text: tr('Close')
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-bottom: 10
+    margin-right: 12
+    width: 80
+    height: 22
 
   Label
     id: ashBonusLabel
@@ -132,4 +152,93 @@ ForgeActionCard < Panel
   Button
     id: cardButton
     text: Execute
+
+ForgePerksWindow < MainWindow
+  id: forgePerksWindow
+  !text: tr('Forge Perks')
+  size: 600 560
+  visible: false
+  @onEscape: modules.game_forge.togglePerks()
+
+  Label
+    id: perksHeader
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 12
+    margin-right: 12
+    height: 16
+    text: Core Level: 0
+    color: #E7CF7A
+    font: verdana-11px-rounded
+    text-align: center
+
+  Button
+    id: perksCloseButton
+    !text: tr('Close')
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-bottom: 10
+    margin-right: 12
+    width: 80
+    height: 22
+
+  VerticalScrollBar
+    id: perksScrollBar
+    anchors.top: perksHeader.bottom
+    anchors.bottom: perksCloseButton.top
+    anchors.right: parent.right
+    margin-top: 8
+    margin-right: 6
+    margin-bottom: 8
+    step: 32
+    pixels-scroll: true
+
+  ScrollablePanel
+    id: perksList
+    anchors.top: perksHeader.bottom
+    anchors.left: parent.left
+    anchors.right: perksScrollBar.left
+    anchors.bottom: perksCloseButton.top
+    margin-top: 8
+    margin-left: 10
+    margin-right: 4
+    margin-bottom: 8
+    vertical-scrollbar: perksScrollBar
+    layout:
+      type: verticalBox
+      spacing: 3
+
+ForgePerkRow < Panel
+  height: 56
+  image-source: /images/ui/windows/miniwindow
+  image-border: 4
+  padding: 4
+
+  Label
+    id: rowTitle
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 4
+    margin-left: 10
+    margin-right: 10
+    text: Level
+    color: #C5C5C5
+    font: verdana-11px-rounded
+
+  Label
+    id: rowDesc
+    anchors.top: rowTitle.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 2
+    margin-left: 10
+    margin-right: 10
+    height: 32
+    text: -
+    color: #C5E1FF
+    font: verdana-11px-antialised
+    text-wrap: true
 
