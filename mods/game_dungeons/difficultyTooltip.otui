@@ -61,7 +61,7 @@ Panel
     shadow: true
 
   UIWidget
-    id: goldIcon
+    id: rewardIcon
     size: 16 16
     anchors.top: expIcon.bottom
     anchors.left: parent.left
@@ -70,26 +70,26 @@ Panel
     image-source: /images/dungeons/icons
 
   Label
-    id: goldLabel
-    anchors.top: goldIcon.top
-    anchors.left: goldIcon.right
+    id: rewardLabel
+    anchors.top: rewardIcon.top
+    anchors.left: rewardIcon.right
     margin-left: 5
     text-auto-resize: true
     shadow: true
 
   UIWidget
-    id: lootIcon
+    id: fameIcon
     size: 16 16
-    anchors.top: goldIcon.bottom
+    anchors.top: rewardIcon.bottom
     anchors.left: parent.left
     margin-left: 5
     margin-bottom: 5
-    image-source: /images/dungeons/icons
+    image-source: /images/icons/fame
 
   Label
-    id: lootLabel
-    anchors.top: lootIcon.top
-    anchors.left: lootIcon.right
+    id: fameLabel
+    anchors.top: fameIcon.top
+    anchors.left: fameIcon.right
     margin-left: 5
     text-auto-resize: true
     shadow: true

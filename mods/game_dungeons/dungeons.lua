@@ -20,21 +20,29 @@ Dungeons.lootChanceThresholds = {
 	[6] = 0
 }
 
+-- Tooltip values mirror the server-side scaling. Keep in sync with:
+--   src/const.h: DifficultyLife / DifficultyDamage / DifficultyXP
+--   data/scripts/dungeons/dungeons.lua: Dungeons.difficultyBonuses
+-- health/damage are displayed as "Monster Health/Damage %d%%" (multiplier as %).
+-- exp/reward are displayed as "+%d%%" (bonus over base loot amount / xp).
+-- fame is displayed as a flat amount.
 Dungeons.difficultyConfig = {
-	[1] = {name = "Normal", health = 100, damage = 100},
-	[2] = {name = "Hard", health = 120, damage = 120, exp = 80, gold = 80},
-	[3] = {name = "Expert", health = 140, damage = 140, exp = 100, gold = 100, loot = 10},
-	[4] = {name = "Master", health = 160, damage = 160, exp = 120, gold = 120, loot = 20},
-	[5] = {name = "Torment", health = 180, damage = 180, exp = 140, gold = 140, loot = 30},
-	[6] = {name = "Hell", health = 200, damage = 200, exp = 160, gold = 160, loot = 40},
+	[1] = {name = "Normal",  health = 100, damage = 100},
+	[2] = {name = "Hard",    health = 130, damage = 115, exp = 40,  reward = 25,  fame = 5},
+	[3] = {name = "Expert",  health = 170, damage = 132, exp = 90,  reward = 55,  fame = 10},
+	[4] = {name = "Master",  health = 220, damage = 152, exp = 150, reward = 100, fame = 20},
+	[5] = {name = "Torment", health = 285, damage = 175, exp = 220, reward = 160, fame = 35},
+	[6] = {name = "Hell",    health = 370, damage = 200, exp = 300, reward = 230, fame = 60},
 }
 
+-- Numeric values are indexes into the dungeons icon sprite-sheet.
+-- "fame" is special-cased: it uses its own image-source from the OTUI.
 Dungeons.attributeIcons = {
 	health = 27,
 	damage = 12,
 	exp = 17,
-	gold = 15,
-	loot = 16,
+	reward = 15,
+	fame = "image",
 }
 
 Dungeons.vocationalIcons = {
@@ -438,19 +446,25 @@ function Dungeons.applyTooltip(difficultyLevel)
 		local iconWidget = tooltip:getChildById(attribute .. "Icon")
 		local labelWidget = tooltip:getChildById(attribute .. "Label")
 
-		if config[attribute] then
+		if iconWidget and labelWidget and config[attribute] then
 			local formattedText
 			if attribute == "health" or attribute == "damage" then
 				formattedText = string.format("Monster %s %d%%", attribute:gsub("^%l", string.upper), config[attribute])
+			elseif attribute == "fame" then
+				formattedText = string.format("Fame Reward +%d", config[attribute])
+			elseif attribute == "reward" then
+				formattedText = string.format("Loot Amount +%d%%", config[attribute])
 			else
-				formattedText = string.format("%s +%d%%", attribute == "exp" and "Bonus XP" or attribute == "gold" and "Gold Drop" or "Loot Chance", config[attribute])
+				formattedText = string.format("Bonus XP +%d%%", config[attribute])
 			end
 
-			Dungeons.setIconImageType(iconWidget, value)
+			if type(value) == "number" then
+				Dungeons.setIconImageType(iconWidget, value)
+			end
 			labelWidget:setText(formattedText)
 			iconWidget:setVisible(true)
 			labelWidget:setVisible(true)
-		else
+		elseif iconWidget and labelWidget then
 			iconWidget:setVisible(false)
 			labelWidget:setVisible(false)
 		end
@@ -459,7 +473,7 @@ function Dungeons.applyTooltip(difficultyLevel)
 	tooltip:setText(config.name)
 
 	local totalHeight = 25
-	for _, attribute in pairs({"health", "damage", "exp", "gold", "loot"}) do
+	for _, attribute in pairs({"health", "damage", "exp", "reward", "fame"}) do
 		if config[attribute] then
 			totalHeight = totalHeight + 16
 		end
