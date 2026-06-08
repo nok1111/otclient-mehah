@@ -177,22 +177,13 @@ function onTaskBoardInit(data)
     rerollGoldCost = data.reroll_gold_cost or 10000
     lockGoldCost = data.lock_gold_cost or 5000
     isPremium = data.is_premium or false
-    rerollsAvailable = data.rerolls_available or 0
-    maxRerolls = data.max_rerolls or 5
-    
+
     -- Copy outfits from availableTasks to activeTask (server doesn't send them in active_task)
 
     
-    if activeTask then
-        
-        local foundTask = nil
-        for slot, task in pairs(availableTasks) do
-            if tostring(slot) == tostring(activeTask.slot) then
-                foundTask = task
-                break
-            end
-        end
-        
+    if activeTask and (not activeTask.outfits or #activeTask.outfits == 0) then
+        -- Fallback: derive outfits from the matching available task slot
+        local foundTask = availableTasks[tostring(activeTask.slot)]
         if foundTask and foundTask.outfits then
             activeTask.outfits = foundTask.outfits
         end
@@ -216,8 +207,8 @@ function onTaskBoardInit(data)
 end
 
 function onTaskProgress(data)
-    
-    if activeTask and activeTask.outfits then
+    -- Fallback: preserve previously known outfits if the server omitted them
+    if (not data.outfits or #data.outfits == 0) and activeTask and activeTask.outfits then
         data.outfits = activeTask.outfits
     end
     activeTask = data
@@ -370,23 +361,34 @@ function createTaskCard(task, slot)
     taskCard:setImageSize({width = 210, height = 370})
     taskCard:setImageBorder(5)
     
-    -- Tier Badge
+    -- Tier Badge (overridden by category="dungeon" so the player spots it instantly)
     local tierBadge = taskCard:recursiveGetChildById('tierBadge')
     if tierBadge then
-        tierBadge:setText(task.tier:upper())
-        local tierColors = {
-            normal = '#888888',
-            rare = '#0070DD',
-            epic = '#A335EE',
-            legendary = '#FF8000'
-        }
-        tierBadge:setColor(tierColors[task.tier] or '#ffffff')
+        if task.category == 'dungeon' then
+            -- Short label so it fits the badge slot next to the title.
+            tierBadge:setText(task.is_boss and 'BOSS' or 'DUNGEON')
+            tierBadge:setColor('#FF3030')
+        else
+            tierBadge:setText(task.tier:upper())
+            local tierColors = {
+                normal = '#888888',
+                rare = '#0070DD',
+                epic = '#A335EE',
+                legendary = '#FF8000'
+            }
+            tierBadge:setColor(tierColors[task.tier] or '#ffffff')
+        end
     end
-    
+
     -- Task Name
     local taskName = taskCard:recursiveGetChildById('taskName')
     if taskName then
         taskName:setText(task.name)
+        if task.category == 'dungeon' then
+            taskName:setColor('#FF6464')
+        else
+            taskName:setColor('#ffffff')
+        end
     end
     
    
@@ -405,111 +407,38 @@ function createTaskCard(task, slot)
     
     -- Crear y posicionar creatures según cantidad (1-3)
     if task.outfits and #task.outfits > 0 and headerImagePanel then
-        local outfitCount = #task.outfits
-        
-        if outfitCount == 1 then
-            -- 1 creature: centrada
+        -- marginLeft offsets per total outfit count (1, 2 or 3 creatures)
+        -- offsetsByCount[count][outfitIndex] = horizontal offset
+        local offsetsByCount = {
+            [1] = { 0 },
+            [2] = { -25, 25 },
+            [3] = { 0, -40, 40 }  -- outfit[1]=center, outfit[2]=left, outfit[3]=right
+        }
+        -- drawOrderByCount[count] = list of outfit indices in render order
+        -- (earlier = farther back). Z-order wanted: left BEHIND, then center,
+        -- then right on top. So we paint outfit[2] first, outfit[1] next,
+        -- and outfit[3] last.
+        local drawOrderByCount = {
+            [1] = { 1 },
+            [2] = { 1, 2 },
+            [3] = { 2, 1, 3 }
+        }
+        local count = math.min(#task.outfits, 3)
+        local offsets = offsetsByCount[count]
+        local drawOrder = drawOrderByCount[count]
+
+        for _, i in ipairs(drawOrder) do
+            local outfit = task.outfits[i]
             local creature = g_ui.createWidget('Creature', headerImagePanel)
-            creature:setId('creature1')
+            creature:setId('creature' .. i)
             creature:setImageSource('/images/ui/windows/transparent')
-            creature:setOutfit(task.outfits[1])
+            creature:setOutfit(outfit)
             creature:centerIn('parent')
+            creature:setMarginLeft(offsets[i] or 0)
             creature:setMarginTop(0)
-            -- Tooltip
-            if task.outfits[1].name then
-                local tooltipText = task.outfits[1].name
-                if task.outfits[1].level then
-                    tooltipText = tooltipText
-                end
-                creature:setTooltip(tooltipText)
+            if outfit.name then
+                creature:setTooltip(outfit.name)
             end
-            
-        elseif outfitCount == 2 then
-            -- 2 creatures: pareja (izquierda y derecha del primero)
-            local creature1 = g_ui.createWidget('Creature', headerImagePanel)
-            creature1:setId('creature1')
-            creature1:setImageSource('/images/ui/windows/transparent')
-            creature1:setOutfit(task.outfits[1])
-            creature1:centerIn('parent')
-            creature1:setMarginLeft(-25)
-            creature1:setMarginTop(0)
-            -- Tooltip
-            if task.outfits[1].name then
-                local tooltipText = task.outfits[1].name
-                if task.outfits[1].level then
-                    tooltipText = tooltipText
-                end
-                creature1:setTooltip(tooltipText)
-            end
-            
-            local creature2 = g_ui.createWidget('Creature', headerImagePanel)
-            creature2:setId('creature2')
-            creature2:setImageSource('/images/ui/windows/transparent')
-            creature2:setOutfit(task.outfits[2])
-            creature2:centerIn('parent')
-            creature2:setMarginLeft(25)
-            creature2:setMarginTop(0)
-            -- Tooltip
-            if task.outfits[2].name then
-                local tooltipText = task.outfits[2].name
-                if task.outfits[2].level then
-                    tooltipText = tooltipText
-                end
-                creature2:setTooltip(tooltipText)
-            end
-            
-        elseif outfitCount >= 3 then
-            -- 3 creatures: trio (izquierda, centro, derecha)
-            local creature2 = g_ui.createWidget('Creature', headerImagePanel)
-            creature2:setId('creature2')
-            creature2:setImageSource('/images/ui/windows/transparent')
-            creature2:setOutfit(task.outfits[2])
-            creature2:centerIn('parent')
-            creature2:setMarginLeft(-40)
-            creature2:setMarginTop(0)
-            -- Tooltip
-
-            
-            if task.outfits[2].name then
-                local tooltipText = task.outfits[2].name
-                if task.outfits[2].level then
-                    tooltipText = tooltipText
-                end
-                creature2:setTooltip(tooltipText)
-            end
-
-            local creature1 = g_ui.createWidget('Creature', headerImagePanel)
-            creature1:setId('creature1')
-            creature1:setImageSource('/images/ui/windows/transparent')
-            creature1:setOutfit(task.outfits[1])
-            creature1:centerIn('parent')
-            creature1:setMarginTop(0)
-            -- Tooltip
-            if task.outfits[1].name then
-                local tooltipText = task.outfits[1].name
-                if task.outfits[1].level then
-                    tooltipText = tooltipText
-                end
-                creature1:setTooltip(tooltipText)
-            end
-            
-            local creature3 = g_ui.createWidget('Creature', headerImagePanel)
-            creature3:setId('creature3')
-            creature3:setImageSource('/images/ui/windows/transparent')
-            creature3:setOutfit(task.outfits[3])
-            creature3:centerIn('parent')
-            creature3:setMarginLeft(40)
-            creature3:setMarginTop(0)
-            -- Tooltip
-            if task.outfits[3].name then
-                local tooltipText = task.outfits[3].name
-                if task.outfits[3].level then
-                    tooltipText = tooltipText
-                end
-                creature3:setTooltip(tooltipText)
-            end
-
-            
         end
     end
     
@@ -529,6 +458,11 @@ function createTaskCard(task, slot)
     local zoneNameLabel = taskCard:recursiveGetChildById('zoneNameLabel')
     if zoneNameLabel and task.zone_name then
         zoneNameLabel:setText(task.zone_name)
+        if task.category == 'dungeon' then
+            zoneNameLabel:setColor('#FFB060')
+        else
+            zoneNameLabel:setColor('#cccccc')
+        end
     end
     
     -- Modifiers with Icons
@@ -569,57 +503,9 @@ function createTaskCard(task, slot)
         end
     end
     
-    -- Sistema de 2 rewards dinámicos
+    -- Reward icons: Codex (rare/bonus) goes first so it never gets hidden by the 2-slot UI cap.
     local rewardTypes = {}
-    
-    if task.rewards.gold then
-        table.insert(rewardTypes, {
-            icon = '/images/icons/gold-bars',
-            text = formatNumber(task.rewards.gold),
-            color = '#FFD700'
-        })
-    end
-    
-    if task.rewards.fame then
-        table.insert(rewardTypes, {
-            icon = '/images/icons/fame',
-            text = tostring(task.rewards.fame),
-            color = '#ff9100ff'
-        })
-    end
-    
-    if task.rewards.experience then
-        table.insert(rewardTypes, {
-            icon = '/images/icons/experience',
-            text = formatNumber(task.rewards.experience),
-            color = '#00BFFF'
-        })
-    end
-    
-    if task.rewards.bonus_rerolls and task.rewards.bonus_rerolls > 0 then
-        table.insert(rewardTypes, {
-            icon = '/images/icons/reroll',
-            text = '+' .. task.rewards.bonus_rerolls,
-            color = '#00FF00'
-        })
-    end
-    
-    if task.rewards.bonus_locks and task.rewards.bonus_locks > 0 then
-        table.insert(rewardTypes, {
-            icon = '/images/icons/lock',
-            text = '+' .. task.rewards.bonus_locks,
-            color = '#FFD700'
-        })
-    end
-    
-    if task.rewards.codex_essences and task.rewards.codex_essences > 0 then
-        table.insert(rewardTypes, {
-            icon = '/images/codex/essence_icon',
-            text = tostring(task.rewards.codex_essences),
-            color = '#A020F0'
-        })
-    end
-    
+
     if task.rewards.codex_crate_type and task.rewards.codex_crate_type > 0 then
         local crateIcons = {
             [1] = '/images/icons/bronce_crate',
@@ -635,6 +521,54 @@ function createTaskCard(task, slot)
             icon = crateIcons[task.rewards.codex_crate_type] or crateIcons[1],
             text = 'x' .. (task.rewards.codex_crate_amount or 1),
             color = crateColors[task.rewards.codex_crate_type] or '#FFFFFF'
+        })
+    end
+
+    if task.rewards.codex_essences and task.rewards.codex_essences > 0 then
+        table.insert(rewardTypes, {
+            icon = '/images/codex/essence_icon',
+            text = tostring(task.rewards.codex_essences),
+            color = '#A020F0'
+        })
+    end
+
+    if task.rewards.gold then
+        table.insert(rewardTypes, {
+            icon = '/images/icons/gold-bars',
+            text = formatNumber(task.rewards.gold),
+            color = '#FFD700'
+        })
+    end
+
+    if task.rewards.fame then
+        table.insert(rewardTypes, {
+            icon = '/images/icons/fame',
+            text = tostring(task.rewards.fame),
+            color = '#ff9100ff'
+        })
+    end
+
+    if task.rewards.experience then
+        table.insert(rewardTypes, {
+            icon = '/images/icons/experience',
+            text = formatNumber(task.rewards.experience),
+            color = '#00BFFF'
+        })
+    end
+
+    if task.rewards.bonus_rerolls and task.rewards.bonus_rerolls > 0 then
+        table.insert(rewardTypes, {
+            icon = '/images/icons/reroll',
+            text = '+' .. task.rewards.bonus_rerolls,
+            color = '#00FF00'
+        })
+    end
+
+    if task.rewards.bonus_locks and task.rewards.bonus_locks > 0 then
+        table.insert(rewardTypes, {
+            icon = '/images/icons/lock',
+            text = '+' .. task.rewards.bonus_locks,
+            color = '#FFD700'
         })
     end
     
@@ -987,25 +921,24 @@ end
 
 function onLockClick(slot, lockState)
     if lockState then
-        if locksAvailable <= 0 then
-            local dialog = displayInfoBox('Task Board', 'No locks available. You have used ' .. locksUsed .. '/' .. maxLocks .. ' locks today.')
-            table.insert(activeDialogs, dialog)
+        if locksAvailable > 0 then
+            sendTaskBoardRequest('lock', {slot = slot, lock_state = true, use_free = true})
             return
         end
-        
-        local confirmMessage = 'Lock this task for ' .. formatNumber(lockGoldCost) .. ' gold?\n\nLocked tasks will not be replaced when rerolling.\n\nLocks used: ' .. locksUsed .. '/' .. maxLocks
-        
+
+        local confirmMessage = 'No free locks left.\n\nLock this task for ' .. formatNumber(lockGoldCost) .. ' gold?\n\nLocked tasks will not be replaced when rerolling.'
+
         local dialog
         dialog = displayGeneralBox('Lock Task', confirmMessage, {
             {text = 'Yes', callback = function()
-                sendTaskBoardRequest('lock', {slot = slot, lock_state = true})
+                sendTaskBoardRequest('lock', {slot = slot, lock_state = true, use_free = false})
                 dialog:destroy()
             end},
             {text = 'No', callback = function()
                 dialog:destroy()
             end}
         }, function()
-            sendTaskBoardRequest('lock', {slot = slot, lock_state = true})
+            sendTaskBoardRequest('lock', {slot = slot, lock_state = true, use_free = false})
             dialog:destroy()
         end, function()
             dialog:destroy()
