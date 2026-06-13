@@ -1,0 +1,12 @@
+Module
+  name: game_zones_overlay
+  description: Renders RME-painted zones as a colored overlay on the minimap.
+  author: Ascension
+  website: https://github.com/nok1111/Ascension-1.4.2
+  autoload: true
+  autoload-priority: 1000
+  sandboxed: true
+  scripts: [ zones_overlay ]
+  @dependencies: [ game_minimap ]
+  @onLoad: ZonesOverlay.init()
+  @onUnload: ZonesOverlay.terminate()
