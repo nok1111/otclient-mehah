@@ -1,4 +1,4 @@
--- Wiki Data
+﻿-- Wiki Data
 -- Multilanguage content for the wiki system
 -- Add more content here as needed
 
@@ -21,19 +21,214 @@ function getEnglishData()
             type = 'list',
             items = {
               {
-                name = 'Fireball Spell',
-                description = 'A powerful fire spell that deals AoE damage',
-                icon = 2260
+                name = 'boots of teleportation',
+                description = '[onUse] Teleport to your targeted position.',
+                icon = 29188
               },
               {
-                name = 'Ice Wave Spell',
-                description = 'Freezes enemies in a wave pattern',
-                icon = 2261
+                name = 'boots of the wild',
+                description = '[onUse] Charge to your current targeted enemy.',
+                icon = 29269
               },
               {
-                name = 'Lightning Strike',
-                description = 'Calls down lightning on your enemies',
-                icon = 2262
+                name = 'boots of timewalking',
+                description = '[onUse] Mark your current self and rewind to it after 4 seconds.',
+                icon = 29299
+              },
+              {
+                name = 'boots of winter',
+                description = '[onUse] Place ice traps on the ground while moving that will slow down the enemies.',
+                icon = 3551
+              },
+              {
+                name = 'boots of levitation',
+                description = '[onUse] Levitate into the air removing all paralysed effects and dashing towards the direction you are facing.',
+                icon = 29249
+              },
+              {
+                name = 'boots of the void',
+                description = '[onUse] Instantly trap all nearby enemies in a void field.',
+                icon = 27379
+              },
+              {
+                name = 'boots of the salamander',
+                description = '[onUse] Place fire pillars in your targeted position wich can block line of sight.',
+                icon = 9019
+              },
+              {
+                name = 'boots of the dreamer',
+                description = '[onUse] Restore 15% maximum mana of all nearby friendly players.',
+                icon = 6529
+              },
+              {
+                name = 'magnetic orb',
+                description = 'place a magnetic orb to create a magnetic field that damages nearby enemies',
+                icon = 34086
+              },
+              {
+                name = 'celestial sigil',
+                description = 'Shoots a celestial mark into the targeted position wich deals damage and increases your magic level percent by 20% for 4 seconds',
+                icon = 34068
+              },
+              {
+                name = 'absolute defense',
+                description = 'increase your block chance by 50% and max health by 30% for the next 8 seconds. (requires a shield equiped)',
+                icon = 34096
+              },
+              {
+                name = 'bouncing sphere',
+                description = 'create a bouncing sphere that bounces between you and your target dealing damage and healing yourself, the sphere speed is based on the distance between you and your target',
+                icon = 34088
+              },
+              {
+                name = 'earthquake',
+                description = 'break the ground dealing physical damage to all enemies and stun them for a short period of time',
+                icon = 34087
+              },
+              {
+                name = 'blessed tree',
+                description = 'create a blessed tree in the targeted position, wich restores health and mana to all nearby players if destroyed.',
+                icon = 34076
+              },
+              {
+                name = 'spider web',
+                description = 'throw a spider web on your target wich stuns it for 2 seconds.',
+                icon = 34084
+              },
+              {
+                name = 'meteor',
+                description = 'throw a meteor on your targeted position dealing fire damage to nearby enemies.',
+                icon = 34071
+              },
+              {
+                name = 'water wave',
+                description = 'create 3 water tides wich deal ice damage and stun the enemies for 1 second.',
+                icon = 34113
+              },
+              {
+                name = 'thunder chain',
+                description = 'create a energy chain reaction will travel through all nearby enemies.',
+                icon = 34072
+              },
+              {
+                name = 'water torrent',
+                description = 'create a water torrent wich repell enemies around yourself.',
+                icon = 34097
+              },
+              {
+                name = 'shark teeth',
+                description = 'create a dangerous area wich later will be devoured by a giant shark.',
+                icon = 29924
+              },
+              {
+                name = 'wild vines',
+                description = 'create wild vines around yourself that pulls nearby monsters into you.',
+                icon = 34107
+              },
+              {
+                name = 'quick chains',
+                description = 'send quick chains in the direction aimed and pull in the first enemy reached into you.',
+                icon = 34075
+              },
+              {
+                name = 'boomerang',
+                description = 'Throw a magical boomerang that deals damage in a straight line and returns to you.',
+                icon = 34121
+              },
+              {
+                name = 'wild spikes',
+                description = 'Unleash two wild spikes in front of you, healing yourself and dealing damage to the target.',
+                icon = 29916
+              },
+              {
+                name = 'sniper shot',
+                description = 'A precise, long-range attack that deals damage based on the distance traveled.',
+                icon = 29936
+              },
+              {
+                name = 'thunder leap',
+                description = 'leap into your targeted position dealing damage and stuning nearby enemies for 1 second.',
+                icon = 34109
+              },
+              {
+                name = 'chain of flames',
+                description = 'create a fire chain reaction will travel through all nearby enemies.',
+                icon = 34077
+              },
+              {
+                name = 'toxic spores',
+                description = 'emanate toxic spores poisoning all nearby enemies for 8 seconds.',
+                icon = 29998
+              },
+              {
+                name = 'final sentence',
+                description = 'Setence your target dealing massive holy damage in a small area increasing its damage based on the target\'s missing health.',
+                icon = 29917
+              },
+              {
+                name = 'healing prisma',
+                description = 'Heals you and nearby allies in a wider area',
+                icon = 34110
+              },
+              {
+                name = 'fire tornado',
+                description = 'Summon a raging fire tornado that repeatedly burns enemies in an area and slows their movement.',
+                icon = 34098
+              },
+              {
+                name = 'opelus',
+                description = 'Unleash repeated bursts of energy damage at a target location, striking all enemies in the area multiple times.',
+                icon = 34081
+              },
+              {
+                name = 'voltstorm',
+                description = 'Unleash a storm of constant energy damage at your targeted location, striking all enemies in the area multiple times.',
+                icon = 34101
+              },
+              {
+                name = 'blood aura',
+                description = 'wield a blood aura draining life force from all nearby enemies.',
+                icon = 29918
+              },
+              {
+                name = 'arcane missiles',
+                description = 'Fire 5 arcane missiles that seek random enemies in a 7x7 area, dealing energy damage.',
+                icon = 34073
+              },
+              {
+                name = 'lightning rod',
+                description = 'Place a lightning rod that strikes nearby enemies with chain lightning every second for 6 seconds.',
+                icon = 34074
+              },
+              {
+                name = 'phase shift',
+                description = 'Become intangible for 2 seconds. You cannot attack or be attacked during this time.',
+                icon = 19369
+              },
+              {
+                name = 'rejuvenation',
+                description = 'Regenerate 5% of your maximum health per second for 10 seconds, healing 50% total.',
+                icon = 34094
+              },
+              {
+                name = 'last stand',
+                description = 'When your health drops below 15%, automatically heal 30% of your maximum health. 120 second cooldown.',
+                icon = 34125
+              },
+              {
+                name = 'mana battery',
+                description = 'Convert 20% of your current health into 30% of your maximum mana.',
+                icon = 34124
+              },
+              {
+                name = 'soul reaper',
+                description = 'Every time you kill an enemy within the next 10 seconds, you deal death damage in a small area and restore 8% of your health and mana.',
+                icon = 34106
+              },
+              {
+                name = 'frost nova',
+                description = 'Freeze the ground in a 5x5 area for 8 seconds. Enemies entering are slowed by 70% for 2 seconds.',
+                icon = 34111
               }
             }
           },
@@ -461,7 +656,7 @@ function getEnglishData()
           fame = {
             name = 'Fame Points',
             type = 'text',
-            content = 'Fame points are earned by completing quests and defeating bosses.\n\nUses:\n• Purchase exclusive items from NPC shops\n• Unlock special areas\n• Buy cosmetic items\n\nHow to earn:\n• Daily quests: 10-50 fame\n• Boss kills: 100-500 fame\n• Events: varies'
+            content = 'Fame points are earned by completing quests and defeating bosses.\n\nUses:\na Purchase exclusive items from NPC shops\na Unlock special areas\na Buy cosmetic items\n\nHow to earn:\na Daily quests: 10-50 fame\na Boss kills: 100-500 fame\na Events: varies'
           },
           valuable_pouches = {
             name = 'Valuable Pouches',
@@ -492,7 +687,7 @@ function getEnglishData()
           overview = {
             name = 'How Tasks Work',
             type = 'text',
-            content = 'The Task System is a dynamic mission board where you hunt monsters for rewards.\n\n**How it Works:**\n- You have 3 task slots available\n- Each task requires killing specific monsters\n- Complete tasks to earn gold, fame, and experience\n- Tasks have different tiers: Normal, Rare, Epic, Legendary\n- Each task has modifiers that affect difficulty and rewards\n\n**Getting Started:**\n1. Open the Task Board (Ctrl+T or click the Tasks button)\n2. Choose a task from the 3 available slots\n3. Click "Start" to activate the task\n4. Hunt the required monsters\n5. Return and click "Complete" to claim your rewards\n\n**Important:**\n- You can only have 1 active task at a time\n- Tasks show monster outfits so you know what to hunt\n- Level ranges help you find appropriate hunting zones\n- You can abandon a task, but you lose all progress'
+            content = 'The Task System is a dynamic mission board where you hunt monsters for rewards.\n\n**How it Works:**\n- You have 3 task slots available\n- Each task requires killing specific monsters\n- Complete tasks to earn gold, fame, and experience\n- Tasks have different tiers: Normal, Rare, Epic, Legendary\n- Each task has modifiers that affect difficulty and rewards\n\n**Getting Started:**\n1. Open the Task Board (click the Tasks Board button from menu)\n2. Choose a task from the 3 available slots\n3. Click "Start" to activate the task\n4. Hunt the required monsters\n5. Return and click "Complete" to claim your rewards\n\n**Important:**\n- You can only have 1 active task at a time\n- Tasks show monster outfits so you know what to hunt\n- Level ranges help you find appropriate hunting zones\n- You can abandon a task, but you lose all progress'
           },
           rerolls = {
             name = 'Rerolls System',
@@ -512,12 +707,101 @@ function getEnglishData()
           rewards = {
             name = 'Rewards & Bonuses',
             type = 'text',
-            content = 'Tasks reward you based on multiple factors that stack together.\n\n**Base Rewards (from level range):**\n- Gold, Fame, and Experience scale with monster level\n- Higher level tasks = higher base rewards\n\n**Reward Multipliers:**\n\n1. **Tier Multiplier:**\n   - Normal: 1.0x\n   - Rare: 1.25x\n   - Epic: 1.5x\n   - Legendary: 2.0x\n\n2. **Monster Count Bonus:**\n   - 1 monster: 1.0x\n   - 2 monsters: 1.15x (+15%)\n   - 3 monsters: 1.30x (+30%)\n\n3. **Modifier Bonus:**\n   - Negative modifier: +15% per modifier\n   - Mixed modifier: +10% per modifier\n   - Harder tasks = better rewards\n\n4. **Kills Bonus (NEW):**\n   - +5% per 50 kills (up to +25% max)\n   - 50 kills: +5%\n   - 100 kills: +10%\n   - 150 kills: +15%\n   - 200 kills: +20%\n   - 250+ kills: +25% (capped)\n\n**Final Formula:**\nReward = Base × Tier × MonsterCount × (1 + ModBonus) × KillsBonus\n\n**Example:**\n- Base: 1000 gold\n- Rare tier: 1.25x\n- 2 monsters: 1.15x\n- 1 negative mod: 1.15x\n- 150 kills: 1.15x\n= 1,913 gold\n\n**Each Task Shows 2 Random Rewards:**\n- Gold, Fame, Experience, Bonus Rerolls, or Bonus Locks'
+            content = 'Tasks reward you based on multiple factors that stack together. Everything multiplies your **Gold, Fame, and Experience** at the end.\n\n**Base Rewards (from level range):**\n- Gold, Fame, and Experience scale with monster level\n- Higher level tasks = higher base rewards before any multipliers\n\n**1. Tier Multiplier (directly affects ALL rewards):**\n   - Normal: 1.0x (base rewards)\n   - Rare: 1.25x (+25% Gold, Fame, and XP)\n   - Epic: 1.5x (+50% Gold, Fame, and XP)\n   - Legendary: 2.0x (+100% Gold, Fame, and XP)\n\n**2. Monster Count Bonus (affects base reward):**\n   - 1 monster: 1.0x\n   - 2 monsters: 1.15x (+15% base Gold, Fame, XP)\n   - 3 monsters: 1.30x (+30% base Gold, Fame, XP)\n\n**3. Modifier Bonus (difficulty = more rewards):**\n   - Each negative modifier: +15% to all rewards\n   - Each mixed modifier: +10% to all rewards\n   - More modifiers = harder task but bigger payout\n\n**4. Kills Bonus (grind reward):**\n   - +5% per 50 kills completed (up to +25%)\n   - 50 kills: +5%\n   - 100 kills: +10%\n   - 150 kills: +15%\n   - 200 kills: +20%\n   - 250+ kills: +25% (capped)\n\n**How It All Stacks:**\nFinal Reward = Base x Tier Multiplier x Monster Count x (1 + Modifier Bonus) x (1 + Kills Bonus)\n\n**Example (Legendary task, 2 monsters, 1 negative mod, 150 kills):**\n- Base: 1000 of each reward\n- Legendary tier: x2.0 = 2000\n- 2 monsters: x1.15 = 2300\n- 1 negative mod: x1.15 = 2645\n- 150 kills: x1.15 = 3041\n\n**What does NOT scale with tier?**\n- Monster count required (set by level range)\n- Modifier difficulty (tier determines how many)\n- Spawn rate of the tier itself\n\n**Each Task Shows 2 Random Extra Rewards:**\n- Bonus Rerolls or Bonus Locks (separate from base Gold/Fame/XP)'
           },
           fame_premium = {
             name = 'Fame & Premium Benefits',
             type = 'text',
-            content = 'Your Fame Level and Premium status provide permanent bonuses.\n\n**Fame Level Bonuses:**\n\n- **Level 3 - Experienced Hunter:**\n  Rare tier spawn rate +5%\n\n- **Level 5 - Veteran Hunter:**\n  Negative modifiers reduced by 15%\n\n- **Level 7 - Elite Hunter:**\n  +1 free reroll per day\n\n- **Level 8 - Master Hunter:**\n  Unlocks Epic tier tasks\n\n- **Level 10 - Legendary Hunter:**\n  +5% bonus to all rewards\n\n**How to Gain Fame:**\n- Complete tasks to earn fame points\n- Higher tier tasks give more fame\n- Fame accumulates and never resets\n- Check your fame level in the Task Board\n\n**Premium Account Benefits:**\n\n- **Free Rerolls:**\n  +5 extra per day (10 total vs 5 free)\n\n- **Free Locks:**\n  +5 extra per day (8 total vs 3 free)\n\n- **Better Efficiency:**\n  Lock more tasks while rerolling\n  More flexibility in task selection\n\n**Combined Power:**\nPremium + Fame Level 10:\n- 10+ free rerolls per day\n- 8 free locks per day\n- +5% rewards on all tasks\n- Epic tier unlocked\n- Better modifier chances\n\n**Strategy:**\n- Fame bonuses are permanent - always worth grinding\n- Premium gives massive QoL for task management\n- Higher fame = better task generation'
+            content = [[Your Fame Level and Premium status provide permanent bonuses that affect the Task System and overall progression.**Fame Level Requirements (Task Bonuses):** Level | Title | Points Needed | Task Bonus |
+|-------|-------|---------------|------------|
+| 3 | Experienced Hunter | 600 | Rare tier spawn rate +5% |
+| 5 | Veteran Hunter | 2,000 | Negative modifiers reduced by 15% |
+| 7 | Elite Hunter | 4,500 | +1 free reroll per day |
+| 8 | Master Hunter | 6,000 | Unlocks Epic tier tasks |
+| 10 | Legendary Hunter | 11,000 | +5% bonus to all task rewards |
+]]
+          }
+        }
+      },
+      daily_tasks = {
+        name = 'Daily Quests',
+        subcategories = {
+          overview = {
+            name = 'How Daily Quests Work',
+            type = 'rich_text',
+            sections = {
+              { type = 'text', content = [[**What are Daily Quests?**
+Daily Quests are 8 tasks that reset every day, giving you consistent objectives and rewards. Open the Daily Quests window using the special item (Daily Task Scroll) to see your active tasks, track progress, and claim rewards.
+Tasks are rolled automatically each day with weighted difficulty: Easy (34%), Medium (33%), and Hard (33%).]] },
+              { type = 'image', path = '/images/wiki/daily_tasks_overview.png', width = 400, height = 126 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Task Categories**
+
+| Category | Description | Type |
+|----------|-------------|------|
+| Kill Zone | Kill monsters in non-PvP, PvP, or PvP-enforced zones | Auto |
+| Boss | Defeat bosses (any or specific) | Auto |
+| Dungeon | Complete dungeon runs | Auto |
+| Zone Event | Complete zone events | Auto |
+| Tower Floor | Clear Tower of God floors | Auto |
+| Kill Task | Complete task board kill tasks | Auto |
+| Crafting | Deliver crafted items (Alchemy, Enchanting, Blacksmith) | Turn In |
+| Gathering | Deliver gathered essences from mining | Turn In |
+| Mixed | Combine multiple actions (kills + tower, bosses + dungeons + events) | Auto |
+
+**Auto-progress** tasks update automatically as you play.
+**Turn In** tasks require you to have the items in your inventory and click the "Turn In" button.]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Rewards**
+
+**Per Task Completion:**
+- **3 Achievement Points**
+- **25 Codex Essences**
+
+**Daily Big Reward (4 completions):**
+- **1 Golden Codex Crate**
+
+The Golden Crate is claimable once per day after completing at least 4 tasks. Make sure to claim it before the daily reset!]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Crafting Task Tiers**
+
+Crafting tasks scale with profession tiers:
+
+**Alchemy:**
+- Apprentice: Refined essences, basic potions
+- Novice: Health/mana/spirit potions, small vials
+- Journeyman: Strong potions, mid-tier vials and elixirs
+- Master: Great potions
+- Grandmaster: Enchanted great potions
+
+**Enchanting (Runesmith):**
+- Apprentice: Tier 1 runes
+- Journeyman: Tier 3 runes
+- Adept: Tier 4 runes
+- Master: Tier 5 runes (two sub-lines)
+- Grand: Tier 6 runes (top-tier)
+- Blueprint Specialist: Rare blueprint crafts
+
+**Blacksmith:**
+- Apprentice: Starter weapons and shields
+- Journeyman: Basic combat gear (1H swords, 2H weapons, ranged, shields)]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Tips**
+
+- Prioritize easy tasks first for quick completions
+- Save harder tasks for when you are already running dungeons or events
+- Keep crafted items in storage so you can quickly turn in crafting tasks
+- Mixed tasks count multiple activities at once - very efficient
+- The daily reset happens based on server local time - plan accordingly
+- Always claim your Golden Crate before the day ends]] }
+            }
           }
         }
       },
@@ -585,7 +869,48 @@ function getEnglishData()
                 element = 'Death',
                 collector = 'Mythical Collector',
                 abilities = {
-                  { name = 'Consume', description = 'Multi-element damage + buff' }
+                  { name = 'Devour', description = 'Melee attack with lifesteal (heals owner for 20% of damage dealt)' }
+                }
+              },
+              {
+                name = 'Baby',
+                outfitId = 1267,
+                rarity = 'Epic',
+                element = 'Physical',
+                collector = 'Special',
+                abilities = {
+                  { name = 'Guardian Cry', description = '+5% all resistances for 8s' },
+                  { name = 'Tantrum', description = 'AoE paralyze to nearby enemies' }
+                }
+              },
+              {
+                name = 'Furry',
+                outfitId = 1263,
+                rarity = 'Epic',
+                element = 'Physical',
+                collector = 'Special',
+                abilities = {
+                  { name = 'Warm Embrace', description = '+8% physical resistance and HP regen for 10s' }
+                }
+              },
+              {
+                name = 'Bob 1',
+                outfitId = 1562,
+                rarity = 'Epic',
+                element = 'Physical',
+                collector = 'Special',
+                abilities = {
+                  { name = 'Challenge', description = 'Challenge + buff' }
+                }
+              },
+              {
+                name = 'Bob 2',
+                outfitId = 1561,
+                rarity = 'Epic',
+                element = 'Physical',
+                collector = 'Special',
+                abilities = {
+                  { name = 'Challenge', description = 'Challenge + buff' }
                 }
               }
             }
@@ -617,7 +942,7 @@ function getEnglishData()
               {
                 name = 'Mystic Baby Dragon',
                 outfitId = 2173,
-                rarity = 'Rare',
+                rarity = 'Epic',
                 element = 'Holy/Ice',
                 collector = 'Mythical Collector',
                 abilities = {
@@ -627,7 +952,7 @@ function getEnglishData()
               {
                 name = 'Wolf Cub',
                 outfitId = 1709,
-                rarity = 'Rare',
+                rarity = 'Common',
                 element = 'Physical',
                 collector = 'Wild Collector',
                 abilities = {
@@ -697,7 +1022,7 @@ function getEnglishData()
               {
                 name = 'Golden Cat',
                 outfitId = 2005,
-                rarity = 'Rare',
+                rarity = 'Uncommon',
                 element = 'Holy',
                 collector = 'Palette Collector',
                 abilities = {
@@ -707,7 +1032,7 @@ function getEnglishData()
               {
                 name = 'Baby Angel',
                 outfitId = 1326,
-                rarity = 'Rare',
+                rarity = 'Epic',
                 element = 'Holy',
                 collector = 'Mythical Collector',
                 abilities = {
@@ -737,7 +1062,7 @@ function getEnglishData()
               {
                 name = 'Baby Rex',
                 outfitId = 2168,
-                rarity = 'Rare',
+                rarity = 'Epic',
                 element = 'Physical',
                 collector = 'Wild Collector',
                 abilities = {
@@ -747,7 +1072,7 @@ function getEnglishData()
               {
                 name = 'Air Elemental',
                 outfitId = 1354,
-                rarity = 'Rare',
+                rarity = 'Common',
                 element = 'Energy',
                 collector = 'Mythical Collector',
                 abilities = {
@@ -757,7 +1082,7 @@ function getEnglishData()
               {
                 name = 'Baby Elemental',
                 outfitId = 2075,
-                rarity = 'Rare',
+                rarity = 'Uncommon',
                 element = 'Energy',
                 collector = 'Mythical Collector',
                 abilities = {
@@ -833,7 +1158,7 @@ function getEnglishData()
               {
                 name = 'Blood Bug',
                 outfitId = 1888,
-                rarity = 'Uncommon',
+                rarity = 'Rare',
                 element = 'Death',
                 collector = 'Bugs Collector',
                 abilities = {
@@ -843,7 +1168,7 @@ function getEnglishData()
               {
                 name = 'Bunny',
                 outfitId = 1821,
-                rarity = 'Uncommon',
+                rarity = 'Common',
                 element = 'Physical',
                 collector = 'Chef Collector',
                 abilities = {
@@ -853,7 +1178,7 @@ function getEnglishData()
               {
                 name = 'Sheep',
                 outfitId = 1481,
-                rarity = 'Uncommon',
+                rarity = 'Rare',
                 element = 'Physical',
                 collector = 'Chef Collector',
                 abilities = {
@@ -893,7 +1218,7 @@ function getEnglishData()
               {
                 name = 'Baby Twin Turtle',
                 outfitId = 2103,
-                rarity = 'Uncommon',
+                rarity = 'Epic',
                 element = 'Ice',
                 collector = 'Aquatic Collector',
                 abilities = {
@@ -923,7 +1248,7 @@ function getEnglishData()
               {
                 name = 'Baby Dworc',
                 outfitId = 216,
-                rarity = 'Uncommon',
+                rarity = 'Rare',
                 element = 'Physical',
                 collector = 'Wild Collector',
                 abilities = {
@@ -933,7 +1258,7 @@ function getEnglishData()
               {
                 name = 'Baby Eyeboh',
                 outfitId = 109,
-                rarity = 'Uncommon',
+                rarity = 'Rare',
                 element = 'Death',
                 collector = 'Spooky Collector',
                 abilities = {
@@ -953,7 +1278,7 @@ function getEnglishData()
               {
                 name = 'Gumateddy',
                 outfitId = 313,
-                rarity = 'Uncommon',
+                rarity = 'Epic',
                 element = 'Physical',
                 collector = 'Palette Collector',
                 abilities = {
@@ -1039,7 +1364,7 @@ function getEnglishData()
               {
                 name = 'Wasp',
                 outfitId = 1992,
-                rarity = 'Common',
+                rarity = 'Uncommon',
                 element = 'Poison',
                 collector = 'Bugs Collector',
                 abilities = {
@@ -1069,7 +1394,7 @@ function getEnglishData()
               {
                 name = 'Turtle',
                 outfitId = 1841,
-                rarity = 'Common',
+                rarity = 'Uncommon',
                 element = 'Physical',
                 collector = 'Aquatic Collector',
                 abilities = {
@@ -1079,7 +1404,7 @@ function getEnglishData()
               {
                 name = 'Aqua Slime',
                 outfitId = 1901,
-                rarity = 'Common',
+                rarity = 'Uncommon',
                 element = 'Ice',
                 collector = 'Aquatic Collector',
                 abilities = {
@@ -1099,7 +1424,7 @@ function getEnglishData()
               {
                 name = 'Bug',
                 outfitId = 45,
-                rarity = 'Common',
+                rarity = 'Uncommon',
                 element = 'Physical',
                 collector = 'Bugs Collector',
                 abilities = {
@@ -1119,7 +1444,7 @@ function getEnglishData()
               {
                 name = 'Fox',
                 outfitId = 1296,
-                rarity = 'Common',
+                rarity = 'Uncommon',
                 element = 'Physical',
                 collector = 'Wild Collector',
                 abilities = {
@@ -1159,7 +1484,7 @@ function getEnglishData()
               {
                 name = 'Firewind Parrot',
                 outfitId = 217,
-                rarity = 'Common',
+                rarity = 'Uncommon',
                 element = 'Fire',
                 collector = 'Palette Collector',
                 abilities = {
@@ -1169,7 +1494,7 @@ function getEnglishData()
               {
                 name = 'Flamingo',
                 outfitId = 212,
-                rarity = 'Common',
+                rarity = 'Uncommon',
                 element = 'Physical',
                 collector = 'Palette Collector',
                 abilities = {
@@ -1179,7 +1504,7 @@ function getEnglishData()
               {
                 name = 'Bear Cub',
                 outfitId = 1716,
-                rarity = 'Common',
+                rarity = 'Uncommon',
                 element = 'Physical',
                 collector = 'Wild Collector',
                 abilities = {
@@ -1189,7 +1514,7 @@ function getEnglishData()
               {
                 name = 'Boar Cub',
                 outfitId = 1286,
-                rarity = 'Common',
+                rarity = 'Uncommon',
                 element = 'Physical',
                 collector = 'Wild Collector',
                 abilities = {
@@ -1249,7 +1574,7 @@ function getEnglishData()
               {
                 name = 'Small Pidgeon',
                 outfitId = 531,
-                rarity = 'Common',
+                rarity = 'Uncommon',
                 element = 'Physical',
                 collector = 'Wild Collector',
                 abilities = {
@@ -1259,7 +1584,7 @@ function getEnglishData()
               {
                 name = 'Baby Crow',
                 outfitId = 1559,
-                rarity = 'Common',
+                rarity = 'Uncommon',
                 element = 'Physical',
                 collector = 'Wild Collector',
                 abilities = {
@@ -1289,7 +1614,7 @@ function getEnglishData()
               {
                 name = 'Snail',
                 outfitId = 2186,
-                rarity = 'Common',
+                rarity = 'Rare',
                 element = 'Physical',
                 collector = 'Bugs Collector',
                 abilities = {
@@ -1299,7 +1624,7 @@ function getEnglishData()
               {
                 name = 'Night Frog',
                 outfitId = 412,
-                rarity = 'Common',
+                rarity = 'Uncommon',
                 element = 'Poison',
                 collector = 'Aquatic Collector',
                 abilities = {
@@ -1313,27 +1638,7 @@ function getEnglishData()
                 element = 'Physical',
                 collector = 'Wild Collector',
                 abilities = {
-                  { name = 'Hop', description = 'Jump away' }
-                }
-              },
-              {
-                name = 'Furry',
-                outfitId = 1263,
-                rarity = 'Common',
-                element = 'Physical',
-                collector = 'Palette Collector',
-                abilities = {
-                  { name = 'Cuddle', description = 'Heal' }
-                }
-              },
-              {
-                name = 'Baby',
-                outfitId = 1267,
-                rarity = 'Common',
-                element = 'Physical',
-                collector = 'Special',
-                abilities = {
-                  { name = 'Baby Cry', description = 'Confusion' }
+                  { name = 'Quick Dodge', description = 'Dodge bonus (5-15%) for 5s based on pet level' }
                 }
               }
             }
@@ -1348,20 +1653,98 @@ function getEnglishData()
             type = 'text',
             content = 'Welcome to Ascension! This is an ARPG style server with deep progression systems.\n\n**Your Priorities:**\n1. Level up and complete Tasks v2.\n2. Collect everything. Use Stash System and Quick Loot to manage items.\n3. Do not vendor trash items! Use the Recycler or Upgrade System to extract materials.'
           },
-          passive_tree = {
-            name = 'Passive Tree',
-            type = 'text',
-            content = 'Like Path of Exile, you can invest points into a massive talent tree.\n\n- Specialize your character (e.g. Pure Crit, Pure Tank with Life Leech).\n- Read carefully to ensure your gear synergizes with your chosen branches.'
+          class_talents = {
+            name = 'Class Talents',
+            type = 'rich_text',
+            sections = {
+              { type = 'image', path = '/images/wiki/talents_overview.png', width = 400, height = 80 },        
+              { type = 'text', content = '**What are Class Talents?**\n\nEvery character class has its own unique talent tree with multiple branches specializing in damage, defense, or utility. Each tree contains nodes that grant passive bonuses when leveled up. Talents are applied automatically on login, so plan your build carefully!' },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Talent Points**\n\n- You earn **1 talent point every 8 character levels**\n- Each node level costs **1 talent point**\n- Most nodes have a **max level of 10**\n- Unused points can be spent at any time by opening the Class Talents window' },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Resetting Talents**\n\nMade a mistake? You can reset your entire tree and get all spent points back.\n\n- Base cost: **50 gold per spent point**\n- **Premium discount:** 25 gold per point (-50%)\n- All spent points are **refunded**\n- You **keep** your total earned points\n\nOpen the talent window and click the Reset button to see the exact cost.' },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Available Classes**\n\n| Class | Branches |\n|-------|----------|\n| Magician | Fire / Arcane / Frost |\n| Templar | Holy / Retribution / Protection / Justice |\n| Nightblade | Shadow / Blood / Assassination |\n| Dragonknight | Earth / Dragon / Fire / Elemental |\n| Warlock | Demonology / Curses / Summoning / Blood Pact |\n| Stellar | Cosmic / Celestial / Wand |\n| Monk | Elements / Earth / Life / Wind |\n| Druid | Nature / Spirit / Ice / Shapeshift |\n| Light Dancer | Light / Speed / Support |' },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Tips**\n\n- Synergize your talent choices with your gear and playstyle\n- DPS builds should focus on damage branches first\n- Tanks should prioritize health and resistances\n- Healers should boost mana pool and healing effectiveness\n- Some nodes unlock spells or special abilities at certain levels\n- You can preview all nodes before spending any points' }
+            }
           },
-          paragon_reborn = {
-            name = 'Paragon & Reborn',
-            type = 'text',
-            content = '**Paragon:** At high levels, you earn Paragon levels which grant small multiplicative stats.\n\n**Reborn:** Rebirth your character to level 1 for permanent damage multipliers. More reborns make leveling easier the next time!'
+          paragon_ascension = {
+            name = 'Paragon Ascension',
+            type = 'rich_text',
+            sections = {
+              { type = 'text', content = '**What is Paragon?**\n\nParagon is the endgame progression system unlocked at **Character Level 300**. After reaching this cap, XP you earn starts filling your Paragon bar instead. Each Paragon level grants a point to spend in one of three stat categories, cycling between them automatically.\n\nOpen the Ascension tab in your Class Talents window to view your Paragon board, allocate points, and track your progress.' },
+              { type = 'image', path = '/images/wiki/paragon_overview.png', width = 400, height = 117 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**How Paragon XP Works**\n\n- Base XP for Paragon Level 1: **6,000,000**\n- Each next level costs **+12% more XP** than the previous\n- **Premium Bonus:** +15% Paragon XP gain\n- **Boost Token:** +25% Paragon XP (consumable buff)\n- **Death Penalty:** Lose 10% of current Paragon XP progress on death\n- Broadcast notification every 10 Paragon levels\n\nParagon XP is earned from the same sources as regular XP (monster kills, quests, etc.) once you are at max level.' },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Point Allocation & Rotation**\n\nPoints rotate automatically between categories as you level up:\n\n- **Paragon Lv 1, 4, 7...** -> **Primary** (Offense)\n- **Paragon Lv 2, 5, 8...** -> **Secondary** (Defense)\n- **Paragon Lv 3, 6, 9...** -> **Utility** (Progression)\n\nYou can spend earned points at any time. Points do not expire. Open the Ascension tab to allocate them into specific stats.' },
+              { type = 'spacer', height = 8 },
+
+              { type = 'image', path = '/images/wiki/paragon_screen.png', width = 400, height = 300 },
+              
+              { type = 'text', content = '**Primary Stats (Offense)**\n\n| Stat | Per Point | Cap |\n|------|-----------|-----|\n| Physical Damage | +1% | 150% |\n| Elemental Damage | +1 flat | 200 |\n| Attack Speed | +1% | 100% |\n| Critical Chance | +1% | 75% |' },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Secondary Stats (Defense)**\n\n| Stat | Per Point | Cap |\n|------|-----------|-----|\n| Block Chance | +1% | 30% |\n| Max HP | +50 flat | No cap |\n| Max Mana | +40 flat | No cap |\n| Healing Received | +1% | 100% |' },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Utility Stats (Progression)**\n\n| Stat | Per Point | Cap |\n|------|-----------|-----|\n| EXP Gain | +1% | 100% |\n| Crafting Experience | +2% | 150% |\n| Fame Gain | +2% | 100% |\n| Codex Knowledge | +0.2% | 50 (~10%) |' },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Milestones**\n\nSpending points in a category unlocks milestone bonuses and titles:\n\n**Primary (Offense):**\n- 25 points -> Title: "Warrior"\n- 50 points -> +3% All Damage\n- 100 points -> +5% All Damage\n- 200 points -> Title: "Paragon of War", +8% All Damage\n\n**Secondary (Defense):**\n- 25 points -> Title: "Guardian"\n- 50 points -> +5% Max HP\n- 100 points -> +8% Max HP\n- 200 points -> Title: "Paragon of Fortitude", +12% Max HP\n\n**Utility (Progression):**\n- 25 points -> Title: "Explorer"\n- 50 points -> +3% All Gains\n- 100 points -> +5% All Gains\n- 200 points -> Title: "Paragon of Fortune", +8% All Gains\n\nMilestone bonuses are automatic and stack with stat bonuses.' },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Tips**\n\n- Prioritize Primary points for raw DPS increase\n- Secondary HP has no cap, making it a safe long-term investment\n- Utility EXP Gain is valuable for faster Paragon progression itself\n- Codex Knowledge helps with card drops while farming\n- Milestone bonuses replace the previous tier (e.g., 100pt replaces 50pt, not stacking)\n- Death protection: be careful in dangerous zones to avoid losing XP progress' }
+            }
           },
           codex = {
             name = 'Codex System',
-            type = 'text',
-            content = 'Monsters drop cards that you can collect in your Codex.\n\n- Activating cards grants passive bonuses and global announcements.\n- Collecting the right cards is vital for End-Game damage.'
+            type = 'rich_text',
+            sections = {
+              { type = 'text', content = '**What is the Codex?**\n\nThe Codex is a card collection system. Monsters can drop cards (or card crates) that you equip into your Deck for powerful passive and active bonuses. With 104 unique cards, building the right deck is essential for End-Game damage, survival, and utility.\n\nOpen the Codex module to see your Collection, active Deck, and Crate crafting tab.' },
+              { type = 'image', path = '/images/wiki/codex_overview.png', width = 400, height = 220 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Deck Slots**\n\nYou have 6 Deck Slots to equip active cards. Unlock requirements:\n\n- **Slot 1:** Free (always unlocked)\n- **Slot 2:** Character Level 80\n- **Slot 3:** Character Level 150\n- **Slot 4:** Paragon Level 1\n- **Slot 5:** Paragon Level 50\n- **Slot 6:** Premium Account only\n\nCards gain no benefit while inactive in your collection. Only equipped cards apply their effects. Go to the Deck tab in the Codex module to equip or swap cards.' },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Crates & How to Get Cards**\n\nCards are obtained by opening Crates. There are 3 crate tiers you can craft in the Codex Crate tab:\n\n| Crate | Craft Cost | Max Card Level | Common | Rare | Epic | Legendary | Bonus Essences |\n|-------|------------|----------------|--------|------|------|-----------|----------------|\n| Bronze | 100 Essences | Level 2 | 70% | 20% | 8% | 2% | 50 (25% chance) |\n| Silver | 200 Essences | Level 3 | 60% | 25% | 10% | 5% | 80 (30% chance) |\n| Golden | 350 Essences | Level 5 | 30% | 30% | 30% | 10% | 120 (35% chance) |\n\nCrates can also drop as loot from monsters and elites. You also receive **1 free Bronze Crate every 15 character levels**.' },
+              { type = 'image', path = '/images/wiki/codex_crates.png', width = 400, height = 250 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Codex Essences**\n\nEssences are the currency of the Codex system. Uses:\n- Craft crates (100/200/350 per crate)\n- Upgrade cards directly (10 EXP per essence spent, rarity cost multiplier applies)\n- Unlock deck slots early (500+ essences, cost doubles each time)\n\n**Ways to earn Essences:**\n- Monster and elite kills\n- Crate bonus rolls\n- Duplicate cards at max level convert to essences\n- **Knowledge Potion:** +50% essence gain while active\n\nYou can see your current Essences at the top of the Codex module.' },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Card Rarities**\n\nCards come in 4 rarities that determine drop rate and power:\n\n- **Common** (White): Basic effects, easiest to obtain\n- **Rare** (Blue): Stronger effects, moderate drop rate\n- **Epic** (Purple): Powerful build-enabling effects\n- **Legendary** (Gold): Game-changing effects, hardest to obtain' },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Card Leveling**\n\nEach card starts at Level 1 and can be leveled up to 10. Higher levels unlock stronger effects. You can level cards by getting duplicates (grants EXP) or by spending Essences directly in the card detail view.\n\n| Level | EXP to Next | Total EXP |\n|-------|-------------|-----------|\n| 1 | 500 | 0 |\n| 2 | 700 | 500 |\n| 3 | 1,000 | 1,200 |\n| 4 | 1,300 | 2,200 |\n| 5 | 1,600 | 3,500 |\n| 6 | 1,900 | 5,100 |\n| 7 | 2,200 | 7,000 |\n| 8 | 2,500 | 9,200 |\n| 9 | 3,000 | 11,700 |\n| 10 | -- | 14,700 (Max) |\n\n**Duplicate Cards:** When you get a card you already own, it grants EXP based on rarity (Common=100, Rare=200, Epic=300, Legendary=500). If the card is already at max level for the crate type, duplicates convert to essences instead.' },
+              { type = 'image', path = '/images/wiki/codex_level_comparison.png', width = 380, height = 280 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Card Trigger Types**\n\nCards activate based on different trigger conditions. You can see a cards trigger type in its tooltip:\n\n- **Passive:** Always active while equipped (stat boosts, resistances, auras)\n- **On Kill:** Triggers when you kill a monster (cooldown reduction, explosions, fear, summon)\n- **On Heal:** Triggers when you heal (mana restore, healing surge, party echo)\n- **On Spell:** Triggers when casting spells (fire fields, heal-on-cast)\n- **On Attack Spell:** Triggers only on offensive/damage spells (lightning, blood sacrifice)\n- **On Healing Spell:** Triggers only on healing spells (blossom dragon blast)\n- **On Party Heal:** Triggers when healing allies (divine punishment on enemies)\n- **On Death:** Cheat death once (The Phoenix revive)\n- **On Crit:** Triggers on critical hits\n- **On Low HP:** Triggers when health drops below threshold\n- **On Think:** Periodic trigger (interval-based effects)' },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = '**Building Your Deck**\n\n*DPS Cards:* Critical Surge, The Witch, Glass Cannon, The Dragon, Guns Lover, The Gunner, Svarog, Zeus\n\n*Tank/Survival Cards:* Golem, The Phoenix, The Behemoth, The Slime, Water Elemental, Soul Leech, Final Symphony\n\n*Healer Cards:* Undine, The Elf, Archangel, Blood Link, Blossom Dragon, The Naga, Yacy\n\n*Utility Cards:* Executioner (CDR), Essence Reaver (essence farm), The Child (EXP), Carnage Presence (clearing), The Necromancer (summons)\n\n**Tips**\n- Synergize cards with your build (e.g., The Witch with high mana pools)\n- Dragon cards (31-40) synergize with Dragon Lord for multiplicative bonuses\n- Healer cards like Blood Link and Archangel only work when healing party members\n- Guns Lover and The Gunner are mandatory for ranged builds\n- Glass Cannon is high-risk, high-reward (+32% damage but +32% damage taken at max)\n- Duplicate cards at max level become essences -- farm lower-tier crates for essence income' }
+            }
           },
           gear_meta = {
             name = 'Gear & Tiers',
@@ -1390,19 +1773,214 @@ function getSpanishData()
             type = 'list',
             items = {
               {
-                name = 'Hechizo de Bola de Fuego',
-                description = 'Un poderoso hechizo de fuego que hace daño en área',
-                icon = 2260
+                name = 'boots of teleportation',
+                description = '[onUse] Teleport to your targeted position.',
+                icon = 29188
               },
               {
-                name = 'Hechizo de Ola de Hielo',
-                description = 'Congela enemigos en patrón de ola',
-                icon = 2261
+                name = 'boots of the wild',
+                description = '[onUse] Charge to your current targeted enemy.',
+                icon = 29269
               },
               {
-                name = 'Rayo',
-                description = 'Invoca un rayo sobre tus enemigos',
-                icon = 2262
+                name = 'boots of timewalking',
+                description = '[onUse] Mark your current self and rewind to it after 4 seconds.',
+                icon = 29299
+              },
+              {
+                name = 'boots of winter',
+                description = '[onUse] Place ice traps on the ground while moving that will slow down the enemies.',
+                icon = 3551
+              },
+              {
+                name = 'boots of levitation',
+                description = '[onUse] Levitate into the air removing all paralysed effects and dashing towards the direction you are facing.',
+                icon = 29249
+              },
+              {
+                name = 'boots of the void',
+                description = '[onUse] Instantly trap all nearby enemies in a void field.',
+                icon = 27379
+              },
+              {
+                name = 'boots of the salamander',
+                description = '[onUse] Place fire pillars in your targeted position wich can block line of sight.',
+                icon = 9019
+              },
+              {
+                name = 'boots of the dreamer',
+                description = '[onUse] Restore 15% maximum mana of all nearby friendly players.',
+                icon = 6529
+              },
+              {
+                name = 'magnetic orb',
+                description = 'place a magnetic orb to create a magnetic field that damages nearby enemies',
+                icon = 34086
+              },
+              {
+                name = 'celestial sigil',
+                description = 'Shoots a celestial mark into the targeted position wich deals damage and increases your magic level percent by 20% for 4 seconds',
+                icon = 34068
+              },
+              {
+                name = 'absolute defense',
+                description = 'increase your block chance by 50% and max health by 30% for the next 8 seconds. (requires a shield equiped)',
+                icon = 34096
+              },
+              {
+                name = 'bouncing sphere',
+                description = 'create a bouncing sphere that bounces between you and your target dealing damage and healing yourself, the sphere speed is based on the distance between you and your target',
+                icon = 34088
+              },
+              {
+                name = 'earthquake',
+                description = 'break the ground dealing physical damage to all enemies and stun them for a short period of time',
+                icon = 34087
+              },
+              {
+                name = 'blessed tree',
+                description = 'create a blessed tree in the targeted position, wich restores health and mana to all nearby players if destroyed.',
+                icon = 34076
+              },
+              {
+                name = 'spider web',
+                description = 'throw a spider web on your target wich stuns it for 2 seconds.',
+                icon = 34084
+              },
+              {
+                name = 'meteor',
+                description = 'throw a meteor on your targeted position dealing fire damage to nearby enemies.',
+                icon = 34071
+              },
+              {
+                name = 'water wave',
+                description = 'create 3 water tides wich deal ice damage and stun the enemies for 1 second.',
+                icon = 34113
+              },
+              {
+                name = 'thunder chain',
+                description = 'create a energy chain reaction will travel through all nearby enemies.',
+                icon = 34072
+              },
+              {
+                name = 'water torrent',
+                description = 'create a water torrent wich repell enemies around yourself.',
+                icon = 34097
+              },
+              {
+                name = 'shark teeth',
+                description = 'create a dangerous area wich later will be devoured by a giant shark.',
+                icon = 29924
+              },
+              {
+                name = 'wild vines',
+                description = 'create wild vines around yourself that pulls nearby monsters into you.',
+                icon = 34107
+              },
+              {
+                name = 'quick chains',
+                description = 'send quick chains in the direction aimed and pull in the first enemy reached into you.',
+                icon = 34075
+              },
+              {
+                name = 'boomerang',
+                description = 'Throw a magical boomerang that deals damage in a straight line and returns to you.',
+                icon = 34121
+              },
+              {
+                name = 'wild spikes',
+                description = 'Unleash two wild spikes in front of you, healing yourself and dealing damage to the target.',
+                icon = 29916
+              },
+              {
+                name = 'sniper shot',
+                description = 'A precise, long-range attack that deals damage based on the distance traveled.',
+                icon = 29936
+              },
+              {
+                name = 'thunder leap',
+                description = 'leap into your targeted position dealing damage and stuning nearby enemies for 1 second.',
+                icon = 34109
+              },
+              {
+                name = 'chain of flames',
+                description = 'create a fire chain reaction will travel through all nearby enemies.',
+                icon = 34077
+              },
+              {
+                name = 'toxic spores',
+                description = 'emanate toxic spores poisoning all nearby enemies for 8 seconds.',
+                icon = 29998
+              },
+              {
+                name = 'final sentence',
+                description = 'Setence your target dealing massive holy damage in a small area increasing its damage based on the target\'s missing health.',
+                icon = 29917
+              },
+              {
+                name = 'healing prisma',
+                description = 'Heals you and nearby allies in a wider area',
+                icon = 34110
+              },
+              {
+                name = 'fire tornado',
+                description = 'Summon a raging fire tornado that repeatedly burns enemies in an area and slows their movement.',
+                icon = 34098
+              },
+              {
+                name = 'opelus',
+                description = 'Unleash repeated bursts of energy damage at a target location, striking all enemies in the area multiple times.',
+                icon = 34081
+              },
+              {
+                name = 'voltstorm',
+                description = 'Unleash a storm of constant energy damage at your targeted location, striking all enemies in the area multiple times.',
+                icon = 34101
+              },
+              {
+                name = 'blood aura',
+                description = 'wield a blood aura draining life force from all nearby enemies.',
+                icon = 29918
+              },
+              {
+                name = 'arcane missiles',
+                description = 'Fire 5 arcane missiles that seek random enemies in a 7x7 area, dealing energy damage.',
+                icon = 34073
+              },
+              {
+                name = 'lightning rod',
+                description = 'Place a lightning rod that strikes nearby enemies with chain lightning every second for 6 seconds.',
+                icon = 34074
+              },
+              {
+                name = 'phase shift',
+                description = 'Become intangible for 2 seconds. You cannot attack or be attacked during this time.',
+                icon = 19369
+              },
+              {
+                name = 'rejuvenation',
+                description = 'Regenerate 5% of your maximum health per second for 10 seconds, healing 50% total.',
+                icon = 34094
+              },
+              {
+                name = 'last stand',
+                description = 'When your health drops below 15%, automatically heal 30% of your maximum health. 120 second cooldown.',
+                icon = 34125
+              },
+              {
+                name = 'mana battery',
+                description = 'Convert 20% of your current health into 30% of your maximum mana.',
+                icon = 34124
+              },
+              {
+                name = 'soul reaper',
+                description = 'Every time you kill an enemy within the next 10 seconds, you deal death damage in a small area and restore 8% of your health and mana.',
+                icon = 34106
+              },
+              {
+                name = 'frost nova',
+                description = 'Freeze the ground in a 5x5 area for 8 seconds. Enemies entering are slowed by 70% for 2 seconds.',
+                icon = 34111
               }
             }
           },
@@ -1411,7 +1989,7 @@ function getSpanishData()
             type = 'list',
             items = {
               {
-                name = 'Runa de Curación Suprema',
+                name = 'Runa de Curacion Suprema',
                 description = 'Restaura una gran cantidad de HP',
                 icon = 2273
               },
@@ -1421,14 +1999,14 @@ function getSpanishData()
                 icon = 2304
               },
               {
-                name = 'Runa de Parálisis',
+                name = 'Runa de ParAlisis',
                 description = 'Paraliza al objetivo',
                 icon = 2278
               }
             }
           },
           sample = {
-            name = 'Categoría de Muestra 1',
+            name = 'Categoria de Muestra 1',
             type = 'list',
             items = {
               {
@@ -1439,7 +2017,7 @@ function getSpanishData()
             }
           },
           sample2 = {
-            name = 'Categoría de Muestra 2',
+            name = 'Categoria de Muestra 2',
             type = 'list',
             items = {
               {
@@ -1455,17 +2033,17 @@ function getSpanishData()
             items = {
               {
                 name = 'Encantamiento de Fuego',
-                description = 'Añade daño de fuego a tu arma (+15% daño de fuego)',
+                description = 'Anade dano de fuego a tu arma (+15% dano de fuego)',
                 icon = 2392
               },
               {
                 name = 'Encantamiento de Hielo',
-                description = 'Añade daño de hielo a tu arma (+15% daño de hielo)',
+                description = 'Anade dano de hielo a tu arma (+15% dano de hielo)',
                 icon = 2393
               },
               {
                 name = 'Encantamiento Sagrado',
-                description = 'Añade daño sagrado a tu arma (+15% daño sagrado)',
+                description = 'Anade dano sagrado a tu arma (+15% dano sagrado)',
                 icon = 2394
               }
             }
@@ -1480,41 +2058,125 @@ function getSpanishData()
             type = 'list',
             items = {
               {
-                name = 'Piedra de Mazmorra Demoníaca',
-                description = 'Teletransporta a la Mazmorra Demoníaca. Nivel requerido: 150',
+                name = 'Piedra de Mazmorra Demoniaca',
+                description = 'Teletransporta a la Mazmorra Demoniaca. Nivel requerido: 150',
                 icon = 1950
               },
               {
-                name = 'Piedra de Guarida del Dragón',
-                description = 'Teletransporta a la Guarida del Dragón. Nivel requerido: 100',
+                name = 'Piedra de Guarida del Dragon',
+                description = 'Teletransporta a la Guarida del Dragon. Nivel requerido: 100',
                 icon = 1951
               },
               {
-                name = 'Piedra de Cripta Vampírica',
-                description = 'Teletransporta a la Cripta Vampírica. Nivel requerido: 80',
+                name = 'Piedra de Cripta Vampirica',
+                description = 'Teletransporta a la Cripta Vampirica. Nivel requerido: 80',
                 icon = 1952
               }
             }
           },
           bosses = {
-            name = 'Información de Jefes',
+            name = 'Informacion de Jefes',
             type = 'list',
             items = {
               {
-                name = 'Señor Demonio',
-                description = 'HP: 50,000 | Ubicación: Mazmorra Demoníaca | Drops: Armadura Demoníaca',
+                name = 'Senor Demonio',
+                description = 'HP: 50,000 | Ubicacion: Mazmorra Demoniaca | Drops: Armadura Demoniaca',
                 icon = 5080
               },
               {
-                name = 'Dragón Ancestral',
-                description = 'HP: 35,000 | Ubicación: Guarida del Dragón | Drops: Armadura de Escamas',
+                name = 'Dragon Ancestral',
+                description = 'HP: 35,000 | Ubicacion: Guarida del Dragon | Drops: Armadura de Escamas',
                 icon = 5081
               },
               {
-                name = 'Príncipe Vampiro',
-                description = 'HP: 25,000 | Ubicación: Cripta Vampírica | Drops: Escudo Vampírico',
+                name = 'Principe Vampiro',
+                description = 'HP: 25,000 | Ubicacion: Cripta Vampirica | Drops: Escudo Vampirico',
                 icon = 5082
               }
+            }
+          }
+        }
+      },
+      daily_tasks = {
+        name = 'Misiones Diarias',
+        subcategories = {
+          overview = {
+            name = 'Como Funcionan las Misiones Diarias',
+            type = 'rich_text',
+            sections = {
+              { type = 'text', content = [[**Que son las Misiones Diarias?**
+
+Las Misiones Diarias son 8 tareas que se reinician cada dia, dandote objetivos y recompensas consistentes. Abre la ventana de Misiones Diarias usando el objeto especial (Daily Task Scroll) para ver tus tareas activas, seguir tu progreso y reclamar recompensas.
+
+Las tareas se sortean automaticamente cada dia con dificultad ponderada: Facil (34%), Media (33%) y Dificil (33%).]] },
+              { type = 'image', path = '/images/wiki/daily_tasks_overview.png', width = 400, height = 220 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Categorias de Tareas**
+
+| Categoria | Descripcion | Tipo |
+|-----------|-------------|------|
+| Kill Zone | Mata monstruos en zonas non-PvP, PvP o PvP-forzado | Auto |
+| Boss | Derrota bosses (cualquiera o especifico) | Auto |
+| Dungeon | Completa mazmorras | Auto |
+| Zone Event | Completa eventos de zona | Auto |
+| Tower Floor | Limpia pisos de la Torre de Dios | Auto |
+| Kill Task | Completa tareas de matar del tablero | Auto |
+| Crafting | Entrega items crafteados (Alquimia, Encantamiento, Herreria) | Entregar |
+| Gathering | Entrega esencias recolectadas de mineria | Entregar |
+| Mixed | Combina multiples actividades (kills + torre, bosses + mazmorras + eventos) | Auto |
+
+Las tareas de **progreso automatico** se actualizan automaticamente mientras juegas.
+Las tareas de **entrega** requieren que tengas los items en tu inventario y hagas clic en el boton "Entregar".]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Recompensas**
+
+**Por Tarea Completada:**
+- **3 Puntos de Logro**
+- **25 Esencias de Codex**
+
+**Recompensa Diaria Grande (4 completadas):**
+- **1 Caja Dorada de Codex**
+
+La Caja Dorada se puede reclamar una vez al dia despues de completar al menos 4 tareas. Asegurate de reclamarla antes del reinicio diario!]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Niveles de Tareas de Crafting**
+
+Las tareas de crafting escalan con los niveles de profesion:
+
+**Alquimia:**
+- Aprendiz: Esencias refinadas, pociones basicas
+- Novicio: Pociones de salud/mana/espiritu, viales pequenos
+- Oficial: Pociones fuertes, viales y elixires de nivel medio
+- Maestro: Grandes pociones
+- Gran Maestro: Grandes pociones encantadas
+
+**Encantamiento (Runesmith):**
+- Aprendiz: Runas Tier 1
+- Oficial: Runas Tier 3
+- Adepto: Runas Tier 4
+- Maestro: Runas Tier 5 (dos sub-lineas)
+- Gran: Runas Tier 6 (maximo nivel)
+- Especialista en Planos: Crafteos raros de planos
+
+**Herreria:**
+- Aprendiz: Armas iniciales y escudos
+- Oficial: Equipo de combate basico (espadas 1M, armas 2M, a distancia, escudos)]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Consejos**
+
+- Prioriza las tareas faciles primero para completarlas rapido
+- Guarda las tareas dificiles para cuando ya estes corriendo mazmorras o eventos
+- Manten items crafteados en tu storage para entregar tareas de crafting rapidamente
+- Las tareas Mixtas cuentan multiples actividades a la vez - muy eficientes
+- El reinicio diario ocurre segun la hora local del servidor - planifica en consecuencia
+- Siempre reclama tu Caja Dorada antes de que termine el dia]] }
             }
           }
         }
@@ -1525,7 +2187,7 @@ function getSpanishData()
           fame = {
             name = 'Puntos de Fama',
             type = 'text',
-            content = 'Los puntos de fama se ganan completando misiones y derrotando jefes.\n\nUsos:\n• Comprar objetos exclusivos en tiendas NPC\n• Desbloquear áreas especiales\n• Comprar objetos cosméticos\n\nCómo ganar:\n• Misiones diarias: 10-50 fama\n• Matar jefes: 100-500 fama\n• Eventos: varía'
+            content = 'Los puntos de fama se ganan completando misiones y derrotando jefes.\n\nUsos:\na Comprar objetos exclusivos en tiendas NPC\na Desbloquear Areas especiales\na Comprar objetos cosmA(c)ticos\n\nComo ganar:\na Misiones diarias: 10-50 fama\na Matar jefes: 100-500 fama\na Eventos: varia'
           },
           valuable_pouches = {
             name = 'Bolsas Valiosas',
@@ -1533,7 +2195,7 @@ function getSpanishData()
             items = {
               {
                 name = 'Bolsa de Bronce',
-                description = 'Contiene 100-500 oro. Drop común de monstruos.',
+                description = 'Contiene 100-500 oro. Drop comAon de monstruos.',
                 icon = 2853
               },
               {
@@ -1554,34 +2216,34 @@ function getSpanishData()
         name = 'Sistema de Tareas',
         subcategories = {
           overview = {
-            name = 'Cómo Funcionan las Tareas',
+            name = 'Como Funcionan las Tareas',
             type = 'text',
-            content = 'El Sistema de Tareas es un tablero de misiones dinámico donde cazas monstruos por recompensas.\n\n**Cómo Funciona:**\n- Tienes 3 slots de tareas disponibles\n- Cada tarea requiere matar monstruos específicos\n- Completa tareas para ganar oro, fama y experiencia\n- Las tareas tienen diferentes niveles: Normal, Rara, Épica, Legendaria\n- Cada tarea tiene modificadores que afectan dificultad y recompensas\n\n**Comenzando:**\n1. Abre el Tablero de Tareas (Ctrl+T o click en botón Tasks)\n2. Elige una tarea de los 3 slots disponibles\n3. Click "Start" para activar la tarea\n4. Caza los monstruos requeridos\n5. Regresa y click "Complete" para reclamar recompensas\n\n**Importante:**\n- Solo puedes tener 1 tarea activa a la vez\n- Las tareas muestran outfits de monstruos para saber qué cazar\n- Los rangos de nivel te ayudan a encontrar zonas apropiadas\n- Puedes abandonar una tarea, pero pierdes todo el progreso'
+            content = 'El Sistema de Tareas es un tablero de misiones dinAmico donde cazas monstruos por recompensas.\n\n**Como Funciona:**\n- Tienes 3 slots de tareas disponibles\n- Cada tarea requiere matar monstruos especificos\n- Completa tareas para ganar oro, fama y experiencia\n- Las tareas tienen diferentes niveles: Normal, Rara, Apica, Legendaria\n- Cada tarea tiene modificadores que afectan dificultad y recompensas\n\n**Comenzando:**\n1. Abre el Tablero de Tareas (Ctrl+T o click en boton Tasks)\n2. Elige una tarea de los 3 slots disponibles\n3. Click "Start" para activar la tarea\n4. Caza los monstruos requeridos\n5. Regresa y click "Complete" para reclamar recompensas\n\n**Importante:**\n- Solo puedes tener 1 tarea activa a la vez\n- Las tareas muestran outfits de monstruos para saber quA(c) cazar\n- Los rangos de nivel te ayudan a encontrar zonas apropiadas\n- Puedes abandonar una tarea, pero pierdes todo el progreso'
           },
           rerolls = {
             name = 'Sistema de Rerolls',
             type = 'text',
-            content = 'Los Rerolls te permiten refrescar los 3 slots de tareas para obtener nuevas opciones.\n\n**Rerolls Gratis:**\n- Base: 5 rerolls gratis por día\n- Bono Premium: +5 rerolls extra (10 total)\n- Bono Fama: +1 reroll por cada 5 niveles de fama\n- Reinicio Diario: Se reinicia cada 24 horas\n\n**Rerolls Pagados:**\n- Costo: 20 oro por reroll\n- Uso ilimitado (si tienes oro)\n- Úsalos cuando se acaben los gratis\n\n**Rerolls Bonus:**\n- Tareas Raras: 25% chance de +1 reroll de recompensa\n- Tareas Épicas: 40% chance de +1 reroll de recompensa\n- Tareas Legendarias: +1-2 rerolls garantizados\n- Estos se acumulan con tus rerolls diarios\n\n**Tips de Estrategia:**\n- Guarda rerolls gratis para cuando necesites mejores tareas\n- Bloquea buenas tareas antes de hacer reroll\n- Mayor fama = más rerolls gratis'
+            content = 'Los Rerolls te permiten refrescar los 3 slots de tareas para obtener nuevas opciones.\n\n**Rerolls Gratis:**\n- Base: 5 rerolls gratis por dia\n- Bono Premium: +5 rerolls extra (10 total)\n- Bono Fama: +1 reroll por cada 5 niveles de fama\n- Reinicio Diario: Se reinicia cada 24 horas\n\n**Rerolls Pagados:**\n- Costo: 20 oro por reroll\n- Uso ilimitado (si tienes oro)\n- Asalos cuando se acaben los gratis\n\n**Rerolls Bonus:**\n- Tareas Raras: 25% chance de +1 reroll de recompensa\n- Tareas Apicas: 40% chance de +1 reroll de recompensa\n- Tareas Legendarias: +1-2 rerolls garantizados\n- Estos se acumulan con tus rerolls diarios\n\n**Tips de Estrategia:**\n- Guarda rerolls gratis para cuando necesites mejores tareas\n- Bloquea buenas tareas antes de hacer reroll\n- Mayor fama = mAs rerolls gratis'
           },
           locks = {
             name = 'Sistema de Bloqueos',
             type = 'text',
-            content = 'Los Bloqueos protegen tareas de ser rerolleadas, permitiendo mantener buenas tareas mientras refrescas otras.\n\n**Bloqueos Gratis:**\n- Base: 3 bloqueos gratis por día\n- Bono Premium: +5 bloqueos extra (8 total)\n- Reinicio Diario: Se reinicia cada 24 horas\n\n**Bloqueos Pagados:**\n- Costo: 10 oro por bloqueo\n- Uso ilimitado (si tienes oro)\n- Úsalos cuando se acaben los gratis\n\n**Bloqueos Bonus:**\n- Tareas Épicas: 30% chance de +1 bloqueo de recompensa\n- Tareas Legendarias: +1-2 bloqueos garantizados\n- Estos se acumulan con tus bloqueos diarios\n\n**Cómo Usar:**\n1. Encuentra una tarea que quieras mantener\n2. Click en el botón "Lock" en esa tarea\n3. Haz reroll de otras tareas sin perder la bloqueada\n4. Click "Unlock" para remover el bloqueo\n\n**Tips de Estrategia:**\n- Bloquea tareas de alto nivel (Épica/Legendaria)\n- Bloquea tareas con buenos modificadores\n- Jugadores premium obtienen significativamente más bloqueos'
+            content = 'Los Bloqueos protegen tareas de ser rerolleadas, permitiendo mantener buenas tareas mientras refrescas otras.\n\n**Bloqueos Gratis:**\n- Base: 3 bloqueos gratis por dia\n- Bono Premium: +5 bloqueos extra (8 total)\n- Reinicio Diario: Se reinicia cada 24 horas\n\n**Bloqueos Pagados:**\n- Costo: 10 oro por bloqueo\n- Uso ilimitado (si tienes oro)\n- Asalos cuando se acaben los gratis\n\n**Bloqueos Bonus:**\n- Tareas Apicas: 30% chance de +1 bloqueo de recompensa\n- Tareas Legendarias: +1-2 bloqueos garantizados\n- Estos se acumulan con tus bloqueos diarios\n\n**Como Usar:**\n1. Encuentra una tarea que quieras mantener\n2. Click en el boton "Lock" en esa tarea\n3. Haz reroll de otras tareas sin perder la bloqueada\n4. Click "Unlock" para remover el bloqueo\n\n**Tips de Estrategia:**\n- Bloquea tareas de alto nivel (Apica/Legendaria)\n- Bloquea tareas con buenos modificadores\n- Jugadores premium obtienen significativamente mAs bloqueos'
           },
           tiers = {
             name = 'Niveles y Rareza de Tareas',
             type = 'text',
-            content = 'Las tareas vienen en 4 niveles con diferentes tasas de aparición y multiplicadores de recompensa.\n\n**Normal (60% tasa de aparición)**\n- Multiplicador de Recompensa: 1.0x\n- Modificadores: 0-1\n- Tareas comunes, recompensas base\n\n**Rara (25% tasa de aparición)**\n- Multiplicador de Recompensa: 1.25x\n- Modificadores: 1-2\n- 25% bonus de recompensas\n- 25% chance de +1 reroll bonus\n\n**Épica (10% tasa de aparición)**\n- Multiplicador de Recompensa: 1.5x\n- Modificadores: 2-3\n- 50% bonus de recompensas\n- 40% chance de +1 reroll\n- 30% chance de +1 bloqueo\n- Desbloqueada en Nivel de Fama 8\n\n**Legendaria (5% tasa de aparición)**\n- Multiplicador de Recompensa: 2.0x\n- Modificadores: 3 (siempre)\n- 100% bonus de recompensas\n- +1-2 rerolls bonus garantizados\n- +1-2 bloqueos bonus garantizados\n- Extremadamente rara, recompensas máximas\n\n**Desbloqueos de Nivel:**\n- Normal, Rara: Disponibles desde el inicio\n- Épica: Requiere Nivel de Fama 8\n- Legendaria: Siempre disponible (si tienes suerte)'
+            content = 'Las tareas vienen en 4 niveles con diferentes tasas de aparicion y multiplicadores de recompensa.\n\n**Normal (60% tasa de aparicion)**\n- Multiplicador de Recompensa: 1.0x\n- Modificadores: 0-1\n- Tareas comunes, recompensas base\n\n**Rara (25% tasa de aparicion)**\n- Multiplicador de Recompensa: 1.25x\n- Modificadores: 1-2\n- 25% bonus de recompensas\n- 25% chance de +1 reroll bonus\n\n**Apica (10% tasa de aparicion)**\n- Multiplicador de Recompensa: 1.5x\n- Modificadores: 2-3\n- 50% bonus de recompensas\n- 40% chance de +1 reroll\n- 30% chance de +1 bloqueo\n- Desbloqueada en Nivel de Fama 8\n\n**Legendaria (5% tasa de aparicion)**\n- Multiplicador de Recompensa: 2.0x\n- Modificadores: 3 (siempre)\n- 100% bonus de recompensas\n- +1-2 rerolls bonus garantizados\n- +1-2 bloqueos bonus garantizados\n- Extremadamente rara, recompensas mAximas\n\n**Desbloqueos de Nivel:**\n- Normal, Rara: Disponibles desde el inicio\n- Apica: Requiere Nivel de Fama 8\n- Legendaria: Siempre disponible (si tienes suerte)'
           },
           rewards = {
             name = 'Recompensas y Bonificaciones',
             type = 'text',
-            content = 'Las tareas te recompensan basándose en múltiples factores que se acumulan.\n\n**Recompensas Base (del rango de nivel):**\n- Oro, Fama y Experiencia escalan con el nivel del monstruo\n- Tareas de mayor nivel = recompensas base más altas\n\n**Multiplicadores de Recompensa:**\n\n1. **Multiplicador de Nivel:**\n   - Normal: 1.0x\n   - Rara: 1.25x\n   - Épica: 1.5x\n   - Legendaria: 2.0x\n\n2. **Bonus por Cantidad de Monstruos:**\n   - 1 monstruo: 1.0x\n   - 2 monstruos: 1.15x (+15%)\n   - 3 monstruos: 1.30x (+30%)\n\n3. **Bonus por Modificadores:**\n   - Modificador negativo: +15% por modificador\n   - Modificador mixto: +10% por modificador\n   - Tareas más difíciles = mejores recompensas\n\n4. **Bonus por Kills (NUEVO):**\n   - +5% por cada 50 kills (hasta +25% máx)\n   - 50 kills: +5%\n   - 100 kills: +10%\n   - 150 kills: +15%\n   - 200 kills: +20%\n   - 250+ kills: +25% (límite)\n\n**Fórmula Final:**\nRecompensa = Base × Nivel × CantidadMonstruos × (1 + BonusMod) × BonusKills\n\n**Ejemplo:**\n- Base: 1000 oro\n- Nivel Raro: 1.25x\n- 2 monstruos: 1.15x\n- 1 mod negativo: 1.15x\n- 150 kills: 1.15x\n= 1,913 oro\n\n**Cada Tarea Muestra 2 Recompensas Aleatorias:**\n- Oro, Fama, Experiencia, Rerolls Bonus, o Bloqueos Bonus'
+            content = 'Las tareas te recompensan basAndose en mAoltiples factores que se acumulan.\n\n**Recompensas Base (del rango de nivel):**\n- Oro, Fama y Experiencia escalan con el nivel del monstruo\n- Tareas de mayor nivel = recompensas base mAs altas\n\n**Multiplicadores de Recompensa:**\n\n1. **Multiplicador de Nivel:**\n   - Normal: 1.0x\n   - Rara: 1.25x\n   - Apica: 1.5x\n   - Legendaria: 2.0x\n\n2. **Bonus por Cantidad de Monstruos:**\n   - 1 monstruo: 1.0x\n   - 2 monstruos: 1.15x (+15%)\n   - 3 monstruos: 1.30x (+30%)\n\n3. **Bonus por Modificadores:**\n   - Modificador negativo: +15% por modificador\n   - Modificador mixto: +10% por modificador\n   - Tareas mAs dificiles = mejores recompensas\n\n4. **Bonus por Kills (NUEVO):**\n   - +5% por cada 50 kills (hasta +25% mAx)\n   - 50 kills: +5%\n   - 100 kills: +10%\n   - 150 kills: +15%\n   - 200 kills: +20%\n   - 250+ kills: +25% (limite)\n\n**Formula Final:**\nRecompensa = Base A- Nivel A- CantidadMonstruos A- (1 + BonusMod) A- BonusKills\n\n**Ejemplo:**\n- Base: 1000 oro\n- Nivel Raro: 1.25x\n- 2 monstruos: 1.15x\n- 1 mod negativo: 1.15x\n- 150 kills: 1.15x\n= 1,913 oro\n\n**Cada Tarea Muestra 2 Recompensas Aleatorias:**\n- Oro, Fama, Experiencia, Rerolls Bonus, o Bloqueos Bonus'
           },
           fame_premium = {
             name = 'Beneficios de Fama y Premium',
             type = 'text',
-            content = 'Tu Nivel de Fama y estado Premium proporcionan bonos permanentes.\n\n**Bonos de Nivel de Fama:**\n\n- **Nivel 3 - Cazador Experimentado:**\n  Tasa de aparición de nivel Raro +5%\n\n- **Nivel 5 - Cazador Veterano:**\n  Modificadores negativos reducidos en 15%\n\n- **Nivel 7 - Cazador Élite:**\n  +1 reroll gratis por día\n\n- **Nivel 8 - Cazador Maestro:**\n  Desbloquea tareas de nivel Épico\n\n- **Nivel 10 - Cazador Legendario:**\n  +5% bonus a todas las recompensas\n\n**Cómo Ganar Fama:**\n- Completa tareas para ganar puntos de fama\n- Tareas de mayor nivel dan más fama\n- La fama se acumula y nunca se reinicia\n- Revisa tu nivel de fama en el Tablero de Tareas\n\n**Beneficios de Cuenta Premium:**\n\n- **Rerolls Gratis:**\n  +5 extra por día (10 total vs 5 gratis)\n\n- **Bloqueos Gratis:**\n  +5 extra por día (8 total vs 3 gratis)\n\n- **Mejor Eficiencia:**\n  Bloquea más tareas mientras haces reroll\n  Más flexibilidad en selección de tareas\n\n**Poder Combinado:**\nPremium + Nivel de Fama 10:\n- 10+ rerolls gratis por día\n- 8 bloqueos gratis por día\n- +5% recompensas en todas las tareas\n- Nivel Épico desbloqueado\n- Mejores chances de modificadores\n\n**Estrategia:**\n- Los bonos de fama son permanentes - siempre vale la pena farmear\n- Premium da QoL masivo para gestión de tareas\n- Mayor fama = mejor generación de tareas'
+            content = 'Tu Nivel de Fama y estado Premium proporcionan bonos permanentes.\n\n**Bonos de Nivel de Fama:**\n\n- **Nivel 3 - Cazador Experimentado:**\n  Tasa de aparicion de nivel Raro +5%\n\n- **Nivel 5 - Cazador Veterano:**\n  Modificadores negativos reducidos en 15%\n\n- **Nivel 7 - Cazador Alite:**\n  +1 reroll gratis por dia\n\n- **Nivel 8 - Cazador Maestro:**\n  Desbloquea tareas de nivel Apico\n\n- **Nivel 10 - Cazador Legendario:**\n  +5% bonus a todas las recompensas\n\n**Como Ganar Fama:**\n- Completa tareas para ganar puntos de fama\n- Tareas de mayor nivel dan mAs fama\n- La fama se acumula y nunca se reinicia\n- Revisa tu nivel de fama en el Tablero de Tareas\n\n**Beneficios de Cuenta Premium:**\n\n- **Rerolls Gratis:**\n  +5 extra por dia (10 total vs 5 gratis)\n\n- **Bloqueos Gratis:**\n  +5 extra por dia (8 total vs 3 gratis)\n\n- **Mejor Eficiencia:**\n  Bloquea mAs tareas mientras haces reroll\n  MAs flexibilidad en seleccion de tareas\n\n**Poder Combinado:**\nPremium + Nivel de Fama 10:\n- 10+ rerolls gratis por dia\n- 8 bloqueos gratis por dia\n- +5% recompensas en todas las tareas\n- Nivel Apico desbloqueado\n- Mejores chances de modificadores\n\n**Estrategia:**\n- Los bonos de fama son permanentes - siempre vale la pena farmear\n- Premium da QoL masivo para gestion de tareas\n- Mayor fama = mejor generacion de tareas'
           }
         }
       },
@@ -1593,39 +2255,39 @@ function getSpanishData()
             type = 'pets',
             items = {
               {
-                name = 'Bebé Pesadilla',
-                rarity = 'Épica',
+                name = 'BebA(c) Pesadilla',
+                rarity = 'Apica',
                 collector = 'Coleccionista Tenebroso',
                 abilities = {
-                  { name = 'Carga de Pesadilla', description = 'Se lanza hacia adelante causando daño y miedo' },
-                  { name = 'Devorador de Sueños', description = 'Drena maná de enemigos y aumenta la regeneración de maná del dueño un 10%' }
+                  { name = 'Carga de Pesadilla', description = 'Se lanza hacia adelante causando dano y miedo' },
+                  { name = 'Devorador de Suenos', description = 'Drena manA de enemigos y aumenta la regeneracion de manA del dueno un 10%' }
                 }
               },
               {
-                name = 'Bebé Prisma',
-                rarity = 'Épica',
+                name = 'BebA(c) Prisma',
+                rarity = 'Apica',
                 collector = 'Coleccionista de Paleta',
                 abilities = {
-                  { name = 'Rayo Prisma', description = 'Dispara un rayo elemental aleatorio (fuego/hielo/energía)' },
+                  { name = 'Rayo Prisma', description = 'Dispara un rayo elemental aleatorio (fuego/hielo/energia)' },
                   { name = 'Escudo Prisma', description = 'Aumenta +8% todas las resistencias durante 10 segundos' }
                 }
               },
               {
                 name = 'Terroc',
-                rarity = 'Épica',
-                collector = 'Coleccionista Mítico',
+                rarity = 'Apica',
+                collector = 'Coleccionista Mitico',
                 abilities = {
-                  { name = 'Terremoto', description = 'Daño físico en área con 2s de aturdimiento' },
-                  { name = 'Buff de Terror', description = '+10% probabilidad crítica durante 10 segundos' }
+                  { name = 'Terremoto', description = 'Dano fisico en Area con 2s de aturdimiento' },
+                  { name = 'Buff de Terror', description = '+10% probabilidad critica durante 10 segundos' }
                 }
               },
               {
                 name = 'Espectro',
-                rarity = 'Épica',
+                rarity = 'Apica',
                 collector = 'Coleccionista Tenebroso',
                 abilities = {
-                  { name = 'Maldición Espectral', description = 'Daño de muerte + reduce curación un 50%' },
-                  { name = 'Aparición', description = '+15% daño de muerte durante 12 segundos' }
+                  { name = 'Maldicion Espectral', description = 'Dano de muerte + reduce curacion un 50%' },
+                  { name = 'Aparicion', description = '+15% dano de muerte durante 12 segundos' }
                 }
               },
               {
@@ -1633,7 +2295,7 @@ function getSpanishData()
                 rarity = 'Rara',
                 collector = 'Coleccionista Salvaje',
                 abilities = {
-                  { name = 'Aullido', description = 'Miedo en área + 10% velocidad de ataque' }
+                  { name = 'Aullido', description = 'Miedo en Area + 10% velocidad de ataque' }
                 }
               },
               {
@@ -1641,23 +2303,23 @@ function getSpanishData()
                 rarity = 'Rara',
                 collector = 'Coleccionista Chef',
                 abilities = {
-                  { name = 'Salto Rápido', description = 'Se lanza hacia adelante con aumento de velocidad' }
+                  { name = 'Salto RApido', description = 'Se lanza hacia adelante con aumento de velocidad' }
                 }
               },
               {
-                name = 'Bebé Fénix de Fuego',
+                name = 'BebA(c) FA(c)nix de Fuego',
                 rarity = 'Rara',
-                collector = 'Coleccionista Mítico',
+                collector = 'Coleccionista Mitico',
                 abilities = {
-                  { name = 'Aura de Llamas', description = 'Daño de fuego en área + 10% daño de fuego' }
+                  { name = 'Aura de Llamas', description = 'Dano de fuego en Area + 10% dano de fuego' }
                 }
               },
               {
-                name = 'Bebé Fénix de Hielo',
+                name = 'BebA(c) FA(c)nix de Hielo',
                 rarity = 'Rara',
-                collector = 'Coleccionista Mítico',
+                collector = 'Coleccionista Mitico',
                 abilities = {
-                  { name = 'Ola de Escarcha', description = 'Daño de hielo + ralentización + aumento de velocidad' }
+                  { name = 'Ola de Escarcha', description = 'Dano de hielo + ralentizacion + aumento de velocidad' }
                 }
               },
               {
@@ -1665,23 +2327,23 @@ function getSpanishData()
                 rarity = 'Rara',
                 collector = 'Coleccionista de Paleta',
                 abilities = {
-                  { name = 'Polvo de Hada', description = 'Cura al dueño 5% HP + HoT durante 8 segundos' }
+                  { name = 'Polvo de Hada', description = 'Cura al dueno 5% HP + HoT durante 8 segundos' }
                 }
               },
               {
                 name = 'Gato Blanco',
-                rarity = 'Común',
+                rarity = 'ComAon',
                 collector = 'Coleccionista de Paleta',
                 abilities = {
-                  { name = 'Pata de la Suerte', description = '+3% probabilidad de botín durante 10 segundos' }
+                  { name = 'Pata de la Suerte', description = '+3% probabilidad de botin durante 10 segundos' }
                 }
               },
               {
                 name = 'Gato Negro',
-                rarity = 'Común',
+                rarity = 'ComAon',
                 collector = 'Coleccionista Tenebroso',
                 abilities = {
-                  { name = 'Garra de Sombra', description = 'Daño + reduce resistencia a la luz' }
+                  { name = 'Garra de Sombra', description = 'Dano + reduce resistencia a la luz' }
                 }
               }
             }
@@ -1689,40 +2351,317 @@ function getSpanishData()
         }
       },
       ascension_guide = {
-        name = 'Guía de Ascension',
+        name = 'Guia de Ascension',
         subcategories = {
           getting_started = {
             name = 'Primeros Pasos',
             type = 'text',
-            content = '¡Bienvenido a Ascension! Este servidor funciona estilo ARPG con varios sistemas de progresión.\n\n**Tus Prioridades:**\n1. Sube de nivel y completa Tasks v2.\n2. Recoge todo el botín. Usa el Stash System y el Quick Loot para organizar todo.\n3. ¡No vendas los ítems basura al NPC! Usa el Recycler o el Upgrade System para extraer minerales y gemas.'
+            content = 'Bienvenido a Ascension! Este servidor funciona estilo ARPG con varios sistemas de progresion.\n\n**Tus Prioridades:**\n1. Sube de nivel y completa Tasks v2.\n2. Recoge todo el botin. Usa el Stash System y el Quick Loot para organizar todo.\n3. No vendas los items basura al NPC! Usa el Recycler o el Upgrade System para extraer minerales y gemas.'
           },
-          passive_tree = {
-            name = 'Árbol de Pasivas (Tree)',
-            type = 'text',
-            content = 'Similar a Path of Exile, puedes invertir puntos en un árbol de talentos masivo.\n\n- Especializa a tu personaje (Ej. Crítico Puro, o Tanque con Life Leech).\n- Lee cuidadosamente para asegurar que tu equipo haga sinergia con la rama que elegiste.'
+          class_talents = {
+            name = 'Talentos de Clase',
+            type = 'rich_text',
+            sections = {
+              { type = 'text', content = [[**Que son los Talentos de Clase?**
+
+Cada clase de personaje tiene su propio arbol de talentos unico con varias ramas que se especializan en dano, defensa o utilidad. Cada arbol contiene nodos que otorgan bonificaciones pasivas al subirlos de nivel. Los talentos se aplican automaticamente al iniciar sesion, asi que planifica tu build con cuidado!]] },
+              { type = 'image', path = '/images/wiki/talents_overview.png', width = 400, height = 220 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Puntos de Talento**
+
+- Ganas **1 punto de talento cada 8 niveles** de personaje
+- Cada nivel de nodo cuesta **1 punto de talento**
+- La mayoria de nodos tienen un **nivel maximo de 10**
+- Los puntos no usados se pueden gastar en cualquier momento abriendo la ventana de Talentos]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Resetear Talentos**
+
+Te equivocaste? Puedes resetear todo tu arbol y recuperar todos los puntos gastados.
+
+- Costo base: **50 de oro por punto gastado**
+- **Descuento Premium:** 25 de oro por punto (-50%)
+- Todos los puntos gastados se **reembolsan**
+- **Conservas** tus puntos totales ganados
+
+Abre la ventana de talentos y haz clic en el boton Reset para ver el costo exacto.]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Clases Disponibles**
+
+| Clase | Ramas |
+|-------|-------|
+| Magician | Fuego / Arcano / Escarcha |
+| Templar | Sagrado / Castigo / Proteccion / Justicia |
+| Nightblade | Sombra / Sangre / Asesinato |
+| Dragonknight | Tierra / Dragon / Fuego / Elemental |
+| Warlock | Demonologia / Maldiciones / Invocacion / Pacto de Sangre |
+| Stellar | Cosmico / Celestial / Wand |
+| Monk | Elementos / Tierra / Vida / Viento |
+| Druid | Naturaleza / Espiritu / Hielo / Cambiaformas |
+| Light Dancer | Luz / Velocidad / Soporte |]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Consejos**
+
+- Haz que tus talentos hagan sinergia con tu equipo y estilo de juego
+- Las builds de DPS deben enfocarse primero en ramas de dano
+- Los Tanques deben priorizar salud y resistencias
+- Los Healers deben aumentar su mana y la efectividad de curacion
+- Algunos nodos desbloquean hechizos o habilidades especiales en ciertos niveles
+- Puedes previsualizar todos los nodos antes de gastar puntos]] }
+            }
           },
-          paragon_reborn = {
-            name = 'Paragon y Reborn',
-            type = 'text',
-            content = '**Paragon:** En los niveles más altos, ganarás niveles de Paragon que otorgan pequeños multiplicadores de estadísticas.\n\n**Reborn:** Puedes "Renacer" a tu personaje de vuelta a nivel 1 a cambio de multiplicadores de daño permanentes. ¡Cada Reborn hace que tu próxima subida de nivel sea más fácil!'
+          paragon_ascension = {
+            name = 'Ascension Paragon',
+            type = 'rich_text',
+            sections = {
+              { type = 'text', content = [[**Que es Paragon?**
+
+Paragon es el sistema de progresion End-Game que se desbloquea al alcanzar **Nivel de Personaje 300**. Despues de llegar a este limite, la XP que ganas comienza a llenar tu barra de Paragon en lugar de subir de nivel. Cada nivel de Paragon otorga un punto para gastar en una de tres categorias de estadisticas, rotando automaticamente entre ellas.
+
+Abre la pestana Ascension en la ventana de Talentos de Clase para ver tu tablero de Paragon, asignar puntos y seguir tu progreso.]] },
+              { type = 'image', path = '/images/wiki/paragon_overview.png', width = 400, height = 220 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Como funciona la XP de Paragon**
+
+- XP base para Nivel de Paragon 1: **6,000,000**
+- Cada nivel siguiente cuesta **+12% mas XP** que el anterior
+- **Bonificacion Premium:** +15% de XP de Paragon
+- **Token de Boost:** +25% de XP de Paragon (buff consumible)
+- **Penalizacion por Muerte:** Pierdes 10% del progreso actual de XP de Paragon
+- Notificacion broadcast cada 10 niveles de Paragon
+
+La XP de Paragon se gana de las mismas fuentes que la XP normal (matar monstruos, quests, etc.) una vez que estas en nivel maximo.]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Asignacion de Puntos y Rotacion**
+
+Los puntos rotan automaticamente entre categorias al subir de nivel:
+
+- **Paragon Niv 1, 4, 7...** -> **Primario** (Ataque)
+- **Paragon Niv 2, 5, 8...** -> **Secundario** (Defensa)
+- **Paragon Niv 3, 6, 9...** -> **Utilidad** (Progresion)
+
+Puedes gastar los puntos ganados en cualquier momento. Los puntos no expiran. Abre la pestana Ascension para asignarlos a estadisticas especificas.]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Estadisticas Primarias (Ataque)**
+
+| Estadistica | Por Punto | Limite |
+|-------------|-----------|--------|
+| Dano Fisico | +1% | 150% |
+| Dano Elemental | +1 plano | 200 |
+| Velocidad de Ataque | +1% | 100% |
+| Probabilidad de Critico | +1% | 75% |]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Estadisticas Secundarias (Defensa)**
+
+| Estadistica | Por Punto | Limite |
+|-------------|-----------|--------|
+| Probabilidad de Bloqueo | +1% | 30% |
+| HP Maxima | +50 plano | Sin limite |
+| Mana Maximo | +40 plano | Sin limite |
+| Curacion Recibida | +1% | 100% |]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Estadisticas de Utilidad (Progresion)**
+
+| Estadistica | Por Punto | Limite |
+|-------------|-----------|--------|
+| Ganancia de EXP | +1% | 100% |
+| Experiencia de Crafting | +2% | 150% |
+| Ganancia de Fame | +2% | 100% |
+| Conocimiento del Codex | +0.2% | 50 (~10%) |]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Hitos (Milestones)**
+
+Gastar puntos en una categoria desbloquea bonos de hito y titulos:
+
+**Primario (Ataque):**
+- 25 puntos -> Titulo: "Warrior"
+- 50 puntos -> +3% Dano Total
+- 100 puntos -> +5% Dano Total
+- 200 puntos -> Titulo: "Paragon of War", +8% Dano Total
+
+**Secundario (Defensa):**
+- 25 puntos -> Titulo: "Guardian"
+- 50 puntos -> +5% HP Maxima
+- 100 puntos -> +8% HP Maxima
+- 200 puntos -> Titulo: "Paragon of Fortitude", +12% HP Maxima
+
+**Utilidad (Progresion):**
+- 25 puntos -> Titulo: "Explorer"
+- 50 puntos -> +3% Todas las Ganancias
+- 100 puntos -> +5% Todas las Ganancias
+- 200 puntos -> Titulo: "Paragon of Fortune", +8% Todas las Ganancias
+
+Los bonos de hito son automaticos y se acumulan con los bonos de estadisticas.]] },
+              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Consejos**
+
+- Prioriza puntos Primarios para aumentar tu DPS bruto
+- La HP Secundaria no tiene limite, lo que la hace una inversion segura a largo plazo
+- La Ganancia de EXP de Utilidad es valiosa para progresar Paragon mas rapido
+- El Conocimiento del Codex ayuda con los drops de cartas mientras farmeas
+- Los bonos de hito reemplazan el nivel anterior (ej. 100pt reemplaza 50pt, no se acumulan)
+- Proteccion contra muerte: ten cuidado en zonas peligrosas para evitar perder progreso de XP]] }
+            }
           },
           codex = {
             name = 'Sistema Codex',
-            type = 'text',
-            content = 'Los monstruos sueltan cartas que puedes coleccionar en tu Codex.\n\n- Activar cartas enteras otorga bonificaciones pasivas y mensajes globales.\n- Coleccionar las cartas correctas es vital para tener daño suficiente en el juego tardío (End-Game).'
+            type = 'rich_text',
+            sections = {
+              { type = 'text', content = [[**Que es el Codex?**
+
+El Codex es un sistema de coleccion de cartas. Los monstruos pueden soltar cartas (o cajas de cartas) que equipas en tu Deck (Mazo) para obtener poderosas bonificaciones pasivas y activas. Con 104 cartas unicas, construir el mazo correcto es esencial para el dano, supervivencia y utilidad del End-Game.
+
+Abre el modulo de Codex para ver tu Coleccion, tu Deck activo y la pestana de Fabricacion de Cajas.]] },
+              { type = 'image', path = '/images/wiki/codex_overview.png', width = 400, height = 220 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Espacios del Deck**
+
+Tienes 6 espacios para equipar cartas activas. Requisitos de desbloqueo:
+
+- **Espacio 1:** Gratis (siempre desbloqueado)
+- **Espacio 2:** Nivel de personaje 80
+- **Espacio 3:** Nivel de personaje 150
+- **Espacio 4:** Paragon Nivel 1
+- **Espacio 5:** Paragon Nivel 50
+- **Espacio 6:** Solo cuentas Premium
+
+Las cartas inactivas en tu coleccion no otorgan beneficios. Solo las cartas equipadas aplican sus efectos. Ve a la pestana Deck en el modulo de Codex para equipar o cambiar cartas.]] },
+              { type = 'image', path = '/images/wiki/codex_deck_slots.png', width = 380, height = 200 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Cajas y Como Obtener Cartas**
+
+Las cartas se obtienen abriendo Cajas. Hay 3 niveles de cajas que puedes fabricar en la pestana Cajas del Codex:
+
+| Caja | Costo de Fabricacion | Nivel Max. de Carta | Comun | Rara | Epica | Legendaria | Esencias Extra |
+|------|----------------------|---------------------|-------|------|-------|------------|----------------|
+| Bronce | 100 Esencias | Nivel 2 | 70% | 20% | 8% | 2% | 50 (25% probabilidad) |
+| Plata | 200 Esencias | Nivel 3 | 60% | 25% | 10% | 5% | 80 (30% probabilidad) |
+| Dorada | 350 Esencias | Nivel 5 | 30% | 30% | 30% | 10% | 120 (35% probabilidad) |
+
+Las cajas tambien pueden caer como botin de monstruos y elites. Ademas recibes **1 Caja de Bronce gratis cada 15 niveles de personaje**.]] },
+              { type = 'image', path = '/images/wiki/codex_crates.png', width = 400, height = 180 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Esencias del Codex**
+
+Las Esencias son la moneda del sistema Codex. Usos:
+- Fabricar cajas (100/200/350 por caja)
+- Mejorar cartas directamente (10 EXP por esencia gastada, con multiplicador de rareza)
+- Desbloquear espacios del deck anticipadamente (500+ esencias, costo se duplica cada vez)
+
+**Formas de ganar Esencias:**
+- Matar monstruos y elites
+- Bonificaciones al abrir cajas
+- Cartas duplicadas al nivel maximo se convierten en esencias
+- **Pocion de Conocimiento:** +50% de ganancia de esencias mientras esta activa
+
+Puedes ver tus Esencias actuales en la parte superior del modulo de Codex.]] },
+              { type = 'image', path = '/images/wiki/codex_essences.png', width = 200, height = 60 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Rareza de Cartas**
+
+Las cartas vienen en 4 rarezas que determinan la tasa de drop y el poder:
+
+- **Comun** (Blanca): Efectos basicos, mas faciles de obtener
+- **Rara** (Azul): Efectos mas fuertes, tasa moderada
+- **Epica** (Morada): Efectos poderosos que definen builds
+- **Legendaria** (Dorada): Efectos que cambian el juego, mas dificiles de obtener]] },
+              { type = 'image', path = '/images/wiki/codex_card_rarities.png', width = 400, height = 120 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Nivelacion de Cartas**
+
+Cada carta comienza en Nivel 1 y puede subir hasta Nivel 10. Niveles mas altos desbloquean efectos mas fuertes. Puedes subir de nivel al obtener duplicados (otorgan EXP) o gastando Esencias directamente desde la vista de detalle de la carta.
+
+| Nivel | EXP para Subir | EXP Total |
+|-------|----------------|-----------|
+| 1 | 500 | 0 |
+| 2 | 700 | 500 |
+| 3 | 1,000 | 1,200 |
+| 4 | 1,300 | 2,200 |
+| 5 | 1,600 | 3,500 |
+| 6 | 1,900 | 5,100 |
+| 7 | 2,200 | 7,000 |
+| 8 | 2,500 | 9,200 |
+| 9 | 3,000 | 11,700 |
+| 10 | -- | 14,700 (Max) |
+
+**Cartas Duplicadas:** Cuando obtienes una carta que ya posees, otorga EXP segun rareza (Comun=100, Rara=200, Epica=300, Legendaria=500). Si la carta ya esta al nivel maximo para el tipo de caja, los duplicados se convierten en esencias.]] },
+              { type = 'image', path = '/images/wiki/codex_level_comparison.png', width = 380, height = 160 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Tipos de Activacion (Triggers)**
+
+Las cartas se activan segun diferentes condiciones. Puedes ver el tipo de activacion en el tooltip de cada carta:
+
+- **Pasiva:** Siempre activa mientras esta equipada (bonificaciones de stats, resistencias, auras)
+- **Al Matar:** Se activa cuando matas un monstruo (reduccion de cooldown, explosiones, miedo, invocacion)
+- **Al Curar:** Se activa cuando curas (restaurar mana, sobrecuracion, eco de grupo)
+- **Al Lanzar Hechizo:** Se activa al lanzar hechizos (campos de fuego, curar-al-lanzar)
+- **Hechizo de Ataque:** Solo hechizos ofensivos (rayos, sacrificio de sangre)
+- **Hechizo de Curacion:** Solo hechizos de curacion (explosion del dragon florido)
+- **Curar Aliado:** Solo al curar aliados (castigo divino en enemigos)
+- **Al Morir:** Evita la muerte una vez (Fenix revive)
+- **Al Critico:** Se activa en golpes criticos
+- **HP Bajo:** Se activa al bajar de cierto umbral de vida
+- **Periodica:** Se activa periodicamente (efectos basados en intervalos)]] },
+              { type = 'image', path = '/images/wiki/codex_trigger_examples.png', width = 400, height = 140 },
+              { type = 'spacer', height = 8 },
+
+              { type = 'text', content = [[**Construyendo tu Deck**
+
+*Cartas de Dano (DPS):* Critical Surge, The Witch, Glass Cannon, The Dragon, Guns Lover, The Gunner, Svarog, Zeus
+
+*Cartas de Tanque/Supervivencia:* Golem, The Phoenix, The Behemoth, The Slime, Water Elemental, Soul Leech, Final Symphony
+
+*Cartas de Sanador:* Undine, The Elf, Archangel, Blood Link, Blossom Dragon, The Naga, Yacy
+
+*Cartas de Utilidad:* Executioner (reduccion CD), Essence Reaver (farmeo de esencias), The Child (EXP), Carnage Presence (limpieza), The Necromancer (invocaciones)
+
+**Consejos**
+- Sinergiza cartas con tu build (ej. The Witch con pools de mana altos)
+- Las cartas de dragon (31-40) sinergizan con Dragon Lord para bonificaciones multiplicativas
+- Cartas de sanador como Blood Link y Archangel solo funcionan al curar miembros del grupo
+- Guns Lover y The Gunner son obligatorias para builds a distancia
+- Glass Cannon es alto riesgo, alta recompensa (+32% dano pero +32% dano recibido al maximo)
+- Cartas duplicadas al nivel maximo se convierten en esencias -- farmea cajas de bajo tier para ingresos de esencias]] }
+            }
           },
           gear_meta = {
             name = 'Equipo y Tiers',
             type = 'text',
-            content = 'La Armadura plana importa mucho menos que los Atributos Secundarios.\n\n**Estadísticas Clave (Stats):**\n1. Critical Hit Chance (Probabilidad de Crítico)\n2. % Max HP / Max Mana (¡Los porcentajes escalan de forma masiva!)\n3. Life/Mana Leech (Crucial para curarte cuando tienes demasiada HP)\n4. Cooldown Reduction\n\n**Regla de Oro:** Nadie usa anillos permanentes. Mantén 3 o 4 anillos en tu mochila y cámbialos según vayas a un Jefe (Boss), a farmear rápido o a aguantar daño.'
+            content = 'La Armadura plana importa mucho menos que los Atributos Secundarios.\n\n**Estadisticas Clave (Stats):**\n1. Critical Hit Chance (Probabilidad de Critico)\n2. % Max HP / Max Mana (Los porcentajes escalan de forma masiva!)\n3. Life/Mana Leech (Crucial para curarte cuando tienes demasiada HP)\n4. Cooldown Reduction\n\n**Regla de Oro:** Nadie usa anillos permanentes. Manten 3 o 4 anillos en tu mochila y cambialos segun vayas a un Jefe (Boss), a farmear rapido o a aguantar dano.'
           },
           endgame = {
             name = 'End Game',
             type = 'text',
-            content = '**Dungeons y Expeditions:** Instancias y mazmorras con botín raro y Jefes complejos.\n\n**Zones (Zonas):** Áreas específicas donde puedes ganar Mejoras de Zona (Zone Buffs) mientras cazas.\n\n**Upgrade System:** Usa polvos y piedras extraídas para mejorar tus armas Tier 3 hasta límites inalcanzables.'
+            content = '**Dungeons y Expeditions:** Instancias y mazmorras con botin raro y Jefes complejos.\n\n**Zones (Zonas):** Areas especificas donde puedes ganar Mejoras de Zona (Zone Buffs) mientras cazas.\n\n**Upgrade System:** Usa polvos y piedras extraidas para mejorar tus armas Tier 3 hasta limites inalcanzables.'
           }
         }
       }
     }
   }
 end
+

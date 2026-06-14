@@ -197,6 +197,8 @@ function selectSubCategory(categoryName, subCategoryName)
     displayPetsContent(subCatData.items)
   elseif subCatData.type == 'enchants' then
     displayEnchantsContent(subCatData.items)
+  elseif subCatData.type == 'rich_text' then
+    displayRichTextContent(subCatData.sections)
   else
     displayTextContent(subCatData.content)
   end
@@ -207,15 +209,26 @@ end
 
 function displayListContent(items)
   local contentPanel = wikiWindow:recursiveGetChildById('contentPanel')
-  
+
   for _, item in ipairs(items) do
     local itemWidget = g_ui.createWidget('WikiListItem', contentPanel)
     itemWidget:getChildById('name'):setText(item.name)
-    itemWidget:getChildById('description'):setText(item.description or '')
-    
+    local descWidget = itemWidget:getChildById('description')
+    descWidget:setText(item.description or '')
+
     if item.icon then
       itemWidget:getChildById('icon'):setItemId(item.icon)
     end
+
+    -- Adjust height to fit wrapped description text
+    scheduleEvent(function()
+      if itemWidget and not itemWidget:isDestroyed() then
+        local textSize = descWidget:getTextSize()
+        local nameWidget = itemWidget:getChildById('name')
+        local newHeight = math.max(60, 8 + nameWidget:getHeight() + 2 + textSize.height + 10)
+        itemWidget:setHeight(newHeight)
+      end
+    end, 0)
   end
 end
 
@@ -304,11 +317,84 @@ function displayEnchantsContent(enchants)
   end
 end
 
+local function parseBoldText(text)
+  local parts = {}
+  local pos = 1
+  while pos <= #text do
+    local startBold = text:find('%*%*', pos)
+    if not startBold then
+      if pos <= #text then
+        table.insert(parts, {text = text:sub(pos), bold = false})
+      end
+      break
+    end
+
+    if startBold > pos then
+      table.insert(parts, {text = text:sub(pos, startBold - 1), bold = false})
+    end
+
+    local endBold = text:find('%*%*', startBold + 2)
+    if not endBold then
+      table.insert(parts, {text = text:sub(startBold), bold = false})
+      break
+    end
+
+    local boldText = text:sub(startBold + 2, endBold - 1)
+    table.insert(parts, {text = boldText, bold = true})
+    pos = endBold + 2
+  end
+  return parts
+end
+
 function displayTextContent(content)
   local contentPanel = wikiWindow:recursiveGetChildById('contentPanel')
-  
-  local textWidget = g_ui.createWidget('WikiTextContent', contentPanel)
-  textWidget:setText(content)
+
+  local parts = parseBoldText(content)
+  for _, part in ipairs(parts) do
+    if part.text ~= '' then
+      if part.bold then
+        local boldWidget = g_ui.createWidget('WikiRichBoldTextSection', contentPanel)
+        boldWidget:setText(part.text)
+      else
+        local textWidget = g_ui.createWidget('WikiTextContent', contentPanel)
+        textWidget:setText(part.text)
+      end
+    end
+  end
+end
+
+function displayRichTextContent(sections)
+  local contentPanel = wikiWindow:recursiveGetChildById('contentPanel')
+
+  if not sections then return end
+
+  for _, section in ipairs(sections) do
+    if section.type == 'text' then
+      local parts = parseBoldText(section.content or '')
+      for _, part in ipairs(parts) do
+        if part.text ~= '' then
+          if part.bold then
+            local boldWidget = g_ui.createWidget('WikiRichBoldTextSection', contentPanel)
+            boldWidget:setText(part.text)
+          else
+            local textWidget = g_ui.createWidget('WikiRichTextSection', contentPanel)
+            textWidget:setText(part.text)
+          end
+        end
+      end
+    elseif section.type == 'image' then
+      local imgWidget = g_ui.createWidget('WikiRichImage', contentPanel)
+      imgWidget:setImageSource(section.path or '')
+      if section.width and section.height then
+        imgWidget:setSize({ width = section.width, height = section.height })
+      end
+    elseif section.type == 'spacer' then
+      local spacer = g_ui.createWidget('WikiRichSpacer', contentPanel)
+      if section.height then
+        spacer:setHeight(section.height)
+      end
+    end
+  end
 end
 
 function onSearchTextChange()

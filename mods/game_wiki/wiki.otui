@@ -24,14 +24,14 @@ WikiListItem < Panel
   height: 60
   background-color: #ffffff11
   margin: 2
-  
+
   Item
     id: icon
     anchors.left: parent.left
     anchors.verticalCenter: parent.verticalCenter
     size: 40 40
     margin-left: 10
-  
+
   Label
     id: name
     anchors.left: icon.right
@@ -41,7 +41,7 @@ WikiListItem < Panel
     margin-top: 8
     font: verdana-11px-rounded
     color: #ffcc00
-  
+
   Label
     id: description
     anchors.left: icon.right
@@ -52,6 +52,7 @@ WikiListItem < Panel
     font: verdana-11px-antialised
     color: #cccccc
     text-wrap: true
+    text-auto-resize: true
 
 WikiPetItem < Panel
   height: 150
@@ -135,11 +136,40 @@ WikiPetItem < Panel
     text-wrap: true
 
 WikiTextContent < Label
-  height: 100
+  height: 25
   text-wrap: true
+  text-auto-resize: true
   background-color: #ffffff11
   padding: 10
   font: verdana-11px-antialised
+
+WikiRichTextSection < Label
+  text-wrap: true
+  text-auto-resize: true
+  background-color: #00000000
+  padding: 10
+  font: verdana-11px-antialised
+  margin: 2
+
+WikiRichBoldTextSection < Label
+  text-wrap: true
+  text-auto-resize: true
+  background-color: #00000000
+  padding: 10
+  font: exo-16px-ultra-bold-italic
+  margin: 2
+  color: #FFD700
+
+WikiRichImage < UIWidget
+  background-color: #00000000
+  margin: 2
+  image-auto-resize: true
+  image-keep-aspect-ratio: true
+  image-smooth: true
+
+WikiRichSpacer < Panel
+  height: 10
+  background-color: #00000000
 
 WikiEnchantItem < Panel
   height: 155
