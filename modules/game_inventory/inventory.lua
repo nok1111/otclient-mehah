@@ -188,6 +188,7 @@ local function inventoryEvent(player, slot, item, oldItem)
         ItemsDatabase.setCharges(slotPanel.item, item)
     end
     ItemsDatabase.setTier(slotPanel.item, item)
+    ItemsDatabase.setProficiency(slotPanel.item, item)
 end
 
 local function onSoulChange(localPlayer, soul)
@@ -238,6 +239,25 @@ end
 
 function getIconsPanelOff()
     return inventoryController.ui.offPanel.icons
+end
+
+-- Re-decorate equipment slots with proficiency tier bars (called after a
+-- proficiency data sync from the game_itemproficiency module).
+function updateProficiencyOverlays()
+    local player = g_game.getLocalPlayer()
+    if not player or inventoryShrink then
+        return
+    end
+    local ui = getInventoryUi()
+    for slot = InventorySlotFirst, InventorySlotRune3 do
+        local getSlotInfo = getSlotPanelBySlot[slot]
+        if getSlotInfo then
+            local slotPanel = getSlotInfo(ui)
+            if slotPanel and slotPanel.item then
+                ItemsDatabase.setProficiency(slotPanel.item, player:getInventoryItem(slot))
+            end
+        end
+    end
 end
 
 local function refreshInventory_panel()

@@ -1,0 +1,11 @@
+Module
+  name: game_itemproficiency
+  description: Item Proficiency system (per-item trait progression)
+  author: Custom
+  version: 1.0.0
+
+  autoload: true
+  sandboxed: true
+  scripts: [ itemproficiency ]
+  @onLoad: init()
+  @onUnload: terminate()

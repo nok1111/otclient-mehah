@@ -36,7 +36,20 @@ Item < UIItem
     focusable: false
     visible: false
     image-smooth: true
-    
+
+  ProgressBar
+    id: proficiency
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-left: 2
+    margin-right: 2
+    margin-bottom: 1
+    height: 3
+    phantom: true
+    focusable: false
+    visible: false
+
 MainInventoryItem < UIWidget
   image-source: /images/inventory/containerslot
   phantom: false
@@ -272,4 +285,17 @@ MainInventoryItem < UIWidget
       focusable: false
       visible: false
       image-smooth: true
+
+    ProgressBar
+      id: proficiency
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-left: 2
+      margin-right: 2
+      margin-bottom: 1
+      height: 3
+      phantom: true
+      focusable: false
+      visible: false
       

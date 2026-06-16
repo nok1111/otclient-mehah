@@ -652,6 +652,16 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
         end
     end
 
+    -- Item Proficiency (Ctrl + right click on an equippable item)
+    do
+        local profThing = useThing or lookThing
+        if profThing and profThing:isItem() and not profThing:isCreature() and modules.game_itemproficiency then
+            menu:addOption(tr('Proficiency'), function()
+                modules.game_itemproficiency.open(profThing:getId())
+            end)
+        end
+    end
+
     if lookThing and not lookThing:isCreature() and not lookThing:isNotMoveable() and lookThing:isPickupable() then
         menu:addSeparator()
         menu:addOption(tr('Trade with ...'), function()

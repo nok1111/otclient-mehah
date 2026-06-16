@@ -1,0 +1,285 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  Reusable widget styles
+# ─────────────────────────────────────────────────────────────────────────────
+IPFilterButton < Button
+  size: 30 18
+  font: verdana-11px-rounded
+  $checked:
+    color: #FFE9A8
+    image-color: #FFD17A
+
+IPItemCell < UIItem
+  size: 34 34
+  image-source: /images/ui/item
+  border-width: 1
+  border-color: #00000000
+  phantom: false
+  virtual: true
+
+IPMilestoneCell < UIWidget
+  width: 96
+  height: 22
+  image-source: /images/ui/windows/miniwindow
+  image-border: 3
+
+  UIWidget
+    id: star
+    anchors.fill: parent
+    image-source: /images/inventory/tiers-strip
+    image-clip: 0 0 10 9
+    image-size: 18 16
+    image-color: #555555
+    phantom: true
+
+IPColumn < Panel
+  width: 96
+  image-source: /images/ui/windows/miniwindow
+  image-border: 4
+  padding-top: 6
+  padding-bottom: 6
+  padding-left: 22
+  padding-right: 22
+  layout:
+    type: verticalBox
+    spacing: 6
+
+IPTraitNode < UIButton
+  size: 50 50
+  border-width: 2
+  border-color: #00000000
+  background-color: #00000022
+  text: ''
+  $checked:
+    border-color: #44E06A
+    background-color: #44E06A33
+  $hover !checked:
+    border-color: #888888
+  $disabled:
+    opacity: 0.45
+
+  UIWidget
+    id: icon
+    anchors.fill: parent
+    margin: 4
+    phantom: true
+    image-smooth: true
+
+IPDescCell < Label
+  width: 96
+  height: 70
+  text-wrap: true
+  text-align: center
+  font: verdana-11px-antialised
+  color: #C5E1FF
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Main window
+# ─────────────────────────────────────────────────────────────────────────────
+ItemProficiencyWindow < MainWindow
+  id: itemProficiencyWindow
+  !text: tr('Item Proficiency')
+  size: 1012 600
+  visible: false
+  @onEscape: modules.game_itemproficiency.hide()
+
+  # ── LEFT PANEL ──────────────────────────────────────────────────────────────
+  Panel
+    id: leftPanel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.bottom: bottomButtons.top
+    width: 214
+    margin-top: 4
+    margin-bottom: 6
+    image-source: /images/ui/windows/miniwindow
+    image-border: 4
+    padding: 6
+
+    UIItem
+      id: itemIcon
+      size: 48 48
+      anchors.top: parent.top
+      anchors.left: parent.left
+      margin-top: 2
+      margin-left: 2
+      virtual: true
+      phantom: true
+
+    Label
+      id: itemNameLabel
+      anchors.top: parent.top
+      anchors.left: itemIcon.right
+      anchors.right: parent.right
+      margin-top: 2
+      margin-left: 8
+      text: No item selected
+      color: #E7CF7A
+      font: verdana-11px-rounded
+      text-wrap: true
+
+    Label
+      id: categoryLabel
+      anchors.top: itemNameLabel.bottom
+      anchors.left: itemIcon.right
+      anchors.right: parent.right
+      margin-top: 2
+      margin-left: 8
+      text: -
+      color: #9FD49F
+      font: verdana-11px-antialised
+
+    Label
+      id: xpLabel
+      anchors.top: itemIcon.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 6
+      text: 0 / 0
+      color: #FFFFFF
+      font: verdana-11px-rounded
+      text-align: center
+
+    Label
+      id: nextLabel
+      anchors.top: xpLabel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 1
+      text: -
+      color: #9E9E9E
+      font: verdana-11px-antialised
+      text-align: center
+
+    Panel
+      id: filterButtons
+      anchors.top: nextLabel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 6
+      height: 40
+      layout:
+        type: grid
+        cell-size: 48 18
+        cell-spacing: 2
+        num-columns: 4
+        flow: true
+
+    TextEdit
+      id: searchBox
+      anchors.top: filterButtons.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 4
+      height: 20
+
+    VerticalScrollBar
+      id: gridScroll
+      anchors.top: searchBox.bottom
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      margin-top: 4
+      step: 36
+      pixels-scroll: true
+
+    ScrollablePanel
+      id: itemGrid
+      anchors.top: searchBox.bottom
+      anchors.left: parent.left
+      anchors.right: gridScroll.left
+      anchors.bottom: parent.bottom
+      margin-top: 4
+      margin-right: 4
+      vertical-scrollbar: gridScroll
+      layout:
+        type: grid
+        cell-size: 34 34
+        cell-spacing: 2
+        flow: true
+
+  # ── MILESTONE HEADER ─────────────────────────────────────────────────────────
+  Panel
+    id: milestoneHeader
+    anchors.top: parent.top
+    anchors.left: leftPanel.right
+    anchors.right: parent.right
+    margin-top: 6
+    margin-left: 8
+    margin-right: 8
+    height: 22
+    layout:
+      type: horizontalBox
+      spacing: 6
+
+  # ── ITEM XP BAR ──────────────────────────────────────────────────────────────
+  ProgressBar
+    id: xpBar
+    anchors.top: milestoneHeader.bottom
+    anchors.left: leftPanel.right
+    anchors.right: parent.right
+    margin-top: 4
+    margin-left: 8
+    margin-right: 8
+    height: 10
+    minimum: 0
+    maximum: 100
+    value: 0
+
+  # ── TRAIT COLUMNS ────────────────────────────────────────────────────────────
+  Panel
+    id: columnsContainer
+    anchors.top: xpBar.bottom
+    anchors.left: leftPanel.right
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 8
+    margin-right: 8
+    height: 300
+    layout:
+      type: horizontalBox
+      spacing: 6
+
+  # ── SELECTED TRAIT DESC ROW ──────────────────────────────────────────────────
+  Panel
+    id: descRow
+    anchors.top: columnsContainer.bottom
+    anchors.left: leftPanel.right
+    anchors.right: parent.right
+    anchors.bottom: bottomButtons.top
+    margin-top: 6
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 4
+    layout:
+      type: horizontalBox
+      spacing: 6
+
+  # ── BOTTOM BUTTONS ───────────────────────────────────────────────────────────
+  Panel
+    id: bottomButtons
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-bottom: 8
+    margin-right: 10
+    height: 24
+    width: 320
+    layout:
+      type: horizontalBox
+      spacing: 8
+
+    Button
+      id: upgradeButton
+      !text: tr('Upgrade (Feed XP)')
+      width: 130
+      height: 24
+
+    Button
+      id: resetButton
+      !text: tr('Reset')
+      width: 80
+      height: 24
+
+    Button
+      id: closeButton
+      !text: tr('Close')
+      width: 80
+      height: 24

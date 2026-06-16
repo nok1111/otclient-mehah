@@ -109,6 +109,53 @@ function ItemsDatabase.setTier(widget, item)
     end
 end
 
+-- Per-tier color for the proficiency mini bar (tier 0..maxTier).
+local proficiencyTierColors = {
+    [0] = "#7d7d7d",
+    [1] = "#9FD49F",
+    [2] = "#67C7E2",
+    [3] = "#5B8DEF",
+    [4] = "#A66CFF",
+    [5] = "#E2A85B",
+    [6] = "#E2675B",
+    [7] = "#FFD17A",
+}
+
+-- Draws a thin proficiency tier bar at the bottom of an item widget.
+-- Reads tier data from the global `ProficiencyTiers` table (clientId -> {t,m,p}),
+-- populated by the game_itemproficiency module.
+function ItemsDatabase.setProficiency(widget, item)
+    if not widget or not widget.proficiency then
+        return
+    end
+
+    local bar = widget.proficiency
+    local mod = modules.game_itemproficiency
+    local tiers = mod and mod.tiers
+    if not tiers then
+        bar:setVisible(false)
+        return
+    end
+
+    local clientId = type(item) == "number" and item or (item and item:getId()) or 0
+    local info = clientId > 0 and tiers[tostring(clientId)] or nil
+    if not info then
+        bar:setVisible(false)
+        return
+    end
+
+    local tier = tonumber(info.t) or 0
+    local maxTier = tonumber(info.m) or 7
+    local pct = tonumber(info.p) or 0
+    if tier >= maxTier then
+        pct = 100
+    end
+
+    bar:setPercent(pct)
+    bar:setBackgroundColor("#4FC3F7")
+    bar:setVisible(true)
+end
+
 function ItemsDatabase.setCharges(widget, item, style)
     if not g_game.getFeature(GameThingCounter) or not widget then
         return
