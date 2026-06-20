@@ -260,7 +260,7 @@ function updateProficiencyOverlays()
     end
 end
 
-local function refreshInventory_panel()
+function refreshInventory_panel()
     local player = g_game.getLocalPlayer()
     if player then
         onSoulChange(player, player:getSoul())
@@ -318,6 +318,15 @@ function inventoryController:onInit()
     local ui = getInventoryUi()
 
     iconTopMenu = modules.game_mainpanel.addStoreButton('inventoryButton', tr('Inventory'), '/images/icons/bag', toggle, false, 3)
+
+    ProtocolGame.registerExtendedOpcode(217, function(protocol, opcode, buffer)
+        refreshInventory_panel()
+        if modules.game_containers and modules.game_containers.refreshContainerItems then
+            for _, container in pairs(g_game.getContainers()) do
+                modules.game_containers.refreshContainerItems(container)
+            end
+        end
+    end)
 end
 
 local slotTooltips = {
@@ -422,6 +431,8 @@ function inventoryController:onTerminate()
         iconTopMenu:destroy()
         iconTopMenu = nil
     end
+
+    ProtocolGame.unregisterExtendedOpcode(217)
 end
 
 function onSetSafeFight(self, checked)

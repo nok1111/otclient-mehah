@@ -425,12 +425,10 @@ void LocalPlayer::setInventoryItem(const Otc::InventorySlot inventory, const Ite
         return;
     }
 
-    if (m_inventoryItems[inventory] == item)
-        return;
-
     const auto& oldItem = m_inventoryItems[inventory];
     m_inventoryItems[inventory] = item;
 
+    // Always fire the event so attribute changes (e.g., upgrade tier) are reflected.
     callLuaField("onInventoryChange", inventory, item, oldItem);
 }
 

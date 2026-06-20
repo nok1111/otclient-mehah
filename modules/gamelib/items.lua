@@ -90,8 +90,26 @@ function ItemsDatabase.setColorLootMessage(text)
     return text:gsub("{(.-)}", coloringLootName)
 end
 
+local function isInventoryOrContainerSlot(widget)
+    local parent = widget
+    while parent do
+        local id = parent:getId()
+        if id == "maininventorypanel" then
+            return true
+        end
+        if id and id:sub(1, 9) == "container" then
+            return true
+        end
+        parent = parent:getParent()
+    end
+    return false
+end
+
 function ItemsDatabase.setTier(widget, item)
     if not g_game.getFeature(GameThingUpgradeClassification) or not widget then
+        return
+    end
+    if not isInventoryOrContainerSlot(widget) then
         return
     end
     local tier = type(item) == "number" and item or (item and item:getTier()) or 0
