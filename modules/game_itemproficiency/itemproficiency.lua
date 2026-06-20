@@ -18,6 +18,7 @@ local selectedCell = nil
 local CATEGORY = {
     NONE = 0, ARMOR = 1, SHIELD = 2, WEAPON_1H = 3,
     WEAPON_2H = 4, BOW = 5, RING = 6, NECKLACE = 7,
+    BOOTS = 8, WAND = 9,
 }
 
 local filterTabs = {
@@ -25,10 +26,12 @@ local filterTabs = {
     { label = 'Armor',  cat = CATEGORY.ARMOR },
     { label = 'Shield', cat = CATEGORY.SHIELD },
     { label = '1H',     cat = CATEGORY.WEAPON_1H },
+    { label = 'Wands',  cat = CATEGORY.WAND },
     { label = '2H',     cat = CATEGORY.WEAPON_2H },
     { label = 'Bow',    cat = CATEGORY.BOW },
     { label = 'Ring',   cat = CATEGORY.RING },
     { label = 'Neck',   cat = CATEGORY.NECKLACE },
+    { label = 'Boots',  cat = CATEGORY.BOOTS },
 }
 
 local tierColors = {
@@ -222,9 +225,20 @@ local function buildColumns(data)
             if iconWidget and trait.icon and trait.icon ~= '' then
                 iconWidget:setImageSource(trait.icon)
             end
+
+            local lockOverlay = btn:getChildById('lockOverlay')
+            if lockOverlay then
+                if not colData.unlocked then
+                    lockOverlay:setImageSource('/images/icons/lock')
+                    lockOverlay:setOpacity(0.6)
+                    lockOverlay:setVisible(true)
+                else
+                    lockOverlay:setVisible(false)
+                end
+            end
             btn:setTooltip(string.format('%s\n%s', trait.name or '', trait.desc or ''))
             btn:setChecked(colData.selected == trait.id)
-            btn:setEnabled(colData.unlocked)
+            btn:setOpacity(colData.unlocked and 1.0 or 0.60)
 
             local traitId = trait.id
             local column = colData.column
@@ -386,11 +400,8 @@ local function onExtendedOpcode(protocol, opcode, buffer)
 
     if packet.action == 'window' then
         applyWindowState(packet.data)
-        if window and not window:isVisible() then
-            window:show()
-            window:raise()
-            window:focus()
-        end
+        -- Do NOT auto-open the window on background updates (kill XP, etc.);
+        -- only refresh the UI if the user already has it open.
         if packet.feedback and packet.feedback ~= '' and modules.game_textmessage then
             modules.game_textmessage.displayStatusMessage(packet.feedback)
         end
