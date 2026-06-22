@@ -466,6 +466,17 @@ TileWidgetsConfig = {
       }
     },
 
+    {
+      pos = {x = 2091, y = 3482, z = 5},
+      text = "level 300+",
+      opts = {
+        width = 130, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40
+      }
+    },
+
 
 
   }, 
