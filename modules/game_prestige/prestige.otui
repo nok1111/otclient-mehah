@@ -1,3 +1,29 @@
+PrestigeRewardEntry < UIWidget
+  id: prestigeRewardEntry
+  height: 28
+  width: 110
+  background-color: alpha
+
+  UIWidget
+    id: rewardIcon
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 4
+    size: 22 22
+    phantom: true
+
+  Label
+    id: rewardValue
+    anchors.left: rewardIcon.right
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 6
+    margin-right: 4
+    color: #FFFFFF
+    font: verdana-11px-antialised
+    text: -
+    phantom: true
+
 PrestigeModeEntry < UIWidget
   id: prestigeModeEntry
   height: 36
@@ -206,6 +232,48 @@ PrestigeWindow < MainWindow
         font: verdana-11px-antialised
 
       Label
+        id: detailRewardsTitle
+        margin-top: 12
+        text: Rewards
+        color: #C5E1FF
+        font: verdana-11px-rounded
+        text-auto-resize: true
+
+      Panel
+        id: rewardsPanel
+        height: 34
+        margin-top: 4
+        margin-left: 6
+        margin-right: 6
+        padding: 4
+        background-color: #2A2E38AA
+        border-color: #4A4F5CAA
+        border-width: 1
+        layout:
+          type: horizontalBox
+          spacing: 6
+          align-center: true
+
+        PrestigeRewardEntry
+          id: rewardGold
+
+        PrestigeRewardEntry
+          id: rewardFame
+
+        PrestigeRewardEntry
+          id: rewardCodex
+
+      Label
+        id: rewardWhenLabel
+        margin-top: 2
+        margin-left: 6
+        margin-right: 6
+        text: -
+        color: #B0B0B0
+        font: verdana-11px-antialised
+        text-auto-resize: true
+
+      Label
         id: detailDescriptionTitle
         margin-top: 10
         text: Description
@@ -232,6 +300,23 @@ PrestigeWindow < MainWindow
 
       Label
         id: detailRequirements
+        margin-top: 2
+        text: -
+        color: #FFFFFF
+        font: verdana-11px-antialised
+        text-wrap: true
+        text-auto-resize: true
+
+      Label
+        id: detailModifiersTitle
+        margin-top: 10
+        text: Modifiers
+        color: #C5E1FF
+        font: verdana-11px-rounded
+        text-auto-resize: true
+
+      Label
+        id: detailModifiers
         margin-top: 2
         text: -
         color: #FFFFFF

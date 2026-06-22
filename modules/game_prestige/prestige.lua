@@ -20,6 +20,30 @@ local MODE_ICONS = {
   [7] = '/data/images/icons/row-5-column-3',   -- Nightmare III
 }
 
+local REWARD_ICONS = {
+  gold  = '/data/images/icons/gold-bars',
+  fame  = '/data/images/icons/fame',
+  codex = '/data/images/icons/gem',
+}
+
+local REWARD_COLORS = {
+  gold  = '#FFD700',
+  fame  = '#E7CF7A',
+  codex = '#9FD49F',
+}
+
+local function formatNumber(n)
+  if type(n) ~= 'number' then return '0' end
+  local s = tostring(math.floor(n))
+  local parts = {}
+  while #s > 3 do
+    table.insert(parts, 1, s:sub(-3))
+    s = s:sub(1, -4)
+  end
+  table.insert(parts, 1, s)
+  return table.concat(parts, ',')
+end
+
 local window = nil
 local confirmWindow = nil
 local currentModes = {}
@@ -54,6 +78,9 @@ local function updateDetail()
   local descLabel = window:recursiveGetChildById('detailDescription')
   local reqLabel = window:recursiveGetChildById('detailRequirements')
   local selectBtn = window:recursiveGetChildById('selectButton')
+  local rewardsTitle = window:recursiveGetChildById('detailRewardsTitle')
+  local rewardsPanel = window:recursiveGetChildById('rewardsPanel')
+  local rewardWhenLabel = window:recursiveGetChildById('rewardWhenLabel')
 
   local mode = selectedModeId and findMode(selectedModeId) or nil
   if not mode then
@@ -62,6 +89,13 @@ local function updateDetail()
     if descLabel then descLabel:setText('-') end
     if reqLabel then reqLabel:setText('-') end
     if selectBtn then selectBtn:setEnabled(false) end
+    if rewardsTitle then rewardsTitle:setVisible(false) end
+    if rewardsPanel then rewardsPanel:setVisible(false) end
+    if rewardWhenLabel then rewardWhenLabel:setVisible(false) end
+    local modifiersTitle = window:recursiveGetChildById('detailModifiersTitle')
+    local modifiersLabel = window:recursiveGetChildById('detailModifiers')
+    if modifiersTitle then modifiersTitle:setVisible(false) end
+    if modifiersLabel then modifiersLabel:setVisible(false) end
     return
   end
 
@@ -82,6 +116,39 @@ local function updateDetail()
     end
   end
 
+  -- Rewards panel: show gold / fame / codex with icons and the trigger note.
+  local rewards = mode.rewards
+  local hasAnyReward = false
+  if rewards then
+    for _, key in ipairs({ 'gold', 'fame', 'codex' }) do
+      local entry = rewardsPanel and rewardsPanel:recursiveGetChildById('reward' .. key:gsub('^%l', string.upper))
+      if entry then
+        local value = tonumber(rewards[key]) or 0
+        local icon = entry:getChildById('rewardIcon')
+        local valueLabel = entry:getChildById('rewardValue')
+        if value > 0 then
+          hasAnyReward = true
+          if icon then icon:setImageSource(REWARD_ICONS[key]) end
+          if valueLabel then
+            valueLabel:setText(formatNumber(value))
+            valueLabel:setColor(REWARD_COLORS[key])
+          end
+          entry:setVisible(true)
+        else
+          entry:setVisible(false)
+        end
+      end
+    end
+  end
+  if rewardsTitle then rewardsTitle:setVisible(hasAnyReward) end
+  if rewardsPanel then rewardsPanel:setVisible(hasAnyReward) end
+  if rewardWhenLabel then
+    rewardWhenLabel:setVisible(hasAnyReward)
+    if hasAnyReward and rewards and rewards.whenText then
+      rewardWhenLabel:setText('Granted ' .. rewards.whenText .. '.')
+    end
+  end
+
   if descLabel then descLabel:setText(mode.description or '-') end
 
   if reqLabel then
@@ -93,6 +160,21 @@ local function updateDetail()
     end
     if #lines == 0 then lines[#lines + 1] = '- Minimum level ' .. tostring(mode.minLevel or '-') end
     reqLabel:setText(table.concat(lines, '\n'))
+  end
+
+  local modifiersTitle = window:recursiveGetChildById('detailModifiersTitle')
+  local modifiersLabel = window:recursiveGetChildById('detailModifiers')
+  local hasModifiers = type(mode.modifiers) == 'table' and #mode.modifiers > 0
+  if modifiersTitle then modifiersTitle:setVisible(hasModifiers) end
+  if modifiersLabel then
+    modifiersLabel:setVisible(hasModifiers)
+    if hasModifiers then
+      local lines = {}
+      for _, line in ipairs(mode.modifiers) do
+        lines[#lines + 1] = '- ' .. tostring(line)
+      end
+      modifiersLabel:setText(table.concat(lines, '\n'))
+    end
   end
 
   -- Block selecting a new prestige while any challenge is ongoing (server enforces too).
