@@ -27,6 +27,7 @@
 #include "declarations.h"
 #include "outfit.h"
 #include "protocolgame.h"
+#include <atomic>
 #include <bitset>
 #include <framework/core/timer.h>
 
@@ -849,6 +850,13 @@ public:
         }
     }
 
+    void recordMagicEffect();
+    void recordDistanceEffect();
+    void recordAttachedEffect();
+    void recordDetachEffect();
+    void recordNetworkBytesIn(uint32_t bytes);
+    void recordNetworkMessageIn();
+
     auto getWalkMaxSteps() { return m_walkMaxSteps; }
     void setWalkMaxSteps(uint8_t v) { m_walkMaxSteps = v; }
 
@@ -859,6 +867,7 @@ protected:
 private:
     void setAttackingCreature(const CreaturePtr& creature);
     void setFollowingCreature(const CreaturePtr& creature);
+    void printPerformanceReport();
 
     LocalPlayerPtr m_localPlayer;
     CreaturePtr m_attackingCreature;
@@ -872,6 +881,14 @@ private:
     UnjustifiedPoints m_unjustifiedPoints;
     ScheduledEventPtr m_pingEvent;
     ScheduledEventPtr m_checkConnectionEvent;
+    ScheduledEventPtr m_profilerEvent;
+
+    std::atomic<uint64_t> m_profilerMagicEffects{0};
+    std::atomic<uint64_t> m_profilerDistanceEffects{0};
+    std::atomic<uint64_t> m_profilerAttachedEffects{0};
+    std::atomic<uint64_t> m_profilerDetachEffects{0};
+    std::atomic<uint64_t> m_profilerNetworkBytesIn{0};
+    std::atomic<uint64_t> m_profilerNetworkMessagesIn{0};
 
     bool m_tileThingsLuaCallback{ false };
     bool m_online{ false };

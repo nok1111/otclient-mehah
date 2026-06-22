@@ -42,6 +42,7 @@ Game g_game;
 void Game::init()
 {
     resetGameStates();
+    m_profilerEvent = g_dispatcher.cycleEvent([this] { printPerformanceReport(); }, 10000);
 }
 
 void Game::terminate()
@@ -88,10 +89,40 @@ void Game::resetGameStates()
         m_checkConnectionEvent = nullptr;
     }
 
+    if (m_profilerEvent) {
+        m_profilerEvent->cancel();
+        m_profilerEvent = nullptr;
+    }
+
     m_containers.clear();
     m_vips.clear();
     m_gmActions.clear();
     g_map.resetAwareRange();
+}
+
+void Game::recordMagicEffect() { ++m_profilerMagicEffects; }
+void Game::recordDistanceEffect() { ++m_profilerDistanceEffects; }
+void Game::recordAttachedEffect() { ++m_profilerAttachedEffects; }
+void Game::recordDetachEffect() { ++m_profilerDetachEffects; }
+void Game::recordNetworkBytesIn(uint32_t bytes) { m_profilerNetworkBytesIn += bytes; }
+void Game::recordNetworkMessageIn() { ++m_profilerNetworkMessagesIn; }
+
+void Game::printPerformanceReport()
+{
+    const auto magicEffects = m_profilerMagicEffects.exchange(0);
+    const auto distanceEffects = m_profilerDistanceEffects.exchange(0);
+    const auto attachedEffects = m_profilerAttachedEffects.exchange(0);
+    const auto detachEffects = m_profilerDetachEffects.exchange(0);
+    const auto networkBytes = m_profilerNetworkBytesIn.exchange(0);
+    const auto networkMessages = m_profilerNetworkMessagesIn.exchange(0);
+
+    g_logger.info("[ClientPerformance] magicEffects/sec={} distanceEffects/sec={} attached/sec={} detach/sec={} messages/sec={} bytes/sec={}",
+                  magicEffects / 10,
+                  distanceEffects / 10,
+                  attachedEffects / 10,
+                  detachEffects / 10,
+                  networkMessages / 10,
+                  networkBytes / 10);
 }
 
 void Game::processConnectionError(const std::error_code& ec)
