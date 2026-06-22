@@ -6,13 +6,25 @@
 ]]
 
 ZonesOverlay = {}
--- Expose toggle/reload at the module table level so other sandboxed modules
--- can call modules.game_zones_overlay.toggle()
+-- Expose toggle/reload/hideZone/showZone at the module table level so other sandboxed modules
+-- can call modules.game_zones_overlay.toggle(), hideZone(id), showZone(id)
 local _M = _G or _ENV
 local function exportApi()
     if not modules or not modules.game_zones_overlay then return end
     modules.game_zones_overlay.toggle = function() ZonesOverlay.toggle() end
     modules.game_zones_overlay.reload = function() ZonesOverlay.reload() end
+    modules.game_zones_overlay.hideZone = function(id) ZonesOverlay.hideZone(id) end
+    modules.game_zones_overlay.showZone = function(id) ZonesOverlay.showZone(id) end
+end
+
+function ZonesOverlay.hideZone(id)
+    HIDDEN_ZONE_IDS[id] = true
+    if ZonesOverlay.enabled then rebuildOverlay() end
+end
+
+function ZonesOverlay.showZone(id)
+    HIDDEN_ZONE_IDS[id] = nil
+    if ZonesOverlay.enabled then rebuildOverlay() end
 end
 
 local ZONES_FILE_CANDIDATES = {
@@ -34,13 +46,47 @@ local BORDER_ALPHA  = 0.85      -- border opacity
 local MAX_DRAW_TILES_W = 96     -- safety cap: don't spawn widgets if rect bbox is huge in tiles
 local MAX_DRAW_TILES_H = 96
 
+-- Performance settings
+local REBUILD_INTERVAL_MS = 250     -- throttle overlay rebuilds (minimap camera scrolls frequently)
+local MAX_FILL_WIDGETS = 500        -- cap on colored fill rectangles (zones)
+local MAX_EDGE_WIDGETS = 200        -- cap on border line widgets
+local ENABLE_BORDERS = true         -- global kill-switch for border rendering
+
+-- Zones that should never be rendered (by ID)
+local HIDDEN_ZONE_IDS = {
+    [95] = true,
+}
+
+-- Active / inactive zone visuals
+local ACTIVE_ZONE_PALETTE = {
+    { 255, 215, 0   }, -- gold
+    { 255, 80, 80   }, -- red
+    { 50, 255, 50   }, -- lime
+    { 0, 255, 255   }, -- cyan
+    { 255, 0, 255   }, -- magenta
+    { 255, 165, 0   }, -- orange
+    { 160, 32, 240  }, -- purple
+    { 30, 144, 255  }, -- blue
+}
+local ACTIVE_FILL_ALPHA = 0.45            -- player is inside this zone
+local INACTIVE_FILL_ALPHA = 0.18          -- other visible zones are dimmed
+local ACTIVE_BORDER_ALPHA = 0.0
+local INACTIVE_BORDER_ALPHA = 0.0
+
 ZonesOverlay.enabled = false
 ZonesOverlay.zones = {}         -- [id] = { id, color = {r,g,b}, rects = { {x,y,z,w,h}, ... } }
 ZonesOverlay.zoneNames = {}     -- [id] = "Zone Display Name"
 ZonesOverlay.overlayWidget = nil
 ZonesOverlay.toggleButton = nil
-ZonesOverlay.lastCameraPos = nil
 ZonesOverlay.connectedEvents = false
+
+-- Widget pool to avoid destroying/recreating every frame
+ZonesOverlay._widgetPool = {}  -- { fills = {widget...}, edges = {widget...} }
+ZonesOverlay._activeZoneWidgets = {} -- [zoneId] = { fill=widget, edges={widget...} }
+ZonesOverlay._lastRebuildKey = ''
+ZonesOverlay._nextRebuildTime = 0
+ZonesOverlay._visibleFills = 0
+ZonesOverlay._visibleEdges = 0
 
 ------------------------------------------------------------
 -- Binary reader
@@ -197,6 +243,19 @@ local function buildTileSets()
     return sets
 end
 
+local function getActiveZoneIds(sets, playerPos)
+    local active = {}
+    if not playerPos then return active end
+    local key = playerPos.x * 65536 + playerPos.y
+    for zoneId, byFloor in pairs(sets) do
+        local fmap = byFloor[playerPos.z]
+        if fmap and fmap[key] then
+            active[zoneId] = true
+        end
+    end
+    return active
+end
+
 ------------------------------------------------------------
 -- Minimap integration
 ------------------------------------------------------------
@@ -247,10 +306,62 @@ local function ensureOverlayWidget(mm)
     return w
 end
 
+local function recycleWidget(widget, kind)
+    if not widget or widget:isDestroyed() then return end
+    widget:hide()
+    widget:setTooltip(nil)
+    local pool = ZonesOverlay._widgetPool[kind]
+    if not pool then
+        pool = {}; ZonesOverlay._widgetPool[kind] = pool
+    end
+    pool[#pool + 1] = widget
+end
+
+local function acquireWidget(kind, parent)
+    local pool = ZonesOverlay._widgetPool[kind]
+    if pool and #pool > 0 then
+        local widget = table.remove(pool)
+        widget:show()
+        return widget
+    end
+    return g_ui.createWidget('UIWidget', parent)
+end
+
+local function releaseZoneWidgets(zoneId)
+    local group = ZonesOverlay._activeZoneWidgets[zoneId]
+    if not group then return end
+    if group.fills then
+        for _, f in ipairs(group.fills) do
+            recycleWidget(f, 'fills')
+        end
+    end
+    if group.edges then
+        for _, e in ipairs(group.edges) do
+            recycleWidget(e, 'edges')
+        end
+    end
+    ZonesOverlay._activeZoneWidgets[zoneId] = nil
+end
+
 local function clearOverlayChildren()
-    local w = ZonesOverlay.overlayWidget
-    if not w or w:isDestroyed() then return end
-    w:destroyChildren()
+    -- Recycle instead of destroy so rebuilds reuse existing widgets.
+    for zoneId, _ in pairs(ZonesOverlay._activeZoneWidgets) do
+        releaseZoneWidgets(zoneId)
+    end
+    ZonesOverlay._visibleFills = 0
+    ZonesOverlay._visibleEdges = 0
+end
+
+local function destroyAllOverlayWidgets()
+    -- Full cleanup used on terminate or when we want to reset everything.
+    clearOverlayChildren()
+    for _, widget in ipairs(ZonesOverlay._widgetPool.fills or {}) do
+        if not widget:isDestroyed() then widget:destroy() end
+    end
+    for _, widget in ipairs(ZonesOverlay._widgetPool.edges or {}) do
+        if not widget:isDestroyed() then widget:destroy() end
+    end
+    ZonesOverlay._widgetPool = {}
 end
 
 local function colorToString(r, g, b, alpha)
@@ -258,9 +369,79 @@ local function colorToString(r, g, b, alpha)
     return string.format('#%02x%02x%02x%02x', r, g, b, a)
 end
 
+local function positionWidget(widget, px, py, pw, ph, rect)
+    if not widget._zo_anchored then
+        widget:breakAnchors()
+        widget:addAnchor(AnchorTop, 'parent', AnchorTop)
+        widget:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+        widget._zo_anchored = true
+    end
+    widget:setMarginTop(py - rect.y)
+    widget:setMarginLeft(px - rect.x)
+    widget:setSize({ width = math.max(1, math.floor(pw + 0.5)), height = math.max(1, math.floor(ph + 0.5)) })
+end
+
+local function emitFill(px, py, pw, ph, fillCol, label, overlay, rect)
+    if ZonesOverlay._visibleFills >= MAX_FILL_WIDGETS then return nil end
+    local widget = acquireWidget('fills', overlay)
+    widget:setPhantom(false)
+    widget:setBackgroundColor(fillCol)
+    widget:setTooltip(label)
+    positionWidget(widget, px, py, pw, ph, rect)
+    ZonesOverlay._visibleFills = ZonesOverlay._visibleFills + 1
+    return widget
+end
+
+local function emitEdge(px, py, pw, ph, borderCol, overlay, rect, group)
+    if ZonesOverlay._visibleEdges >= MAX_EDGE_WIDGETS then return nil end
+    local widget = acquireWidget('edges', overlay)
+    widget:setPhantom(true)
+    widget:setBackgroundColor(borderCol)
+    widget:setTooltip(nil)
+    positionWidget(widget, px, py, pw, ph, rect)
+    ZonesOverlay._visibleEdges = ZonesOverlay._visibleEdges + 1
+    if group then
+        group.edges[#group.edges + 1] = widget
+    end
+    return widget
+end
+
+local function emitSimpleBorder(rx1, ry1, rx2, ry2, floor, borderCol, half, pxPerTile, borderPx, overlay, rect, mm, group)
+    local tlc = mm:getTilePoint({ x = rx1, y = ry1, z = floor })
+    local brc = mm:getTilePoint({ x = rx2, y = ry2, z = floor })
+    if not tlc or not brc or tlc.x < 0 or brc.x < 0 then return 0 end
+    local px = tlc.x - half
+    local py = tlc.y - half
+    local pw = (brc.x - tlc.x) + pxPerTile
+    local ph = (brc.y - tlc.y) + pxPerTile
+    local edgeW = math.max(1, math.floor(pw + 0.5))
+    local edgeH = math.max(1, math.floor(ph + 0.5))
+    local count = 0
+    -- top
+    if emitEdge(px, py, edgeW, borderPx, borderCol, overlay, rect, group) then count = count + 1 end
+    -- bottom
+    if emitEdge(px, py + ph - borderPx, edgeW, borderPx, borderCol, overlay, rect, group) then count = count + 1 end
+    -- left
+    if emitEdge(px, py, borderPx, edgeH, borderCol, overlay, rect, group) then count = count + 1 end
+    -- right
+    if emitEdge(px + pw - borderPx, py, borderPx, edgeH, borderCol, overlay, rect, group) then count = count + 1 end
+    return count
+end
+
+local function currentTimeMs()
+    if g_clock and g_clock.millis then
+        return g_clock.millis()
+    end
+    return math.floor(os.time() * 1000)
+end
+
 local function rebuildOverlay()
+    local now = currentTimeMs()
+    if now < ZonesOverlay._nextRebuildTime then return end
+    ZonesOverlay._nextRebuildTime = now + REBUILD_INTERVAL_MS
+
     local mm = getMinimapWidget()
-    if not mm then print('[ZonesOverlay] rebuild: no minimap widget'); return end
+    if not mm then return end
     if not ZonesOverlay.enabled then
         if ZonesOverlay.overlayWidget and not ZonesOverlay.overlayWidget:isDestroyed() then
             ZonesOverlay.overlayWidget:hide()
@@ -269,20 +450,24 @@ local function rebuildOverlay()
     end
 
     local player = g_game.getLocalPlayer()
-    if not player then print('[ZonesOverlay] rebuild: no local player'); return end
+    if not player then return end
     local camPos = mm.getCameraPosition and mm:getCameraPosition() or player:getPosition()
-    if not camPos then print('[ZonesOverlay] rebuild: no camera pos'); return end
+    if not camPos then return end
     local floor = camPos.z
+    local zoom = mm:getZoom() or 1
+    local key = string.format('%d,%d,%d,%.3f', camPos.x, camPos.y, floor, zoom)
+    if key == ZonesOverlay._lastRebuildKey then return end
+    ZonesOverlay._lastRebuildKey = key
 
     local okOv, ovErr = pcall(ensureOverlayWidget, mm)
     if not okOv then print('[ZonesOverlay] ensureOverlayWidget error: ' .. tostring(ovErr)); return end
     local overlay = ZonesOverlay.overlayWidget
     if not overlay then return end
     overlay:show()
-    clearOverlayChildren()
-    local drawn = 0
+    ZonesOverlay._visibleFills = 0
+    ZonesOverlay._visibleEdges = 0
 
-    -- Determine visible map area in tile coordinates using top-left & bottom-right widget points.
+    -- Determine visible map area in tile coordinates.
     local rect = mm:getPaddingRect()
     if not rect then rect = mm:getRect() end
     local topLeftTile = mm:getTilePosition({ x = rect.x, y = rect.y })
@@ -295,135 +480,140 @@ local function rebuildOverlay()
     local maxX = math.max(topLeftTile.x, botRightTile.x) + 1
     local minY = math.min(topLeftTile.y, botRightTile.y) - 1
     local maxY = math.max(topLeftTile.y, botRightTile.y) + 1
-    -- Hard cap on visible area to avoid runaway widget spawn at extreme zoom-out.
     local areaTiles = (maxX - minX + 1) * (maxY - minY + 1)
     if areaTiles > 40000 then
-        -- Too far zoomed out: don't render anything.
+        -- Too far zoomed out: hide everything.
+        clearOverlayChildren()
         return
     end
 
     local sets = buildTileSets()
+    local playerPos = player and player:getPosition() or nil
+    local activeZoneIds = getActiveZoneIds(sets, playerPos)
+    -- Build a deterministic index per active zone so overlapping active zones get slightly different gold shades.
+    local activeZoneIndex = {}
+    local activeList = {}
+    for zoneId, _ in pairs(activeZoneIds) do
+        activeZoneIndex[zoneId] = #activeList + 1
+        activeList[#activeList + 1] = zoneId
+    end
+    local function activeZoneColor(zoneId)
+        local idx = activeZoneIndex[zoneId] or 1
+        local color = ACTIVE_ZONE_PALETTE[((idx - 1) % #ACTIVE_ZONE_PALETTE) + 1]
+        -- Slightly vary the color if we have more active zones than palette entries.
+        local cycle = math.floor((idx - 1) / #ACTIVE_ZONE_PALETTE)
+        local shift = cycle * 25
+        return { math.min(255, color[1] + shift), math.min(255, color[2] + shift), math.min(255, color[3] + shift) }
+    end
+
     local scale = mm:getScale() or 1
     local pxPerTile = math.max(1, math.floor(scale + 0.5))
     local borderPx = 1
+    local half = math.max(1, math.floor(pxPerTile / 2))
+    local labelFallbackFmt = 'Zone %d'
 
-    local function emitFill(px, py, pw, ph, fillCol)
-        local widget = g_ui.createWidget('UIWidget', overlay)
-        -- Not phantom: needs to receive hover for tooltip.
-        widget:setBackgroundColor(fillCol)
-        widget:breakAnchors()
-        widget:addAnchor(AnchorTop, 'parent', AnchorTop)
-        widget:addAnchor(AnchorLeft, 'parent', AnchorLeft)
-        widget:setMarginTop(py - rect.y)
-        widget:setMarginLeft(px - rect.x)
-        widget:setSize({ width = pw, height = ph })
-        return widget
-    end
-
-    local function emitEdge(px, py, pw, ph, borderCol)
-        local widget = g_ui.createWidget('UIWidget', overlay)
-        widget:setPhantom(true)
-        widget:setBackgroundColor(borderCol)
-        widget:breakAnchors()
-        widget:addAnchor(AnchorTop, 'parent', AnchorTop)
-        widget:addAnchor(AnchorLeft, 'parent', AnchorLeft)
-        widget:setMarginTop(py - rect.y)
-        widget:setMarginLeft(px - rect.x)
-        widget:setSize({ width = math.max(1, pw), height = math.max(1, ph) })
-        return widget
-    end
+    -- Track which zones are still visible so we can recycle unused ones.
+    local desiredZones = {}
 
     for _, zone in pairs(ZonesOverlay.zones) do
-        local color = zone.color
-        local fillCol = colorToString(color[1], color[2], color[3], DEFAULT_ALPHA)
-        local borderCol = colorToString(color[1], color[2], color[3], BORDER_ALPHA)
-        local zoneFloor = sets[zone.id] and sets[zone.id][floor] or nil
-        for _, rc in ipairs(zone.rects) do
-            if rc.z == floor and rc.w <= MAX_DRAW_TILES_W and rc.h <= MAX_DRAW_TILES_H then
-                -- Intersect rect with visible bbox
-                local rx1, ry1 = rc.x, rc.y
-                local rx2, ry2 = rc.x + rc.w - 1, rc.y + rc.h - 1
-                if rx2 >= minX and rx1 <= maxX and ry2 >= minY and ry1 <= maxY then
-                    -- Use getTilePoint (returns the tile CENTER on screen) plus the
-                    -- minimap scale (pixels-per-tile). getTileRect can't be used because
-                    -- it returns a sprite-sized rect (32*scale), not minimap-tile-sized.
+        if HIDDEN_ZONE_IDS[zone.id] then
+            desiredZones[zone.id] = false
+        else
+            local isActive = activeZoneIds[zone.id] == true
+            local color = isActive and activeZoneColor(zone.id) or zone.color
+            local fillAlpha = isActive and ACTIVE_FILL_ALPHA or INACTIVE_FILL_ALPHA
+            local borderAlpha = isActive and ACTIVE_BORDER_ALPHA or INACTIVE_BORDER_ALPHA
+            local fillCol = colorToString(color[1], color[2], color[3], fillAlpha)
+            local borderCol = colorToString(color[1], color[2], color[3], borderAlpha)
+            local label = nil
+            if isActive then
+                local idx = activeZoneIndex[zone.id] or 1
+                local base = ZonesOverlay.zoneNames[zone.id] or string.format(labelFallbackFmt, zone.id)
+                label = string.format('%s (active #%d)', base, idx)
+            end
+
+            -- Collect visible rectangles for this zone.
+            local visibleRects = {}
+            for _, rc in ipairs(zone.rects) do
+                if rc.z == floor and rc.w <= MAX_DRAW_TILES_W and rc.h <= MAX_DRAW_TILES_H then
+                    local rx1, ry1 = rc.x, rc.y
+                    local rx2, ry2 = rc.x + rc.w - 1, rc.y + rc.h - 1
+                    if rx2 >= minX and rx1 <= maxX and ry2 >= minY and ry1 <= maxY then
+                        visibleRects[#visibleRects + 1] = rc
+                    end
+                end
+            end
+
+            if #visibleRects == 0 then
+                desiredZones[zone.id] = false
+            else
+                desiredZones[zone.id] = true
+                local group = ZonesOverlay._activeZoneWidgets[zone.id]
+                if not group then
+                    group = { fills = {}, edges = {} }
+                    ZonesOverlay._activeZoneWidgets[zone.id] = group
+                end
+
+                -- Recycle leftover fill widgets from previous frame; we'll reacquire exactly what we need.
+                for _, f in ipairs(group.fills) do
+                    recycleWidget(f, 'fills')
+                end
+                group.fills = {}
+
+                -- Render fills. One widget per visible rectangle.
+                for _, rc in ipairs(visibleRects) do
+                    local rx1, ry1 = rc.x, rc.y
+                    local rx2, ry2 = rc.x + rc.w - 1, rc.y + rc.h - 1
                     local tlc = mm:getTilePoint({ x = rx1, y = ry1, z = floor })
                     local brc = mm:getTilePoint({ x = rx2, y = ry2, z = floor })
-                    local scale = mm:getScale() or 1
                     if tlc and brc and tlc.x >= 0 and brc.x >= 0 then
-                        local half = math.max(1, math.floor(pxPerTile / 2))
                         local px = tlc.x - half
                         local py = tlc.y - half
                         local pw = (brc.x - tlc.x) + pxPerTile
                         local ph = (brc.y - tlc.y) + pxPerTile
                         if pw >= 1 and ph >= 1 then
-                            local label = ZonesOverlay.zoneNames[zone.id] or string.format('Zone %d', zone.id)
-                            emitFill(px, py, pw, ph, fillCol):setTooltip(label)
-                            drawn = drawn + 1
-
-                            -- Outline only the tiles whose outward neighbor isn't in this zone.
-                            -- Coalesce contiguous boundary tiles into a single widget for perf.
-                            -- Skip entirely when each tile is sub-pixel (zoomed out far).
-                            if zoneFloor and pxPerTile >= 2 then
-                                local function inZone(tx, ty) return zoneFloor[tx * 65536 + ty] == true end
-
-                                -- Helper: emit a horizontal segment that spans tiles [tx1..tx2] on row ty
-                                local function emitH(tx1, tx2, ty, isTop)
-                                    local pa = mm:getTilePoint({ x = tx1, y = ty, z = floor })
-                                    local pb = mm:getTilePoint({ x = tx2, y = ty, z = floor })
-                                    if not pa or not pb or pa.x < 0 or pb.x < 0 then return end
-                                    local x = pa.x - half
-                                    local y = pa.y - half + (isTop and 0 or (pxPerTile - borderPx))
-                                    local w = (pb.x - pa.x) + pxPerTile
-                                    emitEdge(x, y, w, borderPx, borderCol)
-                                end
-                                local function emitV(ty1, ty2, tx, isLeft)
-                                    local pa = mm:getTilePoint({ x = tx, y = ty1, z = floor })
-                                    local pb = mm:getTilePoint({ x = tx, y = ty2, z = floor })
-                                    if not pa or not pb or pa.x < 0 or pb.x < 0 then return end
-                                    local x = pa.x - half + (isLeft and 0 or (pxPerTile - borderPx))
-                                    local y = pa.y - half
-                                    local h = (pb.y - pa.y) + pxPerTile
-                                    emitEdge(x, y, borderPx, h, borderCol)
-                                end
-
-                                -- Top / Bottom: scan along x, group consecutive missing-neighbor runs
-                                local function scanHoriz(ry, neighborY, isTop)
-                                    local runStart = nil
-                                    for tx = rx1, rx2 + 1 do
-                                        local missing = (tx <= rx2) and (not inZone(tx, neighborY))
-                                        if missing then
-                                            if not runStart then runStart = tx end
-                                        elseif runStart then
-                                            emitH(runStart, tx - 1, ry, isTop)
-                                            runStart = nil
-                                        end
-                                    end
-                                end
-                                scanHoriz(ry1, ry1 - 1, true)
-                                scanHoriz(ry2, ry2 + 1, false)
-
-                                -- Left / Right: scan along y
-                                local function scanVert(rx, neighborX, isLeft)
-                                    local runStart = nil
-                                    for ty = ry1, ry2 + 1 do
-                                        local missing = (ty <= ry2) and (not inZone(neighborX, ty))
-                                        if missing then
-                                            if not runStart then runStart = ty end
-                                        elseif runStart then
-                                            emitV(runStart, ty - 1, rx, isLeft)
-                                            runStart = nil
-                                        end
-                                    end
-                                end
-                                scanVert(rx1, rx1 - 1, true)
-                                scanVert(rx2, rx2 + 1, false)
+                            local fill = emitFill(px, py, pw, ph, fillCol, label, overlay, rect)
+                            if fill then
+                                group.fills[#group.fills + 1] = fill
                             end
                         end
                     end
                 end
+
+                -- Recycle leftover edge widgets before drawing new ones.
+                for _, e in ipairs(group.edges) do
+                    recycleWidget(e, 'edges')
+                end
+                group.edges = {}
+
+                -- Borders: single bounding box around the whole visible zone area.
+                if ENABLE_BORDERS and pxPerTile >= 2 and #visibleRects > 0 then
+                    local bx1, by1 = visibleRects[1].x, visibleRects[1].y
+                    local bx2, by2 = visibleRects[1].x + visibleRects[1].w - 1, visibleRects[1].y + visibleRects[1].h - 1
+                    for i = 2, #visibleRects do
+                        local rc = visibleRects[i]
+                        local rx1, ry1 = rc.x, rc.y
+                        local rx2, ry2 = rc.x + rc.w - 1, rc.y + rc.h - 1
+                        if rx1 < bx1 then bx1 = rx1 end
+                        if ry1 < by1 then by1 = ry1 end
+                        if rx2 > bx2 then bx2 = rx2 end
+                        if ry2 > by2 then by2 = ry2 end
+                    end
+                    emitSimpleBorder(bx1, by1, bx2, by2, floor, borderCol, half, pxPerTile, borderPx, overlay, rect, mm, group)
+                end
             end
         end
+    end
+
+    -- Recycle widgets from zones that are no longer visible on this floor/viewport.
+    for zoneId, group in pairs(ZonesOverlay._activeZoneWidgets) do
+        if not desiredZones[zoneId] then
+            releaseZoneWidgets(zoneId)
+        end
+    end
+
+    if ZonesOverlay._visibleFills >= MAX_FILL_WIDGETS or ZonesOverlay._visibleEdges >= MAX_EDGE_WIDGETS then
+        print(string.format('[ZonesOverlay] hit caps: fills=%d/%d edges=%d/%d', ZonesOverlay._visibleFills, MAX_FILL_WIDGETS, ZonesOverlay._visibleEdges, MAX_EDGE_WIDGETS))
     end
 end
 
@@ -472,6 +662,7 @@ function ZonesOverlay.toggle()
         if ZonesOverlay.overlayWidget and not ZonesOverlay.overlayWidget:isDestroyed() then
             ZonesOverlay.overlayWidget:hide()
         end
+        clearOverlayChildren()
     end
 end
 
@@ -486,16 +677,7 @@ end
 local function tickRefresh()
     if not ZonesOverlay.connectedEvents then return end
     if ZonesOverlay.enabled then
-        local mm = getMinimapWidget()
-        if mm then
-            local cam = mm:getCameraPosition()
-            local zoom = mm:getZoom()
-            local key = cam and (cam.x .. ',' .. cam.y .. ',' .. cam.z .. ',' .. zoom) or ''
-            if key ~= ZonesOverlay._lastKey then
-                ZonesOverlay._lastKey = key
-                rebuildOverlay()
-            end
-        end
+        rebuildOverlay()
     end
     scheduleEvent(tickRefresh, 250)
 end
@@ -525,10 +707,15 @@ function ZonesOverlay.terminate()
         ZonesOverlay.toggleButton.onClick = nil
     end
     ZonesOverlay.toggleButton = nil
+    destroyAllOverlayWidgets()
     if ZonesOverlay.overlayWidget and not ZonesOverlay.overlayWidget:isDestroyed() then
         ZonesOverlay.overlayWidget:destroy()
     end
     ZonesOverlay.overlayWidget = nil
+    ZonesOverlay._activeZoneWidgets = {}
+    ZonesOverlay._widgetPool = {}
+    ZonesOverlay._visibleFills = 0
+    ZonesOverlay._visibleEdges = 0
     if ZonesOverlay.connectedEvents then
         disconnect(LocalPlayer, { onPositionChange = onMinimapChanged })
         disconnect(g_game, { onGameStart = onMinimapChanged, onTeleport = onMinimapChanged })
