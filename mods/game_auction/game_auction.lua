@@ -1,6 +1,21 @@
 Auction = Auction or {}
 Auction.opCode = Auction.opCode or 102
 
+-- helper: apply upgrade tier icon to an item widget
+local function applyTier(widget, tier)
+  if not widget then return end
+  local tierWidget = widget:recursiveGetChildById('tier')
+  if not tierWidget then return end
+  tier = tonumber(tier) or 0
+  if tier > 0 then
+    local xOffset = (math.min(math.max(tier, 1), 10) - 1) * 9
+    tierWidget:setImageClip({ x = xOffset, y = 0, width = 10, height = 9 })
+    tierWidget:setVisible(true)
+  else
+    tierWidget:setVisible(false)
+  end
+end
+
 -- helper: apply shader to icon based on item name
 local function applyIconShader(icon, name)
   if not icon or not name then return end
@@ -482,10 +497,11 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       w:getChildById('name'):setText(baseName)
       w:getChildById('price'):setText(  buildPriceText(tonumber(d[i].price) or 0, cnt) .. ' gold')
       local item = w:getChildById('icon')
-      print(string.format('[Auction][Client] SEARCH row i=%d id=%s name=%s price=%s cid=%s count=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count)))
+      print(string.format('[Auction][Client] SEARCH row i=%d id=%s name=%s price=%s cid=%s count=%s tier=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count), tostring(d[i].tier)))
       item:setItemId(d[i].cid)
       applyIconShader(item, d[i].name)
       applyIconCount(item, cnt)
+      applyTier(item, d[i].tier)
       w.listingId = d[i].id
       w.stackCount = cnt
       w.totalPrice = tonumber(d[i].price) or 0
@@ -571,10 +587,11 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       w:getChildById('name'):setText(baseName)
       w:getChildById('price'):setText(buildPriceText(tonumber(d[i].price) or 0, cnt))
       local item = w:getChildById('icon')
-      print(string.format('[Auction][Client] MY row i=%d id=%s name=%s price=%s cid=%s count=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count)))
+      print(string.format('[Auction][Client] MY row i=%d id=%s name=%s price=%s cid=%s count=%s tier=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count), tostring(d[i].tier)))
       item:setItemId(d[i].cid)
       applyIconShader(item, d[i].name)
       applyIconCount(item, cnt)
+      applyTier(item, d[i].tier)
       w.listingId = d[i].id
       -- show Time Left on My tab (hours if >=1h, else minutes)
       local sellerLbl = w:getChildById('seller')
@@ -688,6 +705,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       item:setItemId(d[i].cid)
       applyIconShader(item, d[i].name)
       applyIconCount(item, cnt)
+      applyTier(item, d[i].tier)
       -- show date in the middle column (reuse 'seller' label space)
       local function fmt(ts)
         if tonumber(ts) then
@@ -728,6 +746,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       item:setItemId(d[i].cid)
       applyIconShader(item, d[i].name)
       applyIconCount(item, cnt)
+      applyTier(item, d[i].tier)
       local sellerLbl = w:getChildById('seller')
       if sellerLbl then
         local ts = tonumber(d[i].sold_at) or 0

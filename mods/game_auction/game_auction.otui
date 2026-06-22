@@ -188,6 +188,19 @@ AuctionWindow < MainWindow
         draggable: false
         tooltip: Drag item here from inventory
 
+        UIWidget
+          id: tier
+          size: 10 9
+          image-source: /images/inventory/tiers-strip
+          image-clip: 0 0 10 9
+          image-size: 10 9
+          anchors.top: parent.top
+          anchors.right: parent.right
+          phantom: true
+          focusable: false
+          visible: false
+          image-smooth: true
+
       Label
         text: Unit Price:
         anchors.left: listItemSlot.right
@@ -398,6 +411,19 @@ AuctionRow < Panel
     anchors.verticalCenter: parent.verticalCenter
     z-index: 2
     margin-left: 2
+
+    UIWidget
+      id: tier
+      size: 10 9
+      image-source: /images/inventory/tiers-strip
+      image-clip: 0 0 10 9
+      image-size: 10 9
+      anchors.top: parent.top
+      anchors.right: parent.right
+      phantom: true
+      focusable: false
+      visible: false
+      image-smooth: true
 
   Label
     id: name
