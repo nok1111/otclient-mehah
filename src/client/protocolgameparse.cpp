@@ -38,6 +38,9 @@
 
 void ProtocolGame::parseMessage(const InputMessagePtr& msg)
 {
+    g_game.recordNetworkBytesIn(msg->getMessageSize());
+    g_game.recordNetworkMessageIn();
+
     int opcode = -1;
     int prevOpcode = -1;
 
@@ -1730,6 +1733,10 @@ void ProtocolGame::parseMagicEffect(const InputMessagePtr& msg)
 
                 case Otc::MAGIC_EFFECTS_CREATE_EFFECT: {
                     const uint16_t effectId = g_game.getFeature(Otc::GameEffectU16) ? msg->getU16() : msg->getU8();
+                    if (effectId == 0) {
+                        continue;
+                    }
+                    g_game.recordMagicEffect();
                     if (!g_things.isValidDatId(effectId, ThingCategoryEffect)) {
                         g_logger.traceError("invalid effect id {}", effectId);
                         continue;
@@ -1768,6 +1775,12 @@ void ProtocolGame::parseMagicEffect(const InputMessagePtr& msg)
     if (g_game.getClientVersion() <= 750) {
         effectId += 1; //hack to fix effects in earlier clients
     }
+
+    if (effectId == 0) {
+        return;
+    }
+
+    g_game.recordMagicEffect();
 
     if (!g_things.isValidDatId(effectId, ThingCategoryEffect)) {
         g_logger.traceError("invalid effect id {}", effectId);
@@ -1814,6 +1827,7 @@ void ProtocolGame::parseDistanceMissile(const InputMessagePtr& msg)
     const auto& toPos = getPosition(msg);
 
     const uint16_t shotId = g_game.getFeature(Otc::GameDistanceEffectU16) ? msg->getU16() : msg->getU8();
+    g_game.recordDistanceEffect();
     if (!g_things.isValidDatId(shotId, ThingCategoryMissile)) {
         g_logger.traceError("invalid missile id {}", shotId);
         return;
@@ -3241,7 +3255,6 @@ void ProtocolGame::parseCreatureType(const InputMessagePtr& msg)
 
     const auto& creature = g_map.getCreatureById(creatureId);
     if (!creature) {
-        g_logger.traceError("ProtocolGame::parseCreatureType: could not get creature with id {}", creatureId);
         return;
     }
 
@@ -5447,10 +5460,11 @@ void ProtocolGame::parseAttachedEffect(const InputMessagePtr& msg)
 {
     const uint32_t creatureId = msg->getU32();
     const uint16_t attachedEffectId = msg->getU16();
+    g_game.recordAttachedEffect();
 
     const auto& creature = g_map.getCreatureById(creatureId);
     if (!creature) {
-        g_logger.traceError("ProtocolGame::parseAttachedEffect: could not get creature with id {}", creatureId);
+        // creature may not be known yet; ignore silently
         return;
     }
 
@@ -5466,10 +5480,11 @@ void ProtocolGame::parseDetachEffect(const InputMessagePtr& msg)
 {
     const uint32_t creatureId = msg->getU32();
     const uint16_t attachedEffectId = msg->getU16();
+    g_game.recordDetachEffect();
 
     const auto& creature = g_map.getCreatureById(creatureId);
     if (!creature) {
-        g_logger.traceError("ProtocolGame::parseDetachEffect: could not get creature with id {}", creatureId);
+        // creature may not be known yet; ignore silently
         return;
     }
 
