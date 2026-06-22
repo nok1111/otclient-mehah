@@ -2,7 +2,7 @@ modules.game_forge = modules.game_forge or {}
 
 local Forge = modules.game_forge
 
-local OPCODE_FORGE = 217
+local OPCODE_FORGE = 222
 
 local window = nil
 local toggleButton = nil
