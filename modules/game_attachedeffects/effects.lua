@@ -13,6 +13,16 @@
     }
 ]]
 --
+
+local function safeAddTileEffect(owner, effectId)
+    if not owner then return end
+    local tile = owner:getTile()
+    if not tile then return end
+    local e = Effect.create()
+    e:setId(effectId)
+    tile:addThing(e)
+end
+
 AttachedEffectManager.register(1, 'Spoke Lighting', 12, ThingCategoryEffect, {
     speed = 0.5,
     onAttach = function(effect, owner)
@@ -72,14 +82,10 @@ AttachedEffectManager.register(5, 'Transform', 40, ThingCategoryCreature, {
     transform = true,
     duration = 5000,
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -91,9 +97,7 @@ AttachedEffectManager.register(6, 'Lake Monster', 34, ThingCategoryEffect, {
     size = { 128, 128 },
     -- loop = 1,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(54)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 54)
     end
 })
 
@@ -142,9 +146,7 @@ AttachedEffectManager.register(10, 'Dynamic Effect', 0, 0, {
         
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -176,15 +178,11 @@ AttachedEffectManager.register(13, 'travel form', 217, ThingCategoryCreature, {
     offset = { 0, 0 },
     bounce = { 10, 20, 11000 },
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(647)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 647)
         
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(647)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 647)
     end
 })
 
@@ -208,16 +206,12 @@ AttachedEffectManager.register(16, 'blood blades', 353, ThingCategoryEffect, {
     shader = 'Red Glow',
     speed = 1,
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(353)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 353)
         
         
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(353)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 353)
     end
 })
 
@@ -335,16 +329,12 @@ AttachedEffectManager.register(29, 'holy form', 2288, ThingCategoryCreature, {
     disableWalkAnimation = true,
     
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(662)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 662)
         
         
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(662)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 662)
     end
 })
 
@@ -551,15 +541,11 @@ AttachedEffectManager.register(61, 'cyclone bounce', 0, 0, {
     offset = { 0, 0 },
     bounce = { 10, 20, 11000 },
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(647)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 647)
         
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(647)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 647)
     end
 })
 
@@ -691,14 +677,10 @@ AttachedEffectManager.register(77, 'dragon form', 2274, ThingCategoryCreature, {
     duration = 5000,
     shader = 'Monster Might',
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(497)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 497)
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(497)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 497)
     end
 })
 
@@ -769,14 +751,10 @@ AttachedEffectManager.register(87, 'dark aura', 795, ThingCategoryEffect, {
     speed = 1,
     offset = { 0, 0, true },
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(841)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 841)
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(841)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 841)
     end
 })
 
@@ -880,9 +858,7 @@ AttachedEffectManager.register(97, 'turtle rush', 2198, ThingCategoryCreature, {
     duration = 2000,
     -- loop = 1,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(7)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 7)
     end
 })
 
@@ -892,9 +868,7 @@ AttachedEffectManager.register(98, 'zen sphere', 837, ThingCategoryEffect, {
     duration = 8000,
     offset = { -10, -10, true },
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(54)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 54)
     end
 })
 
@@ -1093,14 +1067,10 @@ AttachedEffectManager.register(128, 'magnetic orb', 550, ThingCategoryEffect, {
     --bounce = { 20, 20, 2000 },
 
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(60)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 60)
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(60)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 60)
     end
 })
 
@@ -1293,9 +1263,7 @@ AttachedEffectManager.register(154, 'shadow form 2', 2903, ThingCategoryCreature
     },
     
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(18)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 18)
     end
 })
 
@@ -1312,9 +1280,7 @@ AttachedEffectManager.register(155, 'lucella transform', 1760, ThingCategoryCrea
     },
     
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(18)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 18)
     end
 })
 
@@ -1331,14 +1297,10 @@ AttachedEffectManager.register(156, 'elixir of ghosts', 48, ThingCategoryCreatur
         [West] = { 0, 0, true }
     },
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(66)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 66)
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(66)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 66)
     end
 })
 
@@ -1400,11 +1362,11 @@ AttachedEffectManager.register(164, 'frost barrel ice', 842, ThingCategoryEffect
         owner:setShader('frost armor')
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(44)
         if oldOwner and oldOwner:getTile() then
-        oldOwner:getTile():addThing(e)
-        oldOwner:setShader('Outfit - Default')
+            local e = Effect.create()
+            e:setId(44)
+            oldOwner:getTile():addThing(e)
+            oldOwner:setShader('Outfit - Default')
         end
     end
 })    
@@ -1665,11 +1627,11 @@ AttachedEffectManager.register(190, '[Frostbound]', 842, ThingCategoryEffect, {
         owner:setShader('frost armor')
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(44)
         if oldOwner and oldOwner:getTile() then
-        oldOwner:getTile():addThing(e)
-        oldOwner:setShader('Outfit - Default')
+            local e = Effect.create()
+            e:setId(44)
+            oldOwner:getTile():addThing(e)
+            oldOwner:setShader('Outfit - Default')
         end
     end
 })  
@@ -1820,11 +1782,11 @@ AttachedEffectManager.register(207, 'frost wave', 842, ThingCategoryEffect, {
         owner:setShader('frost armor')
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(44)
         if oldOwner and oldOwner:getTile() then
-        oldOwner:getTile():addThing(e)
-        oldOwner:setShader('Outfit - Default')
+            local e = Effect.create()
+            e:setId(44)
+            oldOwner:getTile():addThing(e)
+            oldOwner:setShader('Outfit - Default')
         end
     end
 })  
@@ -1877,17 +1839,15 @@ AttachedEffectManager.register(213, 'dragon aura', 2902, ThingCategoryCreature, 
 })
 AttachedEffectManager.register(214, 'ice clones', 0, 0, {
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(44)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 44)
         owner:setShader('frost armor')
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(44)
         if oldOwner and oldOwner:getTile() then
-        oldOwner:getTile():addThing(e)
-        oldOwner:setShader('Outfit - Default')
+            local e = Effect.create()
+            e:setId(44)
+            oldOwner:getTile():addThing(e)
+            oldOwner:setShader('Outfit - Default')
         end
     end
 })  
@@ -1900,16 +1860,14 @@ AttachedEffectManager.register(215, 'frostbloom', 1171, ThingCategoryEffect, {
     shader = 'frost armor',
     
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(44)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 44)
 
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(44)
         if oldOwner and oldOwner:getTile() then
-        oldOwner:getTile():addThing(e)
+            local e = Effect.create()
+            e:setId(44)
+            oldOwner:getTile():addThing(e)
         end
     end
 })  
@@ -2018,16 +1976,14 @@ AttachedEffectManager.register(231, 'astral infusion', 953, ThingCategoryEffect,
     offset = { -25, -10, true },
 
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(12)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 12)
 
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(12)
         if oldOwner and oldOwner:getTile() then
-        oldOwner:getTile():addThing(e)
+            local e = Effect.create()
+            e:setId(12)
+            oldOwner:getTile():addThing(e)
         end
     end
 })
@@ -2160,16 +2116,12 @@ AttachedEffectManager.register(250, 'Miniaturize', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(0.5, 300)
         
-        local e = Effect.create()
-        e:setId(53)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 53)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 300)
         
-        local e = Effect.create()
-        e:setId(54)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 54)
     end
 })
 
@@ -2195,16 +2147,12 @@ AttachedEffectManager.register(252, 'Titan Form', 497, ThingCategoryEffect, {
         
         owner:setScaleFactor(2.0, 1000)
         
-        local e = Effect.create()
-        e:setId(497)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 497)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 1000)
         
-        local e = Effect.create()
-        e:setId(497)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 497)
     end
 })
 
@@ -2224,16 +2172,12 @@ AttachedEffectManager.register(254, 'Size +5%', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.05, 500)
         
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
         
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -2242,16 +2186,12 @@ AttachedEffectManager.register(255, 'Size +10%', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.10, 500)
         
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
         
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -2260,16 +2200,12 @@ AttachedEffectManager.register(256, 'Size +15%', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.15, 500)
         
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
         
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -2278,16 +2214,12 @@ AttachedEffectManager.register(257, 'Size +20%', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.20, 500)
         
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
         
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -2296,16 +2228,12 @@ AttachedEffectManager.register(258, 'Size +25%', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.25, 500)
         
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
         
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -2314,16 +2242,12 @@ AttachedEffectManager.register(259, 'Size +30%', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.30, 500)
         
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
         
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -2332,16 +2256,12 @@ AttachedEffectManager.register(260, 'Size +35%', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.35, 500)
         
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
         
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -2350,16 +2270,12 @@ AttachedEffectManager.register(261, 'Size +40%', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.40, 500)
         
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
         
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -2368,16 +2284,12 @@ AttachedEffectManager.register(262, 'Size +45%', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.45, 500)
         
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
         
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -2386,16 +2298,12 @@ AttachedEffectManager.register(263, 'Size +50%', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.50, 500)
         
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
         
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -4194,14 +4102,10 @@ AttachedEffectManager.register(341, 'Svarog 1', 1061, ThingCategoryEffect, {
     offset = { -26, -26, false},
     --pulse = {32, 55, 500},
      onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(590)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 590)
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(590)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 590)
     end
 })
 AttachedEffectManager.register(342, 'Svarog 2', 1061, ThingCategoryEffect, {
@@ -4281,14 +4185,10 @@ AttachedEffectManager.register(351, 'Transform', 298, ThingCategoryCreature, {
     transform = true,
     duration = 1000,
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(27)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 27)
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(338)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 338)
     end
 })
 
@@ -4371,11 +4271,9 @@ AttachedEffectManager.register(360, 'the necromancer', 301, ThingCategoryEffect,
     loop = 1,
     speed = 1,
     onAttach = function(effect, owner)
-        local e = Effect.create()
+        if not owner then return end
         owner:setShader('Ghost')
-        owner:getTile():addThing(e)
-       
-        
+        safeAddTileEffect(owner, 7)
     end,
 })
 
@@ -4474,14 +4372,10 @@ AttachedEffectManager.register(365, 'Transform clown', 273, ThingCategoryCreatur
     transform = true,
     --duration = 5000,
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -4489,14 +4383,10 @@ AttachedEffectManager.register(366, 'Transform balloon', 2929, ThingCategoryCrea
     transform = true,
     --duration = 5000,
     onAttach = function(effect, owner)
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        local e = Effect.create()
-        e:setId(50)
-        oldOwner:getTile():addThing(e)
+        safeAddTileEffect(oldOwner, 50)
     end
 })
 
@@ -4818,9 +4708,7 @@ AttachedEffectManager.register(601, 'Vulcanys Phase 2', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.4, 800)
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
@@ -4832,9 +4720,7 @@ AttachedEffectManager.register(602, 'Vulcanys Phase 3', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.8, 800)
         owner:setShader('Red Flames')
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
@@ -4847,9 +4733,7 @@ AttachedEffectManager.register(603, 'Vulcanys Phase 4', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(2.3, 1000)
         owner:setShader('Red Flames')
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
@@ -4862,9 +4746,7 @@ AttachedEffectManager.register(604, 'Vulcanys Phase 5 (Enrage)', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(3.0, 1200)
         owner:setShader('Red Flames')
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
@@ -4886,9 +4768,7 @@ AttachedEffectManager.register(610, 'Drakkomir Empowered (Phase 2)', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.3, 800)
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
@@ -4900,9 +4780,7 @@ AttachedEffectManager.register(611, 'Drakkomir Enrage (Phase 3)', 0, 0, {
     onAttach = function(effect, owner)
         owner:setScaleFactor(1.6, 1000)
         owner:setShader('Blueveins')
-        local e = Effect.create()
-        e:setId(7)
-        owner:getTile():addThing(e)
+        safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setScaleFactor(1.0, 500)
