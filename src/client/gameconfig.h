@@ -83,6 +83,11 @@ public:
     double getPlayerDiagonalWalkSpeed() const { return m_playerDiagonalWalkSpeed; }
     double getCreatureDiagonalWalkSpeed() const { return m_creatureDiagonalWalkSpeed; }
 
+    bool isDebugNetwork() const { return m_debugNetwork; }
+    bool isDebugOpcodes() const { return m_debugOpcodes; }
+    bool isDebugRender() const { return m_debugRender; }
+    bool isDebugFps() const { return m_debugFps; }
+
     BitmapFontPtr getCreatureNameFont()  const { return m_creatureNameFont; }
     BitmapFontPtr getAnimatedTextFont()  const { return m_animatedTextFont; }
     BitmapFontPtr getStaticTextFont()  const { return m_staticTextFont; }
@@ -103,6 +108,7 @@ private:
     void loadCreatureNode(const OTMLNodePtr& node);
     void loadPlayerNode(const OTMLNodePtr& node);
     void loadRenderNode(const OTMLNodePtr& node);
+    void loadPerformanceNode(const OTMLNodePtr& node);
 
     // Game
     uint8_t m_spriteSize{ 32 };
@@ -151,6 +157,12 @@ private:
     uint16_t m_animatedTextDuration{ 1000 };
     uint16_t m_staticDurationPerCharacter{ 60 };
     uint16_t m_minStatictextDuration{ 3000 };
+
+    // Performance debug
+    bool m_debugNetwork{ false };
+    bool m_debugOpcodes{ false };
+    bool m_debugRender{ false };
+    bool m_debugFps{ false };
 
     std::string m_creatureNameFontName{ "verdana-11px-rounded" };
     std::string m_animatedTextFontName{ "verdana-11px-rounded" };

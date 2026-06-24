@@ -47,3 +47,9 @@ font
   static-text: verdana-11px-monochrome
   animated-text: verdana-11px-rounded
   creature-text: verdana-11px-rounded
+
+performance
+  debug-network: false
+  debug-opcodes: false
+  debug-render: false
+  debug-fps: false

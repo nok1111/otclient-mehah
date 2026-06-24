@@ -49,6 +49,9 @@ void GameConfig::init()
                 loadFontNode(node);
             }
         }
+
+        g_logger.info("Performance debug flags: network={}, opcodes={}, render={}, fps={}",
+                      m_debugNetwork, m_debugOpcodes, m_debugRender, m_debugFps);
     } catch (const std::exception& e) {
         g_logger.error("Failed to read config otml '{}': {}'", fileName, e.what());
     }
@@ -87,6 +90,8 @@ void GameConfig::loadGameNode(const OTMLNodePtr& mainNode) {
             loadPlayerNode(node);
         else if (node->tag() == "render")
             loadRenderNode(node);
+        else if (node->tag() == "performance")
+            loadPerformanceNode(node);
         else if (node->tag() == "draw-typing")
             m_drawTyping = node->value<bool>();
         else if (node->tag() == "typing-icon")
@@ -255,4 +260,17 @@ void GameConfig::loadRenderNode(const OTMLNodePtr& mainNode) {
         else if (node->tag() == "min-static-text-duration")
             m_minStatictextDuration = node->value<int>();
     }
-};
+}
+
+void GameConfig::loadPerformanceNode(const OTMLNodePtr& mainNode) {
+    for (const auto& node : mainNode->children()) {
+        if (node->tag() == "debug-network")
+            m_debugNetwork = node->value<bool>();
+        else if (node->tag() == "debug-opcodes")
+            m_debugOpcodes = node->value<bool>();
+        else if (node->tag() == "debug-render")
+            m_debugRender = node->value<bool>();
+        else if (node->tag() == "debug-fps")
+            m_debugFps = node->value<bool>();
+    }
+}
