@@ -368,7 +368,8 @@ ExtendedIds = {
     NpcTaskList = 0x12,
     NpcRewardList = 0x13,
     NpcTaskWindowClose = 0x14,
-    
+    QuestCompletedImage = 0x17,
+
     -- Achievement System (81-86)
     AchievementList = 81,
     AchievementUpdate = 82,

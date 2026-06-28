@@ -293,250 +293,317 @@ NpcTaskDescription < UIWidget
     margin-top: 5
     color: #ffdd88
 
-  Label
-    id: taskDescription
+  Button
+    id: detailsTab
     anchors.top: taskTitle.bottom
     anchors.left: parent.left
-    anchors.right: parent.right
-    color: #3396ff
-    text-wrap: true
-    text-auto-resize: true
-    margin-left: 5
-    margin-top: 2
-    margin-bottom: 5
-
-  Panel
-    id: objectivesDivider
-    anchors.top: taskDescription.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    height: 1
-    margin-top: 4
-    margin-left: 5
-    margin-right: 5
-    background: #ffffff22
-
-
-  # Objectives header and divider (moved here)
-  Item
-    id: objectivesIcon
-    size: 16 16
-    image-source: /images/icons/show_gui_help_grey
-    anchors.left: parent.left
-    anchors.top: taskDescription.bottom
-    margin-left: 5
-    margin-top: 10
-
-  Label
-    id: taskObjectives
-    !text: tr('Objectives:')
-    anchors.left: objectivesIcon.right
-    anchors.top: objectivesIcon.top
-    anchors.right: parent.right
-    margin-left: 5
-    text-wrap: true
-
-  # Objective lines
-  Label
-    id: monsterGoals
-    anchors.top: taskObjectives.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    color: #3396ff
-    visible: false
-    text-wrap: true
-    text-auto-resize: true
-    margin-left: 5
-    margin-top: 5
-
-  Label
-    id: itemGoals
-    anchors.top: taskObjectives.bottom
-    anchors.left: parent.left
-    size: 200 30
-    color: #3396ff
-    visible: false
-    text-wrap: true
-    text-auto-resize: true
-    margin-top: 5
-    margin-left: 5
-
-  Label
-    id: storageGoals
-    anchors.top: taskObjectives.bottom
-    anchors.left: parent.left
-    size: 200 30
-    color: #3396ff
-    visible: false
-    text-wrap: true
-    text-auto-resize: true
-    margin-top: 5
-    margin-left: 5
-
-  # Progress line
-  Item
-    id: progressIcon
-    size: 20 20
-    anchors.top: storageGoals.bottom
-    image-source: /images/icons/wow_obj
-    anchors.left: parent.left
-    margin-top: 4
-    margin-left: 5
-
-  Label
-    id: itemProgress
-    !text: tr('Progress:')
-    anchors.top: storageGoals.bottom
-    anchors.left: progressIcon.left
-    width: 60
-    visible: true
-    margin-top: 8
-    margin-left: 20
-
-  Label
-    id: itemCnt
-    anchors.top: prev.top
-    anchors.left: prev.right
-    width: 75
-    color: #61f296
-    margin-left: 5
-
-  # Hints
-  Item
-    id: hintsIcon
-    size: 16 16
-    image-source: /images/icons/prey_no_bonus
-    anchors.left: parent.left
-    anchors.top: itemProgress.bottom
-    margin-top: 10
-    margin-left: 5
-
-  Label
-    !text: tr('Hints:')
-    anchors.top: itemProgress.bottom
-    anchors.left: hintsIcon.left
-    margin-top: 10
-    margin-left: 20
-
-  Label
-    id: taskHint
-    size: 200 30
-    anchors.top: prev.top
-    anchors.left: prev.right
-    color: #f69f32
-    text-wrap: true
-    text-auto-resize: true
-    margin-left: 5
-
-  Panel
-    id: objectivesDivider2
-    anchors.top: taskHint.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    height: 1
-    margin-top: 4
-    margin-left: 5
-    margin-right: 5
-    background: #ffffff22
-
-  UIWidget
-    id: rewardExpIcon
-    size: 16 16
-    anchors.top: taskHint.bottom
-    anchors.left: parent.left
-    margin-top: 20
-    margin-left: 5
-    image-source: /images/topbuttons/experience
-
-  Label
-    id: rewardExp
-    size: 80 20
-    anchors.top: rewardExpIcon.top
-    anchors.left: rewardExpIcon.right
-    margin-top: 0
-    margin-left: 5
-    color: #ffffff
-    background: #1a1f2a
-    border-width: 1
-    border-color: #2a3344
-    text-align: center
-
-  UIWidget
-    id: rewardMoneyIcon
-    size: 16 16
-    anchors.top: rewardExp.top
-    anchors.left: rewardExp.right
-    margin-top: 2
-    margin-left: 5
-    image-source: /images/topbuttons/autoloot
-
-  Label
-    id: rewardMoney
-    size: 80 20
-    anchors.top: rewardMoneyIcon.top
-    anchors.left: rewardMoneyIcon.right
-    margin-top: 0
-    margin-left: 5
-    color: #e0c269
-    background: #1a1f2a
-    border-width: 1
-    border-color: #2a3344
-    text-align: center
-
-
-  Label
-    id: rewardCodex
-    size: 300 0
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    margin-top: 3
-    margin-left: 21
-    color: #b388ff
-    font: verdana-11px-rounded
-
-  Label
-    id: rewardOutfit
-    size: 300 1
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    margin-top: 5
-    margin-left: 21
-    color: #3396ff
-
-  TaskRewardsPanel
-    id: basicRewards
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    margin-top: 2
-    margin-left: 5
-    margin-right: 5
-    border-width: 2
-    border-color: #ffffff
-    height: 98
-
-  Label
-    id: choiceRewardsTitle
-    !text: tr('Choice Rewards:')
-    anchors.top: prev.bottom
-    anchors.left: parent.left
+    width: 120
+    height: 22
     margin-top: 6
-    margin-left: 21
-    color: #ff6666
+    margin-left: 5
+    !text: tr('Details')
+    background: #1a2332
+    border-color: #3a4a5f
+    @onClick: modules.game_tasklist.showNpcTaskDetailsTab()
 
-  TaskRewardsPanel
-    id: choiceRewards
-    anchors.top: prev.bottom
+  Button
+    id: rewardsTab
+    anchors.top: taskTitle.bottom
+    anchors.left: detailsTab.right
+    width: 120
+    height: 22
+    margin-top: 6
+    margin-left: 4
+    !text: tr('Rewards')
+    background: #0f141c
+    border-color: #2a3344
+    @onClick: modules.game_tasklist.showNpcTaskRewardsTab()
+
+  Panel
+    id: detailsPanel
+    anchors.top: detailsTab.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    margin-top: 2
+    anchors.bottom: parent.bottom
+    margin-top: 4
     margin-left: 5
     margin-right: 5
-    border-width: 2
-    border-color: #ffffff
-    height: 140
+    margin-bottom: 5
+    visible: true
 
+    ScrollablePanel
+      id: taskDescriptionScroll
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 120
+      vertical-scrollbar: taskDescriptionScrollBar
+      margin-top: 2
+      border-width: 1
+      border-color: #202327
+      background: #00000033
 
+      Label
+        id: taskDescription
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        color: #3396ff
+        text-wrap: true
+        text-auto-resize: true
+        margin-left: 5
+        margin-top: 2
+        margin-right: 5
+
+    VerticalScrollBar
+      id: taskDescriptionScrollBar
+      anchors.top: taskDescriptionScroll.top
+      anchors.bottom: taskDescriptionScroll.bottom
+      anchors.right: parent.right
+      width: 12
+      step: 14
+      pixels-scroll: true
+
+    Panel
+      id: objectivesDivider
+      anchors.top: taskDescriptionScroll.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 1
+      margin-top: 8
+      background: #ffffff22
+
+    Item
+      id: objectivesIcon
+      size: 16 16
+      image-source: /images/icons/show_gui_help_grey
+      anchors.left: parent.left
+      anchors.top: objectivesDivider.bottom
+      margin-top: 8
+
+    Label
+      id: taskObjectives
+      !text: tr('Objectives:')
+      anchors.left: objectivesIcon.right
+      anchors.top: objectivesIcon.top
+      anchors.right: parent.right
+      margin-left: 5
+      text-wrap: true
+
+    Label
+      id: monsterGoals
+      anchors.top: taskObjectives.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      color: #3396ff
+      visible: false
+      text-wrap: true
+      text-auto-resize: true
+      margin-top: 5
+
+    Label
+      id: itemGoals
+      anchors.top: taskObjectives.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      color: #3396ff
+      visible: false
+      text-wrap: true
+      text-auto-resize: true
+      margin-top: 5
+
+    Label
+      id: storageGoals
+      anchors.top: taskObjectives.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      color: #3396ff
+      visible: false
+      text-wrap: true
+      text-auto-resize: true
+      margin-top: 5
+
+    Item
+      id: progressIcon
+      size: 20 20
+      anchors.top: storageGoals.bottom
+      image-source: /images/icons/wow_obj
+      anchors.left: parent.left
+      margin-top: 8
+
+    Label
+      id: itemProgress
+      !text: tr('Progress:')
+      anchors.top: storageGoals.bottom
+      anchors.left: progressIcon.left
+      width: 60
+      visible: true
+      margin-top: 8
+      margin-left: 20
+
+    Label
+      id: itemCnt
+      anchors.top: prev.top
+      anchors.left: prev.right
+      width: 75
+      color: #61f296
+      margin-left: 5
+
+    Item
+      id: hintsIcon
+      size: 16 16
+      image-source: /images/icons/prey_no_bonus
+      anchors.left: parent.left
+      anchors.top: itemProgress.bottom
+      margin-top: 10
+
+    Label
+      !text: tr('Hints:')
+      anchors.top: itemProgress.bottom
+      anchors.left: hintsIcon.left
+      margin-top: 10
+      margin-left: 20
+
+    Label
+      id: taskHint
+      anchors.top: prev.top
+      anchors.left: prev.right
+      anchors.right: parent.right
+      color: #f69f32
+      text-wrap: true
+      text-auto-resize: true
+      margin-left: 5
+
+  Panel
+    id: rewardsPanel
+    anchors.top: detailsTab.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 4
+    margin-left: 5
+    margin-right: 5
+    margin-bottom: 5
+    visible: false
+
+    Item
+      id: rewardsIcon
+      size: 16 16
+      image-source: /images/icons/wow_loot
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin-top: 8
+
+    Label
+      !text: tr('Your rewards:')
+      anchors.top: parent.top
+      anchors.left: rewardsIcon.left
+      margin-top: 8
+      margin-left: 20
+
+    UIWidget
+      id: rewardExpIcon
+      size: 16 16
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      margin-top: 8
+      image-source: /images/topbuttons/experience
+
+    Label
+      id: rewardExp
+      size: 80 20
+      anchors.top: rewardExpIcon.top
+      anchors.left: rewardExpIcon.right
+      margin-top: 0
+      margin-left: 5
+      color: #ffffff
+      background: #1a1f2a
+      border-width: 1
+      border-color: #2a3344
+      text-align: center
+
+    UIWidget
+      id: rewardMoneyIcon
+      size: 16 16
+      anchors.top: rewardExp.top
+      anchors.left: rewardExp.right
+      margin-top: 2
+      margin-left: 5
+      image-source: /images/topbuttons/autoloot
+
+    Label
+      id: rewardMoney
+      size: 80 20
+      anchors.top: rewardMoneyIcon.top
+      anchors.left: rewardMoneyIcon.right
+      margin-top: 0
+      margin-left: 5
+      color: #e0c269
+      background: #1a1f2a
+      border-width: 1
+      border-color: #2a3344
+      text-align: center
+
+    Label
+      id: rewardCodex
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 3
+      margin-left: 21
+      color: #b388ff
+      font: verdana-11px-rounded
+
+    Label
+      id: rewardOutfit
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 21
+      color: #3396ff
+
+    Label
+      id: basicRewardsTitle
+      !text: tr('Basic Rewards:')
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      margin-top: 2
+      margin-left: 21
+      color: #ffcc66
+
+    TaskRewardsPanel
+      id: basicRewards
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 2
+      margin-left: 0
+      margin-right: 0
+      border-width: 2
+      border-color: #ffffff
+      height: 98
+
+    Label
+      id: choiceRewardsTitle
+      !text: tr('Choice Rewards:')
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      margin-top: 6
+      margin-left: 21
+      color: #ff6666
+
+    TaskRewardsPanel
+      id: choiceRewards
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 2
+      margin-left: 0
+      margin-right: 0
+      border-width: 2
+      border-color: #ffffff
+      height: 140
 
 NpcTaskListWidget < MainWindow
   id: npcTaskListWidget
@@ -637,7 +704,7 @@ NpcTaskListWidget < MainWindow
 
   Button
     id: acceptButton
-    !text: 'Accept'
+    !text: tr('Accept')
     anchors.left: parent.left
     anchors.bottom: parent.bottom
     margin-left: 10
@@ -646,7 +713,7 @@ NpcTaskListWidget < MainWindow
 
   Button
     id: declioneButton
-    !text: 'Close'
+    !text: tr('Close')
     anchors.right: parent.right
     anchors.bottom: parent.bottom
     margin-right: 10

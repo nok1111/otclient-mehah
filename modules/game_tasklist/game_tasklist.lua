@@ -11,6 +11,7 @@ local selectedChoiceByTask = {} -- taskNumber -> choiceIndex (1-based)
 local choiceWidgetsByTask = {}   -- taskNumber -> { widget list }
 local taskRewardItemPanel = nil
 local npcRewardItemPanel = nil
+local questCompletedWidget = nil
 
 local lastOpcode = 0
 local npcSelectedTask = 0
@@ -49,7 +50,7 @@ local function setAcceptState(label, enabled)
   if not npcTaskWidget then return end
   local ab = npcTaskWidget:recursiveGetChildById('acceptButton')
   if not ab then return end
-  if label then pcall(function() ab:setText(label) end) end
+  if label then pcall(function() ab:setText(tr(label)) end) end
   if enabled ~= nil then pcall(function() ab:setEnabled(enabled) end) end
 end
 
@@ -97,13 +98,14 @@ function buildUnifiedNpcUI(parsed)
   stopNpcCooldownTicker(); npcCooldownLeftByRow = {}
   if not npcTaskWidget or (npcTaskWidget.isDestroyed and npcTaskWidget:isDestroyed()) then
     npcTaskWidget = g_ui.createWidget('NpcTaskListWidget', modules.game_interface.getRootPanel())
-    npcTaskWidget:setText("World Quests")
+    npcTaskWidget:setText(tr("World Quests"))
     npcTaskWidget:show(); npcTaskWidget:raise(); npcTaskWidget:focus()
   else
     -- Reuse existing window to avoid close/flicker
-    npcTaskWidget:setText("World Quests")
+    npcTaskWidget:setText(tr("World Quests"))
     npcTaskWidget:show(); npcTaskWidget:raise(); npcTaskWidget:focus()
   end
+  translateUI(npcTaskWidget)
   npcTaskDescription = npcTaskWidget:getChildById('npcTaskDescription')
   dbg('Bound npcTaskDescription: ' .. tostring(npcTaskDescription ~= nil))
   if npcTaskDescription and npcTaskDescription.hide then npcTaskDescription:hide() end
@@ -133,7 +135,7 @@ function buildUnifiedNpcUI(parsed)
         header:setId(kind == 'available' and 'combinedAvailableHeader' or (kind == 'inprogress' and 'combinedInProgHeader' or 'combinedCompletedHeader'))
         local caret = header:getChildById('zoneCaret')
         local title = header:getChildById('zoneTitle')
-        if title then title:setText(string.format('%s (%d)', titleText, count)) end
+        if title then title:setText(string.format('%s (%d)', tr(titleText), count)) end
         if caret then caret:setText(se[kind] ~= false and '+' or '-') end
         header.onClick = function() toggleStatusSection(kind) end
         return header
@@ -145,12 +147,12 @@ function buildUnifiedNpcUI(parsed)
         local rec = parsed.available[i]
         local row = g_ui.createWidget('NpcTaskRecord', list)
         row:setId('npcAvail_'.. tostring(i))
-        row:getChildById('taskButton'):setText(rec.taskName)
+        row:getChildById('taskButton'):setText(tr(rec.taskName))
         local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 0)) end
-        local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
+        local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText(tr('Level %d', rec.taskMinLvl or 0)) end
         local badge = row:getChildById('taskBadge'); if badge then
           local tag = tostring(rec.taskBadge or (rec.taskRepeat and 'Repeat' or 'Story'))
-          badge:setText(tag)
+          badge:setText(tr(tag))
           local lc = tag:lower()
           if lc == 'story' then badge:setColor('#D4AF37')
           elseif lc == 'repeat' then badge:setColor('#66cc66')
@@ -169,12 +171,12 @@ function buildUnifiedNpcUI(parsed)
         local rec = parsed.active[i]
         local row = g_ui.createWidget('NpcTaskRecord', list)
         row:setId('npcInProg_'.. tostring(i))
-        row:getChildById('taskButton'):setText(rec.taskName)
+        row:getChildById('taskButton'):setText(tr(rec.taskName))
         local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 1)) end
-        local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
+        local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText(tr('Level %d', rec.taskMinLvl or 0)) end
         local badge = row:getChildById('taskBadge'); if badge then
           local tag = tostring(rec.taskBadge or (rec.taskRepeat and 'Repeat' or 'Story'))
-          badge:setText(tag)
+          badge:setText(tr(tag))
           local lc = tag:lower()
           if lc == 'story' then badge:setColor('#D4AF37')
           elseif lc == 'repeat' then badge:setColor('#66cc66')
@@ -197,12 +199,12 @@ function buildUnifiedNpcUI(parsed)
         local rec = parsed.completed[i]
         local row = g_ui.createWidget('NpcTaskRecord', list)
         row:setId('npcCompleted_'.. tostring(i))
-        row:getChildById('taskButton'):setText(rec.taskName)
+        row:getChildById('taskButton'):setText(tr(rec.taskName))
         local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 2)) end
-        local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
+        local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText(tr('Level %d', rec.taskMinLvl or 0)) end
         local badge = row:getChildById('taskBadge'); if badge then
           local tag = tostring(rec.taskBadge or (rec.taskRepeat and 'Repeat' or 'Story'))
-          badge:setText(tag)
+          badge:setText(tr(tag))
           local lc = tag:lower()
           if lc == 'story' then badge:setColor('#D4AF37')
           elseif lc == 'repeat' then badge:setColor('#66cc66')
@@ -222,7 +224,7 @@ function buildUnifiedNpcUI(parsed)
           local rec = parsed.cooldown[i]
           local row = g_ui.createWidget('NpcTaskRecord', list)
           row:setId('npcCooldown_'.. tostring(i))
-          row:getChildById('taskButton'):setText(rec.taskName)
+          row:getChildById('taskButton'):setText(tr(rec.taskName))
           local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/0') end
           -- write cooldown into its own label under the name
           local cdLbl = row:getChildById('cooldownText')
@@ -231,21 +233,27 @@ function buildUnifiedNpcUI(parsed)
             local hrs = math.floor(left / 3600)
             local mins = math.floor((left % 3600) / 60)
             local secs = left % 60
-            local txt = (left <= 0) and 'Ready'
-              or (hrs > 0 and string.format('Available in %dh %dm', hrs, mins))
-              or (mins > 0 and string.format('Available in %dm', mins))
-              or string.format('Available in %ds', secs)
+            local txt
+            if left <= 0 then
+              txt = tr('Ready')
+            elseif hrs > 0 then
+              txt = tr('Available in %dh %dm', hrs, mins)
+            elseif mins > 0 then
+              txt = tr('Available in %dm', mins)
+            else
+              txt = tr('Available in %ds', secs)
+            end
             cdLbl:setText(txt)
           end
           -- show level top-right as usual
-          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('Level ' .. tostring(rec.taskMinLvl or 0)) end
+          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText(tr('Level %d', rec.taskMinLvl or 0)) end
           -- register per-row remaining seconds for ticker
           npcCooldownLeftByRow[row:getId()] = tonumber(rec.taskCooldownLeftSec or 0) or 0
           if (npcCooldownLeftByRow[row:getId()] or 0) <= 0 then hasZero = true end
           local badge = row:getChildById('taskBadge')
           if badge then
             local tag = tostring(rec.taskBadge or 'Story')
-            badge:setText(tag)
+            badge:setText(tr(tag))
             local lc = tag:lower()
             if lc == 'story' then badge:setColor('#D4AF37')
             elseif lc == 'repeat' then badge:setColor('#66cc66')
@@ -353,8 +361,9 @@ local function showChoiceReminder()
   local host = npcTaskWidget or taskListsWindow or modules.game_interface.getRootPanel()
   askWidget = g_ui.createWidget('AskWidget', host)
   if askWidget then
+    translateUI(askWidget)
     pcall(function()
-      askWidget:setText('Reward Selection Required')
+      askWidget:setText(tr('Reward Selection Required'))
       if askWidget.setSize then askWidget:setSize({width = 380, height = 110}) end
     end)
     -- try to set first label text
@@ -362,7 +371,7 @@ local function showChoiceReminder()
       local kids = askWidget:getChildren()
       for i=1,#kids do
         if kids[i].setText then
-          kids[i]:setText('Please choose one of the reward options before claiming.')
+          kids[i]:setText(tr('Please choose one of the reward options before claiming.'))
           if kids[i].setTextWrap then kids[i]:setTextWrap(true) end
           if kids[i].setTextAutoResize then kids[i]:setTextAutoResize(true) end
           if kids[i].setColor then kids[i]:setColor('#ffffff') end
@@ -374,7 +383,7 @@ local function showChoiceReminder()
     -- make it a single OK button
     local yesBtn = askWidget:recursiveGetChildById('yesButton')
     local noBtn  = askWidget:recursiveGetChildById('noButton')
-    if yesBtn and yesBtn.setText then yesBtn:setText('OK') end
+    if yesBtn and yesBtn.setText then yesBtn:setText(tr('OK')) end
     if noBtn and noBtn.hide then noBtn:hide() end
     if yesBtn then
       yesBtn.onClick = function()
@@ -431,9 +440,9 @@ function tickNpcCooldownOnce()
           mins = mins % 60
           local txt
           if hrs > 0 then
-            txt = string.format('Available in %dh %dm', hrs, mins)
+            txt = tr('Available in %dh %dm', hrs, mins)
           else
-            if left > 0 and mins == 0 then txt = 'Available in <1m' else txt = string.format('Available in %dm', mins) end
+            if left > 0 and mins == 0 then txt = tr('Available in <1m') else txt = tr('Available in %dm', mins) end
           end
           lbl:setText(txt)
         end
@@ -747,9 +756,7 @@ function onExtendedTaskList(protocol, opcode, buffer)
         currentSelectedTask = tonumber(raw) or tonumber(raw:match("(%d+)")) or 0
       end
     end
-    local widgetTitle = "Adventure Log ("
-    widgetTitle = widgetTitle .. tostring(#localTaskList) .. "/" .. MaxTaskList .. ")"
-    taskListsWindow:setText(widgetTitle)
+    taskListsWindow:setText(tr("Adventure Log (%d/%d)", #localTaskList, MaxTaskList))
     -- update cap pill
     local capPill = taskListsWindow:getChildById('capPill')
     if capPill then
@@ -759,7 +766,7 @@ function onExtendedTaskList(protocol, opcode, buffer)
           used = used + 1
         end
       end
-      capPill:setText(string.format('Max %d / %d', used, MaxTaskList))
+      capPill:setText(tr("Max %d / %d", used, MaxTaskList))
       if used >= MaxTaskList then
         capPill:setStyle('background: #532b2b; color: #ffdddd; border-color: #7a3a3a')
       elseif used >= MaxTaskList - 2 then
@@ -797,7 +804,7 @@ function buildGroupedTaskList()
   for _, zone in ipairs(zones) do
     local header = g_ui.createWidget('ZoneHeader', taskListPanel)
     header:setId('zoneHeader_'..zone)
-    header:getChildById('zoneTitle'):setText(string.format('%s (%d)', zone, #groups[zone]))
+    header:getChildById('zoneTitle'):setText(string.format('%s (%d)', tr(zone), #groups[zone]))
     header:getChildById('zoneCaret'):setText('+')
 
     local content = g_ui.createWidget('ZoneContent', taskListPanel)
@@ -833,11 +840,10 @@ function buildGroupedTaskList()
       local taskName = taskItem:getChildById('taskName')
       local taskLevel = taskItem:getChildById('taskLevel')
       if taskName then
-        taskName:setText(localTaskList[idx].taskName)
+        taskName:setText(tr(localTaskList[idx].taskName))
       end
       if taskLevel then
-        local lvlTxt = 'level ' .. tostring(localTaskList[idx].taskMinLvl)
-        taskLevel:setText(lvlTxt)
+        taskLevel:setText(tr('Level %d', localTaskList[idx].taskMinLvl or 0))
       end
       if taskState then
         taskState:setImageSource('/images/taskList/'..tostring(localTaskList[idx].taskState))
@@ -846,7 +852,7 @@ function buildGroupedTaskList()
       local badge = taskItem:getChildById('taskBadge')
       if badge then
         local tag = tostring(localTaskList[idx].taskBadge or 'Story')
-        badge:setText(tag)
+        badge:setText(tr(tag))
         local lc = tag:lower()
         if lc == 'story' then badge:setColor('#D4AF37')
         elseif lc == 'repeat' then badge:setColor('#66cc66')
@@ -935,28 +941,76 @@ function expandAllZones()
   end
 end
 
--- Toggle rewards panel visibility
-function setRewardsExpanded(expanded)
-  if not taskDescriptionWindow then return end
-  local ids = {
-    'rewardExpIcon','rewardExp','rewardMoneyIcon','rewardMoney','rewardOutfit',
-    'basicRewardsTitle','basicRewards','choiceRewardsTitle','choiceRewards'
-  }
-  for _, id in ipairs(ids) do
-    local w = taskDescriptionWindow:recursiveGetChildById(id)
-    if w then w:setVisible(expanded) end
+function switchTaskTabInWidget(widget, tab)
+  if not widget then return end
+  local detailsPanel = widget:recursiveGetChildById('detailsPanel')
+  local rewardsPanel = widget:recursiveGetChildById('rewardsPanel')
+  local detailsTab = widget:recursiveGetChildById('detailsTab')
+  local rewardsTab = widget:recursiveGetChildById('rewardsTab')
+
+  if tab == 'details' then
+    if detailsPanel then detailsPanel:setVisible(true) end
+    if rewardsPanel then rewardsPanel:setVisible(false) end
+    if detailsTab then detailsTab:setBackgroundColor('#1a2332'); detailsTab:setBorderColor('#3a4a5f') end
+    if rewardsTab then rewardsTab:setBackgroundColor('#0f141c'); rewardsTab:setBorderColor('#2a3344') end
+  else
+    if detailsPanel then detailsPanel:setVisible(false) end
+    if rewardsPanel then rewardsPanel:setVisible(true) end
+    if detailsTab then detailsTab:setBackgroundColor('#0f141c'); detailsTab:setBorderColor('#2a3344') end
+    if rewardsTab then rewardsTab:setBackgroundColor('#1a2332'); rewardsTab:setBorderColor('#3a4a5f') end
   end
-  local btn = taskListsWindow and taskListsWindow:recursiveGetChildById('rewardsToggle') or nil
-  if btn then btn:setText(expanded and '-' or '+') end
-  g_settings.set('game_tasklist/rewards_expanded', expanded and '1' or '0')
+end
+
+function switchTaskTab(tab)
+  switchTaskTabInWidget(taskDescriptionWindow, tab)
+end
+
+function showTaskDetailsTab()
+  switchTaskTab('details')
+end
+
+function showTaskRewardsTab()
+  switchTaskTab('rewards')
+end
+
+function switchNpcTaskTab(tab)
+  switchTaskTabInWidget(npcTaskDescription, tab)
+end
+
+function showNpcTaskDetailsTab()
+  switchNpcTaskTab('details')
+end
+
+function showNpcTaskRewardsTab()
+  switchNpcTaskTab('rewards')
+end
+
+local REWARD_ITEM_HEIGHT = 34
+local REWARD_ITEM_MARGIN = 2
+local REWARD_PANEL_PADDING = 4
+
+function adjustRewardPanelHeight(panel, itemCount, maxVisible)
+  if not panel then return end
+  maxVisible = maxVisible or 4
+  if itemCount <= 0 then
+    panel:setHeight(0)
+    return
+  end
+  local visible = math.min(itemCount, maxVisible)
+  local height = visible * REWARD_ITEM_HEIGHT
+  if visible > 1 then
+    height = height + (visible - 1) * REWARD_ITEM_MARGIN
+  end
+  height = height + REWARD_PANEL_PADDING
+  panel:setHeight(height)
+end
+
+function setRewardsExpanded(expanded)
+  -- Deprecated: rewards are now shown via the Rewards tab
 end
 
 function toggleRewards()
-  if not taskDescriptionWindow then return end
-  local basic = taskDescriptionWindow:recursiveGetChildById('basicRewards')
-  local expanded = true
-  if basic then expanded = not basic:isVisible() end
-  setRewardsExpanded(expanded)
+  showTaskRewardsTab()
 end
 
 function collapseAllZones()
@@ -1186,7 +1240,7 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           )
           local caret = header:getChildById('zoneCaret')
           local title = header:getChildById('zoneTitle')
-          if title then title:setText(string.format('%s (%d)', titleText, count)) end
+          if title then title:setText(string.format('%s (%d)', tr(titleText), count)) end
           if caret then caret:setText(statusExpanded[kind] ~= false and '+' or '-') end
           header.onClick = function() toggleStatusSection(kind) end
           return header
@@ -1198,13 +1252,13 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           local rec = parsed.available[i]
           local row = g_ui.createWidget('NpcTaskRecord', list)
           row:setId('npcAvail_'.. tostring(i))
-          row:getChildById('taskButton'):setText(rec.taskName)
+          row:getChildById('taskButton'):setText(tr(rec.taskName))
           local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 0)) end
-          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
+          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText(tr('Level %d', rec.taskMinLvl or 0)) end
           local badge = row:getChildById('taskBadge');
           if badge then
             local tag = tostring(rec.taskBadge or 'Story')
-            badge:setText(tag)
+            badge:setText(tr(tag))
             local lc = tag:lower()
             if lc == 'story' then badge:setColor('#D4AF37')
             elseif lc == 'repeat' then badge:setColor('#66cc66')
@@ -1225,13 +1279,13 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           local rec = parsed.active[i]
           local row = g_ui.createWidget('NpcTaskRecord', list)
           row:setId('npcInProg_'.. tostring(i))
-          row:getChildById('taskButton'):setText(rec.taskName)
+          row:getChildById('taskButton'):setText(tr(rec.taskName))
           local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 1)) end
-          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
+          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText(tr('Level %d', rec.taskMinLvl or 0)) end
           local badge = row:getChildById('taskBadge');
           if badge then
             local tag = tostring(rec.taskBadge or (rec.taskRepeat and 'Repeat' or 'Story'))
-            badge:setText(tag)
+            badge:setText(tr(tag))
             local lc = tag:lower()
             if lc == 'story' then badge:setColor('#D4AF37')
             elseif lc == 'repeat' then badge:setColor('#66cc66')
@@ -1255,21 +1309,21 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
           local rec = parsed.completed[i]
           local row = g_ui.createWidget('NpcTaskRecord', list)
           row:setId('npcCompleted_'.. tostring(i))
-          row:getChildById('taskButton'):setText(rec.taskName)
+          row:getChildById('taskButton'):setText(tr(rec.taskName))
           local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/'.. tostring(rec.taskState or 2)) end
-          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('level '.. tostring(rec.taskMinLvl or 0)) end
-          local badge = row:getChildById('taskBadge'); if badge then badge:setText(rec.taskRepeat and 'Repeat' or 'Story') end
+          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText(tr('Level %d', rec.taskMinLvl or 0)) end
+          local badge = row:getChildById('taskBadge'); if badge then badge:setText(tr(rec.taskRepeat and 'Repeat' or 'Story')) end
           local p = row:getChildById('taskProgress'); if p then p:setVisible(false) end
         end
 
         -- Cooldown section
-        addHeader('cooldown', 'Cooldown', #parsed.cooldown)
+        addHeader('cooldown', 'On Cooldown', #parsed.cooldown)
         local hasZero2 = false
         for i = 1, #parsed.cooldown do
           local rec = parsed.cooldown[i]
           local row = g_ui.createWidget('NpcTaskRecord', list)
           row:setId('npcCooldown_'.. tostring(i))
-          row:getChildById('taskButton'):setText(rec.taskName)
+          row:getChildById('taskButton'):setText(tr(rec.taskName))
           local st = row:getChildById('taskState'); if st then st:setImageSource('/images/taskList/0') end
           local cdLbl = row:getChildById('cooldownText')
           if cdLbl then
@@ -1277,20 +1331,26 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
             local hrs = math.floor(left / 3600)
             local mins = math.floor((left % 3600) / 60)
             local secs = left % 60
-            local txt = (left <= 0) and 'Ready'
-              or (hrs > 0 and string.format('Available in %dh %dm', hrs, mins))
-              or (mins > 0 and string.format('Available in %dm', mins))
-              or string.format('Available in %ds', secs)
+            local txt
+            if left <= 0 then
+              txt = tr('Ready')
+            elseif hrs > 0 then
+              txt = tr('Available in %dh %dm', hrs, mins)
+            elseif mins > 0 then
+              txt = tr('Available in %dm', mins)
+            else
+              txt = tr('Available in %ds', secs)
+            end
             cdLbl:setText(txt)
           end
-          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText('Level '.. tostring(rec.taskMinLvl or 0)) end
+          local lvl = row:getChildById('taskLevel'); if lvl then lvl:setText(tr('Level %d', rec.taskMinLvl or 0)) end
           -- track for ticker
           npcCooldownLeftByRow[row:getId()] = tonumber(rec.taskCooldownLeftSec or 0) or 0
           if (npcCooldownLeftByRow[row:getId()] or 0) <= 0 then hasZero2 = true end
           local badge = row:getChildById('taskBadge');
           if badge then
             local tag = tostring(rec.taskBadge or 'Story')
-            badge:setText(tag)
+            badge:setText(tr(tag))
             local lc = tag:lower()
             if lc == 'story' then badge:setColor('#D4AF37')
             elseif lc == 'repeat' then badge:setColor('#66cc66')
@@ -1340,8 +1400,9 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
       npcTaskWidget = g_ui.createWidget('NpcTaskListWidget', modules.game_interface.getRootPanel())
       npcTaskWidget:setPosition({x = 600, y = 300})
     end
-    npcTaskWidget:setText("Main Story Quests")
-    npcTaskWidget:getChildById("acceptButton"):setText("Accept")
+    npcTaskWidget:setText(tr("Main Story Quests"))
+    translateUI(npcTaskWidget)
+    setAcceptState('Accept', true)
     npcTaskWidget:show(); npcTaskWidget:raise(); npcTaskWidget:focus()
 
     -- Clear old list/description content using the unified list panel
@@ -1382,8 +1443,9 @@ function onExtendedNpcRewardList(protocol, opcode, buffer)
       npcTaskWidget = g_ui.createWidget('NpcTaskListWidget', modules.game_interface.getRootPanel())
       npcTaskWidget:setPosition({x = 600, y = 300})
     end
-    npcTaskWidget:setText("NPC claim reward")
-    npcTaskWidget:getChildById("acceptButton"):setText("Claim")
+    npcTaskWidget:setText(tr("NPC claim reward"))
+    translateUI(npcTaskWidget)
+    setAcceptState('Claim', true)
     npcTaskWidget:show(); npcTaskWidget:raise(); npcTaskWidget:focus()
 
     -- Clear old list/description content using the unified list panel
@@ -1431,10 +1493,14 @@ function init()
       safeRegister(ExtendedIds.NpcTaskList, onExtendedNpcTaskList)
       safeRegister(ExtendedIds.NpcRewardList, onExtendedNpcRewardList)
       safeRegister(ExtendedIds.NpcTaskWindowClose, onExtendedNpcTaskWindowClose)
+      safeRegister(ExtendedIds.QuestCompletedImage, onExtendedQuestCompletedImage)
       opsRegistered = true
     end
 
     taskListsWindow = g_ui.displayUI('game_tasklist', modules.game_interface.getRightPanel())
+    questCompletedWidget = g_ui.loadUI('quest_completed_image', modules.game_interface.getMapPanel())
+    questCompletedWidget:hide()
+    translateUI(taskListsWindow)
     taskDescriptionWindow = taskListsWindow:recursiveGetChildById('taskDescriptionWnd')
     taskDescriptionWindow:hide()
 	taskRewardItemPanel = taskDescriptionWindow:recursiveGetChildById('rewardItemsPanel')
@@ -1448,9 +1514,9 @@ function init()
     if statusFilter then
       if statusFilter.clearOptions then pcall(function() statusFilter:clearOptions() end) end
       if statusFilter.addOption then
-        statusFilter:addOption('All')
-        statusFilter:addOption('Active')
-        statusFilter:addOption('Completed')
+        statusFilter:addOption(tr('All'))
+        statusFilter:addOption(tr('Active'))
+        statusFilter:addOption(tr('Completed'))
       end
       if statusFilter.setCurrentIndex then statusFilter:setCurrentIndex(0) end
     end
@@ -1466,6 +1532,7 @@ function terminate()
     pcall(function() ProtocolGame.unregisterExtendedOpcode(ExtendedIds.NpcTaskList) end)
     pcall(function() ProtocolGame.unregisterExtendedOpcode(ExtendedIds.NpcRewardList) end)
     pcall(function() ProtocolGame.unregisterExtendedOpcode(ExtendedIds.NpcTaskWindowClose) end)
+    pcall(function() ProtocolGame.unregisterExtendedOpcode(ExtendedIds.QuestCompletedImage) end)
     opsRegistered = false
     if taskListsWindow then
       taskListsWindow:destroy()
@@ -1476,6 +1543,10 @@ function terminate()
     end
     if npcAutoRefreshEvent and removeEvent then removeEvent(npcAutoRefreshEvent) end
     npcAutoRefreshEvent = nil
+    if questCompletedWidget then
+      questCompletedWidget:destroy()
+      questCompletedWidget = nil
+    end
 end
 
 function toggle()
@@ -1497,6 +1568,7 @@ function openWindow()
   -- ensure UI exists in case toggle fired before init finished or after a reload
   if not taskListsWindow or taskListsWindow:isDestroyed() then
     taskListsWindow = g_ui.displayUI('game_tasklist', modules.game_interface.getRightPanel())
+    translateUI(taskListsWindow)
     taskDescriptionWindow = taskListsWindow:recursiveGetChildById('taskDescriptionWnd')
     if taskDescriptionWindow then taskDescriptionWindow:hide() end
     taskListPanel = taskListsWindow:recursiveGetChildById('taskListPanel')
@@ -1703,6 +1775,20 @@ function onExtendedNpcTaskWindowClose(protocol, opcode, buffer)
   if proto then proto:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
 end
 
+function onExtendedQuestCompletedImage(protocol, opcode, buffer)
+  if not questCompletedWidget or questCompletedWidget:isDestroyed() then
+    questCompletedWidget = g_ui.loadUI('quest_completed_image', modules.game_interface.getMapPanel())
+  end
+  if not questCompletedWidget then return end
+  questCompletedWidget:raise()
+  questCompletedWidget:show()
+  g_effects.fadeIn(questCompletedWidget, 250)
+  scheduleEvent(function()
+    if questCompletedWidget and not questCompletedWidget:isDestroyed() then
+      g_effects.fadeOut(questCompletedWidget, 250)
+    end
+  end, 3000)
+end
 
 
 function UpdateNpcTaskDescription()
@@ -1734,10 +1820,11 @@ function UpdateNpcTaskDescription()
   if not rec then dbg('UpdateNpcTaskDescription abort: rec nil'); return end
 
   if npcTaskDescription.show then npcTaskDescription:show() end
-  local title = npcTaskDescription:getChildById('taskTitle')
-  local desc = npcTaskDescription:getChildById('taskDescription')
-  if title then title:setText(rec.taskName) end
-  if desc then desc:setText(rec.taskDesc); desc:setTextAutoResize(true) end
+  switchNpcTaskTab('details')
+  local title = npcTaskDescription:recursiveGetChildById('taskTitle')
+  local desc = npcTaskDescription:recursiveGetChildById('taskDescription')
+  if title then title:setText(tr(rec.taskName)) end
+  if desc then desc:setText(tr(rec.taskDesc)); desc:setTextAutoResize(true) end
 
   -- Debug: log the selected task's current/goal and state as received
   do
@@ -1750,13 +1837,13 @@ function UpdateNpcTaskDescription()
   end
 
   -- Rewards basic (match main TaskDescription style)
-  local expLbl = npcTaskDescription:getChildById('rewardExp')
-  if expLbl then expLbl:setText('EXP  ' .. tostring(rec.taskRewards.exp or 0)) end
-  local moneyLbl = npcTaskDescription:getChildById('rewardMoney')
-  local moneyIcon = npcTaskDescription:getChildById('rewardMoneyIcon')
+  local expLbl = npcTaskDescription:recursiveGetChildById('rewardExp')
+  if expLbl then expLbl:setText(tr('EXP %d', rec.taskRewards.exp or 0)) end
+  local moneyLbl = npcTaskDescription:recursiveGetChildById('rewardMoney')
+  local moneyIcon = npcTaskDescription:recursiveGetChildById('rewardMoneyIcon')
   local money = (rec.taskRewards and rec.taskRewards.money) or 0
   if money > 0 then
-    if moneyLbl then moneyLbl:setText('GOLD  ' .. tostring(money)); moneyLbl:setVisible(true) end
+    if moneyLbl then moneyLbl:setText(tr('GOLD %d', money)); moneyLbl:setVisible(true) end
     if moneyIcon then moneyIcon:setVisible(true) end
   else
     if moneyLbl then moneyLbl:setText(''); moneyLbl:setVisible(false) end
@@ -1764,14 +1851,14 @@ function UpdateNpcTaskDescription()
   end
 
   -- Codex rewards (NPC pane)
-  local npcCodexLbl = npcTaskDescription:getChildById('rewardCodex')
+  local npcCodexLbl = npcTaskDescription:recursiveGetChildById('rewardCodex')
   if npcCodexLbl then
     local codexParts = {}
     local ce = (rec.taskRewards and rec.taskRewards.codex_essences) or 0
-    if ce > 0 then table.insert(codexParts, tostring(ce) .. ' Codex Essences') end
+    if ce > 0 then table.insert(codexParts, tr('%d Codex Essences', ce)) end
     local cc = (rec.taskRewards and rec.taskRewards.codex_crates) or {}
     for _, cr in ipairs(cc) do
-      table.insert(codexParts, tostring(cr.amount) .. 'x ' .. tostring(cr.name))
+      table.insert(codexParts, tr('%dx %s', cr.amount, tr(cr.name)))
     end
     if #codexParts > 0 then
       npcCodexLbl:setText(table.concat(codexParts, '  +  '))
@@ -1794,7 +1881,7 @@ function UpdateNpcTaskDescription()
       if goals.monsters and #goals.monsters > 0 then
         local names = {}
         for i = 1, #goals.monsters do names[#names+1] = tostring(goals.monsters[i].name) end
-        monLbl:setText('You have to kill: ' .. table.concat(names, ', ') .. '.')
+        monLbl:setText(tr('You have to kill: %s.', table.concat(names, ', ')))
         monLbl:setVisible(true)
       else
         monLbl:setText('')
@@ -1808,7 +1895,7 @@ function UpdateNpcTaskDescription()
       if goals.items and #goals.items > 0 then
         local names = {}
         for i = 1, #goals.items do names[#names+1] = tostring(goals.items[i].name) end
-        itemLbl:setText('You have to collect: ' .. table.concat(names, ', ') .. '.')
+        itemLbl:setText(tr('You have to collect: %s.', table.concat(names, ', ')))
         itemLbl:setVisible(true)
       else
         itemLbl:setText('')
@@ -1816,13 +1903,14 @@ function UpdateNpcTaskDescription()
       end
     end
 
+
     -- Storages
     local storLbl = npcTaskDescription:recursiveGetChildById('storageGoals')
     if storLbl then
       if goals.storages and #goals.storages > 0 then
         local names = {}
         for i = 1, #goals.storages do names[#names+1] = tostring(goals.storages[i].starageName) end
-        storLbl:setText('You have to do: ' .. table.concat(names, ', ') .. '.')
+        storLbl:setText(tr('You have to do: %s.', table.concat(names, ', ')))
         storLbl:setVisible(true)
       else
         storLbl:setText('')
@@ -1855,31 +1943,31 @@ function UpdateNpcTaskDescription()
     local hintLbl = npcTaskDescription:recursiveGetChildById('taskHint')
     if hintLbl then
       local hv = tostring(rec.taskHint or rec.taskHintNpc or '')
-      hintLbl:setText(hv)
+      hintLbl:setText(tr(hv))
       hintLbl:setVisible(hv ~= '')
     end
     local zoneLbl = npcTaskDescription:recursiveGetChildById('taskZoneName')
     if zoneLbl then
       local zv = tostring(rec.taskZoneName or rec.taskZone or '')
-      zoneLbl:setText(zv)
+      zoneLbl:setText(tr(zv))
       zoneLbl:setVisible(zv ~= '')
     end
     local srcLbl = npcTaskDescription:recursiveGetChildById('taskSource')
     if srcLbl then
       local sv = tostring(rec.taskSource or rec.taskSourceNpc or '')
-      srcLbl:setText(sv)
+      srcLbl:setText(tr(sv))
       srcLbl:setVisible(sv ~= '')
     end
   end
 
   -- Outfit
-  local npcOutfitLbl = npcTaskDescription:getChildById('rewardOutfit')
+  local npcOutfitLbl = npcTaskDescription:recursiveGetChildById('rewardOutfit')
   if npcOutfitLbl then
     local outfits = (rec.taskRewards and rec.taskRewards.outfits) or {}
     if outfits and #outfits > 0 then
       local outfit = outfits[1]
-      local text = 'Outfit: ' .. tostring(outfit.name)
-      if outfit.addon and outfit.addon > 0 then text = text .. ' (Addon ' .. tostring(outfit.addon) .. ')' end
+      local text = tr('Outfit: %s', tr(outfit.name))
+      if outfit.addon and outfit.addon > 0 then text = tr('%s (Addon %d)', text, outfit.addon) end
       npcOutfitLbl:setText(text)
       npcOutfitLbl:setVisible(true)
     else
@@ -1890,6 +1978,7 @@ function UpdateNpcTaskDescription()
 
   -- Items
   npcRewardItemPanel = npcTaskDescription:recursiveGetChildById('rewardItemsPanel')
+  local npcBasicRewardsPanel = npcTaskDescription:recursiveGetChildById('basicRewards')
   -- Clear old refs from previous NPC renders to avoid stale references warnings
   for i = #localRewardItemList, 1, -1 do
     localRewardItemList[i] = nil
@@ -1899,6 +1988,7 @@ function UpdateNpcTaskDescription()
   local items = (rec.taskRewards and rec.taskRewards.items) or {}
   if items and #items > 0 then
     if npcRewardItemPanel and npcRewardItemPanel.show then npcRewardItemPanel:show() end
+    if npcBasicRewardsPanel and npcBasicRewardsPanel.show then npcBasicRewardsPanel:show() end
     for i = 1, #items do
       local it = items[i]
       local rewardItem = g_ui.createWidget('TasklistRewardItem', npcRewardTarget)
@@ -1906,11 +1996,13 @@ function UpdateNpcTaskDescription()
       rewardItem:getChildById('rewardItem'):setItemId(it.itemCid)
       rewardItem:getChildById('rewardItem'):setVirtual(true)
       rewardItem:getChildById('rewardItem'):setItemCount(it.itemCnt)
-      rewardItem:getChildById('rewardItemCnt'):setText('x ' .. tostring(it.itemCnt))
-      rewardItem:getChildById('rewardItemName'):setText(it.name)
+      rewardItem:getChildById('rewardItemCnt'):setText(tr('x %d', it.itemCnt))
+      rewardItem:getChildById('rewardItemName'):setText(tr(it.name))
     end
+    adjustRewardPanelHeight(npcBasicRewardsPanel, #items, 4)
   else
     if npcRewardItemPanel and npcRewardItemPanel.hide then npcRewardItemPanel:hide() end
+    if npcBasicRewardsPanel and npcBasicRewardsPanel.hide then npcBasicRewardsPanel:hide() end
   end
 
   -- Choice rewards (NPC pane) with same row size as basic rewards
@@ -1936,8 +2028,8 @@ function UpdateNpcTaskDescription()
         cw:getChildById('rewardItem'):setItemId(cid)
         cw:getChildById('rewardItem'):setVirtual(true)
         cw:getChildById('rewardItem'):setItemCount(choices[i].itemCnt)
-        cw:getChildById('rewardItemCnt'):setText('x '.. tostring(choices[i].itemCnt))
-        cw:getChildById('rewardItemName'):setText(choices[i].name)
+        cw:getChildById('rewardItemCnt'):setText(tr('x %d', choices[i].itemCnt))
+        cw:getChildById('rewardItemName'):setText(tr(choices[i].name))
         local function apply()
           selectedChoiceByTask[tnum] = i
           pcall(function() g_settings.set('game_tasklist/choice/'.. tostring(tnum), tostring(i)) end)
@@ -1960,6 +2052,7 @@ function UpdateNpcTaskDescription()
           cw:mergeStyle({ background = '#00000033', ['border-color'] = '#333333', ['border-width'] = 1 })
         end
       end
+      adjustRewardPanelHeight(choiceContainer, #choices, 4)
     else
       if choiceTitle then choiceTitle:setVisible(false) end
       if choiceContainer and choiceContainer.hide then choiceContainer:hide() end
@@ -2214,25 +2307,26 @@ function updateTaskDescription(taskNumber)
   if taskNumber > #localTaskList then
     return
   end
-  taskDescriptionWindow:getChildById('taskTitle'):setText(localTaskList[taskNumber].taskName)
+  switchTaskTab('details')
+  taskDescriptionWindow:recursiveGetChildById('taskTitle'):setText(tr(localTaskList[taskNumber].taskName))
   local tags = {}
   -- removed repeatable tag: taskRepeat deprecated
-  if localTaskList[taskNumber].taskZone then table.insert(tags, localTaskList[taskNumber].taskZone) end
-  if localTaskList[taskNumber].taskMinLvl then table.insert(tags, 'level '.. tostring(localTaskList[taskNumber].taskMinLvl)) end
-  taskDescriptionWindow:getChildById('taskTags'):setText(table.concat(tags, ' - '))
-  taskDescriptionWindow:getChildById('taskDescription'):setText(localTaskList[taskNumber].taskDesc)
-  taskDescriptionWindow:getChildById('taskDescription'):setTextAutoResize(true)
-  taskDescriptionWindow:getChildById('taskZoneName'):setText(localTaskList[taskNumber].taskZone)
-  taskDescriptionWindow:getChildById('taskZoneName'):setTextAutoResize(true)
-  taskDescriptionWindow:getChildById('taskSource'):setText(localTaskList[taskNumber].taskSourceNpc)
-  taskDescriptionWindow:getChildById('taskSource'):setTextAutoResize(true)
-  taskDescriptionWindow:getChildById('taskHint'):setText(localTaskList[taskNumber].taskHintNpc)
-  taskDescriptionWindow:getChildById('taskHint'):setTextAutoResize(true)
-  taskDescriptionWindow:getChildById('rewardExp'):setText("EXP  "..(localTaskList[taskNumber].taskRewards.exp or 0))
-  local moneyLbl = taskDescriptionWindow:getChildById('rewardMoney')
-  local moneyIcon = taskDescriptionWindow:getChildById('rewardMoneyIcon')
+  if localTaskList[taskNumber].taskZone then table.insert(tags, tr(localTaskList[taskNumber].taskZone)) end
+  if localTaskList[taskNumber].taskMinLvl then table.insert(tags, tr('Level %d', localTaskList[taskNumber].taskMinLvl)) end
+  taskDescriptionWindow:recursiveGetChildById('taskTags'):setText(table.concat(tags, ' - '))
+  taskDescriptionWindow:recursiveGetChildById('taskDescription'):setText(tr(localTaskList[taskNumber].taskDesc))
+  taskDescriptionWindow:recursiveGetChildById('taskDescription'):setTextAutoResize(true)
+  taskDescriptionWindow:recursiveGetChildById('taskZoneName'):setText(tr(localTaskList[taskNumber].taskZone))
+  taskDescriptionWindow:recursiveGetChildById('taskZoneName'):setTextAutoResize(true)
+  taskDescriptionWindow:recursiveGetChildById('taskSource'):setText(tr(localTaskList[taskNumber].taskSourceNpc))
+  taskDescriptionWindow:recursiveGetChildById('taskSource'):setTextAutoResize(true)
+  taskDescriptionWindow:recursiveGetChildById('taskHint'):setText(tr(localTaskList[taskNumber].taskHintNpc))
+  taskDescriptionWindow:recursiveGetChildById('taskHint'):setTextAutoResize(true)
+  taskDescriptionWindow:recursiveGetChildById('rewardExp'):setText(tr("EXP %d", localTaskList[taskNumber].taskRewards.exp or 0))
+  local moneyLbl = taskDescriptionWindow:recursiveGetChildById('rewardMoney')
+  local moneyIcon = taskDescriptionWindow:recursiveGetChildById('rewardMoneyIcon')
   if localTaskList[taskNumber].taskRewards.money and localTaskList[taskNumber].taskRewards.money > 0 then
-    moneyLbl:setText("GOLD  " .. localTaskList[taskNumber].taskRewards.money)
+    moneyLbl:setText(tr("GOLD %d", localTaskList[taskNumber].taskRewards.money))
     moneyLbl:setVisible(true)
     if moneyIcon then moneyIcon:setVisible(true) end
   else
@@ -2241,14 +2335,14 @@ function updateTaskDescription(taskNumber)
     if moneyIcon then moneyIcon:setVisible(false) end
   end
   -- Codex rewards (Quest Log pane)
-  local codexLbl = taskDescriptionWindow:getChildById('rewardCodex')
+  local codexLbl = taskDescriptionWindow:recursiveGetChildById('rewardCodex')
   if codexLbl then
     local codexParts = {}
     local ce = (localTaskList[taskNumber].taskRewards and localTaskList[taskNumber].taskRewards.codex_essences) or 0
-    if ce > 0 then table.insert(codexParts, tostring(ce) .. ' Codex Essences') end
+    if ce > 0 then table.insert(codexParts, tr('%d Codex Essences', ce)) end
     local cc = (localTaskList[taskNumber].taskRewards and localTaskList[taskNumber].taskRewards.codex_crates) or {}
     for _, cr in ipairs(cc) do
-      table.insert(codexParts, tostring(cr.amount) .. 'x ' .. tostring(cr.name))
+      table.insert(codexParts, tr('%dx %s', cr.amount, tr(cr.name)))
     end
     if #codexParts > 0 then
       codexLbl:setText(table.concat(codexParts, '  +  '))
@@ -2262,15 +2356,15 @@ function updateTaskDescription(taskNumber)
   end
   if localTaskList[taskNumber].taskRewards.outfits and #localTaskList[taskNumber].taskRewards.outfits > 0 then
     local outfit = localTaskList[taskNumber].taskRewards.outfits[1]
-    local text = "Outfit: " .. outfit.name
+    local text = tr('Outfit: %s', tr(outfit.name))
     if outfit.addon and outfit.addon > 0 then
-      text = text .. " (Addon " .. tostring(outfit.addon) .. ")"
+      text = tr('%s (Addon %d)', text, outfit.addon)
     end
-    taskDescriptionWindow:getChildById('rewardOutfit'):setText(text)
-	 taskDescriptionWindow:getChildById('rewardOutfit'):setHeight(15)
+    taskDescriptionWindow:recursiveGetChildById('rewardOutfit'):setText(text)
+	 taskDescriptionWindow:recursiveGetChildById('rewardOutfit'):setHeight(15)
   else
-    taskDescriptionWindow:getChildById('rewardOutfit'):setText("")
-    taskDescriptionWindow:getChildById('rewardOutfit'):setHeight(0)
+    taskDescriptionWindow:recursiveGetChildById('rewardOutfit'):setText("")
+    taskDescriptionWindow:recursiveGetChildById('rewardOutfit'):setHeight(0)
   end
 
   -- Render basic rewards (items) into basicRewards panel's inner scroll area
@@ -2288,9 +2382,10 @@ function updateTaskDescription(taskNumber)
         rewardItem:getChildById('rewardItem'):setItemId(iid)
         rewardItem:getChildById('rewardItem'):setVirtual(true)
         rewardItem:getChildById('rewardItem'):setItemCount(items[i].itemCnt)
-        rewardItem:getChildById('rewardItemCnt'):setText('x ' .. tostring(items[i].itemCnt))
-        rewardItem:getChildById('rewardItemName'):setText(items[i].name)
+        rewardItem:getChildById('rewardItemCnt'):setText(tr('x %d', items[i].itemCnt))
+        rewardItem:getChildById('rewardItemName'):setText(tr(items[i].name))
       end
+      adjustRewardPanelHeight(basicPanel, #items, 4)
       if basicPanel.hide then basicPanel:show() end
     else
       if basicPanel.hide then basicPanel:hide() end
@@ -2313,7 +2408,7 @@ function updateTaskDescription(taskNumber)
     if choices and #choices > 0 then
       if choiceTitle then
         choiceTitle:setVisible(true)
-        pcall(function() choiceTitle:setText(tr('Choice Rewards:') .. ' ('.. tostring(#choices) ..')') end)
+        pcall(function() choiceTitle:setText(tr('Choice Rewards: (%d)', #choices)) end)
       end
       if choicePanelContainer and choicePanelContainer.show then choicePanelContainer:show() end
       local tnum = tonumber(localTaskList[taskNumber].taskNumber) or 0
@@ -2333,8 +2428,8 @@ function updateTaskDescription(taskNumber)
         cw:getChildById('rewardItem'):setItemId(iid)
         cw:getChildById('rewardItem'):setVirtual(true)
         cw:getChildById('rewardItem'):setItemCount(choices[i].itemCnt)
-        cw:getChildById('rewardItemCnt'):setText('x '..tostring(choices[i].itemCnt))
-        cw:getChildById('rewardItemName'):setText(choices[i].name)
+        cw:getChildById('rewardItemCnt'):setText(tr('x %d', choices[i].itemCnt))
+        cw:getChildById('rewardItemName'):setText(tr(choices[i].name))
 
         local function applySelection()
           selectedChoiceByTask[tnum] = i
@@ -2360,13 +2455,14 @@ function updateTaskDescription(taskNumber)
           cw:mergeStyle({ background = '#00000033', ['border-color'] = '#333333', ['border-width'] = 1 })
         end
       end
+      adjustRewardPanelHeight(choicePanelContainer, #choices, 4)
       -- let layout engine position wrappers
       -- debug: verify rows created
       -- removed chat log to avoid server-bound spam
     else
       if choiceTitle then
         choiceTitle:setVisible(true)
-        pcall(function() choiceTitle:setText(tr('Choice Rewards: (0)')) end)
+        pcall(function() choiceTitle:setText(tr('Choice Rewards:')) end)
       end
       if choicePanelContainer and choicePanelContainer.hide then choicePanelContainer:hide() end
     end
@@ -2385,7 +2481,7 @@ function updateTaskDescription(taskNumber)
   end)
   if localTaskList[taskNumber].taskGoals.monsters then
     if #localTaskList[taskNumber].taskGoals.monsters > 0 then
-      taskDescriptionWindow:getChildById('monsterGoals'):setVisible(true)
+      taskDescriptionWindow:recursiveGetChildById('monsterGoals'):setVisible(true)
       local goalMsg = "You have to kill: "
       for i = 1, #localTaskList[taskNumber].taskGoals.monsters, 1 do
         goalMsg = goalMsg ..  localTaskList[taskNumber].taskGoals.monsters[i].name
@@ -2396,21 +2492,21 @@ function updateTaskDescription(taskNumber)
           goalMsg = goalMsg .. "."
         end
       end
-      taskDescriptionWindow:getChildById('monsterGoals'):setText(goalMsg)
-	  taskDescriptionWindow:getChildById('monsterGoals'):setTextAutoResize(true)
+      taskDescriptionWindow:recursiveGetChildById('monsterGoals'):setText(goalMsg)
+	  taskDescriptionWindow:recursiveGetChildById('monsterGoals'):setTextAutoResize(true)
     else
-      taskDescriptionWindow:getChildById('monsterGoals'):setVisible(false)
+      taskDescriptionWindow:recursiveGetChildById('monsterGoals'):setVisible(false)
     end
   else
-    taskDescriptionWindow:getChildById('monsterGoals'):setVisible(false)
+    taskDescriptionWindow:recursiveGetChildById('monsterGoals'):setVisible(false)
   end
   
   
-  local objDivider = taskDescriptionWindow:getChildById('objectivesDivider')
+  local objDivider = taskDescriptionWindow:recursiveGetChildById('objectivesDivider')
   if objDivider then objDivider:setVisible(true) end
   if localTaskList[taskNumber].taskGoals.items then
     if #localTaskList[taskNumber].taskGoals.items > 0 then
-      taskDescriptionWindow:getChildById('itemGoals'):setVisible(true)
+      taskDescriptionWindow:recursiveGetChildById('itemGoals'):setVisible(true)
       local goalMsg = "You have to collect: "
       for i = 1, #localTaskList[taskNumber].taskGoals.items, 1 do
         goalMsg = goalMsg ..  localTaskList[taskNumber].taskGoals.items[i].name
@@ -2421,19 +2517,19 @@ function updateTaskDescription(taskNumber)
           goalMsg = goalMsg .. "."
         end
       end
-      taskDescriptionWindow:getChildById('itemGoals'):setText(goalMsg)
-	  taskDescriptionWindow:getChildById('itemGoals'):setTextAutoResize(true)
+      taskDescriptionWindow:recursiveGetChildById('itemGoals'):setText(goalMsg)
+	  taskDescriptionWindow:recursiveGetChildById('itemGoals'):setTextAutoResize(true)
     else
-      taskDescriptionWindow:getChildById('itemGoals'):setVisible(false)
+      taskDescriptionWindow:recursiveGetChildById('itemGoals'):setVisible(false)
     end
   else
-    taskDescriptionWindow:getChildById('itemGoals'):setVisible(false)
+    taskDescriptionWindow:recursiveGetChildById('itemGoals'):setVisible(false)
   end
   
   
    if localTaskList[taskNumber].taskGoals.storages then
     if #localTaskList[taskNumber].taskGoals.storages > 0 then
-      taskDescriptionWindow:getChildById('storageGoals'):setVisible(true)
+      taskDescriptionWindow:recursiveGetChildById('storageGoals'):setVisible(true)
       local goalMsg = "You have to do: "
       for i = 1, #localTaskList[taskNumber].taskGoals.storages, 1 do
         goalMsg = goalMsg ..  localTaskList[taskNumber].taskGoals.storages[i].starageName
@@ -2444,18 +2540,18 @@ function updateTaskDescription(taskNumber)
           goalMsg = goalMsg .. "."
         end
       end
-      taskDescriptionWindow:getChildById('storageGoals'):setText(goalMsg)
-	  taskDescriptionWindow:getChildById('storageGoals'):setTextAutoResize(true)
+      taskDescriptionWindow:recursiveGetChildById('storageGoals'):setText(goalMsg)
+	  taskDescriptionWindow:recursiveGetChildById('storageGoals'):setTextAutoResize(true)
     else
-      taskDescriptionWindow:getChildById('storageGoals'):setVisible(false)
+      taskDescriptionWindow:recursiveGetChildById('storageGoals'):setVisible(false)
     end
   else
-    taskDescriptionWindow:getChildById('storageGoals'):setVisible(false)
+    taskDescriptionWindow:recursiveGetChildById('storageGoals'):setVisible(false)
   end
   
   
-  taskDescriptionWindow:getChildById('itemCnt'):setVisible(true)
+  taskDescriptionWindow:recursiveGetChildById('itemCnt'):setVisible(true)
   local cntMsg = localTaskList[taskNumber].taskCurrentCnt .. "/" ..localTaskList[taskNumber].taskGoalCnt
-  taskDescriptionWindow:getChildById('itemCnt'):setText(cntMsg)
+  taskDescriptionWindow:recursiveGetChildById('itemCnt'):setText(cntMsg)
 end
 
