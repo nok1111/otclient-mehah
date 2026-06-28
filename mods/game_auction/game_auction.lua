@@ -38,18 +38,14 @@ function Auction.setTab(tab)
   if tab ~= 'auction' and tab ~= 'my' and tab ~= 'history' and tab ~= 'mail' then return end
   Auction.activeTab = tab
   -- toggle UI
-  local showCreate = (tab == 'my')
-  if Auction.createLabel and Auction.createLabel.setVisible then Auction.createLabel:setVisible(showCreate) end
-  if Auction.createRowPanel and Auction.createRowPanel.setVisible then Auction.createRowPanel:setVisible(showCreate) end
   if Auction.buyButton and Auction.buyButton.setVisible then Auction.buyButton:setVisible(tab == 'auction') end
-  if Auction.cancelButton and Auction.cancelButton.setVisible then Auction.cancelButton:setVisible(tab == 'my') end
   if Auction.buyCountSpin and Auction.buyCountSpin.setVisible then Auction.buyCountSpin:setVisible(tab == 'auction') end
-  -- buyCountValue label was removed; no visibility toggle needed
+  if Auction.buyCountValue and Auction.buyCountValue.setVisible then Auction.buyCountValue:setVisible(tab == 'auction') end
   if Auction.buyCostValue and Auction.buyCostValue.setVisible then Auction.buyCostValue:setVisible(tab == 'auction') end
   local costLbl = Auction.window and Auction.window:recursiveGetChildById('buyCostLabel') or nil
   if costLbl and costLbl.setVisible then costLbl:setVisible(tab == 'auction') end
-  local costSuf = Auction.window and Auction.window:recursiveGetChildById('buyCostSuffix') or nil
-  if costSuf and costSuf.setVisible then costSuf:setVisible(tab == 'auction') end
+  local costIco = Auction.window and Auction.window:recursiveGetChildById('buyCostIcon') or nil
+  if costIco and costIco.setVisible then costIco:setVisible(tab == 'auction') end
   local amountLbl = Auction.window and Auction.window:recursiveGetChildById('buyAmountLabel') or nil
   if amountLbl and amountLbl.setVisible then amountLbl:setVisible(tab == 'auction') end
   -- Ensure we use the same list/scroll as other tabs for 'history'
@@ -59,17 +55,57 @@ function Auction.setTab(tab)
   local browseScroll = Auction.window and Auction.window:recursiveGetChildById('browseScroll') or nil
   local actionsRow = Auction.window and Auction.window:recursiveGetChildById('actionsRow') or nil
   local browseVBar = Auction.window and Auction.window:recursiveGetChildById('browseVBar') or nil
-  if resultsHeader and resultsHeader.setVisible then resultsHeader:setVisible(true) end
-  if browseScroll and browseScroll.setVisible then browseScroll:setVisible(true) end
+  local myOffersPanel = Auction.window and Auction.window:recursiveGetChildById('myOffersPanel') or nil
+  if Auction.categoryPanel and Auction.categoryPanel.setVisible then Auction.categoryPanel:setVisible(tab == 'auction') end
+  if Auction.updateSubcategoryUI then Auction.updateSubcategoryUI() end
+  if resultsHeader and resultsHeader.setVisible then resultsHeader:setVisible(tab ~= 'my') end
+  if browseScroll and browseScroll.setVisible then browseScroll:setVisible(tab ~= 'my') end
+  if browseVBar and browseVBar.setVisible then browseVBar:setVisible(tab ~= 'my') end
   if actionsRow and actionsRow.setVisible then actionsRow:setVisible(tab == 'auction') end
-  if browseVBar and browseVBar.setVisible then browseVBar:setVisible(true) end
+  if myOffersPanel and myOffersPanel.setVisible then myOffersPanel:setVisible(tab == 'my') end
+  local mainArea = Auction.window and Auction.window:recursiveGetChildById('mainArea') or nil
+  if mainArea and mainArea.removeAnchor and mainArea.addAnchor then
+    mainArea:removeAnchor(3) -- remove left anchor
+    if tab == 'auction' then
+      mainArea:addAnchor(3, 'categoryPanel', 4) -- left to categoryPanel.right
+    else
+      mainArea:addAnchor(3, 'parent', 3) -- left to parent.left (use category space)
+    end
+  end
+  local paginationRow = Auction.window and Auction.window:recursiveGetChildById('paginationRow') or nil
+  local auctionTools = { Auction.sortBox, Auction.prevPageButton, Auction.nextPageButton, Auction.pageLabel, paginationRow }
+  for _, widget in ipairs(auctionTools) do
+    if widget and widget.setVisible then widget:setVisible(tab == 'auction') end
+  end
+  if tab == 'auction' then Auction.updatePageLabel() end
+  if Auction.window and Auction.window.updateLayout then Auction.window:updateLayout() end
+  -- Highlight active tab
+  local tabButtons = { auction = Auction.tabAuction, my = Auction.tabMy, history = Auction.tabHistory, mail = Auction.tabMail }
+  for name, btn in pairs(tabButtons) do
+    if btn and btn.setColor and btn.setBackgroundColor then
+      if name == tab then
+        btn:setColor('#f5c542')
+        btn:setBackgroundColor('#252535')
+        if btn.setBorderColor then btn:setBorderColor('#f5c542') end
+      else
+        btn:setColor('#cccccc')
+        btn:setBackgroundColor('#1a1a24')
+        if btn.setBorderColor then btn:setBorderColor('#2a2a3a') end
+      end
+    end
+  end
   if sellerHeader and sellerHeader.setText then
-    if tab == 'history' or tab == 'mail' then sellerHeader:setText('Date') else sellerHeader:setText('Time Left') end
+    if tab == 'history' or tab == 'mail' then sellerHeader:setText('') else sellerHeader:setText('Seller') end
+  end
+  local timeHeader = Auction.window and Auction.window:recursiveGetChildById('timeHeader') or nil
+  if timeHeader and timeHeader.setText then
+    if tab == 'history' or tab == 'mail' then timeHeader:setText('Date') else timeHeader:setText('Time Left') end
   end
   -- clear current list
   if Auction.browseList then Auction.browseList:destroyChildren() end
   -- request data
   if tab == 'auction' then
+    print('[Auction][Client] [source] setTab -> AH_SEARCH')
     Auction.send('AH_SEARCH', Auction.buildSearchParams())
   elseif tab == 'my' then
     Auction.send('AH_MY', {})
@@ -82,6 +118,8 @@ function Auction.setTab(tab)
       loading:setColor('#bbbbbb')
       loading:setMarginTop(8)
       loading:setMarginLeft(8)
+      loading:setWidth(120)
+      loading:setHeight(16)
     end
     Auction.send('AH_HISTORY', {})
   elseif tab == 'mail' then
@@ -93,6 +131,8 @@ function Auction.setTab(tab)
       loading:setColor('#bbbbbb')
       loading:setMarginTop(8)
       loading:setMarginLeft(8)
+      loading:setWidth(120)
+      loading:setHeight(16)
     end
     Auction.send('AH_MAIL', {})
   end
@@ -148,24 +188,9 @@ end
 Auction = Auction or {}
 Auction.opCode = 102
 
--- helper: category param from ComboBox
+-- helper: current category filter
 local function getSelectedCategory()
-  local fb = Auction.filterBox
-  local txt = nil
-  if fb and fb.getCurrentOption then
-    local ok, val = pcall(function() return fb:getCurrentOption() end)
-    if ok and type(val) == 'string' and val ~= '' then txt = val end
-  end
-  if not txt and fb and fb.getText then
-    local ok, val = pcall(function() return fb:getText() end)
-    if ok and type(val) == 'string' and val ~= '' then txt = val end
-  end
-  txt = tostring(txt or 'All'):lower()
-  local map = {
-    ['all']='all', ['weapons']='weapons', ['shields']='shields', ['armors']='armors', ['boots']='boots', ['helmet']='helmet',
-    ['accessories']='accessories', ['runes']='runes', ['pets']='pets', ['others']='others'
-  }
-  return map[txt] or 'all'
+  return Auction.currentCategory or 'all'
 end
 
 -- helper: build AH_SEARCH payload with current UI values
@@ -174,8 +199,14 @@ function Auction.buildSearchParams(nameOverride)
   if not name and Auction.searchEdit and Auction.searchEdit.getText then
     name = Auction.searchEdit:getText()
   end
-  local params = { limit = 25, offset = 0, category = getSelectedCategory() }
-  print(string.format('[Auction][Client] buildSearchParams category=%s name=%s', tostring(params.category), tostring(name)))
+  local params = {
+    limit = 25,
+    offset = tonumber(Auction.searchOffset) or 0,
+    category = getSelectedCategory(),
+    sortBy = Auction.searchSortBy or 'newest',
+    sortOrder = (Auction.searchSortBy == 'price_desc') and 'DESC' or 'ASC'
+  }
+  print(string.format('[Auction][Client] buildSearchParams category=%s name=%s sort=%s offset=%s', tostring(params.category), tostring(name), tostring(params.sortBy), tostring(params.offset)))
   if name and name ~= '' then params.name = name end
   return params
 end
@@ -195,14 +226,27 @@ Auction.buyButton = nil
 Auction.cancelButton = nil
 Auction.tabAuction = nil
 Auction.tabMy = nil
-Auction.createLabel = nil
-Auction.createRowPanel = nil
-Auction.countValue = nil
+Auction.myOffersList = nil
 Auction.searchDebounceEvent = nil
 Auction.buyCountSpin = nil
 Auction.buyCountValue = nil
 Auction.buyCostValue = nil
+Auction.buyCostIcon = nil
+Auction.createCostIcon = nil
+Auction.rewardGold = nil
+Auction.rewardFame = nil
+Auction.dur12 = nil
+Auction.dur24 = nil
+Auction.dur48 = nil
+Auction.rewardGroup = nil
+Auction.durationGroup = nil
 Auction.currentSelected = { id = nil, count = 1, price = 0 }
+Auction.searchOffset = 0
+Auction.searchSortBy = 'newest'
+Auction.currentCategory = 'all'
+Auction.weaponsExpanded = false
+Auction.consumablesExpanded = false
+Auction.ignoreSearchEdit = false
 
 -- Update partial-buy controls from currentSelected
 function Auction.updateBuyControls(curOverride)
@@ -218,7 +262,25 @@ function Auction.updateBuyControls(curOverride)
   if Auction.buyCountValue and Auction.buyCountValue.setText then Auction.buyCountValue:setText(tostring(cur)) end
   local part = math.floor((total > 0 and (total * (cur / maxc))) or 0)
   if Auction.buyCostValue.setText then Auction.buyCostValue:setText(buildPriceText(part, 1)) end
-  print(string.format('[Auction][Client] updateBuyControls cur=%s max=%s total=%s part=%s', tostring(cur), tostring(maxc), tostring(total), tostring(part)))
+  local reward = Auction.currentSelected.reward or 'gold'
+  if Auction.buyCostIcon and Auction.buyCostIcon.setImageSource then
+    Auction.buyCostIcon:setImageSource(reward == 'fame' and '/images/icons/fame.png' or '/images/icons/gold_coin.png')
+  end
+  print(string.format('[Auction][Client] updateBuyControls cur=%s max=%s total=%s part=%s reward=%s', tostring(cur), tostring(maxc), tostring(total), tostring(part), tostring(reward)))
+end
+
+function Auction.updateRewardUI()
+  local reward = 'gold'
+  if Auction.rewardGroup and Auction.rewardGroup.getSelectedWidget then
+    local sel = Auction.rewardGroup:getSelectedWidget()
+    if sel and sel.getId then
+      local id = sel:getId()
+      if id == 'rewardFame' then reward = 'fame' end
+    end
+  end
+  if Auction.createCostIcon and Auction.createCostIcon.setImageSource then
+    Auction.createCostIcon:setImageSource(reward == 'fame' and '/images/icons/fame.png' or '/images/icons/gold_coin.png')
+  end
 end
 
 -- Lazy UI creator to avoid crashing during login if OTUI has issues
@@ -240,46 +302,92 @@ function Auction.ensureWindow()
   -- Recursively resolve children since they are nested
   Auction.browseList   = Auction.window:recursiveGetChildById('browseList')
   Auction.searchEdit   = Auction.window:recursiveGetChildById('searchEdit')
-  Auction.filterBox    = Auction.window:recursiveGetChildById('filterBox')
   Auction.priceEdit    = Auction.window:recursiveGetChildById('priceEdit')
   Auction.countSpin    = Auction.window:recursiveGetChildById('countSpin')
   Auction.listItemSlot = Auction.window:recursiveGetChildById('listItemSlot')
   Auction.createCostValue = Auction.window:recursiveGetChildById('createCostValue')
-  Auction.createLabel  = Auction.window:recursiveGetChildById('createLabel')
-  Auction.createRowPanel = Auction.window:recursiveGetChildById('createRow')
-  Auction.tabAuction   = Auction.window:recursiveGetChildById('tabAuction')
-  Auction.tabMy        = Auction.window:recursiveGetChildById('tabMy')
-  Auction.tabMail      = Auction.window:recursiveGetChildById('tabMail')
-  Auction.tabHistory   = Auction.window:recursiveGetChildById('tabHistory')
-  Auction.countValue   = Auction.window:recursiveGetChildById('countValue')
+  Auction.createCostIcon = Auction.window:recursiveGetChildById('createCostIcon')
+  Auction.myOffersList = Auction.window:recursiveGetChildById('myOffersList')
+  Auction.rewardGold = Auction.window:recursiveGetChildById('rewardGold')
+  Auction.rewardFame = Auction.window:recursiveGetChildById('rewardFame')
+  Auction.dur12 = Auction.window:recursiveGetChildById('dur12')
+  Auction.dur24 = Auction.window:recursiveGetChildById('dur24')
+  Auction.dur48 = Auction.window:recursiveGetChildById('dur48')
+  Auction.tabAuction     = Auction.window:recursiveGetChildById('tabAuction')
+  Auction.tabMy          = Auction.window:recursiveGetChildById('tabMy')
+  Auction.tabMail        = Auction.window:recursiveGetChildById('tabMail')
+  Auction.tabHistory     = Auction.window:recursiveGetChildById('tabHistory')
   Auction.buyCountSpin = Auction.window:recursiveGetChildById('buyCountSpin')
   Auction.buyCountValue= Auction.window:recursiveGetChildById('buyCountValue')
   Auction.buyCostValue = Auction.window:recursiveGetChildById('buyCostValue')
+  Auction.buyCostIcon = Auction.window:recursiveGetChildById('buyCostIcon')
   Auction.historyList  = Auction.window:recursiveGetChildById('historyList')
   Auction.historyPanel = Auction.window:recursiveGetChildById('historyPanel')
+  Auction.sortBox      = Auction.window:recursiveGetChildById('sortBox')
+  Auction.pageLabel    = Auction.window:recursiveGetChildById('pageLabel')
+  Auction.prevPageButton = Auction.window:recursiveGetChildById('prevPageButton')
+  Auction.nextPageButton = Auction.window:recursiveGetChildById('nextPageButton')
 
-  -- Initialize category options programmatically
-  if Auction.filterBox then
-    local opts = { 'All','Weapons','Shields','Armors','Boots','Helmet','Accessories','Runes','Pets','Others' }
-    -- clear existing if supported
-    if Auction.filterBox.clearOptions then pcall(function() Auction.filterBox:clearOptions() end) end
-    for i = 1, #opts do
-      pcall(function() Auction.filterBox:addOption(opts[i]) end)
+  Auction.categoryPanel    = Auction.window:recursiveGetChildById('categoryPanel')
+  Auction.subcategoryPanel = Auction.window:recursiveGetChildById('subcategoryPanel')
+
+  -- Sidebar category buttons
+  Auction.catAll         = Auction.window:recursiveGetChildById('catAll')
+  Auction.catWeapons     = Auction.window:recursiveGetChildById('catWeapons')
+  Auction.catArmor       = Auction.window:recursiveGetChildById('catArmor')
+  Auction.catShields     = Auction.window:recursiveGetChildById('catShields')
+  Auction.catBoots       = Auction.window:recursiveGetChildById('catBoots')
+  Auction.catHelmet      = Auction.window:recursiveGetChildById('catHelmet')
+  Auction.catAccessories = Auction.window:recursiveGetChildById('catAccessories')
+  Auction.catRunes       = Auction.window:recursiveGetChildById('catRunes')
+  Auction.catPets        = Auction.window:recursiveGetChildById('catPets')
+  Auction.catConsumables = Auction.window:recursiveGetChildById('catConsumables')
+  Auction.catMaterials   = Auction.window:recursiveGetChildById('catMaterials')
+  Auction.catOthers      = Auction.window:recursiveGetChildById('catOthers')
+
+  -- Subcategory panels
+  Auction.subcategoryPanel = Auction.window:recursiveGetChildById('subcategoryPanel')
+  Auction.consumablesSubcategoryPanel = Auction.window:recursiveGetChildById('consumablesSubcategoryPanel')
+
+  -- Subcategory buttons (weapons)
+  Auction.subOneHand   = Auction.window:recursiveGetChildById('subOneHand')
+  Auction.subTwoHand   = Auction.window:recursiveGetChildById('subTwoHand')
+  Auction.subDistance  = Auction.window:recursiveGetChildById('subDistance')
+  Auction.subWands     = Auction.window:recursiveGetChildById('subWands')
+  Auction.subShields   = Auction.window:recursiveGetChildById('subShields')
+
+  -- Subcategory buttons (consumables)
+  Auction.subPotions   = Auction.window:recursiveGetChildById('subPotions')
+  Auction.subFlasks    = Auction.window:recursiveGetChildById('subFlasks')
+  Auction.subElixirs   = Auction.window:recursiveGetChildById('subElixirs')
+
+  -- Initialize sort options
+  if Auction.sortBox then
+    local sortOpts = { 'Newest', 'Price: Low to High', 'Price: High to Low', 'Time Left' }
+    if Auction.sortBox.clearOptions then pcall(function() Auction.sortBox:clearOptions() end) end
+    for i = 1, #sortOpts do
+      pcall(function() Auction.sortBox:addOption(sortOpts[i]) end)
     end
-    -- Set default selection to All
-    if Auction.filterBox.setCurrentOption then
-      pcall(function() Auction.filterBox:setCurrentOption('All') end)
-    elseif Auction.filterBox.setText then
-      pcall(function() Auction.filterBox:setText('All') end)
+    if Auction.sortBox.setCurrentOption then
+      pcall(function() Auction.sortBox:setCurrentOption('Newest') end)
+    elseif Auction.sortBox.setText then
+      pcall(function() Auction.sortBox:setText('Newest') end)
+    end
+    Auction.sortBox.onOptionChange = function(widget, text, index)
+      Auction.onSortChange(text)
+    end
+    Auction.sortBox.onChange = function(widget)
+      local ok, txt = pcall(function() return widget:getText() end)
+      Auction.onSortChange(ok and txt or nil)
     end
   end
 
-  local function updateCountValue()
-    if Auction.countValue and Auction.countSpin and Auction.countSpin.getValue then
-      local v = tonumber(Auction.countSpin:getValue()) or 1
-      Auction.countValue:setText(tostring(v))
-    end
-  end
+  -- Bind page buttons
+  if Auction.prevPageButton then Auction.prevPageButton.onClick = Auction.onPrevPage end
+  if Auction.nextPageButton then Auction.nextPageButton.onClick = Auction.onNextPage end
+  Auction.updatePageLabel()
+
+  local function updateCountValue() end
 
   local function updateCreateTotal()
     if not Auction.createCostValue then return end
@@ -355,25 +463,99 @@ function Auction.ensureWindow()
   end
 
   -- Bind button handlers
+  local refreshButton = Auction.window:recursiveGetChildById('refreshButton')
   local searchButton = Auction.window:recursiveGetChildById('searchButton')
   local listButton   = Auction.window:recursiveGetChildById('listButton')
   local buyButton    = Auction.window:recursiveGetChildById('buyButton')
   local cancelButton = Auction.window:recursiveGetChildById('cancelButton')
+  if refreshButton then refreshButton.onClick = Auction.onRefresh end
   if searchButton then searchButton.onClick = Auction.onSearch end
-  if Auction.filterBox then
-    Auction.filterBox.onOptionChange = function(widget, text, index)
-      if Auction.onFilterChange then Auction.onFilterChange() else Auction.onSearch() end
-    end
-    -- some otclient builds use onChange
-    Auction.filterBox.onChange = function(widget)
-      if Auction.onFilterChange then Auction.onFilterChange() else Auction.onSearch() end
+
+  -- Bind sidebar category buttons
+  local catButtons = {
+    { 'catAll', 'all' }, { 'catWeapons', 'weapons' }, { 'catArmor', 'armors' },
+    { 'catShields', 'shields' }, { 'catBoots', 'boots' }, { 'catHelmet', 'helmet' },
+    { 'catAccessories', 'accessories' }, { 'catRunes', 'runes' }, { 'catPets', 'pets' },
+    { 'catConsumables', 'consumables' }, { 'catMaterials', 'materials' },
+    { 'catOthers', 'others' }
+  }
+  for _, pair in ipairs(catButtons) do
+    local btn = Auction[pair[1]]
+    if btn then
+      btn.onClick = function()
+        local cat = pair[2]
+        if cat == 'weapons' then
+          -- Toggle subcategories on re-click, always fall back to all weapons
+          Auction.weaponsExpanded = not Auction.weaponsExpanded
+          Auction.consumablesExpanded = false
+          Auction.currentCategory = 'weapons'
+        elseif cat == 'consumables' then
+          -- Toggle consumables subcategories on re-click
+          Auction.consumablesExpanded = not Auction.consumablesExpanded
+          Auction.weaponsExpanded = false
+          Auction.currentCategory = 'consumables'
+        else
+          if Auction.currentCategory == cat then return end
+          Auction.weaponsExpanded = false
+          Auction.consumablesExpanded = false
+          Auction.currentCategory = cat
+        end
+        Auction.updateCategoryUI()
+        Auction.updateSubcategoryUI()
+        Auction.onSearch()
+      end
     end
   end
-  if Auction.searchEdit then
-    Auction.searchEdit.onTextChange = function(widget, text)
-      local term = text or (widget and widget.getText and widget:getText()) or ''
-      Auction.onSearchChange(term)
+  Auction.updateCategoryUI()
+  Auction.updateSubcategoryUI()
+
+  -- Bind weapon subcategory buttons
+  local subButtons = {
+    { 'subOneHand', 'weapons_onehand' }, { 'subTwoHand', 'weapons_twohand' },
+    { 'subDistance', 'weapons_distance' }, { 'subWands', 'weapons_wands' },
+    { 'subShields', 'weapons_shield' }
+  }
+  for _, pair in ipairs(subButtons) do
+    local btn = Auction[pair[1]]
+    if btn then
+      btn.onClick = function()
+        if Auction.currentCategory == pair[2] then return end
+        Auction.weaponsExpanded = true
+        Auction.consumablesExpanded = false
+        Auction.currentCategory = pair[2]
+        Auction.updateCategoryUI()
+        Auction.updateSubcategoryUI()
+        Auction.onSearch()
+      end
     end
+  end
+
+  -- Bind consumables subcategory buttons
+  local consumablesSubButtons = {
+    { 'subPotions', 'consumables_potions' }, { 'subFlasks', 'consumables_flasks' },
+    { 'subElixirs', 'consumables_elixirs' }
+  }
+  for _, pair in ipairs(consumablesSubButtons) do
+    local btn = Auction[pair[1]]
+    if btn then
+      btn.onClick = function()
+        if Auction.currentCategory == pair[2] then return end
+        Auction.consumablesExpanded = true
+        Auction.weaponsExpanded = false
+        Auction.currentCategory = pair[2]
+        Auction.updateCategoryUI()
+        Auction.updateSubcategoryUI()
+        Auction.onSearch()
+      end
+    end
+  end
+
+  -- Live search disabled: TextEdit onTextChange can fire during window open
+  -- and trigger duplicate AH_SEARCH, which is causing the freeze.
+  -- Use the Search button instead.
+  if Auction.searchEdit then
+    -- no-op onTextChange prevents any accidental live search
+    Auction.searchEdit.onTextChange = function(widget, text) end
   end
   if listButton   then listButton.onClick   = Auction.onList   end
   if buyButton    then buyButton.onClick    = Auction.onBuy    end
@@ -410,19 +592,38 @@ function Auction.ensureWindow()
     end
   end
 
-  -- initialize tab visuals (default auction)
-  Auction.setTab('auction')
+  -- Reward type and duration radio groups
+  if UIRadioGroup then
+    Auction.rewardGroup = UIRadioGroup.create()
+    Auction.durationGroup = UIRadioGroup.create()
+    if Auction.rewardGold then Auction.rewardGroup:addWidget(Auction.rewardGold) end
+    if Auction.rewardFame then Auction.rewardGroup:addWidget(Auction.rewardFame) end
+    if Auction.dur12 then Auction.durationGroup:addWidget(Auction.dur12) end
+    if Auction.dur24 then Auction.durationGroup:addWidget(Auction.dur24) end
+    if Auction.dur48 then Auction.durationGroup:addWidget(Auction.dur48) end
+    if Auction.rewardGroup then
+      Auction.rewardGroup.onSelectionChange = function(group, selected, previous)
+        Auction.updateRewardUI()
+      end
+    end
+    if Auction.rewardGroup and Auction.rewardGold then Auction.rewardGroup:selectWidget(Auction.rewardGold, true) end
+    if Auction.durationGroup and Auction.dur24 then Auction.durationGroup:selectWidget(Auction.dur24, true) end
+    Auction.updateRewardUI()
+  end
+
+  -- tab visuals and initial request are set by toggle() after ensureWindow()
   return true
 end
 
 function Auction.send(e, d)
   local protocol = g_game.getProtocolGame()
   if not protocol then return end
+  print(string.format('[Auction][Client] >>> send %s', tostring(e)))
   protocol:sendExtendedOpcode(Auction.opCode, json.encode({ e = e, d = d }))
 end
 
 function Auction.onExtendedOpcode(protocol, code, buffer)
-  print('[Auction][Client] onExtendedOpcode called')
+  print(string.format('[Auction][Client] <<< recv opcode %d', code))
   if code ~= Auction.opCode then return end
   print(string.format('[Auction][Client] onExtendedOpcode code=%d buffer=%s', code, tostring(buffer)))
   local ok, pkt = pcall(function() return json.decode(buffer) end)
@@ -451,6 +652,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       print('[Auction][Client][Error] Failed to show auction window: '..tostring(showErr))
       return
     end
+    print('[Auction][Client] [source] AH_OPEN_ACK handler -> AH_SEARCH')
     local okReq1, reqErr1 = pcall(function() Auction.send('AH_SEARCH', Auction.buildSearchParams()) end)
     if not okReq1 then print('[Auction][Client][Warn] Failed to request AH_SEARCH: '..tostring(reqErr1)) end
     local okReq2, reqErr2 = pcall(function() Auction.send('AH_MY', {}) end)
@@ -459,21 +661,6 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
   elseif e == 'AH_SEARCH_DATA' then
     print(string.format('[Auction][Client] AH_SEARCH_DATA count=%d', type(d)=='table' and #d or -1))
     if not Auction.browseList or Auction.activeTab ~= 'auction' then return end
-    -- client-side safety filter in case server didn't apply category
-    local cat = (function()
-      local ok, val = pcall(function() return Auction.buildSearchParams().category end)
-      return ok and val or 'all'
-    end)()
-    if type(d) == 'table' and cat == 'weapons' then
-      local filtered = {}
-      for i = 1, #d do
-        local wt = d[i].weapon_type
-        if type(wt) == 'string' and wt ~= '' then
-          filtered[#filtered+1] = d[i]
-        end
-      end
-      d = filtered
-    end
     -- reset selection and disable buy until user selects again
     if Auction.selectedBrowseRow then
       pcall(function() local o = Auction.selectedBrowseRow:getChildById('sel'); if o then o:setVisible(false) end end)
@@ -489,13 +676,19 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       empty:setColor('#bbbbbb')
       empty:setMarginTop(8)
       empty:setMarginLeft(8)
+      empty:setWidth(120)
+      empty:setHeight(16)
     end
     for i = 1, #d do
       local w = g_ui.createWidget('AuctionRow', Auction.browseList)
       local cnt = tonumber(d[i].count) or 1
       local baseName = tostring(d[i].name or ''):gsub('^%s*[xX]%s*%d+%s+', '')
       w:getChildById('name'):setText(baseName)
-      w:getChildById('price'):setText(  buildPriceText(tonumber(d[i].price) or 0, cnt) .. ' gold')
+      w:getChildById('price'):setText(buildPriceText(tonumber(d[i].price) or 0, cnt))
+      local priceIcon = w:getChildById('priceIcon')
+      if priceIcon and priceIcon.setImageSource then
+        priceIcon:setImageSource((d[i].reward == 'fame') and '/images/icons/fame.png' or '/images/icons/gold_coin.png')
+      end
       local item = w:getChildById('icon')
       print(string.format('[Auction][Client] SEARCH row i=%d id=%s name=%s price=%s cid=%s count=%s tier=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count), tostring(d[i].tier)))
       item:setItemId(d[i].cid)
@@ -505,16 +698,19 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       w.listingId = d[i].id
       w.stackCount = cnt
       w.totalPrice = tonumber(d[i].price) or 0
-      -- set Time Left for Auction tab (hours if >=1h, else minutes)
-      local sellerLbl = w:getChildById('seller')
-      if sellerLbl then
+      w.rewardType = d[i].reward or 'gold'
+      -- set Seller and Time Left columns for Auction tab
+      local sellerNameLbl = w:getChildById('sellerName')
+      if sellerNameLbl then
+        sellerNameLbl:setText(tostring(d[i].sellerName or ''))
+      end
+      local timeLbl = w:getChildById('timeLeft')
+      if timeLbl then
         local ttl = tonumber(d[i].ttl) or 0
         if ttl >= 3600 then
-          local hours = math.ceil(ttl / 3600)
-          sellerLbl:setText(string.format('%dh', hours))
+          timeLbl:setText(string.format('%dh', math.ceil(ttl / 3600)))
         else
-          local mins = math.max(0, math.ceil(ttl / 60))
-          sellerLbl:setText(string.format('%dm', mins))
+          timeLbl:setText(string.format('%dm', math.max(0, math.ceil(ttl / 60))))
         end
       end
       -- ensure per-row cancel is hidden on Auction tab rows
@@ -545,6 +741,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
         Auction.currentSelected.id = w.listingId
         Auction.currentSelected.count = w.stackCount
         Auction.currentSelected.price = w.totalPrice
+        Auction.currentSelected.reward = w.rewardType or 'gold'
         -- initialize slider range/value for this stack
         if Auction.buyCountSpin then
           if Auction.buyCountSpin.setMinimum then Auction.buyCountSpin:setMinimum(1) end
@@ -562,30 +759,38 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
         return true
       end
     end
+    if Auction.nextPageButton and Auction.nextPageButton.setEnabled then
+      Auction.nextPageButton:setEnabled(#d >= 25)
+    end
   elseif e == 'AH_MY_DATA' then
     print(string.format('[Auction][Client] AH_MY_DATA count=%d', type(d)=='table' and #d or -1))
-    if not Auction.browseList or Auction.activeTab ~= 'my' then return end
+    if not Auction.myOffersList or Auction.activeTab ~= 'my' then return end
     if Auction.selectedMyRow then
       pcall(function() local o = Auction.selectedMyRow:getChildById('sel'); if o then o:setVisible(false) end end)
     end
     Auction.selectedId = nil
     Auction.selectedMyRow = nil
-    if Auction.cancelButton and Auction.cancelButton.setEnabled then Auction.cancelButton:setEnabled(false) end
-    Auction.browseList:destroyChildren()
+    Auction.myOffersList:destroyChildren()
     if #d == 0 then
-      local empty = g_ui.createWidget('UILabel', Auction.browseList)
+      local empty = g_ui.createWidget('UILabel', Auction.myOffersList)
       empty:setText('You have no active listings.')
       empty:setPhantom(true)
       empty:setColor('#bbbbbb')
       empty:setMarginTop(8)
       empty:setMarginLeft(8)
+      empty:setWidth(120)
+      empty:setHeight(16)
     end
     for i = 1, #d do
-      local w = g_ui.createWidget('AuctionRow', Auction.browseList)
+      local w = g_ui.createWidget('AuctionRow', Auction.myOffersList)
       local cnt = tonumber(d[i].count) or 1
       local baseName = tostring(d[i].name or ''):gsub('^%s*[xX]%s*%d+%s+', '')
       w:getChildById('name'):setText(baseName)
       w:getChildById('price'):setText(buildPriceText(tonumber(d[i].price) or 0, cnt))
+      local priceIcon = w:getChildById('priceIcon')
+      if priceIcon and priceIcon.setImageSource then
+        priceIcon:setImageSource((d[i].reward == 'fame') and '/images/icons/fame.png' or '/images/icons/gold_coin.png')
+      end
       local item = w:getChildById('icon')
       print(string.format('[Auction][Client] MY row i=%d id=%s name=%s price=%s cid=%s count=%s tier=%s', i, tostring(d[i].id), tostring(d[i].name), tostring(d[i].price), tostring(d[i].cid), tostring(d[i].count), tostring(d[i].tier)))
       item:setItemId(d[i].cid)
@@ -593,16 +798,15 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       applyIconCount(item, cnt)
       applyTier(item, d[i].tier)
       w.listingId = d[i].id
+      w.rewardType = d[i].reward or 'gold'
       -- show Time Left on My tab (hours if >=1h, else minutes)
-      local sellerLbl = w:getChildById('seller')
-      if sellerLbl then
+      local timeLbl = w:getChildById('timeLeft')
+      if timeLbl then
         local ttl = tonumber(d[i].ttl) or 0
         if ttl >= 3600 then
-          local hours = math.ceil(ttl / 3600)
-          sellerLbl:setText(string.format('%dh', hours))
+          timeLbl:setText(string.format('%dh', math.ceil(ttl / 3600)))
         else
-          local mins = math.max(0, math.ceil(ttl / 60))
-          sellerLbl:setText(string.format('%dm', mins))
+          timeLbl:setText(string.format('%dm', math.max(0, math.ceil(ttl / 60))))
         end
       end
       -- show per-row cancel button for My Listings
@@ -614,7 +818,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
         end
       end
       print(string.format('[Auction][Client] added my row id=%s name=%s', tostring(d[i].id), tostring(d[i].name)))
-      print('[Auction][Client] list child count:', Auction.browseList:getChildCount())
+      print('[Auction][Client] list child count:', Auction.myOffersList:getChildCount())
       if w.getWidth and w.getHeight then
         print(string.format('[Auction][Client] my row size w=%d h=%d', w:getWidth(), w:getHeight()))
       end
@@ -627,7 +831,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
         local overlay = w:getChildById('sel'); if overlay then overlay:setVisible(true) end
         Auction.selectedMyRow = w
         Auction.selectedId = w.listingId
-        if Auction.cancelButton and Auction.cancelButton.setEnabled then Auction.cancelButton:setEnabled(true) end
+        Auction.currentSelected.reward = w.rewardType or 'gold'
         print(string.format('[Auction][Client] Selected my listing id=%s', tostring(w.listingId)))
       end
       w.onClick = function()
@@ -643,19 +847,24 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     if d and d.error then
       displayInfoBox('Auction', d.error)
     else
-      displayInfoBox('Auction', 'Listed: '..d.name..' x'..d.count..' for '..d.price..' gp')
+      local suffix = (d.reward == 'fame' and ' fame') or ' gp'
+      displayInfoBox('Auction', 'Listed: '..d.name..' x'..d.count..' for '..d.price..suffix)
       Auction.send('AH_MY', {})
       Auction.send('AH_SEARCH', Auction.buildSearchParams())
       if Auction.listItemSlot then Auction.listItemSlot:setItem(nil) end
       Auction.priceEdit:setText('')
       Auction.countSpin:setValue(1)
+      if Auction.rewardGroup and Auction.rewardGold then Auction.rewardGroup:selectWidget(Auction.rewardGold, true) end
+      if Auction.durationGroup and Auction.dur24 then Auction.durationGroup:selectWidget(Auction.dur24, true) end
+      Auction.updateRewardUI()
     end
   elseif e == 'AH_BUY_ACK' then
     print('[Auction][Client] AH_BUY_ACK received')
     if d and d.error then
       displayInfoBox('Auction', d.error)
     else
-      displayInfoBox('Auction', 'Purchased for '..d.price..' gp')
+      local suffix = (d.reward == 'fame') and ' fame' or ' gp'
+      displayInfoBox('Auction', 'Purchased for '..d.price..suffix)
       Auction.send('AH_MY', {})
       Auction.send('AH_SEARCH', Auction.buildSearchParams())
     end
@@ -664,7 +873,8 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     if d and d.error then
       displayInfoBox('Auction', d.error)
     else
-      displayInfoBox('Auction', 'Purchased '..tostring(d.count)..' for '..tostring(d.price)..' gp')
+      local suffix = (d.reward == 'fame') and ' fame' or ' gp'
+      displayInfoBox('Auction', 'Purchased '..tostring(d.count)..' for '..tostring(d.price)..suffix)
       Auction.send('AH_MY', {})
       local params = Auction.buildSearchParams()
       print(string.format('[Auction][Client] refresh after BUY_PART with category=%s name=%s', tostring(params.category), tostring(params.name)))
@@ -693,6 +903,8 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       empty:setColor('#bbbbbb')
       empty:setMarginTop(8)
       empty:setMarginLeft(8)
+      empty:setWidth(120)
+      empty:setHeight(16)
       return
     end
     for i = 1, #d do
@@ -706,14 +918,15 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       applyIconShader(item, d[i].name)
       applyIconCount(item, cnt)
       applyTier(item, d[i].tier)
-      -- show date in the middle column (reuse 'seller' label space)
+      -- show date in the timeLeft column
       local function fmt(ts)
         if tonumber(ts) then
           return os.date and os.date('%Y-%m-%d %H:%M', ts) or tostring(ts)
         end
         return tostring(ts)
       end
-      local sellerLbl = w:getChildById('seller'); if sellerLbl then sellerLbl:setText(fmt(d[i].sold_at)) end
+      local timeLbl = w:getChildById('timeLeft'); if timeLbl then timeLbl:setText(fmt(d[i].sold_at)) end
+      local sellerNameLbl = w:getChildById('sellerName'); if sellerNameLbl then sellerNameLbl:setText('') end
       local rowCancel = w:recursiveGetChildById('rowCancel'); if rowCancel then rowCancel:setVisible(false) end
     end
   elseif e == 'AH_MAIL_DATA' then
@@ -728,6 +941,8 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       empty:setColor('#bbbbbb')
       empty:setMarginTop(8)
       empty:setMarginLeft(8)
+      empty:setWidth(120)
+      empty:setHeight(16)
       return
     end
     for i = 1, #d do
@@ -736,22 +951,29 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       local baseName = tostring(d[i].name or ''):gsub('^%s*[xX]%s*%d+%s+', '')
       w:getChildById('name'):setText(baseName)
       local priceLbl = w:getChildById('price')
+      local priceIcon = w:getChildById('priceIcon')
       local amount = tonumber(d[i].price) or 0
       if amount > 0 then
-        priceLbl:setText(tostring(amount) .. ' gold')
+        priceLbl:setText(tostring(amount))
+        if priceIcon and priceIcon.setImageSource then
+          priceIcon:setImageSource((d[i].reward == 'fame') and '/images/icons/fame.png' or '/images/icons/gold_coin.png')
+        end
+        if priceIcon and priceIcon.setVisible then priceIcon:setVisible(true) end
       else
         priceLbl:setText('')
+        if priceIcon and priceIcon.setVisible then priceIcon:setVisible(false) end
       end
       local item = w:getChildById('icon')
       item:setItemId(d[i].cid)
       applyIconShader(item, d[i].name)
       applyIconCount(item, cnt)
       applyTier(item, d[i].tier)
-      local sellerLbl = w:getChildById('seller')
-      if sellerLbl then
+      local timeLbl = w:getChildById('timeLeft')
+      if timeLbl then
         local ts = tonumber(d[i].sold_at) or 0
-        sellerLbl:setText(os.date and os.date('%Y-%m-%d %H:%M', ts) or tostring(ts))
+        timeLbl:setText(os.date and os.date('%Y-%m-%d %H:%M', ts) or tostring(ts))
       end
+      local sellerNameLbl = w:getChildById('sellerName'); if sellerNameLbl then sellerNameLbl:setText('') end
       local rowCancel = w:recursiveGetChildById('rowCancel')
       if rowCancel then
         rowCancel:setVisible(true)
@@ -794,11 +1016,18 @@ end
 
 function Auction.onGameStart()
   print('[Auction][Client] onGameStart called')
+  -- Add a main panel button when game starts (if mainpanel module is available)
+  if modules and modules.game_mainpanel and modules.game_mainpanel.addToggleButton then
+    pcall(function()
+      modules.game_mainpanel.addToggleButton('auctionButton', tr('Auction'), '', Auction.toggle, false, 9)
+    end)
+  end
   -- Defer UI creation until first open; do not import OTUI here to avoid startup issues
   if Auction.pendingOpen and not Auction.window then
     if Auction.ensureWindow() then
       Auction.pendingOpen = false
       Auction.window:show(); Auction.window:raise(); Auction.window:focus()
+      print('[Auction][Client] [source] onGameStart pendingOpen -> AH_SEARCH')
       Auction.send('AH_SEARCH', { limit = 25, offset = 0 })
       Auction.send('AH_MY', {})
     end
@@ -810,11 +1039,22 @@ function Auction.onGameEnd()
   -- Destroy UI when leaving the game
   if Auction.window then Auction.window:destroy() Auction.window = nil end
   Auction.browseList = nil
-  Auction.myList = nil
+  Auction.myOffersList = nil
   Auction.searchEdit = nil
   Auction.priceEdit = nil
   Auction.countSpin = nil
   Auction.listItemSlot = nil
+  Auction.buyCostIcon = nil
+  Auction.createCostIcon = nil
+  Auction.rewardGold = nil
+  Auction.rewardFame = nil
+  Auction.dur12 = nil
+  Auction.dur24 = nil
+  Auction.dur48 = nil
+  if Auction.rewardGroup and Auction.rewardGroup.destroy then Auction.rewardGroup:destroy() end
+  if Auction.durationGroup and Auction.durationGroup.destroy then Auction.durationGroup:destroy() end
+  Auction.rewardGroup = nil
+  Auction.durationGroup = nil
   Auction.selectedListingId = nil
   Auction.selectedMyId = nil
   Auction.listFromPos = nil
@@ -830,6 +1070,7 @@ function Auction.init()
     }
   )
   ProtocolGame.registerExtendedOpcode(Auction.opCode, Auction.onExtendedOpcode)
+  g_keyboard.bindKeyDown('Ctrl+A', Auction.toggle)
   if g_game.isOnline() then
     Auction.onGameStart()
   end
@@ -850,30 +1091,183 @@ function Auction.terminate()
   if Auction.window then Auction.window:destroy() Auction.window = nil end
 end
 
--- No manual toggle; window opens only via opcode
+function Auction.toggle()
+  print('[Auction][Client] toggle called')
+  if not Auction.window or Auction.window:isDestroyed() then
+    if not Auction.ensureWindow() then
+      return
+    end
+  end
+  if Auction.window:isVisible() then
+    Auction.window:hide()
+  else
+    Auction.window:show(); Auction.window:raise(); Auction.window:focus()
+    Auction.setTab(Auction.activeTab or 'auction')
+  end
+end
 
 function Auction.onOpen()
-  print('[Auction][Client] onOpen: sending AH_OPEN')
-  Auction.send('AH_OPEN', {})
+  print('[Auction][Client] onOpen called')
+  Auction.toggle()
 end
 
 function Auction.onRefresh()
   print('[Auction][Client] onRefresh: reloading lists')
   if Auction.activeTab == 'auction' then
-    Auction.send('AH_SEARCH', { limit = 25, offset = 0 })
+    Auction.send('AH_SEARCH', Auction.buildSearchParams())
   else
     Auction.send('AH_MY', {})
   end
 end
 
+function Auction.updatePageLabel()
+  if Auction.pageLabel and Auction.pageLabel.setText then
+    local page = math.floor((tonumber(Auction.searchOffset) or 0) / 25) + 1
+    Auction.pageLabel:setText('Page ' .. page)
+  end
+  if Auction.prevPageButton and Auction.prevPageButton.setEnabled then
+    Auction.prevPageButton:setEnabled((tonumber(Auction.searchOffset) or 0) > 0)
+  end
+end
+
+function Auction.onSortChange(text)
+  if not text then return end
+  local map = {
+    ['Newest'] = 'newest',
+    ['Price: Low to High'] = 'timethenprice',
+    ['Price: High to Low'] = 'price_desc',
+    ['Time Left'] = 'timeleft'
+  }
+  local newSort = map[tostring(text)] or 'newest'
+  if newSort ~= Auction.searchSortBy then
+    Auction.searchSortBy = newSort
+    Auction.searchOffset = 0
+    Auction.updatePageLabel()
+    if Auction.activeTab == 'auction' then
+      Auction.clearBrowseWithLoading()
+      Auction.send('AH_SEARCH', Auction.buildSearchParams())
+    end
+  end
+end
+
+function Auction.onPrevPage()
+  if Auction.activeTab ~= 'auction' then return end
+  Auction.searchOffset = math.max(0, (tonumber(Auction.searchOffset) or 0) - 25)
+  Auction.updatePageLabel()
+  Auction.clearBrowseWithLoading()
+  Auction.send('AH_SEARCH', Auction.buildSearchParams())
+end
+
+function Auction.onNextPage()
+  if Auction.activeTab ~= 'auction' then return end
+  Auction.searchOffset = (tonumber(Auction.searchOffset) or 0) + 25
+  Auction.updatePageLabel()
+  Auction.clearBrowseWithLoading()
+  Auction.send('AH_SEARCH', Auction.buildSearchParams())
+end
+
 function Auction.onSearch()
-  print(string.format('[Auction][Client] onSearch: name=%s', tostring(Auction.searchEdit and Auction.searchEdit:getText() or ''))) 
+  print(string.format('[Auction][Client] onSearch: name=%s', tostring(Auction.searchEdit and Auction.searchEdit:getText() or '')))
+  Auction.searchOffset = 0
+  Auction.updatePageLabel()
   if Auction.activeTab == 'auction' then Auction.clearBrowseWithLoading() end
   Auction.send('AH_SEARCH', Auction.buildSearchParams())
 end
 
+function Auction.updateCategoryUI()
+  local cats = { 'all', 'weapons', 'armors', 'shields', 'boots', 'helmet', 'accessories', 'runes', 'pets', 'consumables', 'materials', 'others' }
+  local ids = { 'catAll', 'catWeapons', 'catArmor', 'catShields', 'catBoots', 'catHelmet', 'catAccessories', 'catRunes', 'catPets', 'catConsumables', 'catMaterials', 'catOthers' }
+  for i, c in ipairs(cats) do
+    local btn = Auction[ids[i]]
+    if btn and btn.setColor and btn.setBackgroundColor then
+      local active = (Auction.currentCategory == c)
+      -- weapons subcategories keep the main Weapons button highlighted
+      if c == 'weapons' and Auction.currentCategory and Auction.currentCategory:match('^weapons_') then
+        active = true
+      end
+      -- consumables subcategories keep the main Consumables button highlighted
+      if c == 'consumables' and Auction.currentCategory and Auction.currentCategory:match('^consumables_') then
+        active = true
+      end
+      if active then
+        btn:setColor('#f5c542')
+        btn:setBackgroundColor('#2a2a3a')
+      else
+        btn:setColor('#cccccc')
+        btn:setBackgroundColor('#1a1a24')
+      end
+    end
+  end
+end
+
+function Auction.updateSubcategoryUI()
+  -- Weapons subcategory panel
+  local isWeaponSub = Auction.currentCategory and Auction.currentCategory:match('^weapons_') ~= nil
+  local showWeapons = Auction.weaponsExpanded or isWeaponSub
+  if Auction.subcategoryPanel and Auction.subcategoryPanel.setVisible then
+    Auction.subcategoryPanel:setVisible(showWeapons)
+  end
+  if Auction.subcategoryPanel and Auction.subcategoryPanel.setHeight then
+    Auction.subcategoryPanel:setHeight(showWeapons and 110 or 0)
+  end
+
+  -- Consumables subcategory panel
+  local isConsumablesSub = Auction.currentCategory and Auction.currentCategory:match('^consumables_') ~= nil
+  local showConsumables = Auction.consumablesExpanded or isConsumablesSub
+  if Auction.consumablesSubcategoryPanel and Auction.consumablesSubcategoryPanel.setVisible then
+    Auction.consumablesSubcategoryPanel:setVisible(showConsumables)
+  end
+  if Auction.consumablesSubcategoryPanel and Auction.consumablesSubcategoryPanel.setHeight then
+    Auction.consumablesSubcategoryPanel:setHeight(showConsumables and 64 or 0)
+  end
+
+  local weaponSubMap = {
+    ['weapons_onehand'] = 'subOneHand',
+    ['weapons_twohand'] = 'subTwoHand',
+    ['weapons_distance'] = 'subDistance',
+    ['weapons_wands'] = 'subWands',
+    ['weapons_shield'] = 'subShields'
+  }
+  for key, id in pairs(weaponSubMap) do
+    local btn = Auction[id]
+    if btn and btn.setColor and btn.setBackgroundColor then
+      if Auction.currentCategory == key then
+        btn:setColor('#f5c542')
+        btn:setBackgroundColor('#2a2a3a')
+      else
+        btn:setColor('#aaaaaa')
+        btn:setBackgroundColor('#14141c')
+      end
+    end
+  end
+
+  local consumablesSubMap = {
+    ['consumables_potions'] = 'subPotions',
+    ['consumables_flasks'] = 'subFlasks',
+    ['consumables_elixirs'] = 'subElixirs'
+  }
+  for key, id in pairs(consumablesSubMap) do
+    local btn = Auction[id]
+    if btn and btn.setColor and btn.setBackgroundColor then
+      if Auction.currentCategory == key then
+        btn:setColor('#f5c542')
+        btn:setBackgroundColor('#2a2a3a')
+      else
+        btn:setColor('#aaaaaa')
+        btn:setBackgroundColor('#14141c')
+      end
+    end
+  end
+end
+
 function Auction.onFilterChange()
   if Auction.activeTab ~= 'auction' then return end
+  local cat = getSelectedCategory()
+  if cat == Auction.currentCategory then return end
+  Auction.currentCategory = cat
+  Auction.updateCategoryUI()
+  Auction.searchOffset = 0
+  Auction.updatePageLabel()
   Auction.clearBrowseWithLoading()
   Auction.send('AH_SEARCH', Auction.buildSearchParams())
 end
@@ -887,6 +1281,8 @@ function Auction.clearBrowseWithLoading()
   loading:setColor('#bbbbbb')
   loading:setMarginTop(8)
   loading:setMarginLeft(8)
+  loading:setWidth(100)
+  loading:setHeight(16)
   -- also reset selection and buttons
   Auction.selectedId = nil
   if Auction.buyButton and Auction.buyButton.setEnabled then Auction.buyButton:setEnabled(false) end
@@ -967,6 +1363,19 @@ function Auction.onList()
   end
   local cid = item:getId()
   if item.getClientId then cid = item:getClientId() end
-  print(string.format('[Auction][Client] Sending AH_LIST pos=(%s,%s,%s) clientCid=%s count=%s totalPrice=%s', tostring(pos.x), tostring(pos.y), tostring(pos.z), tostring(cid), tostring(count), tostring(totalPrice)))
-  Auction.send('AH_LIST', { pos = { x = pos.x, y = pos.y, z = pos.z }, cid = cid, count = count, price = totalPrice })
+  local reward = 'gold'
+  if Auction.rewardGroup and Auction.rewardGroup.getSelectedWidget then
+    local sel = Auction.rewardGroup:getSelectedWidget()
+    if sel and sel.getId and sel:getId() == 'rewardFame' then reward = 'fame' end
+  end
+  local duration = 24
+  if Auction.durationGroup and Auction.durationGroup.getSelectedWidget then
+    local sel = Auction.durationGroup:getSelectedWidget()
+    if sel and sel.getId then
+      local id = sel:getId()
+      if id == 'dur12' then duration = 12 elseif id == 'dur48' then duration = 48 end
+    end
+  end
+  print(string.format('[Auction][Client] Sending AH_LIST pos=(%s,%s,%s) clientCid=%s count=%s totalPrice=%s reward=%s duration=%s', tostring(pos.x), tostring(pos.y), tostring(pos.z), tostring(cid), tostring(count), tostring(totalPrice), tostring(reward), tostring(duration)))
+  Auction.send('AH_LIST', { pos = { x = pos.x, y = pos.y, z = pos.z }, cid = cid, count = count, price = totalPrice, reward = reward, duration = duration })
 end

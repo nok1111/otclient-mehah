@@ -211,7 +211,7 @@ function onPartyData(protocol, opcode, buffer)
 end
 
 function init()
-  partyButton = modules.game_mainpanel.addToggleButton('partyStatusButton', 'Party', '/images/options/button_partyshow', toggle, false, 5)
+  partyButton = modules.game_mainpanel.addToggleButton('partyStatusButton', 'Party', '/images/options/button_partyshow', toggle, false, 7)
   partyButton:setOn(false)
 
   ProtocolGame.registerExtendedOpcode(PARTY_OPCODE, onPartyData)

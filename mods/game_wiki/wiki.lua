@@ -54,7 +54,7 @@ function online()
     if modules.game_mainpanel then
       print("[Wiki] Creating wiki button...")
       wikiButton = modules.game_mainpanel.addToggleButton('wikiButton', 
-        tr('Wiki'), '/images/options/button_options', toggle, false, 15)
+        tr('Wiki'), '/images/options/button_options', toggle, false, 14)
       wikiButton:setOn(false)
       print("[Wiki] Wiki button created successfully")
     else

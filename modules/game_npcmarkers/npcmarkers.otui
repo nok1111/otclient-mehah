@@ -1,0 +1,5 @@
+NpcMarkerWidget < UIWidget
+  size: 16 16
+  image-auto-resize: true
+  phantom: true
+  focusable: false

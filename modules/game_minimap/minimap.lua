@@ -110,6 +110,9 @@ function mapController:onGameStart()
         loadFnc(minimapFile)
     end
 
+    -- Load pre-rendered photo minimap blocks if available.
+    g_minimap.loadPreRenderedBlocks('/minimap')
+
     self.ui.minimapBorder.minimap:load()
     syncMinimapPosition()
 

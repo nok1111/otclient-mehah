@@ -469,7 +469,7 @@ function rewardWallController:onGameStart()
     if g_game.getClientVersion() > 1140 then -- Summer Update 2017
         if not ButtonRewardWall then
             ButtonRewardWall = modules.game_mainpanel.addToggleButton("rewardWall", tr("Open rewardWall"),
-                "/images/options/rewardwall", toggle, false, 21)
+                "/images/options/rewardwall", toggle, false, 24)
         end
     else
         scheduleEvent(function()

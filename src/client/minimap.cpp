@@ -37,6 +37,7 @@ void MinimapBlock::clean()
 {
     m_tiles.fill({});
     m_texture.reset();
+    m_photoTexture.reset();
     m_mustUpdate = false;
 }
 
@@ -44,6 +45,11 @@ void MinimapBlock::update()
 {
     if (!m_mustUpdate)
         return;
+
+    if (m_photoTexture) {
+        m_mustUpdate = false;
+        return;
+    }
 
     m_image = std::make_shared<Image>(m_size);
 
@@ -78,6 +84,36 @@ void MinimapBlock::updateTile(const int x, const int y, const MinimapTile& tile)
     m_tiles[getTileIndex(x, y)] = tile;
 }
 
+bool MinimapBlock::loadTexture(const std::string& fileName)
+{
+    try {
+        const ImagePtr image = Image::load(fileName);
+        if (!image || image->getSize().width() == 0 || image->getSize().height() == 0)
+            return false;
+
+        m_photoTexture = std::make_shared<Texture>(image, true, false);
+        m_mustUpdate = false;
+        return true;
+    } catch (const stdext::exception& e) {
+        g_logger.error("failed to load minimap photo texture {}: {}", fileName, e.what());
+        return false;
+    }
+}
+
+bool MinimapBlock::tryLoadPhotoTexture(const std::string& basePath, const Position& pos)
+{
+    if (m_photoTexture || m_photoLoadAttempted)
+        return false;
+
+    m_photoLoadAttempted = true;
+
+    const std::string filePath = basePath + "/floor_" + std::to_string(pos.z) + "/" + std::to_string(pos.x) + "_" + std::to_string(pos.y) + ".png";
+    if (!g_resources.fileExists(filePath))
+        return false;
+
+    return loadTexture(filePath);
+}
+
 void Minimap::init() {
     m_tileBlocks.resize(g_gameConfig.getMapMaxZ() + 1);
 }
@@ -89,6 +125,26 @@ void Minimap::clean()
     SpinLock::Guard lock(m_lock);
     for (uint_fast8_t i = 0; i <= g_gameConfig.getMapMaxZ(); ++i)
         m_tileBlocks[i].clear();
+}
+
+bool Minimap::loadBlockTexture(const Position& pos, const std::string& filePath)
+{
+    try {
+        MinimapBlock& block = getBlock(pos);
+        if (block.loadTexture(filePath)) {
+            block.justSaw();
+            return true;
+        }
+    } catch (const stdext::exception& e) {
+        g_logger.error("failed to load pre-rendered minimap block {}: {}", filePath, e.what());
+    }
+    return false;
+}
+
+bool Minimap::loadPreRenderedBlocks(const std::string& basePath)
+{
+    m_photoBasePath = basePath;
+    return !basePath.empty() && g_resources.directoryExists(basePath);
 }
 
 void Minimap::draw(const Rect& screenRect, const Position& mapCenter, const float scale, const Color& color)
@@ -121,12 +177,15 @@ void Minimap::draw(const Rect& screenRect, const Position& mapCenter, const floa
                     continue;
 
                 auto& block = getBlock(pos);
+                if (!m_photoBasePath.empty())
+                    block.tryLoadPhotoTexture(m_photoBasePath, pos);
                 block.update();
 
                 const auto& tex = block.getTexture();
                 if (tex) {
-                    const Rect src(0, 0, MMBLOCK_SIZE, MMBLOCK_SIZE);
-                    const Rect dest(Point(xs, ys), src.size() * scale);
+                    const Rect src(0, 0, tex->getSize());
+                    const int blockPixelSize = static_cast<int>(MMBLOCK_SIZE * scale);
+                    const Rect dest(Point(xs, ys), Size(blockPixelSize, blockPixelSize));
                     g_drawPool.addTexturedRect(dest, tex, src);
                 }
             }

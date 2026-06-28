@@ -37,8 +37,15 @@ local categories = {
   {id = "crafting", name = "Crafting", color = "#FFA500", icon = "anvil"},
   {id = "gathering", name = "Gathering", color = "#32CD32", icon = "pickaxe"},
   {id = "dungeons", name = "Dungeons", color = "#FFFFFF", icon = "dungeon"},
-  {id = "fame", name = "Fame", color = "#FFFFFF", icon = "star"},
-  {id = "special", name = "Special", color = "#FFFFFF", icon = "crown"}
+  {id = "special", name = "Special", color = "#FFFFFF", icon = "crown"},
+  {id = "paragon", name = "Paragon", color = "#FF8C00", icon = "star"},
+  {id = "tasks", name = "Tasks", color = "#20B2AA", icon = "scroll"},
+  {id = "forge", name = "Forge", color = "#FF4500", icon = "anvil"},
+  {id = "codex", name = "Codex", color = "#9370DB", icon = "book"},
+  {id = "capture", name = "Capture", color = "#DC143C", icon = "flag"},
+  {id = "daily", name = "Daily", color = "#FFD700", icon = "sun"},
+  {id = "prestige", name = "Prestige", color = "#8B0000", icon = "crown"},
+  {id = "proficiency", name = "Proficiency", color = "#1E90FF", icon = "sword"}
 }
 
 local currentCategory = "all"
@@ -180,7 +187,7 @@ function setupWindow()
   local categoryPanel = achievementWindow:getChildById('categoryPanel')
   if categoryPanel then
     for _, category in ipairs(categories) do
-      local btn = categoryPanel:getChildById('cat_' .. category.id)
+      local btn = categoryPanel:recursiveGetChildById('cat_' .. category.id)
       if btn then
         btn.onClick = function()
           selectCategory(category.id)
@@ -265,7 +272,7 @@ function selectCategory(categoryId)
   local categoryPanel = achievementWindow:getChildById('categoryPanel')
   if categoryPanel then
     for _, category in ipairs(categories) do
-      local btn = categoryPanel:getChildById('cat_' .. category.id)
+      local btn = categoryPanel:recursiveGetChildById('cat_' .. category.id)
       if btn then
         if category.id == categoryId then
           btn:setOn(true)

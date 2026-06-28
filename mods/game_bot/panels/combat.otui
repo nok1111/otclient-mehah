@@ -16,7 +16,7 @@ Panel
     phantom: false
   
     Label
-      text: Combat Settings
+      !text: tr('Combat Settings')
       font: verdana-11px-rounded
       text-align: center
       text-auto-resize: true
@@ -35,7 +35,7 @@ Panel
     
     CheckBox
       id: attackAllCheckbox
-      text: Attack All Monsters
+      !text: tr('Attack All Monsters')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -45,7 +45,7 @@ Panel
     
     CheckBox
       id: attackSummonsCheckbox
-      text: Attack Summons
+      !text: tr('Attack Summons')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -55,7 +55,7 @@ Panel
     
     CheckBox
       id: holdTargetPvECheckbox
-      text: Hold Target (PvE)
+      !text: tr('Hold Target (PvE)')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -65,7 +65,7 @@ Panel
     
     CheckBox
       id: attackPlayersCheckbox
-      text: Hold Target (PvP)
+      !text: tr('Hold Target (PvP)')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -75,7 +75,7 @@ Panel
     
     Label
       id: distanceLabel
-      text: Max Attack Distance: 10 sqm
+      !text: tr('Max Attack Distance: %d sqm', 10)
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -97,7 +97,7 @@ Panel
       step: 1
     
     Label
-      text: Target Priority:
+      !text: tr('Target Priority:')
       text-auto-resize: true
       anchors.top: prev.bottom
       anchors.left: parent.left
@@ -117,7 +117,7 @@ Panel
       margin-right: 10
     
     Label
-      text: Exclude monsters from attacking:
+      !text: tr('Exclude monsters from attacking:')
       text-wrap: true
       text-align: center
       text-auto-resize: true
@@ -133,7 +133,7 @@ Panel
     
     Button
       id: addMonsterButton
-      text: Exclude Monster
+      !text: tr('Exclude Monster')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -144,7 +144,7 @@ Panel
     
     Button
       id: clearMonstersButton
-      text: Clear Exclusions
+      !text: tr('Clear Exclusions')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -181,7 +181,7 @@ Panel
       margin-right: 2
     
     Label
-      text: Attack Spells (max 3):
+      !text: tr('Attack Spells (max 3):')
       text-auto-resize: true
       anchors.top: prev.bottom
       anchors.left: parent.left
@@ -193,7 +193,7 @@ Panel
     
     Button
       id: spell1Button
-      text: Click to add spell 1
+      !text: tr('Click to add spell 1')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -204,7 +204,7 @@ Panel
     
     Button
       id: spell2Button
-      text: Click to add spell 2
+      !text: tr('Click to add spell 2')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -215,7 +215,7 @@ Panel
     
     Button
       id: spell3Button
-      text: Click to add spell 3
+      !text: tr('Click to add spell 3')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -234,7 +234,7 @@ Panel
     
     CheckBox
       id: combatEnabledCheckbox
-      text: Combat Enabled
+      !text: tr('Combat Enabled')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right

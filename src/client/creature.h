@@ -112,6 +112,7 @@ public:
     void setEmblemTexture(const std::string& filename);
     void setTypeTexture(const std::string& filename);
     void setIconTexture(const std::string& filename);
+    void setCustomIconTexture(const std::string& filename);
     void setPassable(const bool passable) { m_passable = passable; }
     void setMountShader(std::string_view name);
     void setStaticWalking(uint16_t v);
@@ -324,6 +325,7 @@ private:
     TexturePtr m_emblemTexture;
     TexturePtr m_typeTexture;
     TexturePtr m_iconTexture;
+    TexturePtr m_customIconTexture;
     TexturePtr m_typingIconTexture;
 
     TexturePtr m_healthBarPlayerFrame;

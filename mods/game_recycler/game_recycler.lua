@@ -238,7 +238,7 @@ function Recycler.updateDisplay(data)
   -- Update total value and bonuses using recursiveGetChildById
   local totalValueLabel = recyclerWindow:recursiveGetChildById('totalValue')
   if totalValueLabel then
-    totalValueLabel:setText(totalValue .. ' gold')
+    totalValueLabel:setText(tr('%d gold', totalValue))
     print("[Recycler][Client] Total value label updated: " .. totalValue)
   else
     print("[Recycler][Client] ERROR: totalValue label not found")
@@ -247,7 +247,7 @@ function Recycler.updateDisplay(data)
   local rarityBonusLabel = recyclerWindow:recursiveGetChildById('rarityBonusValue')
   if rarityBonusLabel then
     local rarityBonus = data.rarityBonus or 0
-    rarityBonusLabel:setText('+ ' .. rarityBonus .. ' gold')
+    rarityBonusLabel:setText(tr('+ %d gold', rarityBonus))
     print("[Recycler][Client] Rarity bonus label updated: " .. rarityBonus)
   else
     print("[Recycler][Client] ERROR: rarityBonusValue label not found")
@@ -256,7 +256,7 @@ function Recycler.updateDisplay(data)
   local enchantBonusLabel = recyclerWindow:recursiveGetChildById('enchantBonusValue')
   if enchantBonusLabel then
     local enchantBonus = data.enchantBonus or 0
-    enchantBonusLabel:setText('+ ' .. enchantBonus .. ' gold')
+    enchantBonusLabel:setText(tr('+ %d gold', enchantBonus))
     print("[Recycler][Client] Enchant bonus label updated: " .. enchantBonus)
   else
     print("[Recycler][Client] ERROR: enchantBonusValue label not found")

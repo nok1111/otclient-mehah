@@ -28,11 +28,11 @@ Dungeons.lootChanceThresholds = {
 -- fame is displayed as a flat amount.
 Dungeons.difficultyConfig = {
 	[1] = {name = "Normal",  health = 100, damage = 100},
-	[2] = {name = "Hard",    health = 130, damage = 115, exp = 40,  reward = 25,  fame = 5},
-	[3] = {name = "Expert",  health = 170, damage = 132, exp = 90,  reward = 55,  fame = 10},
-	[4] = {name = "Master",  health = 220, damage = 152, exp = 150, reward = 100, fame = 20},
-	[5] = {name = "Torment", health = 285, damage = 175, exp = 220, reward = 160, fame = 35},
-	[6] = {name = "Hell",    health = 370, damage = 200, exp = 300, reward = 230, fame = 60},
+	[2] = {name = "Dificil",    health = 130, damage = 115, exp = 40,  reward = 25,  fame = 5},
+	[3] = {name = "Experto",  health = 170, damage = 132, exp = 90,  reward = 55,  fame = 10},
+	[4] = {name = "Maestro",  health = 220, damage = 152, exp = 150, reward = 100, fame = 20},
+	[5] = {name = "Tormento", health = 285, damage = 175, exp = 220, reward = 160, fame = 35},
+	[6] = {name = "Infierno",    health = 370, damage = 200, exp = 300, reward = 230, fame = 60},
 }
 
 -- Numeric values are indexes into the dungeons icon sprite-sheet.
@@ -60,17 +60,17 @@ Dungeons.vocationalIcons = {
 }
 
 Dungeons.vocationNames = {
-	[0] = "None",
-	[1] = "Magician",
-	[2] = "Templar",
+	[0] = "Ninguno",
+	[1] = "Mago",
+	[2] = "Templario",
 	[3] = "Nightblade",
-	[4] = "Dragon Knight",
-	[5] = "Warlock",
+	[4] = "Caballero Dragon",
+	[5] = "Brujo",
 	[6] = "Stellar",
-	[7] = "Monk",
-	[8] = "Druid",
+	[7] = "Monje",
+	[8] = "Druida",
 	[9] = "Light Dancer",
-	[10] = "Archer",
+	[10] = "Arquero",
 
 }
 
@@ -97,8 +97,8 @@ function Dungeons.init()
 		Dungeons.create()
 	end
 	
-	Keybind.new("Dungeons", "Dungeons List", "Ctrl+Shift+D", "")
-	Keybind.bind("Dungeons", "Dungeons List", {{type = KEY_DOWN, callback = Dungeons.toggleList}})
+	Keybind.new("Dungeons", tr("Dungeons List"), "Ctrl+Shift+D", "")
+	Keybind.bind("Dungeons", tr("Dungeons List"), {{type = KEY_DOWN, callback = Dungeons.toggleList}})
 end
 
 function Dungeons.terminate()
@@ -113,6 +113,26 @@ function Dungeons.terminate()
 	ProtocolGame.unregisterExtendedOpcode(DUNGEON_OPCODE, Dungeons.onExtendedOpcode)
 
 	Dungeons.destroy()
+end
+
+function Dungeons.translateUI(widget)
+	if not widget then
+		return
+	end
+
+	local text = widget:getText()
+	if text and text ~= "" then
+		widget:setText(tr(text))
+	end
+
+	local tooltip = widget.tooltip
+	if tooltip and tooltip ~= "" then
+		widget.tooltip = tr(tooltip)
+	end
+
+	for _, child in ipairs(widget:getChildren()) do
+		Dungeons.translateUI(child)
+	end
 end
 
 function Dungeons.create()
@@ -142,6 +162,12 @@ function Dungeons.create()
 	Dungeons.registerDiffculityButtons()
 	Dungeons.generateLootTooltip()
 
+	Dungeons.translateUI(Dungeons.UI)
+	Dungeons.translateUI(Dungeons.listUI)
+	Dungeons.translateUI(Dungeons.killCounter)
+	Dungeons.translateUI(Dungeons.difficultyTooltip)
+	Dungeons.translateUI(Dungeons.challengeNotifi)
+
 	Dungeons.UI:recursiveGetChildById("closeButton").onClick = function()
 		Dungeons.hide()
 	end
@@ -152,7 +178,7 @@ function Dungeons.create()
 
 	Dungeons.UI:recursiveGetChildById("leaderboardButton").onClick = function()
 		Dungeons.sendOpcode({topic = "requestLeaderboard", data = {id = Dungeons.selectedDungeonId, difficulty = Dungeons.selectedDungeonDifficulty}})
-		Dungeons.UI.leaderboardPanel.diffculityLabel:setText("Difficulty Tier: " .. Dungeons.difficultyConfig[Dungeons.selectedDungeonDifficulty].name)
+		Dungeons.UI.leaderboardPanel.diffculityLabel:setText(tr("Difficulty Tier: %s", tr(Dungeons.difficultyConfig[Dungeons.selectedDungeonDifficulty].name)))
 		Dungeons.UI.leaderboardPanel:setVisible(true)
 	end
 
@@ -317,16 +343,16 @@ function Dungeons.onDungeonList(data)
 	
 	if not data.dungeons or #data.dungeons == 0 then
 		local label = g_ui.createWidget("Label", dungeonListPanel)
-		label:setText("No dungeons available")
+		label:setText(tr("No dungeons available"))
 		label:setTextAlign(AlignCenter)
 		return
 	end
 	
 	for _, dungeon in ipairs(data.dungeons) do
 		local widget = g_ui.createWidget("DungeonListEntry", dungeonListPanel)
-		widget:recursiveGetChildById("dungeonName"):setText(dungeon.title)
-		widget:recursiveGetChildById("dungeonLevel"):setText("Level: " .. dungeon.level)
-		widget:recursiveGetChildById("dungeonParty"):setText("Party: " .. dungeon.party)
+		widget:recursiveGetChildById("dungeonName"):setText(tr(dungeon.title))
+		widget:recursiveGetChildById("dungeonLevel"):setText(tr("Level: %s", dungeon.level))
+		widget:recursiveGetChildById("dungeonParty"):setText(tr("Party: %s", tr(dungeon.party)))
 		
 		-- Set header image with 70% opacity
 		local headerImage = widget:recursiveGetChildById("dungeonHeaderImage")
@@ -336,7 +362,7 @@ function Dungeons.onDungeonList(data)
 		
 		if dungeon.cooldown and dungeon.cooldown > 0 then
 			local cdLabel = widget:recursiveGetChildById("cooldownLabel")
-			cdLabel:setText("CD: " .. Dungeons.SecondsToShortTime(dungeon.cooldown))
+			cdLabel:setText(tr("CD: %s", Dungeons.SecondsToShortTime(dungeon.cooldown)))
 			cdLabel:setVisible(true)
 		end
 		
@@ -389,10 +415,10 @@ function Dungeons.onDungeonList(data)
 		
 		widget.onMouseRelease = function(self, mousePos, mouseButton)
 			if mouseButton == MouseLeftButton then
-				print("Dungeon clicked: " .. dungeonTitle)
+				print(tr("Dungeon clicked: %s", dungeonTitle))
 				Dungeons.hideList()
 				scheduleEvent(function()
-					print("Requesting dungeon data for: " .. dungeonTitle)
+					print(tr("Requesting dungeon data for: %s", dungeonTitle))
 					Dungeons.sendOpcode({topic = "dungeonBaseData-request", data = {dungeonName = dungeonTitle}})
 					Dungeons.sendOpcode({topic = "openDungeon", data = {dungeonName = dungeonTitle}})
 				end, 50)
@@ -449,13 +475,13 @@ function Dungeons.applyTooltip(difficultyLevel)
 		if iconWidget and labelWidget and config[attribute] then
 			local formattedText
 			if attribute == "health" or attribute == "damage" then
-				formattedText = string.format("Monster %s %d%%", attribute:gsub("^%l", string.upper), config[attribute])
+				formattedText = tr("Monster %s %d%%", tr(attribute:gsub("^%l", string.upper)), config[attribute])
 			elseif attribute == "fame" then
-				formattedText = string.format("Fame Reward +%d", config[attribute])
+				formattedText = tr("Fame Reward") .. " +" .. config[attribute]
 			elseif attribute == "reward" then
-				formattedText = string.format("Loot Amount +%d%%", config[attribute])
+				formattedText = tr("Loot Amount") .. " +" .. config[attribute] .. "%"
 			else
-				formattedText = string.format("Bonus XP +%d%%", config[attribute])
+				formattedText = tr("Bonus XP") .. " +" .. config[attribute] .. "%"
 			end
 
 			if type(value) == "number" then
@@ -470,7 +496,7 @@ function Dungeons.applyTooltip(difficultyLevel)
 		end
 	end
 
-	tooltip:setText(config.name)
+	tooltip:setText(tr(config.name))
 
 	local totalHeight = 25
 	for _, attribute in pairs({"health", "damage", "exp", "reward", "fame"}) do
@@ -500,11 +526,11 @@ function Dungeons.generateLootTooltip()
 	for difficulty, threshold in ipairs(Dungeons.lootChanceThresholds) do
 		local line
 		if difficulty == 1 then
-			line = string.format("Difficulty level %d: Default - You can view items with %d%% chance drop rate or higher", difficulty, threshold)
+			line = tr("Difficulty level %d: Default - You can view items with %d%% chance drop rate or higher", difficulty, threshold)
 		elseif difficulty == #Dungeons.lootChanceThresholds then
-			line = string.format("Difficulty level %d unlocked: You can view all droppable items", difficulty)
+			line = tr("Difficulty level %d unlocked: You can view all droppable items", difficulty)
 		else
-			line = string.format("Difficulty level %d unlocked: You can view items with %d%% chance drop rate or higher", difficulty, threshold)
+			line = tr("Difficulty level %d unlocked: You can view items with %d%% chance drop rate or higher", difficulty, threshold)
 		end
 		table.insert(tooltipLines, line)
 	end
@@ -597,13 +623,13 @@ function Dungeons.onDungeonData(data)
 	Dungeons.show()
 	Dungeons.UI.bottomPanel.challengePoints:setText(data.challengePoints)
 
-	Dungeons.UI:recursiveGetChildById("dungeonName"):setText(data.title)
+	Dungeons.UI:recursiveGetChildById("dungeonName"):setText(tr(data.title))
 	Dungeons.UI:recursiveGetChildById("banner"):setImageSource("/images/dungeons/" .. data.title)
 
 	-- Queue
 	local queuePlayers = data.queue.players
 	local queueStatusWidget = Dungeons.UI:recursiveGetChildById("queueStatus")
-	queueStatusWidget:setText(queuePlayers == 0 and "Open" or queuePlayers .. " Player(s)")
+	queueStatusWidget:setText(queuePlayers == 0 and tr("Open") or tr("%s Player(s)", queuePlayers))
 	if queuePlayers >= 6 then
 		queueStatusWidget:setColor("red")
 	elseif queuePlayers >= 3 then
@@ -614,9 +640,9 @@ function Dungeons.onDungeonData(data)
 
 	local queueButton = Dungeons.UI:recursiveGetChildById("queueButton")
 	if not data.queue.playerStatus then 
-		queueButton:setText("Join")
+		queueButton:setText(tr("Join"))
 	else
-		queueButton:setText("Leave Queue")
+		queueButton:setText(tr("Leave Queue"))
 	end
 
 	-- Recall base data from cache
@@ -641,9 +667,9 @@ function Dungeons.onDungeonData(data)
 		local iconPath = "/images/dungeons/mutations/" .. (mutation.icon or mutation.key)
 		iconWidget:setImageSource(iconPath)
 
-		widget:getChildById("name"):setText(mutation.name or mutation.key)
-		widget:getChildById("description"):setText(mutation.description or "")
-		widget:setTooltip(mutation.description or "")
+		widget:getChildById("name"):setText(tr(mutation.name or mutation.key))
+		widget:getChildById("description"):setText(tr(mutation.description or ""))
+		widget:setTooltip(tr(mutation.description or ""))
 	end
 
 	-- Party Panel
@@ -656,24 +682,24 @@ function Dungeons.onDungeonData(data)
 		if data.party.leader then
 			local leaderWidget = g_ui.createWidget("PartyEntry", partyPanel)
 			leaderWidget.PlayerName:parseColoredText("[color=#ffed2b]" .. data.party.leader.name .. "[/color]")
-			leaderWidget.PlayerLevel:parseColoredText("Lvl: " .. data.party.leader.level)
-			leaderWidget.PlayerName:setTooltip("Party Leader")
+			leaderWidget.PlayerLevel:parseColoredText(tr("Lvl: %s", data.party.leader.level))
+			leaderWidget.PlayerName:setTooltip(tr("Party Leader"))
 			local vocationIconId = Dungeons.vocationalIcons[data.party.leader.vocation]
 			if vocationIconId then
 				Dungeons.setIconImageType(leaderWidget.VocationalIcon, vocationIconId)
 
-				leaderWidget.VocationalIcon:setTooltip("Vocation: " .. Dungeons.vocationNames[data.party.leader.vocation])
+				leaderWidget.VocationalIcon:setTooltip(tr("Vocation: %s", tr(Dungeons.vocationNames[data.party.leader.vocation])))
 			end
 		end
 		for _, member in ipairs(data.party.members) do
 			local widget = g_ui.createWidget("PartyEntry", partyPanel)
 			widget.PlayerName:setText(member.name)
-			widget.PlayerLevel:setText("Lvl: " .. member.level)
+			widget.PlayerLevel:setText(tr("Lvl: %s", member.level))
 			local vocationIconId = Dungeons.vocationalIcons[member.vocation]
 			if vocationIconId then
 				Dungeons.setIconImageType(widget.VocationalIcon, vocationIconId)
 
-				widget.VocationalIcon:setTooltip("Vocation: " .. Dungeons.vocationNames[member.vocation])
+				widget.VocationalIcon:setTooltip(tr("Vocation: %s", tr(Dungeons.vocationNames[member.vocation])))
 			end
 		end
 	end
@@ -689,7 +715,7 @@ end
 
 function Dungeons.onDungeonBaseData(data)
 	Dungeons.UI:recursiveGetChildById("levelRequirement"):setText(data.req.level .. "+")
-	Dungeons.UI:recursiveGetChildById("partyRequirement"):setText(data.req.party)
+	Dungeons.UI:recursiveGetChildById("partyRequirement"):setText(tr(data.req.party))
 	Dungeons.UI:recursiveGetChildById("goldRequirement"):setText("0")
 
 	if not data.req.quests then
@@ -716,7 +742,7 @@ function Dungeons.onDungeonBaseData(data)
 		local bossWidget = g_ui.createWidget("MonsterEntry", monstersPanel)
 		bossWidget.creature:setOutfit(data.bossOutfit)
 		bossWidget.name:parseColoredText("[color=#ffed2b]" .. data.bossName .. "[/color]")
-		bossWidget.name:setTooltip("Dungeon Boss")
+		bossWidget.name:setTooltip(tr("Dungeon Boss"))
 	end
 
 	if data.monsters and #data.monsters > 0 then
@@ -739,25 +765,25 @@ function Dungeons.updatePartyList(data)
 		if data.party.leader then
 			local leaderWidget = g_ui.createWidget("PartyEntry", partyPanel)
 			leaderWidget.PlayerName:parseColoredText("[color=#ffed2b]" .. data.party.leader.name .. "[/color]")
-			leaderWidget.PlayerLevel:parseColoredText("Lvl: " .. data.party.leader.level)
-			leaderWidget.PlayerName:setTooltip("Party Leader")
+			leaderWidget.PlayerLevel:parseColoredText(tr("Lvl: %s", data.party.leader.level))
+			leaderWidget.PlayerName:setTooltip(tr("Party Leader"))
 			local vocationIconId = Dungeons.vocationalIcons[data.party.leader.vocation]
 			if vocationIconId then
 				Dungeons.setIconImageType(leaderWidget.VocationalIcon, vocationIconId)
 
-				leaderWidget.VocationalIcon:setTooltip("Vocation: " .. Dungeons.vocationNames[data.party.leader.vocation])
+				leaderWidget.VocationalIcon:setTooltip(tr("Vocation: %s", tr(Dungeons.vocationNames[data.party.leader.vocation])))
 			end
 		end
 		if data.party.members then
 			for _, member in ipairs(data.party.members) do
 				local widget = g_ui.createWidget("PartyEntry", partyPanel)
 				widget.PlayerName:setText(member.name)
-				widget.PlayerLevel:setText("Lvl: " .. member.level)
+				widget.PlayerLevel:setText(tr("Lvl: %s", member.level))
 				local vocationIconId = Dungeons.vocationalIcons[member.vocation]
 				if vocationIconId then
 					Dungeons.setIconImageType(widget.VocationalIcon, vocationIconId)
 
-					widget.VocationalIcon:setTooltip("Vocation: " .. Dungeons.vocationNames[member.vocation])
+					widget.VocationalIcon:setTooltip(tr("Vocation: %s", tr(Dungeons.vocationNames[member.vocation])))
 				end
 			end
 		end
@@ -812,7 +838,7 @@ function Dungeons.onDungeonQueueUpdate(data)
 		local queue = Dungeons.UI:recursiveGetChildById("queueStatus")
 		local queuePlayers = data.queue
 		local queueStatus = Dungeons.UI:recursiveGetChildById("queueStatus")
-		queueStatus:setText(queuePlayers == 0 and "Open" or queuePlayers .. " Player(s)")
+		queueStatus:setText(queuePlayers == 0 and tr("Open") or tr("%s Player(s)", queuePlayers))
 		if queuePlayers >= 6 then
 			queueStatus:setColor("red")
 		elseif queuePlayers >= 3 then
@@ -825,15 +851,15 @@ end
 
 function Dungeons.onStopQueue()
 	local queueButton = Dungeons.UI:recursiveGetChildById("queueButton")
-	queueButton:setText("Join")
+	queueButton:setText(tr("Join"))
 end
 
 function Dungeons.onDungeonQueue(data)
 	local queueButton = Dungeons.UI:recursiveGetChildById("queueButton")
 	if data.joined then
-		queueButton:setText("Leave Queue")
+		queueButton:setText(tr("Leave Queue"))
 	else
-		queueButton:setText("Join")
+		queueButton:setText(tr("Join"))
 	end
 end
 
@@ -852,7 +878,7 @@ function Dungeons.onDungeonStart(data)
 		Dungeons.hide()
 	end
 	local queueButton = Dungeons.UI:recursiveGetChildById("queueButton")
-	queueButton:setText("Join")
+	queueButton:setText(tr("Join"))
 	Dungeons.killCounter:show()
 
 	local bonusObjectives = Dungeons.killCounter:getChildById("bonusObjectives")
@@ -866,7 +892,7 @@ function Dungeons.onDungeonStart(data)
 			local w = g_ui.createWidget("ObjectiveCheckBox", bonusObjectives)
 			w:addAnchor(AnchorTop, "prev", AnchorBottom)
 			w:setMarginTop(5)
-			w:setText(obj)
+			w:setText(tr(obj))
 			h = h + 25
 		end
 		bonusObjectives:setHeight(h)
@@ -883,8 +909,8 @@ function Dungeons.onDungeonStart(data)
 	if data.mutation and data.mutation.key and data.mutation.key ~= "" then
 		local iconWidget = mutationDisplay:getChildById("icon")
 		iconWidget:setImageSource("/images/dungeons/mutations/" .. tostring(data.mutation.icon or data.mutation.key))
-		mutationDisplay:getChildById("name"):setText(tostring(data.mutation.name or ""))
-		mutationDisplay:getChildById("description"):setText(tostring(data.mutation.description or ""))
+		mutationDisplay:getChildById("name"):setText(tr(tostring(data.mutation.name or "")))
+		mutationDisplay:getChildById("description"):setText(tr(tostring(data.mutation.description or "")))
 		mutationDisplay:setVisible(true)
 		mutationHeight = mutationDisplay:getHeight() + 6
 	else
@@ -897,7 +923,7 @@ function Dungeons.onDungeonStart(data)
 	bar:setVisible(false)
 
 	local label = Dungeons.killCounter:getChildById("label")
-	label:setText("0%")
+	label:setText(tr("0%"))
 	local mainObjective = Dungeons.killCounter:getChildById("mainObjective")
 	local bossObjective = Dungeons.killCounter:getChildById("bossObjective")
 	local monstersLeftLabel = Dungeons.killCounter:getChildById("monstersLeft")
@@ -912,7 +938,7 @@ function Dungeons.onDungeonStart(data)
 		label:setVisible(false)
 		mainObjective:setVisible(false)
 		mainObjective:setChecked(true)
-		bossObjective:setText("Kill " .. data.boss)
+		bossObjective:setText(tr("Kill %s", data.boss))
 		bossObjective:setEnabled(true)
 		bossObjective:setChecked(false)
 		monstersLeftLabel:setVisible(false)
@@ -920,25 +946,25 @@ function Dungeons.onDungeonStart(data)
 		bar:setVisible(false)
 		label:setVisible(false)
 		mainObjective:setVisible(true)
-		mainObjective:setText("Survive " .. Dungeons.totalWaves .. " waves")
+		mainObjective:setText(tr("Survive %s waves", Dungeons.totalWaves))
 		mainObjective:setChecked(false)
-		bossObjective:setText("Kill " .. data.boss)
+		bossObjective:setText(tr("Kill %s", data.boss))
 		bossObjective:setEnabled(false)
 		bossObjective:setChecked(false)
 		monstersLeftLabel:setVisible(true)
-		monstersLeftLabel:setText("Wave: 0 / " .. Dungeons.totalWaves)
+		monstersLeftLabel:setText(tr("Wave: 0 / %s", Dungeons.totalWaves))
 	else
 		label:setVisible(true)
 		mainObjective:setVisible(true)
-		mainObjective:setText("Kill monsters to spawn " .. data.boss)
+		mainObjective:setText(tr("Kill monsters to spawn %s", data.boss))
 		mainObjective:setChecked(false)
-		bossObjective:setText("Kill " .. data.boss)
+		bossObjective:setText(tr("Kill %s", data.boss))
 		bossObjective:setEnabled(false)
 		bossObjective:setChecked(false)
 		monstersLeftLabel:setVisible(true)
-		monstersLeftLabel:setText("Monsters Remaining:  " .. data.left)
+		monstersLeftLabel:setText(tr("Monsters Remaining: %s", data.left))
 	end
-	Dungeons.killCounter:getChildById("timeLeft"):setText("Time Left:  " .. Dungeons.MsToShortTime(data.duration))
+	Dungeons.killCounter:getChildById("timeLeft"):setText(tr("Time Left: %s", Dungeons.MsToShortTime(data.duration)))
 
 	Dungeons.timeLeft = data.duration
 	timeLeftEvent = scheduleEvent(Dungeons.doTimeLeft, 100)
@@ -964,11 +990,11 @@ function Dungeons.onDungeonWave(data)
 		if mainObjective then mainObjective:setChecked(true) end
 		if bossObjective then bossObjective:setEnabled(true) end
 		if monstersLeftLabel then
-			monstersLeftLabel:setText("Wave: " .. total .. " / " .. total .. "  (Boss!)")
+			monstersLeftLabel:setText(tr("Wave: %s / %s  (Boss!)", total, total))
 		end
 		if Dungeons.challengeNotifi then
 			local textWidget = Dungeons.challengeNotifi:getChildById("text")
-			textWidget:setText("Boss has arrived!")
+			textWidget:setText(tr("Boss has arrived!"))
 			Dungeons.challengeNotifi:setWidth(math.max(263, 96 + textWidget:getTextSize().width))
 			g_effects.fadeIn(Dungeons.challengeNotifi, 250)
 			scheduleEvent(function()
@@ -982,9 +1008,9 @@ function Dungeons.onDungeonWave(data)
 
 	if monstersLeftLabel then
 		if current <= 0 then
-			monstersLeftLabel:setText("Wave: 0 / " .. total)
+			monstersLeftLabel:setText(tr("Wave: 0 / %s", total))
 		else
-			monstersLeftLabel:setText("Wave: " .. current .. " / " .. total .. "   Left: " .. left)
+			monstersLeftLabel:setText(tr("Wave: %s / %s   Left: %s", current, total, left))
 		end
 	end
 end
@@ -997,7 +1023,7 @@ function Dungeons.onDungeonKilled(data)
 			bossObjective:setChecked(true)
 			if Dungeons.challengeNotifi then
 				local textWidget = Dungeons.challengeNotifi:getChildById("text")
-				textWidget:setText("You completed the dungeon!")
+				textWidget:setText(tr("You completed the dungeon!"))
 				Dungeons.challengeNotifi:setWidth(math.max(263, 96 + textWidget:getTextSize().width))
 				g_effects.fadeIn(Dungeons.challengeNotifi, 250)
 				scheduleEvent(function()
@@ -1020,12 +1046,12 @@ function Dungeons.onDungeonKilled(data)
 		local newHeight = maxHeight
 		bar:setWidth(newWidth)
 		bar:setHeight(newHeight)
-		Dungeons.killCounter:getChildById("label"):setText(math.min(100, data.percent) .. "%")
+		Dungeons.killCounter:getChildById("label"):setText(tr("%s%%", math.min(100, data.percent)))
 		if data.percent >= 100 then
 			Dungeons.killCounter:getChildById("mainObjective"):setChecked(true)
 			bossObjective:setEnabled(true)
 			local textWidget = Dungeons.challengeNotifi:getChildById("text")
-			textWidget:setText("You can kill the boss now!")
+			textWidget:setText(tr("You can kill the boss now!"))
 			Dungeons.challengeNotifi:setWidth(math.max(263, 96 + textWidget:getTextSize().width))
 			g_effects.fadeIn(Dungeons.challengeNotifi, 250)
 			scheduleEvent(
@@ -1040,7 +1066,7 @@ function Dungeons.onDungeonKilled(data)
 	elseif data.boss then
 		bossObjective:setChecked(true)
 		local textWidget = Dungeons.challengeNotifi:getChildById("text")
-		textWidget:setText("You completed the dungeon!")
+		textWidget:setText(tr("You completed the dungeon!"))
 		Dungeons.challengeNotifi:setWidth(math.max(263, 96 + textWidget:getTextSize().width))
 		g_effects.fadeIn(Dungeons.challengeNotifi, 250)
 		scheduleEvent(
@@ -1053,7 +1079,7 @@ function Dungeons.onDungeonKilled(data)
 		)
 	end
 	if data.left then
-		Dungeons.killCounter:getChildById("monstersLeft"):setText("Monsters Alive: " .. data.left)
+		Dungeons.killCounter:getChildById("monstersLeft"):setText(tr("Monsters Alive: %s", data.left))
 	end
 end
 
@@ -1070,7 +1096,7 @@ function Dungeons.onDungeonLives(data)
 	if not label then return end
 	local current = tonumber(data.current) or 0
 	local max = tonumber(data.max) or 0
-	label:setText(string.format("Team Lives: %d / %d", current, max))
+	label:setText(tr("Team Lives: %d / %d", current, max))
 	if current <= 1 then
 		label:setColor("#ff3030")
 	else
@@ -1080,7 +1106,7 @@ end
 
 function Dungeons.doTimeLeft()
 	Dungeons.timeLeft = Dungeons.timeLeft - 100
-	if Dungeons.killCounter then Dungeons.killCounter:getChildById("timeLeft"):setText("Time Left: " .. Dungeons.MsToShortTime(Dungeons.timeLeft)) end
+	if Dungeons.killCounter then Dungeons.killCounter:getChildById("timeLeft"):setText(tr("Time Left: %s", Dungeons.MsToShortTime(Dungeons.timeLeft))) end
 	if Dungeons.timeLeft > 0 then
 		timeLeftEvent = scheduleEvent(Dungeons.doTimeLeft, 100)
 	end
@@ -1088,7 +1114,7 @@ end
 
 function Dungeons.onChallengeCompleted(data)
 	local textWidget = Dungeons.challengeNotifi:getChildById("text")
-	textWidget:setText(data .. " challenge completed!")
+	textWidget:setText(tr("%s challenge completed!", data))
 	Dungeons.challengeNotifi:setWidth(math.max(263, 96 + textWidget:getTextSize().width))
 	g_effects.fadeIn(Dungeons.challengeNotifi, 250)
 	scheduleEvent(

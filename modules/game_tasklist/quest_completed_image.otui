@@ -1,0 +1,7 @@
+Panel
+  id: questCompletedPanel
+  anchors.top: parent.top
+  anchors.horizontalCenter: parent.horizontalCenter
+  margin-top: 30
+  image-source: /images/ui/quest_completed.png
+  image-auto-resize: true

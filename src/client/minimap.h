@@ -57,16 +57,19 @@ public:
     void clean();
     void update();
     void updateTile(int x, int y, const MinimapTile& tile);
+    bool loadTexture(const std::string& fileName);
+    bool tryLoadPhotoTexture(const std::string& basePath, const Position& pos);
     MinimapTile& getTile(const int x, const int y) { return m_tiles[getTileIndex(x, y)]; }
     void resetTile(const int x, const int y) { m_tiles[getTileIndex(x, y)] = MinimapTile(); }
     uint32_t getTileIndex(const int x, const int y) { return ((y % MMBLOCK_SIZE) * MMBLOCK_SIZE) + (x % MMBLOCK_SIZE); }
-    const TexturePtr& getTexture() { return m_texture; }
+    const TexturePtr& getTexture() { return m_photoTexture ? m_photoTexture : m_texture; }
     std::array<MinimapTile, MMBLOCK_SIZE* MMBLOCK_SIZE>& getTiles() { return m_tiles; }
     void mustUpdate() { m_mustUpdate = true; }
     void justSaw() { m_wasSeen = true; }
     bool wasSeen() const { return m_wasSeen; }
 private:
     TexturePtr m_texture;
+    TexturePtr m_photoTexture;
     ImagePtr m_image;
 
     Size m_size{ MMBLOCK_SIZE, MMBLOCK_SIZE };
@@ -75,6 +78,7 @@ private:
 
     bool m_mustUpdate{ true };
     bool m_wasSeen{ false };
+    bool m_photoLoadAttempted{ false };
 };
 
 #pragma pack(pop)
@@ -102,9 +106,11 @@ public:
     void saveImage(const std::string& fileName, const Rect& mapRect);
     bool loadOtmm(const std::string& fileName);
     void saveOtmm(const std::string& fileName);
+    bool loadPreRenderedBlocks(const std::string& basePath);
 
 private:
     Rect calcMapRect(const Rect& screenRect, const Position& mapCenter, float scale) const;
+    bool loadBlockTexture(const Position& pos, const std::string& filePath);
     bool hasBlock(const Position& pos) { return m_tileBlocks[pos.z].contains(getBlockIndex(pos)); }
     MinimapBlock& getBlock(const Position& pos)
     {
@@ -130,6 +136,7 @@ private:
     }
     uint32_t getBlockIndex(const Position& pos) { return ((pos.y / MMBLOCK_SIZE) * (65536 / MMBLOCK_SIZE)) + (pos.x / MMBLOCK_SIZE); }
     std::vector<std::unordered_map<uint32_t, MinimapBlock_ptr>> m_tileBlocks;
+    std::string m_photoBasePath;
     SpinLock m_lock;
 };
 

@@ -17,10 +17,10 @@ local DIFF_COLORS = {
 }
 
 local PROFESSION_LABELS = {
-  alchemy    = 'Alchemy',
-  enchanting = 'Enchanting',
-  blacksmith = 'Blacksmith',
-  gathering  = 'Gathering',
+  alchemy    = 'Alquimia',
+  enchanting = 'Encantamiento',
+  blacksmith = 'Herrero',
+  gathering  = 'Recoleccion',
 }
 
 local PROFESSION_COLORS = {
@@ -80,6 +80,7 @@ local function ensureWindow()
     parent = modules.game_interface.getRootPanel() or rootWidget
   end
   window = g_ui.createWidget('DailyTasksWindow', parent)
+  translateUI(window)
   window:hide()
 
   local claim = window:getChildById('claimDailyButton')
@@ -104,15 +105,16 @@ local cachedState = nil
 
 local function buildTaskRow(list, task)
   local row = g_ui.createWidget('DailyTaskRow', list)
+  translateUI(row)
 
   -- Title + description
-  row:getChildById('title'):setText(task.title or 'Task')
-  row:getChildById('desc'):setText(task.description or '-')
+  row:getChildById('title'):setText(tr(task.title or 'Task'))
+  row:getChildById('desc'):setText(tr(task.description or '-'))
 
   -- Difficulty badge
   local diffLabel = row:getChildById('diffLabel')
   if diffLabel then
-    diffLabel:setText((task.difficulty or 'task'):upper())
+    diffLabel:setText(tr((task.difficulty or 'task'):upper()))
     diffLabel:setColor(DIFF_COLORS[task.difficulty] or '#FFFFFF')
   end
 
@@ -120,7 +122,7 @@ local function buildTaskRow(list, task)
   local profLabel = row:getChildById('professionLabel')
   if profLabel then
     if task.profession and PROFESSION_LABELS[task.profession] then
-      profLabel:setText('. ' .. PROFESSION_LABELS[task.profession])
+      profLabel:setText('. ' .. tr(PROFESSION_LABELS[task.profession]))
       profLabel:setColor(PROFESSION_COLORS[task.profession] or '#C5E1FF')
       profLabel:setVisible(true)
     else
@@ -179,8 +181,8 @@ local function buildTaskRow(list, task)
     essValue:setColor('#D7B4FF')
   end
 
-  local apTip = string.format('Achievement Points reward: +%d\n\nSpent to unlock achievements and perks.', ap)
-  local essTip = string.format('Codex Essence reward: +%d\n\nUsed by the Codex system to level up your knowledge.', ess)
+  local apTip = tr('Achievement Points reward: +%d\n\nSpent to unlock achievements and perks.', ap)
+  local essTip = tr('Codex Essence reward: +%d\n\nUsed by the Codex system to level up your knowledge.', ess)
   if apIcon then apIcon:setTooltip(apTip) end
   if apValue then apValue:setTooltip(apTip) end
   if essIcon then essIcon:setTooltip(essTip) end
@@ -195,19 +197,19 @@ local function buildTaskRow(list, task)
   else
     bar:setPercent(0)
   end
-  bar:setText(string.format('%d / %d', progress, target))
+  bar:setText(tr('%d / %d', progress, target))
 
   local btn = row:getChildById('claimButton')
   if task.claimed then
-    btn:setText('Completed')
+    btn:setText(tr('Completed'))
     btn:setEnabled(false)
   elseif task.submission then
     -- Submission: player must click to hand over items.
     if task.completable then
-      btn:setText('Turn In')
+      btn:setText(tr('Turn In'))
       btn:setEnabled(true)
     else
-      btn:setText(string.format('Need %d', (task.target or 0) - (task.progress or 0)))
+      btn:setText(tr('Need %d', (task.target or 0) - (task.progress or 0)))
       btn:setEnabled(false)
     end
     btn.onClick = function()
@@ -221,7 +223,7 @@ local function buildTaskRow(list, task)
     end
   elseif task.completable then
     -- Non-submission tasks auto-claim server-side; this button is a fallback.
-    btn:setText('Claim')
+    btn:setText(tr('Claim'))
     btn:setEnabled(true)
     btn.onClick = function()
       local proto = g_game.getProtocolGame()
@@ -232,7 +234,7 @@ local function buildTaskRow(list, task)
       }))
     end
   else
-    btn:setText('In Progress')
+    btn:setText(tr('In Progress'))
     btn:setEnabled(false)
   end
 end
@@ -253,35 +255,35 @@ local function applyState(state)
   local required = tonumber(state.required) or 4
 
   if header then
-    header:setText(string.format('Daily Tasks  -  %d / %d', completed, required))
+    header:setText(tr('Daily Tasks  -  %s / %s', completed, required))
   end
   if subHeader then
     if state.bigRewardClaimed then
-      subHeader:setText('Daily Golden Crate already claimed. Come back tomorrow!')
+      subHeader:setText(tr('Daily Golden Crate already claimed. Come back tomorrow!'))
       subHeader:setColor('#9FD49F')
     elseif completed >= required then
-      subHeader:setText('You can now claim your Golden Crate!')
+      subHeader:setText(tr('You can now claim your Golden Crate!'))
       subHeader:setColor('#E7CF7A')
     else
-      subHeader:setText(string.format('Complete %d tasks to unlock the Golden Crate.', required))
+      subHeader:setText(tr('Complete %s tasks to unlock the Golden Crate.', required))
       subHeader:setColor('#C5E1FF')
     end
   end
 
   if progress then
     progress:setValue(math.min(completed, required), 0, math.max(1, required))
-    progress:setText(string.format('%d / %d', completed, required))
+    progress:setText(tr('%d / %d', completed, required))
   end
 
   if claimBtn then
     if state.bigRewardClaimed then
-      claimBtn:setText('Daily Reward Claimed')
+      claimBtn:setText(tr('Daily Reward Claimed'))
       claimBtn:setEnabled(false)
     elseif completed >= required then
-      claimBtn:setText('Claim Golden Crate')
+      claimBtn:setText(tr('Claim Golden Crate'))
       claimBtn:setEnabled(true)
     else
-      claimBtn:setText(string.format('Claim Golden Crate (%d/%d)', completed, required))
+      claimBtn:setText(tr('Claim Golden Crate (%s/%s)', completed, required))
       claimBtn:setEnabled(false)
     end
   end

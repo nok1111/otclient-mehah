@@ -356,6 +356,26 @@ function tr(s, ...)
     return string.format(s, ...)
 end
 
+function translateUI(widget)
+    if not widget then
+        return
+    end
+
+    local text = widget:getText()
+    if text and text ~= "" then
+        widget:setText(tr(text))
+    end
+
+    local tooltip = widget.tooltip
+    if tooltip and tooltip ~= "" then
+        widget.tooltip = tr(tooltip)
+    end
+
+    for _, child in ipairs(widget:getChildren()) do
+        translateUI(child)
+    end
+end
+
 function getOppositeAnchor(anchor)
     if anchor == AnchorLeft then
         return AnchorRight

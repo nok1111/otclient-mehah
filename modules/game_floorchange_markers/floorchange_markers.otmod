@@ -1,0 +1,10 @@
+Module
+  name: game_floorchange_markers
+  description: Floor change arrows on minimap
+  author: assistant
+  scripts: [ floorchange_markers ]
+  autoload: true
+  autoload-priority: 1003
+  @dependencies: [ game_minimap ]
+  @onLoad: init()
+  @onUnload: terminate()

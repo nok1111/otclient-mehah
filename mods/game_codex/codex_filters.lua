@@ -157,9 +157,16 @@ end
 function Codex.passesFilters(cardId, cardLevel, cardData)
 	if not cardData then return false end
 	
-	-- Search filter
+	-- Search filter (native or translated name)
 	if Codex.activeFilters.searchText ~= "" then
-		local nameMatch = cardData.name:lower():find(Codex.activeFilters.searchText, 1, true)
+		local searchText = Codex.activeFilters.searchText
+		local nameMatch = cardData.name:lower():find(searchText, 1, true)
+		if not nameMatch then
+			local translatedName = tr(cardData.name)
+			if translatedName and translatedName ~= cardData.name then
+				nameMatch = translatedName:lower():find(searchText, 1, true)
+			end
+		end
 		if not nameMatch then
 			return false
 		end

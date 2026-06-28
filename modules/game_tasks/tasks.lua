@@ -62,6 +62,7 @@ function create()
   end
 
   tasksWindow = g_ui.displayUI("tasks")
+  translateUI(tasksWindow)
   tasksWindow:hide()
 end
 
@@ -198,6 +199,7 @@ function onTaskBoardInit(data)
     if activeTask then
         if not taskTrackerWindow then
             taskTrackerWindow = g_ui.loadUI('task_tracker', modules.game_interface.getMapPanel())
+            translateUI(taskTrackerWindow)
         end
         if taskTrackerWindow then
             updateTaskTracker()
@@ -306,12 +308,12 @@ function updateFameDisplay()
     
     local fameLabel = headerPanel:recursiveGetChildById('fameLabel')
     if fameLabel then
-        fameLabel:setText('Fame: ' .. formatNumber(playerFame))
+        fameLabel:setText(tr('Fame: %s', formatNumber(playerFame)))
     end
     
     local fameLevelLabel = headerPanel:recursiveGetChildById('fameLevelLabel')
     if fameLevelLabel then
-        fameLevelLabel:setText('Level ' .. fameLevel .. ' (' .. fameExp .. '/' .. fameExpRequired .. ')')
+        fameLevelLabel:setText(tr('Level %s (%s/%s)', fameLevel, fameExp, fameExpRequired))
     end
 end
 
@@ -335,6 +337,7 @@ end
 function createTaskCard(task, slot)
     local taskCard = g_ui.createWidget('TaskCard')
     if not taskCard then return nil end
+    translateUI(taskCard)
     taskCard:setId('taskCard' .. slot)
     
     -- Create invisible panel for particle effect overlay
@@ -366,10 +369,10 @@ function createTaskCard(task, slot)
     if tierBadge then
         if task.category == 'dungeon' then
             -- Short label so it fits the badge slot next to the title.
-            tierBadge:setText(task.is_boss and 'BOSS' or 'DUNGEON')
+            tierBadge:setText(task.is_boss and tr('BOSS') or tr('DUNGEON'))
             tierBadge:setColor('#FF3030')
         else
-            tierBadge:setText(task.tier:upper())
+            tierBadge:setText(tr(task.tier:upper()))
             local tierColors = {
                 normal = '#888888',
                 rare = '#0070DD',
@@ -383,7 +386,7 @@ function createTaskCard(task, slot)
     -- Task Name
     local taskName = taskCard:recursiveGetChildById('taskName')
     if taskName then
-        taskName:setText(task.name)
+        taskName:setText(tr(task.name))
         if task.category == 'dungeon' then
             taskName:setColor('#FF6464')
         else
@@ -437,7 +440,7 @@ function createTaskCard(task, slot)
             creature:setMarginLeft(offsets[i] or 0)
             creature:setMarginTop(0)
             if outfit.name then
-                creature:setTooltip(outfit.name)
+                creature:setTooltip(tr(outfit.name))
             end
         end
     end
@@ -445,19 +448,19 @@ function createTaskCard(task, slot)
     -- Mostrar solo total de kills (sin nombres de monsters)
     local killsLabel = taskCard:recursiveGetChildById('killsLabel')
     if killsLabel then
-        killsLabel:setText('Kills: ' .. task.total_kills)
+        killsLabel:setText(tr('Kills: %s', task.total_kills))
     end
     
     -- Level range label
     local zoneLabel = taskCard:recursiveGetChildById('zoneLabel')
     if zoneLabel then
-        zoneLabel:setText('Level: ' .. task.level_range)
+        zoneLabel:setText(tr('Level: %s', task.level_range))
     end
     
     -- Zone name label (restaurado)
     local zoneNameLabel = taskCard:recursiveGetChildById('zoneNameLabel')
     if zoneNameLabel and task.zone_name then
-        zoneNameLabel:setText(task.zone_name)
+        zoneNameLabel:setText(tr(task.zone_name))
         if task.category == 'dungeon' then
             zoneNameLabel:setColor('#FFB060')
         else
@@ -496,10 +499,15 @@ function createTaskCard(task, slot)
             modLabel:setHeight(28)
             
             local modColor = modifier.type == 'positive' and '#00ff00' or (modifier.type == 'negative' and '#ff0000' or '#ffaa00')
-            modLabel:setText(modifier.description)
+            local modDesc = modifier.description
+            if modDesc:find('%s', 1, true) then
+                modLabel:setText(tr(modDesc, modifier.value))
+            else
+                modLabel:setText(tr(modDesc))
+            end
             modLabel:setColor(modColor)
             modLabel:setTextWrap(true)
-            modLabel:setTooltip(modifier.name)
+            modLabel:setTooltip(tr(modifier.name))
         end
     end
     
@@ -580,7 +588,7 @@ function createTaskCard(task, slot)
         
         if icon then icon:setImageSource(rewardTypes[1].icon) end
         if label then
-            label:setText(rewardTypes[1].text)
+            label:setText(tr(rewardTypes[1].text))
             label:setColor(rewardTypes[1].color)
         end
         reward1Panel:setVisible(true)
@@ -595,7 +603,7 @@ function createTaskCard(task, slot)
         
         if icon then icon:setImageSource(rewardTypes[2].icon) end
         if label then
-            label:setText(rewardTypes[2].text)
+            label:setText(tr(rewardTypes[2].text))
             label:setColor(rewardTypes[2].color)
         end
         reward2Panel:setVisible(true)
@@ -609,16 +617,16 @@ function createTaskCard(task, slot)
         if activeTask then
             lockButton:setEnabled(false)
             lockButton:setOpacity(0.5)
-            lockButton:setText('LOCKED')
+            lockButton:setText(tr('LOCKED'))
             lockButton:setImageColor('#888888')
         else
             lockButton:setEnabled(true)
             lockButton:setOpacity(1.0)
             if task.locked then
-                lockButton:setText('UNLOCK')
+                lockButton:setText(tr('UNLOCK'))
                 lockButton:setImageColor('#00BFFF')  -- Blue color for unlock
             else
-                lockButton:setText('LOCK')
+                lockButton:setText(tr('LOCK'))
                 lockButton:setImageColor('#ffffff')
             end
             lockButton.onClick = function() onLockClick(slot, not task.locked) end
@@ -673,18 +681,18 @@ function createTaskCard(task, slot)
             
             if isTaskComplete then
                 -- Task is complete - show Complete button
-                startButton:setText('Complete')
+                startButton:setText(tr('Complete'))
                 startButton:setImageColor('#00ff00')
                 startButton.onClick = function() onCompleteClick() end
             else
                 -- Task not complete - show Abandon button
-                startButton:setText('Abandon')
+                startButton:setText(tr('Abandon'))
                 startButton:setImageColor('#ff0000')
                 startButton.onClick = function() onAbandonClick() end
             end
         else
             -- Not active - show Start button
-            startButton:setText('Start')
+            startButton:setText(tr('Start'))
             startButton:setImageColor('#00ff00')
             if activeTask then
                 -- Another task is active, disable this one
@@ -722,7 +730,7 @@ function refreshActiveTask()
     
     if not activeTask then
         if activeTaskStatus then 
-            activeTaskStatus:setText('No active task')
+            activeTaskStatus:setText(tr('No active task'))
             activeTaskStatus:setColor('#888888')
         end
         if progressContainer then progressContainer:destroyChildren() end
@@ -733,7 +741,7 @@ function refreshActiveTask()
     end
     
     if activeTaskStatus then 
-        activeTaskStatus:setText(activeTask.name)
+        activeTaskStatus:setText(tr(activeTask.name))
         activeTaskStatus:setColor('#00BFFF')
     end
     
@@ -770,7 +778,7 @@ function refreshActiveTask()
             progressWidget:setHeight(28)
             
             local monsterLabel = g_ui.createWidget('Label', progressWidget)
-            monsterLabel:setText(monster.name .. ': ' .. (monster.current or 0) .. ' / ' .. monster.kills)
+            monsterLabel:setText(tr('%s: %s / %s', monster.name, monster.current or 0, monster.kills))
             monsterLabel:setTextAlign(AlignLeft)
             monsterLabel:setFont('verdana-11px-rounded')
             monsterLabel:addAnchor(AnchorTop, 'parent', AnchorTop)
@@ -797,10 +805,10 @@ function updateDailyBonus()
     local dailyBonusLabel = tasksWindow:recursiveGetChildById('dailyBonusLabel')
     if dailyBonusLabel then
         if dailyBonusAvailable then
-            dailyBonusLabel:setText('Daily Bonus: +' .. dailyBonusFame .. ' Fame (Available)')
+            dailyBonusLabel:setText(tr('Daily Bonus: +%s Fame (Available)', dailyBonusFame))
             dailyBonusLabel:setColor('#00ff00')
         else
-            dailyBonusLabel:setText('Daily Bonus: Already Claimed')
+            dailyBonusLabel:setText(tr('Daily Bonus: Already Claimed'))
             dailyBonusLabel:setColor('#888888')
         end
     end
@@ -811,7 +819,7 @@ function updateRerollsDisplay()
     
     local rerollsAvailableLabel = tasksWindow:recursiveGetChildById('rerollsAvailableLabel')
     if rerollsAvailableLabel then
-        local displayText = 'Free Rerolls: ' .. rerollsAvailable .. '/' .. maxRerolls
+        local displayText = tr('Free Rerolls: %s/%s', rerollsAvailable, maxRerolls)
         rerollsAvailableLabel:setText(displayText)
         
         if rerollsAvailable > 0 then
@@ -827,8 +835,8 @@ function updatePremiumDisplay()
     
     local premiumLabel = tasksWindow:recursiveGetChildById('premiumLabel')
     if premiumLabel then
-        local lockText = locksAvailable == 1 and 'lock' or 'locks'
-        local displayText = 'Premium: ' .. locksAvailable .. ' free ' .. lockText
+        local lockText = locksAvailable == 1 and tr('lock') or tr('locks')
+        local displayText = tr('Premium: %s free %s', locksAvailable, lockText)
         premiumLabel:setText(displayText)
         
         if isPremium then
@@ -848,7 +856,7 @@ function updateActionButtons()
         -- Disable reroll if there's an active task
         if activeTask then
             rerollButton:setEnabled(false)
-            rerollCostAmount:setText('None')
+            rerollCostAmount:setText(tr('None'))
             rerollCostAmount:setColor('#ff0000')
             if fameCostIcon then
                 fameCostIcon:hide()
@@ -1017,7 +1025,7 @@ function updateTaskTracker()
     -- Update task name
     local taskNameLabel = taskTrackerWindow:getChildById('taskNameLabel')
     if taskNameLabel then
-        taskNameLabel:setText(activeTask.name or 'Task')
+        taskNameLabel:setText(tr(activeTask.name or 'Task'))
     end
     
     -- Update monster progress
@@ -1048,7 +1056,7 @@ function updateTaskTracker()
                     if outfit then
                         creatureWidget:setOutfit(outfit)
                         if monster.name then
-                            creatureWidget:setTooltip(monster.name)
+                            creatureWidget:setTooltip(tr(monster.name))
                         end
                     end
                 end
@@ -1056,7 +1064,7 @@ function updateTaskTracker()
                 -- Set name label
                 local nameLabel = entry:getChildById('nameLabel')
                 if nameLabel then
-                    nameLabel:setText(monster.name .. ': ' .. current .. ' / ' .. total)
+                    nameLabel:setText(tr('%s: %s / %s', monster.name, current, total))
                     nameLabel:setColor(isComplete and '#00ff00' or '#ffffff')
                 end
                 

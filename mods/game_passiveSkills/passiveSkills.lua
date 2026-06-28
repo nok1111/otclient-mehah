@@ -328,7 +328,7 @@ function PassiveSkills.buildAscensionUI()
 	nextLabel:addAnchor(AnchorTop, 'levelLabel', AnchorTop)
 	nextLabel:addAnchor(AnchorRight, 'parent', AnchorRight)
 	nextLabel:setMarginRight(10)
-	nextLabel:setText(tr("Next: %s", nextType:sub(1,1):upper() .. nextType:sub(2)))
+	nextLabel:setText(tr("Next: %s", tr(nextType:sub(1,1):upper() .. nextType:sub(2))))
 	nextLabel:setTextAutoResize(true)
 	local typeColors = { primary = "#ff6060", secondary = "#60a0ff", utility = "#60dd60" }
 	nextLabel:setColor(typeColors[nextType] or '#ffffff')
@@ -384,10 +384,10 @@ function PassiveSkills.buildAscensionUI()
 		pointsBadge:setMarginRight(8)
 		pointsBadge:setTextAutoResize(true)
 		if availablePoints > 0 then
-			pointsBadge:setText(availablePoints .. " pt")
+			pointsBadge:setText(tr("%d pt", availablePoints))
 			pointsBadge:setColor('#f4ca16')
 		else
-			pointsBadge:setText("0 pt")
+			pointsBadge:setText(tr("0 pt"))
 			pointsBadge:setColor('#665e78')
 		end
 
@@ -479,9 +479,9 @@ function PassiveSkills.buildAscensionUI()
 			countLabel:addAnchor(AnchorTop, 'parent', AnchorTop)
 			countLabel:addAnchor(AnchorLeft, 'parent', AnchorLeft)
 			countLabel:setMarginTop(30)
-			local countStr = tostring(statPoints) .. " pts"
+			local countStr = tostring(statPoints) .. " " .. tr("pts")
 			if statConfig.capLabel then
-				countStr = countStr .. " (" .. statConfig.capLabel .. ")"
+				countStr = countStr .. " (" .. tr(statConfig.capLabel) .. ")"
 			end
 			countLabel:setText(countStr)
 			countLabel:setColor('#554e68')
@@ -564,7 +564,7 @@ function PassiveSkills.buildAscensionUI()
 			msRow:setTextAutoResize(true)
 
 			local progressStr = spent .. " / " .. nextThreshold
-			msRow:setText(ms.name .. " " .. nextThreshold .. "pts: " .. nextLabel .. "   [" .. progressStr .. "]")
+			msRow:setText(tr("%s %dpts: %s   [%s]", ms.name, nextThreshold, nextLabel, progressStr))
 			msRow:setColor(spent >= nextThreshold and '#d4a847' or '#665e78')
 			msRowY = msRowY + 18
 		end
@@ -573,10 +573,8 @@ function PassiveSkills.buildAscensionUI()
 	-- Update bottom label
 	if PassiveSkills.UI.ascensionParagonLevel then
 		PassiveSkills.UI.ascensionParagonLevel:setText(
-			"Paragon Lv " .. data.paragonLevel ..
-			" | P:" .. (data.points.primary or 0) ..
-			" S:" .. (data.points.secondary or 0) ..
-			" U:" .. (data.points.utility or 0)
+			tr("Paragon Lv %d | P:%d S:%d U:%d", data.paragonLevel,
+				(data.points.primary or 0), (data.points.secondary or 0), (data.points.utility or 0))
 		)
 	end
 end
@@ -626,7 +624,9 @@ function PassiveSkills.applyTooltip(nodeData)
 	PassiveSkills.moveToolTip()
 	PassiveSkills.Tooltip:setText(tr(nodeData.name))
 	--print(nodeData.description )
-	PassiveSkills.Tooltip.description:setText(tr(nodeData.description or "No description"))
+	local description = tr(nodeData.description or "No description")
+	description = description:gsub("\\n", "\n")
+	PassiveSkills.Tooltip.description:setText(description)
 	PassiveSkills.Tooltip.maxLevel:setText(tr("Max Level: %s", nodeData.maxLevel or 1))
 	local totalHeight = PassiveSkills.Tooltip.description:getHeight() +  PassiveSkills.Tooltip.maxLevel:getHeight() + 80  -- Adjust as needed
 	PassiveSkills.Tooltip:setHeight(totalHeight)
@@ -657,8 +657,8 @@ function PassiveSkills.onNodeButtonClick(branchId, nodeId)
 		})
 	else
 		PassiveSkills.setupConfirmMessage(
-			"Confirm Level Up",
-			"Are you sure you want to level up this node?",
+			tr("Confirm Level Up"),
+			tr("Are you sure you want to level up this node?"),
 			function()
 				PassiveSkills.sendOpcode({
 					topic = "node-levelup-request",
@@ -678,11 +678,11 @@ end
 
 function PassiveSkills.handleResetRequirements(data)
 	local requirements = data.requirements
-	local message = "To reset the passive skills, you need:\n" .. requirements
+	local message = tr("To reset the passive skills, you need:") .. "\n" .. requirements
 
 	PassiveSkills.setupConfirmMessage(
-		"Confirm Tree Reset",
-		message .. "\n\nAre you sure you want to reset all your passive skills?",
+		tr("Confirm Tree Reset"),
+		message .. "\n\n" .. tr("Are you sure you want to reset all your passive skills?"),
 		function()
 			PassiveSkills.sendOpcode({
 				topic = "confirm-reset-request"
@@ -770,7 +770,7 @@ function PassiveSkills.createBranch(treeId, branchIndex, branchData, branchProgr
 			nodeLevel:addAnchor(AnchorHorizontalCenter, nodeId, AnchorHorizontalCenter)
 
 			local currentLevel = branchProgress[nodeIndex] or 0
-			nodeLevel:setText(currentLevel .. "/" .. (nodeData.maxLevel or 1))
+			nodeLevel:setText(tr("%d/%d", currentLevel, nodeData.maxLevel or 1))
 		else
 			node:addAnchor(AnchorTop, 'parent', AnchorTop)
 			node:setMarginTop(PassiveSkills.marginBetweenNodes)
@@ -781,7 +781,7 @@ function PassiveSkills.createBranch(treeId, branchIndex, branchData, branchProgr
 			nodeLevel:addAnchor(AnchorHorizontalCenter, nodeId, AnchorHorizontalCenter)
 
 			local currentLevel = branchProgress[nodeIndex] or 0
-			nodeLevel:setText(currentLevel .. "/" .. (nodeData.maxLevel or 1))
+			nodeLevel:setText(tr("%d/%d", currentLevel, nodeData.maxLevel or 1))
 		end
 
 		local button = g_ui.createWidget("NodeButton", PassiveSkills.UI.internalPanel)
@@ -912,6 +912,7 @@ function PassiveSkills.displayTotalBuffs()
 						local value = currentLevel * v
 						formatted = formatted:gsub("%[%[%s*" .. k .. "%s*%]%]", tostring(value))
 					end
+					formatted = formatted:gsub("\\n", "\n")
 
 					local descLabel = g_ui.createWidget("Label", PassiveSkills.UI.totalBuffsPanel)
 					descLabel:setText(formatted)
@@ -921,7 +922,9 @@ function PassiveSkills.displayTotalBuffs()
 					descLabel:setColor('#60dd60')
 				else
 					local descLabel = g_ui.createWidget("Label", PassiveSkills.UI.totalBuffsPanel)
-					descLabel:setText(tr(nodeData.description or "No description"))
+					local description = tr(nodeData.description or "No description")
+					description = description:gsub("\\n", "\n")
+					descLabel:setText(description)
 					descLabel:setTextWrap(true)
 					descLabel:setTextAutoResize(true)
 					descLabel:setPhantom(false)
@@ -989,7 +992,7 @@ function PassiveSkills.onExtendedOpcode(protocol, opcode, buffer)
 		PassiveSkills.cachedTotalPoints = data.totalPoints
 		PassiveSkills.setupPoints()
 	elseif data.topic == "message-reply" then
-		PassiveSkills.setupMessage(data.title, data.message)
+		PassiveSkills.setupMessage(tr(data.title), tr(data.message))
 	elseif data.topic == "reset-requirements-reply" then
 		PassiveSkills.handleResetRequirements(data)
 
@@ -1003,7 +1006,7 @@ function PassiveSkills.onExtendedOpcode(protocol, opcode, buffer)
 		end
 	elseif data.topic == "paragon-allocate-reply" then
 		if not data.success then
-			PassiveSkills.setupMessage("Failed", data.message or "Could not allocate point.")
+			PassiveSkills.setupMessage(tr("Failed"), tr(data.message or "Could not allocate point."))
 		end
 		-- On success, server already sends paragon-data-reply via sendDataToClient
 	end

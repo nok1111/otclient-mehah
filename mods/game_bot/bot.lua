@@ -20,7 +20,7 @@ local combatSetup = false
 local healingSetup = false
 local supportSetup = false
 local needsUIRefresh = false  -- Flag to track when storage is loaded and UI needs update
-local BOT_BUTTON_INDEX = 11
+local BOT_BUTTON_INDEX = 1
 
 -- SimplifiedBot (integrated from bot_simple.lua)
 SimplifiedBot = {}
@@ -129,6 +129,11 @@ end
 
 function init()
   
+  print('[Bot] init() called')
+  
+  -- Ensure bot button exists early, even if botWindow UI fails later
+  ensureBotButton()
+  
   -- TEMPORARY: Debug input
   debugInput()
   
@@ -179,7 +184,7 @@ function init()
           SimplifiedBot.setOff()
           if botMainLoop then botMainLoop.setOff() end
           enableButton:setOn(false)
-          statusLabel:setText('Status: Stopped')
+          statusLabel:setText(tr('Status: Stopped'))
           statusLabel:setColor("#FF0000")
           storage.globalEnabled = false
           SimplifiedBot.saveStorage()
@@ -187,7 +192,7 @@ function init()
           SimplifiedBot.setOn()
           if botMainLoop then botMainLoop.setOn() end
           enableButton:setOn(true)
-          statusLabel:setText('Status: Running')
+          statusLabel:setText(tr('Status: Running'))
           statusLabel:setColor("#00FF00")
           storage.globalEnabled = true
           SimplifiedBot.saveStorage()
@@ -201,7 +206,7 @@ function init()
     end)
     
     if not status then
-      return
+      print('[Bot] ERROR loading botWindow UI: ' .. tostring(err))
     end
   end
   
@@ -212,9 +217,13 @@ function init()
   })
   
   if g_game.isOnline() then
+    print('[Bot] Game already online, calling onlineSimple from init')
     local success, error = pcall(onlineSimple)
     if not success then
+      print('[Bot] ERROR in onlineSimple: ' .. tostring(error))
     end
+  else
+    print('[Bot] Game not online yet, waiting for onGameStart')
   end
 end
 
@@ -289,7 +298,97 @@ function toggleSimple()
   end
 end
 
+function ensureBotButton()
+  if not modules.game_mainpanel or not modules.game_mainpanel.addToggleButton then
+    print('[Bot] ensureBotButton: game_mainpanel not available')
+    return
+  end
+
+  local status, err = pcall(function()
+    if not botButton or botButton:isDestroyed() then
+      botButton = modules.game_mainpanel.addToggleButton('botButton', tr('Bot'), '/images/options/bot', toggleSimple, true, BOT_BUTTON_INDEX)
+      botButton:setOn(false)
+      print('[Bot] botButton created by ensureBotButton')
+    else
+      print('[Bot] botButton already exists, reusing')
+    end
+
+    if botButton and not botButton:isDestroyed() then
+      botButton.index = BOT_BUTTON_INDEX
+      botButton:show()
+      botButton:setVisible(true)
+      local parent = botButton:getParent()
+      if parent then
+        parent:moveChildToIndex(botButton, 1)
+        print('[Bot] botButton moved to front of parent: ' .. tostring(parent:getId()))
+      else
+        print('[Bot] botButton has no parent!')
+      end
+      if modules.game_mainpanel and modules.game_mainpanel.prioritizeButton then
+        modules.game_mainpanel.prioritizeButton('botButton')
+      elseif modules.game_mainpanel and modules.game_mainpanel.showButton then
+        modules.game_mainpanel.showButton('botButton')
+      end
+    end
+  end)
+
+  if not status then
+    print('[Bot] ensureBotButton ERROR: ' .. tostring(err))
+    return
+  end
+
+  -- Defer prioritization to ensure mainpanel config is loaded
+  scheduleEvent(function()
+    print('[Bot] deferred ensureBotButton scheduleEvent running')
+    if botButton and not botButton:isDestroyed() then
+      print('[Bot] botButton still valid, index=' .. tostring(botButton.index) .. ', parent=' .. tostring(botButton:getParent() and botButton:getParent():getId() or 'nil'))
+      botButton.index = BOT_BUTTON_INDEX
+      botButton:show()
+      botButton:setVisible(true)
+      if modules.game_mainpanel and modules.game_mainpanel.prioritizeButton then
+        print('[Bot] calling prioritizeButton from scheduleEvent')
+        modules.game_mainpanel.prioritizeButton('botButton')
+      else
+        print('[Bot] prioritizeButton not available, using parent moveChildToIndex')
+        local parent = botButton:getParent()
+        if parent then
+          parent:moveChildToIndex(botButton, 1)
+        end
+        if modules.game_mainpanel and modules.game_mainpanel.showButton then
+          modules.game_mainpanel.showButton('botButton')
+        end
+      end
+    else
+      print('[Bot] botButton invalid or destroyed in scheduleEvent')
+    end
+  end, 100)
+
+  -- Extra safety: ensure bot button is visible after mainpanel onGameStart config load
+  scheduleEvent(function()
+    print('[Bot] extra safety scheduleEvent running')
+    if botButton and not botButton:isDestroyed() then
+      botButton:show()
+      botButton:setVisible(true)
+      botButton.index = BOT_BUTTON_INDEX
+      local parent = botButton:getParent()
+      if parent then
+        parent:moveChildToIndex(botButton, 1)
+        print('[Bot] extra safety: botButton moved to front')
+      else
+        print('[Bot] extra safety: botButton has no parent')
+      end
+      if modules.game_mainpanel and modules.game_mainpanel.prioritizeButton then
+        modules.game_mainpanel.prioritizeButton('botButton')
+      elseif modules.game_mainpanel and modules.game_mainpanel.showButton then
+        modules.game_mainpanel.showButton('botButton')
+      end
+    end
+  end, 600)
+end
+
 function onlineSimple()
+  
+  print('[Bot] onlineSimple called')
   
   if not SimplifiedBot then
     return
@@ -326,28 +425,9 @@ function onlineSimple()
 
   
   
-  -- Create button if it doesn't exist
-  if not botButton then
-    local status, err = pcall(function()
-      botButton = modules.game_mainpanel.addToggleButton('botButton', tr('Bot'), '/images/options/bot', toggleSimple, true, BOT_BUTTON_INDEX)
-      botButton:setOn(false)
-      botButton:show()
-    end)
-    
-    if not status then
-      return
-    end
-  end
+  -- Create/ensure bot button is visible and at the front
+  ensureBotButton()
 
-  if botButton and not botButton:isDestroyed() then
-    botButton.index = BOT_BUTTON_INDEX
-    botButton:show()
-    local parent = botButton:getParent()
-    if parent then
-      parent:moveChildToIndex(botButton, 1)
-    end
-  end
-  
   -- Create main loop
   if not botMainLoop then
     status, err = pcall(function()
@@ -397,7 +477,7 @@ function onlineSimple()
       if botMainLoop then botMainLoop.setOn() end
       if enableButton and statusLabel then
         enableButton:setOn(true)
-        statusLabel:setText('Status: Running')
+        statusLabel:setText(tr('Status: Running'))
         statusLabel:setColor("#00FF00")
       end
     end
@@ -593,10 +673,10 @@ function SimplifiedBot.updateStatus()
   
   if statusLabel then
     if botEnabled then
-      statusLabel:setText("Status: Running")
+      statusLabel:setText(tr('Status: Running'))
       statusLabel:setColor("#00FF00")
     else
-      statusLabel:setText("Status: Stopped")
+      statusLabel:setText(tr('Status: Stopped'))
       statusLabel:setColor("#FF0000")
     end
   end
@@ -966,7 +1046,7 @@ function showTextInputModal(title, currentText, callback)
   inputWindow:setSize({width = 340, height = 170})
   
   local label = g_ui.createWidget('Label', inputWindow)
-  label:setText('Enter spell text:')
+  label:setText(tr('Enter spell text:'))
   label:setTextAlign(AlignLeft)
   label:addAnchor(AnchorTop, 'parent', AnchorTop)
   label:addAnchor(AnchorLeft, 'parent', AnchorLeft)
@@ -985,7 +1065,7 @@ function showTextInputModal(title, currentText, callback)
   textEdit:setHeight(25)
   
   local okButton = g_ui.createWidget('Button', inputWindow)
-  okButton:setText('OK')
+  okButton:setText(tr('OK'))
   okButton:setWidth(90)
   okButton:setHeight(32)
   okButton:addAnchor(AnchorTop, 'prev', AnchorBottom)
@@ -994,7 +1074,7 @@ function showTextInputModal(title, currentText, callback)
   okButton:setMarginRight(5)
   
   local cancelButton = g_ui.createWidget('Button', inputWindow)
-  cancelButton:setText('Cancel')
+  cancelButton:setText(tr('Cancel'))
   cancelButton:setWidth(90)
   cancelButton:setHeight(32)
   cancelButton:addAnchor(AnchorTop, 'prev', AnchorTop)
@@ -1179,12 +1259,12 @@ function setupCombatPanel()
   local distanceLabel = combatPanel:recursiveGetChildById('distanceLabel')
   if distanceSlider and distanceLabel then
     distanceSlider:setValue(storage.combat.maxDistance)
-    distanceLabel:setText("Max Attack Distance: " .. storage.combat.maxDistance .. " sqm")
+    distanceLabel:setText(tr('Max Attack Distance: %d sqm', storage.combat.maxDistance))
     
     distanceSlider.onValueChange = function()
       local value = distanceSlider:getValue()
       storage.combat.maxDistance = value
-      distanceLabel:setText("Max Attack Distance: " .. value .. " sqm")
+      distanceLabel:setText(tr('Max Attack Distance: %d sqm', value))
       SimplifiedBot.delayedSave()
     end
   end
@@ -1192,8 +1272,8 @@ function setupCombatPanel()
   local priorityComboBox = combatPanel:recursiveGetChildById('priorityComboBox')
   if priorityComboBox then
     priorityComboBox:clearOptions()
-    priorityComboBox:addOption("Closest")
-    priorityComboBox:addOption("Lowest Health")
+    priorityComboBox:addOption(tr('Closest'))
+    priorityComboBox:addOption(tr('Lowest Health'))
     
     -- Set current option from storage
     if storage.combat.priority then
@@ -1237,7 +1317,7 @@ function setupCombatPanel()
         removeButton:addAnchor(AnchorTop, 'parent', AnchorTop)
         removeButton:setMarginRight(20)  -- Increased margin to avoid scrollbar overlap
         removeButton:setMarginTop(1)
-        removeButton:setTooltip('Remove this monster')
+        removeButton:setTooltip(tr('Remove this monster'))
         
         removeButton.onClick = function()
           table.remove(storage.combat.monsterList, index)
@@ -1252,7 +1332,7 @@ function setupCombatPanel()
   
   if addMonsterButton then
     addMonsterButton.onClick = function()
-      showTextInputModal('Exclude Monster (name)', "", function(text)
+      showTextInputModal(tr('Exclude Monster (name)'), "", function(text)
         if text and text ~= "" then
           if not storage.combat.monsterList then
             storage.combat.monsterList = {}
@@ -1294,9 +1374,9 @@ function setupCombatPanel()
     end
     
     spell1Button.onClick = function()
-      showTextInputModal('Spell 1', storage.combat.spells[1] or "", function(text)
+      showTextInputModal(tr('Spell 1'), storage.combat.spells[1] or "", function(text)
         storage.combat.spells[1] = text
-        spell1Button:setText(text ~= "" and text or "Click to add spell 1")
+        spell1Button:setText(text ~= "" and text or tr('Click to add spell 1'))
         SimplifiedBot.saveStorage()
       end)
     end
@@ -1309,9 +1389,9 @@ function setupCombatPanel()
     end
     
     spell2Button.onClick = function()
-      showTextInputModal('Spell 2', storage.combat.spells[2] or "", function(text)
+      showTextInputModal(tr('Spell 2'), storage.combat.spells[2] or "", function(text)
         storage.combat.spells[2] = text
-        spell2Button:setText(text ~= "" and text or "Click to add spell 2")
+        spell2Button:setText(text ~= "" and text or tr('Click to add spell 2'))
         SimplifiedBot.saveStorage()
       end)
     end
@@ -1324,9 +1404,9 @@ function setupCombatPanel()
     end
     
     spell3Button.onClick = function()
-      showTextInputModal('Spell 3', storage.combat.spells[3] or "", function(text)
+      showTextInputModal(tr('Spell 3'), storage.combat.spells[3] or "", function(text)
         storage.combat.spells[3] = text
-        spell3Button:setText(text ~= "" and text or "Click to add spell 3")
+        spell3Button:setText(text ~= "" and text or tr('Click to add spell 3'))
         SimplifiedBot.saveStorage()
       end)
     end
@@ -1357,9 +1437,9 @@ function setupHealingPanel()
     end
     
     healSpellButton.onClick = function()
-      showTextInputModal('Heal Spell', storage.healing.spell.text or "", function(text)
+      showTextInputModal(tr('Heal Spell'), storage.healing.spell.text or "", function(text)
         storage.healing.spell.text = text
-        healSpellButton:setText(text ~= "" and text or "Click to set spell")
+        healSpellButton:setText(text ~= "" and text or tr('Click to set spell'))
         SimplifiedBot.saveStorage()
       end)
     end
@@ -1379,10 +1459,10 @@ function setupHealingPanel()
     local decrementButton = healSpellHpSlider:getChildById('decrementButton')
     local incrementButton = healSpellHpSlider:getChildById('incrementButton')
     if decrementButton then
-      decrementButton:setTooltip('Decrease HP threshold')
+      decrementButton:setTooltip(tr('Decrease HP threshold'))
     end
     if incrementButton then
-      incrementButton:setTooltip('Increase HP threshold')
+      incrementButton:setTooltip(tr('Increase HP threshold'))
     end
   end
   
@@ -1402,7 +1482,7 @@ function setupHealingPanel()
   if healthPotionButton then
     local currentItem = tostring(storage.healing.healthPotion.itemId)
     healthPotionButton:setText(currentItem)
-    healthPotionButton:setTooltip('Click to select health potion with crosshair')
+    healthPotionButton:setTooltip(tr('Click to select health potion with crosshair'))
     
     healthPotionButton.onClick = function()
       startChoosePotionItem('health')
@@ -1417,10 +1497,10 @@ function setupHealingPanel()
     local decrementButton = healthPotionHpSlider:getChildById('decrementButton')
     local incrementButton = healthPotionHpSlider:getChildById('incrementButton')
     if decrementButton then
-      decrementButton:setTooltip('Decrease HP threshold')
+      decrementButton:setTooltip(tr('Decrease HP threshold'))
     end
     if incrementButton then
-      incrementButton:setTooltip('Increase HP threshold')
+      incrementButton:setTooltip(tr('Increase HP threshold'))
     end
     healthPotionHpSlider.onValueChange = function()
       local value = healthPotionHpSlider:getValue()
@@ -1446,7 +1526,7 @@ function setupHealingPanel()
   if manaPotionButton then
     local currentItem = tostring(storage.healing.manaPotion.itemId)
     manaPotionButton:setText(currentItem)
-    manaPotionButton:setTooltip('Click to select mana potion with crosshair')
+    manaPotionButton:setTooltip(tr('Click to select mana potion with crosshair'))
     
     manaPotionButton.onClick = function()
       startChoosePotionItem('mana')
@@ -1461,10 +1541,10 @@ function setupHealingPanel()
     local decrementButton = manaPotionMpSlider:getChildById('decrementButton')
     local incrementButton = manaPotionMpSlider:getChildById('incrementButton')
     if decrementButton then
-      decrementButton:setTooltip('Decrease MP threshold')
+      decrementButton:setTooltip(tr('Decrease MP threshold'))
     end
     if incrementButton then
-      incrementButton:setTooltip('Increase MP threshold')
+      incrementButton:setTooltip(tr('Increase MP threshold'))
     end
     
     manaPotionMpSlider.onValueChange = function()
@@ -1500,9 +1580,9 @@ function setupSupportPanel()
     end
     
     spell1Button.onClick = function()
-      showTextInputModal('Support Spell 1', storage.support.spell1.text or "", function(text)
+      showTextInputModal(tr('Support Spell 1'), storage.support.spell1.text or "", function(text)
         storage.support.spell1.text = text
-        spell1Button:setText(text ~= "" and text or "Click to set spell")
+        spell1Button:setText(text ~= "" and text or tr('Click to set spell'))
         SimplifiedBot.saveStorage()
       end)
     end
@@ -1523,10 +1603,10 @@ function setupSupportPanel()
     local decrementButton = spell1CooldownSlider:getChildById('decrementButton')
     local incrementButton = spell1CooldownSlider:getChildById('incrementButton')
     if decrementButton then
-      decrementButton:setTooltip('Decrease cooldown')
+      decrementButton:setTooltip(tr('Decrease cooldown'))
     end
     if incrementButton then
-      incrementButton:setTooltip('Increase cooldown')
+      incrementButton:setTooltip(tr('Increase cooldown'))
     end
   end
   
@@ -1550,9 +1630,9 @@ function setupSupportPanel()
     end
     
     spell2Button.onClick = function()
-      showTextInputModal('Support Spell 2', storage.support.spell2.text or "", function(text)
+      showTextInputModal(tr('Support Spell 2'), storage.support.spell2.text or "", function(text)
         storage.support.spell2.text = text
-        spell2Button:setText(text ~= "" and text or "Click to set spell")
+        spell2Button:setText(text ~= "" and text or tr('Click to set spell'))
         SimplifiedBot.saveStorage()
       end)
     end
@@ -1573,10 +1653,10 @@ function setupSupportPanel()
     local decrementButton = spell2CooldownSlider:getChildById('decrementButton')
     local incrementButton = spell2CooldownSlider:getChildById('incrementButton')
     if decrementButton then
-      decrementButton:setTooltip('Decrease cooldown')
+      decrementButton:setTooltip(tr('Decrease cooldown'))
     end
     if incrementButton then
-      incrementButton:setTooltip('Increase cooldown')
+      incrementButton:setTooltip(tr('Increase cooldown'))
     end
   end
   
@@ -1596,7 +1676,7 @@ function setupSupportPanel()
   if autoEatButton then
     local currentItem = tostring(storage.support.autoEat.itemId)
     autoEatButton:setText(currentItem)
-    autoEatButton:setTooltip('Click to select food item with crosshair')
+    autoEatButton:setTooltip(tr('Click to select food item with crosshair'))
     
     autoEatButton.onClick = function()
       startChoosePotionItem('food')
@@ -1618,10 +1698,10 @@ function setupSupportPanel()
     local decrementButton = autoEatIntervalSlider:getChildById('decrementButton')
     local incrementButton = autoEatIntervalSlider:getChildById('incrementButton')
     if decrementButton then
-      decrementButton:setTooltip('Decrease interval')
+      decrementButton:setTooltip(tr('Decrease interval'))
     end
     if incrementButton then
-      incrementButton:setTooltip('Increase interval')
+      incrementButton:setTooltip(tr('Increase interval'))
     end
   end
   

@@ -87,6 +87,7 @@ Creature::Creature() :m_type(Proto::CreatureTypeUnknown)
     m_healthBarNpcFrame = g_textures.getTexture("/images/lifebars/npc");
     m_healthBarKillerFrame = g_textures.getTexture("/images/lifebars/killer");
     m_healthBarPlayersFrame = g_textures.getTexture("/images/lifebars/players");
+    m_customIconTexture = g_textures.getTexture("/images/game/npcicons/icon_default");
 }
 
 Creature::~Creature() {
@@ -411,6 +412,9 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
 
     if (m_icon != Otc::NpcIconNone && m_iconTexture)
         g_drawPool.addTexturedPos(m_iconTexture, static_cast<int>(backgroundRect.x() + 50), healthBarY - 2);
+
+    if (isNpc() && m_customIconTexture)
+        g_drawPool.addTexturedPos(m_customIconTexture, static_cast<int>(textRect.horizontalCenter() - 9), static_cast<int>(textRect.y() - 20));
 
     if (g_gameConfig.drawTyping() && getTyping() && m_typingIconTexture)
         g_drawPool.addTexturedPos(m_typingIconTexture, p.x + (nameSize.width() / 2.0) + 2, textRect.y() - 6);
@@ -1080,6 +1084,7 @@ void Creature::setEmblem(const uint8_t v) { if (m_emblem != v) callLuaField("onE
 
 void Creature::setTypeTexture(const std::string& filename) { m_typeTexture = g_textures.getTexture(filename); }
 void Creature::setIconTexture(const std::string& filename) { m_iconTexture = g_textures.getTexture(filename); }
+void Creature::setCustomIconTexture(const std::string& filename) { m_customIconTexture = g_textures.getTexture(filename); }
 void Creature::setIconsTexture(const std::string& filename, const Rect& clip, const uint16_t count)
 {
     if (!m_icons) {

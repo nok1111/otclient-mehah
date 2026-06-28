@@ -47,7 +47,7 @@ function Codex.setupTabButtons()
 	if Codex.UI.UpgradeTab then Codex.UI.UpgradeTab.onClick = function() Codex.switchTab(Codex.TAB_UPGRADE) end end
 	
 	if Codex.UI.EssencesLabel then
-		Codex.UI.EssencesLabel:setText("Codex Essences: " .. Codex.cachedEssences)
+		Codex.UI.EssencesLabel:setText(tr("Codex Essences: %s", Codex.cachedEssences))
 	end
 end
 
@@ -126,7 +126,7 @@ function Codex.setupCollectionUI()
 	local paginationPanel = Codex.UI.CollectionPanel and Codex.UI.CollectionPanel:getChildById("PaginationPanel")
 	if paginationPanel then
 		local pageInfo = paginationPanel:getChildById("PageInfo")
-		if pageInfo then pageInfo:setText("Page " .. Codex.currentCollectionPage .. " / " .. totalPages) end
+		if pageInfo then pageInfo:setText(tr("Page %s / %s", Codex.currentCollectionPage, totalPages)) end
 		
 		local prevButton = paginationPanel:getChildById("PrevPageButton")
 		if prevButton then
@@ -192,7 +192,7 @@ function Codex.setupCollectionUI()
 					expBar:setVisible(true)
 				end
 				if expLabel then
-					expLabel:setText(currentExp .. "/" .. expNeeded)
+					expLabel:setText(tr("%s / %s", currentExp, expNeeded))
 					expLabel:setVisible(true)
 				end
 			end
@@ -272,7 +272,7 @@ function Codex.updateCardDetails()
 			local expPercent = math.min(100, math.floor((currentExp / expNeeded) * 100))
 			
 			cardExpBar:setPercent(expPercent)
-			cardExpText:setText(currentExp .. " / " .. expNeeded .. " EXP")
+			cardExpText:setText(tr("%s / %s EXP", currentExp, expNeeded))
 			cardExpBar:setVisible(true)
 			cardExpText:setVisible(true)
 		elseif isUnlocked and cardLevel >= cardData.maxLevel then
@@ -356,10 +356,10 @@ function Codex.updateCardDetails()
 			end
 		end
 		if isActive then
-			cardDetailsPanel.CardStatus:setText("Status: ACTIVE")
+			cardDetailsPanel.CardStatus:setText(tr("Status: ACTIVE"))
 			cardDetailsPanel.CardStatus:setColor("#00ff00")
 		else
-			cardDetailsPanel.CardStatus:setText("Status: INACTIVE")
+			cardDetailsPanel.CardStatus:setText(tr("Status: INACTIVE"))
 			cardDetailsPanel.CardStatus:setColor("#888888")
 		end
 	end
@@ -414,7 +414,7 @@ function Codex.setupDeckUI()
 				
 				local expLabel = cardWidget:getChildById("expLabel")
 				if expLabel then
-					expLabel:setText(currentExp .. "/" .. expNeeded)
+					expLabel:setText(tr("%s / %s", currentExp, expNeeded))
 					expLabel:setVisible(true)
 				end
 			end
@@ -450,10 +450,10 @@ function Codex.setupDeckUI()
 		
 		if slotLabel then
 			if isLocked then
-				slotLabel:setText("Slot " .. i .. " (Locked)")
+				slotLabel:setText(tr("Slot %s (Locked)", i))
 				slotLabel:setColor("#888888")
 			else
-				slotLabel:setText("Slot " .. i)
+				slotLabel:setText(tr("Slot %s", i))
 				slotLabel:setColor("#ffffff")
 			end
 		end
@@ -464,7 +464,7 @@ function Codex.setupDeckUI()
 			if removeButton then removeButton:hide() end
 			slotWidget:setOpacity(0.5)
 			if requirementLabel and slotStatus then
-				requirementLabel:setText(slotStatus.requirement or "Locked")
+				requirementLabel:setText(slotStatus.requirement or tr("Locked"))
 				requirementLabel:show()
 			end
 		elseif activeCardId and activeCardId > 0 then
@@ -564,7 +564,7 @@ function Codex.updateActiveSlots()
 				
 				-- Show requirement label if slot is locked
 				if isLocked and requirementLabel and slotStatus then
-					requirementLabel:setText(slotStatus.requirement or "Locked")
+					requirementLabel:setText(slotStatus.requirement or tr("Locked"))
 					requirementLabel:show()
 				elseif requirementLabel then
 					requirementLabel:hide()
@@ -608,15 +608,15 @@ function Codex.setupCratesUI()
 	local goldenButton = selectorPanel:getChildById("GoldenCrateButton")
 
 	if bronzeButton then
-		bronzeButton:setText("\n\n\n" .. "     BRONZE CRATE\nx" .. Codex.cachedBronzeCrates)
+		bronzeButton:setText("\n\n\n" .. tr("BRONZE CRATE\nx%s", Codex.cachedBronzeCrates))
 		bronzeButton.onClick = function() Codex.selectCrateType(1) end
 	end
 	if silverButton then
-		silverButton:setText("\n\n\n" .. "     SILVER CRATE\nx" .. Codex.cachedSilverCrates)
+		silverButton:setText("\n\n\n" .. tr("SILVER CRATE\nx%s", Codex.cachedSilverCrates))
 		silverButton.onClick = function() Codex.selectCrateType(2) end
 	end
 	if goldenButton then
-		goldenButton:setText("\n\n\n" .. "     GOLDEN CRATE\nx" .. Codex.cachedGoldenCrates)
+		goldenButton:setText("\n\n\n" .. tr("GOLDEN CRATE\nx%s", Codex.cachedGoldenCrates))
 		goldenButton.onClick = function() Codex.selectCrateType(3) end
 	end
 
@@ -652,12 +652,12 @@ function Codex.selectCrateType(crateId)
 	if imageMap[crateId] then displayPanel:setImageSource(imageMap[crateId]) end
 
 	local nameLabel = displayPanel:getChildById("SelectedCrateName")
-	if nameLabel then nameLabel:setText(crateData.name:upper()) end
+	if nameLabel then nameLabel:setText(tr(crateData.name):upper()) end
 
 	local ownedLabel = displayPanel:getChildById("CrateOwnedCount")
 	if ownedLabel then
 		local ownedCount = (crateId == 1 and Codex.cachedBronzeCrates) or (crateId == 2 and Codex.cachedSilverCrates) or (crateId == 3 and Codex.cachedGoldenCrates) or 0
-		ownedLabel:setText("You own: " .. ownedCount)
+		ownedLabel:setText(tr("You own: %s", ownedCount))
 	end
 
 	local barsPanel = displayPanel:getChildById("ProbabilityBarsPanel")
@@ -694,7 +694,7 @@ function Codex.createProbabilityBar(container, rarity, weight)
 	barContainer:setMarginTop(5)
 	
 	local label = g_ui.createWidget("Label", barContainer)
-	label:setText(rarity:sub(1,1):upper() .. rarity:sub(2))
+	label:setText(tr(rarity:sub(1,1):upper() .. rarity:sub(2)))
 	label:setColor(Codex.rarityColors[rarity] or "#FFFFFF")
 	label:addAnchor(AnchorLeft, "parent", AnchorLeft)
 	label:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
@@ -947,7 +947,7 @@ function Codex.applyTooltip(cardData, cardLevel)
 			
 			Codex.Tooltip.expBar:setPercent(expPercent)
 			Codex.Tooltip.expBar:show()
-			Codex.Tooltip.expLabel:setText(currentExp .. "/" .. expNeeded)
+			Codex.Tooltip.expLabel:setText(tr("%s / %s", currentExp, expNeeded))
 			Codex.Tooltip.expLabel:setColor("#ffffff")
 			Codex.Tooltip.expLabel:show()
 		else

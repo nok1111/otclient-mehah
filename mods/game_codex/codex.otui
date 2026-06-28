@@ -205,7 +205,7 @@ ActiveSlot < Panel
     anchors.top: parent.top
     anchors.horizontalCenter: parent.horizontalCenter
     margin-top: 5
-    text: Slot 1
+    !text: tr('Slot 1')
     font: verdana-11px-rounded
   
   Label
@@ -365,7 +365,7 @@ MainWindow
       margin-top: 8
       width: 200
       height: 22
-      placeholder: Search cards...
+      !placeholder: tr('Search cards...')
       font: verdana-11px-rounded
 
     Label
@@ -374,7 +374,7 @@ MainWindow
       anchors.top: parent.top
       margin-left: 15
       margin-top: 10
-      text: Trigger:
+      !text: tr('Trigger:')
       font: verdana-11px-rounded
       color: #ffffff
 
@@ -394,7 +394,7 @@ MainWindow
       anchors.top: parent.top
       margin-left: 15
       margin-top: 10
-      text: Rarity:
+      !text: tr('Rarity:')
       font: verdana-11px-rounded
       color: #ffffff
 
@@ -444,7 +444,7 @@ MainWindow
       anchors.top: SearchInput.bottom
       margin-left: 10
       margin-top: 8
-      text: Level:
+      !text: tr('Level:')
       font: verdana-11px-rounded
       color: #ffffff
 
@@ -539,7 +539,7 @@ MainWindow
         id: PrevPageButton
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        text: < Previous
+        !text: tr('< Previous')
         width: 100
         margin-left: 10
       
@@ -547,7 +547,7 @@ MainWindow
         id: PageInfo
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        text: Page 1 / 1
+        !text: tr('Page %s / %s', 1, 1)
         width: 100
         color: #ffffff
       
@@ -555,7 +555,7 @@ MainWindow
         id: NextPageButton
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        text: Next >
+        !text: tr('Next >')
         width: 100
         margin-right: 10
     
@@ -594,7 +594,7 @@ MainWindow
       image-source: /images/ui/window
       image-border: 6
       image-border-top: 27
-      text: Card Details
+      !text: tr('Card Details')
       text-offset: 0 2
       text-align: top
       
@@ -613,7 +613,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         margin-top: 10
-        text: Select a card
+        !text: tr('Select a card')
         text-align: center
         font: verdana-11px-rounded
         color: #ffffff
@@ -624,7 +624,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         margin-top: 5
-        text: Level: -
+        !text: tr('Level: -')
         text-align: center
         font: verdana-11px-rounded
         
@@ -646,7 +646,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         margin-top: 5
-        text: 0 / 0 EXP
+        !text: tr('0 / 0 EXP')
         text-align: center
         font: verdana-11px-rounded
         color: #A020F0
@@ -657,7 +657,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         margin-top: 15
-        text: Trigger: -
+        !text: tr('Trigger: -')
         text-align: center
         color: #00ffff
 
@@ -689,7 +689,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         margin-bottom: 10
-        text: Status: -
+        !text: tr('Status: -')
         text-align: center
 
   // DECK PANEL
@@ -715,7 +715,7 @@ MainWindow
       image-source: /images/ui/window
       image-border: 6
       image-border-top: 27
-      text: Available Cards
+      !text: tr('Available Cards')
       text-offset: 0 2
       text-align: top
       padding-top: 30
@@ -747,7 +747,7 @@ MainWindow
       image-source: /images/ui/window
       image-border: 6
       image-border-top: 27
-      text: Active Deck
+      !text: tr('Active Deck')
       text-offset: 0 2
       text-align: top
       padding-top: 30
@@ -800,7 +800,7 @@ MainWindow
       Button
         id: BronzeCrateButton
         size: 200 156
-        text: BRONZE CRATE
+        !text: tr('BRONZE CRATE')
         icon: /images/codex/bronze
         icon-align: top
         icon-offset: 0 -50
@@ -810,7 +810,7 @@ MainWindow
       Button
         id: SilverCrateButton
         size: 200 156
-        text: SILVER CRATE
+        !text: tr('SILVER CRATE')
         icon: /images/codex/silver
         icon-align: top
         icon-offset: 0 -50
@@ -820,7 +820,7 @@ MainWindow
       Button
         id: GoldenCrateButton
         size: 200 156
-        text: GOLDEN CRATE
+        !text: tr('GOLDEN CRATE')
         icon: /images/codex/golden
         icon-align: top
         icon-offset: 0 -50
@@ -845,7 +845,7 @@ MainWindow
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         margin-top: 2
-        text: BRONZE CODEX CRATE
+        !text: tr('BRONZE CODEX CRATE')
         text-align: center
         font: verdana-11px-rounded
         color: #FFD700
@@ -855,7 +855,7 @@ MainWindow
         anchors.top: SelectedCrateName.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         margin-top: 15
-        text: You own: 0
+        !text: tr('You own: %s', 0)
         text-align: center
         width: 300
         color: #FFFFFF
@@ -866,7 +866,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         margin-top: 20
-        text: Drop Chances:
+        !text: tr('Drop Chances:')
         text-align: center
         font: verdana-11px-rounded
         color: #AAAAAA
@@ -890,7 +890,7 @@ MainWindow
         anchors.bottom: parent.bottom
         margin-bottom: 10
         size: 200 30
-        text: OPEN CRATE
+        !text: tr('OPEN CRATE')
         font: verdana-11px-rounded
 
     // Bottom: Crafting Info
@@ -910,25 +910,25 @@ MainWindow
 
       Label
         id: CraftingLabel
-        text: Crafting:
+        !text: tr('Crafting:')
         color: #AAAAAA
 
       Button
         id: CraftBronzeButton
         size: 150 25
-        text: 100 Essences -> Bronze
+        !text: tr('100 Essences -> Bronze')
         font: verdana-11px-rounded
 
       Button
         id: CraftSilverButton
         size: 150 25
-        text: 200 Essences -> Silver
+        !text: tr('200 Essences -> Silver')
         font: verdana-11px-rounded
 
       Button
         id: CraftGoldenButton
         size: 150 25
-        text: 350 Essences -> Golden
+        !text: tr('350 Essences -> Golden')
         font: verdana-11px-rounded
 
   // UPGRADE PANEL
@@ -954,7 +954,7 @@ MainWindow
       image-source: /images/ui/window
       image-border: 6
       image-border-top: 27
-      text: Cards
+      !text: tr('Cards')
       text-offset: 0 2
       text-align: top
       padding-top: 35
@@ -987,7 +987,7 @@ MainWindow
       image-source: /images/ui/window
       image-border: 6
       image-border-top: 27
-      text: Card Details
+      !text: tr('Card Details')
       text-offset: 0 2
       text-align: top
       padding: 20
@@ -1006,7 +1006,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         margin-top: 20
-        text: Select a card
+        !text: tr('Select a card')
         text-align: center
         font: verdana-11px-rounded
         color: #ffffff
@@ -1017,7 +1017,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         margin-top: 8
-        text: Level: -
+        !text: tr('Level: -')
         text-align: center
         font: verdana-11px-rounded
         color: #ffff00
@@ -1040,7 +1040,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         margin-top: 8
-        text: 0 / 0 EXP
+        !text: tr('0 / 0 EXP')
         text-align: center
         font: verdana-11px-rounded
         color: #A020F0
@@ -1091,7 +1091,7 @@ MainWindow
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         margin-bottom: 35
-        text: Max Level
+        !text: tr('Max Level')
         text-align: center
         font: verdana-11px-rounded
         color: #888888
@@ -1118,7 +1118,7 @@ MainWindow
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         margin-top: 20
-        text: CARD OBTAINED!
+        !text: tr('CARD OBTAINED!')
         font: verdana-11px-rounded
         color: #FFD700
 
@@ -1177,7 +1177,7 @@ MainWindow
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         margin-top: 20
-        text: BONUS!
+        !text: tr('BONUS!')
         font: verdana-11px-rounded
         color: #FFD700
 

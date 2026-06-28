@@ -1,5 +1,5 @@
 DailyTaskRow < Panel
-  height: 78
+  height: 82
   image-source: /images/ui/windows/miniwindow
   image-border: 5
   padding: 6
@@ -19,7 +19,7 @@ DailyTaskRow < Panel
     id: diffBadge
     anchors.top: parent.top
     anchors.left: categoryIcon.right
-    margin-top: 4
+    margin-top: 2
     margin-left: 8
     size: 58 14
     image-source: /images/ui/windows/miniwindow
@@ -30,7 +30,7 @@ DailyTaskRow < Panel
       text-align: center
       color: #FFFFFF
       font: verdana-11px-antialised
-      text: easy
+      !text: tr('easy')
 
   // Profession tag (right next to difficulty)
   Label
@@ -40,20 +40,18 @@ DailyTaskRow < Panel
     margin-left: 6
     color: #C5E1FF
     font: verdana-11px-antialised
-    text: 
-
-  Label
+    !text: tr('Label')
     id: title
     anchors.top: parent.top
     anchors.left: categoryIcon.right
     anchors.right: rewardsPanel.left
-    margin-top: 18
+    margin-top: 20
     margin-left: 8
     margin-right: 6
     text-align: left
     color: #E7CF7A
     font: verdana-11px-rounded
-    text: Task
+    !text: tr('Task')
 
   Label
     id: desc
@@ -67,7 +65,7 @@ DailyTaskRow < Panel
     text-wrap: true
     color: #FFFFFF
     font: verdana-11px-antialised
-    text: -
+    !text: tr('-')
 
   // Rewards cluster: AP icon + value, Essence icon + value
   Panel
@@ -93,7 +91,7 @@ DailyTaskRow < Panel
       width: 20
       color: #FFD56B
       font: verdana-11px-rounded
-      text: +0
+      !text: tr('+0')
     UIWidget
       id: essIcon
       anchors.left: apValue.right
@@ -109,21 +107,21 @@ DailyTaskRow < Panel
       width: 30
       color: #D7B4FF
       font: verdana-11px-rounded
-      text: +0
+      !text: tr('+0')
 
   ProgressBar
     id: progress
     anchors.bottom: parent.bottom
     anchors.left: categoryIcon.right
     anchors.right: claimButton.left
-    margin-bottom: 4
+    margin-bottom: 2
     margin-left: 8
     margin-right: 6
     height: 14
     minimum: 0
     maximum: 100
     value: 0
-    text: 0/0
+    !text: tr('0/0')
 
   Button
     id: claimButton
@@ -132,7 +130,7 @@ DailyTaskRow < Panel
     margin-right: 6
     width: 92
     height: 26
-    text: Claim
+    !text: tr('Claim')
 
 DailyTasksWindow < MainWindow
   id: dailyTasksWindow
@@ -170,7 +168,7 @@ DailyTasksWindow < MainWindow
       margin-top: 8
       margin-left: 12
       margin-right: 12
-      text: Daily Tasks
+      !text: tr('Daily Tasks')
       color: #E7CF7A
       font: verdana-11px-rounded
       text-align: left
@@ -183,7 +181,7 @@ DailyTasksWindow < MainWindow
       margin-top: 2
       margin-left: 12
       margin-right: 12
-      text: Complete 4 tasks to unlock the Golden Crate
+      !text: tr('Complete 4 tasks to unlock the Golden Crate')
       color: #C5E1FF
       font: verdana-11px-antialised
       text-align: left
@@ -200,7 +198,7 @@ DailyTasksWindow < MainWindow
       minimum: 0
       maximum: 4
       value: 0
-      text: 0/4
+      !text: tr('0/4')
 
   Button
     id: claimDailyButton
@@ -209,7 +207,7 @@ DailyTasksWindow < MainWindow
     margin-top: 8
     width: 280
     height: 28
-    text: Claim Golden Crate
+    !text: tr('Claim Golden Crate')
     enabled: false
 
   Button

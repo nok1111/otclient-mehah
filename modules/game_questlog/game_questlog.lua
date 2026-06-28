@@ -641,7 +641,7 @@ function questLogController:onInit()
     questLogButton = modules.game_mainpanel.addToggleButton('questLogButton', tr('Quest Log'),
         '/images/options/button_questlog', function()
             toggle()
-        end, false, 1000)
+        end, false, 22)
     Keybind.new("Windows", "Show/hide quest Log", "", "")
     Keybind.bind("Windows", "Show/hide quest Log", {{
         type = KEY_DOWN,
@@ -668,7 +668,7 @@ function questLogController:onGameStart()
             buttonQuestLogTrackerButton = modules.game_mainpanel.addToggleButton("QuestLogTracker",
                 tr("Open QuestLog Tracker"), "/images/options/button_questlog_tracker", function()
                     questLogController:toggleMiniWindowsTracker()
-                end, false, 1001)
+                end, false, 23)
         end
         if trackerMiniWindow then
             trackerMiniWindow:setupOnStart()

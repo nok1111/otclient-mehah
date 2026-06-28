@@ -44,15 +44,15 @@ LeaderboardPanel < Panel
         height: 20
         
         PlayersTableHeaderColumn
-          !text: '#'
+          !text: tr('#')
           width: 33
 
         PlayersTableHeaderColumn
-          !text: 'Name'
+          !text: tr('Name')
           width: 228
 
         PlayersTableHeaderColumn
-          !text: 'Time'
+          !text: tr('Time')
           width: 82
 
     TableData
@@ -93,15 +93,15 @@ LeaderboardPanel < Panel
         height: 20
         
         PlayersTableHeaderColumn
-          !text: '#'
+          !text: tr('#')
           width: 33
 
         PlayersTableHeaderColumn
-          !text: 'Name'
+          !text: tr('Name')
           width: 228
 
         PlayersTableHeaderColumn
-          !text: 'Time'
+          !text: tr('Time')
           width: 82
 
     TableData

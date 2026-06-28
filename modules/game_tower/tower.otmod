@@ -4,7 +4,7 @@ Module
   author: Custom
   version: 1.0.0
 
-  autoload: true
+  autoload: false
   sandboxed: true
   scripts: [ tower ]
   @onLoad: init()

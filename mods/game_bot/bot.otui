@@ -58,11 +58,11 @@ MiniWindow
       text-vertical-align: center
 
       $on:
-        text: On
+        !text: tr('On')
         color: #00AA00
 
       $!on:
-        text: Off
+        !text: tr('Off')
         color: #FF0000
 
     Label
@@ -122,7 +122,7 @@ MiniWindow
       
       Button
         id: combatTabButton
-        text: Combat
+        !text: tr('Combat')
         height: 22
         
         $on:
@@ -135,7 +135,7 @@ MiniWindow
         
       Button
         id: healingTabButton
-        text: Healing
+        !text: tr('Healing')
         height: 22
         
         $on:
@@ -148,7 +148,7 @@ MiniWindow
         
       Button
         id: supportTabButton
-        text: Support
+        !text: tr('Support')
         height: 22
         
         $on:

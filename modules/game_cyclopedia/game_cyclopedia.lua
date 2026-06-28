@@ -41,12 +41,12 @@ end
 function controllerCyclopedia:onGameStart()
     if g_game.getClientVersion() >= 1310 then
         CyclopediaButton = modules.game_mainpanel.addToggleButton('CyclopediaButton', tr('Cyclopedia'),
-            '/images/options/cooldowns', function() toggle("items") end, false, 7)
+            '/images/options/cooldowns', function() toggle("items") end, false, 10)
         ButtonBossSlot = modules.game_mainpanel.addToggleButton("bossSlot", tr("Open Boss Slots dialog"),
-            "/images/options/ButtonBossSlot", function() toggle("bossSlot") end, false, 20)
+            "/images/options/ButtonBossSlot", function() toggle("bossSlot") end, false, 18)
         CyclopediaButton:setOn(false)
         ButtonBestiary = modules.game_mainpanel.addToggleButton("bosstiary", tr("Open Bosstiary dialog"),
-            "/images/options/ButtonBosstiary", function() toggle("bosstiary") end, false, 17)
+            "/images/options/ButtonBosstiary", function() toggle("bosstiary") end, false, 15)
 
         contentContainer = controllerCyclopedia.ui:recursiveGetChildById('contentContainer')
         buttonSelection = controllerCyclopedia.ui:recursiveGetChildById('buttonSelection')
@@ -104,7 +104,7 @@ function controllerCyclopedia:onGameStart()
     =================================================== ]] --
 
         trackerButton = modules.game_mainpanel.addToggleButton("trackerButton", tr("Bestiary Tracker"),
-            "/images/options/bestiaryTracker", Cyclopedia.toggleBestiaryTracker, false, 17)
+            "/images/options/bestiaryTracker", Cyclopedia.toggleBestiaryTracker, false, 16)
 
         trackerButton:setOn(false)
         trackerMiniWindow = g_ui.createWidget('BestiaryTracker', modules.game_interface.getRightPanel())

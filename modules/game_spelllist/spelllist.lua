@@ -40,7 +40,7 @@ end
 function online()
     if g_game.getFeature(GameSpellList) and not spelllistButton then
         spelllistButton = modules.game_mainpanel.addToggleButton('spelllistButton', tr('Spell List'),
-        '/images/options/button_spells', toggle, false, 4)
+        '/images/options/button_spells', toggle, false, 6)
         spelllistButton:setOn(false)
     end
 end
@@ -171,7 +171,7 @@ function initializeSpelllist()
 
         local tmpLabel = g_ui.createWidget('SpellListLabel', spellList)
         tmpLabel:setId(spell)
-        tmpLabel:setText(spell .. '\n\'' .. info.words .. '\'')
+        tmpLabel:setText(tr(spell) .. '\n\'' .. info.words .. '\'')
         tmpLabel:setPhantom(false)
 
         local iconId = tonumber(info.icon)
@@ -330,10 +330,10 @@ function updateSpellInformation(widget)
     end
 
     -- New UI: title and chips
-    if spellTitle then spellTitle:setText(name) else print('[SpellList] WARN: spellTitle missing') end
+    if spellTitle then spellTitle:setText(tr(name)) else print('[SpellList] WARN: spellTitle missing') end
     if chipFormula then chipFormula:setText(formula ~= '' and ('/' .. formula) or '') else print('[SpellList] WARN: chipFormula missing') end
     if chipCooldown then chipCooldown:setText(cooldown) else print('[SpellList] WARN: chipCooldown missing') end
-    if chipLevel then chipLevel:setText(level ~= '' and ('Lv. ' .. level) or '') else print('[SpellList] WARN: chipLevel missing') end
+    if chipLevel then chipLevel:setText(level ~= '' and (tr('Lv. ') .. level) or '') else print('[SpellList] WARN: chipLevel missing') end
     if chipMana then chipMana:setText(mana) else print('[SpellList] WARN: chipMana missing') end
 
     -- Also fill labeled value rows

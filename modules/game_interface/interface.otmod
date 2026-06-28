@@ -11,6 +11,8 @@ Module
     - game_shortcuts
     - game_mainpanel
     - game_minimap
+    - game_npcmarkers
+    - game_floorchange_markers
     - game_healthinfo
     - game_inventory
     - game_prey

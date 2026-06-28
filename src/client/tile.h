@@ -158,6 +158,7 @@ public:
     bool hasCommonItem() const { return m_thingTypeFlag & HAS_COMMON_ITEM; }
     bool hasBottomItem() const { return m_thingTypeFlag & HAS_BOTTOM_ITEM; }
 
+    bool hasFloorChange();
     bool hasIgnoreLook() { return m_thingTypeFlag & IGNORE_LOOK; }
     bool hasDisplacement() const { return m_thingTypeFlag & HAS_DISPLACEMENT; }
     bool hasLight() const { return m_thingTypeFlag & HAS_LIGHT; }

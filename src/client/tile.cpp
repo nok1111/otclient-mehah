@@ -433,6 +433,15 @@ std::vector<ItemPtr> Tile::getItems()
     return items;
 }
 
+bool Tile::hasFloorChange()
+{
+    for (const auto& thing : m_things) {
+        if (thing->isItem() && thing->isFloorChange())
+            return true;
+    }
+    return false;
+}
+
 EffectPtr Tile::getEffect(const uint16_t id) const
 {
     if (m_effects) {

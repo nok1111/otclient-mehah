@@ -194,7 +194,7 @@ end
 
 function onGameStart()
     if g_game.getClientVersion() >= 1100 then
-        imbuementTrackerButton = modules.game_mainpanel.addToggleButton('imbuementTrackerButton', tr('Imbuement Tracker'), '/images/options/button_imbuementtracker', toggle)
+        imbuementTrackerButton = modules.game_mainpanel.addToggleButton('imbuementTrackerButton', tr('Imbuement Tracker'), '/images/options/button_imbuementtracker', toggle, false, 19)
         g_game.imbuementDurations(imbuementTrackerButton:isOn())
         imbuementTracker:setupOnStart()
         loadFilters()

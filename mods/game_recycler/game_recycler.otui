@@ -115,7 +115,7 @@ MainWindow
 
     Label
       id: totalValue
-      text: 0 gold
+      !text: tr('%d gold', 0)
       anchors.top: parent.top
       anchors.right: parent.right
       font: verdana-11px-rounded
@@ -134,7 +134,7 @@ MainWindow
 
     Label
       id: rarityBonusValue
-      text: + 0 gold
+      !text: tr('+ %d gold', 0)
       anchors.top: totalValue.bottom
       anchors.right: parent.right
       margin-top: 4
@@ -154,7 +154,7 @@ MainWindow
 
     Label
       id: enchantBonusValue
-      text: + 0 gold
+      !text: tr('+ %d gold', 0)
       anchors.top: rarityBonusValue.bottom
       anchors.right: parent.right
       margin-top: 4

@@ -290,7 +290,7 @@ MainWindow
     anchors.top: prev.bottom
     anchors.left: parent.left
     anchors.bottom: parent.bottom
-    width: 150
+    width: 170
     margin-top: 5
     margin-left: 5
     margin-bottom: 5
@@ -310,313 +310,508 @@ MainWindow
       color: #FFD700
       text-align: center
 
-    // All Category
-    Button
-      id: cat_all
-      anchors.top: prev.bottom
-      anchors.left: parent.left
+    VerticalScrollBar
+      id: categoryScrollBar
+      anchors.top: categoryTitle.bottom
       anchors.right: parent.right
-      height: 28
+      anchors.bottom: parent.bottom
       margin-top: 5
-      margin-left: 5
-      margin-right: 5
-      !text: tr('All')
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-align: center
-      image-source: /images/ui/buttons/tabbar_button
-      image-clip: 0 0 116 34
-      image-border: 12
-      padding: 2 6 2 6
+      margin-bottom: 5
+      step: 28
+      pixels-scroll: true
 
-      $hover !disabled:
-        image-clip: 0 34 116 34
-
-      $pressed:
-        image-clip: 0 68 116 34
-
-      $disabled:
-        color: #dfdfdf88
-
-    // Combat Category
-    Button
-      id: cat_combat
-      anchors.top: prev.bottom
+    ScrollablePanel
+      id: categoryList
+      anchors.top: categoryTitle.bottom
       anchors.left: parent.left
-      anchors.right: parent.right
-      height: 28
-      margin-top: 2
-      margin-left: 5
-      margin-right: 5
-      !text: tr('Combat')
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-align: center
-      image-source: /images/ui/buttons/tabbar_button
-      image-clip: 0 0 116 34
-      image-border: 12
-      padding: 2 6 2 6
+      anchors.right: categoryScrollBar.left
+      anchors.bottom: parent.bottom
+      margin-top: 5
+      margin-bottom: 5
+      vertical-scrollbar: categoryScrollBar
+      layout:
+        type: verticalBox
+        spacing: 2
 
-      $hover !disabled:
-        image-clip: 0 34 116 34
+      Button
+        id: cat_all
+        height: 26
+        margin-top: 5
+        margin-left: 5
+        margin-right: 5
+        !text: tr('All')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
 
-      $pressed:
-        image-clip: 0 68 116 34
+        $hover !disabled:
+          image-clip: 0 34 116 34
 
-      $disabled:
-        color: #dfdfdf88
+        $pressed:
+          image-clip: 0 68 116 34
 
-    // Exploration Category
-    Button
-      id: cat_exploration
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 28
-      margin-top: 2
-      margin-left: 5
-      margin-right: 5
-      !text: tr('Exploration')
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-align: center
-      image-source: /images/ui/buttons/tabbar_button
-      image-clip: 0 0 116 34
-      image-border: 12
-      padding: 2 6 2 6
+        $disabled:
+          color: #dfdfdf88
 
-      $hover !disabled:
-        image-clip: 0 34 116 34
+      Button
+        id: cat_combat
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Combat')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
 
-      $pressed:
-        image-clip: 0 68 116 34
+        $hover !disabled:
+          image-clip: 0 34 116 34
 
-      $disabled:
-        color: #dfdfdf88
+        $pressed:
+          image-clip: 0 68 116 34
 
-    // Collection Category
-    Button
-      id: cat_collection
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 28
-      margin-top: 2
-      margin-left: 5
-      margin-right: 5
-      !text: tr('Collection')
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-align: center
-      image-source: /images/ui/buttons/tabbar_button
-      image-clip: 0 0 116 34
-      image-border: 12
-      padding: 2 6 2 6
+        $disabled:
+          color: #dfdfdf88
 
-      $hover !disabled:
-        image-clip: 0 34 116 34
+      Button
+        id: cat_exploration
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Exploration')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
 
-      $pressed:
-        image-clip: 0 68 116 34
+        $hover !disabled:
+          image-clip: 0 34 116 34
 
-      $disabled:
-        color: #dfdfdf88
+        $pressed:
+          image-clip: 0 68 116 34
 
-    // Social Category
-    Button
-      id: cat_social
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 28
-      margin-top: 2
-      margin-left: 5
-      margin-right: 5
-      !text: tr('Social')
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-align: center
-      image-source: /images/ui/buttons/tabbar_button
-      image-clip: 0 0 116 34
-      image-border: 12
-      padding: 2 6 2 6
+        $disabled:
+          color: #dfdfdf88
 
-      $hover !disabled:
-        image-clip: 0 34 116 34
+      Button
+        id: cat_collection
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Collection')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
 
-      $pressed:
-        image-clip: 0 68 116 34
+        $hover !disabled:
+          image-clip: 0 34 116 34
 
-      $disabled:
-        color: #dfdfdf88
+        $pressed:
+          image-clip: 0 68 116 34
 
-    // Skills Category
-    Button
-      id: cat_skills
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 28
-      margin-top: 2
-      margin-left: 5
-      margin-right: 5
-      !text: tr('Skills')
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-align: center
-      image-source: /images/ui/buttons/tabbar_button
-      image-clip: 0 0 116 34
-      image-border: 12
-      padding: 2 6 2 6
+        $disabled:
+          color: #dfdfdf88
 
-      $hover !disabled:
-        image-clip: 0 34 116 34
+      Button
+        id: cat_social
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Social')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
 
-      $pressed:
-        image-clip: 0 68 116 34
+        $hover !disabled:
+          image-clip: 0 34 116 34
 
-      $disabled:
-        color: #dfdfdf88
+        $pressed:
+          image-clip: 0 68 116 34
 
-    // Special Category
-    Button
-      id: cat_special
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 28
-      margin-top: 2
-      margin-left: 5
-      margin-right: 5
-      !text: tr('Special')
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-align: center
-      image-source: /images/ui/buttons/tabbar_button
-      image-clip: 0 0 116 34
-      image-border: 12
-      padding: 2 6 2 6
+        $disabled:
+          color: #dfdfdf88
 
-      $hover !disabled:
-        image-clip: 0 34 116 34
+      Button
+        id: cat_skills
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Skills')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
 
-      $pressed:
-        image-clip: 0 68 116 34
+        $hover !disabled:
+          image-clip: 0 34 116 34
 
-      $disabled:
-        color: #dfdfdf88
+        $pressed:
+          image-clip: 0 68 116 34
 
-    // Pets Category
-    Button
-      id: cat_pets
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 28
-      margin-top: 2
-      margin-left: 5
-      margin-right: 5
-      !text: tr('Pets')
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-align: center
-      image-source: /images/ui/buttons/tabbar_button
-      image-clip: 0 0 116 34
-      image-border: 12
-      padding: 2 6 2 6
+        $disabled:
+          color: #dfdfdf88
 
-      $hover !disabled:
-        image-clip: 0 34 116 34
+      Button
+        id: cat_special
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Special')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
 
-      $pressed:
-        image-clip: 0 68 116 34
+        $hover !disabled:
+          image-clip: 0 34 116 34
 
-      $disabled:
-        color: #dfdfdf88
+        $pressed:
+          image-clip: 0 68 116 34
 
-    // Professions Category
-    Button
-      id: cat_professions
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 28
-      margin-top: 2
-      margin-left: 5
-      margin-right: 5
-      !text: tr('Professions')
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-align: center
-      image-source: /images/ui/buttons/tabbar_button
-      image-clip: 0 0 116 34
-      image-border: 12
-      padding: 2 6 2 6
+        $disabled:
+          color: #dfdfdf88
 
-      $hover !disabled:
-        image-clip: 0 34 116 34
+      Button
+        id: cat_pets
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Pets')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
 
-      $pressed:
-        image-clip: 0 68 116 34
+        $hover !disabled:
+          image-clip: 0 34 116 34
 
-      $disabled:
-        color: #dfdfdf88
+        $pressed:
+          image-clip: 0 68 116 34
 
-    // Dungeons Category
-    Button
-      id: cat_dungeons
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 28
-      margin-top: 2
-      margin-left: 5
-      margin-right: 5
-      !text: tr('Dungeons')
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-align: center
-      image-source: /images/ui/buttons/tabbar_button
-      image-clip: 0 0 116 34
-      image-border: 12
-      padding: 2 6 2 6
+        $disabled:
+          color: #dfdfdf88
 
-      $hover !disabled:
-        image-clip: 0 34 116 34
+      Button
+        id: cat_professions
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Professions')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
 
-      $pressed:
-        image-clip: 0 68 116 34
+        $hover !disabled:
+          image-clip: 0 34 116 34
 
-      $disabled:
-        color: #dfdfdf88
+        $pressed:
+          image-clip: 0 68 116 34
 
-    // Fame Category
-    Button
-      id: cat_fame
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 28
-      margin-top: 2
-      margin-left: 5
-      margin-right: 5
-      !text: tr('Fame')
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-align: center
-      image-source: /images/ui/buttons/tabbar_button
-      image-clip: 0 0 116 34
-      image-border: 12
-      padding: 2 6 2 6
+        $disabled:
+          color: #dfdfdf88
 
-      $hover !disabled:
-        image-clip: 0 34 116 34
+      Button
+        id: cat_crafting
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Crafting')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
 
-      $pressed:
-        image-clip: 0 68 116 34
+        $hover !disabled:
+          image-clip: 0 34 116 34
 
-      $disabled:
-        color: #dfdfdf88
+        $pressed:
+          image-clip: 0 68 116 34
+
+        $disabled:
+          color: #dfdfdf88
+
+      Button
+        id: cat_gathering
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Gathering')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
+
+        $hover !disabled:
+          image-clip: 0 34 116 34
+
+        $pressed:
+          image-clip: 0 68 116 34
+
+        $disabled:
+          color: #dfdfdf88
+
+      Button
+        id: cat_dungeons
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Dungeons')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
+
+        $hover !disabled:
+          image-clip: 0 34 116 34
+
+        $pressed:
+          image-clip: 0 68 116 34
+
+        $disabled:
+          color: #dfdfdf88
+
+      Button
+        id: cat_paragon
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Paragon')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
+
+        $hover !disabled:
+          image-clip: 0 34 116 34
+
+        $pressed:
+          image-clip: 0 68 116 34
+
+        $disabled:
+          color: #dfdfdf88
+
+      Button
+        id: cat_tasks
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Tasks')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
+
+        $hover !disabled:
+          image-clip: 0 34 116 34
+
+        $pressed:
+          image-clip: 0 68 116 34
+
+        $disabled:
+          color: #dfdfdf88
+
+      Button
+        id: cat_forge
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Forge')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
+
+        $hover !disabled:
+          image-clip: 0 34 116 34
+
+        $pressed:
+          image-clip: 0 68 116 34
+
+        $disabled:
+          color: #dfdfdf88
+
+      Button
+        id: cat_codex
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Codex')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
+
+        $hover !disabled:
+          image-clip: 0 34 116 34
+
+        $pressed:
+          image-clip: 0 68 116 34
+
+        $disabled:
+          color: #dfdfdf88
+
+      Button
+        id: cat_capture
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Capture')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
+
+        $hover !disabled:
+          image-clip: 0 34 116 34
+
+        $pressed:
+          image-clip: 0 68 116 34
+
+        $disabled:
+          color: #dfdfdf88
+
+      Button
+        id: cat_daily
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Daily')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
+
+        $hover !disabled:
+          image-clip: 0 34 116 34
+
+        $pressed:
+          image-clip: 0 68 116 34
+
+        $disabled:
+          color: #dfdfdf88
+
+      Button
+        id: cat_prestige
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Prestige')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
+
+        $hover !disabled:
+          image-clip: 0 34 116 34
+
+        $pressed:
+          image-clip: 0 68 116 34
+
+        $disabled:
+          color: #dfdfdf88
+
+      Button
+        id: cat_proficiency
+        height: 26
+        margin-top: 2
+        margin-left: 5
+        margin-right: 5
+        !text: tr('Proficiency')
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        image-source: /images/ui/buttons/tabbar_button
+        image-clip: 0 0 116 34
+        image-border: 12
+        padding: 2 6 2 6
+
+        $hover !disabled:
+          image-clip: 0 34 116 34
+
+        $pressed:
+          image-clip: 0 68 116 34
+
+        $disabled:
+          color: #dfdfdf88
 
   // Right panel - Achievement List
   Panel

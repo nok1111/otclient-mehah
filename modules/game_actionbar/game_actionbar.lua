@@ -329,7 +329,7 @@ function showSpellTooltip(slot)
     if statsLbl.setTextAutoResize then statsLbl:setTextAutoResize(true) end
     if descLbl.setTextAutoResize then descLbl:setTextAutoResize(true) end
 
-    nameLbl:setText(spellName or 'Unknown')
+    nameLbl:setText(tr(spellName) or tr('Unknown'))
     if iconPath then
         iconW:setImageSource(iconPath)
         iconW:setImageSize({ width = 34, height = 34 })
@@ -352,14 +352,14 @@ function showSpellTooltip(slot)
 
     local cdText
     if remainingMs > 0 then
-        cdText = string.format('Cooldown: %.1fs', remainingMs / 1000)
+        cdText = tr('Cooldown: %.1fs', remainingMs / 1000)
     elseif baseCdMs > 0 then
-        cdText = string.format('Cooldown: %.1fs', baseCdMs / 1000)
+        cdText = tr('Cooldown: %.1fs', baseCdMs / 1000)
     else
-        cdText = 'Cooldown: —'
+        cdText = tr('Cooldown: —')
     end
 
-    statsLbl:setText(string.format('Mana: %s    Level: %s    %s', tostring(mana), tostring(level), cdText))
+    statsLbl:setText(tr('Mana: %s    Level: %s    %s', tostring(mana), tostring(level), cdText))
     descLbl:setText(tr(spell.description or ''))
 
     -- Size/position
@@ -502,7 +502,7 @@ function initializeSpelllist()
             if show then
                 local tmpLabel = g_ui.createWidget('SpellListLabel', spellsPanel)
                 tmpLabel:setId(spell)
-                local spellText = spell .. " (Lv. " .. tostring(info.level or "?") .. ")"
+                local spellText = tr(spell) .. " (" .. tr('Lv. ') .. tostring(info.level or "?") .. ")"
                 local formulaText = "'" .. info.words .. "'"
                 local localPlayerLevel = localPlayer and localPlayer:getLevel() or 0
                 if info.level and localPlayerLevel >= info.level then
@@ -559,7 +559,7 @@ function updatePreviewSpell(focusedChild)
     local spell = Spells.getSpellByName(spellName)
     local profile = Spells.getSpellProfileByName(spellName)
     spellsPanel:getParent():getChildById('previewSpell'):setImageSource(Spells.getIconId(iconId, profile))
-    spellsPanel:getParent():getChildById('previewSpellName'):setText(spellName)
+    spellsPanel:getParent():getChildById('previewSpellName'):setText(tr(spellName))
     spellsPanel:getParent():getChildById('previewSpellWords'):setText('\'' .. spell.words .. '\'')
     if spell.parameter then
         spellAssignWindow:getChildById('parameterTextEdit'):enable()

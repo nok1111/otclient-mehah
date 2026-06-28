@@ -25,6 +25,7 @@
 #include <framework/graphics/drawpoolmanager.h>
 #include <framework/graphics/fontmanager.h>
 #include <framework/graphics/textureatlas.h>
+#include <framework/stdext/string.h>
 #include <regex>
 
 void UIWidget::initText()
@@ -149,7 +150,10 @@ void UIWidget::onFontChange(const std::string_view font) { callLuaField("onFontC
 
 void UIWidget::setText(const std::string_view text, const bool dontFireLuaCall)
 {
-    std::string _text{ text.data() };
+    std::string _text{ text.data(), text.size() };
+    if (stdext::is_valid_utf8(_text))
+        _text = stdext::utf8_to_latin1(_text);
+
     if (hasProp(PropTextOnlyUpperCase))
         stdext::toupper(_text);
 
@@ -178,7 +182,9 @@ void UIWidget::setColoredText(const std::string_view coloredText, bool dontFireL
 
     std::regex exp(R"(\{([^\}]+),[ ]*([^\}]+)\})");
 
-    std::string _text{ coloredText.data() };
+    std::string _text{ coloredText.data(), coloredText.size() };
+    if (stdext::is_valid_utf8(_text))
+        _text = stdext::utf8_to_latin1(_text);
 
     Color baseColor = Color::white;
     std::smatch res;

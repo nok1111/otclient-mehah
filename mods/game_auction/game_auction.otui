@@ -1,416 +1,983 @@
+AuctionToggleButton < UICheckBox
+  font: verdana-11px-antialised
+  text-align: center
+  text-offset: 0 0
+  color: #aaaaaa
+  background-color: #1a1a24
+  border: 1 #3a3a4a
+  $hover !disabled:
+    color: #ffffff
+    border: 1 #5a5a6a
+  $checked:
+    color: #1a1a24
+    background-color: #f5c542
+    border: 1 #f5c542
+
 AuctionWindow < MainWindow
   id: auctionWindow
   !text: tr("Auction House")
-  size: 640 520
+  size: 680 500
   visible: false
+  background-color: #0c0c12f0
+  color: #e8d0a0
   @onEscape: self:hide()
 
   Button
     id: closeButton
     anchors.top: parent.top
     anchors.right: parent.right
-    margin-top: 6
-    margin-right: 6
-    text: close
+    margin-top: 8
+    margin-right: 8
+    size: 24 24
+    text: X
+    color: #ff6b6b
+    background-color: #1a1a24
+    border: 1 #3a3a4a
     @onClick: self:getParent():hide()
 
-  ComboBox
-    id: filterBox
+  Panel
+    id: headerPanel
     anchors.top: parent.top
     anchors.left: parent.left
-    margin-top: 6
-    margin-left: 8
-    size: 150 22
+    anchors.right: parent.right
+    height: 34
+    background-color: #14141cff
+    border: 1 #2a2a3a
 
-  TextEdit
-    id: searchEdit
-    anchors.left: filterBox.right
-    anchors.top: parent.top
-    margin-left: 8
+    Button
+      id: tabAuction
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 10
+      size: 110 30
+      text: Browse
+      color: #cccccc
+      background-color: #1a1a24
+      border: 1 #2a2a3a
+
+    Button
+      id: tabMy
+      anchors.left: tabAuction.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 4
+      size: 110 30
+      text: My Offers
+      color: #cccccc
+      background-color: #1a1a24
+      border: 1 #2a2a3a
+
+    Button
+      id: tabHistory
+      anchors.left: tabMy.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 4
+      size: 110 30
+      text: History
+      color: #cccccc
+      background-color: #1a1a24
+      border: 1 #2a2a3a
+
+    Button
+      id: tabMail
+      anchors.left: tabHistory.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 4
+      size: 110 30
+      text: Mail
+      color: #cccccc
+      background-color: #1a1a24
+      border: 1 #2a2a3a
+
+    Button
+      id: refreshButton
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 40
+      size: 76 24
+      text: Refresh
+      color: #cccccc
+      background-color: #1a1a24
+      border: 1 #3a3a4a
+
+  Panel
+    id: toolbarPanel
+    anchors.top: headerPanel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 44
     margin-top: 8
-    size: 200 20
+    margin-left: 10
+    margin-right: 10
+    background-color: #14141cff
+    border: 1 #2a2a3a
+    layout:
+      type: anchor
 
-  Button
-    id: searchButton
-    anchors.left: searchEdit.right
-    anchors.top: parent.top
-    margin-left: 6
-    margin-top: 8
-    text: Search
-    @onClick: Auction.onSearch()
+    TextEdit
+      id: searchEdit
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 10
+      size: 250 22
 
+    Button
+      id: searchButton
+      anchors.left: searchEdit.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 6
+      size: 70 22
+      text: Search
+      color: #cccccc
+      background-color: #1a1a24
+      border: 1 #3a3a4a
+
+    Label
+      text: Sort
+      anchors.left: searchButton.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 12
+      width: 30
+      color: #aaaaaa
+
+    ComboBox
+      id: sortBox
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 6
+      size: 120 22
+
+    Button
+      id: filterButton
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 10
+      size: 70 22
+      text: Filter
+      color: #cccccc
+      background-color: #1a1a24
+      border: 1 #3a3a4a
 
   Panel
     id: contentPane
-    anchors.top: searchButton.bottom
+    anchors.top: toolbarPanel.bottom
     anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
     margin-top: 8
-    margin-left: 8
-    size: 590 470
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 10
+    background-color: #14141cff
+    border: 1 #2a2a3a
+    layout:
+      type: anchor
 
     Panel
-      id: tabsRow
+      id: categoryPanel
       anchors.top: parent.top
       anchors.left: parent.left
-      anchors.right: parent.right
-      height: 24
-      layout:
-        type: anchor
+      anchors.bottom: parent.bottom
+      width: 100
+      margin-right: 8
+      background-color: #14141cff
+      border: 1 #2a2a3a
 
-      Button
-        id: tabAuction
-        text: Auction
-        anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
-
-      Button
-        id: tabMy
-        text: My Offers
-        anchors.left: tabAuction.right
-        margin-left: 6
-        anchors.verticalCenter: parent.verticalCenter
-
-      Button
-        id: tabHistory
-        text: History
-        anchors.left: tabMy.right
-        margin-left: 6
-        anchors.verticalCenter: parent.verticalCenter
-
-      Button
-        id: tabMail
-        text: Mail
-        anchors.left: tabHistory.right
-        margin-left: 6
-        anchors.verticalCenter: parent.verticalCenter
-
-    Panel
-      id: resultsHeader
-      anchors.left: parent.left
-      anchors.right: parent.right
-      anchors.top: tabsRow.bottom
-      margin-top: 4
-      height: 16
-      phantom: true
-      layout:
-        type: anchor
-      
-      Label
-        text: Item
-        anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 4
-        color: #cccccc
-        phantom: true
-
-      Label
-        text: Price
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-right: 16
-        color: #cccccc
-        phantom: true
-
-      Label
-        id: sellerHeader
-        text: Seller
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-right: 242
-        color: #cccccc
-        phantom: true
-
-    UIScrollArea
-      id: browseScroll
-      anchors.left: parent.left
-      anchors.right: parent.right
-      anchors.top: resultsHeader.bottom
-      margin-top: 4
-      height: 260
-      background-color: #1f1f1fcc
-      border: 1 #555555
-      vertical-scrollbar: browseVBar
-
-      Panel
-        id: browseList
-        anchors.left: parent.left
-        anchors.right: parent.right
+      VerticalScrollBar
+        id: categoryScrollBar
         anchors.top: parent.top
-        margin-right: 14
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        width: 12
+        step: 22
+        pixels-scroll: true
+
+      ScrollablePanel
+        id: categoryScrollArea
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.right: categoryScrollBar.left
+        vertical-scrollbar: categoryScrollBar
         layout:
           type: verticalBox
-          fit-children: true
-          fit-children-last: true
+          fit-children-last: false
 
-    VerticalScrollBar
-      id: browseVBar
-      anchors.right: parent.right
-      anchors.top: browseScroll.top
-      anchors.bottom: browseScroll.bottom
-      step: 20
-      on: true
+        Button
+          id: catAll
+          text: All
+          height: 22
+          margin-top: 2
+          margin-left: 4
+          margin-right: 4
+          background-color: #1a1a24
+          border: 1 #2a2a3a
+          color: #cccccc
 
-    Label
-      id: createLabel
-      text: Create Listing
-      anchors.left: parent.left
-      anchors.top: browseScroll.bottom
-      margin-top: 6
-
-    Panel
-      id: createRow
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 64
-      margin-top: 4
-
-      FlatPanel
-        id: listItemBg
-        anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
-        size: 34 34
-        background-color: #2a2a2acc
-        border: 1 #666666
-        phantom: true
-
-      Item
-        id: listItemSlot
-        anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
-        size: 36 36
-        virtual: true
-        accept-drop: true
-        focusable: true
-        z-index: 3
-        item-id: 0
-        item-count: 0
-        draggable: false
-        tooltip: Drag item here from inventory
-
-        UIWidget
-          id: tier
-          size: 10 9
-          image-source: /images/inventory/tiers-strip
-          image-clip: 0 0 10 9
-          image-size: 10 9
-          anchors.top: parent.top
-          anchors.right: parent.right
-          phantom: true
-          focusable: false
-          visible: false
-          image-smooth: true
-
-      Label
-        text: Unit Price:
-        anchors.left: listItemSlot.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 8
-
-      TextEdit
-        id: priceEdit
-        anchors.left: prev.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 4
-        size: 100 18
-        numbers-only: true
-
-      Label
-        id: counterLabel
-        text: Count:
-        anchors.left: listItemSlot.right
-        anchors.top: priceEdit.bottom
-        margin-left: 8
-        margin-top: 4
-
-      SpinBox
-        id: countSpin
-        anchors.left: prev.right
-        anchors.top: prev.top
-        margin-left: 4
-        size: 80 18
-        minimum: 1
-        maximum: 1
-        focusable: true
-        read-only: false
-        buttons: true
-        mouse-scroll: true
-
-      Label
-        id: createCostLabel
-        anchors.left: listItemSlot.right
-        anchors.top: counterLabel.bottom
-        margin-left: 8
-        margin-top: 4
-        text: Total Price:
-        color: #dddddd
-        z-index: 2
-        phantom: false
-
-      Label
-        id: createCostValue
-        anchors.left: createCostLabel.right
-        anchors.top: createCostLabel.top
-        margin-left: 2
-        width: 50
-        text-align: right
-        text: 0
-        color: #dddddd
-        z-index: 2
-        phantom: false
-
-      Label
-        id: createCostSuffix
-        anchors.left: createCostValue.right
-        anchors.top: createCostValue.top
-        margin-left: 6
-        text:  gold
-        color: #dddddd
-        z-index: 2
-        phantom: false
-
-      Button
-        id: listButton
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        text: Create Offer
-        @onClick: Auction.onList()
-
-    Panel
-      id: actionsRow
-      anchors.top: createRow.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 32
-      margin-top: 8
-
-      Label
-        id: buyAmountLabel
-        text: Amount:
-        anchors.left: parent.left
-        anchors.top: parent.top
-        visible: false
-
-      SpinBox
-        id: buyCountSpin
-        anchors.left: buyAmountLabel.right
-        anchors.top: parent.top
-        margin-left: 4
-        margin-top: -4
-        size: 80 22
-        minimum: 1
-        maximum: 1
-
-      Label
-        id: buyCostLabel
-        anchors.left: buyCountSpin.right
-        anchors.top: parent.top
-        margin-left: 12
-        text: Cost:
-
-      Label
-        id: buyCostValue
-        anchors.left: buyCostLabel.right
-        anchors.top: parent.top
-        margin-left: 4
-        width: 60
-        text-align: right
-        text: 0
-
-      Label
-        id: buyCostSuffix
-        anchors.left: buyCostValue.right
-        anchors.top: parent.top
-        margin-left: 4
-        text:  gold
-
-      Button
-        id: buyButton
-        anchors.left: buyCostSuffix.right
-        anchors.top: parent.top
-        margin-left: 12
-        margin-top: -4
-        text: Buy Selected
-        @onClick: Auction.onBuy()
-
-    Panel
-      id: historyPanel
-      anchors.top: resultsHeader.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      anchors.bottom: parent.bottom
-      margin-top: 4
-      visible: false
-      layout:
-        type: anchor
-      z-index: 3
-
-      Label
-        id: historyHeader
-        text: Last 50 Sales (Name | Count | Price | Date)
-        color: #cccccc
-        phantom: false
-        height: 16
-        margin-bottom: 2
-
-      Panel
-        id: historyBody
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: historyHeader.bottom
-        anchors.bottom: parent.bottom
-        layout:
-          type: anchor
-        z-index: 4
-        background-color: #00112266
-        border: 1 #224466
+        Button
+          id: catWeapons
+          text: Weapons
+          height: 22
+          margin-top: 2
+          margin-left: 4
+          margin-right: 4
+          background-color: #1a1a24
+          border: 1 #2a2a3a
+          color: #cccccc
 
         Panel
-          id: historyList
-          anchors.top: parent.top
+          id: subcategoryPanel
+          height: 0
+          visible: false
+          margin-top: 4
+          margin-left: 4
+          margin-right: 4
+          background-color: #0f0f16
+          border: 1 #2a2a3a
+          layout:
+            type: verticalBox
+            fit-children-last: false
+
+          Button
+            id: subOneHand
+            text: One-Hand
+            height: 18
+            margin-top: 2
+            margin-left: 4
+            margin-right: 4
+            background-color: #1f1f2a
+            border: 1 #3a3a4a
+            color: #aaaaaa
+
+          Button
+            id: subTwoHand
+            text: Two-Hand
+            height: 18
+            margin-top: 2
+            margin-left: 4
+            margin-right: 4
+            background-color: #1f1f2a
+            border: 1 #3a3a4a
+            color: #aaaaaa
+
+          Button
+            id: subDistance
+            text: Distance
+            height: 18
+            margin-top: 2
+            margin-left: 4
+            margin-right: 4
+            background-color: #1f1f2a
+            border: 1 #3a3a4a
+            color: #aaaaaa
+
+          Button
+            id: subWands
+            text: Wands
+            height: 18
+            margin-top: 2
+            margin-left: 4
+            margin-right: 4
+            background-color: #1f1f2a
+            border: 1 #3a3a4a
+            color: #aaaaaa
+
+          Button
+            id: subShields
+            text: Shields
+            height: 18
+            margin-top: 2
+            margin-left: 4
+            margin-right: 4
+            background-color: #1f1f2a
+            border: 1 #3a3a4a
+            color: #aaaaaa
+
+        Button
+          id: catArmor
+          text: Armor
+          height: 22
+          margin-top: 2
+          margin-left: 4
+          margin-right: 4
+          background-color: #1a1a24
+          border: 1 #2a2a3a
+          color: #cccccc
+
+        Button
+          id: catShields
+          text: Shields
+          height: 22
+          margin-top: 2
+          margin-left: 4
+          margin-right: 4
+          background-color: #1a1a24
+          border: 1 #2a2a3a
+          color: #cccccc
+
+        Button
+          id: catBoots
+          text: Boots
+          height: 22
+          margin-top: 2
+          margin-left: 4
+          margin-right: 4
+          background-color: #1a1a24
+          border: 1 #2a2a3a
+          color: #cccccc
+
+        Button
+          id: catHelmet
+          text: Spells
+          height: 22
+          margin-top: 2
+          margin-left: 4
+          margin-right: 4
+          background-color: #1a1a24
+          border: 1 #2a2a3a
+          color: #cccccc
+
+        Button
+          id: catAccessories
+          text: Accessories
+          height: 22
+          margin-top: 2
+          margin-left: 4
+          margin-right: 4
+          background-color: #1a1a24
+          border: 1 #2a2a3a
+          color: #cccccc
+
+        Button
+          id: catRunes
+          text: Runes
+          height: 22
+          margin-top: 2
+          margin-left: 4
+          margin-right: 4
+          background-color: #1a1a24
+          border: 1 #2a2a3a
+          color: #cccccc
+
+        Button
+          id: catPets
+          text: Pets
+          height: 22
+          margin-top: 2
+          margin-left: 4
+          margin-right: 4
+          background-color: #1a1a24
+          border: 1 #2a2a3a
+          color: #cccccc
+
+        Button
+          id: catConsumables
+          text: Consumables
+          height: 22
+          margin-top: 2
+          margin-left: 4
+          margin-right: 4
+          background-color: #1a1a24
+          border: 1 #2a2a3a
+          color: #cccccc
+
+        Panel
+          id: consumablesSubcategoryPanel
+          height: 0
+          visible: false
+          margin-top: 4
+          margin-left: 4
+          margin-right: 4
+          background-color: #0f0f16
+          border: 1 #2a2a3a
+          layout:
+            type: verticalBox
+            fit-children-last: false
+
+          Button
+            id: subPotions
+            text: Potions
+            height: 18
+            margin-top: 2
+            margin-left: 4
+            margin-right: 4
+            background-color: #1f1f2a
+            border: 1 #3a3a4a
+            color: #aaaaaa
+
+          Button
+            id: subFlasks
+            text: Flasks
+            height: 18
+            margin-top: 2
+            margin-left: 4
+            margin-right: 4
+            background-color: #1f1f2a
+            border: 1 #3a3a4a
+            color: #aaaaaa
+
+          Button
+            id: subElixirs
+            text: Elixirs
+            height: 18
+            margin-top: 2
+            margin-left: 4
+            margin-right: 4
+            background-color: #1f1f2a
+            border: 1 #3a3a4a
+            color: #aaaaaa
+
+        Button
+          id: catMaterials
+          text: Materials
+          height: 22
+          margin-top: 2
+          margin-left: 4
+          margin-right: 4
+          background-color: #1a1a24
+          border: 1 #2a2a3a
+          color: #cccccc
+
+        Button
+          id: catOthers
+          text: Others
+          height: 22
+          margin-top: 2
+          margin-left: 4
+          margin-right: 4
+          background-color: #1a1a24
+          border: 1 #2a2a3a
+          color: #cccccc
+
+    Panel
+      id: mainArea
+      anchors.top: parent.top
+      anchors.left: categoryPanel.right
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      layout:
+        type: anchor
+
+      Panel
+        id: resultsHeader
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        margin-top: 6
+        margin-left: 4
+        margin-right: 18
+        height: 20
+        background-color: #1a1a24ff
+        border: 1 #2a2a3a
+        phantom: true
+        layout:
+          type: anchor
+
+        Label
+          text: Item
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 48
+          color: #aaaaaa
+          font: verdana-11px-rounded
+          phantom: true
+
+        Label
+          id: sellerHeader
+          text: Seller
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 260
+          width: 90
+          text-align: right
+          color: #aaaaaa
+          font: verdana-11px-rounded
+          phantom: true
+
+        Label
+          id: timeHeader
+          text: Time Left
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 354
+          width: 100
+          text-align: right
+          color: #aaaaaa
+          font: verdana-11px-rounded
+          phantom: true
+
+        Label
+          text: Price
+          anchors.right: parent.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-right: 8
+          color: #aaaaaa
+          font: verdana-11px-rounded
+          phantom: true
+
+      UIScrollArea
+        id: browseScroll
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: resultsHeader.bottom
+        margin-top: 4
+        height: 280
+        background-color: #0f0f16cc
+        border: 1 #2a2a3a
+        vertical-scrollbar: browseVBar
+
+        Panel
+          id: browseList
           anchors.left: parent.left
           anchors.right: parent.right
-          margin-left: 6
-          margin-top: 4
-          minimum-height: 40
+          anchors.top: parent.top
+          margin-right: 14
           layout:
             type: verticalBox
             fit-children: true
-            fit-children-last: true
-          z-index: 5
-          background-color: #11331144
-          border: 1 #44aa44
+            fit-children-last: false
+
+      VerticalScrollBar
+        id: browseVBar
+        anchors.top: browseScroll.top
+        anchors.bottom: browseScroll.bottom
+        anchors.right: browseScroll.right
+        step: 20
+        on: true
+
+      Panel
+        id: paginationRow
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: browseScroll.bottom
+        margin-top: 6
+        height: 26
+        background-color: #14141cff
+        layout:
+          type: anchor
+
+        Button
+          id: prevPageButton
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          size: 26 22
+          text: <
+          color: #cccccc
+          background-color: #1a1a24
+          border: 1 #3a3a4a
+
+        Label
+          id: pageLabel
+          anchors.left: prevPageButton.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 8
+          text: Page 1
+          color: #cccccc
+
+        Button
+          id: nextPageButton
+          anchors.left: pageLabel.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 8
+          size: 26 22
+          text: >
+          color: #cccccc
+          background-color: #1a1a24
+          border: 1 #3a3a4a
+
+      Panel
+        id: actionsRow
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 36
+        margin-bottom: 4
+        background-color: #1a1a24ff
+        border: 1 #2a2a3a
+        layout:
+          type: anchor
+        visible: false
+
+        SpinBox
+          id: buyCountSpin
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 8
+          size: 80 22
+          minimum: 1
+          maximum: 1
+
+        Label
+          id: buyCountValue
+          anchors.left: buyCountSpin.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 6
+          width: 30
+          text: 1
+          color: #cccccc
+          phantom: true
+
+        Label
+          id: buyCostLabel
+          anchors.left: buyCountValue.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 12
+          width: 40
+          text: Cost:
+          color: #aaaaaa
+
+        Label
+          id: buyCostValue
+          anchors.left: prev.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 4
+          width: 60
+          text-align: right
+          text: 0
+          color: #f5c542
+
+        UIWidget
+          id: buyCostIcon
+          anchors.left: buyCostValue.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 6
+          size: 16 16
+          image-source: /images/icons/gold_coin.png
+          image-size: 16 16
+
+        Button
+          id: buyButton
+          anchors.right: parent.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-right: 8
+          size: 110 26
+          text: Buy Selected
+          color: #f5c542
+          background-color: #1a1a24
+          border: 1 #f5c542
+
+        Button
+          id: cancelButton
+          anchors.right: parent.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-right: 8
+          size: 110 26
+          text: Cancel Listing
+          color: #cccccc
+          background-color: #1a1a24
+          border: 1 #3a3a4a
+          visible: false
+
+      Panel
+        id: myOffersPanel
+        anchors.fill: parent
+        margin: 6
+        visible: false
+        layout:
+          type: anchor
+
+        Label
+          id: myOffersHeader
+          anchors.left: parent.left
+          anchors.top: parent.top
+          margin-left: 4
+          text: My Active Offers
+          color: #f5c542
+          font: verdana-11px-rounded
+
+        UIScrollArea
+          id: myOffersScroll
+          anchors.left: parent.left
+          anchors.right: parent.right
+          anchors.top: myOffersHeader.bottom
+          anchors.bottom: createPanel.top
+          margin-top: 4
+          margin-bottom: 4
+          background-color: #0f0f16cc
+          border: 1 #2a2a3a
+          vertical-scrollbar: myOffersVBar
+
+          Panel
+            id: myOffersList
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            margin-right: 14
+            layout:
+              type: verticalBox
+              fit-children: true
+              fit-children-last: false
+
+        VerticalScrollBar
+          id: myOffersVBar
+          anchors.top: myOffersScroll.top
+          anchors.bottom: myOffersScroll.bottom
+          anchors.right: myOffersScroll.right
+          step: 20
+          on: true
+
+        Panel
+          id: createPanel
+          anchors.left: parent.left
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+          height: 110
+          background-color: #1a1a24ff
+          border: 1 #2a2a3a
+          layout:
+            type: anchor
+
+          Label
+            id: createLabel
+            anchors.left: parent.left
+            anchors.top: parent.top
+            margin-left: 8
+            margin-top: 6
+            text: Create Listing
+            color: #f5c542
+            font: verdana-11px-rounded
+
+          Panel
+            id: createTopRow
+            anchors.top: createLabel.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 38
+            margin-top: 4
+            layout:
+              type: anchor
+
+            FlatPanel
+              id: listItemBg
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 10
+              size: 34 34
+              background-color: #2a2a3a
+              border: 1 #3a3a4a
+              phantom: true
+
+            Item
+              id: listItemSlot
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 9
+              size: 36 36
+              virtual: true
+              accept-drop: true
+              focusable: true
+              z-index: 3
+              item-id: 0
+              item-count: 0
+              draggable: false
+              tooltip: Drag item here from inventory
+
+              UIWidget
+                id: tier
+                size: 10 9
+                image-source: /images/inventory/tiers-strip
+                image-clip: 0 0 10 9
+                image-size: 10 9
+                anchors.top: parent.top
+                anchors.right: parent.right
+                phantom: true
+                focusable: false
+                visible: false
+                image-smooth: true
+
+            Label
+              id: priceLabel
+              text: Price:
+              anchors.left: listItemSlot.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 14
+              width: 40
+              color: #aaaaaa
+
+            TextEdit
+              id: priceEdit
+              anchors.left: priceLabel.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 6
+              size: 70 22
+              numbers-only: true
+
+            Label
+              id: countLabel
+              text: Count:
+              anchors.left: priceEdit.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 12
+              width: 40
+              color: #aaaaaa
+
+            SpinBox
+              id: countSpin
+              anchors.left: countLabel.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 6
+              size: 50 22
+              minimum: 1
+              maximum: 1
+              focusable: true
+              read-only: false
+              buttons: true
+              mouse-scroll: true
+
+            Label
+              id: totalLabel
+              text: Total:
+              anchors.left: countSpin.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 12
+              width: 40
+              color: #aaaaaa
+
+            Label
+              id: createCostValue
+              anchors.left: totalLabel.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 6
+              width: 60
+              text-align: right
+              text: 0
+              color: #f5c542
+
+            UIWidget
+              id: createCostIcon
+              anchors.left: createCostValue.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 6
+              size: 16 16
+              image-source: /images/icons/gold_coin.png
+              image-size: 16 16
+
+            Button
+              id: listButton
+              anchors.right: parent.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-right: 10
+              size: 65 26
+              text: List
+              color: #f5c542
+              background-color: #1a1a24
+              border: 1 #f5c542
+
+          Panel
+            id: createBottomRow
+            anchors.top: createTopRow.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 38
+            margin-top: 4
+            layout:
+              type: anchor
+
+            Label
+              id: rewardLabel
+              text: Reward:
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 10
+              width: 50
+              color: #aaaaaa
+
+            AuctionToggleButton
+              id: rewardGold
+              text: Gold
+              anchors.left: rewardLabel.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 6
+              size: 60 24
+              color: #f5c542
+              $checked:
+                background-color: #f5c542
+                border: 1 #f5c542
+
+            AuctionToggleButton
+              id: rewardFame
+              text: Fame
+              anchors.left: rewardGold.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 4
+              size: 60 24
+              color: #aaaaaa
+              $checked:
+                background-color: #e040fb
+                border: 1 #e040fb
+
+            Label
+              id: durationLabel
+              text: Duration:
+              anchors.left: rewardFame.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 16
+              width: 60
+              color: #aaaaaa
+
+            AuctionToggleButton
+              id: dur12
+              text: 12h
+              anchors.left: durationLabel.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 6
+              size: 45 24
+              color: #aaaaaa
+              $checked:
+                background-color: #4fc3f7
+                border: 1 #4fc3f7
+
+            AuctionToggleButton
+              id: dur24
+              text: 24h
+              anchors.left: dur12.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 4
+              size: 45 24
+              color: #aaaaaa
+              $checked:
+                background-color: #4fc3f7
+                border: 1 #4fc3f7
+
+            AuctionToggleButton
+              id: dur48
+              text: 48h
+              anchors.left: dur24.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 4
+              size: 45 24
+              color: #aaaaaa
+              $checked:
+                background-color: #4fc3f7
+                border: 1 #4fc3f7
 
 AuctionRow < Panel
-  height: 36
-  minimum-width: 260
-  width: 280
+  height: 40
   layout:
     type: anchor
-  background-color: #222222ff
-  border: 1 #444444
+  background-color: #1a1a24ff
+  border: 1 #2a2a3a
   margin-top: 2
   margin-left: 4
   margin-right: 4
   focusable: true
-  
+
   Panel
     id: sel
     anchors.fill: parent
-    background-color: #33557766
-    border: 1 #88aaff
+    background-color: #f5c54222
+    border: 1 #f5c542
     visible: false
     phantom: true
     z-index: 1
 
   Item
     id: icon
-    size: 32 32
+    size: 34 34
     virtual: true
     anchors.left: parent.left
     anchors.verticalCenter: parent.verticalCenter
     z-index: 2
-    margin-left: 2
+    margin-left: 6
 
     UIWidget
       id: tier
@@ -429,20 +996,31 @@ AuctionRow < Panel
     id: name
     anchors.left: icon.right
     anchors.verticalCenter: parent.verticalCenter
-    anchors.right: seller.left
-    margin-left: 6
+    anchors.right: sellerName.left
+    margin-left: 8
     text: Item Name
-    color: white
+    color: #e8d0a0
     text-auto-resize: false
     wrap: false
     phantom: true
 
   Label
-    id: seller
+    id: sellerName
     anchors.left: icon.right
-    margin-left: 200
+    margin-left: 220
     anchors.verticalCenter: parent.verticalCenter
-    width: 120
+    width: 90
+    text: ""
+    color: #aaaaaa
+    text-align: right
+    phantom: true
+
+  Label
+    id: timeLeft
+    anchors.left: sellerName.right
+    margin-left: 4
+    anchors.verticalCenter: parent.verticalCenter
+    width: 50
     text: ""
     color: #cccccc
     text-align: right
@@ -450,20 +1028,35 @@ AuctionRow < Panel
 
   Label
     id: price
-    anchors.right: parent.right
-    margin-right: 6
-    width: 80
+    anchors.right: priceIcon.left
+    margin-right: 4
+    width: 90
     anchors.verticalCenter: parent.verticalCenter
     text: 0
-    color: yellow
+    color: #f5c542
+    text-align: right
+    phantom: true
+
+  UIWidget
+    id: priceIcon
+    anchors.right: parent.right
+    margin-right: 8
+    anchors.verticalCenter: parent.verticalCenter
+    size: 16 16
+    image-source: /images/icons/gold_coin.png
+    image-size: 16 16
     phantom: true
 
   Button
     id: rowCancel
-    anchors.right: price.left
+    anchors.right: sellerName.right
     anchors.verticalCenter: parent.verticalCenter
-    margin-right: 8
+    margin-right: 4
+    size: 80 24
     text: Remove
+    color: #ff6b6b
+    background-color: #1a1a24
+    border: 1 #3a3a4a
     visible: false
     phantom: false
 

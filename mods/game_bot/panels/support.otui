@@ -16,7 +16,7 @@ Panel
     phantom: false
   
     Label
-      text: Support Settings
+      !text: tr('Support Settings')
       font: verdana-11px-rounded
       text-align: center
       text-auto-resize: true
@@ -34,7 +34,7 @@ Panel
       margin-right: 2
     
     Label
-      text: Support Spell 1:
+      !text: tr('Support Spell 1:')
       text-auto-resize: true
       anchors.top: prev.bottom
       anchors.left: parent.left
@@ -46,7 +46,7 @@ Panel
     
     CheckBox
       id: spell1Enabled
-      text: Enabled
+      !text: tr('Enabled')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -56,7 +56,7 @@ Panel
     
     Button
       id: spell1Button
-      text: Click to set spell
+      !text: tr('Click to set spell')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -66,7 +66,7 @@ Panel
       height: 25
     
     Label
-      text: Cooldown (seconds):
+      !text: tr('Cooldown (seconds):')
       anchors.top: prev.bottom
       anchors.left: parent.left
       margin-top: 8
@@ -100,7 +100,7 @@ Panel
       margin-right: 2
     
     Label
-      text: Support Spell 2:
+      !text: tr('Support Spell 2:')
       text-auto-resize: true
       anchors.top: prev.bottom
       anchors.left: parent.left
@@ -112,7 +112,7 @@ Panel
     
     CheckBox
       id: spell2Enabled
-      text: Enabled
+      !text: tr('Enabled')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -122,7 +122,7 @@ Panel
     
     Button
       id: spell2Button
-      text: Click to set spell
+      !text: tr('Click to set spell')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -132,7 +132,7 @@ Panel
       height: 25
     
     Label
-      text: Cooldown (seconds):
+      !text: tr('Cooldown (seconds):')
       anchors.top: prev.bottom
       anchors.left: parent.left
       margin-top: 8
@@ -166,7 +166,7 @@ Panel
       margin-right: 2
     
     Label
-      text: Auto Eat:
+      !text: tr('Auto Eat:')
       text-auto-resize: true
       anchors.top: prev.bottom
       anchors.left: parent.left
@@ -178,7 +178,7 @@ Panel
     
     CheckBox
       id: autoEatEnabled
-      text: Enabled
+      !text: tr('Enabled')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -188,7 +188,7 @@ Panel
     
     Button
       id: autoEatButton
-      text: Click to set item ID
+      !text: tr('Click to set item ID')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -198,7 +198,7 @@ Panel
       height: 25
     
     Label
-      text: Interval (seconds):
+      !text: tr('Interval (seconds):')
       anchors.top: prev.bottom
       anchors.left: parent.left
       margin-top: 8
@@ -233,7 +233,7 @@ Panel
     
     CheckBox
       id: antiIdleEnabled
-      text: Auto Anti-Idle (Turns every 14 mins)
+      !text: tr('Auto Anti-Idle (Turns every 14 mins)')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right

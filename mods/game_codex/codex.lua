@@ -46,7 +46,7 @@ function Codex.onGameStart()
 		print("[Codex] ERROR: Failed to load codex.otui")
 		return
 	end
-	
+	translateUI(Codex.UI)
 	Codex.UI:hide()
 	Codex.UI.onEscape = Codex.hide
 	Codex.UI.onClose = Codex.hide

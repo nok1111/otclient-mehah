@@ -5,6 +5,16 @@ local defaultLocaleName = 'en'
 local installedLocales
 local currentLocale
 
+local function stripAccents(str)
+    if type(str) ~= 'string' then return str end
+    local from = '\195\161\195\169\195\173\195\179\195\186\195\129\195\137\195\141\195\147\195\154\195\177\195\145\195\188\195\156\195\160\195\168\195\172\195\178\195\185\195\128\195\136\195\140\195\146\195\153\195\162\195\170\195\174\195\180\195\187\195\130\195\138\195\142\195\148\195\155\195\163\195\181\195\131\195\149\195\167\195\135\195\191\197\184\195\182\195\150\195\164\195\132\195\165\195\133'
+    local to = 'aeiouAEIOUnNuUaeiouAEIOUaeiouAEIOUaoAOcCyYoOaAaA'
+    for i = 1, #from, 2 do
+        str = str:gsub(from:sub(i, i + 1), to:sub((i + 1) / 2, (i + 1) / 2))
+    end
+    return str
+end
+
 function sendLocale(localeName)
     local protocolGame = g_game.getProtocolGame()
     if protocolGame then
@@ -219,6 +229,7 @@ function _G.tr(text, ...)
             end
             return out:reverse()
         elseif tostring(text) then
+            text = stripAccents(text)
             local translation = currentLocale.translation[text]
             if not translation then
                 local normalized = text:gsub('\n', '\\n')

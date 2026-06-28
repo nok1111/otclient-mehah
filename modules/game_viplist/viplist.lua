@@ -27,7 +27,7 @@ function controllerVip:onInit()
         callback = toggle,
       }
     })
-    vipButton = modules.game_mainpanel.addToggleButton("vipListButton", tr("VIP List"), "/images/options/button_vip", toggle, false, 3)
+    vipButton = modules.game_mainpanel.addToggleButton("vipListButton", tr("VIP List"), "/images/options/button_vip", toggle, false, 5)
     vipWindow = g_ui.loadUI('viplist')
     controllerVip:registerEvents(g_game, {
         onAddVip = onAddVip,

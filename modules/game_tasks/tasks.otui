@@ -21,7 +21,7 @@ TaskCard < Panel
     
   Label
     id: taskName
-    text: Hunt Task
+    !text: tr('Hunt Task')
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: tierBadge.left
@@ -56,7 +56,7 @@ TaskCard < Panel
     
     Label
       id: killsLabel
-      text: Kills: 15
+      !text: tr('Kills: 15')
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
       margin-top: 5
@@ -66,7 +66,7 @@ TaskCard < Panel
       
     Label
       id: zoneLabel
-      text: Zone: 20-30
+      !text: tr('Zone: 20-30')
       anchors.top: killsLabel.bottom
       anchors.horizontalCenter: parent.horizontalCenter
       margin-top: 3
@@ -76,7 +76,7 @@ TaskCard < Panel
       
     Label
       id: zoneNameLabel
-      text: Zone Name
+      !text: tr('Zone Name')
       anchors.top: zoneLabel.bottom
       anchors.horizontalCenter: parent.horizontalCenter
       margin-top: 2
@@ -99,7 +99,7 @@ TaskCard < Panel
     
     Label
       id: modifiersTitle
-      text: Modifiers:
+      !text: tr('Modifiers:')
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
       font: verdana-11px-rounded
@@ -131,7 +131,7 @@ TaskCard < Panel
     
     Label
       id: rewardsTitle
-      text: Rewards:
+      !text: tr('Rewards:')
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
       font: verdana-11px-rounded
@@ -190,7 +190,7 @@ TaskCard < Panel
     
   Button
     id: lockButton
-    text: LOCK
+    !text: tr('LOCK')
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     width: 80
@@ -201,7 +201,7 @@ TaskCard < Panel
     
   Button
     id: startButton
-    text: START
+    !text: tr('START')
     anchors.bottom: parent.bottom
     anchors.right: parent.right
     width: 80
@@ -224,7 +224,7 @@ TaskCard < Panel
       image-source: /images/icons/lock
       
     Label
-      text: LOCKED
+      !text: tr('LOCKED')
       anchors.top: lockIcon.bottom
       anchors.horizontalCenter: parent.horizontalCenter
       margin-top: 5
@@ -253,7 +253,7 @@ MainWindow
     
     Label
       id: fameLabel
-      text: Fame: 0
+      !text: tr('Fame: 0')
       font: verdana-11px-rounded
       anchors.left: parent.left
       anchors.top: parent.top
@@ -263,7 +263,7 @@ MainWindow
       
     Label
       id: fameLevelLabel
-      text: Level 1 (0/100)
+      !text: tr('Level 1 (0/100)')
       font: verdana-11px-rounded
       anchors.left: parent.left
       anchors.top: fameLabel.bottom
@@ -273,7 +273,7 @@ MainWindow
       
     Label
       id: dailyBonusLabel
-      text: Daily Bonus: +20 Fame (Available)
+      !text: tr('Daily Bonus: +20 Fame (Available)')
       font: verdana-11px-rounded
       color: #00ff00
       anchors.right: parent.right
@@ -283,7 +283,7 @@ MainWindow
 
   Label
     id: availableTasksTitle
-    text: Available Tasks (3/3)
+    !text: tr('Available Tasks (3/3)')
     font: verdana-11px-rounded
     anchors.top: headerPanel.bottom
     anchors.horizontalCenter: parent.horizontalCenter
@@ -334,7 +334,7 @@ MainWindow
       
       Button
         id: rerollButton
-        text: Reroll Tasks
+        !text: tr('Reroll Tasks')
         width: 110
         height: 28
         anchors.left: rerollIcon.right
@@ -344,7 +344,7 @@ MainWindow
         
       Label
         id: rerollCostLabel
-        text: Cost:
+        !text: tr('Cost:')
         anchors.left: rerollButton.right
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 5
@@ -361,7 +361,7 @@ MainWindow
         
       Label
         id: rerollCostAmount
-        text: 50
+        !text: tr('50')
         anchors.left: fameCostIcon.right
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 3
@@ -390,7 +390,7 @@ MainWindow
       
       Label
         id: rerollsAvailableLabel
-        text: Free Rerolls: 5/10
+        !text: tr('Free Rerolls: 5/10')
         anchors.left: rerollAvailableIcon.right
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 5
@@ -418,7 +418,7 @@ MainWindow
         
       Label
         id: premiumLabel
-        text: Premium: 1 free lock
+        !text: tr('Premium: 1 free lock')
         anchors.left: premiumIcon.right
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 5
@@ -447,7 +447,7 @@ MainWindow
       
       Label
         id: activeTaskTitle
-        text: Active Task:
+        !text: tr('Active Task:')
         font: verdana-11px-rounded
         color: #FFD700
         anchors.left: parent.left
@@ -457,7 +457,7 @@ MainWindow
         
       Label
         id: activeTaskStatus
-        text: No active task
+        !text: tr('No active task')
         font: verdana-11px-rounded
         color: #888888
         anchors.left: activeTaskTitle.right
@@ -500,7 +500,7 @@ MainWindow
         
       Button
         id: completeButton
-        text: Complete Task
+        !text: tr('Complete Task')
         width: 120
         height: 25
         visible: false
@@ -524,7 +524,7 @@ MainWindow
       
     Label
       id: dailyBonusText
-      text: +20 Fame (First Daily Task Completed)
+      !text: tr('+20 Fame (First Daily Task Completed)')
       color: #FFD700
       font: verdana-11px-rounded
       anchors.left: fameIcon.right
@@ -534,7 +534,7 @@ MainWindow
 
   Button
     id: closeButton
-    text: Close
+    !text: tr('Close')
     width: 100
     anchors.bottom: parent.bottom
     anchors.right: parent.right

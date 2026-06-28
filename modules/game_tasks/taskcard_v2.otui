@@ -21,7 +21,7 @@ TaskCard < Panel
   // Task Name centered
   Label
     id: taskName
-    text: Hunt Task
+    !text: tr('Hunt Task')
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: tierBadge.left
@@ -63,7 +63,7 @@ TaskCard < Panel
     
     Label
       id: killsLabel
-      text: Kills: 120
+      !text: tr('Kills: 120')
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
       margin-top: 5
@@ -72,7 +72,7 @@ TaskCard < Panel
       
     Label
       id: zoneLabel
-      text: Zone: 20-30
+      !text: tr('Zone: 20-30')
       anchors.top: killsLabel.bottom
       anchors.horizontalCenter: parent.horizontalCenter
       margin-top: 3
@@ -94,7 +94,7 @@ TaskCard < Panel
     
     Label
       id: modifiersTitle
-      text: Modifiers:
+      !text: tr('Modifiers:')
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
       font: verdana-11px-rounded
@@ -127,7 +127,7 @@ TaskCard < Panel
     
     Label
       id: rewardsTitle
-      text: Rewards:
+      !text: tr('Rewards:')
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
       font: verdana-11px-rounded
@@ -158,7 +158,7 @@ TaskCard < Panel
           
         Label
           id: goldLabel
-          text: 240
+          !text: tr('240')
           anchors.left: goldIcon.right
           anchors.verticalCenter: parent.verticalCenter
           margin-left: 5
@@ -182,7 +182,7 @@ TaskCard < Panel
           
         Label
           id: fameLabel
-          text: 60
+          !text: tr('60')
           anchors.left: fameIcon.right
           anchors.verticalCenter: parent.verticalCenter
           margin-left: 5
@@ -205,7 +205,7 @@ TaskCard < Panel
   // Lock Button
   Button
     id: lockButton
-    text: LOCK
+    !text: tr('LOCK')
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     width: 95
@@ -216,7 +216,7 @@ TaskCard < Panel
   // Start Button
   Button
     id: startButton
-    text: START
+    !text: tr('START')
     anchors.bottom: parent.bottom
     anchors.right: parent.right
     width: 95
@@ -239,7 +239,7 @@ TaskCard < Panel
       image-source: /images/ui/icons/lock
       
     Label
-      text: LOCKED
+      !text: tr('LOCKED')
       anchors.top: lockIcon.bottom
       anchors.horizontalCenter: parent.horizontalCenter
       margin-top: 5

@@ -199,6 +199,7 @@ void Client::registerLuaFunctions()
     g_lua.bindSingletonFunction("g_minimap", "saveImage", &Minimap::saveImage, &g_minimap);
     g_lua.bindSingletonFunction("g_minimap", "loadOtmm", &Minimap::loadOtmm, &g_minimap);
     g_lua.bindSingletonFunction("g_minimap", "saveOtmm", &Minimap::saveOtmm, &g_minimap);
+    g_lua.bindSingletonFunction("g_minimap", "loadPreRenderedBlocks", &Minimap::loadPreRenderedBlocks, &g_minimap);
 
 #ifdef FRAMEWORK_EDITOR
     g_lua.registerSingletonClass("g_creatures");
@@ -603,6 +604,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<Creature>("setEmblemTexture", &Creature::setEmblemTexture);
     g_lua.bindClassMemberFunction<Creature>("setTypeTexture", &Creature::setTypeTexture);
     g_lua.bindClassMemberFunction<Creature>("setIconTexture", &Creature::setIconTexture);
+    g_lua.bindClassMemberFunction<Creature>("setCustomIconTexture", &Creature::setCustomIconTexture);
     g_lua.bindClassMemberFunction<Creature>("setIconsTexture", &Creature::setIconsTexture);
     g_lua.bindClassMemberFunction<Creature>("setHealthBarPlayerFrame", &Creature::setHealthBarPlayerFrame);
     g_lua.bindClassMemberFunction<Creature>("setHealthBarOwnSummonFrame", &Creature::setHealthBarOwnSummonFrame);
@@ -938,6 +940,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<Tile>("isPathable", &Tile::isPathable);
 
     g_lua.bindClassMemberFunction<Tile>("hasCreatures", &Tile::hasCreatures);
+    g_lua.bindClassMemberFunction<Tile>("hasFloorChange", &Tile::hasFloorChange);
 
     g_lua.bindClassMemberFunction<Tile>("select", &Tile::select);
     g_lua.bindClassMemberFunction<Tile>("unselect", &Tile::unselect);

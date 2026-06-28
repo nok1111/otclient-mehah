@@ -162,6 +162,7 @@ public:
     bool hasExpireStop() const { return getThingType()->hasExpireStop(); }
     bool hasAnimationPhases() const { return getThingType()->getAnimationPhases() > 1; }
     bool isDecoKit() const { return getThingType()->isDecoKit(); }
+    bool isFloorChange() const { return getThingType()->isFloorChange(); }
 
     PLAYER_ACTION getDefaultAction() { return getThingType()->getDefaultAction(); }
 

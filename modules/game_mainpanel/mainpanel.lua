@@ -19,6 +19,45 @@ local COLORS = {
     BASE_2 = "#414141"
 }
 
+-- Buttons that must always be visible and cannot be hidden by Manage control buttons
+local ALWAYS_VISIBLE_BUTTONS = {
+    botButton = true,
+    auctionButton = true
+}
+
+local function forceAlwaysVisibleButtons()
+    if not optionsController or not optionsController.ui then
+        print("[MainPanel] forceAlwaysVisibleButtons: optionsController not ready")
+        return
+    end
+    local optionsPanel = optionsController.ui.onPanel.options
+    if not optionsPanel then
+        print("[MainPanel] forceAlwaysVisibleButtons: optionsPanel not found")
+        return
+    end
+    for buttonId, _ in pairs(ALWAYS_VISIBLE_BUTTONS) do
+        local button = optionsPanel:getChildById(buttonId)
+        if button then
+            button:setVisible(true)
+            if not buttonConfigs[buttonId] then
+                buttonConfigs[buttonId] = { visible = true, tooltip = button:getTooltip() or buttonId }
+            else
+                buttonConfigs[buttonId].visible = true
+            end
+            for i = #buttonOrder, 1, -1 do
+                if buttonOrder[i] == buttonId then
+                    table.remove(buttonOrder, i)
+                end
+            end
+            table.insert(buttonOrder, 1, buttonId)
+            button.index = 1
+            print("[MainPanel] Forced always-visible button '" .. buttonId .. "' to front")
+        else
+            print("[MainPanel] forceAlwaysVisibleButtons: button '" .. buttonId .. "' not found in optionsPanel")
+        end
+    end
+end
+
 function reloadMainPanelSizes()
     -- Only size widgets that live in the RightPanel; do not change MainRightPanel height
     local container = modules.game_interface.getLeftPanel()
@@ -201,6 +240,7 @@ local function createButton(id, description, image, callback, special, front, in
         else
             panel:addChild(button)
         end
+        print("[MainPanel] createButton: created '" .. id .. "' in options panel (front=" .. tostring(front) .. ")")
     end
 
     button:setId(id)
@@ -298,6 +338,7 @@ function optionsController:onGameStart()
                         button:setVisible(buttonConfigs[id].visible)
                     end
                 end
+                forceAlwaysVisibleButtons()
                 reorderButtons()
                 updateDisplayedButtonsList()
                 updateAvailableButtonsList()
@@ -307,7 +348,7 @@ function optionsController:onGameStart()
     end, 50, "onGameStart")
     if g_game.getClientVersion() >= 1400 and not controlButton1400 then
         controlButton1400 = modules.game_mainpanel.addToggleButton('controButtons', tr('Manage control buttons'),
-        '/images/options/button_control', function() modules.client_options.openOptionsCategory("Interface", "Control Buttons") end, false, 1)
+        '/images/options/button_control', function() modules.client_options.openOptionsCategory("Interface", "Control Buttons") end, false, 2)
         controlButton1400:setOn(false)
     end
 end
@@ -327,6 +368,46 @@ end
 
 function addStoreButton(id, description, image, callback, front, index, customStyle)
     return createButton_large(id, description, image, callback, true, front, index, customStyle)
+end
+
+function prioritizeButton(buttonId)
+    print("[MainPanel] prioritizeButton called for '" .. buttonId .. "'")
+    if not optionsController or not optionsController.ui then
+        print("[MainPanel] prioritizeButton: optionsController/ui not ready")
+        return
+    end
+    local optionsPanel = optionsController.ui.onPanel.options
+    if not optionsPanel then
+        print("[MainPanel] prioritizeButton: optionsPanel not found")
+        return
+    end
+    local button = optionsPanel:getChildById(buttonId)
+    if not button then
+        print("[MainPanel] prioritizeButton: button '" .. buttonId .. "' not found")
+        return
+    end
+
+    button.index = 1
+    button:setVisible(true)
+    if not buttonConfigs[buttonId] then
+        buttonConfigs[buttonId] = { visible = true, tooltip = button:getTooltip() or buttonId }
+    else
+        buttonConfigs[buttonId].visible = true
+    end
+
+    for i = #buttonOrder, 1, -1 do
+        if buttonOrder[i] == buttonId then
+            table.remove(buttonOrder, i)
+        end
+    end
+    table.insert(buttonOrder, 1, buttonId)
+
+    reorderButtons()
+    updateDisplayedButtonsList()
+    updateAvailableButtonsList()
+    saveButtonConfig()
+    reloadMainPanelSizes()
+    print("[MainPanel] Prioritized button '" .. buttonId .. "'")
 end
 
 function getButton(id)
@@ -731,6 +812,7 @@ function initControlButtons()
             end
         end
     end
+    forceAlwaysVisibleButtons()
     updateDisplayedButtonsList()
     updateAvailableButtonsList()
     reorderButtons()

@@ -60,12 +60,11 @@ SKILL_LEVEL = 8
 
 -- Combat skill names
 local combatSkillNames = {
-    [SKILL_CLUB] = "Club Fighting",
-    [SKILL_SWORD] = "Sword Fighting",
-    [SKILL_AXE] = "Axe Fighting",
-    [SKILL_DISTANCE] = "Distance Fighting",
-    [SKILL_SHIELDING] = "Shielding",
-    [SKILL_FIST] = "Fist Fighting",
+   -- [SKILL_CLUB] = "Focus",
+    [SKILL_SWORD] = "Melee",
+    [SKILL_AXE] = "Arcana",
+    [SKILL_DISTANCE] = "Distance",
+    [SKILL_SHIELDING] = "Defence",
     [SKILL_MAGLEVEL] = "Magic Level"
 }
 
@@ -657,16 +656,16 @@ function Inspect.onCardHoverChange(widget, hovered)
         local tooltipDesc = findWidget(Inspect.UI, "tooltipCardDescription")
         
         if tooltipName then
-            tooltipName:setText(card.name or "Unknown Card")
+            tooltipName:setText(tr(card.name) or "Unknown Card")
             tooltipName:setColor(Inspect.rarityColors[card.rarity] or "#ffffff")
         end
         
         if tooltipLevel then
-            tooltipLevel:setText("Level " .. (card.level or 1) .. " / " .. (card.maxLevel or 1))
+            tooltipLevel:setText(tr("Level") .. " " .. (card.level or 1) .. " / " .. (card.maxLevel or 1))
         end
         
         if tooltipDesc then
-            local desc = "No description available"
+            local desc = tr("No description")
             if card.description then
                 if type(card.description) == "table" then
                     desc = card.description[card.level] or card.description[1] or desc
@@ -674,7 +673,7 @@ function Inspect.onCardHoverChange(widget, hovered)
                     desc = card.description
                 end
             end
-            tooltipDesc:setText(desc)
+            tooltipDesc:setText(tr(desc))
         end
         
         -- Position and show tooltip

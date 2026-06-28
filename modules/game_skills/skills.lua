@@ -52,7 +52,7 @@ function init()
     ProtocolGame.registerOpcode(GameServerOpcodes.GameServerUpdateFame, parseUpdateFame)
     ProtocolGame.registerOpcode(GameServerOpcodes.GameServerJobs, parseJobs)
 
-    skillsButton = modules.game_mainpanel.addToggleButton("skillsButton", tr("Skills"), "/images/options/button_skills", toggle, false, 1)
+    skillsButton = modules.game_mainpanel.addToggleButton("skillsButton", tr("Skills"), "/images/options/button_skills", toggle, false, 3)
     skillsButton:setOn(true)
     skillsWindow = g_ui.loadUI('skills')
 
@@ -283,7 +283,7 @@ function online()
     if g_game.getFeature(GameEnterGameShowAppearance) then
         local regenerationTime = skillsWindow:recursiveGetChildById('regenerationTime')
         if regenerationTime then
-            regenerationTime:getChildByIndex(1):setText('Food')
+            regenerationTime:getChildByIndex(1):setText(tr('Food'))
         end
     end
 end
@@ -658,7 +658,7 @@ function onFameChange(points, level, pointsToAdvance, percentage)
     --fame:setTooltip(("You need %d pts to unlock next fame level"):format(tostring(pointsToAdvance)))
 
     local famePoints = fame:getChildById('famePoints')
-    famePoints:setText(points .. " exp")
+    famePoints:setText(points .. ' ' .. tr('exp'))
     famePoints:setWidth(famePoints:getTextSize().width)
 
     local famePtsToLvl = fame2:getChildById('famePtsToLvl')
@@ -668,7 +668,7 @@ function onFameChange(points, level, pointsToAdvance, percentage)
     -- set percentage
     local famebarpercent = skillsWindow:recursiveGetChildById('famebar')
     famebarpercent:setPercent(tonumber(percentage))
-    famebarpercent:setTooltip("You have " .. 100 - tonumber(percentage) .. " percent to go.")
+    famebarpercent:setTooltip(tr('You have %s percent to go.', 100 - tonumber(percentage)))
 end
 
 -- protocol
@@ -702,7 +702,7 @@ pwarning("updateMainJobs triggered")
                 -- finding 'id: label' inside id: 'professionIdX'
                 local label = skillWindow:getChildById("label")
                 if label then
-                    label:setText(skillIdToUI[i])
+                    label:setText(tr(skillIdToUI[i]))
                 end
 
                 -- finding 'id: value' inside id: 'professionIdX'
@@ -716,7 +716,7 @@ pwarning("updateMainJobs triggered")
                 if bar then
                     bar:setPercent(job_skill[i].percentage)
                     if i > 4 or (i < 5 and profId == i) then
-                        bar:setTooltip("You have " .. 100 - job_skill[i].percentage .. " percent to go.")
+                        bar:setTooltip(tr('You have %s percent to go.', 100 - job_skill[i].percentage))
                     end
                 end
             else

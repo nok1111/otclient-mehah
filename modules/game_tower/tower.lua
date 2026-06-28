@@ -218,29 +218,29 @@ local function ensureToggleButton()
     return
   end
 
-  trackerToggleButton = modules.game_mainpanel.addToggleButton(
-    'towerTrackerButton',
-    tr('Tower Tracker'),
-    '/images/options/button_prey',
-    function()
-      trackerHiddenByUser = not trackerHiddenByUser
-      if trackerHiddenByUser then
-        if trackerWidget and not trackerWidget:isDestroyed() then
-          trackerWidget:hide()
-        end
-      elseif trackerData then
-        applyTrackerData(trackerData)
-      else
-        showPlaceholderTracker()
-      end
+ -- trackerToggleButton = modules.game_mainpanel.addToggleButton(
+ --   'towerTrackerButton',
+  --  tr('Tower Tracker'),
+  --  '/images/options/button_prey',
+  --  function()
+  --    trackerHiddenByUser = not trackerHiddenByUser
+   --   if trackerHiddenByUser then
+   --     if trackerWidget and not trackerWidget:isDestroyed() then
+   --       trackerWidget:hide()
+  --      end
+   --   elseif trackerData then
+   --     applyTrackerData(trackerData)
+  --    else
+  --      showPlaceholderTracker()
+  --    end
 
-      if trackerToggleButton and not trackerToggleButton:isDestroyed() then
-        trackerToggleButton:setOn(not trackerHiddenByUser)
-      end
-    end,
-    false,
+  --    if trackerToggleButton and not trackerToggleButton:isDestroyed() then
+  --      trackerToggleButton:setOn(not trackerHiddenByUser)
+ --     end
+ --   end,
+ --   false,
     1010
-  )
+ -- )
 
   if trackerToggleButton and not trackerToggleButton:isDestroyed() then
     trackerToggleButton:setOn(not trackerHiddenByUser)
