@@ -105,6 +105,32 @@ ChoiceRowWrapper < Panel
 
   
 
+TaskObjectiveRow < UIWidget
+  height: 24
+  layout:
+    type: anchor
+  margin-top: 2
+
+  Item
+    id: objectiveIcon
+    size: 16 16
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 4
+    image-source: /images/icons/quest_marker
+
+  Label
+    id: objectiveText
+    anchors.left: objectiveIcon.right
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-left: 5
+    margin-top: 2
+    margin-bottom: 2
+    color: #3396ff
+    text-wrap: true
+    text-auto-resize: true
+
 TaskRecord < UIWidget
   image-source: /images/taskList/task_item
   width: 256
@@ -435,43 +461,36 @@ TaskDescription < UIWidget
       margin-left: 5
       text-wrap: true
 
-    Label
-      id: monsterGoals
+    Panel
+      id: objectivesContainer
       anchors.top: taskObjectives.bottom
       anchors.left: parent.left
       anchors.right: parent.right
-      color: #3396ff
-      visible: false
-      text-wrap: true
-      text-auto-resize: true
       margin-top: 5
+      layout:
+        type: verticalBox
+        fit-children: true
+
+    # Legacy labels kept hidden for compatibility
+    Label
+      id: monsterGoals
+      visible: false
+      height: 0
 
     Label
       id: itemGoals
-      anchors.top: taskObjectives.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      color: #3396ff
       visible: false
-      text-wrap: true
-      text-auto-resize: true
-      margin-top: 5
+      height: 0
 
     Label
       id: storageGoals
-      anchors.top: taskObjectives.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      color: #3396ff
       visible: false
-      text-wrap: true
-      text-auto-resize: true
-      margin-top: 5
+      height: 0
 
     Item
       id: progressIcon
       size: 20 20
-      anchors.top: storageGoals.bottom
+      anchors.top: objectivesContainer.bottom
       image-source: /images/icons/wow_obj
       anchors.left: parent.left
       margin-top: 8
@@ -479,7 +498,7 @@ TaskDescription < UIWidget
     Label
       id: itemProgress
       !text: tr('Progress:')
-      anchors.top: storageGoals.bottom
+      anchors.top: objectivesContainer.bottom
       anchors.left: progressIcon.left
       width: 60
       visible: true

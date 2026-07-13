@@ -595,23 +595,41 @@ function parseIncomingTaskList(buffer)
         if tonumber(goalSplit[goalCnt]) == 1 and goalCnt < maxGoalCnt then --monster goal
             local monsterCnt = tonumber(goalSplit[goalCnt+1])
             for j = 1, monsterCnt do
-                table.insert(monsterList, {name = goalSplit[goalCnt+1 + (2*j-1)], spriteId = tonumber(goalSplit[goalCnt+1 + (2*j-1)+1])})
+                local base = goalCnt + 1 + (4*(j-1))
+                table.insert(monsterList, {
+                    name = goalSplit[base + 1],
+                    spriteId = tonumber(goalSplit[base + 2]),
+                    current = tonumber(goalSplit[base + 3]) or 0,
+                    goal = tonumber(goalSplit[base + 4]) or 1
+                })
             end
-            goalCnt = goalCnt + 1 + monsterCnt * 2
+            goalCnt = goalCnt + 1 + monsterCnt * 4
             goalCnt = goalCnt + 1
         end
         if tonumber(goalSplit[goalCnt]) == 2 and goalCnt < maxGoalCnt then --item goal
             local itemCnt = tonumber(goalSplit[goalCnt+1])
             for j = 1, itemCnt do
-                table.insert(itemList, {name = goalSplit[goalCnt+1 + (2*j-1)], itemId = tonumber(goalSplit[goalCnt+1 + (2*j-1)+1])})
+                local base = goalCnt + 1 + (4*(j-1))
+                table.insert(itemList, {
+                    name = goalSplit[base + 1],
+                    itemId = tonumber(goalSplit[base + 2]),
+                    current = tonumber(goalSplit[base + 3]) or 0,
+                    goal = tonumber(goalSplit[base + 4]) or 1
+                })
             end
-            goalCnt = goalCnt + 1 + itemCnt * 2
+            goalCnt = goalCnt + 1 + itemCnt * 4
             goalCnt = goalCnt + 1
         end
         if tonumber(goalSplit[goalCnt]) == 3 and goalCnt < maxGoalCnt then --storage goal
             local storageCnt = tonumber(goalSplit[goalCnt+1])
             for j = 1, storageCnt do
-                table.insert(storageList, {starageName = goalSplit[goalCnt+1 + (2*j-1)], starageTaskId = tonumber(goalSplit[goalCnt+1 + (2*j-1)+1])})
+                local base = goalCnt + 1 + (4*(j-1))
+                table.insert(storageList, {
+                    starageName = goalSplit[base + 1],
+                    starageTaskId = tonumber(goalSplit[base + 2]),
+                    current = tonumber(goalSplit[base + 3]) or 0,
+                    goal = tonumber(goalSplit[base + 4]) or 1
+                })
             end
         end
         targetList = {monsters = monsterList, items = itemList, storages = storageList}
@@ -732,6 +750,7 @@ function onExtendedTaskList(protocol, opcode, buffer)
     currentSelectedTask = 0
 
     localTaskList = parseIncomingTaskList(buffer)
+    print('[Client TaskList] received ' .. tostring(#localTaskList) .. ' tasks')
     buildGroupedTaskList()
     -- restore previously selected task by taskNumber if any
     if not selectedListIndex or selectedListIndex <= 0 then
@@ -748,6 +767,7 @@ function onExtendedTaskList(protocol, opcode, buffer)
     end
     if selectedListIndex and selectedListIndex > 0 and selectedListIndex <= #localTaskList then
       -- ensure description reflects restored selection
+      print('[Client TaskList] restoring selectedListIndex=' .. tostring(selectedListIndex) .. ' taskNumber=' .. tostring(localTaskList[selectedListIndex].taskNumber))
       taskDescriptionWindow:show()
       deleteButton:show()
       updateTaskDescription(selectedListIndex)
@@ -1032,6 +1052,7 @@ function onExtendedUpdateTask(protocol, opcode, buffer)
     local idx = tonumber(mainSplit[1])
     local state = tonumber(mainSplit[2])
     local cnt = tonumber(mainSplit[3])
+    print('[Client TaskUpdate] taskNumber=' .. tostring(idx) .. ' state=' .. tostring(state) .. ' cnt=' .. tostring(cnt))
 
     -- When a task progress update arrives, request a unified refresh so the left list
     -- and the right description reflect the latest state immediately.
@@ -1040,9 +1061,11 @@ function onExtendedUpdateTask(protocol, opcode, buffer)
       -- small debounce to coalesce multiple updates
       if scheduleEvent then
         scheduleEvent(function()
+          print('[Client TaskUpdate] requesting full refresh')
           local gp = g_game.getProtocolGame(); if gp then gp:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "") end
         end, 100)
       else
+        print('[Client TaskUpdate] requesting full refresh (immediate)')
         p:sendExtendedOpcode(ClientOpcodes.ClientGetTaskList, "")
       end
     end
@@ -1875,55 +1898,59 @@ function UpdateNpcTaskDescription()
   do
     local goals = rec.taskGoals or {}
 
-    -- Monsters
-    local monLbl = npcTaskDescription:recursiveGetChildById('monsterGoals')
-    if monLbl then
-      if goals.monsters and #goals.monsters > 0 then
-        local names = {}
-        for i = 1, #goals.monsters do names[#names+1] = tostring(goals.monsters[i].name) end
-        monLbl:setText(tr('You have to kill: %s.', table.concat(names, ', ')))
-        monLbl:setVisible(true)
-      else
-        monLbl:setText('')
-        monLbl:setVisible(false)
+    local objContainer = npcTaskDescription:recursiveGetChildById('objectivesContainer')
+    if objContainer and objContainer.destroyChildren then
+      objContainer:destroyChildren()
+    end
+
+    local function addNpcObjective(text, current, goal)
+      if not objContainer then return end
+      local row = g_ui.createWidget('TaskObjectiveRow', objContainer)
+      local lbl = row:recursiveGetChildById('objectiveText')
+      if lbl then
+        local full = text
+        if current ~= nil and goal ~= nil and goal > 1 then
+          full = string.format('%s (%d/%d)', text, current, goal)
+        elseif current ~= nil and goal ~= nil and goal == 1 then
+          full = string.format('%s [%s]', text, current >= goal and 'Done' or 'Pending')
+        end
+        lbl:setText(tr(full))
+        lbl:setTextAutoResize(true)
       end
     end
 
-    -- Items
-    local itemLbl = npcTaskDescription:recursiveGetChildById('itemGoals')
-    if itemLbl then
-      if goals.items and #goals.items > 0 then
-        local names = {}
-        for i = 1, #goals.items do names[#names+1] = tostring(goals.items[i].name) end
-        itemLbl:setText(tr('You have to collect: %s.', table.concat(names, ', ')))
-        itemLbl:setVisible(true)
-      else
-        itemLbl:setText('')
-        itemLbl:setVisible(false)
+    local anyObj = false
+    if goals.monsters and #goals.monsters > 0 then
+      for i = 1, #goals.monsters do
+        local m = goals.monsters[i]
+        addNpcObjective(string.format('Kill %s', m.name), m.current, m.goal)
+        anyObj = true
       end
     end
-
-
-    -- Storages
-    local storLbl = npcTaskDescription:recursiveGetChildById('storageGoals')
-    if storLbl then
-      if goals.storages and #goals.storages > 0 then
-        local names = {}
-        for i = 1, #goals.storages do names[#names+1] = tostring(goals.storages[i].starageName) end
-        storLbl:setText(tr('You have to do: %s.', table.concat(names, ', ')))
-        storLbl:setVisible(true)
-      else
-        storLbl:setText('')
-        storLbl:setVisible(false)
+    if goals.items and #goals.items > 0 then
+      for i = 1, #goals.items do
+        local item = goals.items[i]
+        addNpcObjective(string.format('Collect %s', item.name), item.current, item.goal)
+        anyObj = true
       end
     end
+    if goals.storages and #goals.storages > 0 then
+      for i = 1, #goals.storages do
+        local st = goals.storages[i]
+        addNpcObjective(string.format('Complete: %s', st.starageName), st.current, st.goal)
+        anyObj = true
+      end
+    end
+    if not anyObj then
+      addNpcObjective(tr('No specific objectives.'))
+    end
+    if objContainer and objContainer.show then objContainer:show() end
 
     -- Objectives header + divider
-    local anyObj = (goals.monsters and #goals.monsters > 0) or (goals.items and #goals.items > 0) or (goals.storages and #goals.storages > 0)
     local objTitle = npcTaskDescription:recursiveGetChildById('taskObjectives')
-    if objTitle then objTitle:setVisible(anyObj and true or false) end
+    if objTitle then objTitle:setVisible(true) end
     local objDiv = npcTaskDescription:recursiveGetChildById('objectivesDivider')
-    if objDiv then objDiv:setVisible(anyObj and true or false) end
+    if objDiv then objDiv:setVisible(true) end
 
     -- Progress label (current/goal)
     local cntLbl = npcTaskDescription:recursiveGetChildById('itemCnt')
@@ -2479,79 +2506,78 @@ function updateTaskDescription(taskNumber)
       selectedChoiceByTask[tnum] = tonumber(persistedChoice) or 0
     end
   end)
-  if localTaskList[taskNumber].taskGoals.monsters then
-    if #localTaskList[taskNumber].taskGoals.monsters > 0 then
-      taskDescriptionWindow:recursiveGetChildById('monsterGoals'):setVisible(true)
-      local goalMsg = "You have to kill: "
-      for i = 1, #localTaskList[taskNumber].taskGoals.monsters, 1 do
-        goalMsg = goalMsg ..  localTaskList[taskNumber].taskGoals.monsters[i].name
-        if i < #localTaskList[taskNumber].taskGoals.monsters then
-          goalMsg = goalMsg .. ", "
-        end
-        if i == #localTaskList[taskNumber].taskGoals.monsters then
-          goalMsg = goalMsg .. "."
-        end
-      end
-      taskDescriptionWindow:recursiveGetChildById('monsterGoals'):setText(goalMsg)
-	  taskDescriptionWindow:recursiveGetChildById('monsterGoals'):setTextAutoResize(true)
-    else
-      taskDescriptionWindow:recursiveGetChildById('monsterGoals'):setVisible(false)
-    end
-  else
-    taskDescriptionWindow:recursiveGetChildById('monsterGoals'):setVisible(false)
-  end
-  
-  
+  -- Render objectives as stacked rows with quest_marker icon
+  local objContainer = taskDescriptionWindow:recursiveGetChildById('objectivesContainer')
   local objDivider = taskDescriptionWindow:recursiveGetChildById('objectivesDivider')
   if objDivider then objDivider:setVisible(true) end
-  if localTaskList[taskNumber].taskGoals.items then
-    if #localTaskList[taskNumber].taskGoals.items > 0 then
-      taskDescriptionWindow:recursiveGetChildById('itemGoals'):setVisible(true)
-      local goalMsg = "You have to collect: "
-      for i = 1, #localTaskList[taskNumber].taskGoals.items, 1 do
-        goalMsg = goalMsg ..  localTaskList[taskNumber].taskGoals.items[i].name
-        if i < #localTaskList[taskNumber].taskGoals.items then
-          goalMsg = goalMsg .. ", "
-        end
-        if i == #localTaskList[taskNumber].taskGoals.items then
-          goalMsg = goalMsg .. "."
-        end
-      end
-      taskDescriptionWindow:recursiveGetChildById('itemGoals'):setText(goalMsg)
-	  taskDescriptionWindow:recursiveGetChildById('itemGoals'):setTextAutoResize(true)
-    else
-      taskDescriptionWindow:recursiveGetChildById('itemGoals'):setVisible(false)
-    end
-  else
-    taskDescriptionWindow:recursiveGetChildById('itemGoals'):setVisible(false)
+  if objContainer and objContainer.destroyChildren then
+    objContainer:destroyChildren()
   end
-  
-  
-   if localTaskList[taskNumber].taskGoals.storages then
-    if #localTaskList[taskNumber].taskGoals.storages > 0 then
-      taskDescriptionWindow:recursiveGetChildById('storageGoals'):setVisible(true)
-      local goalMsg = "You have to do: "
-      for i = 1, #localTaskList[taskNumber].taskGoals.storages, 1 do
-        goalMsg = goalMsg ..  localTaskList[taskNumber].taskGoals.storages[i].starageName
-        if i < #localTaskList[taskNumber].taskGoals.storages then
-          goalMsg = goalMsg .. ", "
-        end
-        if i == #localTaskList[taskNumber].taskGoals.storages then
-          goalMsg = goalMsg .. "."
-        end
+
+  local function addObjective(text, current, goal)
+    if not objContainer then return end
+    local row = g_ui.createWidget('TaskObjectiveRow', objContainer)
+    local lbl = row:recursiveGetChildById('objectiveText')
+    if lbl then
+      local full = text
+      if current ~= nil and goal ~= nil and goal > 1 then
+        full = string.format('%s (%d/%d)', text, current, goal)
+      elseif current ~= nil and goal ~= nil and goal == 1 then
+        full = string.format('%s [%s]', text, current >= goal and 'Done' or 'Pending')
       end
-      taskDescriptionWindow:recursiveGetChildById('storageGoals'):setText(goalMsg)
-	  taskDescriptionWindow:recursiveGetChildById('storageGoals'):setTextAutoResize(true)
-    else
-      taskDescriptionWindow:recursiveGetChildById('storageGoals'):setVisible(false)
+      lbl:setText(tr(full))
+      lbl:setTextAutoResize(true)
     end
-  else
-    taskDescriptionWindow:recursiveGetChildById('storageGoals'):setVisible(false)
   end
-  
-  
+
+  local hasObjectives = false
+  local goals = localTaskList[taskNumber].taskGoals or {}
+  print('[Client TaskDesc] goals for task ' .. tostring(localTaskList[taskNumber].taskNumber) .. ': monsters=' .. tostring(goals.monsters and #goals.monsters or 0) .. ' items=' .. tostring(goals.items and #goals.items or 0) .. ' storages=' .. tostring(goals.storages and #goals.storages or 0))
+  if goals.monsters and #goals.monsters > 0 then
+    for i = 1, #goals.monsters do
+      local m = goals.monsters[i]
+      print('[Client TaskDesc] monster ' .. i .. ': ' .. tostring(m.name) .. ' current=' .. tostring(m.current) .. ' goal=' .. tostring(m.goal))
+    end
+  end
+  if goals.storages and #goals.storages > 0 then
+    for i = 1, #goals.storages do
+      local st = goals.storages[i]
+      print('[Client TaskDesc] storage ' .. i .. ': ' .. tostring(st.starageName) .. ' current=' .. tostring(st.current) .. ' goal=' .. tostring(st.goal))
+    end
+  end
+
+  if goals.monsters and #goals.monsters > 0 then
+    for i = 1, #goals.monsters do
+      local m = goals.monsters[i]
+      addObjective(string.format('Kill %s', m.name), m.current, m.goal)
+      hasObjectives = true
+    end
+  end
+
+  if goals.items and #goals.items > 0 then
+    for i = 1, #goals.items do
+      local item = goals.items[i]
+      addObjective(string.format('Collect %s', item.name), item.current, item.goal)
+      hasObjectives = true
+    end
+  end
+
+  if goals.storages and #goals.storages > 0 then
+    for i = 1, #goals.storages do
+      local st = goals.storages[i]
+      addObjective(string.format('Complete: %s', st.starageName), st.current, st.goal)
+      hasObjectives = true
+    end
+  end
+
+  if not hasObjectives then
+    addObjective(tr('No specific objectives.'))
+  end
+
+  if objContainer and objContainer.show then objContainer:show() end
+
   taskDescriptionWindow:recursiveGetChildById('itemCnt'):setVisible(true)
-  local cntMsg = localTaskList[taskNumber].taskCurrentCnt .. "/" ..localTaskList[taskNumber].taskGoalCnt
+  local cntMsg = localTaskList[taskNumber].taskCurrentCnt .. "/" .. localTaskList[taskNumber].taskGoalCnt
   taskDescriptionWindow:recursiveGetChildById('itemCnt'):setText(cntMsg)
 end
 

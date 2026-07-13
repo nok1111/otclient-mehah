@@ -555,16 +555,16 @@ local function renderLobby(state)
 
   local mutatorNameLabel = lobbyWindow:getChildById('mutatorNameLabel')
   if mutatorNameLabel then
-    mutatorNameLabel:setText(state.weeklyMutator.name)
+    mutatorNameLabel:setText(tr(state.weeklyMutator.name))
   end
 
   local mutatorDescLabel = lobbyWindow:getChildById('mutatorDescLabel')
   if mutatorDescLabel then
     local mutatorDesc = normalizeMultilineText(state.weeklyMutator.description)
     if mutatorDesc == '' then
-      mutatorDesc = 'No special mutation this week.'
+      mutatorDesc = tr('No special mutation this week.')
     end
-    mutatorDescLabel:setText(mutatorDesc)
+    mutatorDescLabel:setText(tr(mutatorDesc))
   end
 
   local systemInfoTextLabel = lobbyWindow:getChildById('systemInfoTextLabel')
@@ -803,7 +803,7 @@ applyTrackerData = function(data)
     titleText = titleText .. ' - ' .. biome
   end
   if mutator ~= '' and mutator ~= 'nil' then
-    titleText = titleText .. ' [' .. mutator .. ']'
+    titleText = titleText .. ' [' .. tr(mutator) .. ']'
   end
 
   local titleLabel = trackerWidget:getChildById('titleLabel')

@@ -28,11 +28,11 @@ Dungeons.lootChanceThresholds = {
 -- fame is displayed as a flat amount.
 Dungeons.difficultyConfig = {
 	[1] = {name = "Normal",  health = 100, damage = 100},
-	[2] = {name = "Dificil",    health = 130, damage = 115, exp = 40,  reward = 25,  fame = 5},
-	[3] = {name = "Experto",  health = 170, damage = 132, exp = 90,  reward = 55,  fame = 10},
-	[4] = {name = "Maestro",  health = 220, damage = 152, exp = 150, reward = 100, fame = 20},
-	[5] = {name = "Tormento", health = 285, damage = 175, exp = 220, reward = 160, fame = 35},
-	[6] = {name = "Infierno",    health = 370, damage = 200, exp = 300, reward = 230, fame = 60},
+	[2] = {name = "Hard",    health = 130, damage = 115, exp = 40,  reward = 25,  fame = 5},
+	[3] = {name = "Expert",  health = 170, damage = 132, exp = 90,  reward = 55,  fame = 10},
+	[4] = {name = "Master",  health = 220, damage = 152, exp = 150, reward = 100, fame = 20},
+	[5] = {name = "Torment", health = 285, damage = 175, exp = 220, reward = 160, fame = 35},
+	[6] = {name = "Inferno",    health = 370, damage = 200, exp = 300, reward = 230, fame = 60},
 }
 
 -- Numeric values are indexes into the dungeons icon sprite-sheet.
@@ -60,17 +60,17 @@ Dungeons.vocationalIcons = {
 }
 
 Dungeons.vocationNames = {
-	[0] = "Ninguno",
-	[1] = "Mago",
-	[2] = "Templario",
+	[0] = "None",
+	[1] = "Sorcerer",
+	[2] = "Templar",
 	[3] = "Nightblade",
-	[4] = "Caballero Dragon",
-	[5] = "Brujo",
+	[4] = "Dragon Knight",
+	[5] = "Warlock",
 	[6] = "Stellar",
-	[7] = "Monje",
-	[8] = "Druida",
+	[7] = "Monk",
+	[8] = "Druid",
 	[9] = "Light Dancer",
-	[10] = "Arquero",
+	[10] = "Archer",
 
 }
 

@@ -56,6 +56,32 @@ UIWindow
     layout: verticalBox
     &limitText: 80
 
+  Panel
+    id: textBoxPanel
+    size: 0 24
+    anchors.bottom: buttonHolder.top
+    anchors.left: buttonHolder.left
+    anchors.right: buttonHolder.right
+    margin-bottom: 5
+    visible: false
+
+    TextEdit
+      id: textBox
+      height: 20
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.left: parent.left
+      anchors.right: sendButton.left
+      margin-right: 5
+      max-length: 255
+
+    Button
+      id: sendButton
+      !text: tr('Send')
+      width: 60
+      height: 20
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.right: parent.right
+
   ScrollablePanel
     id: buttonHolder
     size: 0 24

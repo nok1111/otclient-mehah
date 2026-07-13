@@ -7,6 +7,9 @@ local outfitBox
 local panelMessage
 local scrollPanel
 local labelMessage
+local textBoxPanel
+local textBox
+local sendButton
 
 -- variables
 local OpcodeDialog = 80
@@ -39,8 +42,20 @@ function init()
   scrollPanel  = windowDialog:getChildById('scrollPanel')
   panelMessage = windowDialog:getChildById('panelMessage')
   outfitBox    = windowDialog:getChildById('outfitBox')
+  textBoxPanel = windowDialog:getChildById('textBoxPanel')
+  textBox      = textBoxPanel:getChildById('textBox')
+  sendButton   = textBoxPanel:getChildById('sendButton')
   
   labelMessage = g_ui.createWidget('LabelText', panelMessage)
+
+  sendButton.onClick = function() sendTextBox() end
+  textBox.onKeyPress = function(self, keyCode, modifiers, autoRepeat)
+    if keyCode == KeyEnter then
+      sendTextBox()
+      return true
+    end
+    return false
+  end
 end
 
 function terminate()
@@ -53,6 +68,15 @@ end
 function closeDialog()
   windowDialog:hide()
   modules.game_interface.getRootPanel():focus()
+end
+
+function sendTextBox()
+  local text = textBox:getText()
+  if text and text:len() > 0 then
+    g_game.talkChannel(MessageModes.NpcTo, 0, text)
+    textBox:setText('')
+    textBox:focus()
+  end
 end
 
 function onPositionChange(creature, newPos, oldPos)
@@ -90,5 +114,15 @@ function createDialog(value)
 	buttonHolder:setHeight(#options > 6 and 48 or 25)
   end
     	
+  textBox:setText('')
+  if value.textbox then
+    textBoxPanel:setVisible(true)
+    if type(value.textbox) == 'string' then
+      textBox:setText(value.textbox)
+    end
+  else
+    textBoxPanel:setVisible(false)
+  end
+  	
   openDialog()
 end
