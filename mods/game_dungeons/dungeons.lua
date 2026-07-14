@@ -47,7 +47,7 @@ Dungeons.attributeIcons = {
 
 Dungeons.vocationalIcons = {
 	[0] = 64,
-	[1] = 32, -- Sorcerer
+	[1] = 32, -- Magician
 	[2] = 16, -- Templar
 	[3] = 11, -- Nightblade
 	[4] = 19, -- Dragon Knight
@@ -57,11 +57,16 @@ Dungeons.vocationalIcons = {
 	[8] = 34, -- Druid
 	[9] = 31, -- Light Dancer
 	[10] = 9, -- Archer
+	[11] = 64, -- Bard
+	[12] = 64, -- Tinker
+	[13] = 64, -- Samurai
+	[14] = 64, -- Blood Mage
+	[15] = 64, -- Warden
 }
 
 Dungeons.vocationNames = {
 	[0] = "None",
-	[1] = "Sorcerer",
+	[1] = "Magician",
 	[2] = "Templar",
 	[3] = "Nightblade",
 	[4] = "Dragon Knight",
@@ -71,7 +76,11 @@ Dungeons.vocationNames = {
 	[8] = "Druid",
 	[9] = "Light Dancer",
 	[10] = "Archer",
-
+	[11] = "Bard",
+	[12] = "Tinker",
+	[13] = "Samurai",
+	[14] = "Blood Mage",
+	[15] = "Warden"
 }
 
 Dungeons.IconsConfig = {

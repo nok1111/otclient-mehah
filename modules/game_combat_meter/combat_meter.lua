@@ -329,16 +329,36 @@ end
 local function getVocationColorHex(vocationId, isHealing)
   local voc = tonumber(vocationId) or 0
 
-  if voc == 1 or voc == 5 then -- sorcerer / master sorcerer
+  if voc == 1 then -- Magician
     return '#50A0FF'
-  elseif voc == 2 or voc == 6 then -- druid / elder druid
-    return '#48C780'
-  elseif voc == 3 or voc == 7 then -- paladin / royal paladin
+  elseif voc == 2 then -- Templar
     return '#FFD166'
-  elseif voc == 4 or voc == 8 then -- knight / elite knight
-    return '#E46A6A'
-  elseif voc == 9 or voc == 10 then -- optional custom voc ids
+  elseif voc == 3 then -- Nightblade
     return '#C88CFF'
+  elseif voc == 4 then -- Dragon Knight
+    return '#E46A6A'
+  elseif voc == 5 then -- Warlock
+    return '#8B5CF6'
+  elseif voc == 6 then -- Stellar
+    return '#4DD0E1'
+  elseif voc == 7 then -- Monk
+    return '#FF9F43'
+  elseif voc == 8 then -- Druid
+    return '#48C780'
+  elseif voc == 9 then -- Light Dancer
+    return '#FF6B9D'
+  elseif voc == 10 then -- Archer
+    return '#D4A373'
+  elseif voc == 11 then -- Bard
+    return '#2ECC71'
+  elseif voc == 12 then -- Tinker
+    return '#CD7F32'
+  elseif voc == 13 then -- Samurai
+    return '#DC143C'
+  elseif voc == 14 then -- Blood Mage
+    return '#B22222'
+  elseif voc == 15 then -- Warden
+    return '#2E8B57'
   end
 
   if isHealing then

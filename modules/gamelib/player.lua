@@ -99,7 +99,12 @@ vocationNamesByClientId = {
     [7] = "Monk",
     [8] = "Druid",
     [9] = "Light Dancer",
-    [10] = "Archer"
+    [10] = "Archer",
+    [11] = "Bard",
+    [12] = "Tinker",
+    [13] = "Samurai",
+    [14] = "Blood Mage",
+    [15] = "Warden"
 }
 
 function Player:isPartyLeader()

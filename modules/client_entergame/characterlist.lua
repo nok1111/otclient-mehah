@@ -386,7 +386,9 @@ function CharacterList.create(characters, account, otui)
             local vocationNames = {
                 [0] = 'None', [1] = 'Magician', [2] = 'Templar', [3] = 'Nightblade',
                 [4] = 'Dragon Knight', [5] = 'Warlock', [6] = 'Stellar', [7] = 'Monk',
-                [8] = 'Druid', [9] = 'Light Dancer', [10] = 'Archer'
+                [8] = 'Druid', [9] = 'Light Dancer', [10] = 'Archer',
+                [11] = 'Bard', [12] = 'Tinker', [13] = 'Samurai', [14] = 'Blood Mage',
+                [15] = 'Warden'
             }
 
             -- Prestige / Paragon badge colors (mutually exclusive — Paragon is 300+, Prestige resets below).
