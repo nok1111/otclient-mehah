@@ -4787,3 +4787,42 @@ AttachedEffectManager.register(611, 'Drakkomir Enrage (Phase 3)', 0, 0, {
         oldOwner:setShader('Outfit - Default')
     end
 })
+
+AttachedEffectManager.register(612, 'blade tempest', 864, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -64, -64, false },
+  --  shader = 'Blueveins',
+})
+
+AttachedEffectManager.register(613, 'crimson lotus', 1142, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 0.9,
+    offset = { -90, -90, true},
+    shader = 'Ashes',
+    
+})
+
+AttachedEffectManager.register(614, 'triple slash', 1106, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -64, -32, false }
+})
+
+AttachedEffectManager.register(615, 'crinsom sigil', 900 , ThingCategoryEffect, {
+    duration = 12000,
+    opacity = 0.85,
+    speed = 1.3,
+    offset = { -64, -64, false}, 
+    shader = 'Fire Spiral',
+})
+
+AttachedEffectManager.register(616, 'crimson threads', 0, 0, {
+    duration = 4000,
+    lineMode = true,
+    lineColor = { r = 180, g = 20, b = 20, a = 255 },
+    lineWidth = 3,
+    fade = { 0, 100, 2000 },
+    onTop = true,
+})

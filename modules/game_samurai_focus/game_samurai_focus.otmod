@@ -1,0 +1,11 @@
+Module
+  name: game_samurai_focus
+  description: Samurai Focus stacks widget under player mana bar
+  author: Custom
+  version: 1.0.0
+
+  autoload: true
+  sandboxed: true
+  scripts: [ game_samurai_focus ]
+  @onLoad: init()
+  @onUnload: terminate()

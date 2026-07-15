@@ -45,6 +45,14 @@ public:
     void setExperience(uint64_t experience);
     void setLevel(uint16_t level, uint8_t levelPercent);
     void setMana(uint32_t mana, uint32_t maxMana);
+    void setFocusStacks(uint8_t stacks) { m_focusStacks = stacks; }
+    uint8_t getFocusStacks() { return m_focusStacks; }
+    void setBloodEssence(uint8_t essence) { m_bloodEssence = essence; }
+    uint8_t getBloodEssence() { return m_bloodEssence; }
+    void setBloodFrenzy(bool active) { m_bloodFrenzy = active; }
+    bool isBloodFrenzy() { return m_bloodFrenzy; }
+    void setBloodOrbs(uint8_t orbs) { m_bloodOrbs = orbs; }
+    uint8_t getBloodOrbs() { return m_bloodOrbs; }
     void setMagicLevel(uint16_t magicLevel, uint16_t magicLevelPercent);
     void setBaseMagicLevel(uint16_t baseMagicLevel);
     void setSoul(uint8_t soul);
@@ -180,6 +188,10 @@ private:
     uint8_t m_levelPercent{ 0 };
     uint32_t m_mana{ 0 };
     uint32_t m_maxMana{ 0 };
+    uint8_t m_focusStacks{ 0 };
+    uint8_t m_bloodEssence{ 0 };
+    bool m_bloodFrenzy{ false };
+    uint8_t m_bloodOrbs{ 0 };
     uint16_t m_magicLevel{ 0 };
     uint16_t m_magicLevelPercent{ 0 };
     uint16_t m_baseMagicLevel{ 0 };

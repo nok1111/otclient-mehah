@@ -171,6 +171,9 @@ void Creature::draw(const Point& dest, const bool drawThings, const LightViewPtr
             }
         }
 
+        if (m_dash)
+            drawDashEffect(_dest);
+
         internalDraw(_dest);
 
         if (isMarked())
@@ -358,13 +361,72 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
             const auto& player = static_self_cast<LocalPlayer>();
             backgroundRect.moveTop(backgroundRect.bottom() + 4);
 
-            g_drawPool.addFilledRect(backgroundRect, Color::black);
+            if (player->getVocation() == 14) {
+                // Blood Mage: draw Blood Essence bar in the mana bar slot
+                static constexpr Color essenceFull(220, 0, 0);
+                static constexpr Color essenceFrenzy(255, 80, 0);
 
-            Rect manaRect = backgroundRect.expanded(-1);
-            const double maxMana = player->getMaxMana();
-            manaRect.setWidth((maxMana ? player->getMana() / maxMana : 1) * 38);
+                const uint8_t bloodEssence = player->getBloodEssence();
+                const bool inBloodFrenzy = player->isBloodFrenzy();
 
-            g_drawPool.addFilledRect(manaRect, Color::blue);
+                g_drawPool.addFilledRect(backgroundRect, Color::black);
+
+                Rect essenceRect = backgroundRect.expanded(-1);
+                const int essenceMaxWidth = essenceRect.width();
+                int essenceWidth = static_cast<int>((bloodEssence / 100.0) * essenceMaxWidth);
+                essenceRect.setWidth(essenceWidth);
+
+                g_drawPool.addFilledRect(essenceRect, inBloodFrenzy ? essenceFrenzy : essenceFull);
+
+                // Draw Blood Orbs under the essence bar (red, similar to Focus stacks)
+                const uint8_t bloodOrbs = player->getBloodOrbs();
+                static constexpr int orbSize = 5;
+                static constexpr int orbSpacing = 8;
+                static constexpr Color orbEmpty(80, 0, 0);
+                static constexpr Color orbFull(220, 0, 0);
+
+                const int orbBarWidth = (5 * orbSpacing) - (orbSpacing - orbSize);
+                const int orbX = backgroundRect.x() + (backgroundRect.width() - orbBarWidth) / 2;
+                const int orbY = backgroundRect.bottom() + 3;
+
+                for (int i = 0; i < 5; ++i) {
+                    Rect orbRect(orbX + (i * orbSpacing), orbY, orbSize, orbSize);
+                    g_drawPool.addBoundingRect(orbRect, orbEmpty, 1);
+                    if (i < bloodOrbs) {
+                        g_drawPool.addFilledRect(orbRect.expanded(-1), orbFull);
+                    }
+                }
+            } else {
+                g_drawPool.addFilledRect(backgroundRect, Color::black);
+
+                Rect manaRect = backgroundRect.expanded(-1);
+                const double maxMana = player->getMaxMana();
+                manaRect.setWidth((maxMana ? player->getMana() / maxMana : 1) * 38);
+
+                g_drawPool.addFilledRect(manaRect, Color::blue);
+            }
+
+            // Draw Samurai Focus stacks under the mana bar (only for local player)
+            const auto& localPlayer = static_self_cast<LocalPlayer>();
+            const uint8_t focus = localPlayer->getFocusStacks();
+            if (focus > 0 || localPlayer->getVocation() == 13) {
+                static constexpr int focusSize = 5;
+                static constexpr int focusSpacing = 8;
+                static constexpr Color focusEmpty(128, 128, 128);
+                static constexpr Color focusFull(255, 215, 0);
+
+                const int focusBarWidth = (3 * focusSpacing) - (focusSpacing - focusSize);
+                const int focusX = backgroundRect.x() + (backgroundRect.width() - focusBarWidth) / 2;
+                const int focusY = backgroundRect.bottom() + 3;
+
+                for (int i = 0; i < 3; ++i) {
+                    Rect focusRect(focusX + (i * focusSpacing), focusY, focusSize, focusSize);
+                    g_drawPool.addBoundingRect(focusRect, focusEmpty, 1);
+                    if (i < focus) {
+                        g_drawPool.addFilledRect(focusRect.expanded(-1), focusFull);
+                    }
+                }
+            }
         }
         
         // Draw barrier bar above health bar if barrier exists (grows right to left)
@@ -430,6 +492,59 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
             const Rect numberRect(dest.right() + 2, dest.y() + (dest.height() - textSize.height()) / 2, textSize);
             m_icons->numberText.draw(numberRect, Color::white);
             ++iconOffset;
+        }
+    }
+}
+
+void Creature::drawDashEffect(const Point& dest)
+{
+    if (!m_outfit.isCreature())
+        return;
+
+    const auto& datType = getThingType();
+    if (!datType)
+        return;
+
+    const int ghosts = m_dashGhosts;
+    // fade evenly across the whole trail regardless of how many ghosts it has
+    const float opacityStep = 0.8f / (ghosts + 1);
+    const int stepLen = static_cast<int>(16 * g_drawPool.getScaleFactor());
+
+    Point dirStep;
+    switch (m_direction) {
+        case Otc::North: dirStep = Point(0, 1); break;
+        case Otc::South: dirStep = Point(0, -1); break;
+        case Otc::East: dirStep = Point(-1, 0); break;
+        case Otc::West: dirStep = Point(1, 0); break;
+        default: return;
+    }
+
+    const int animationPhase = getCurrentAnimationPhase();
+
+    // draw farthest (most transparent) ghost first so closer ones overlap it
+    for (int j = ghosts; j >= 1; --j) {
+        const float opacity = 1.0f - (j * opacityStep);
+        if (opacity <= 0.f)
+            continue;
+
+        const Point ghostDest = dest + dirStep * (j * stepLen);
+
+        g_drawPool.setOpacity(opacity, true);
+        datType->draw(ghostDest, 0, m_numPatternX, 0, m_numPatternZ, animationPhase, Color::white);
+
+        if (m_drawOutfitColor && getLayers() > 1) {
+            g_drawPool.setCompositionMode(CompositionMode::MULTIPLY, true);
+            g_drawPool.setOpacity(opacity, true);
+            datType->draw(ghostDest, SpriteMaskYellow, m_numPatternX, 0, m_numPatternZ, animationPhase, m_outfit.getHeadColor());
+            g_drawPool.setCompositionMode(CompositionMode::MULTIPLY, true);
+            g_drawPool.setOpacity(opacity, true);
+            datType->draw(ghostDest, SpriteMaskRed, m_numPatternX, 0, m_numPatternZ, animationPhase, m_outfit.getBodyColor());
+            g_drawPool.setCompositionMode(CompositionMode::MULTIPLY, true);
+            g_drawPool.setOpacity(opacity, true);
+            datType->draw(ghostDest, SpriteMaskGreen, m_numPatternX, 0, m_numPatternZ, animationPhase, m_outfit.getLegsColor());
+            g_drawPool.setCompositionMode(CompositionMode::MULTIPLY, true);
+            g_drawPool.setOpacity(opacity, true);
+            datType->draw(ghostDest, SpriteMaskBlue, m_numPatternX, 0, m_numPatternZ, animationPhase, m_outfit.getFeetColor());
         }
     }
 }

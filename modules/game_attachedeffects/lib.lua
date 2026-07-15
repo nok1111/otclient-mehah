@@ -86,6 +86,18 @@ local executeConfig = function(attachedEffect, config)
         attachedEffect:setDisableWalkAnimation(config.disableWalkAnimation)
     end
 
+    if config.lineMode then
+        attachedEffect:setLineMode(config.lineMode)
+    end
+
+    if config.lineColor then
+        attachedEffect:setLineColor(config.lineColor)
+    end
+
+    if config.lineWidth then
+        attachedEffect:setLineWidth(config.lineWidth)
+    end
+
     if config.offset then
         x = config.offset[1] or 0
         y = config.offset[2] or 0

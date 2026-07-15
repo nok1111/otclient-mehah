@@ -88,6 +88,7 @@ public:
     void drawLight(const Point& dest, const LightViewPtr& lightView) override;
 
     void internalDraw(Point dest, const Color& color = Color::white);
+    void drawDashEffect(const Point& dest);
     void drawInformation(const MapPosInfo& mapRect, const Point& dest, int drawFlags);
 
     void setId(const uint32_t id) override { m_id = id; }
@@ -138,6 +139,11 @@ public:
     void removeTimedSquare() { m_showTimedSquare = false; }
     void showStaticSquare(const Color& color) { m_showStaticSquare = true; m_staticSquareColor = color; }
     void hideStaticSquare() { m_showStaticSquare = false; }
+
+    void setDash(const bool enabled) { m_dash = enabled; }
+    bool isDash() { return m_dash; }
+    void setDashGhosts(const uint8_t ghosts) { m_dashGhosts = std::clamp<uint8_t>(ghosts, 1, 12); }
+    uint8_t getDashGhosts() { return m_dashGhosts; }
 
     // walk related
     void turn(Otc::Direction direction);
@@ -412,6 +418,8 @@ private:
     bool m_allowAppearWalk{ false };
     bool m_showTimedSquare{ false };
     bool m_showStaticSquare{ false };
+    bool m_dash{ false };
+    uint8_t m_dashGhosts{ 4 };
     bool m_cameraFollowing{ false };
     
 

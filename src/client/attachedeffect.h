@@ -24,6 +24,7 @@
 
 #include "outfit.h"
 #include "thingtype.h"
+#include <framework/util/color.h>
 
 class AttachedEffect final : public LuaObject
 {
@@ -111,6 +112,16 @@ onTop,
 
     void attachEffect(const AttachedEffectPtr& e) { m_effects.emplace_back(e); }
 
+    bool isLineMode() { return m_lineMode; }
+    void setLineMode(const bool v) { m_lineMode = v; }
+    Color getLineColor() { return m_lineColor; }
+    void setLineColor(const Color& c) { m_lineColor = c; }
+    uint8_t getLineWidth() { return m_lineWidth; }
+    void setLineWidth(const uint8_t w) { m_lineWidth = w; }
+    void setOwnerCreatureId(const uint32_t id) { m_ownerCreatureId = id; }
+    void addTargetCreature(const uint32_t id) { m_targetCreatureIds.emplace_back(id); }
+    void clearTargetCreatures() { m_targetCreatureIds.clear(); }
+
     DrawOrder getDrawOrder() { return m_drawOrder; }
     void setDrawOrder(const DrawOrder drawOrder) { m_drawOrder = drawOrder; }
     const Light& getLight() const { return m_light; }
@@ -183,6 +194,12 @@ private:
     std::vector<AttachedEffectPtr> m_effects;
 
     Point m_toPoint;
+
+    bool m_lineMode{ false };
+    Color m_lineColor{ 180, 20, 20, 255 };
+    uint8_t m_lineWidth{ 3 };
+    uint32_t m_ownerCreatureId{ 0 };
+    std::vector<uint32_t> m_targetCreatureIds;
 
     friend class Thing;
     friend class Creature;

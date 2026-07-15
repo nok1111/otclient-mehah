@@ -634,6 +634,10 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<Creature>("isStaticSquareVisible", &Creature::isStaticSquareVisible);
     g_lua.bindClassMemberFunction<Creature>("getStaticSquareColor", &Creature::getStaticSquareColor);
     g_lua.bindClassMemberFunction<Creature>("setBounce", &Creature::setBounce);
+    g_lua.bindClassMemberFunction<Creature>("setDash", &Creature::setDash);
+    g_lua.bindClassMemberFunction<Creature>("isDash", &Creature::isDash);
+    g_lua.bindClassMemberFunction<Creature>("setDashGhosts", &Creature::setDashGhosts);
+    g_lua.bindClassMemberFunction<Creature>("getDashGhosts", &Creature::getDashGhosts);
 
     g_lua.bindClassMemberFunction<Creature>("setTyping", &Creature::setTyping);
     g_lua.bindClassMemberFunction<Creature>("getTyping", &Creature::getTyping);
@@ -834,6 +838,12 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<AttachedEffect>("setPulse", &AttachedEffect::setPulse);
     g_lua.bindClassMemberFunction<AttachedEffect>("setFade", &AttachedEffect::setFade);
 
+    g_lua.bindClassMemberFunction<AttachedEffect>("setLineMode", &AttachedEffect::setLineMode);
+    g_lua.bindClassMemberFunction<AttachedEffect>("setLineColor", &AttachedEffect::setLineColor);
+    g_lua.bindClassMemberFunction<AttachedEffect>("setLineWidth", &AttachedEffect::setLineWidth);
+    g_lua.bindClassMemberFunction<AttachedEffect>("addTargetCreature", &AttachedEffect::addTargetCreature);
+    g_lua.bindClassMemberFunction<AttachedEffect>("clearTargetCreatures", &AttachedEffect::clearTargetCreatures);
+
     g_lua.bindClassMemberFunction<AttachedEffect>("setDirection", &AttachedEffect::setDirection);
     g_lua.bindClassMemberFunction<AttachedEffect>("getDirection", &AttachedEffect::getDirection);
     g_lua.bindClassMemberFunction<AttachedEffect>("move", &AttachedEffect::move);
@@ -868,6 +878,14 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<LocalPlayer>("setExperience", &LocalPlayer::setExperience);
     g_lua.bindClassMemberFunction<LocalPlayer>("setLevel", &LocalPlayer::setLevel);
     g_lua.bindClassMemberFunction<LocalPlayer>("setMana", &LocalPlayer::setMana);
+    g_lua.bindClassMemberFunction<LocalPlayer>("setFocusStacks", &LocalPlayer::setFocusStacks);
+    g_lua.bindClassMemberFunction<LocalPlayer>("getFocusStacks", &LocalPlayer::getFocusStacks);
+    g_lua.bindClassMemberFunction<LocalPlayer>("setBloodEssence", &LocalPlayer::setBloodEssence);
+    g_lua.bindClassMemberFunction<LocalPlayer>("getBloodEssence", &LocalPlayer::getBloodEssence);
+    g_lua.bindClassMemberFunction<LocalPlayer>("setBloodFrenzy", &LocalPlayer::setBloodFrenzy);
+    g_lua.bindClassMemberFunction<LocalPlayer>("isBloodFrenzy", &LocalPlayer::isBloodFrenzy);
+    g_lua.bindClassMemberFunction<LocalPlayer>("setBloodOrbs", &LocalPlayer::setBloodOrbs);
+    g_lua.bindClassMemberFunction<LocalPlayer>("getBloodOrbs", &LocalPlayer::getBloodOrbs);
     g_lua.bindClassMemberFunction<LocalPlayer>("setMagicLevel", &LocalPlayer::setMagicLevel);
     g_lua.bindClassMemberFunction<LocalPlayer>("setSoul", &LocalPlayer::setSoul);
     g_lua.bindClassMemberFunction<LocalPlayer>("setStamina", &LocalPlayer::setStamina);

@@ -21,6 +21,7 @@
  */
 
 #include "attachableobject.h"
+#include "creature.h"
 #include <framework/graphics/particleeffect.h>
 #include <framework/graphics/particlemanager.h>
 
@@ -48,6 +49,10 @@ void AttachableObject::attachEffect(const AttachedEffectPtr& obj)
 {
     if (!obj)
         return;
+
+    auto thing = std::dynamic_pointer_cast<Thing>(shared_from_this());
+    if (thing && thing->isCreature())
+        obj->setOwnerCreatureId(std::static_pointer_cast<Creature>(thing)->getId());
 
     onStartAttachEffect(obj);
 

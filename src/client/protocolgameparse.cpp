@@ -147,11 +147,20 @@ void ProtocolGame::parseMessage(const InputMessagePtr& msg)
                 case Proto::GameServerCreatureTyping:
                     parseCreatureTyping(msg);
                     break;
+                case Proto::GameServerAttachedEffectWithTargets:
+                    parseAttachedEffectWithTargets(msg);
+                    break;
+                case Proto::GameServerProgressbar:
+                    parseProgressbar(msg);
+                    break;
                 case Proto::GameServerFeatures:
                     parseFeatures(msg);
                     break;
                 case Proto::GameServerFloorDescription:
                     parseFloorDescription(msg);
+                    break;
+                case Proto::GameServerCreatureDash:
+                    parseCreatureDash(msg);
                     break;
                 case Proto::GameServerImbuementDurations:
                     parseImbuementDurations(msg);
@@ -1715,7 +1724,7 @@ void ProtocolGame::parseMagicEffect(const InputMessagePtr& msg)
                     const auto offsetY = static_cast<int8_t>(msg->getU8());
                     if (!g_things.isValidDatId(shotId, ThingCategoryMissile)) {
                         g_logger.traceError("invalid missile id {}", shotId);
-                        return;
+                        break;
                     }
 
                     const auto& missile = std::make_shared<Missile>();
@@ -5476,6 +5485,34 @@ void ProtocolGame::parseAttachedEffect(const InputMessagePtr& msg)
     creature->attachEffect(effect->clone());
 }
 
+void ProtocolGame::parseAttachedEffectWithTargets(const InputMessagePtr& msg)
+{
+    const uint32_t creatureId = msg->getU32();
+    const uint16_t attachedEffectId = msg->getU16();
+    const uint8_t targetCount = msg->getU8();
+    g_game.recordAttachedEffect();
+
+    std::vector<uint32_t> targetIds;
+    targetIds.reserve(targetCount);
+    for (uint8_t i = 0; i < targetCount; ++i)
+        targetIds.push_back(msg->getU32());
+
+    const auto& creature = g_map.getCreatureById(creatureId);
+    if (!creature)
+        return;
+
+    const auto& effect = g_attachedEffects.getById(attachedEffectId);
+    if (!effect)
+        return;
+
+    auto cloned = effect->clone();
+    cloned->setLineMode(true);
+    for (uint32_t targetId : targetIds)
+        cloned->addTargetCreature(targetId);
+
+    creature->attachEffect(cloned);
+}
+
 void ProtocolGame::parseDetachEffect(const InputMessagePtr& msg)
 {
     const uint32_t creatureId = msg->getU32();
@@ -5510,6 +5547,27 @@ void ProtocolGame::parseMapShader(const InputMessagePtr& msg)
     const auto& shaderName = msg->getString();
 
     g_lua.callGlobalField("g_game", "onMapShaderChange", shaderName);
+}
+
+void ProtocolGame::parseProgressbar(const InputMessagePtr& msg)
+{
+    const uint32_t creatureId = msg->getU32();
+    const uint32_t duration = msg->getU32();
+    const bool ltr = static_cast<bool>(msg->getU8());
+
+    g_lua.callGlobalField("g_game", "onProgressbar", creatureId, duration, ltr);
+}
+
+void ProtocolGame::parseCreatureDash(const InputMessagePtr& msg)
+{
+    const uint32_t creatureId = msg->getU32();
+    const bool enabled = static_cast<bool>(msg->getU8());
+
+    const auto& creature = g_map.getCreatureById(creatureId);
+    if (!creature)
+        return;
+
+    creature->setDash(enabled);
 }
 
 

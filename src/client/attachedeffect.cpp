@@ -21,12 +21,15 @@
  */
 
 #include "attachedeffect.h"
+#include "creature.h"
 #include "gameconfig.h"
 #include "lightview.h"
+#include "map.h"
 #include "thingtypemanager.h"
 
 #include <framework/core/clock.h>
 #include <framework/graphics/animatedtexture.h>
+#include <framework/graphics/drawpoolmanager.h>
 #include <framework/graphics/shadermanager.h>
 #include <framework/graphics/texturemanager.h>
 
@@ -75,6 +78,100 @@ int getBounce(const AttachedEffect::Bounce bounce, const ticks_t ticks) {
 void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightViewPtr& lightView, const bool drawThing) {
     if (m_transform)
         return;
+
+    // Line mode: draw lines from owner to each target creature
+    if (m_lineMode && !m_targetCreatureIds.empty()) {
+        if (!isOnTop)
+            return;
+
+        const auto& owner = g_map.getCreatureById(m_ownerCreatureId);
+        if (!owner || owner->isRemoved()) {
+            m_targetCreatureIds.clear();
+            m_loop = 0;
+            return;
+        }
+
+        const auto scaleFactor = g_drawPool.getScaleFactor();
+        const auto spriteSize = g_gameConfig.getSpriteSize();
+        const auto ownerPos = owner->getPosition();
+        const auto ownerWalkOffset = owner->getWalkOffset();
+
+        // Remove invalid targets (creature removed, dead, or no longer in range)
+        std::erase_if(m_targetCreatureIds, [ownerPos](uint32_t id) {
+            const auto& c = g_map.getCreatureById(id);
+            if (!c || c->isRemoved() || c->isDead())
+                return true;
+            const auto& pos = c->getPosition();
+            if (pos.z != ownerPos.z)
+                return true;
+            return std::abs(pos.x - ownerPos.x) > 8 || std::abs(pos.y - ownerPos.y) > 8;
+        });
+
+        if (m_targetCreatureIds.empty()) {
+            m_loop = 0;
+            return;
+        }
+
+        for (const auto targetId : m_targetCreatureIds) {
+            const auto& target = g_map.getCreatureById(targetId);
+            if (!target)
+                continue;
+
+            const auto targetPos = target->getPosition();
+            const auto targetWalkOffset = target->getWalkOffset();
+
+            Point delta = Point(targetPos.x - ownerPos.x, targetPos.y - ownerPos.y) * spriteSize;
+            delta += (targetWalkOffset - ownerWalkOffset) * scaleFactor;
+
+            const Point targetScreen = dest + delta;
+            const float dx = static_cast<float>(delta.x);
+            const float dy = static_cast<float>(delta.y);
+            const float length = std::sqrt(dx * dx + dy * dy);
+            if (length < 1.f)
+                continue;
+
+            const float halfW = m_lineWidth * 0.5f * scaleFactor;
+            const float px = -dy / length * halfW;
+            const float py = dx / length * halfW;
+
+            const Point a1(dest.x + px, dest.y + py);
+            const Point a2(dest.x - px, dest.y - py);
+            const Point b1(targetScreen.x + px, targetScreen.y + py);
+            const Point b2(targetScreen.x - px, targetScreen.y - py);
+
+            Color lineColor = m_lineColor;
+            if (m_opacity < 100)
+                lineColor.setAlpha(static_cast<uint8_t>(m_lineColor.a() * getOpacity()));
+
+            if (m_fade.height > 0 && m_fade.speed > 0) {
+                const float fadeVal = std::clamp<float>(getBounce(m_fade, m_fade.timer.ticksElapsed()) / 100.f, 0, 1.f);
+                lineColor.setAlpha(static_cast<uint8_t>(lineColor.a() * fadeVal));
+            }
+
+            // Glow: wider, semi-transparent line behind the main line
+            const float glowHalfW = (m_lineWidth + 4) * 0.5f * scaleFactor;
+            const float gpx = -dy / length * glowHalfW;
+            const float gpy = dx / length * glowHalfW;
+            const Point ga1(dest.x + gpx, dest.y + gpy);
+            const Point ga2(dest.x - gpx, dest.y - gpy);
+            const Point gb1(targetScreen.x + gpx, targetScreen.y + gpy);
+            const Point gb2(targetScreen.x - gpx, targetScreen.y - gpy);
+            Color glowColor = m_lineColor;
+            glowColor.setAlpha(static_cast<uint8_t>(lineColor.a() * 0.35f));
+            g_drawPool.addFilledTriangle(ga1, ga2, gb1, glowColor);
+            g_drawPool.addFilledTriangle(ga2, gb2, gb1, glowColor);
+
+            g_drawPool.addFilledTriangle(a1, a2, b1, lineColor);
+            g_drawPool.addFilledTriangle(a2, b2, b1, lineColor);
+        }
+
+        // Still draw child effects
+        if (drawThing) {
+            for (const auto& effect : m_effects)
+                effect->draw(dest, isOnTop, lightView);
+        }
+        return;
+    }
 
     if (m_texture != nullptr || getThingType() != nullptr) {
         const auto& dirControl = m_offsetDirections[m_direction];

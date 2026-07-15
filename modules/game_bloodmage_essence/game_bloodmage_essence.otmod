@@ -1,0 +1,11 @@
+Module
+  name: game_bloodmage_essence
+  description: Blood Mage essence progress bar under player mana bar
+  author: Custom
+  version: 1.0.0
+
+  autoload: true
+  sandboxed: true
+  scripts: [ game_bloodmage_essence ]
+  @onLoad: init()
+  @onUnload: terminate()
