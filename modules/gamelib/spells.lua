@@ -162,6 +162,30 @@ SpelllistSettings = {
       'Ice Arrow',
       'Falcon Shot',
 
+      --Bard
+      'Cheerful Melody',
+      'Pensive Melody',
+      'Menacing Melody',
+      'Cathartic Melody',
+      'Epic Melody',
+      'Echo Strike',
+      'Resonant Chorus',
+      'Discordant Verse',
+      'Harmonic Collapse',
+      'Reverberation',
+      'Grand Finale',
+
+      --Warden
+      'Crystal Cleave',
+      'Glacial Shard',
+      'Avalanche Stomp',
+      'Barkskin',
+      'Sylvan Mend',
+      'Frozen Earth',
+      "Guardian's Bulwark",
+      'Permafrost Shell',
+      'Frigid Grasp',
+      'Verdant Sanctuary',
 
 
 
@@ -423,17 +447,42 @@ SpellInfo = {
     ['Taunt'] = {id = 220, words = 'taunt', icon_id = 220, description = 'Taunt all nearby enemies forcing them to attack you.', exhaustion = 2000, premium = false, type = 'Instant', icon = 220, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {2,4,7,8}},
 
 
-    ['Minor Heal'] = {id = 200, words = 'minor heal', icon_id = 200, description = 'personal minor heal', exhaustion = 2000, premium = false, type = 'Instant', icon = 200, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
-    ['Strong Heal'] = {id = 201, words = 'strong heal', icon_id = 201, description = 'personal strong heal', exhaustion = 2000, premium = false, type = 'Instant', icon = 201, mana = 65, level = 50, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
-    ['Great Heal'] = {id = 202, words = 'great heal', icon_id = 202, description = 'personal great heal', exhaustion = 2000, premium = false, type = 'Instant', icon = 202, mana = 120, level = 100, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
+    ['Minor Heal'] = {id = 200, words = 'minor heal', icon_id = 200, description = 'personal minor heal', exhaustion = 2000, premium = false, type = 'Instant', icon = 200, mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10,11,15}},
+    ['Strong Heal'] = {id = 201, words = 'strong heal', icon_id = 201, description = 'personal strong heal', exhaustion = 2000, premium = false, type = 'Instant', icon = 201, mana = 65, level = 50, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10,11,15}},
+    ['Great Heal'] = {id = 202, words = 'great heal', icon_id = 202, description = 'personal great heal', exhaustion = 2000, premium = false, type = 'Instant', icon = 202, mana = 120, level = 100, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10,11,15}},
 
-    ['Magic Shield'] = {id = 208, words = 'magic shield', icon_id = 208, description = 'Creates a protective barrier that absorbs damage.', exhaustion = 2000, premium = false, type = 'Instant', icon = 208, mana = 0, level = 1, soul = 0, group = {[2] = 2000}, vocations = {1,5,8,6}},
-    ['Find Person'] = {id = 209, words = 'exiva', icon_id = 209, description = 'Reveals the location of a player.', exhaustion = 1000, premium = false, type = 'Instant', icon = 209, mana = 20, level = 8, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10}},
-    ['Food'] = {id = 210, words = 'exevo pan', icon_id = 210, description = 'Creates food to restore hunger.', exhaustion = 2000, premium = false, type = 'Instant', icon = 210, mana = 15, level = 8, soul = 1, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10}},
-    ['Haste'] = {id = 211, words = 'utani hur', icon_id = 211, description = 'Increases movement speed for a short duration.', exhaustion = 2000, premium = false, type = 'Instant', icon = 211, mana = 60, level = 14, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10}},
-    ['Levitate'] = {id = 212, words = 'exani hur', icon_id = 212, description = 'Allows the caster to move up or down floors.', exhaustion = 2000, premium = false, type = 'Instant', icon = 212, mana = 50, level = 12, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10}},
-    ['Light'] = {id = 213, words = 'utevo lux', icon_id = 213, description = 'Creates a light source around the caster.', exhaustion = 2000, premium = false, type = 'Instant', icon = 213, mana = 20, level = 8, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10}},
-    
+    ['Magic Shield'] = {id = 208, words = 'magic shield', icon_id = 208, description = 'Creates a protective barrier that absorbs damage.', exhaustion = 2000, premium = false, type = 'Instant', icon = 208, mana = 0, level = 1, soul = 0, group = {[2] = 2000}, vocations = {1,5,8,6,15}},
+    ['Find Person'] = {id = 209, words = 'exiva', icon_id = 209, description = 'Reveals the location of a player.', exhaustion = 1000, premium = false, type = 'Instant', icon = 209, mana = 20, level = 8, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10,11,15}},
+    ['Food'] = {id = 210, words = 'exevo pan', icon_id = 210, description = 'Creates food to restore hunger.', exhaustion = 2000, premium = false, type = 'Instant', icon = 210, mana = 15, level = 8, soul = 1, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,15}},
+    ['Haste'] = {id = 211, words = 'utani hur', icon_id = 211, description = 'Increases movement speed for a short duration.', exhaustion = 2000, premium = false, type = 'Instant', icon = 211, mana = 60, level = 14, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,15}},
+    ['Levitate'] = {id = 212, words = 'exani hur', icon_id = 212, description = 'Allows the caster to move up or down floors.', exhaustion = 2000, premium = false, type = 'Instant', icon = 212, mana = 50, level = 12, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,15}},
+    ['Light'] = {id = 213, words = 'utevo lux', icon_id = 213, description = 'Creates a light source around the caster.', exhaustion = 2000, premium = false, type = 'Instant', icon = 213, mana = 20, level = 8, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,15}},
+
+    -- Bard
+    ['Cheerful Melody'] = {id = 270, words = 'cheerful melody', icon_id = 270, description = 'Aura: +20% healing received. Burst: AoE heal on cast. Generates Harmony.', exhaustion = 8000, premium = false, type = 'Instant', icon = 270, mana = 30, level = 8, soul = 0, group = {[3] = 1900}, vocations = {11}},
+    ['Pensive Melody'] = {id = 271, words = 'pensive melody', icon_id = 271, description = 'Aura: mana regen. Burst: AoE mana restore on cast. Generates Harmony.', exhaustion = 8000, premium = false, type = 'Instant', icon = 271, mana = 25, level = 12, soul = 0, group = {[3] = 1900}, vocations = {11}},
+    ['Menacing Melody'] = {id = 272, words = 'menacing melody', icon_id = 272, description = 'Aura: enemies +15% damage taken. Burst: 1.5s AoE stun on cast. Generates Harmony.', exhaustion = 12000, premium = false, type = 'Instant', icon = 272, mana = 35, level = 16, soul = 0, group = {[3] = 1900}, vocations = {11}},
+    ['Cathartic Melody'] = {id = 273, words = 'cathartic melody', icon_id = 273, description = 'Aura: +15% damage output. Burst: AoE energy damage on cast. Generates Harmony.', exhaustion = 8000, premium = false, type = 'Instant', icon = 273, mana = 40, level = 20, soul = 0, group = {[3] = 1900}, vocations = {11}},
+    ['Epic Melody'] = {id = 274, words = 'epic melody', icon_id = 274, description = 'Aura: +30 movement speed. Burst: instant speed on cast. Generates Harmony.', exhaustion = 8000, premium = false, type = 'Instant', icon = 274, mana = 20, level = 24, soul = 0, group = {[3] = 1900}, vocations = {11}},
+    ['Echo Strike'] = {id = 275, words = 'echo strike', icon_id = 275, description = 'Single target damage. Applies Resonance for 6s. Resonating enemies emit a small sonic wave when hit (0.5s cd).', exhaustion = 4000, premium = false, type = 'Instant', icon = 275, mana = 15, level = 8, soul = 0, group = {[1] = 1900}, vocations = {11}},
+    ['Resonant Chorus'] = {id = 276, words = 'resonant chorus', icon_id = 276, description = 'AoE damage. The first enemy hit becomes Resonating. Hitting a resonating enemy makes resonance jump to the nearest non-resonating enemy.', exhaustion = 8000, premium = false, type = 'Instant', icon = 276, mana = 30, level = 14, soul = 0, group = {[1] = 1900}, vocations = {11}},
+    ['Discordant Verse'] = {id = 277, words = 'discordant verse', icon_id = 277, description = 'High single target damage. Against resonating targets: bonus damage and reduces target damage dealt for 5s. Does not consume Resonance.', exhaustion = 10000, premium = false, type = 'Instant', icon = 277, mana = 45, level = 22, soul = 0, group = {[1] = 1900}, vocations = {11}},
+    ['Harmonic Collapse'] = {id = 278, words = 'harmonic collapse', icon_id = 278, description = 'Detonates all nearby resonating enemies. Overlapping explosions boost each other by +10% (max +50%). Consumes Resonance.', exhaustion = 12000, premium = false, type = 'Instant', icon = 278, mana = 70, level = 38, soul = 0, group = {[1] = 1900}, vocations = {11}},
+    ['Reverberation'] = {id = 280, words = 'reverberation', icon_id = 280, description = '5s aura: every resonating enemy that takes damage emits a sonic wave (1s cd per enemy). Does not consume Resonance.', exhaustion = 15000, premium = false, type = 'Instant', icon = 280, mana = 60, level = 30, soul = 0, group = {[1] = 1900}, vocations = {11}},
+    ['Grand Finale'] = {id = 279, words = 'grand finale', icon_id = 279, description = 'Requires a meter at 100%. Dissonance: Apocalypse Crescendo - massive holy AoE + debuff enemies. Harmony: Elysian Symphony - party heal + cleanse + defense.', exhaustion = 30000, premium = false, type = 'Instant', icon = 279, mana = 120, level = 60, soul = 0, group = {[1] = 1900}, vocations = {11}},
+
+    --Warden
+    ['Crystal Cleave'] = {id = 281, words = 'crystal cleave', icon_id = 281, description = 'Strike the target with earth damage. Applies Earth Mark.', exhaustion = 2000, premium = false, type = 'Instant', icon = 281, mana = 20, level = 8, soul = 0, group = {[1] = 1900}, vocations = {15}},
+    ['Glacial Shard'] = {id = 282, words = 'glacial shard', icon_id = 282, description = 'Launch an icy shard at the target. Applies Frost Mark.', exhaustion = 2500, premium = false, type = 'Instant', icon = 282, mana = 20, level = 8, soul = 0, group = {[1] = 1900}, vocations = {15}},
+    ['Avalanche Stomp'] = {id = 283, words = 'avalanche stomp', icon_id = 283, description = 'Knock back and slow nearby enemies with ice damage. Applies Frost Mark.', exhaustion = 7000, premium = false, type = 'Instant', icon = 283, mana = 45, level = 14, soul = 0, group = {[1] = 1900}, vocations = {15}},
+    ['Barkskin'] = {id = 284, words = 'barkskin', icon_id = 284, description = 'Shield yourself; stronger while Earth Mark is active.', exhaustion = 10000, premium = false, type = 'Instant', icon = 284, mana = 30, level = 20, soul = 0, group = {[2] = 1900}, vocations = {15}},
+    ['Sylvan Mend'] = {id = 285, words = 'sylvan mend', icon_id = 285, description = 'Heal yourself or an ally; stronger while Earth Mark is active.', exhaustion = 8000, premium = false, type = 'Instant', icon = 285, mana = 35, level = 18, soul = 0, group = {[2] = 1900}, vocations = {15}},
+    ['Frozen Earth'] = {id = 286, words = 'frozen earth', icon_id = 286, description = 'Root and slow nearby enemies with earth damage. Applies Earth Mark.', exhaustion = 12000, premium = false, type = 'Instant', icon = 286, mana = 40, level = 24, soul = 0, group = {[1] = 1900}, vocations = {15}},
+    ["Guardian's Bulwark"] = {id = 287, words = 'guardian bulwark', icon_id = 287, description = 'Shield nearby allies; stronger while Earth Mark is active.', exhaustion = 18000, premium = false, type = 'Instant', icon = 287, mana = 50, level = 30, soul = 0, group = {[2] = 1900}, vocations = {15}},
+    ['Permafrost Shell'] = {id = 288, words = 'permafrost shell', icon_id = 288, description = 'Shield yourself; stronger while Earth Mark is active.', exhaustion = 14000, premium = false, type = 'Instant', icon = 288, mana = 45, level = 38, soul = 0, group = {[2] = 1900}, vocations = {15}},
+    ['Frigid Grasp'] = {id = 289, words = 'frigid grasp', icon_id = 289, description = 'Pull the target to you, freeze it and force monsters to attack you.', exhaustion = 14000, premium = false, type = 'Instant', icon = 289, mana = 30, level = 26, soul = 0, group = {[3] = 1900}, vocations = {15}},
+    ['Verdant Sanctuary'] = {id = 290, words = 'verdant sanctuary', icon_id = 290, description = 'Ultimate: shield and cleanse allies, pulse earth damage, then finish with a frost explosion.', exhaustion = 60000, premium = false, type = 'Instant', icon = 290, mana = 120, level = 60, soul = 0, group = {[1] = 1900}, vocations = {15}},
+
   
   }
 }
@@ -511,6 +560,7 @@ function Spells.getServerId(spellName)
 end
 
 function Spells.getSpellByName(name)
+    if not name then return nil end
     local nameLower = name:lower():trim()
     for profile, data in pairs(SpellInfo) do
         for k, spell in pairs(data) do
@@ -622,8 +672,7 @@ function Spells.getGroupIds(spell)
 end
 
 function Spells.getIconId(iconid, profile)
-    --use iconid as SpellInfo[profile].id to finde SpellInfo[profile].iconid
-    --print(iconid)
+    if not SpellInfo[profile] then return nil end
     for k, v in pairs(SpellInfo[profile]) do
         if v.id == iconid or v.icon_id == iconid or tonumber(v.icon) == iconid then
             return SpelllistSettings[profile].iconFile .. '/' .. tostring(v.icon_id) .. '.png'
