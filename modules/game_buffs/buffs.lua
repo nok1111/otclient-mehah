@@ -288,7 +288,7 @@ function onBuffCooldown(iconId, duration, spellName, bgId, count)
 
   icon:setImageSource(BuffsBackgrounds[bgId].image)
   icon:setParent(buffsPanel)
-  if duration == 4294967295000 then -- -1 nie dziala xd
+  if duration == -1 or duration == 4294967295000 then
 	  icon:setTooltip(spellName)
 	  cooldown[iconId] = true
 	  return
