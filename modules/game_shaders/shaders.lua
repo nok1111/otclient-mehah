@@ -109,6 +109,14 @@ OUTFIT_SHADERS = { {
     useFramebuffer = true,
     frag = 'shaders/fragment/outline - colorfull.frag'
 },
+{
+    name = 'Outfit - Warden Earth Aura',
+    frag = 'shaders/fragment/warden_earth_aura.frag'
+},
+{
+    name = 'Outfit - Warden Frost Aura',
+    frag = 'shaders/fragment/warden_frost_aura.frag'
+},
 
  {      name = 'Aura',
         frag = 'shaders/fragment/radialblur.frag',
@@ -184,7 +192,7 @@ OUTFIT_SHADERS = { {
     {name = 'Majestic', frag = 'shaders/fragment/creature_texture_zoom.frag', tex1 = '/images/shaders/majestic.png', drawColor = false},
     {name = 'Golden', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/golden.png', drawColor = false},
     {name = 'Slime', frag = 'shaders/fragment/creature_texture_zoom.frag', tex1 = '/images/shaders/slime.png', drawColor = false},
-    {name = 'Sky', frag = 'shaders/fragment/creature_texture_zoom.frag', tex1 = '/images/shaders/sky.png', drawColor = false}
+    {name = 'Sky', frag = 'shaders/fragment/creature_texture_zoom.frag', tex1 = '/images/shaders/sky.png', drawColor = false},
 
 
 
