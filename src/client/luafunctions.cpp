@@ -886,6 +886,12 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<LocalPlayer>("isBloodFrenzy", &LocalPlayer::isBloodFrenzy);
     g_lua.bindClassMemberFunction<LocalPlayer>("setBloodOrbs", &LocalPlayer::setBloodOrbs);
     g_lua.bindClassMemberFunction<LocalPlayer>("getBloodOrbs", &LocalPlayer::getBloodOrbs);
+    g_lua.bindClassMemberFunction<LocalPlayer>("setBardDissonance", &LocalPlayer::setBardDissonance);
+    g_lua.bindClassMemberFunction<LocalPlayer>("getBardDissonance", &LocalPlayer::getBardDissonance);
+    g_lua.bindClassMemberFunction<LocalPlayer>("setBardHarmony", &LocalPlayer::setBardHarmony);
+    g_lua.bindClassMemberFunction<LocalPlayer>("getBardHarmony", &LocalPlayer::getBardHarmony);
+    g_lua.bindClassMemberFunction<LocalPlayer>("setBardCrescendoVuln", &LocalPlayer::setBardCrescendoVuln);
+    g_lua.bindClassMemberFunction<LocalPlayer>("isBardCrescendoVuln", &LocalPlayer::isBardCrescendoVuln);
     g_lua.bindClassMemberFunction<LocalPlayer>("setMagicLevel", &LocalPlayer::setMagicLevel);
     g_lua.bindClassMemberFunction<LocalPlayer>("setSoul", &LocalPlayer::setSoul);
     g_lua.bindClassMemberFunction<LocalPlayer>("setStamina", &LocalPlayer::setStamina);

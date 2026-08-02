@@ -406,6 +406,51 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
                 g_drawPool.addFilledRect(manaRect, Color::blue);
             }
 
+            // Draw Bard dual resource bar (Dissonance vs Harmony) under the mana bar
+            if (player->getVocation() == 11) {
+                static constexpr Color disColor(180, 140, 30);
+                static constexpr Color disColorHigh(255, 200, 50);
+                static constexpr Color harColor(180, 0, 255);
+                static constexpr Color harColorHigh(210, 60, 255);
+                static constexpr Color goldenColor(255, 255, 255);
+
+                const uint8_t dissonance = player->getBardDissonance();
+                const uint8_t harmony = player->getBardHarmony();
+                const bool grandFinale = (dissonance >= 100 || harmony >= 100);
+
+                const int barW = backgroundRect.width();
+                const int barY = backgroundRect.bottom() + 3;
+                Rect barRect(backgroundRect.x(), barY, barW, 5);
+
+                // Dissonance (gold) from left, Harmony (purple) from right
+                // Each takes its share of the bar; they push against each other
+                int disW = static_cast<int>((dissonance / 100.0) * barW);
+                int harW = barW - disW; // harmony fills the rest
+
+                const Color& disFill = disColorHigh;
+                const Color& harFill = harColorHigh;
+
+                // Draw gold (dissonance) on left portion
+                Rect disRect(barRect.x(), barRect.y(), disW, barRect.height());
+                g_drawPool.addFilledRect(disRect, disFill);
+
+                // Draw purple (harmony) on right portion
+                Rect harRect(barRect.x() + disW, barRect.y(), harW, barRect.height());
+                g_drawPool.addFilledRect(harRect, harFill);
+
+                // Grand Finale ready - colored glow based on which meter is 100%
+                if (grandFinale) {
+                    const Color& glowColor = (dissonance >= 100) ? disColorHigh : harColorHigh;
+                    // Draw expanding rects with decreasing alpha for glow effect
+                    for (int i = 1; i <= 3; ++i) {
+                        const uint8_t alpha = static_cast<uint8_t>(120 / i);
+                        g_drawPool.addBoundingRect(barRect.expanded(i), Color(glowColor.r(), glowColor.g(), glowColor.b(), alpha), 1);
+                    }
+                }
+                // Always draw white border
+                g_drawPool.addBoundingRect(barRect.expanded(1), goldenColor, 1);
+            }
+
             // Draw Samurai Focus stacks under the mana bar (only for local player)
             const auto& localPlayer = static_self_cast<LocalPlayer>();
             const uint8_t focus = localPlayer->getFocusStacks();

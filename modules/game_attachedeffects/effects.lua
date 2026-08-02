@@ -4826,3 +4826,236 @@ AttachedEffectManager.register(616, 'crimson threads', 0, 0, {
     fade = { 0, 100, 2000 },
     onTop = true,
 })
+
+-- =============================================================
+-- Bard Class Effects
+-- =============================================================
+
+AttachedEffectManager.register(620, 'Dark Crescendo Aura', 0, 0, {
+    duration = 5000,
+    opacity = 1.0,
+    speed = 0.8,
+   -- shader = 'Fire Spiral',
+    onAttach = function(effect, owner)
+        owner:setPulse(0, 15, 800)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setPulse(0, 0)
+    end
+})
+
+AttachedEffectManager.register(621, 'Grand Finale Aura', 0, 0, {
+    duration = 2000,
+    opacity = 1.0,
+    speed = 1.0,
+   -- shader = 'Outfit - Rainbow',
+    onAttach = function(effect, owner)
+        owner:setPulse(0, 20, 400)
+        owner:setBounce(0, 12, 600)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setPulse(0, 0)
+        oldOwner:setBounce(0, 0)
+    end
+})
+--1307 tambien podriamos usarlo
+AttachedEffectManager.register(630, 'Sonic Pulse', 876, ThingCategoryEffect, {
+    duration = 800,
+    opacity = 1.0,
+    speed = 2.0,
+    size = { 64, 64 },
+    offset = { 0, 0, true },
+    pulse = { 0, 30, 400 },
+    fade = { 0, 100, 600 },
+    onTop = true,
+})
+
+AttachedEffectManager.register(631, 'Dissonant Strike', 1088, ThingCategoryEffect, {
+    duration = 1000,
+    opacity = 1.0,
+    speed = 1.5,
+    size = { 80, 80 },
+    offset = { 0, 0, true },
+    pulse = { 0, 25, 300 },
+    bounce = { 0, 15, 500 },
+    onTop = true,
+})
+
+AttachedEffectManager.register(632, 'Echoing Wave', 1167, ThingCategoryEffect, {
+    duration = 600,
+    opacity = 1.0,
+    speed = 1.8,
+    size = { 64, 64 },
+    offset = { 0, 0, true },
+    pulse = { 0, 20, 300 },
+    fade = { 0, 100, 400 },
+    onTop = true,
+})
+
+AttachedEffectManager.register(633, 'Healing Melody', 1320, ThingCategoryEffect, {
+    loop =1,
+    opacity = 1.0,
+    speed = 1.0,
+    offset = { 0, 0, true },
+    onTop = true,
+    onAttach = function(effect, owner)
+        local inner = AttachedEffect.create(1171, ThingCategoryEffect)
+        inner:setDuration(effect:getDuration())
+        inner:setOffset(0, 0)
+        inner:setOpacity(0.8)
+        effect:attachEffect(inner)
+    end,
+})
+
+-- =========================================================
+-- Melody Auras (640-644)
+-- Orbiting particle effects for each Bard melody
+-- =========================================================
+
+local orbitEvents = {}
+
+local function createOrbitAura(id, name, spriteId, config)
+    AttachedEffectManager.register(id, name, spriteId, ThingCategoryEffect, {
+        opacity = config.opacity or 0.8,
+        speed = 1.0,
+        size = { config.size or 32, config.size or 32 },
+        offset = { 0, 0, true },
+        onTop = true,
+        onAttach = function(effect, owner)
+            local radius = config.radius or 30
+            local orbitSpeed = config.orbitSpeed or 360
+            local orbCount = config.orbs or 1
+            local tickMs = config.tickMs or 30
+            local key = tostring(effect)
+
+            local orbs = {}
+            if orbCount == 1 then
+                orbs[1] = effect
+            else
+                for i = 1, orbCount do
+                    local orb = AttachedEffect.create(spriteId, ThingCategoryEffect)
+                    orb:setDuration(effect:getDuration())
+                    orb:setOpacity(config.opacity or 0.7)
+                    orb:setSize({ width = config.size or 24, height = config.size or 24 })
+                    orb:setOnTop(true)
+                    orbs[i] = { effect = orb, baseAngle = (360 / orbCount) * (i - 1) }
+                    effect:attachEffect(orb)
+                end
+            end
+
+            local angle = 0
+            local function orbit()
+                angle = angle + (orbitSpeed * tickMs / 1000)
+                if angle >= 360 then angle = angle - 360 end
+                for i, orb in ipairs(orbs) do
+                    local baseAngle = (orbCount == 1) and 0 or orb.baseAngle
+                    local a = math.rad(angle + baseAngle)
+                    local x = math.floor(math.cos(a) * radius + 0.5)
+                    local y = math.floor(math.sin(a) * radius + 0.5)
+                    if orbCount == 1 then
+                        orb:setOffset(x, y)
+                    else
+                        orb.effect:setOffset(x, y)
+                    end
+                end
+            end
+
+            orbit()
+            orbitEvents[key] = cycleEvent(orbit, tickMs)
+        end,
+        onDetach = function(effect, oldOwner)
+            local key = tostring(effect)
+            if orbitEvents[key] then
+                orbitEvents[key]:cancel()
+                orbitEvents[key] = nil
+            end
+        end,
+    })
+end
+
+-- 640: Cheerful Melody - 1 orb, green, slow & wide
+createOrbitAura(640, 'Cheerful Melody Aura', 19, {
+    radius = 32, orbitSpeed = 180, orbs = 1, size = 32, opacity = 0.98, tickMs = 30,
+})
+
+-- 641: Pensive Melody - 2 orbs, blue, medium
+createOrbitAura(641, 'Pensive Melody Aura', 24, {
+    radius = 28, orbitSpeed = 240, orbs = 2, size = 28, opacity = 0.98, tickMs = 30,
+})
+
+-- 642: Menacing Melody - 3 orbs, red, fast & tight
+createOrbitAura(642, 'Menacing Melody Aura', 20, {
+    radius = 35, orbitSpeed = 420, orbs = 3, size = 24, opacity = 0.98, tickMs = 30,
+})
+
+-- 643: Cathartic Melody - 2 orbs, dark, slow pulse
+createOrbitAura(643, 'Cathartic Melody Aura', 23, {
+    radius = 30, orbitSpeed = 200, orbs = 2, size = 30, opacity = 0.98, tickMs = 30,
+})
+
+-- 644: Epic Melody - 1 orb, bright, fast
+createOrbitAura(644, 'Epic Melody Aura', 22, {
+    radius = 38, orbitSpeed = 540, orbs = 1, size = 32, opacity = 0.98, tickMs = 30,
+})
+
+-- =============================================================
+-- Grand Finale Effects
+-- =============================================================
+
+-- 1118: Apocalypse Crescendo - damage burst on enemies
+AttachedEffectManager.register(645, 'Apocalypse Crescendo Hit', 1118, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1.0,
+    speed = 0.8,
+    size = { 0, 0 },
+    offset = { -50, -28, true },
+    onTop = true,
+})
+
+-- 1244: Elysian Symphony effect 1 on allies
+AttachedEffectManager.register(646, 'Elysian Symphony Aura 1', 1244, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1.0,
+    speed = 1.0,
+    size = { 48, 48 },
+    offset = { 0, 0, true },
+    onTop = true,
+})
+
+-- 1247: Elysian Symphony effect 2 on allies
+AttachedEffectManager.register(647, 'Elysian Symphony Aura 2', 1247, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1.0,
+    speed = 1.0,
+    size = { 48, 48 },
+    offset = { 0, 0, true },
+    onTop = true,
+})
+
+-- 1118: Apocalypse Crescendo - damage burst on enemies
+AttachedEffectManager.register(648, 'Apocalypse Crescendo AURA', 989, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1.0,
+    speed = 0.8,
+    size = { 0, 0 },
+    offset = { -64, -64, false },
+   -- onTop = true,
+})
+
+-- =============================================================
+-- Warden Elemental Mark Auras
+-- =============================================================
+
+AttachedEffectManager.register(659, 'Warden Earth Aura', 1314, ThingCategoryEffect, {
+    shader = 'Outfit - Warden Earth Aura',
+    opacity = 0.7,
+    speed = 0.7,
+    offset = { -18, -20, true }
+})
+
+AttachedEffectManager.register(660, 'Warden Frost Aura', 1314, ThingCategoryEffect, {
+    shader = 'Outfit - Warden Frost Aura',
+    opacity = 0.7,
+    speed = 0.7,
+    offset = { -18, -20, true }
+})

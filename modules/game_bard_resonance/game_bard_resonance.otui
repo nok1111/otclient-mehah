@@ -1,0 +1,100 @@
+UIWidget
+  id: bardWindow
+  width: 180
+  height: 48
+  margin-top: 4
+  margin-bottom: 4
+  opacity: 0.88
+  border: 0 #00000000
+  phantom: true
+  &save: false
+
+  Label
+    id: disLabel
+    text: Dissonance
+    font: verdana-11px-rounded
+    color: #ff6644
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-left: 4
+    margin-top: 2
+    text-align: left
+    width: 80
+    height: 12
+    phantom: true
+
+  Label
+    id: harLabel
+    text: Harmony
+    font: verdana-11px-rounded
+    color: #44aaff
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-right: 4
+    margin-top: 2
+    text-align: right
+    width: 80
+    height: 12
+    phantom: true
+
+  UIProgressBar
+    id: disBar
+    background: #220000
+    color: #ff3322
+    percent: 0
+    anchors.top: disLabel.bottom
+    anchors.left: parent.left
+    anchors.right: bardCenter.right
+    margin-left: 4
+    margin-right: 1
+    margin-top: 2
+    height: 12
+    phantom: true
+
+  UIProgressBar
+    id: harBar
+    background: #001122
+    color: #3399ff
+    percent: 0
+    anchors.top: harLabel.bottom
+    anchors.left: bardCenter.right
+    anchors.right: parent.right
+    margin-left: 1
+    margin-right: 4
+    margin-top: 2
+    height: 12
+    phantom: true
+
+  UIWidget
+    id: bardCenter
+    width: 1
+    height: 1
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.top: parent.top
+    phantom: true
+
+  Label
+    id: disValue
+    text: 0
+    font: verdana-11px-rounded
+    color: #ffaa88
+    anchors.top: disBar.bottom
+    anchors.left: disBar.left
+    margin-top: 1
+    text-align: left
+    width: 60
+    height: 12
+    phantom: true
+
+  Label
+    id: harValue
+    text: 0
+    font: verdana-11px-rounded
+    color: #88ccff
+    anchors.top: harBar.bottom
+    anchors.right: harBar.right
+    margin-top: 1
+    text-align: right
+    width: 60
+    height: 12
+    phantom: true

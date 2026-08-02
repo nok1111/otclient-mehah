@@ -53,6 +53,12 @@ public:
     bool isBloodFrenzy() { return m_bloodFrenzy; }
     void setBloodOrbs(uint8_t orbs) { m_bloodOrbs = orbs; }
     uint8_t getBloodOrbs() { return m_bloodOrbs; }
+    void setBardDissonance(uint8_t value) { m_bardDissonance = value; }
+    uint8_t getBardDissonance() { return m_bardDissonance; }
+    void setBardHarmony(uint8_t value) { m_bardHarmony = value; }
+    uint8_t getBardHarmony() { return m_bardHarmony; }
+    void setBardCrescendoVuln(bool active) { m_bardCrescendoVuln = active; }
+    bool isBardCrescendoVuln() { return m_bardCrescendoVuln; }
     void setMagicLevel(uint16_t magicLevel, uint16_t magicLevelPercent);
     void setBaseMagicLevel(uint16_t baseMagicLevel);
     void setSoul(uint8_t soul);
@@ -192,6 +198,9 @@ private:
     uint8_t m_bloodEssence{ 0 };
     bool m_bloodFrenzy{ false };
     uint8_t m_bloodOrbs{ 0 };
+    uint8_t m_bardDissonance{ 0 };
+    uint8_t m_bardHarmony{ 0 };
+    bool m_bardCrescendoVuln{ false };
     uint16_t m_magicLevel{ 0 };
     uint16_t m_magicLevelPercent{ 0 };
     uint16_t m_baseMagicLevel{ 0 };

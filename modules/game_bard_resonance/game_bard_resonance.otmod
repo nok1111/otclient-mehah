@@ -1,0 +1,11 @@
+Module
+  name: game_bard_resonance
+  description: Bard Harmony/Dissonance resource handler
+  author: Custom
+  version: 1.0.0
+
+  autoload: true
+  sandboxed: true
+  scripts: [ game_bard_resonance ]
+  @onLoad: init()
+  @onUnload: terminate()
