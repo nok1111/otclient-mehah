@@ -22,12 +22,17 @@
 
 #include "mapview.h"
 
+#include <cmath>
+
 #include "animatedtext.h"
 #include "client.h"
 #include "creature.h"
 #include "game.h"
 #include "lightview.h"
 #include "map.h"
+#include "spritemanager.h"
+#include "thingtype.h"
+#include "thingtypemanager.h"
 #include "missile.h"
 #include "statictext.h"
 #include "tile.h"
@@ -176,10 +181,65 @@ void MapView::drawFloor()
     }
 
     if (m_posInfo.rect.contains(g_window.getMousePosition() * g_window.getDisplayDensity())) {
-        if (m_crosshairTexture && m_mousePosition.isValid()) {
-            const auto& point = transformPositionTo2D(m_mousePosition);
+        auto crosshairPos = getPosition(g_window.getMousePosition() * g_window.getDisplayDensity());
+        if (m_crosshairTexture && crosshairPos.isValid()) {
+            const auto& origin = g_map.getCentralPosition();
+            if (m_crosshairRange > 0) {
+                const float dx = static_cast<float>(crosshairPos.x - origin.x);
+                const float dy = static_cast<float>(crosshairPos.y - origin.y);
+                const float dist = std::sqrt(dx * dx + dy * dy);
+                if (dist > m_crosshairRange) {
+                    const float scale = static_cast<float>(m_crosshairRange) / dist;
+                    crosshairPos.x = static_cast<int>(std::round(origin.x + dx * scale));
+                    crosshairPos.y = static_cast<int>(std::round(origin.y + dy * scale));
+                }
+
+                if (m_crosshairAreaName == "WIND_STEP") {
+                    const int d = static_cast<int>(std::round(std::min<float>(dist, static_cast<float>(m_crosshairRange))));
+                    if (std::abs(dx) >= std::abs(dy)) {
+                        crosshairPos.x = origin.x + (dx >= 0 ? d : -d);
+                        crosshairPos.y = origin.y;
+                    } else {
+                        crosshairPos.x = origin.x;
+                        crosshairPos.y = origin.y + (dy >= 0 ? d : -d);
+                    }
+                    crosshairPos.z = origin.z;
+                }
+            }
+            m_crosshairClampedPos = crosshairPos;
+
+            const auto& point = transformPositionTo2D(crosshairPos);
             const auto& crosshairRect = Rect(point, m_tileSize, m_tileSize);
             g_drawPool.addTexturedRect(crosshairRect, m_crosshairTexture);
+
+            if (m_crosshairRange > 0) {
+                const int segments = 64;
+                const float cx = point.x + m_tileSize / 2.0f;
+                const float cy = point.y + m_tileSize / 2.0f;
+                const float radius = m_crosshairRange * m_tileSize;
+                std::vector<float> vertices;
+                vertices.reserve((segments + 1) * 2);
+                for (int i = 0; i <= segments; ++i) {
+                    const float angle = i * 2.0f * 3.14159265358979323846f / segments;
+                    vertices.push_back(cx + std::cos(angle) * radius);
+                    vertices.push_back(cy + std::sin(angle) * radius);
+                }
+                g_painter->setColor(Color(255, 0, 0, 128));
+                g_painter->drawLine(vertices, static_cast<int>(vertices.size() / 2), 2);
+                g_painter->resetColor();
+            }
+
+            for (const auto& offset : m_crosshairArea) {
+                Position areaPos(static_cast<int>(crosshairPos.x) + offset.first,
+                                 static_cast<int>(crosshairPos.y) + offset.second,
+                                 crosshairPos.z);
+                const auto& areaPoint = transformPositionTo2D(areaPos);
+                const auto& areaRect = Rect(areaPoint, m_tileSize, m_tileSize);
+                if (m_crosshairAreaTexture)
+                    g_drawPool.addTexturedRect(areaRect, m_crosshairAreaTexture);
+                else
+                    g_drawPool.addFilledRect(areaRect, Color(0, 255, 0, 96));
+            }
         }
     } else if (m_lastHighlightTile) {
         m_mousePosition = {}; // Invalidate mousePosition
@@ -1072,6 +1132,61 @@ std::vector<CreaturePtr> MapView::getSpectators(const bool multiFloor)
 void MapView::setCrosshairTexture(const std::string& texturePath)
 {
     m_crosshairTexture = texturePath.empty() ? nullptr : g_textures.getTexture(texturePath);
+}
+
+void MapView::setCrosshairAreaTexture(int effectId)
+{
+    m_crosshairAreaTexture = nullptr;
+    if (effectId > 0 && g_things.isValidDatId(effectId, ThingCategoryEffect)) {
+        const auto& thingType = g_things.getThingType(effectId, ThingCategoryEffect);
+        const auto& sprites = thingType->getSprites();
+        if (!sprites.empty() && g_sprites.isLoaded()) {
+            const auto& image = g_sprites.getSpriteImage(static_cast<int>(sprites[0]));
+            if (image)
+                m_crosshairAreaTexture = std::make_shared<Texture>(image);
+        }
+    }
+}
+
+void MapView::setSpellCrosshair(int range, const std::string& area, const std::string& areaName)
+{
+    m_crosshairRange = range;
+    m_crosshairArea.clear();
+    m_crosshairAreaName = areaName;
+
+    if (!area.empty()) {
+        size_t start = 0;
+        while (start < area.length()) {
+            size_t end = area.find(';', start);
+            if (end == std::string::npos) {
+                end = area.length();
+            }
+            std::string token = area.substr(start, end - start);
+            size_t comma = token.find(',');
+            if (comma != std::string::npos) {
+                try {
+                    int x = std::stoi(token.substr(0, comma));
+                    int y = std::stoi(token.substr(comma + 1));
+                    m_crosshairArea.push_back({ x, y });
+                } catch (...) {}
+            }
+            start = end + 1;
+        }
+    }
+}
+
+void MapView::clearSpellCrosshair()
+{
+    m_crosshairRange = 0;
+    m_crosshairArea.clear();
+    m_crosshairAreaName.clear();
+    m_crosshairClampedPos = {};
+    m_crosshairAreaTexture = nullptr;
+}
+
+Position MapView::getSpellCrosshairTarget()
+{
+    return m_crosshairClampedPos;
 }
 
 void MapView::updateHighlightTile(const Position& mousePos) {

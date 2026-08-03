@@ -93,6 +93,10 @@ public:
     float getMinimumAmbientLight() { return m_mapView->getMinimumAmbientLight(); }
 
     void setCrosshairTexture(const std::string& texturePath) { m_mapView->setCrosshairTexture(texturePath); }
+    void setCrosshairAreaTexture(const int spriteId) { m_mapView->setCrosshairAreaTexture(spriteId); }
+    void setSpellCrosshair(const int range, const std::string& area = "", const std::string& areaName = "") { m_mapView->setSpellCrosshair(range, area, areaName); }
+    void clearSpellCrosshair() { m_mapView->clearSpellCrosshair(); }
+    Position getSpellCrosshairTarget() { return m_mapView->getSpellCrosshairTarget(); }
     void setDrawHighlightTarget(const bool enable) { m_mapView->setDrawHighlightTarget(enable); }
     void setAntiAliasingMode(const MapView::AntialiasingMode mode) { m_mapView->setAntiAliasingMode(mode); }
     void setFloorFading(const uint16_t v) { m_mapView->setFloorFading(v); }

@@ -15,6 +15,7 @@ showTopMenuButton = nil
 logoutButton = nil
 logOutMainButton = nil
 mouseGrabberWidget = nil
+selectedSpell = nil
 countWindow = nil
 logoutWindow = nil
 exitWindow = nil
@@ -440,7 +441,7 @@ function updateStretchShrink()
 end
 
 function onMouseGrabberRelease(self, mousePosition, mouseButton)
-    if selectedThing == nil then
+    if selectedThing == nil and selectedSpell == nil then
         return false
     end
     if mouseButton == MouseLeftButton then
@@ -450,11 +451,15 @@ function onMouseGrabberRelease(self, mousePosition, mouseButton)
                 onUseWith(clickedWidget, mousePosition)
             elseif selectedType == 'trade' then
                 onTradeWith(clickedWidget, mousePosition)
+            elseif selectedType == 'spell' then
+                onSpellCrosshair(clickedWidget, mousePosition)
             end
         end
     end
 
     selectedThing = nil
+    selectedSpell = nil
+    clearSpellCrosshair()
     g_mouse.popCursor('target')
     self:ungrabMouse()
     return true
@@ -509,6 +514,55 @@ function startUseWith(thing)
     selectedThing = thing
     mouseGrabberWidget:grabMouse()
     g_mouse.pushCursor('target')
+end
+
+function startSpellCrosshair(words, range, area, areaSprite, areaName)
+    if not words then
+        return
+    end
+    if g_ui.isMouseGrabbed() then
+        if selectedSpell then
+            selectedSpell = { words = words, range = range or 0 }
+            selectedType = 'spell'
+        end
+        return
+    end
+    selectedType = 'spell'
+    selectedSpell = { words = words, range = range or 0 }
+    if gameMapPanel then
+        gameMapPanel:setCrosshairTexture('/images/game/crosshair/default')
+        local ok, err = pcall(function() gameMapPanel:setSpellCrosshair(range or 0, area or '', areaName or '') end)
+        if not ok then
+            print('[Crosshair] setSpellCrosshair not available (needs recompile): ' .. tostring(err))
+        end
+        local ok2, err2 = pcall(function() gameMapPanel:setCrosshairAreaTexture(areaSprite or 1178) end)
+        if not ok2 then
+            print('[Crosshair] setCrosshairAreaTexture not available (needs recompile): ' .. tostring(err2))
+        end
+    end
+    mouseGrabberWidget:grabMouse()
+    g_mouse.pushCursor('target')
+end
+
+function onSpellCrosshair(clickedWidget, mousePosition)
+    if clickedWidget:getClassName() ~= 'UIGameMap' then
+        return
+    end
+    local pos = clickedWidget:getSpellCrosshairTarget()
+    if not pos or pos.x == 0 and pos.y == 0 then
+        print('[Crosshair] no valid target')
+        return
+    end
+    local msg = selectedSpell.words .. ' "' .. pos.x .. ' ' .. pos.y .. ' ' .. pos.z .. '"'
+    print('[Crosshair] sending: ' .. msg)
+    g_game.talk(msg)
+end
+
+function clearSpellCrosshair()
+    if gameMapPanel then
+        gameMapPanel:setCrosshairTexture('')
+        gameMapPanel:clearSpellCrosshair()
+    end
 end
 
 function startTradeWith(thing)

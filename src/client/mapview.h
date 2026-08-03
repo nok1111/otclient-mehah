@@ -176,6 +176,10 @@ public:
     CreaturePtr getTopCreatureAtPoint(const Point& mousePos);
 
     void setCrosshairTexture(const std::string& texturePath);
+    void setCrosshairAreaTexture(int spriteId);
+    void setSpellCrosshair(int range, const std::string& area = "", const std::string& areaName = "");
+    void clearSpellCrosshair();
+    Position getSpellCrosshairTarget();
     void setAntiAliasingMode(AntialiasingMode mode);
 
     void onMouseMove(const Position& mousePos, bool isVirtualMove = false);
@@ -351,6 +355,11 @@ private:
 
     TilePtr m_lastHighlightTile;
     TexturePtr m_crosshairTexture;
+    TexturePtr m_crosshairAreaTexture;
+    int m_crosshairRange{ 0 };
+    std::vector<std::pair<int, int>> m_crosshairArea;
+    std::string m_crosshairAreaName;
+    Position m_crosshairClampedPos;
 
     // State for creature pick cycling (see getTopCreatureAtPoint).
     uint32_t m_lastPickedCreatureId{ 0 };

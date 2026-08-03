@@ -1104,6 +1104,10 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<UIMap>("getSpectators", &UIMap::getSpectators);
     g_lua.bindClassMemberFunction<UIMap>("getSightSpectators", &UIMap::getSightSpectators);
     g_lua.bindClassMemberFunction<UIMap>("setCrosshairTexture", &UIMap::setCrosshairTexture);
+    g_lua.bindClassMemberFunction<UIMap>("setCrosshairAreaTexture", &UIMap::setCrosshairAreaTexture);
+    g_lua.bindClassMemberFunction<UIMap>("setSpellCrosshair", &UIMap::setSpellCrosshair);
+    g_lua.bindClassMemberFunction<UIMap>("clearSpellCrosshair", &UIMap::clearSpellCrosshair);
+    g_lua.bindClassMemberFunction<UIMap>("getSpellCrosshairTarget", &UIMap::getSpellCrosshairTarget);
     g_lua.bindClassMemberFunction<UIMap>("setDrawHighlightTarget", &UIMap::setDrawHighlightTarget);
     g_lua.bindClassMemberFunction<UIMap>("setAntiAliasingMode", &UIMap::setAntiAliasingMode);
     g_lua.bindClassMemberFunction<UIMap>("setFloorFading", &UIMap::setFloorFading);

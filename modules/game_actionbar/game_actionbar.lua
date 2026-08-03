@@ -950,8 +950,13 @@ function setupHotkeys()
                     end
                 end
             elseif slot.words then
-                if slot.parameter and slot.parameter ~= '' then
-                    g_game.talk(slot.words .. ' "' .. slot.parameter)
+                print('[ActionBar] slot.words=' .. slot.words)
+                local spell = Spells.getByWords(slot.words)
+                print('[ActionBar] spell=' .. tostring(spell) .. ' crosshair=' .. tostring(spell and spell.crosshair) .. ' range=' .. tostring(spell and spell.range) .. ' area=' .. tostring(spell and spell.area))
+                if spell and spell.crosshair then
+                    modules.game_interface.startSpellCrosshair(slot.words, spell.range, Spells.getAreaOffsets(spell.area), spell.areaSprite, spell.area)
+                elseif slot.parameter and slot.parameter ~= '' then
+                    g_game.talk(slot.words .. ' "' .. slot.parameter .. '"')
                 else
                     g_game.talk(slot.words)
                 end
@@ -998,8 +1003,13 @@ function setupHotkeys()
                         end
                     end
                 elseif slot.words then
-                    if slot.parameter and slot.parameter ~= '' then
-                        g_game.talk(slot.words .. ' "' .. slot.parameter)
+                    print('[ActionBar] slot.words=' .. slot.words)
+                    local spell = Spells.getByWords(slot.words)
+                    print('[ActionBar] spell=' .. tostring(spell) .. ' crosshair=' .. tostring(spell and spell.crosshair) .. ' range=' .. tostring(spell and spell.range) .. ' area=' .. tostring(spell and spell.area))
+                    if spell and spell.crosshair then
+                        modules.game_interface.startSpellCrosshair(slot.words, spell.range, Spells.getAreaOffsets(spell.area), spell.areaSprite, spell.area)
+                    elseif slot.parameter and slot.parameter ~= '' then
+                        g_game.talk(slot.words .. ' "' .. slot.parameter .. '"')
                     else
                         g_game.talk(slot.words)
                     end
