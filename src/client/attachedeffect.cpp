@@ -27,6 +27,8 @@
 #include "map.h"
 #include "thingtypemanager.h"
 
+#include <utility>
+
 #include <framework/core/clock.h>
 #include <framework/graphics/animatedtexture.h>
 #include <framework/graphics/drawpoolmanager.h>
@@ -73,6 +75,21 @@ int getBounce(const AttachedEffect::Bounce bounce, const ticks_t ticks) {
     const auto minHeight = bounce.minHeight * g_drawPool.getScaleFactor();
     const auto height = bounce.height * g_drawPool.getScaleFactor();
     return minHeight + (height - std::abs(height - static_cast<int>(ticks / (bounce.speed / 100.f)) % static_cast<int>(height * 2)));
+}
+
+static std::pair<int, int> getMissilePatternFromDirection(const Otc::Direction dir)
+{
+    switch (dir) {
+        case Otc::NorthWest: return { 0, 0 };
+        case Otc::North: return { 1, 0 };
+        case Otc::NorthEast: return { 2, 0 };
+        case Otc::East: return { 2, 1 };
+        case Otc::SouthEast: return { 2, 2 };
+        case Otc::South: return { 1, 2 };
+        case Otc::SouthWest: return { 0, 2 };
+        case Otc::West: return { 0, 1 };
+        default: return { 1, 1 };
+    }
 }
 
 void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightViewPtr& lightView, const bool drawThing) {
@@ -173,6 +190,163 @@ void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightView
         return;
     }
 
+    // Distance mode: draw a thing/texture moving from owner to each target creature
+    if (m_distanceMode && !m_targetCreatureIds.empty()) {
+        const auto& owner = g_map.getCreatureById(m_ownerCreatureId);
+        if (!owner || owner->isRemoved()) {
+            m_targetCreatureIds.clear();
+            m_loop = 0;
+            return;
+        }
+
+        const auto scaleFactor = g_drawPool.getScaleFactor();
+        const auto spriteSize = g_gameConfig.getSpriteSize();
+        const auto ownerPos = owner->getPosition();
+        const auto ownerWalkOffset = owner->getWalkOffset();
+
+        // Remove invalid targets (creature removed, dead, or no longer in range)
+        std::erase_if(m_targetCreatureIds, [ownerPos](uint32_t id) {
+            const auto& c = g_map.getCreatureById(id);
+            if (!c || c->isRemoved() || c->isDead())
+                return true;
+            const auto& pos = c->getPosition();
+            if (pos.z != ownerPos.z)
+                return true;
+            return std::abs(pos.x - ownerPos.x) > 8 || std::abs(pos.y - ownerPos.y) > 8;
+        });
+
+        if (m_targetCreatureIds.empty()) {
+            m_loop = 0;
+            return;
+        }
+
+        // Determine shot duration from the configured duration or from the farthest target
+        uint16_t shotDuration = m_duration;
+        if (shotDuration == 0) {
+            uint16_t maxDist = 0;
+            for (const auto targetId : m_targetCreatureIds) {
+                const auto& target = g_map.getCreatureById(targetId);
+                if (!target)
+                    continue;
+                maxDist = std::max<uint16_t>(maxDist, static_cast<uint16_t>(ownerPos.distance(target->getPosition())));
+            }
+            if (maxDist == 0)
+                maxDist = 1;
+            shotDuration = std::max<uint16_t>(1, static_cast<uint16_t>(maxDist * 120 / getSpeed()));
+        }
+
+        float fraction = m_animationTimer.ticksElapsed() / static_cast<float>(shotDuration);
+        if (fraction >= 1.f) {
+            if (m_loop == 0) {
+                m_loop = 0;
+                return;
+            }
+
+            if (m_loop > 0) {
+                --m_loop;
+                m_animationTimer.restart();
+                if (m_loop == 0) {
+                    m_loop = 0;
+                    return;
+                }
+            } else {
+                // infinite loop (-1): restart the shot
+                m_animationTimer.restart();
+            }
+            fraction = 0.f;
+        }
+
+        const auto originalScaleFactor = g_drawPool.getScaleFactor();
+
+        for (const auto targetId : m_targetCreatureIds) {
+            const auto& target = g_map.getCreatureById(targetId);
+            if (!target)
+                continue;
+
+            const auto targetPos = target->getPosition();
+            const auto targetWalkOffset = target->getWalkOffset();
+
+            Point delta = Point(targetPos.x - ownerPos.x, targetPos.y - ownerPos.y) * spriteSize;
+            delta += (targetWalkOffset - ownerWalkOffset) * originalScaleFactor;
+
+            m_direction = ownerPos.getDirectionFromPosition(targetPos);
+            const auto& dirControl = m_offsetDirections[m_direction];
+            if (dirControl.onTop != isOnTop)
+                continue;
+
+            Point point = dest + (delta * fraction) - (dirControl.offset * originalScaleFactor);
+
+            if (m_texture == nullptr && getThingType() == nullptr)
+                continue;
+
+            const int animation = getCurrentAnimationPhase();
+
+            if (m_shader) g_drawPool.setShaderProgram(m_shader, true);
+            if (m_opacity < 100) g_drawPool.setOpacity(getOpacity(), true);
+
+            auto scaleFactor = originalScaleFactor;
+
+            // Apply custom size for sprite-based distance effects
+            if (!m_size.isUnset() && m_texture == nullptr && getThingType() != nullptr) {
+                const auto& defaultSize = getThingType()->getSize() * g_gameConfig.getSpriteSize();
+                if (defaultSize.width() > 0 && defaultSize.height() > 0) {
+                    const float ratio = std::min<float>(m_size.width() / static_cast<float>(defaultSize.width()),
+                                                        m_size.height() / static_cast<float>(defaultSize.height()));
+                    scaleFactor = originalScaleFactor * ratio;
+                    g_drawPool.setScaleFactor(scaleFactor);
+                    point = dest + (delta * fraction) - (dirControl.offset * g_drawPool.getScaleFactor());
+                }
+            }
+
+            if (m_pulse.height > 0 && m_pulse.speed > 0) {
+                g_drawPool.setScaleFactor(scaleFactor + getBounce(m_pulse, m_pulse.timer.ticksElapsed()) / 100.f);
+            }
+
+            if (m_fade.height > 0 && m_fade.speed > 0) {
+                g_drawPool.setOpacity(std::clamp<float>(getBounce(m_fade, m_fade.timer.ticksElapsed()) / 100.f, 0, 1.f));
+            }
+
+            if (m_bounce.height > 0 && m_bounce.speed > 0) {
+                point -= getBounce(m_bounce, m_bounce.timer.ticksElapsed());
+            }
+
+            if (lightView && m_light.intensity > 0)
+                lightView->addLightSource(point, m_light);
+
+            auto lastDrawOrder = g_drawPool.getDrawOrder();
+            if (g_drawPool.getCurrentType() == DrawPoolType::MAP)
+                g_drawPool.setDrawOrder(getDrawOrder());
+
+            if (m_texture) {
+                if (drawThing) {
+                    const auto& size = (m_size.isUnset() ? m_texture->getSize() : m_size) * g_drawPool.getScaleFactor();
+                    const auto& texture = m_texture->isAnimatedTexture() ? std::static_pointer_cast<AnimatedTexture>(m_texture)->get(m_frame, m_animationTimer) : m_texture;
+                    const auto& rect = Rect(Point(), texture->getSize());
+                    g_drawPool.addTexturedRect(Rect(point, size), texture, rect, Color::white);
+                }
+            } else if (getThingType()->isMissile()) {
+                const auto [patternX, patternY] = getMissilePatternFromDirection(m_direction);
+                getThingType()->draw(point, 0, patternX, patternY, 0, animation, Color::white, drawThing, lightView);
+            } else {
+                getThingType()->draw(point, 0, m_direction, 0, 0, animation, Color::white, drawThing, lightView);
+            }
+
+            g_drawPool.setDrawOrder(lastDrawOrder);
+            g_drawPool.setScaleFactor(originalScaleFactor);
+
+            if (m_fade.height > 0 && m_fade.speed > 0) {
+                g_drawPool.resetOpacity();
+            }
+        }
+
+        // Still draw child effects once from the owner position
+        if (drawThing) {
+            for (const auto& effect : m_effects)
+                effect->draw(dest, isOnTop, lightView);
+        }
+        return;
+    }
+
     if (m_texture != nullptr || getThingType() != nullptr) {
         const auto& dirControl = m_offsetDirections[m_direction];
         if (dirControl.onTop != isOnTop)
@@ -191,7 +365,19 @@ void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightView
         if (m_shader) g_drawPool.setShaderProgram(m_shader, true);
         if (m_opacity < 100) g_drawPool.setOpacity(getOpacity(), true);
 
-        const auto scaleFactor = g_drawPool.getScaleFactor();
+        const auto originalScaleFactor = g_drawPool.getScaleFactor();
+        auto scaleFactor = originalScaleFactor;
+
+        // Apply custom size for sprite-based effects
+        if (!m_size.isUnset() && m_texture == nullptr && getThingType() != nullptr) {
+            const auto& defaultSize = getThingType()->getSize() * g_gameConfig.getSpriteSize();
+            if (defaultSize.width() > 0 && defaultSize.height() > 0) {
+                const float ratio = std::min<float>(m_size.width() / static_cast<float>(defaultSize.width()),
+                                                    m_size.height() / static_cast<float>(defaultSize.height()));
+                scaleFactor = originalScaleFactor * ratio;
+                g_drawPool.setScaleFactor(scaleFactor);
+            }
+        }
 
         if (m_pulse.height > 0 && m_pulse.speed > 0) {
             g_drawPool.setScaleFactor(scaleFactor + getBounce(m_pulse, m_pulse.timer.ticksElapsed()) / 100.f);
@@ -226,15 +412,15 @@ void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightView
 
                 g_drawPool.addTexturedRect(Rect(point, size), texture, rect, Color::white);
             }
+        } else if (getThingType()->isMissile()) {
+            const auto [patternX, patternY] = getMissilePatternFromDirection(m_direction);
+            getThingType()->draw(point, 0, patternX, patternY, 0, animation, Color::white, drawThing, lightView);
         } else {
             getThingType()->draw(point, 0, m_direction, 0, 0, animation, Color::white, drawThing, lightView);
         }
 
         g_drawPool.setDrawOrder(lastDrawOrder);
-
-        if (m_pulse.height > 0 && m_pulse.speed > 0) {
-            g_drawPool.setScaleFactor(scaleFactor);
-        }
+        g_drawPool.setScaleFactor(originalScaleFactor);
 
         if (m_fade.height > 0 && m_fade.speed > 0) {
             g_drawPool.resetOpacity();

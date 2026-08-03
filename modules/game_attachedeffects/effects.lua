@@ -7,7 +7,10 @@
         light { color, intensity}, drawOrder(only for tiles),
         bounce{minHeight, height, speed},
         pulse{minHeight, height, speed},
-        fade{start, end, speed}
+        fade{start, end, speed},
+        lineMode, lineColor, lineWidth,
+        distanceMode          -- when true, draws the effect moving from owner to each target
+                                -- sent via creature:attachDistanceEffectWithTargets(effectId, {targets})
 
         onAttach, onDetach
     }
@@ -4907,6 +4910,43 @@ AttachedEffectManager.register(633, 'Healing Melody', 1320, ThingCategoryEffect,
     end,
 })
 
+AttachedEffectManager.register(634, 'broken floor', 1321, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 0.9,
+    offset = { -64, -64, true},
+    shader = 'Zaphire',
+    
+})
+
+-- 32x32 escala a 64x64
+AttachedEffectManager.register(635, 'Ice Lance Distance', 106, ThingCategoryMissile, {
+    distanceMode = true,
+    loop = 1,
+    size = { 96, 96 },
+    opacity = 1.0,
+    offset = { 0, 25, true },
+    onTop = true,
+})
+
+-- 32x32 escala a 64x64
+AttachedEffectManager.register(700, 'Ice Lance Distance', 38, ThingCategoryMissile, {
+    distanceMode = true,
+    loop = 1,
+    size = { 64, 64 },
+    opacity = 1.0,
+    offset = { 0, 0, true },
+    onTop = true,
+})
+ 
+-- Attached effect normal con sprite escalado
+AttachedEffectManager.register(701, 'Big Aura', 605, ThingCategoryEffect, {
+    size = { 96, 96 },
+    opacity = 0.8,
+    onTop = true,
+})
+
+
 -- =========================================================
 -- Melody Auras (640-644)
 -- Orbiting particle effects for each Bard melody
@@ -5058,4 +5098,21 @@ AttachedEffectManager.register(660, 'Warden Frost Aura', 1314, ThingCategoryEffe
     opacity = 0.7,
     speed = 0.7,
     offset = { -18, -20, true }
+})
+
+-- =============================================================
+-- Distance effects (travel from caster to each target)
+-- Sent from the server with: creature:attachDistanceEffectWithTargets(effectId, {targetId1, targetId2, ...})
+-- =============================================================
+AttachedEffectManager.register(700, 'Ice Lance Distance', 38, ThingCategoryMissile, {
+    distanceMode = true,
+    -- duration = 400,         -- optional: ms per shot; if 0 it is computed from the farthest distance
+    loop = 1,                 -- number of shots per target (-1 = infinite)
+    size = { 64, 64 },        -- scales the sprite to 64x64 pixels
+    opacity = 1.0,
+    offset = { 0, 0, true },  -- x, y, onTop
+    onTop = true,
+    -- pulse = { 0, 15, 300 },
+    -- fade = { 0, 100, 400 },
+    -- shader = 'Red Glow',
 })

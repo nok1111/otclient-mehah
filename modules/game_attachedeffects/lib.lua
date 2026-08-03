@@ -90,6 +90,10 @@ local executeConfig = function(attachedEffect, config)
         attachedEffect:setLineMode(config.lineMode)
     end
 
+    if config.distanceMode then
+        attachedEffect:setDistanceMode(config.distanceMode)
+    end
+
     if config.lineColor then
         attachedEffect:setLineColor(config.lineColor)
     end

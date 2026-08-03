@@ -358,6 +358,7 @@ private:
     void parseHighscores(const InputMessagePtr& msg);
     void parseAttachedEffect(const InputMessagePtr& msg);
     void parseAttachedEffectWithTargets(const InputMessagePtr& msg);
+    void parseAttachedEffectWithTargetsEx(const InputMessagePtr& msg);
     void parseDetachEffect(const InputMessagePtr& msg);
     void parseCreatureShader(const InputMessagePtr& msg);
     void parseMapShader(const InputMessagePtr& msg);

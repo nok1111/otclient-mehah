@@ -150,6 +150,9 @@ void ProtocolGame::parseMessage(const InputMessagePtr& msg)
                 case Proto::GameServerAttachedEffectWithTargets:
                     parseAttachedEffectWithTargets(msg);
                     break;
+                case Proto::GameServerAttachedEffectWithTargetsEx:
+                    parseAttachedEffectWithTargetsEx(msg);
+                    break;
                 case Proto::GameServerProgressbar:
                     parseProgressbar(msg);
                     break;
@@ -5507,6 +5510,40 @@ void ProtocolGame::parseAttachedEffectWithTargets(const InputMessagePtr& msg)
 
     auto cloned = effect->clone();
     cloned->setLineMode(true);
+    for (uint32_t targetId : targetIds)
+        cloned->addTargetCreature(targetId);
+
+    creature->attachEffect(cloned);
+}
+
+void ProtocolGame::parseAttachedEffectWithTargetsEx(const InputMessagePtr& msg)
+{
+    const uint32_t creatureId = msg->getU32();
+    const uint16_t attachedEffectId = msg->getU16();
+    const uint8_t targetCount = msg->getU8();
+    g_game.recordAttachedEffect();
+
+    std::vector<uint32_t> targetIds;
+    targetIds.reserve(targetCount);
+    for (uint8_t i = 0; i < targetCount; ++i)
+        targetIds.push_back(msg->getU32());
+
+    const uint8_t mode = msg->getU8(); // 0 = line, 1 = distance
+
+    const auto& creature = g_map.getCreatureById(creatureId);
+    if (!creature)
+        return;
+
+    const auto& effect = g_attachedEffects.getById(attachedEffectId);
+    if (!effect)
+        return;
+
+    auto cloned = effect->clone();
+    if (mode == 1)
+        cloned->setDistanceMode(true);
+    else
+        cloned->setLineMode(true);
+
     for (uint32_t targetId : targetIds)
         cloned->addTargetCreature(targetId);
 

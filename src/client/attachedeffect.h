@@ -114,6 +114,8 @@ onTop,
 
     bool isLineMode() { return m_lineMode; }
     void setLineMode(const bool v) { m_lineMode = v; }
+    bool isDistanceMode() { return m_distanceMode; }
+    void setDistanceMode(const bool v) { m_distanceMode = v; }
     Color getLineColor() { return m_lineColor; }
     void setLineColor(const Color& c) { m_lineColor = c; }
     uint8_t getLineWidth() { return m_lineWidth; }
@@ -196,6 +198,7 @@ private:
     Point m_toPoint;
 
     bool m_lineMode{ false };
+    bool m_distanceMode{ false };
     Color m_lineColor{ 180, 20, 20, 255 };
     uint8_t m_lineWidth{ 3 };
     uint32_t m_ownerCreatureId{ 0 };

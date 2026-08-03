@@ -839,6 +839,8 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<AttachedEffect>("setFade", &AttachedEffect::setFade);
 
     g_lua.bindClassMemberFunction<AttachedEffect>("setLineMode", &AttachedEffect::setLineMode);
+    g_lua.bindClassMemberFunction<AttachedEffect>("setDistanceMode", &AttachedEffect::setDistanceMode);
+    g_lua.bindClassMemberFunction<AttachedEffect>("isDistanceMode", &AttachedEffect::isDistanceMode);
     g_lua.bindClassMemberFunction<AttachedEffect>("setLineColor", &AttachedEffect::setLineColor);
     g_lua.bindClassMemberFunction<AttachedEffect>("setLineWidth", &AttachedEffect::setLineWidth);
     g_lua.bindClassMemberFunction<AttachedEffect>("addTargetCreature", &AttachedEffect::addTargetCreature);
