@@ -1028,121 +1028,189 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["6:0"] = {
-		name = "Core",
-		description = "",
+		name = "Astral Communion",
+		description = "Commune with the cosmos. Increases energy damage by 2% and max mana by 2%.",
+		effect = {
+			{type = "condition", name = "Energy Damage", value = 2},
+			{type = "condition", name = "Max Mana", value = 2},
+		},
 	},
 	["6:1"] = {
 		name = "Cosmic Focus",
-		description = "Increase the energy damage done by 2% per level",
+		description = "Increase the energy damage done by 2% per level.",
 		effect = {
 			{type = "condition", name = "Energy Damage", value = 2},
 		},
 	},
 	["6:2"] = {
 		name = "Astral Burn",
-		description = "Starfall now applies a damaging condition to the target wich deal energy damage for 1 seconds per level",
+		description = "Starfall now applies a damaging condition to the target which deals energy damage for 1 second per level.",
 		effect = {
 			{type = "storage", name = "AstralBurn", value = 1},
 		},
 	},
 	["6:3"] = {
+		name = "Star Style",
+		description = "Choose your star specialization.",
+	},
+	["6:4"] = {
 		name = "Falling Stars",
-		description = "Dealing energy damage has a 2% (per level) chance to trigger a starfall on the target",
+		description = "Dealing energy damage has a 2% chance per level to trigger a Starfall on the target.",
 		effect = {
 			{type = "storage", name = "FallingStars", value = 2},
 		},
 	},
-	["6:4"] = {
-		name = "Holy Flare",
-		description = "Learn Spell Holy Flare",
-		effect = {
-			{type = "spell", name = "Holy Flare"},
-		},
-	},
 	["6:5"] = {
 		name = "Aery's Rapidfire",
-		description = "Increase Aery's Strikes shots by 1 per level",
+		description = "Increase Aery's Strikes shots by 1 per level.",
 		effect = {
 			{type = "storage", name = "AeryRapidfire", value = 1},
 		},
 	},
 	["6:6"] = {
-		name = "Celestial Insight",
-		description = "Increases your Magic Level by 2 points per level",
+		name = "Holy Flare",
+		description = "Learn the spell Holy Flare.",
 		effect = {
-			{type = "condition", name = "MagicLevel", value = 2},
+			{type = "spell", name = "Holy Flare"},
 		},
 	},
 	["6:7"] = {
+		name = "Celestial Insight",
+		description = "Increases your Magic Level by 2 points per level.",
+		effect = {
+			{type = "condition", name = "Magic Level", value = 2},
+		},
+	},
+	["6:8"] = {
 		name = "Full Moon",
-		description = "Learn Spell Full Moon",
+		description = "Learn the spell Full Moon.",
 		effect = {
 			{type = "spell", name = "Full Moon"},
 		},
 	},
-	["6:8"] = {
+	["6:11"] = {
 		name = "Starwell",
-		description = "Increases max mana by 4% per level",
+		description = "Increases max mana by 4% per level.",
 		effect = {
-			{type = "condition", name = "MaxManaPercent", value = 4},
+			{type = "condition", name = "Max Mana", value = 4},
 		},
 	},
-	["6:9"] = {
+	["6:12"] = {
 		name = "Divine Restoration",
-		description = "Increases Healling effectivenessby 6% per level \nReduce the mana cost of moon light by 3% per level",
+		description = "Increases healing effectiveness by 6% per level and reduces the mana cost of Moon Light by 3% per level.",
 		effect = {
-			{type = "condition", name = "HealingEffectiveness", value = 6},
+			{type = "condition", name = "Healing Effectiveness", value = 6},
 			{type = "storage", name = "MoonLightManaCost", value = 3},
 		},
 	},
-	["6:10"] = {
+	["6:13"] = {
+		name = "Lunar Path",
+		description = "Choose your lunar path.",
+	},
+	["6:14"] = {
 		name = "Moonshower",
-		description = "Increase the healing of rain fall by 6% (per level)\nincrease the duration of rainfall by 1 second (per level)",
+		description = "Increase the healing of Rain Fall by 6% per level and increase its duration by 1 second per level.",
 		effect = {
 			{type = "storage", name = "RainFallHealing", value = 6},
 			{type = "storage", name = "RainFallDuration", value = 1},
 		},
 	},
-	["6:11"] = {
+	["6:15"] = {
 		name = "Luminous Bond",
-		description = "Increase the passive healing of Aery by 6% (per level)",
+		description = "Increase the passive healing of Aery by 6% per level.",
 		effect = {
 			{type = "storage", name = "LuminousBond", value = 6},
 		},
 	},
-	["6:12"] = {
+	["6:16"] = {
 		name = "Guiding Constellation",
-		description = "Cosmic Force now restores 3% of your max mana per level",
+		description = "Cosmic Force now restores 3% of your max mana per level.",
 		effect = {
 			{type = "storage", name = "CosmicForceManaRestore", value = 3},
 		},
 	},
-	["6:13"] = {
-		name = "Solar Blessing",
-		description = "Learn Spell Solar Blessing\nIncrease the target's max health by 65% for 8 seconds and healing them instantly for 50% of your max mana at the start and ending of spell.",
-		effect = {
-			{type = "spell", name = "Solar Blessing"},
-		},
-	},
-	["6:14"] = {
-		name = "Back to basics",
-		description = "+4% wand damage per level",
-		effect = {
-			{type = "storage", name = "WandDamage", value = 4},
-		},
-	},
-	["6:15"] = {
+	["6:17"] = {
 		name = "Mana Feather",
-		description = "Aery now restores 0.2% (per level) of your max mana per basic attack\n\n\nThis node does not require a previous node to be unlocked",
+		description = "Aery now restores 0.2% of your max mana per basic attack per level.",
 		effect = {
 			{type = "storage", name = "AeryManaRestore", value = 2},
 		},
 	},
-	["6:16"] = {
-		name = "Sacred Constitution",
-		description = "Increases max health by 4.0% per level\n\n\nThis node does not require a previous node to be unlocked",
+	["6:18"] = {
+		name = "Solar Blessing",
+		description = "Learn the spell Solar Blessing. Increases the target's max health by 65% for 8 seconds and heals them instantly for 50% of your max mana at the start and ending of the spell.",
 		effect = {
-			{type = "condition", name = "MaxHealthPercent", value = 4},
+			{type = "spell", name = "Solar Blessing"},
+		},
+	},
+	["6:21"] = {
+		name = "Back to Basics",
+		description = "Increase wand damage by 4% per level.",
+		effect = {
+			{type = "storage", name = "WandDamage", value = 4},
+		},
+	},
+	["6:22"] = {
+		name = "Sacred Constitution",
+		description = "Increases max health by 4% per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 4},
+		},
+	},
+	["6:23"] = {
+		name = "Cosmic Bond",
+		description = "Choose your cosmic bond.",
+	},
+	["6:24"] = {
+		name = "Arcane Resonance",
+		description = "Increases max mana by 3% per level and reduces spell mana costs by 2% per level.",
+		effect = {
+			{type = "condition", name = "Max Mana", value = 3},
+		},
+	},
+	["6:25"] = {
+		name = "Vital Resonance",
+		description = "Increases max health by 3% per level and life leech by 1% per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 3},
+			{type = "condition", name = "Life Leech", value = 1},
+		},
+	},
+	["6:26"] = {
+		name = "Stellar Alignment",
+		description = "When you cast a spell, you have a 4% chance per level to restore 5% of your max mana.",
+		effect = {
+			{type = "storage", name = "CosmicForceManaRestore", value = 4},
+		},
+	},
+	["6:27"] = {
+		name = "Astral Vigor",
+		description = "Increases healing effectiveness by 3% per level.",
+		effect = {
+			{type = "condition", name = "Healing Effectiveness", value = 3},
+		},
+	},
+	["6:28"] = {
+		name = "Cosmic Convergence",
+		description = "When your mana drops below 20%, you enter Cosmic Convergence for 6 seconds: +10% magic level and all spells cost 50% less mana. 30 second cooldown.",
+		effect = {
+			{type = "condition", name = "Magic Level", value = 10},
+		},
+	},
+	["6:30"] = {
+		name = "Starweaver",
+		description = "Your radiance and lunarity combine. Increases energy damage by 3% and max mana by 3% while you have unlocked Falling Stars and Moonshower.",
+		effect = {
+			{type = "condition", name = "Energy Damage", value = 3},
+			{type = "condition", name = "Max Mana", value = 3},
+		},
+	},
+	["6:31"] = {
+		name = "Astral Harmony",
+		description = "Your lunarity and astral bond combine. Increases healing effectiveness by 3% and max health by 3% while you have unlocked Luminous Bond and Vital Resonance.",
+		effect = {
+			{type = "condition", name = "Healing Effectiveness", value = 3},
+			{type = "condition", name = "Max Health", value = 3},
 		},
 	},
 	["7:0"] = {
