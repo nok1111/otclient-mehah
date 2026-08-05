@@ -639,145 +639,205 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["4:0"] = {
-		name = "Core",
-		description = "",
+		name = "Draconic Heritage",
+		description = "Dragon blood flows through your veins. Increases max health by 2% and physical damage by 2%.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 2},
+			{type = "condition", name = "Physical Damage", value = 2},
+		},
 	},
 	["4:1"] = {
 		name = "Scaled Rupture",
-		description = "Increase Rend damage by 3% (per level)",
+		description = "Increase Rend damage by 3% per level.",
 		effect = {
 			{type = "storage", name = "ScaledRupture", value = 3},
 		},
 	},
 	["4:2"] = {
 		name = "Colossal Blows",
-		description = "Increase physical damage done by 2% per level",
+		description = "Increase physical damage done by 2% per level.",
 		effect = {
 			{type = "condition", name = "Physical Damage", value = 2},
 		},
 	},
 	["4:3"] = {
-		name = "Shockwave",
-		description = "Learn spell Shockwave",
-		effect = {
-			{type = "spell", name = "Shockwave"},
-		},
+		name = "Battle Focus",
+		description = "Choose your combat specialization.",
 	},
 	["4:4"] = {
+		name = "Heartseeker",
+		description = "Increase critical strike chance by 2% per level.",
+		effect = {
+			{type = "condition", name = "Critical Hit Chance", value = 2},
+		},
+	},
+	["4:5"] = {
 		name = "Lifeblood Strike",
-		description = "Increase the health gain from your brutal swing by 10% (per level)",
+		description = "Increase the health gain from your Brutal Swing by 10% per level.",
 		effect = {
 			{type = "storage", name = "LifebloodStrike", value = 10},
 		},
 	},
-	["4:5"] = {
-		name = "Heartseeker",
-		description = "Increase critical strike chance by 2% (per level)",
-		effect = {
-			{type = "condition", name = "Critical Strike", value = 2},
-		},
-	},
 	["4:6"] = {
-		name = "Bloodlust",
-		description = "Learn spell Bloodlust",
+		name = "Shockwave",
+		description = "Learn the spell Shockwave.",
 		effect = {
-			{type = "spell", name = "Bloodlust"},
+			{type = "spell", name = "Shockwave"},
 		},
 	},
 	["4:7"] = {
-		name = "Goliath",
-		description = "Increase max health by 4% (per level)",
-		effect = {
-			{type = "condition", name = "MaxHealthPercent", value = 4},
-		},
-	},
-	["4:8"] = {
-		name = "Bloodthirst",
-		description = "Increases life leech by 2% (per level)",
-		effect = {
-			{type = "condition", name = "Life Leech", value = 2},
-		},
-	},
-	["4:9"] = {
-		name = "Dragon Heart",
-		description = "Dragon aura now heals the caster, and increases its healing effectiveness by 5% (per level)",
-		effect = {
-			{type = "storage", name = "DragonHeart", value = 5},
-		},
-	},
-	["4:10"] = {
-		name = "Fire Within",
-		description = "Learn spell Fire Within",
-		effect = {
-			{type = "spell", name = "Fire Within"},
-		},
-	},
-	["4:11"] = {
-		name = "Survival Instincts",
-		description = "Auto attacks heals you per missing health, the heal is increased 1% per missing % health (per level)",
-		effect = {
-			{type = "storage", name = "SurvivalInstincts", value = 1},
-		},
-	},
-	["4:12"] = {
-		name = "Draconic Chains",
-		description = "Learn spell Draconic Chains",
-		effect = {
-			{type = "spell", name = "Draconic Chains"},
-		},
-	},
-	["4:13"] = {
-		name = "Ember Touch",
-		description = "Auto attacks apply have a 2% (per level) chance to apply a burning effect for 2 seconds (increased per level)",
-		effect = {
-			{type = "storage", name = "EmberTouch", value = 2},
-		},
-	},
-	["4:14"] = {
-		name = "Berserker's Tempo",
-		description = "Increases attack speed by 5% (per level)",
-		effect = {
-			{type = "condition", name = "Attack Speed", value = 5},
-		},
-	},
-	["4:15"] = {
 		name = "Rebound Strike",
-		description = "brutal swing has a 10% (per level) chance to heal you for 8% of your max health",
+		description = "Brutal Swing has a 10% chance per level to heal you for 8% of your max health.",
 		effect = {
 			{type = "storage", name = "ReboundStrike", value = 10},
 		},
 	},
-	["4:16"] = {
-		name = "Flame Eater",
-		description = "Increase the damage done to burning targets by 2% (per level)",
+	["4:8"] = {
+		name = "Bloodlust",
+		description = "Learn the spell Bloodlust.",
 		effect = {
-			{type = "storage", name = "FlameEater", value = 2},
+			{type = "spell", name = "Bloodlust"},
+		},
+	},
+	["4:11"] = {
+		name = "Goliath",
+		description = "Increase max health by 4% per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 4},
+		},
+	},
+	["4:12"] = {
+		name = "Bloodthirst",
+		description = "Increases life leech by 2% per level.",
+		effect = {
+			{type = "condition", name = "Life Leech", value = 2},
+		},
+	},
+	["4:13"] = {
+		name = "Dragon's Path",
+		description = "Choose your draconic path.",
+	},
+	["4:14"] = {
+		name = "Dragon Heart",
+		description = "Dragon Aura now heals the caster and increases its healing effectiveness by 5% per level.",
+		effect = {
+			{type = "storage", name = "DragonHeart", value = 5},
+		},
+	},
+	["4:15"] = {
+		name = "Survival Instincts",
+		description = "Auto attacks heal you based on missing health, increased 1% per missing 1% health per level.",
+		effect = {
+			{type = "storage", name = "SurvivalInstincts", value = 1},
+		},
+	},
+	["4:16"] = {
+		name = "Fire Within",
+		description = "Learn the spell Fire Within.",
+		effect = {
+			{type = "spell", name = "Fire Within"},
 		},
 	},
 	["4:17"] = {
-		name = "Phoenix Wrath",
-		description = "Learn spell Phoenix Wrath",
-		effect = {
-			{type = "spell", name = "Phoenix Wrath"},
-		},
-	},
-	["4:18"] = {
 		name = "Emberhide",
-		description = "Increase elemental resistance by 2% (per level)",
+		description = "Increase elemental resistance by 2% per level.",
 		effect = {
 			{type = "storage", name = "Emberhide", value = 2},
 		},
 	},
-	["4:19"] = {
+	["4:18"] = {
+		name = "Draconic Chains",
+		description = "Learn the spell Draconic Chains.",
+		effect = {
+			{type = "spell", name = "Draconic Chains"},
+		},
+	},
+	["4:21"] = {
+		name = "Ember Touch",
+		description = "Auto attacks have a 2% chance per level to apply a burning effect for 2 seconds.",
+		effect = {
+			{type = "storage", name = "EmberTouch", value = 2},
+		},
+	},
+	["4:22"] = {
+		name = "Berserker's Tempo",
+		description = "Increases attack speed by 5% per level.",
+		effect = {
+			{type = "condition", name = "Attack Speed", value = 5},
+		},
+	},
+	["4:23"] = {
+		name = "Flame Mastery",
+		description = "Choose your flame specialization.",
+	},
+	["4:24"] = {
+		name = "Flame Eater",
+		description = "Increase damage done to burning targets by 2% per level.",
+		effect = {
+			{type = "storage", name = "FlameEater", value = 2},
+		},
+	},
+	["4:25"] = {
+		name = "Inner Flame",
+		description = "Increase fire damage by 3% per level.",
+		effect = {
+			{type = "condition", name = "Fire Damage", value = 3},
+		},
+	},
+	["4:26"] = {
+		name = "Burning Soul",
+		description = "Burning effects last 1 additional second per level and deal 5% more damage per level.",
+		effect = {
+			{type = "storage", name = "EmberTouch", value = 5},
+		},
+	},
+	["4:27"] = {
+		name = "Cinder Armor",
+		description = "Increase max health by 2% per level while a burning enemy is nearby.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 2},
+		},
+	},
+	["4:28"] = {
+		name = "Phoenix Wrath",
+		description = "Learn the spell Phoenix Wrath.",
+		effect = {
+			{type = "spell", name = "Phoenix Wrath"},
+		},
+	},
+	["4:29"] = {
+		name = "Eternal Flame",
+		description = "When you die, you are revived with 25% health and all nearby enemies are set on fire for 5 seconds. 10 minute cooldown.",
+		effect = {
+			{type = "storage", name = "EmberTouch", value = 25},
+		},
+	},
+	["4:30"] = {
+		name = "Draconic Fury",
+		description = "Your fury and scales combine. Increases critical hit chance by 3% and max health by 3% while you have unlocked Lifeblood Strike and Dragon Heart.",
+		effect = {
+			{type = "condition", name = "Critical Hit Chance", value = 3},
+			{type = "condition", name = "Max Health", value = 3},
+		},
+	},
+	["4:31"] = {
+		name = "Crimson Phoenix",
+		description = "The phoenix and dragon unite. Increases life leech by 3% and fire damage by 3% while you have unlocked Emberhide and Flame Eater.",
+		effect = {
+			{type = "condition", name = "Life Leech", value = 3},
+			{type = "condition", name = "Fire Damage", value = 3},
+		},
+	},
+	["4:32"] = {
 		name = "Dragon Soul",
-		description = "Learn spell Dragon Soul",
+		description = "Learn the spell Dragon Soul.",
 		effect = {
 			{type = "spell", name = "Dragon Soul"},
 		},
 	},
-	["4:20"] = {
+	["4:33"] = {
 		name = "Bloodline",
-		description = "Increases the healing of Dragon Soul by 5% (per level)",
+		description = "Increases the healing of Dragon Soul by 5% per level.",
 		effect = {
 			{type = "storage", name = "Bloodline", value = 5},
 		},
