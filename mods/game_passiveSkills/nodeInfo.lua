@@ -1398,147 +1398,186 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["8:0"] = {
-		name = "Core",
-		description = "",
+		name = "Nature's Embrace",
+		description = "Embrace the wild. Increases earth damage by 2% and max mana by 2%.",
+		effect = {
+			{type = "condition", name = "Earth Damage", value = 2},
+			{type = "condition", name = "Max Mana", value = 2},
+		},
 	},
 	["8:1"] = {
 		name = "Savage Bloom",
-		description = "Increase terra strike and carnivorous vile damage by 3% (per level)",
+		description = "Increase Terra Strike and Carnivorous Vile damage by 3% per level.",
 		effect = {
 			{type = "storage", name = "SavageBloom", value = 3},
 		},
 	},
 	["8:2"] = {
 		name = "Primal Infestation",
-		description = "Your nature or earth damage, has a 2% (per level) chance to trigger a carnivorous vile with 45% effectiveness.",
+		description = "Your nature or earth damage has a 2% chance per level to trigger a Carnivorous Vile with 45% effectiveness.",
 		effect = {
 			{type = "storage", name = "PrimalInfestation", value = 2},
 		},
 	},
 	["8:3"] = {
-		name = "Swarn of Insects",
-		description = "Learn spell Swarn of Insects\nPlace a swarm of insects on a target increasing it's damage received by 10% (per level) from all sources.",
+		name = "Swarm Style",
+		description = "Choose your swarm specialization.",
+	},
+	["8:4"] = {
+		name = "Swarm of Insects",
+		description = "Learn the spell Insect Swarm. Place a swarm of insects on a target, increasing its damage received by 10% per level from all sources.",
 		effect = {
 			{type = "spell", name = "Insect Swarm"},
 		},
 	},
-	["8:4"] = {
-		name = "Hive Queen",
-		description = "Increase your critical damage chance by 2% (per level) for each enemy reached by Swarn of Insects",
-		effect = {
-			{type = "storage", name = "HiveQueen", value = 2},
-		},
-	},
 	["8:5"] = {
 		name = "Thorned Rose",
-		description = "Piercing Wave now bleeds enemies dealing physical damage and increse its damage by 2% (per level).",
+		description = "Piercing Wave now bleeds enemies dealing physical damage and increases its damage by 2% per level.",
 		effect = {
 			{type = "storage", name = "EntanglingRoots", value = 2},
 		},
 	},
 	["8:6"] = {
+		name = "Hive Queen",
+		description = "Increase your critical damage chance by 2% per level for each enemy reached by Swarm of Insects.",
+		effect = {
+			{type = "storage", name = "HiveQueen", value = 2},
+		},
+	},
+	["8:7"] = {
+		name = "Nature's Wrath",
+		description = "Increases earth damage by 3% per level.",
+		effect = {
+			{type = "condition", name = "Earth Damage", value = 3},
+		},
+	},
+	["8:8"] = {
 		name = "Force of Nature",
-		description = "Increase the damage done by Wrath of Nature by 4% (per level)",
+		description = "Increase the damage done by Wrath of Nature by 4% per level.",
 		effect = {
 			{type = "storage", name = "ForceOfNature", value = 4},
 		},
 	},
-	["8:7"] = {
+	["8:11"] = {
 		name = "Spirit Pool",
-		description = "Increases maximum mana by 5% per level",
+		description = "Increases maximum mana by 5% per level.",
 		effect = {
-			{type = "condition", name = "MaxManaPercent", value = 5},
+			{type = "condition", name = "Max Mana", value = 5},
 		},
 	},
-	["8:8"] = {
+	["8:12"] = {
 		name = "Life Bloom",
-		description = "Learn Life Bloom spell",
+		description = "Learn the spell Life Bloom.",
 		effect = {
 			{type = "spell", name = "Life Bloom"},
 		},
 	},
-	["8:9"] = {
+	["8:13"] = {
+		name = "Bloom Style",
+		description = "Choose your bloom specialization.",
+	},
+	["8:14"] = {
 		name = "Blooming Wisdom",
-		description = "Decrease the % mana cost required to cast life bloom by 2% per level",
+		description = "Decrease the mana cost required to cast Life Bloom by 2% per level.",
 		effect = {
 			{type = "storage", name = "BloomingWisdom", value = 2},
 		},
 	},
-	["8:10"] = {
+	["8:15"] = {
 		name = "Healing Concentration",
-		description = "Increase the effectiveness of Focus Healing by 6% per level",
+		description = "Increase the effectiveness of Focus Healing by 6% per level.",
 		effect = {
 			{type = "storage", name = "FocusHealing", value = 6},
 		},
 	},
-	["8:11"] = {
+	["8:16"] = {
 		name = "Living Ground",
-		description = "Learn Living Ground spell\nPlace a nature ground on your current position wich heal all nearby allies while standing on it.",
+		description = "Learn the spell Living Ground. Place a nature ground on your current position which heals all nearby allies while standing on it.",
 		effect = {
-			{type = "spell", name = "living ground"},
+			{type = "spell", name = "Living Ground"},
 		},
 	},
-	["8:12"] = {
+	["8:17"] = {
+		name = "Nature's Endurance",
+		description = "Increases max health by 5% per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 5},
+		},
+	},
+	["8:18"] = {
 		name = "Thorned Sanctuary",
-		description = "Living ground now deals damage to nearby enemies every 1.0 seconds, dealing 2% (per level) of your max health as nature damage.",
+		description = "Living Ground now deals damage to nearby enemies every 1.0 seconds, dealing 2% of your max health per level as nature damage.",
 		effect = {
 			{type = "storage", name = "ThornedSanctuary", value = 2},
 		},
 	},
-	["8:13"] = {
+	["8:21"] = {
 		name = "Winter's Grasp",
 		description = "Increase your ice damage by 4% per level.",
 		effect = {
 			{type = "condition", name = "Ice Damage", value = 4},
 		},
 	},
-	["8:14"] = {
+	["8:22"] = {
 		name = "Ice Shatter",
-		description = "Learn Ice Shatter spell\nTurn the target into a solid ice block dealing ice damage and a second AOE damage when it ends.",
+		description = "Learn the spell Ice Shatter. Turn the target into a solid ice block dealing ice damage and a second AOE damage when it ends.",
 		effect = {
 			{type = "spell", name = "Ice Shatter"},
 		},
 	},
-	["8:15"] = {
+	["8:23"] = {
+		name = "Frost Style",
+		description = "Choose your frost specialization.",
+	},
+	["8:24"] = {
 		name = "Permafrost Trap",
-		description = "Dealing ice damage have a 4% chance to trigger Frost cage , wich dealth ice damage to the target and nearby enemies.",
+		description = "Dealing ice damage has a 4% chance per level to trigger Frost Cage, which deals ice damage to the target and nearby enemies.",
 		effect = {
 			{type = "storage", name = "PermafrostTrap", value = 4},
 		},
 	},
-	["8:16"] = {
-		name = "Frost Armor",
-		description = "Learn Frost Armor spell\nGain a frost armor wich reduces your damage taken by 20% and deals ice damage back to the attacker.",
-		effect = {
-			{type = "spell", name = "Frost Armor"},
-		},
-	},
-	["8:17"] = {
-		name = "Frost Aura",
-		description = "frost armor now deals damage to nearby enemies every 1.0 seconds, dealing 1% of your max mana as ice damage.",
-		effect = {
-			{type = "storage", name = "FrostAura", value = 1},
-		},
-	},
-	["8:18"] = {
-		name = "Nature's Endurance",
-		description = "Increases max health by 5.0% per level",
-		effect = {
-			{type = "condition", name = "MaxHealthPercent", value = 5},
-		},
-	},
-	["8:19"] = {
+	["8:25"] = {
 		name = "Bear Form",
-		description = "Learn Bear Form spell\n\n\nThis node does not require a previous node to be unlocked",
+		description = "Learn the spell Bear Form.",
 		effect = {
 			{type = "spell", name = "Bear Form"},
 		},
 	},
-	["8:20"] = {
+	["8:26"] = {
+		name = "Frost Armor",
+		description = "Learn the spell Frost Armor. Gain a frost armor which reduces your damage taken by 20% and deals ice damage back to the attacker.",
+		effect = {
+			{type = "spell", name = "Frost Armor"},
+		},
+	},
+	["8:27"] = {
 		name = "Wildhide Endurance",
-		description = "Increase bear form maximum health and health regeneration by 5% per level",
+		description = "Increase Bear Form maximum health and health regeneration by 5% per level.",
 		effect = {
 			{type = "storage", name = "WildhideEndurance", value = 5},
+		},
+	},
+	["8:28"] = {
+		name = "Frost Aura",
+		description = "Frost Armor now deals damage to nearby enemies every 1.0 seconds, dealing 1% of your max mana per level as ice damage.",
+		effect = {
+			{type = "storage", name = "FrostAura", value = 1},
+		},
+	},
+	["8:30"] = {
+		name = "Wild Bloom",
+		description = "Your wildgrowth and verdancy combine. Increases earth damage by 3% and max mana by 3% while you have unlocked Swarm of Insects and Blooming Wisdom.",
+		effect = {
+			{type = "condition", name = "Earth Damage", value = 3},
+			{type = "condition", name = "Max Mana", value = 3},
+		},
+	},
+	["8:31"] = {
+		name = "Frozen Sanctuary",
+		description = "Your verdancy and frost combine. Increases max health by 3% and ice damage by 3% while you have unlocked Nature's Endurance and Permafrost Trap.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 3},
+			{type = "condition", name = "Ice Damage", value = 3},
 		},
 	},
 	["9:0"] = {
