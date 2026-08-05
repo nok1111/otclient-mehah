@@ -2495,4 +2495,184 @@ PassiveSkills.nodeInfo = {
 			{type = "storage", name = "EternalThirst", value = 1},
 		},
 	},
+	["15:0"] = {
+		name = "Nature's Guardian",
+		description = "+2% max HP. When you apply an Elemental Mark, gain 1 stack of Guardian's Resolve (max 5). Each stack: +1% damage and +1% shield strength. Stacks decay after 8s of no mark application.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 2},
+		},
+	},
+	["15:1"] = {
+		name = "Earth Power",
+		description = "+3% earth damage per level.",
+		effect = {
+			{type = "condition", name = "Physical Damage", value = 3},
+		},
+	},
+	["15:2"] = {
+		name = "Resonating Marks",
+		description = "When you apply an Elemental Mark, 20% chance per level to trigger an echo: deal 10% of the spell's damage again as earth damage to all enemies within 2 tiles.",
+		effect = {
+			{type = "storage", name = "ResonatingMarks", value = 20},
+		},
+	},
+	["15:3"] = {
+		name = "Earth Fork",
+		description = "Choose your offensive specialization.",
+	},
+	["15:4"] = {
+		name = "Thorned Skin",
+		description = "Learn the spell Thorned Skin. For 8 seconds, reflect 25% of melee damage as earth. Each reflect grants 1 Thorn Stack (max 5). When Thorned Skin ends, each stack explodes for earth damage around you. 15s cooldown.",
+		effect = {
+			{type = "storage", name = "ThornedSkin", value = 1},
+		},
+	},
+	["15:5"] = {
+		name = "Seismic Slam",
+		description = "Learn the spell Seismic Slam. Leap to a target location (5 tiles), dealing earth damage in 3x3 on impact. If you have Earth Mark, consume it to stun all hit enemies for 2s and create a Fissure on the landing spot for 5s. 8s cooldown.",
+		effect = {
+			{type = "storage", name = "SeismicSlam", value = 1},
+		},
+	},
+	["15:6"] = {
+		name = "Cleave Mastery",
+		description = "Crystal Cleave has +15% chance per level to apply Earth Mark twice. Crystal Cleave damage +10% per level.",
+		effect = {
+			{type = "storage", name = "CleaveMastery", value = 15},
+		},
+	},
+	["15:7"] = {
+		name = "Tectonic Surge",
+		description = "When you consume an Earth Mark, gain Tectonic Surge for 6s: your next earth spell deals +20% damage per level and applies Earth Mark even if it normally doesn't.",
+		effect = {
+			{type = "storage", name = "TectonicSurge", value = 20},
+		},
+	},
+	["15:8"] = {
+		name = "Tectonic Wrath",
+		description = "When you consume an Earth Mark, all enemies within 3 tiles take earth damage equal to 5% of your max HP and are knocked back 2 tiles. If this kills a target, instantly refresh Earth Mark on yourself.",
+		effect = {
+			{type = "storage", name = "TectonicWrath", value = 1},
+		},
+	},
+	["15:11"] = {
+		name = "Frost Resilience",
+		description = "+3% max HP per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 3},
+		},
+	},
+	["15:12"] = {
+		name = "Shield Mastery",
+		description = "All shields +10% per level. When a shield is fully absorbed, gain 1 Guardian's Resolve stack.",
+		effect = {
+			{type = "storage", name = "ShieldMastery", value = 10},
+		},
+	},
+	["15:13"] = {
+		name = "Frost Fork",
+		description = "Choose your defensive specialization.",
+	},
+	["15:14"] = {
+		name = "Ice Barrier",
+		description = "Learn the spell Ice Barrier. For 6 seconds, gain a shield absorbing 20% max HP. Melee attackers are slowed 30% for 3s and you gain 1 Frost Stack per hit (max 5). When the shield expires, each Frost Stack releases a frozen shard at the nearest enemy. 12s cooldown.",
+		effect = {
+			{type = "storage", name = "IceBarrier", value = 1},
+		},
+	},
+	["15:15"] = {
+		name = "Taunting Roar",
+		description = "Learn the spell Taunting Roar. Force all enemies within 4 tiles to attack you for 4s. Marked targets are also rooted for 2s. While taunted, enemies deal 15% less damage to you. 20s cooldown.",
+		effect = {
+			{type = "storage", name = "TauntingRoar", value = 1},
+		},
+	},
+	["15:16"] = {
+		name = "Frozen Heart",
+		description = "When a shield expires or is fully absorbed, freeze all enemies within 2 tiles for 1s + 0.5s per level. 10s cooldown per level.",
+		effect = {
+			{type = "storage", name = "FrozenHeart", value = 1},
+		},
+	},
+	["15:17"] = {
+		name = "Cold Blooded",
+		description = "When you drop below 40% HP, automatically cast Permafrost Shell (if off cooldown) and gain 20% damage reduction for 4s. 30s cooldown per level.",
+		effect = {
+			{type = "storage", name = "ColdBlooded", value = 1},
+		},
+	},
+	["15:18"] = {
+		name = "Permafrost",
+		description = "Permafrost Shell grants CC immunity for its duration. When fully absorbed, instantly refresh its cooldown and apply Frost Mark to all enemies within 3 tiles.",
+		effect = {
+			{type = "storage", name = "Permafrost", value = 1},
+		},
+	},
+	["15:21"] = {
+		name = "Healing Touch",
+		description = "Sylvan Mend heal +10% per level. When you heal a target with an active shield, the shield is also strengthened by 10% per level.",
+		effect = {
+			{type = "storage", name = "HealingTouch", value = 10},
+		},
+	},
+	["15:22"] = {
+		name = "Nature's Swiftness",
+		description = "+2% movement speed per level. After casting any spell, your next melee attack within 3s deals +15% damage per level and applies both Earth and Frost Mark.",
+		effect = {
+			{type = "storage", name = "NaturesSwiftness", value = 15},
+		},
+	},
+	["15:23"] = {
+		name = "Wilderness Fork",
+		description = "Choose your utility specialization.",
+	},
+	["15:24"] = {
+		name = "Root Grasp",
+		description = "Learn the spell Root Grasp. Root a target for 3s. If the target has Earth Mark, consume it: root spreads to all enemies within 2 tiles and duration becomes 5s. Rooted enemies take +15% damage. 10s cooldown.",
+		effect = {
+			{type = "storage", name = "RootGrasp", value = 1},
+		},
+	},
+	["15:25"] = {
+		name = "Spring of Life",
+		description = "Learn the spell Spring of Life. Create a healing spring on a 3x3 area for 8s. Allies standing in it heal 4% max HP/s and gain 5% damage reduction. If you have Earth Mark, consume it: spring also cleanses debuffs on entry. 20s cooldown.",
+		effect = {
+			{type = "storage", name = "SpringOfLife", value = 1},
+		},
+	},
+	["15:26"] = {
+		name = "Bulwark Mastery",
+		description = "Guardian's Bulwark radius +1 tile per level. Allies shielded gain +5% damage reduction per level for the shield's duration.",
+		effect = {
+			{type = "storage", name = "BulwarkMastery", value = 5},
+		},
+	},
+	["15:27"] = {
+		name = "Sanctuary Mastery",
+		description = "Verdant Sanctuary duration +2s per level. Final explosion damage +15% per level and applies Earth Mark to all enemies hit.",
+		effect = {
+			{type = "storage", name = "SanctuaryMastery", value = 15},
+		},
+	},
+	["15:28"] = {
+		name = "Nature's Wrath",
+		description = "20% chance when applying a Mark to also apply the opposite Mark. Both marks can now be active simultaneously. When both marks are active, your spells deal +15% damage and shields are +15% stronger.",
+		effect = {
+			{type = "storage", name = "NaturesWrath", value = 1},
+		},
+	},
+	["15:30"] = {
+		name = "Elemental Harmony",
+		description = "When you consume an Earth Mark, gain Frost Charge for 5s: next Frost spell deals +40% damage. When you consume a Frost Mark, gain Earth Charge for 5s: next Earth spell deals +40% damage and its shield/heal is empowered by 40%.",
+		effect = {
+			{type = "storage", name = "ElementalHarmony", value = 1},
+		},
+	},
+	["15:31"] = {
+		name = "Guardian's Oath",
+		description = "When you cast a shield spell, all allies within 3 tiles gain 10% of the shield amount and Guardian's Resolve stacks are doubled for 5s. When you cast a heal, all allies within 3 tiles gain 10% lifesteal for 5s. At 5 Guardian's Resolve stacks, your next shield spell costs no mana.",
+		effect = {
+			{type = "storage", name = "GuardiansOath", value = 1},
+		},
+	},
 }

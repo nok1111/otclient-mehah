@@ -203,6 +203,12 @@ SpelllistSettings = {
       'Permafrost Shell',
       'Frigid Grasp',
       'Verdant Sanctuary',
+      'Thorned Skin',
+      'Seismic Slam',
+      'Ice Barrier',
+      'Taunting Roar',
+      'Root Grasp',
+      'Spring of Life',
 
       --Blood Mage
       'Sanguine Bolt',
@@ -557,6 +563,12 @@ SpellInfo = {
     ['Permafrost Shell'] = {id = 288, words = 'permafrost shell', icon = 282, description = 'Shield yourself; stronger with Earth Mark. Consumes Earth Mark.', exhaustion = 14000, premium = false, type = 'Instant', mana = 45, level = 38, soul = 0, group = {[2] = 1900}, vocations = {15}},
     ['Frigid Grasp'] = {id = 289, words = 'frigid grasp', icon = 285, description = 'Hurl an ice shard at the target. Consumes Frost Mark to slow it and gain a shield.', exhaustion = 14000, premium = false, type = 'Instant', mana = 30, level = 26, soul = 0, group = {[3] = 1900}, vocations = {15}},
     ['Verdant Sanctuary'] = {id = 290, words = 'verdant sanctuary', icon = 286, description = 'Ultimate: shield and cleanse allies, pulse earth damage, then finish with an earth explosion. Consumes Earth Mark.', exhaustion = 60000, premium = false, type = 'Instant', mana = 120, level = 60, soul = 0, group = {[1] = 1900}, vocations = {15}},
+    ['Thorned Skin'] = {id = 305, words = 'thorned skin', icon = 267, description = 'For 8 seconds, reflect 25% of melee damage as earth. Each reflect grants 1 Thorn Stack (max 5). When Thorned Skin ends, each stack explodes for earth damage.', exhaustion = 15000, premium = false, type = 'Instant', mana = 30, level = 8, soul = 0, group = {[3] = 1100}, vocations = {15}},
+    ['Seismic Slam'] = {id = 306, words = 'seismic slam', icon = 267, description = 'Leap to a target location (5 tiles), dealing earth damage in 3x3 on impact. If you have Earth Mark, consume it to stun all hit enemies for 2s and create a Fissure for 5s.', exhaustion = 8000, premium = false, type = 'Instant', mana = 35, level = 8, soul = 0, group = {[1] = 1900}, vocations = {15}},
+    ['Ice Barrier'] = {id = 307, words = 'ice barrier', icon = 283, description = 'For 6 seconds, gain a shield absorbing 20% max HP. Melee attackers are slowed 30% for 3s and you gain 1 Frost Stack per hit (max 5). When the shield expires, each Frost Stack releases a frozen shard.', exhaustion = 12000, premium = false, type = 'Instant', mana = 40, level = 8, soul = 0, group = {[3] = 1100}, vocations = {15}},
+    ['Taunting Roar'] = {id = 308, words = 'taunting roar', icon = 267, description = 'Force all enemies within 4 tiles to attack you for 4s. Marked targets are also rooted for 2s. While taunted, enemies deal 15% less damage to you.', exhaustion = 20000, premium = false, type = 'Instant', mana = 25, level = 8, soul = 0, group = {[3] = 1100}, vocations = {15}},
+    ['Root Grasp'] = {id = 309, words = 'root grasp', icon = 267, description = 'Root a target for 3s. If you have Earth Mark, consume it: root spreads to all enemies within 2 tiles and duration becomes 5s. Rooted enemies take +15% damage.', exhaustion = 10000, premium = false, type = 'Instant', mana = 25, level = 8, soul = 0, group = {[1] = 1900}, vocations = {15}},
+    ['Spring of Life'] = {id = 310, words = 'spring of life', icon = 267, description = 'Create a healing spring on a 3x3 area for 8s. Allies standing in it heal 4% max HP/s and gain 5% damage reduction. If you have Earth Mark, consume it: spring also cleanses debuffs on entry.', exhaustion = 20000, premium = false, type = 'Instant', mana = 50, level = 8, soul = 0, group = {[3] = 1100}, vocations = {15}},
 
    
   }
