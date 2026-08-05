@@ -230,154 +230,199 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["2:0"] = {
-		name = "Core",
-		description = "",
+		name = "Sacred Resolve",
+		description = "Dedicate yourself to the holy cause. Increases max health and mana by 2%.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 2},
+			{type = "condition", name = "Max Mana", value = 2},
+		},
 	},
 	["2:1"] = {
 		name = "Unyielding Strength",
-		description = "Increase physical damage done by 3% (per level)",
+		description = "Increase physical damage done by 3% per level.",
 		effect = {
 			{type = "condition", name = "Physical Damage", value = 3},
 		},
 	},
 	["2:2"] = {
 		name = "Consecrated Strikes",
-		description = "Every 4 hits of a melee attack will have a 20% (per level) chance to trigger consecrated strike to deal extra holy damage",
+		description = "Every 4 melee hits has a 20% chance per level to trigger a consecrated strike dealing extra holy damage.",
 		effect = {
 			{type = "storage", name = "ConsecratedStrikes", value = 20},
 		},
 	},
 	["2:3"] = {
-		name = "Blessed Judgment",
-		description = "Judgement now heals 2% of your max health (per level)",
-		effect = {
-			{type = "storage", name = "BlessedJudgment", value = 2},
-		},
+		name = "Path of Retribution",
+		description = "Choose your path of judgment.",
 	},
 	["2:4"] = {
-		name = "Final Veredict",
-		description = "Holy strike deals an aditional 5% (per level) extra damage to enemies below 50% health",
-		effect = {
-			{type = "storage", name = "FinalVeredict", value = 5},
-		},
-	},
-	["2:5"] = {
 		name = "Righteous Focus",
-		description = "Your judgement now grants you a 4% (per level) critical strike chance per 3 seconds",
+		description = "Your Judgement grants 4% critical strike chance per level for 3 seconds.",
 		effect = {
 			{type = "storage", name = "RighteousFocus", value = 4},
 		},
 	},
-	["2:6"] = {
-		name = "Divine Punishment",
-		description = "Learn the spell Divine Punishment",
-		effect = {
-			{type = "spell", name = "Divine Punishment"},
-		},
-	},
-	["2:7"] = {
-		name = "Blessed Fortitude",
-		description = "Increases max health by 3.0% per level",
-		effect = {
-			{type = "condition", name = "MaxHealthPercent", value = 3},
-		},
-	},
-	["2:8"] = {
-		name = "Echoing Command",
-		description = "Your Taunt spell now deals Holy damage equal to 2% of your max health (per level) and applies a shield for 4 seconds equal to 30% of your max health.",
-		effect = {
-			{type = "storage", name = "EchoingCommand", value = 2},
-		},
-	},
-	["2:9"] = {
-		name = "Consecrated Protection",
-		description = "Reduce All damage taken while standing in a holy ground by 2% (per level)",
-		effect = {
-			{type = "storage", name = "ConsecratedProtection", value = 2},
-		},
-	},
-	["2:10"] = {
-		name = "Sanctified Power",
-		description = "Increase the damage of your holy ground by 8% (per level)",
-		effect = {
-			{type = "storage", name = "SanctifiedPower", value = 8},
-		},
-	},
-	["2:11"] = {
-		name = "Kings Blessing",
-		description = "Learn spell Kings Blessing",
-		effect = {
-			{type = "spell", name = "Kings Blessing"},
-		},
-	},
-	["2:12"] = {
-		name = "Guardian of Light",
-		description = "Learn spell Guardian of Light",
-		effect = {
-			{type = "spell", name = "Guardian of Light"},
-		},
-	},
-	["2:13"] = {
-		name = "Well of Power",
-		description = "Increases max Mana by 2.0% per level",
-		effect = {
-			{type = "condition", name = "MaxManaPercent", value = 2},
-		},
-	},
-	["2:14"] = {
-		name = "Radiant Focus",
-		description = "Light beam damage increased by 12% per level \nThis talent does not requires a previous talent node.",
-		effect = {
-			{type = "storage", name = "RadiantFocus", value = 12},
-		},
-	},
-	["2:15"] = {
-		name = "Holy Ascendancy",
-		description = "Increase all holy damage by 2% per level \nThis talent does not requires a previous talent node.",
-		effect = {
-			{type = "condition", name = "Holy Damage", value = 2},
-		},
-	},
-	["2:16"] = {
+	["2:5"] = {
 		name = "Lawbringer's Shock",
-		description = "your Judgement has a 5% chance to stun your target for 2 seconds",
+		description = "Your Judgement has a 5% chance per level to stun the target for 2 seconds.",
 		effect = {
 			{type = "storage", name = "JudmentStun", value = 5},
 		},
 	},
+	["2:6"] = {
+		name = "Final Verdict",
+		description = "Holy strike deals an additional 5% damage per level to enemies below 50% health.",
+		effect = {
+			{type = "storage", name = "FinalVeredict", value = 5},
+		},
+	},
+	["2:7"] = {
+		name = "Blessed Judgment",
+		description = "Judgement now heals 2% of your max health per level.",
+		effect = {
+			{type = "storage", name = "BlessedJudgment", value = 2},
+		},
+	},
+	["2:8"] = {
+		name = "Divine Punishment",
+		description = "Learn the spell Divine Punishment.",
+		effect = {
+			{type = "spell", name = "Divine Punishment"},
+		},
+	},
+	["2:11"] = {
+		name = "Blessed Fortitude",
+		description = "Increases max health by 3% per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 3},
+		},
+	},
+	["2:12"] = {
+		name = "Consecrated Protection",
+		description = "Reduce all damage taken while standing on holy ground by 2% per level.",
+		effect = {
+			{type = "storage", name = "ConsecratedProtection", value = 2},
+		},
+	},
+	["2:13"] = {
+		name = "Stalwart Discipline",
+		description = "Choose your defensive doctrine.",
+	},
+	["2:14"] = {
+		name = "Sanctified Power",
+		description = "Increase the damage of your holy ground by 8% per level.",
+		effect = {
+			{type = "storage", name = "SanctifiedPower", value = 8},
+		},
+	},
+	["2:15"] = {
+		name = "Echoing Command",
+		description = "Your Taunt deals Holy damage equal to 2% of your max health per level and applies a shield for 4 seconds equal to 30% of your max health.",
+		effect = {
+			{type = "storage", name = "EchoingCommand", value = 2},
+		},
+	},
+	["2:16"] = {
+		name = "Aegis of Faith",
+		description = "Increase block chance by 2% per level.",
+		effect = {
+			{type = "condition", name = "Block Chance", value = 2},
+		},
+	},
 	["2:17"] = {
+		name = "Taunting Presence",
+		description = "Reduce cooldowns by 2% per level.",
+		effect = {
+			{type = "condition", name = "Cooldown Reduction", value = 2},
+		},
+	},
+	["2:18"] = {
+		name = "Bulwark of the Martyr",
+		description = "Increases max health by 2% per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 2},
+		},
+	},
+	["2:19"] = {
+		name = "Guardian of Light",
+		description = "Learn the spell Guardian of Light.",
+		effect = {
+			{type = "spell", name = "Guardian of Light"},
+		},
+	},
+	["2:21"] = {
+		name = "Well of Power",
+		description = "Increases max mana by 2% per level.",
+		effect = {
+			{type = "condition", name = "Max Mana", value = 2},
+		},
+	},
+	["2:22"] = {
+		name = "Radiant Focus",
+		description = "Light beam damage increased by 12% per level.",
+		effect = {
+			{type = "storage", name = "RadiantFocus", value = 12},
+		},
+	},
+	["2:23"] = {
+		name = "Sacred Calling",
+		description = "Choose your path of sacred healing.",
+	},
+	["2:24"] = {
 		name = "Blessed Impact",
-		description = "Holy strike now has a 10% chance (per level) to trigger a holy light wich heals you scaling with 10% of your max mana.",
+		description = "Holy strike has a 10% chance per level to trigger a holy light which heals you scaling with 10% of your max mana.",
 		effect = {
 			{type = "storage", name = "BlessedImpact", value = 10},
 		},
 	},
-	["2:18"] = {
+	["2:25"] = {
 		name = "Judgment of Wisdom",
-		description = "your Judgement now restores 3% (per level) of your total mana and applies a shield for the same amount for 3 seconds",
+		description = "Judgement restores 3% of your total mana per level and applies a shield for the same amount for 3 seconds.",
 		effect = {
 			{type = "storage", name = "JudmentRestore", value = 3},
 		},
 	},
-	["2:19"] = {
+	["2:26"] = {
 		name = "Enlightened Punishment",
-		description = "Judgement and Exorcism deals 1% (per level) of your total mana as extra damage",
+		description = "Judgement and Exorcism deal 1% of your total mana as extra damage per level.",
 		effect = {
 			{type = "storage", name = "JudmentManaExtraDamage", value = 1},
 		},
 	},
-	["2:20"] = {
-		name = "Sacred Ground",
-		description = "Learn spell Sacred Ground",
+	["2:27"] = {
+		name = "Holy Ascendancy",
+		description = "Increase all holy damage by 2% per level.",
 		effect = {
-			{type = "spell", name = "Sacred Ground"},
+			{type = "condition", name = "Holy Damage", value = 2},
 		},
 	},
-	["2:21"] = {
+	["2:28"] = {
+		name = "Sacred Resonance",
+		description = "Increases max mana by 2% per level.",
+		effect = {
+			{type = "condition", name = "Max Mana", value = 2},
+		},
+	},
+	["2:29"] = {
 		name = "Angelic Form",
-		description = "Learn spell Angelic Form",
+		description = "Learn the spell Angelic Form.",
 		effect = {
 			{type = "spell", name = "Angelic Form"},
+		},
+	},
+	["2:30"] = {
+		name = "Righteous Bulwark",
+		description = "Your faith hardens your strikes. Increases holy damage by 5% while you have unlocked Lawbringer's Shock and Sanctified Power.",
+		effect = {
+			{type = "condition", name = "Holy Damage", value = 5},
+		},
+	},
+	["2:31"] = {
+		name = "Sacred Sentinel",
+		description = "The light sustains both body and soul. Increases max health and mana by 3% while you have unlocked Echoing Command and Judgment of Wisdom.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 3},
+			{type = "condition", name = "Max Mana", value = 3},
 		},
 	},
 	["3:0"] = {
