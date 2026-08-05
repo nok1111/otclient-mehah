@@ -29,6 +29,13 @@ SpelllistSettings = {
       'Triple Slash',
       'Crimson Lotus',
       'Merciful End',
+      'Flash Steel',
+      'Death Mark',
+      'Iron Skin',
+      'Second Wind',
+      'Cyclone Slash',
+      'Searing Wind',
+      'Meditation',
 
       --Templar
       'Divine Punishment',
@@ -490,6 +497,13 @@ SpellInfo = {
     ['Triple Slash'] = {id = 257, words = 'triple slash', icon = 293, description = 'perform 1 to 3 rapid slashes on the target based on current Focus. Consumes all Focus.', exhaustion = 6000, premium = false, type = 'Instant', mana = 40, level = 30, soul = 0, group = {[1] = 1900}, vocations = {13}},
     ['Crimson Lotus'] = {id = 255, words = 'crimson lotus', icon = 298, description = 'ignite the area in front of you with a fiery lotus, dealing fire damage over time. Scales with Focus.', exhaustion = 25000, premium = false, type = 'Instant', mana = 90, level = 60, soul = 0, group = {[1] = 1900}, vocations = {13}},
     ['Merciful End'] = {id = 256, words = 'merciful end', icon = 290, description = 'finish off a wounded target with a devastating strike. Scales with Focus.', exhaustion = 30000, premium = false, type = 'Instant', mana = 75, level = 80, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Flash Steel'] = {id = 291, words = 'flash steel', icon = 287, description = 'hurl a blade of energy at a target up to 4 tiles away. Generates 1 Focus.', exhaustion = 3000, premium = false, type = 'Instant', mana = 20, level = 8, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Death Mark'] = {id = 292, words = 'death mark', icon = 292, description = 'mark a target for 8 seconds. Your finisher spells deal +20% damage to marked targets.', exhaustion = 15000, premium = false, type = 'Instant', mana = 25, level = 8, soul = 0, group = {[3] = 1100}, vocations = {13}},
+    ['Iron Skin'] = {id = 293, words = 'iron skin', icon = 297, description = 'reduce all damage taken by 30% + 10% per Focus stack consumed for 3 seconds. Consumes all Focus.', exhaustion = 15000, premium = false, type = 'Instant', mana = 40, level = 8, soul = 0, group = {[3] = 1100}, vocations = {13}},
+    ['Second Wind'] = {id = 294, words = 'second wind', icon = 297, description = 'instantly heal 15% max HP + 10% per Focus stack consumed. Consumes all Focus.', exhaustion = 20000, premium = false, type = 'Instant', mana = 50, level = 8, soul = 0, group = {[3] = 1100}, vocations = {13}},
+    ['Cyclone Slash'] = {id = 295, words = 'cyclone slash', icon = 289, description = 'spin in a whirlwind dealing physical damage to all enemies within 3 tiles. Generates 1 Focus.', exhaustion = 4000, premium = false, type = 'Instant', mana = 30, level = 8, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Searing Wind'] = {id = 296, words = 'searing wind', icon = 252, description = 'passive: your Wind Step leaves a trail of fire that burns enemies.', exhaustion = 1000, premium = false, type = 'Instant', mana = 0, level = 8, soul = 0, group = {[3] = 1100}, vocations = {13}},
+    ['Meditation'] = {id = 297, words = 'meditation', icon = 297, description = 'channel for 1 second to instantly gain 3 Focus stacks.', exhaustion = 15000, premium = false, type = 'Instant', mana = 20, level = 8, soul = 0, group = {[3] = 1100}, vocations = {13}},
 
 
         --Blood Mage

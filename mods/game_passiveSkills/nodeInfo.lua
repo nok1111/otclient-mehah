@@ -2133,4 +2133,185 @@ PassiveSkills.nodeInfo = {
 			{type = "storage", name = "EternalEcho", value = 15},
 		},
 	},
+	["13:0"] = {
+		name = "Bushido Spirit",
+		description = "The way of the warrior. Increases physical damage by 2% and max health by 2%.",
+		effect = {
+			{type = "condition", name = "Physical Damage", value = 2},
+			{type = "condition", name = "Max Health", value = 2},
+		},
+	},
+	["13:1"] = {
+		name = "Keen Edge",
+		description = "+3% physical damage per level.",
+		effect = {
+			{type = "condition", name = "Physical Damage", value = 3},
+		},
+	},
+	["13:2"] = {
+		name = "Focus Mastery",
+		description = "Maximum Focus stacks increased by 1 per level (up to 6).",
+		effect = {
+			{type = "storage", name = "FocusMastery", value = 1},
+		},
+	},
+	["13:3"] = {
+		name = "Sword Style",
+		description = "Choose your offensive specialization.",
+	},
+	["13:4"] = {
+		name = "Flash Steel",
+		description = "Learn the spell Flash Steel. Hurl a blade of energy at a target up to 4 tiles away, dealing physical damage and generating +1 Focus. 3s cooldown.",
+		effect = {
+			{type = "storage", name = "FlashSteel", value = 1},
+		},
+	},
+	["13:5"] = {
+		name = "Death Mark",
+		description = "Learn the spell Death Mark. Mark a target for 8 seconds. Your finisher spells deal +20% damage to marked targets. 15s cooldown.",
+		effect = {
+			{type = "storage", name = "DeathMark", value = 1},
+		},
+	},
+	["13:6"] = {
+		name = "Bloodletting",
+		description = "Crimson Lotus bleed duration +2s per level and bleed damage +10% per level. When a bleeding target dies, restore 5% max HP.",
+		effect = {
+			{type = "storage", name = "Bloodletting", value = 10},
+		},
+	},
+	["13:7"] = {
+		name = "Executioner's Edge",
+		description = "Merciful End execute threshold +5% per level (up to 40%). Execute damage +10% per level.",
+		effect = {
+			{type = "storage", name = "ExecutionersEdge", value = 5},
+		},
+	},
+	["13:8"] = {
+		name = "Blade Master",
+		description = "At maximum Focus, your finisher spells consume 0 Focus and deal +30% damage. 10 second cooldown after triggering.",
+		effect = {
+			{type = "storage", name = "BladeMaster", value = 1},
+		},
+	},
+	["13:11"] = {
+		name = "Iron Body",
+		description = "+3% max HP per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 3},
+		},
+	},
+	["13:12"] = {
+		name = "Focused Defense",
+		description = "Guardian Stance duration +2s per level and heal +5% per level.",
+		effect = {
+			{type = "storage", name = "FocusedDefense", value = 5},
+		},
+	},
+	["13:13"] = {
+		name = "Shield Style",
+		description = "Choose your defensive specialization.",
+	},
+	["13:14"] = {
+		name = "Iron Skin",
+		description = "Learn the spell Iron Skin. For 3 seconds, reduce all damage taken by 30% + 10% per Focus stack consumed. Consumes all Focus. 15s cooldown.",
+		effect = {
+			{type = "storage", name = "IronSkin", value = 1},
+		},
+	},
+	["13:15"] = {
+		name = "Second Wind",
+		description = "Learn the spell Second Wind. Instantly heal 15% max HP + 10% per Focus stack consumed. Consumes all Focus. 20s cooldown.",
+		effect = {
+			{type = "storage", name = "SecondWind", value = 1},
+		},
+	},
+	["13:16"] = {
+		name = "Parry",
+		description = "+3% dodge per level. When you dodge an attack, gain 1 Focus stack.",
+		effect = {
+			{type = "storage", name = "Parry", value = 3},
+		},
+	},
+	["13:17"] = {
+		name = "Undying Will",
+		description = "When you drop below 20% HP, gain 3 Focus stacks and 50% damage reduction for 4 seconds. 60s cooldown.",
+		effect = {
+			{type = "storage", name = "UndyingWill", value = 1},
+		},
+	},
+	["13:18"] = {
+		name = "Fortress",
+		description = "Guardian Stance now reflects 50% of melee damage to attackers. While Guardian Stance is active, you generate 1 Focus stack per second.",
+		effect = {
+			{type = "storage", name = "Fortress", value = 1},
+		},
+	},
+	["13:21"] = {
+		name = "Swift Feet",
+		description = "+2% movement speed per level.",
+		effect = {
+			{type = "condition", name = "Speed", value = 20},
+		},
+	},
+	["13:22"] = {
+		name = "Wind Step Mastery",
+		description = "Wind Step range +1 tile per level and cooldown -1s per level.",
+		effect = {
+			{type = "storage", name = "WindStepMastery", value = 1},
+		},
+	},
+	["13:23"] = {
+		name = "Wind Style",
+		description = "Choose your utility specialization.",
+	},
+	["13:24"] = {
+		name = "Cyclone Slash",
+		description = "Learn the spell Cyclone Slash. Spin in a whirlwind, dealing physical damage to all enemies within 3 tiles. Generates +1 Focus. 4s cooldown.",
+		effect = {
+			{type = "storage", name = "CycloneSlash", value = 1},
+		},
+	},
+	["13:25"] = {
+		name = "Searing Wind",
+		description = "Learn the spell Searing Wind. Your Wind Step leaves a trail of fire for 3 seconds that burns enemies standing in it. Passive enhancement.",
+		effect = {
+			{type = "storage", name = "SearingWind", value = 1},
+		},
+	},
+	["13:26"] = {
+		name = "Meditation",
+		description = "Learn the spell Meditation. Channel for 1 second to instantly gain 3 Focus stacks. 15s cooldown.",
+		effect = {
+			{type = "storage", name = "Meditation", value = 1},
+		},
+	},
+	["13:27"] = {
+		name = "Flowing Water",
+		description = "After using Wind Step, your next attack within 3s deals +15% damage per level and generates +1 Focus.",
+		effect = {
+			{type = "storage", name = "FlowingWater", value = 15},
+		},
+	},
+	["13:28"] = {
+		name = "Storm Spirit",
+		description = "Wind Step cooldown reduced by 50%. After dashing, gain Storm Spirit for 5s: +20% attack speed and your attacks hit all enemies within 2 tiles.",
+		effect = {
+			{type = "storage", name = "StormSpirit", value = 1},
+		},
+	},
+	["13:30"] = {
+		name = "Bushido",
+		description = "When you consume 3 Focus stacks on a finisher, gain Bushido for 6 seconds: +10% damage and +10% damage reduction.",
+		effect = {
+			{type = "storage", name = "Bushido", value = 1},
+		},
+	},
+	["13:31"] = {
+		name = "Zanshin",
+		description = "After consuming all Focus, your next builder spell within 3 seconds generates 2 Focus stacks instead of 1 and deals +25% damage.",
+		effect = {
+			{type = "storage", name = "Zanshin", value = 1},
+		},
+	},
 }
