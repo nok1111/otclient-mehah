@@ -440,134 +440,202 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["3:0"] = {
-		name = "Core",
-		description = "",
+		name = "Shadowborn Pact",
+		description = "Bind your soul to the shadows. Increases dodge chance by 2% and attack speed by 2%.",
+		effect = {
+			{type = "condition", name = "Dodge", value = 2},
+			{type = "condition", name = "Attack Speed", value = 2},
+		},
 	},
 	["3:1"] = {
 		name = "Veiled Might",
-		description = "Increase physical damage done by 6% per level",
+		description = "Increase physical damage done by 6% per level.",
 		effect = {
 			{type = "condition", name = "Physical Damage", value = 6},
 		},
 	},
 	["3:2"] = {
 		name = "Assassin's Mastery",
-		description = "Lethal Dagger now deals 5% (per level) extra physical damage and has a chance of 20% (per level) to apply a bleed to the target",
+		description = "Lethal Dagger deals 5% extra physical damage per level and has a 20% chance per level to apply bleed.",
 		effect = {
 			{type = "storage", name = "AssassinsMastery", value = 20},
 		},
 	},
 	["3:3"] = {
+		name = "Rupture Style",
+		description = "Choose your rupture specialization.",
+	},
+	["3:4"] = {
 		name = "Scent of Blood",
-		description = "Deal 3% (per level) extra damage to bleeding targets",
+		description = "Deal 3% extra damage per level to bleeding targets.",
 		effect = {
 			{type = "storage", name = "ScentOfBlood", value = 3},
 		},
 	},
-	["3:4"] = {
+	["3:5"] = {
 		name = "Virulent Rupture",
-		description = "Dark rupture has a 15% (per level) chance to spill corrupted blood over nearby targets applying the same bleeding effects at 35% effectiveness.",
+		description = "Dark Rupture has a 15% chance per level to spread corrupted blood to nearby targets at 35% effectiveness.",
 		effect = {
 			{type = "storage", name = "VirulentRupture", value = 15},
 		},
 	},
-	["3:5"] = {
+	["3:6"] = {
 		name = "Blood Drinker",
-		description = "Increases the amount of life leech by 1% (per level)",
+		description = "Increases life leech by 1% per level.",
 		effect = {
 			{type = "condition", name = "Life Leech", value = 1},
 		},
 	},
-	["3:6"] = {
+	["3:7"] = {
+		name = "Crimson Feast",
+		description = "Killing a bleeding target restores 5% of your max health per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 2},
+		},
+	},
+	["3:8"] = {
 		name = "Assassination",
-		description = "Learn spell Assassination",
+		description = "Learn the spell Assassination.",
 		effect = {
 			{type = "spell", name = "Assassination"},
 		},
 	},
-	["3:7"] = {
+	["3:11"] = {
 		name = "Quickstep",
-		description = "Increases Dodge Chance by 2% per level",
+		description = "Increases dodge chance by 2% per level.",
 		effect = {
 			{type = "condition", name = "Dodge", value = 2},
 		},
 	},
-	["3:8"] = {
+	["3:12"] = {
 		name = "Frenzied Blades",
-		description = "Increases attack speed by 2% per level",
+		description = "Increases attack speed by 2% per level.",
 		effect = {
 			{type = "condition", name = "Attack Speed", value = 2},
 		},
 	},
-	["3:9"] = {
+	["3:13"] = {
+		name = "Shadow Arts",
+		description = "Choose your shadow technique.",
+	},
+	["3:14"] = {
 		name = "Blackout",
-		description = "Learn spell Blackout",
+		description = "Learn the spell Blackout. Your attacks have a chance to blind the target, reducing their hit chance.",
 		effect = {
 			{type = "spell", name = "Blackout"},
 		},
 	},
-	["3:10"] = {
+	["3:15"] = {
 		name = "Death's Approach",
-		description = "lethal dagger has a 12% (per level) chance to teleport you to your marked target and deal an aditional extra deathdamage",
+		description = "Lethal Dagger has a 12% chance per level to teleport you to your marked target and deal extra death damage.",
 		effect = {
 			{type = "storage", name = "DeathApproach", value = 12},
 		},
 	},
-	["3:11"] = {
+	["3:16"] = {
 		name = "Killing Instinct",
-		description = "Increases critical chance by 2% per level",
+		description = "Increases critical hit chance by 2% per level.",
 		effect = {
-			{type = "condition", name = "Critcial Chance", value = 2},
+			{type = "condition", name = "Critical Hit Chance", value = 2},
 		},
 	},
-	["3:12"] = {
-		name = "Stealth",
-		description = "Increases stealth duration by 1 second per level",
+	["3:17"] = {
+		name = "Blur",
+		description = "Increases dodge chance by 3% per level.",
 		effect = {
+			{type = "condition", name = "Dodge", value = 3},
+		},
+	},
+	["3:18"] = {
+		name = "Bulwark of the Martyr",
+		description = "Increases max health by 2% per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 2},
+		},
+	},
+	["3:19"] = {
+		name = "Stealth",
+		description = "Learn the spell Stealth. Increases stealth duration by 1 second per level.",
+		effect = {
+			{type = "spell", name = "Stealth"},
 			{type = "storage", name = "StealthDuration", value = 1},
 		},
 	},
-	["3:13"] = {
+	["3:21"] = {
 		name = "Butcher's Art",
-		description = "Increases mutilate damage by 3% per level",
+		description = "Increases Mutilate damage by 3% per level.",
 		effect = {
 			{type = "storage", name = "ButchersArt", value = 3},
 		},
 	},
-	["3:14"] = {
+	["3:22"] = {
 		name = "Dark Transmutation",
-		description = "Transforms Mutilate damage into Death Damage and increases Death Damage done  by 8% per level",
+		description = "Transforms Mutilate damage into Death Damage and increases Death Damage done by 8% per level.",
 		effect = {
 			{type = "storage", name = "DarkTransmutation", value = 1},
 			{type = "condition", name = "Death Damage", value = 8},
 		},
 	},
-	["3:15"] = {
+	["3:23"] = {
+		name = "Corruption",
+		description = "Choose your path of corruption.",
+	},
+	["3:24"] = {
 		name = "Shadow Reflection",
-		description = "Lethal dagger now has a chance 12% per level to create a  shadow version of yourself wich deals death damage for 6 seconds.",
+		description = "Lethal Dagger has a 12% chance per level to create a shadow version of yourself that deals death damage for 6 seconds.",
 		effect = {
 			{type = "storage", name = "ShadowReflection", value = 12},
 		},
 	},
-	["3:16"] = {
+	["3:25"] = {
 		name = "Deathwind",
-		description = "Transforms Fan of Knives damage into Death Damage and increases its over time damage effect  by 4% per level",
+		description = "Transforms Fan of Knives damage into Death Damage and increases its over time effect by 4% per level.",
 		effect = {
 			{type = "storage", name = "Deathwind", value = 4},
 		},
 	},
-	["3:17"] = {
+	["3:26"] = {
 		name = "Deathbringer",
-		description = "Your melee attacks have a 3% (per level) chance to deal extra death damage on hit.",
+		description = "Your melee attacks have a 3% chance per level to deal extra death damage on hit.",
 		effect = {
 			{type = "storage", name = "Deathbringer", value = 3},
 		},
 	},
-	["3:18"] = {
+	["3:27"] = {
+		name = "Necrotic Edge",
+		description = "Increases death damage by 3% per level.",
+		effect = {
+			{type = "condition", name = "Death Damage", value = 3},
+		},
+	},
+	["3:28"] = {
+		name = "Umbral Clone",
+		description = "Your shadow reflection lasts 2 additional seconds per level and deals 5% more damage per level.",
+		effect = {
+			{type = "storage", name = "ShadowReflection", value = 5},
+		},
+	},
+	["3:29"] = {
 		name = "Void Execution",
-		description = "Learn spell Void Execution",
+		description = "Learn the spell Void Execution.",
 		effect = {
 			{type = "spell", name = "Void Execution"},
+		},
+	},
+	["3:30"] = {
+		name = "Bloodletter's Grasp",
+		description = "Your cruelty and agility feed each other. Increases critical hit chance by 3% and dodge by 3% while you have unlocked Virulent Rupture and Death's Approach.",
+		effect = {
+			{type = "condition", name = "Critical Hit Chance", value = 3},
+			{type = "condition", name = "Dodge", value = 3},
+		},
+	},
+	["3:31"] = {
+		name = "Void Dancer",
+		description = "The shadows bend to your will. Increases attack speed by 3% and death damage by 3% while you have unlocked Blur and Necrotic Edge.",
+		effect = {
+			{type = "condition", name = "Attack Speed", value = 3},
+			{type = "condition", name = "Death Damage", value = 3},
 		},
 	},
 	["4:0"] = {
