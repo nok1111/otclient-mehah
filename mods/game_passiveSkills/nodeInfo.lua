@@ -350,6 +350,13 @@ PassiveSkills.nodeInfo = {
 			{type = "spell", name = "Guardian of Light"},
 		},
 	},
+	["2:20"] = {
+		name = "Sacred Ground",
+		description = "Learn the spell Sacred Ground.",
+		effect = {
+			{type = "spell", name = "Sacred Ground"},
+		},
+	},
 	["2:21"] = {
 		name = "Well of Power",
 		description = "Increases max mana by 2% per level.",
@@ -423,6 +430,13 @@ PassiveSkills.nodeInfo = {
 		effect = {
 			{type = "condition", name = "Max Health", value = 3},
 			{type = "condition", name = "Max Mana", value = 3},
+		},
+	},
+	["2:32"] = {
+		name = "Kings Blessing",
+		description = "Learn the spell King's Blessing.",
+		effect = {
+			{type = "spell", name = "Kings Blessing"},
 		},
 	},
 	["3:0"] = {
