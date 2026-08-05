@@ -4,6 +4,6 @@ Module
   author: Fifth
   sandboxed: true
   autoload: true
-  scripts: [ passiveSkillsDataConfig, passiveSkills ]
+  scripts: [ passiveSkillsDataConfig, nodeInfo, passiveSkills ]
   @onLoad: PassiveSkills.init()
   @onUnload: PassiveSkills.terminate()

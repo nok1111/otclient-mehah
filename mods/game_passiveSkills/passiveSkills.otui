@@ -12,20 +12,29 @@ NodeButton < Button
   !tooltip: tr("Ctrl + left click to level up with out confirmation request")
 
 NodeEntry < Panel
-  size: 42 42
+  size: 44 44
   image-smooth: true
+  phantom: false
 
 NodeEntryBorder < Panel
-  size: 48 48
+  size: 50 50
   image-smooth: true
   anchors.centerIn: parent
-  phantom: false
+  phantom: true
 
 NodeEntryLevel < FlatPanel
   margin-top: -27
   text-auto-resize: true
   padding: 4
   color: #a098b0
+  background-color: #1a1525
+  border-width: 1
+  border-color: #2a2040
+
+NodeEntryLevel2D < FlatPanel
+  text-auto-resize: true
+  padding: 3
+  color: #f4ca16
   background-color: #1a1525
   border-width: 1
   border-color: #2a2040
@@ -119,7 +128,7 @@ FullLockUI < Panel
 MainWindow
   id: mainWindow
   !text: tr('Passive Skills')
-  size: 690 680
+  size: 900 760
 
   Button
     id: tabTalents
@@ -146,53 +155,30 @@ MainWindow
     border-width: 1
     border-color: #2a2040
 
-  Label
-    id: treeName
-    anchors.bottom: totalBuffsPanel.top
-    anchors.left: totalBuffsPanel.left
-    anchors.right: totalBuffsScrollBar.right
-    text-auto-resize: true
-    text-align: center
-    margin-bottom: 20
-    margin-left: 300
-    color: #f4ca16
-
-  UIScrollArea
-    id: totalBuffsPanel
-    image-source: /images/ui/window
-    image-border: 1
-    anchors.bottom: parent.bottom
+  CheckBox
+    id: devModeCheckBox
     anchors.top: parent.top
-    anchors.left: parent.left
-    margin-top: 30
-    margin-bottom: 40
-    margin-left: 10
-    margin-right: 20
-    width: 200
-    !text: tr('Total Buffs')
-    text-align: top
-    image-source: /images/ui/window
-    image-border: 6
-    image-border-top: 27
-    padding-top: 26
-    padding-left: 16
-    padding-right: 16
-    padding-bottom: 16
-    text-offset: 0 2
-    layout:
-      type: verticalBox
-      spacing: 1
-      align-top: true
-    vertical-scrollbar: totalBuffsScrollBar
+    anchors.left: tabAscension.right
+    margin-top: 4
+    margin-left: 8
+    size: 90 18
+    !text: tr('Dev Mode')
+    color: #ff4040
+    visible: false
 
-  VerticalScrollBar
-    id: totalBuffsScrollBar
-    anchors.top: totalBuffsPanel.top
-    anchors.bottom: totalBuffsPanel.bottom
-    anchors.right: totalBuffsPanel.right
-    margin-right: -10
-    pixels-scroll: true
-    step: 50
+  Button
+    id: devSaveButton
+    anchors.top: parent.top
+    anchors.left: devModeCheckBox.right
+    margin-top: 2
+    margin-left: 4
+    size: 70 22
+    !text: tr('Save')
+    color: #40ff40
+    background-color: #1a152080
+    border-width: 1
+    border-color: #2a2040
+    visible: false
 
   UIWidget
     id: background
@@ -203,41 +189,209 @@ MainWindow
     image-smooth: true
     border: 1 #f4ca16
 
-  UIScrollArea
+  Panel
     id: internalPanel
-    anchors.bottom: parent.bottom
+    anchors.bottom: legendPanel.top
     anchors.top: parent.top
-    anchors.left: totalBuffsPanel.right
+    anchors.left: parent.left
     anchors.right: parent.right
     margin-top: 30
-    margin-bottom: 50
+    margin-bottom: 4
     margin-left: 20
     margin-right: 20
     padding: 4
     layout:
       type: anchor
-      align-top: true
-    vertical-scrollbar: internalVerticalScrollBar
-    horizontal-scrollbar: internalHorizontalScrollBar
 
-  VerticalScrollBar
-    id: internalVerticalScrollBar
-    anchors.top: internalPanel.top
-    anchors.bottom: internalPanel.bottom
-    anchors.right: internalPanel.right
-    margin-right: -13
-    pixels-scroll: true
-    step: 50
+  Panel
+    id: legendPanel
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-bottom: 45
+    height: 95
+    background-color: #1a152580
+    border: 1 #2a2040
 
-  HorizontalScrollBar
-    id: internalHorizontalScrollBar
-    anchors.left: internalPanel.left
-    anchors.right: internalPanel.right
-    anchors.bottom: internalPanel.bottom
-    margin-bottom: -15
-    margin-right: 5
-    pixels-scroll: true
-    step: 50
+    Panel
+      id: legendStar
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      width: 225
+
+      NodeEntry
+        id: legendStarIcon
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 8
+        size: 36 36
+        image-source: images/icons/node.png
+
+        NodeEntryBorder
+          id: legendStarBorder
+          anchors.centerIn: parent
+          size: 42 42
+          image-color: #c0c0c0
+
+      Label
+        id: legendStarTitle
+        anchors.left: legendStarIcon.right
+        anchors.top: parent.top
+        margin-top: 8
+        margin-left: 8
+        text-auto-resize: true
+        color: #f4ca16
+        !text: tr('Star / Notable')
+
+      Label
+        id: legendStarDesc
+        anchors.left: legendStarIcon.right
+        anchors.top: legendStarTitle.bottom
+        anchors.right: parent.right
+        margin-top: 2
+        margin-left: 8
+        margin-right: 8
+        text-wrap: true
+        text-auto-resize: true
+        text-align: left
+        color: #a0a0b0
+        !text: tr('Stat and passive bonuses. Most common node type.')
+
+    Panel
+      id: legendFork
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: legendStar.right
+      width: 225
+
+      NodeEntry
+        id: legendForkIcon
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 8
+        size: 36 36
+        image-source: images/icons/node.png
+
+        NodeEntryBorder
+          id: legendForkBorder
+          anchors.centerIn: parent
+          size: 42 42
+          image-color: #40a0ff
+
+      Label
+        id: legendForkTitle
+        anchors.left: legendForkIcon.right
+        anchors.top: parent.top
+        margin-top: 8
+        margin-left: 8
+        text-auto-resize: true
+        color: #40a0ff
+        !text: tr('Fork')
+
+      Label
+        id: legendForkDesc
+        anchors.left: legendForkIcon.right
+        anchors.top: legendForkTitle.bottom
+        anchors.right: parent.right
+        margin-top: 2
+        margin-left: 8
+        margin-right: 8
+        text-wrap: true
+        text-auto-resize: true
+        text-align: left
+        color: #a0a0b0
+        !text: tr('Mutually exclusive choice. Locks the other path.')
+
+    Panel
+      id: legendKeystone
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: legendFork.right
+      width: 225
+
+      NodeEntry
+        id: legendKeystoneIcon
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 8
+        size: 36 36
+        image-source: images/icons/node.png
+
+        NodeEntryBorder
+          id: legendKeystoneBorder
+          anchors.centerIn: parent
+          size: 42 42
+          image-color: #ff8040
+
+      Label
+        id: legendKeystoneTitle
+        anchors.left: legendKeystoneIcon.right
+        anchors.top: parent.top
+        margin-top: 8
+        margin-left: 8
+        text-auto-resize: true
+        color: #ff8040
+        !text: tr('Keystone')
+
+      Label
+        id: legendKeystoneDesc
+        anchors.left: legendKeystoneIcon.right
+        anchors.top: legendKeystoneTitle.bottom
+        anchors.right: parent.right
+        margin-top: 2
+        margin-left: 8
+        margin-right: 8
+        text-wrap: true
+        text-auto-resize: true
+        text-align: left
+        color: #a0a0b0
+        !text: tr('Powerful capstone. One rank only.')
+
+    Panel
+      id: legendNexus
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: legendKeystone.right
+      width: 225
+
+      NodeEntry
+        id: legendNexusIcon
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 8
+        size: 36 36
+        image-source: images/icons/node.png
+
+        NodeEntryBorder
+          id: legendNexusBorder
+          anchors.centerIn: parent
+          size: 42 42
+          image-color: #40ff80
+
+      Label
+        id: legendNexusTitle
+        anchors.left: legendNexusIcon.right
+        anchors.top: parent.top
+        margin-top: 8
+        margin-left: 8
+        text-auto-resize: true
+        color: #40ff80
+        !text: tr('Nexus')
+
+      Label
+        id: legendNexusDesc
+        anchors.left: legendNexusIcon.right
+        anchors.top: legendNexusTitle.bottom
+        anchors.right: parent.right
+        margin-top: 2
+        margin-left: 8
+        margin-right: 8
+        text-wrap: true
+        text-auto-resize: true
+        text-align: left
+        color: #a0a0b0
+        !text: tr('Hybrid bridge between branches.')
 
   Label
     id: TotalPassivePoints
@@ -259,17 +413,33 @@ MainWindow
 
   Button
     id: CloseButton
-    anchors.right: internalVerticalScrollBar.right
+    anchors.right: parent.right
     anchors.bottom: parent.bottom
     margin-bottom: 3
+    margin-right: 3
     !text: tr('Close')
     @onClick: self:getParent():hide()
 
   Button
-    id: ResetButton
-    anchors.left: internalHorizontalScrollBar.left
+    id: ApplyButton
+    anchors.right: CloseButton.left
     anchors.bottom: parent.bottom
     margin-bottom: 3
+    margin-right: 8
+    size: 70 22
+    color: #40ff40
+    background-color: #1a152080
+    border-width: 1
+    border-color: #2a2040
+    !text: tr('Apply')
+
+  Button
+    id: ResetButton
+    anchors.right: ApplyButton.left
+    anchors.bottom: parent.bottom
+    margin-bottom: 3
+    margin-right: 8
+    size: 70 22
     !text: tr('Reset')
 
   UIScrollArea

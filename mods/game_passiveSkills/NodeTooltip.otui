@@ -2,28 +2,93 @@ UIWindow
   id: NodeTooltip
   text-offset: 0 4
   text-align: top
+  color: #f4ca16
   image-source: images/minipanel
   image-border: 9
   image-border-top: 27
-  width: 300
+  width: 340
+  min-width: 220
+  max-width: 480
+  height: 60
+  min-height: 60
   phantom: true
-  padding: 15
+  padding: 8
+
   Label
-    id: description
+    id: title
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
-    margin-top: 25
-    margin-right: 5
-    margin-left: 5
+    margin-top: 12
+    margin-left: 10
+    margin-right: 10
     text-wrap: true
     text-auto-resize: true
-    text-align: center
+    text-align: left
+    color: #f4ca16
+
   Label
-    id: maxLevel
-    anchors.top: description.bottom
-    anchors.horizontalCenter: parent.horizontalCenter
-    margin-top: 10
+    id: subtitle
+    anchors.top: title.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 0
+    margin-left: 10
+    margin-right: 10
     text-wrap: true
     text-auto-resize: true
-    text-align: center
+    text-align: left
+    color: #ffaa00
+
+  Label
+    id: classLine
+    anchors.top: subtitle.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 0
+    margin-left: 10
+    margin-right: 10
+    text-wrap: true
+    text-auto-resize: true
+    text-align: left
+    color: #f4ca16
+
+  Label
+    id: requirementLine
+    anchors.top: classLine.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 0
+    margin-left: 10
+    margin-right: 10
+    text-wrap: true
+    text-auto-resize: true
+    text-align: left
+    color: #ff4040
+
+  Label
+    id: description
+    anchors.top: requirementLine.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 2
+    margin-left: 10
+    margin-right: 10
+    text-wrap: true
+    text-auto-resize: true
+    text-align: left
+    color: #e0d8f0
+
+  Label
+    id: extraInfo
+    anchors.top: description.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 0
+    margin-bottom: 4
+    margin-left: 10
+    margin-right: 10
+    text-wrap: true
+    text-auto-resize: true
+    text-align: left
+    color: #a0a0b0
