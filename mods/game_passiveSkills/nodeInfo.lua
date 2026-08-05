@@ -1214,134 +1214,187 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["7:0"] = {
-		name = "Core",
-		description = "",
+		name = "Inner Peace",
+		description = "Balance your body and spirit. Increases max health by 2% and healing effectiveness by 2%.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 2},
+			{type = "condition", name = "Healing Effectiveness", value = 2},
+		},
 	},
 	["7:1"] = {
 		name = "Elemental Harmony",
-		description = "Increases the damage of your elemental fists (Fire, Ice, Life) by 2% per level when used in combination",
+		description = "Increases the damage of your elemental fists (Fire, Ice, Life) by 2% per level when used in combination.",
 		effect = {
 			{type = "storage", name = "ElementalHarmony", value = 2},
 		},
 	},
 	["7:2"] = {
 		name = "Vital Points",
-		description = "Increase critical strike chance by 2% per level",
+		description = "Increase critical strike chance by 2% per level.",
 		effect = {
-			{type = "condition", name = "Critical Strike", value = 2},
+			{type = "condition", name = "Critical Hit Chance", value = 2},
 		},
 	},
 	["7:3"] = {
+		name = "Combat Style",
+		description = "Choose your combat specialization.",
+	},
+	["7:4"] = {
 		name = "Mystic Punch",
-		description = "you have a 3% (per level) chance to land a mystic punch every time you deal physical damage",
+		description = "You have a 3% chance per level to land a Mystic Punch every time you deal physical damage.",
 		effect = {
 			{type = "storage", name = "MysticPunch", value = 3},
 		},
 	},
-	["7:4"] = {
+	["7:5"] = {
 		name = "Inner Tempo",
-		description = "Landing a mystic punch increases your attack speed by 8% (per level) for 5 seconds",
+		description = "Landing a Mystic Punch increases your attack speed by 8% per level for 5 seconds.",
 		effect = {
 			{type = "storage", name = "InnerTempo", value = 8},
 		},
 	},
-	["7:5"] = {
+	["7:6"] = {
 		name = "Stormfist",
-		description = "Learn Spell Stormfist\n For the next 3 seconds your physical damage sends a lighting shock to nearby target",
+		description = "Learn the spell Stormfist. For the next 3 seconds your physical damage sends a lightning shock to nearby targets.",
 		effect = {
 			{type = "spell", name = "Stormfist"},
 		},
 	},
-	["7:6"] = {
+	["7:7"] = {
+		name = "Fist Mastery",
+		description = "Increases physical damage by 3% per level.",
+		effect = {
+			{type = "condition", name = "Physical Damage", value = 3},
+		},
+	},
+	["7:8"] = {
 		name = "Tempest God",
-		description = "Empowers Stormfist, extending its duration by 1 second and amplifying its damage by 10% (per level)",
+		description = "Empowers Stormfist, extending its duration by 1 second and amplifying its damage by 10% per level.",
 		effect = {
 			{type = "storage", name = "StormfistDuration", value = 1},
 			{type = "storage", name = "StormfistDamage", value = 10},
 		},
 	},
-	["7:7"] = {
+	["7:11"] = {
 		name = "Rock Mentality",
-		description = "Increases max health by 3.0% per level",
+		description = "Increases max health by 3% per level.",
 		effect = {
-			{type = "condition", name = "MaxHealthPercent", value = 3},
+			{type = "condition", name = "Max Health", value = 3},
 		},
 	},
-	["7:8"] = {
+	["7:12"] = {
 		name = "Meditative Recovery",
 		description = "Every time you use a monk healing spell, restore 1.2% of your maximum health and 2% of your maximum mana.",
 		effect = {
 			{type = "storage", name = "MeditativeRecovery", value = 2},
 		},
 	},
-	["7:9"] = {
+	["7:13"] = {
+		name = "Mountain Style",
+		description = "Choose your mountain specialization.",
+	},
+	["7:14"] = {
 		name = "Mountain Stance",
-		description = "Learn spell Mountain Stance\nReduce Damage taken by 30% and increases your max health by 25% for 10 seconds",
+		description = "Learn the spell Mountain Stance. Reduces damage taken by 30% and increases your max health by 25% for 10 seconds.",
 		effect = {
 			{type = "spell", name = "Mountain Stance"},
 		},
 	},
-	["7:10"] = {
+	["7:15"] = {
 		name = "Glacial Palm",
-		description = "Your adaptive punch (ice + ice) now has a 5% (per level) chance to trigger Glacial Palm wich deals damage to the target and all nearby enemies.",
+		description = "Your adaptive punch (Ice + Ice) now has a 5% chance per level to trigger Glacial Palm which deals damage to the target and all nearby enemies.",
 		effect = {
 			{type = "storage", name = "GlacialPalm", value = 5},
 		},
 	},
-	["7:11"] = {
+	["7:16"] = {
 		name = "Frozen Lotus",
-		description = "Triggering glacial palm will now heal you by 15% (per level) of the damage done .",
+		description = "Triggering Glacial Palm will now heal you by 15% per level of the damage done.",
 		effect = {
 			{type = "storage", name = "FrozenLotus", value = 15},
 		},
 	},
-	["7:12"] = {
+	["7:17"] = {
 		name = "Frost Blossom",
-		description = "Increase the damage by Glacial Palm and Frozen Lotus haling by 6% (per level)",
+		description = "Increase the damage of Glacial Palm and Frozen Lotus healing by 6% per level.",
 		effect = {
 			{type = "storage", name = "FrostBlossom", value = 6},
 		},
 	},
-	["7:13"] = {
+	["7:18"] = {
+		name = "Eternal Mountain",
+		description = "While Mountain Stance is active, you also reflect 15% of incoming damage back to attackers as ice damage.",
+		effect = {
+			{type = "storage", name = "FrostBlossom", value = 15},
+		},
+	},
+	["7:21"] = {
 		name = "Vital Palm",
-		description = "Increase the healing effectiveness of your adaptive punch (life + life) by 10% (per level)",
+		description = "Increase the healing effectiveness of your adaptive punch (Life + Life) by 10% per level.",
 		effect = {
 			{type = "storage", name = "VitalPalm", value = 10},
 		},
 	},
-	["7:14"] = {
+	["7:22"] = {
 		name = "Chi Transfer",
-		description = "Dealing physical melee damage has a chance 3% chance (per level) to send chi healing wave to a nearby ally.",
+		description = "Dealing physical melee damage has a 3% chance per level to send a chi healing wave to a nearby ally.",
 		effect = {
 			{type = "storage", name = "ChiTransfer", value = 3},
 		},
 	},
-	["7:15"] = {
+	["7:23"] = {
+		name = "Chi Style",
+		description = "Choose your chi specialization.",
+	},
+	["7:24"] = {
 		name = "Mystic Reserves",
-		description = "increase your maximum mana by 10% (per level)",
+		description = "Increase your maximum mana by 5% per level.",
 		effect = {
-			{type = "condition", name = "MaxManaPercent", value = 5},
+			{type = "condition", name = "Max Mana", value = 5},
 		},
 	},
-	["7:16"] = {
+	["7:25"] = {
 		name = "Life Pulse",
-		description = "Every third consecutive Life punch has a 20% (per level) chance to triger a healing chi wave wich heals a random nearby ally.",
+		description = "Every third consecutive Life punch has a 20% chance per level to trigger a healing chi wave which heals a random nearby ally.",
 		effect = {
 			{type = "storage", name = "LifePulse", value = 20},
 		},
 	},
-	["7:17"] = {
+	["7:26"] = {
 		name = "Zen Barrier",
-		description = "Learn spell Zen Barrier\nPlace a serenity sphere on a chosen player for 8 seconds. Each time they take damage, the sphere absorbs the damage and instantly heals them for the same amount.",
+		description = "Learn the spell Zen Barrier. Place a serenity sphere on a chosen player for 8 seconds. Each time they take damage, the sphere absorbs the damage and instantly heals them for the same amount.",
 		effect = {
 			{type = "spell", name = "Zen Barrier"},
 		},
 	},
-	["7:18"] = {
+	["7:27"] = {
 		name = "Serene Amplification",
-		description = "Increase the healing effectiveness of zen barrier when is casted on yourself and the healing effectiveness of fist of life by 10% (per level)",
+		description = "Increase the healing effectiveness of Zen Barrier when cast on yourself and the healing effectiveness of Fist of Life by 10% per level.",
 		effect = {
 			{type = "storage", name = "SereneAmplification", value = 10},
+		},
+	},
+	["7:28"] = {
+		name = "Enlightened State",
+		description = "When you heal an ally below 30% health, you enter Enlightened State for 5 seconds: +10% healing effectiveness and your next punch costs no mana. 20 second cooldown.",
+		effect = {
+			{type = "condition", name = "Healing Effectiveness", value = 10},
+		},
+	},
+	["7:30"] = {
+		name = "Tempest Mountain",
+		description = "Your fury and stone combine. Increases critical hit chance by 3% and max health by 3% while you have unlocked Inner Tempo and Mountain Stance.",
+		effect = {
+			{type = "condition", name = "Critical Hit Chance", value = 3},
+			{type = "condition", name = "Max Health", value = 3},
+		},
+	},
+	["7:31"] = {
+		name = "Serene Storm",
+		description = "Your stone and chi combine. Increases max health by 3% and healing effectiveness by 3% while you have unlocked Glacial Palm and Life Pulse.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 3},
+			{type = "condition", name = "Healing Effectiveness", value = 3},
 		},
 	},
 	["8:0"] = {
