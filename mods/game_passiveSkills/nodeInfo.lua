@@ -843,74 +843,61 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["5:0"] = {
-		name = "Core",
-		description = "",
+		name = "Forbidden Pact",
+		description = "Bind yourself to forbidden powers. Increases max health by 2% and death damage by 2%.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 2},
+			{type = "condition", name = "Death Damage", value = 2},
+		},
 	},
 	["5:1"] = {
-		name = "Immortal Flesh",
-		description = "Increase you max health by 3% (per level)",
-		effect = {
-			{type = "condition", name = "MaxHealthPercent", value = 3},
-		},
-	},
-	["5:2"] = {
-		name = "Dark Aura",
-		description = "Learn spell Dark Aura",
-		effect = {
-			{type = "spell", name = "Dark Aura"},
-		},
-	},
-	["5:3"] = {
-		name = "Lingering Darkness",
-		description = "Increase the duration of Dark Aura by 0.5 seconds (per level)",
-		effect = {
-			{type = "storage", name = "LingeringDarkness", value = 5},
-		},
-	},
-	["5:4"] = {
 		name = "Malefic Persistence",
-		description = "Increases the duration of Curse by 0.5 second (per level) \nIncreases curse damage by 3% (per level)",
+		description = "Increases the duration of Curse by 0.5 seconds per level and increases curse damage by 3% per level.",
 		effect = {
 			{type = "storage", name = "MaleficPersistencedamage", value = 3},
 			{type = "storage", name = "MaleficPersistenceDuration", value = 5},
 		},
 	},
-	["5:5"] = {
+	["5:2"] = {
 		name = "Malediction",
-		description = "Learn spell Malediction",
+		description = "Learn the spell Malediction.",
 		effect = {
 			{type = "spell", name = "Malediction"},
 		},
 	},
-	["5:6"] = {
+	["5:3"] = {
+		name = "Plague Spread",
+		description = "Choose your plague specialization.",
+	},
+	["5:4"] = {
 		name = "Plague Detonation",
-		description = "When Malediction is applied to a target, it has a 20% (per level) chance to explode and send malefic pestilence to nearby enemies",
+		description = "When Malediction is applied to a target, it has a 20% chance per level to explode and send malefic pestilence to nearby enemies.",
 		effect = {
 			{type = "storage", name = "PlagueDetonation", value = 20},
 		},
 	},
-	["5:7"] = {
-		name = "Dark Plague",
-		description = "Learn spell Dark Plague",
-		effect = {
-			{type = "spell", name = "Dark Plague"},
-		},
-	},
-	["5:8"] = {
+	["5:5"] = {
 		name = "Lasting Blight",
-		description = "Increase malediction, curse and dark plague duration by 0.5 seconds per level",
+		description = "Increase Malediction, Curse and Dark Plague duration by 0.5 seconds per level.",
 		effect = {
 			{type = "storage", name = "LastingBlight", value = 5},
 		},
 	},
-	["5:9"] = {
+	["5:6"] = {
+		name = "Dark Plague",
+		description = "Learn the spell Dark Plague.",
+		effect = {
+			{type = "spell", name = "Dark Plague"},
+		},
+	},
+	["5:7"] = {
 		name = "Soulstorm",
-		description = "drain soul now also affect an additional nearby cursed enemies around your targets. (+1 additional enemy per level)",
+		description = "Drain Soul now also affects additional nearby cursed enemies around your targets. +1 additional enemy per level.",
 		effect = {
 			{type = "storage", name = "Soulstorm", value = 1},
 		},
 	},
-	["5:10"] = {
+	["5:8"] = {
 		name = "Soulstorm Echoes",
 		description = "Increases the number of times Drain Soul damages its targets by 1 per level.",
 		effect = {
@@ -919,66 +906,125 @@ PassiveSkills.nodeInfo = {
 	},
 	["5:11"] = {
 		name = "Demonic Bulwark",
-		description = "Increase the max health of your summons by an aditional 18% per level",
+		description = "Increase the max health of your summons by an additional 18% per level.",
 		effect = {
 			{type = "storage", name = "DemonicBulwark", value = 18},
 		},
 	},
 	["5:12"] = {
 		name = "Legion Mastery",
-		description = "Increase the maximum number of Servants you can control by 1 (per level) and increase your chance to successfully summon by 100% per level.",
+		description = "Increase the maximum number of Servants you can control by 1 per level and increase your chance to successfully summon by 100% per level.",
 		effect = {
 			{type = "storage", name = "LegionMasteryNumber", value = 1},
 			{type = "storage", name = "LegionMasteryChance", value = 1},
 		},
 	},
 	["5:13"] = {
+		name = "Command Style",
+		description = "Choose your command specialization.",
+	},
+	["5:14"] = {
 		name = "Infernal Command",
-		description = "Increases the damage of your summons by 4% (per level).",
+		description = "Increases the damage of your summons by 4% per level.",
 		effect = {
 			{type = "storage", name = "InfernalCommand", value = 4},
 		},
 	},
-	["5:14"] = {
-		name = "Void Mender",
-		description = "Learn Spell Summon Void Mender",
-		effect = {
-			{type = "spell", name = "Summon Void Mender"},
-		},
-	},
 	["5:15"] = {
 		name = "Abyssal Refund",
-		description = "Your void mender now restores a part of your mana every time it heals a target \nIncrease the healing efficiency by 7% (per level).",
+		description = "Your Void Mender restores part of your mana every time it heals a target. Increase healing efficiency by 7% per level.",
 		effect = {
 			{type = "storage", name = "AbyssalRefund", value = 7},
 		},
 	},
 	["5:16"] = {
+		name = "Void Mender",
+		description = "Learn the spell Summon Void Mender.",
+		effect = {
+			{type = "spell", name = "Summon Void Mender"},
+		},
+	},
+	["5:17"] = {
+		name = "Soul Link",
+		description = "Your summons share 3% of their max health with you per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 3},
+		},
+	},
+	["5:18"] = {
 		name = "Void Guard",
-		description = "Learn Spell Summon Void Guard",
+		description = "Learn the spell Summon Void Guard.",
 		effect = {
 			{type = "spell", name = "Summon Void Guard"},
 		},
 	},
-	["5:17"] = {
+	["5:21"] = {
+		name = "Immortal Flesh",
+		description = "Increase your max health by 3% per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 3},
+		},
+	},
+	["5:22"] = {
+		name = "Dark Aura",
+		description = "Learn the spell Dark Aura.",
+		effect = {
+			{type = "spell", name = "Dark Aura"},
+		},
+	},
+	["5:23"] = {
+		name = "Pact Style",
+		description = "Choose your pact specialization.",
+	},
+	["5:24"] = {
+		name = "Lingering Darkness",
+		description = "Increase the duration of Dark Aura by 0.5 seconds per level.",
+		effect = {
+			{type = "storage", name = "LingeringDarkness", value = 5},
+		},
+	},
+	["5:25"] = {
 		name = "Pactmaster's Gift",
-		description = "Increase the mana transfer from blood pact by 12% per level",
+		description = "Increase the mana transfer from Blood Pact by 12% per level.",
 		effect = {
 			{type = "storage", name = "PactmasterGift", value = 12},
 		},
 	},
-	["5:18"] = {
+	["5:26"] = {
 		name = "Sanguine Shield",
-		description = "Increases the effectiveness of Blood Wall by 12% per level\n\n\nThis node does not require a previous node to be unlocked",
+		description = "Increases the effectiveness of Blood Wall by 12% per level.",
 		effect = {
 			{type = "storage", name = "BloodWall", value = 12},
 		},
 	},
-	["5:19"] = {
+	["5:27"] = {
+		name = "Demonic Vigor",
+		description = "Increases life leech by 2% per level.",
+		effect = {
+			{type = "condition", name = "Life Leech", value = 2},
+		},
+	},
+	["5:28"] = {
 		name = "Zombie Wall",
-		description = "Learn Spell Zombie Wall\n\n\nThis node does not require a previous node to be unlocked",
+		description = "Learn the spell Zombie Wall.",
 		effect = {
 			{type = "spell", name = "Zombie Wall"},
+		},
+	},
+	["5:30"] = {
+		name = "Plaguebringer",
+		description = "Your blight and vitality combine. Increases death damage by 3% and max health by 3% while you have unlocked Lasting Blight and Lingering Darkness.",
+		effect = {
+			{type = "condition", name = "Death Damage", value = 3},
+			{type = "condition", name = "Max Health", value = 3},
+		},
+	},
+	["5:31"] = {
+		name = "Soul Harvester",
+		description = "Your curses and legion combine. Increases curse damage by 3% and summon damage by 3% while you have unlocked Soulstorm and Infernal Command.",
+		effect = {
+			{type = "condition", name = "Death Damage", value = 3},
+			{type = "storage", name = "InfernalCommand", value = 3},
 		},
 	},
 	["6:0"] = {
