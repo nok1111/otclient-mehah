@@ -2314,4 +2314,185 @@ PassiveSkills.nodeInfo = {
 			{type = "storage", name = "Zanshin", value = 1},
 		},
 	},
+	["14:0"] = {
+		name = "Sanguine Heritage",
+		description = "Blood is power. Increases lifesteal by 2% and max Blood Essence by 5.",
+		effect = {
+			{type = "condition", name = "Lifesteal", value = 2},
+			{type = "storage", name = "EssenceFlow", value = 5},
+		},
+	},
+	["14:1"] = {
+		name = "Blood Power",
+		description = "+3% damage per level.",
+		effect = {
+			{type = "condition", name = "Physical Damage", value = 3},
+		},
+	},
+	["14:2"] = {
+		name = "Bleed Mastery",
+		description = "Bleed damage +15% per level and bleed duration +1s per level.",
+		effect = {
+			{type = "storage", name = "BleedMastery", value = 15},
+		},
+	},
+	["14:3"] = {
+		name = "Crimson Fork",
+		description = "Choose your offensive specialization.",
+	},
+	["14:4"] = {
+		name = "Blood Curse",
+		description = "Learn the spell Blood Curse. Debuff a target for 6 seconds: target takes +15% damage and healing received is reduced by 50%. 12s cooldown.",
+		effect = {
+			{type = "storage", name = "BloodCurse", value = 1},
+		},
+	},
+	["14:5"] = {
+		name = "Crimson Rain",
+		description = "Learn the spell Crimson Rain. Call down a rain of blood on a 3x3 area for 5 seconds, applying bleeds to all enemies standing in it. 10s cooldown.",
+		effect = {
+			{type = "storage", name = "CrimsonRain", value = 1},
+		},
+	},
+	["14:6"] = {
+		name = "Eruption Mastery",
+		description = "Blood Eruption damage bonus per bleed consumed +10% per level and shield cap +5% per level.",
+		effect = {
+			{type = "storage", name = "EruptionMastery", value = 10},
+		},
+	},
+	["14:7"] = {
+		name = "Frenzy Mastery",
+		description = "Blood Frenzy duration +2s per level and damage bonus +5% per level.",
+		effect = {
+			{type = "storage", name = "FrenzyMastery", value = 5},
+		},
+	},
+	["14:8"] = {
+		name = "Crimson Devastation",
+		description = "Blood Detonation damage +50%. Survivors of Blood Detonation get a new bleed applied (4 ticks, 25% heal).",
+		effect = {
+			{type = "storage", name = "CrimsonDevastation", value = 1},
+		},
+	},
+	["14:11"] = {
+		name = "Vitality",
+		description = "+3% max HP per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 3},
+		},
+	},
+	["14:12"] = {
+		name = "Lifesteal Mastery",
+		description = "+2% lifesteal per level.",
+		effect = {
+			{type = "condition", name = "Lifesteal", value = 2},
+		},
+	},
+	["14:13"] = {
+		name = "Sanguine Fork",
+		description = "Choose your defensive specialization.",
+	},
+	["14:14"] = {
+		name = "Sanguine Shield",
+		description = "Learn the spell Sanguine Shield. For 5 seconds, 20% of incoming damage is converted to Blood Essence instead of dealing damage. 15s cooldown.",
+		effect = {
+			{type = "storage", name = "SanguineShield", value = 1},
+		},
+	},
+	["14:15"] = {
+		name = "Vampiric Aura",
+		description = "Learn the spell Vampiric Aura. For 10 seconds, all allies within 5 tiles gain 10% lifesteal. 20s cooldown.",
+		effect = {
+			{type = "storage", name = "VampiricAura", value = 1},
+		},
+	},
+	["14:16"] = {
+		name = "Pool Mastery",
+		description = "Sanguine Pool duration +1s per level and shield +5% per level.",
+		effect = {
+			{type = "storage", name = "PoolMastery", value = 5},
+		},
+	},
+	["14:17"] = {
+		name = "Blood Armor",
+		description = "When you kill a bleeding target, gain a shield equal to 10% max HP for 5 seconds.",
+		effect = {
+			{type = "storage", name = "BloodArmor", value = 1},
+		},
+	},
+	["14:18"] = {
+		name = "Sanguine Fortress",
+		description = "Sanguine Pool now cleanses all debuffs on cast and grants CC immunity for its duration.",
+		effect = {
+			{type = "storage", name = "SanguineFortress", value = 1},
+		},
+	},
+	["14:21"] = {
+		name = "Essence Flow",
+		description = "+5 max Blood Essence per level (up to 115).",
+		effect = {
+			{type = "storage", name = "EssenceFlow", value = 5},
+		},
+	},
+	["14:22"] = {
+		name = "Orb Mastery",
+		description = "+1 max Blood Orb per level (up to 8).",
+		effect = {
+			{type = "storage", name = "OrbMastery", value = 1},
+		},
+	},
+	["14:23"] = {
+		name = "Hemomancy Fork",
+		description = "Choose your utility specialization.",
+	},
+	["14:24"] = {
+		name = "Blood Walk",
+		description = "Learn the spell Blood Walk. Teleport to a bleeding target within 6 tiles, dealing AoE damage on arrival. 6s cooldown.",
+		effect = {
+			{type = "storage", name = "BloodWalk", value = 1},
+		},
+	},
+	["14:25"] = {
+		name = "Crimson Chains",
+		description = "Learn the spell Crimson Chains. Root all enemies within 3 tiles for 3 seconds. 12s cooldown.",
+		effect = {
+			{type = "storage", name = "CrimsonChains", value = 1},
+		},
+	},
+	["14:26"] = {
+		name = "Tether Mastery",
+		description = "Blood Tether duration +1s per level and damage +10% per level.",
+		effect = {
+			{type = "storage", name = "TetherMastery", value = 10},
+		},
+	},
+	["14:27"] = {
+		name = "Blood Ritual",
+		description = "Learn the spell Blood Ritual. Toggle: sacrifice 5% HP per second for 15 Blood Essence per second. 1s cooldown to toggle off.",
+		effect = {
+			{type = "storage", name = "BloodRitual", value = 1},
+		},
+	},
+	["14:28"] = {
+		name = "Hemomancy Mastery",
+		description = "Blood Lance only consumes 50% of orbs (rounded down). During Blood Frenzy, Blood Lance applies 2 bleeds instead of 1.",
+		effect = {
+			{type = "storage", name = "HemomancyMastery", value = 1},
+		},
+	},
+	["14:30"] = {
+		name = "Blood Sovereignty",
+		description = "When you enter Blood Frenzy, all active bleeds on enemies are instantly triggered (deal all remaining damage at once).",
+		effect = {
+			{type = "storage", name = "BloodSovereignty", value = 1},
+		},
+	},
+	["14:31"] = {
+		name = "Eternal Thirst",
+		description = "While in Blood Frenzy, all spell HP costs are reduced by 50%.",
+		effect = {
+			{type = "storage", name = "EternalThirst", value = 1},
+		},
+	},
 }
