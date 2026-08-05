@@ -1952,4 +1952,185 @@ PassiveSkills.nodeInfo = {
 			{type = "condition", name = "Ice Damage", value = 3},
 		},
 	},
+	["11:0"] = {
+		name = "Virtuoso",
+		description = "You are a master of sound and spirit. Increases energy damage by 2% and healing effectiveness by 2%.",
+		effect = {
+			{type = "condition", name = "Energy Damage", value = 2},
+			{type = "condition", name = "Healing Effectiveness", value = 2},
+		},
+	},
+	["11:1"] = {
+		name = "Sonic Amplification",
+		description = "+3% energy damage per level.",
+		effect = {
+			{type = "storage", name = "SonicAmplification", value = 3},
+		},
+	},
+	["11:2"] = {
+		name = "Dissonant Surge",
+		description = "When Dissonance exceeds 70, your attack spells have a 5% chance per level to trigger a free Echo Strike on the target.",
+		effect = {
+			{type = "storage", name = "DissonantSurge", value = 5},
+		},
+	},
+	["11:3"] = {
+		name = "Strike Style",
+		description = "Choose your offensive specialization.",
+	},
+	["11:4"] = {
+		name = "Resonance Spread",
+		description = "Resonant Chorus now applies Resonance to up to 2 additional enemies per level hit by the spell.",
+		effect = {
+			{type = "storage", name = "ResonanceSpread", value = 2},
+		},
+	},
+	["11:5"] = {
+		name = "Discordant Wrath",
+		description = "Discordant Verse now hits all enemies within 2 tiles of the target. If the target has Resonance, the debuff spreads to all hit enemies.",
+		effect = {
+			{type = "storage", name = "DiscordantWrath", value = 1},
+		},
+	},
+	["11:6"] = {
+		name = "Harmonic Overload",
+		description = "Harmonic Collapse detonations leave a sonic field for 3 seconds that deals energy damage per second to enemies inside. +10% explosion damage per level.",
+		effect = {
+			{type = "storage", name = "HarmonicOverload", value = 10},
+		},
+	},
+	["11:7"] = {
+		name = "Dissonant Frenzy",
+		description = "While Dissonance is above 50, your attack spells deal +3% energy damage per level. While Dissonance is above 80, your critical hits with attack spells deal +5% extra damage per level.",
+		effect = {
+			{type = "storage", name = "DissonantFrenzy", value = 3},
+		},
+	},
+	["11:8"] = {
+		name = "Apocalypse Master",
+		description = "Grand Finale (Dissonance mode) now also consumes all Resonance marks, each adding 15% damage. Requiem storage increased to 30%. Self-vulnerability debuff removed entirely.",
+		effect = {
+			{type = "storage", name = "ApocalypseMaster", value = 1},
+		},
+	},
+	["11:11"] = {
+		name = "Harmonious Aura",
+		description = "+3% healing effectiveness per level.",
+		effect = {
+			{type = "condition", name = "Healing Effectiveness", value = 3},
+		},
+	},
+	["11:12"] = {
+		name = "Extended Performance",
+		description = "Melody pulse range +1 per level and duration +3s per level.",
+		effect = {
+			{type = "storage", name = "ExtendedPerformance", value = 1},
+		},
+	},
+	["11:13"] = {
+		name = "Melodic Style",
+		description = "Choose your support specialization.",
+	},
+	["11:14"] = {
+		name = "Cheerful Cleansing",
+		description = "Cheerful Melody now cleanses 1 negative condition per level from allies on application. Burst heal +10% per level.",
+		effect = {
+			{type = "storage", name = "CheerfulCleansing", value = 1},
+		},
+	},
+	["11:15"] = {
+		name = "Menacing Pressure",
+		description = "Menacing Melody's damage taken debuff increases by +3% per level (from 15% base). Stun duration +0.5s per level.",
+		effect = {
+			{type = "storage", name = "MenacingPressure", value = 3},
+		},
+	},
+	["11:16"] = {
+		name = "Cathartic Resonance",
+		description = "Cathartic Melody's damage buff now also applies to spell damage. Burst damage +8% per level.",
+		effect = {
+			{type = "storage", name = "CatharticResonance", value = 8},
+		},
+	},
+	["11:17"] = {
+		name = "Harmonious Overflow",
+		description = "While Harmony is above 65, your melody effects are 20% stronger per level (healing, mana regen, speed, debuff). +2% max health per level.",
+		effect = {
+			{type = "storage", name = "HarmoniousOverflow", value = 20},
+		},
+	},
+	["11:18"] = {
+		name = "Elysian Master",
+		description = "Grand Finale (Harmony mode) shield increased to 25% max HP. Cleansed allies gain immunity to negative conditions for 4s. Mana restore increased to 50% of heal.",
+		effect = {
+			{type = "storage", name = "ElysianMaster", value = 1},
+		},
+	},
+	["11:21"] = {
+		name = "Echo Mastery",
+		description = "Sonic waves from Resonance now hit 1 additional target per level.",
+		effect = {
+			{type = "storage", name = "EchoMastery", value = 1},
+		},
+	},
+	["11:22"] = {
+		name = "Lingering Resonance",
+		description = "Resonance duration +1s per level. When Resonance expires naturally, it deals burst energy damage to the target equal to 5% of damage stored per level.",
+		effect = {
+			{type = "storage", name = "LingeringResonance", value = 5},
+		},
+	},
+	["11:23"] = {
+		name = "Echo Style",
+		description = "Choose your utility specialization.",
+	},
+	["11:24"] = {
+		name = "Reverb Cascade",
+		description = "While Reverberation is active, sonic waves also heal nearby allies for 3% of damage dealt per level.",
+		effect = {
+			{type = "storage", name = "ReverbCascade", value = 3},
+		},
+	},
+	["11:25"] = {
+		name = "Epic Tempo",
+		description = "Epic Melody now also grants +3% attack speed per level to allies. Duration +2s per level.",
+		effect = {
+			{type = "storage", name = "EpicTempo", value = 3},
+		},
+	},
+	["11:26"] = {
+		name = "Bardic Soul",
+		description = "+4% max mana per level and +2% mana regen per level. When you shift Dissonance or Harmony by casting any spell, restore 2% of max mana per level.",
+		effect = {
+			{type = "storage", name = "BardicSoul", value = 2},
+		},
+	},
+	["11:27"] = {
+		name = "Finale Mastery",
+		description = "Grand Finale deals +8% damage and heals +8% per level. After casting Grand Finale, your resources reset to 65 instead of 50.",
+		effect = {
+			{type = "storage", name = "FinaleMastery", value = 8},
+		},
+	},
+	["11:28"] = {
+		name = "Virtuoso's Finale",
+		description = "When you cast Grand Finale, all allies in range gain Crescendo Inspiration for 10s: +15% damage and +15% healing. Your Dissonance/Harmony resets to 75 instead of 50.",
+		effect = {
+			{type = "storage", name = "VirtuososFinale", value = 1},
+		},
+	},
+	["11:30"] = {
+		name = "Dark Symphony",
+		description = "When Dissonance is above 70, your attack spells have a 10% chance to apply the Discordant Verse debuff (-15% damage dealt) to the target for 3 seconds. 8 second cooldown.",
+		effect = {
+			{type = "storage", name = "DarkSymphony", value = 10},
+		},
+	},
+	["11:31"] = {
+		name = "Eternal Echo",
+		description = "When you cast any melody, all Resonating enemies take 15% more damage for 3 seconds.",
+		effect = {
+			{type = "storage", name = "EternalEcho", value = 15},
+		},
+	},
 }
