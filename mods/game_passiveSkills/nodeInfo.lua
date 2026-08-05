@@ -1766,12 +1766,16 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["10:0"] = {
-		name = "Core",
-		description = "",
+		name = "Eagle Eye",
+		description = "Sharpen your aim. Increases physical damage by 2% and fire damage by 2%.",
+		effect = {
+			{type = "condition", name = "Physical Damage", value = 2},
+			{type = "condition", name = "Fire Damage", value = 2},
+		},
 	},
 	["10:1"] = {
 		name = "Volatile Ammunition",
-		description = "Increase your fire damage by an additional 3% (per level) and your physical damage done by an additional 2% (per level)",
+		description = "Increase your fire damage by an additional 3% per level and your physical damage done by an additional 2% per level.",
 		effect = {
 			{type = "condition", name = "Fire Damage", value = 3},
 			{type = "condition", name = "Physical Damage", value = 2},
@@ -1779,137 +1783,173 @@ PassiveSkills.nodeInfo = {
 	},
 	["10:2"] = {
 		name = "Explosive Shot",
-		description = "Learn Explosive Shot\nShoot a powerful shot that explodes on impact after a short delay applying a burn to all nearby enemies",
+		description = "Learn the spell Explosive Shot. Shoot a powerful shot that explodes on impact after a short delay, applying a burn to all nearby enemies.",
 		effect = {
 			{type = "spell", name = "Explosive Shot"},
 		},
 	},
 	["10:3"] = {
+		name = "Blast Style",
+		description = "Choose your blast specialization.",
+	},
+	["10:4"] = {
 		name = "Demolition",
-		description = "Your fire damage have a 2% chance (per level) to trigger Demolition, Demolition deals aoe physical damage on impact.",
+		description = "Your fire damage has a 2% chance per level to trigger Demolition, which deals AOE physical damage on impact.",
 		effect = {
 			{type = "storage", name = "Demolition", value = 2},
 		},
 	},
-	["10:4"] = {
-		name = "Volatile Impact",
-		description = "Demolition Proc's now grant you 3% (per level) critical chance and attack speed for 5 seconds",
-		effect = {
-			{type = "storage", name = "VolatileImpact", value = 3},
-		},
-	},
 	["10:5"] = {
 		name = "Explosive Barrel",
-		description = "Learn Explosive Barrel\nPlace a barrel at your target location exploding after a 4 seconds delay, igniting all enemies nearby. (if you dont have target it will be placed in front of you)",
+		description = "Learn the spell Explosive Barrel. Place a barrel at your target location exploding after a 4 second delay, igniting all nearby enemies. If you don't have a target it will be placed in front of you.",
 		effect = {
 			{type = "spell", name = "Explosive Barrel"},
 		},
 	},
 	["10:6"] = {
+		name = "Volatile Impact",
+		description = "Demolition procs now grant you 3% per level critical chance and attack speed for 5 seconds.",
+		effect = {
+			{type = "storage", name = "VolatileImpact", value = 3},
+		},
+	},
+	["10:7"] = {
+		name = "Dead from Above",
+		description = "Your physical damage has a 2% chance per level to trigger Dead from Above, which triggers a bullet barrage from the sky that deals fire damage to the target and nearby enemies.",
+		effect = {
+			{type = "storage", name = "DeadFromAbove", value = 2},
+		},
+	},
+	["10:8"] = {
 		name = "Detonation Expert",
-		description = "Your Explosive Shot now instantly detonates your existing explosive barrels, and increase their damage by an aditional 10% and applying a burn to all nearby enemies",
+		description = "Your Explosive Shot now instantly detonates your existing Explosive Barrels, increasing their damage by an additional 10% per level and applying a burn to all nearby enemies.",
 		effect = {
 			{type = "storage", name = "DetonationExpert", value = 10},
 		},
 	},
-	["10:7"] = {
+	["10:11"] = {
 		name = "Frostbite Weapon",
-		description = "Learn Ice Arrow\nShoot a powerful ice arrow that slows the target for 5 seconds, if target is already slowed or frozen, it will deal double damage.",
+		description = "Learn the spell Ice Arrow. Shoot a powerful ice arrow that slows the target for 5 seconds. If the target is already slowed or frozen, it will deal double damage.",
 		effect = {
 			{type = "spell", name = "Ice Arrow"},
 		},
 	},
-	["10:8"] = {
+	["10:12"] = {
 		name = "Winter Hunter",
-		description = "Increase your ice damage by an aditional 2% (per level)",
+		description = "Increase your ice damage by an additional 2% per level.",
 		effect = {
 			{type = "condition", name = "Ice Damage", value = 2},
 		},
 	},
-	["10:9"] = {
+	["10:13"] = {
+		name = "Frost Style",
+		description = "Choose your frost specialization.",
+	},
+	["10:14"] = {
 		name = "Frost Barrel",
-		description = "Learn Frost Barrel\nPlace a barrel at your location exploding after a short delay, freezing all enemies nearby.",
+		description = "Learn the spell Frost Barrel. Place a barrel at your location exploding after a short delay, freezing all nearby enemies.",
 		effect = {
 			{type = "spell", name = "Frost Barrel"},
 		},
 	},
-	["10:10"] = {
+	["10:15"] = {
 		name = "Frost Barrage",
-		description = "Arrow Barrage now deals ice damage and slows all enemies for 4 seconds\nIncrease the damage of Ice Arrow and Arrow Barrage by an aditional 2% (per level)",
+		description = "Arrow Barrage now deals ice damage and slows all enemies for 4 seconds. Increase the damage of Ice Arrow and Arrow Barrage by an additional 2% per level.",
 		effect = {
 			{type = "storage", name = "FrostBarrage", value = 2},
 		},
 	},
-	["10:11"] = {
+	["10:16"] = {
 		name = "Momentum",
-		description = "Your auto attacks now have a 20% + 1% (per level) chance to grant you Momentum, which increases your attack speed for 1% (per level)  to a maximum of 95% for 4 seconds every time your attacks hit an enemy, this effect last until duration is over. Attacks will refresh the duration of momentum.",
+		description = "Your auto attacks now have a 20% + 1% per level chance to grant you Momentum, which increases your attack speed by 1% per level to a maximum of 95% for 4 seconds. Attacks will refresh the duration of Momentum.",
 		effect = {
 			{type = "storage", name = "Momentum", value = 1},
 		},
 	},
-	["10:12"] = {
+	["10:17"] = {
+		name = "Tenacious Spirit",
+		description = "Increase your maximum health by 2% per level and gain 3 health points regeneration every 3 seconds per level.",
+		effect = {
+			{type = "condition", name = "Health Regen", value = 3},
+			{type = "condition", name = "Max Health", value = 2},
+		},
+	},
+	["10:18"] = {
 		name = "Frost Quiver",
-		description = "Every fourth attack you have a 5% (per level) chance to trigger Frost Quiver, wich deals shoots a fronzen bolt to the target dealing ice damage.",
+		description = "Every fourth attack you have a 5% chance per level to trigger Frost Quiver, which shoots a frozen bolt to the target dealing ice damage.",
 		effect = {
 			{type = "storage", name = "FrostQuiver", value = 5},
 		},
 	},
-	["10:13"] = {
-		name = "Tenacious Spirit",
-		description = "Increase your maximum health by 2% and 3 health points regeneration every 3 seconds (per level)",
-		effect = {
-			{type = "condition", name = "Health Regen", value = 3},
-			{type = "condition", name = "MaxHealthPercent", value = 2},
-		},
-	},
-	["10:14"] = {
-		name = "Falcon Shot",
-		description = "Learn Falcon Shot\nShoot a powerful shot that deals physical damage to the target and nearby enemies slowing them for 3 seconds\n\n\nThis node does not require a previous node to be unlocked",
-		effect = {
-			{type = "spell", name = "Falcon Shot"},
-		},
-	},
-	["10:15"] = {
+	["10:21"] = {
 		name = "Phantom Shot",
-		description = "Learn Phantom Shot\nShoot a powerful shot that deals physical damage to the target",
+		description = "Learn the spell Phantom Shot. Shoot a powerful shot that deals physical damage to the target.",
 		effect = {
 			{type = "spell", name = "Phantom Shot"},
 		},
 	},
-	["10:16"] = {
+	["10:22"] = {
 		name = "Hunter's Mercy",
-		description = "Your phantom shot now deals 4% (per level) additional damage if the target is below 50% health.",
+		description = "Your Phantom Shot now deals 4% per level additional damage if the target is below 50% health.",
 		effect = {
 			{type = "storage", name = "HunterMercy", value = 4},
 		},
 	},
-	["10:17"] = {
+	["10:23"] = {
+		name = "Marksman Style",
+		description = "Choose your marksman specialization.",
+	},
+	["10:24"] = {
 		name = "Arrowstorm",
-		description = "Increase the shots from rapid fire by 1 (per level) and reduces its cast time.",
+		description = "Increase the shots from Rapid Fire by 1 per level and reduce its cast time.",
 		effect = {
 			{type = "storage", name = "Arrowstorm", value = 1},
 			{type = "storage", name = "Arrowstorm", value = 10},
 		},
 	},
-	["10:18"] = {
+	["10:25"] = {
+		name = "Falcon Shot",
+		description = "Learn the spell Falcon Shot. Shoot a powerful shot that deals physical damage to the target and nearby enemies, slowing them for 3 seconds.",
+		effect = {
+			{type = "spell", name = "Falcon Shot"},
+		},
+	},
+	["10:26"] = {
 		name = "Focused Fire",
-		description = "Increase the damage done by your Phantom Shot, Falcon Shot and Rapid Fire by an additional 4% (per level)",
+		description = "Increase the damage done by your Phantom Shot, Falcon Shot and Rapid Fire by an additional 4% per level.",
 		effect = {
 			{type = "storage", name = "FocusedFire", value = 4},
 		},
 	},
-	["10:19"] = {
-		name = "Dead from above",
-		description = "Your physical damage has a 2% (per level) chance to trigger Dead from Above, Wich will trigger a bullet barrage from the sky that does fire damage to the target and nearby enemies.",
-		effect = {
-			{type = "storage", name = "DeadFromAbove", value = 2},
-		},
-	},
-	["10:20"] = {
+	["10:27"] = {
 		name = "Scorched Mark",
-		description = "Dead from above now increases your critical strike chance by 4% (per level) every time it triggers (this effect does not stack)",
+		description = "Dead from Above now increases your critical strike chance by 4% per level every time it triggers. This effect does not stack.",
 		effect = {
 			{type = "storage", name = "DeadFromAbove", value = 4},
+		},
+	},
+	["10:28"] = {
+		name = "Apex Predator",
+		description = "When you kill an enemy, you gain Apex Predator for 8 seconds: +15% physical damage and +15% fire damage. 30 second cooldown.",
+		effect = {
+			{type = "condition", name = "Physical Damage", value = 15},
+			{type = "condition", name = "Fire Damage", value = 15},
+		},
+	},
+	["10:30"] = {
+		name = "Frostfire Arsenal",
+		description = "Your ballistics and frost combine. Increases fire damage by 3% and ice damage by 3% while you have unlocked Explosive Barrel and Frost Barrel.",
+		effect = {
+			{type = "condition", name = "Fire Damage", value = 3},
+			{type = "condition", name = "Ice Damage", value = 3},
+		},
+	},
+	["10:31"] = {
+		name = "Eternal Hunter",
+		description = "Your frost and survival combine. Increases max health by 3% and ice damage by 3% while you have unlocked Frost Barrage and Tenacious Spirit.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 3},
+			{type = "condition", name = "Ice Damage", value = 3},
 		},
 	},
 }
