@@ -1581,135 +1581,188 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["9:0"] = {
-		name = "Core",
-		description = "",
+		name = "Static Flow",
+		description = "Channel the storm through your blades. Increases energy damage by 2% and physical damage by 2%.",
+		effect = {
+			{type = "condition", name = "Energy Damage", value = 2},
+			{type = "condition", name = "Physical Damage", value = 2},
+		},
 	},
 	["9:1"] = {
 		name = "Short Circuit",
-		description = "During static shock, your attacks have a 10% (per level) chance to deal extra damage to enemies affected by Static Shock. (this effect is increased by magic level and base weapon damage)",
+		description = "During Static Shock, your attacks have a 10% chance per level to deal extra damage to enemies affected by Static Shock. This effect is increased by magic level and base weapon damage.",
 		effect = {
 			{type = "storage", name = "ShortCircuit", value = 10},
 		},
 	},
 	["9:2"] = {
 		name = "Kinetic Dancer",
-		description = "Increase physical damage done by 2% and your energy damage by 2% (per level)",
+		description = "Increase physical damage done by 2% and your energy damage by 2% per level.",
 		effect = {
 			{type = "condition", name = "Physical Damage", value = 2},
 			{type = "condition", name = "Energy Damage", value = 2},
 		},
 	},
 	["9:3"] = {
+		name = "Storm Style",
+		description = "Choose your storm specialization.",
+	},
+	["9:4"] = {
 		name = "High Voltage",
-		description = "Your Short Circuit now have a chance 25% to grant you High Voltage, wich increases your magic level by 10% (per level) for 6 seconds.",
+		description = "Your Short Circuit now has a 25% chance to grant you High Voltage, which increases your magic level by 10% per level for 6 seconds.",
 		effect = {
 			{type = "storage", name = "HighVoltage", value = 10},
 		},
 	},
-	["9:4"] = {
+	["9:5"] = {
 		name = "Stormpiercer",
-		description = "Lightning Spear now grants you 3% attack speed for 8 seconds and deals 3% more damage per level",
+		description = "Lightning Spear now grants you 3% attack speed for 8 seconds and deals 3% more damage per level.",
 		effect = {
 			{type = "storage", name = "Stormpiercer", value = 3},
 		},
 	},
-	["9:5"] = {
+	["9:6"] = {
 		name = "Tempest Coin",
-		description = "Lern spell Tempest Coin\nToss a tempest coin in the air that will grant you Tempest Charges, Tempest charges will determine the times Charged Strike will be triggered on next cast based on token results (1-3).",
+		description = "Learn the spell Tempest Coin. Toss a tempest coin in the air that will grant you Tempest Charges. Tempest Charges will determine the times Charged Strike will be triggered on next cast based on token results (1-3).",
 		effect = {
 			{type = "spell", name = "Tempest Coin"},
 		},
 	},
-	["9:6"] = {
+	["9:7"] = {
 		name = "Gambler's Luck",
-		description = "Increase the max number result from tempest coin by 1 (per level)",
+		description = "Increase the max number result from Tempest Coin by 1 per level.",
 		effect = {
 			{type = "storage", name = "GamblerLuck", value = 1},
 		},
 	},
-	["9:7"] = {
+	["9:8"] = {
 		name = "Jackpot",
-		description = "Increase the damage of your casted charged strike based on your Tempest Coin roll by 1 % (per level) per roll",
+		description = "Increase the damage of your casted Charged Strike based on your Tempest Coin roll by 1% per level per roll.",
 		effect = {
 			{type = "storage", name = "Jackpot", value = 1},
 		},
 	},
-	["9:8"] = {
+	["9:11"] = {
 		name = "Lightning Riposte",
-		description = "You have a 2% (per level) chance to parry physical damage and send a small portion back to the attacker as energy damage.",
+		description = "You have a 2% chance per level to parry physical damage and send a small portion back to the attacker as energy damage.",
 		effect = {
 			{type = "storage", name = "LightningRiposte", value = 2},
 		},
 	},
-	["9:9"] = {
+	["9:12"] = {
 		name = "Lightning Waltz",
-		description = "Your Veil of Swords now heals you for 4% of your max health (per level) and grants you a dodge chance of 3% (per level) for 5 seconds.",
+		description = "Your Veil of Swords now heals you for 4% of your max health per level and grants you a dodge chance of 3% per level for 5 seconds.",
 		effect = {
 			{type = "storage", name = "LightningWaltzHeal", value = 4},
 			{type = "storage", name = "LightningWaltzparry", value = 3},
 		},
 	},
-	["9:10"] = {
+	["9:13"] = {
+		name = "Guard Style",
+		description = "Choose your guard specialization.",
+	},
+	["9:14"] = {
 		name = "Magnetic Shield",
-		description = "Learn Magnetic Shield spell\nGain damage immunity for 5 seconds to all damage types but reduce your damage done by 80%",
+		description = "Learn the spell Magnetic Shield. Gain damage immunity for 5 seconds to all damage types but reduce your damage done by 80%.",
 		effect = {
 			{type = "spell", name = "Magnetic Shield"},
 		},
 	},
-	["9:11"] = {
-		name = "Blade Mastery",
-		description = "Increase your Melee skill by an aditional 3 points (per level).",
+	["9:15"] = {
+		name = "Light's On",
+		description = "Your Short Circuit procs now restore 0.5% of your total mana per hit per level.",
 		effect = {
-			{type = "condition", name = "Skill Sword", value = 3},
+			{type = "storage", name = "LightsON", value = 0.5},
 		},
 	},
-	["9:12"] = {
+	["9:16"] = {
+		name = "Critical Flow",
+		description = "Increase your critical chance by an additional 3% per level.",
+		effect = {
+			{type = "condition", name = "Critical Hit Chance", value = 3},
+		},
+	},
+	["9:17"] = {
+		name = "Energy Reserve",
+		description = "Increases max mana by 4% per level.",
+		effect = {
+			{type = "condition", name = "Max Mana", value = 4},
+		},
+	},
+	["9:18"] = {
+		name = "Magnetic Mastery",
+		description = "While Magnetic Shield is active, you also reflect 25% of incoming damage back as energy damage to attackers.",
+		effect = {
+			{type = "storage", name = "LightningRiposte", value = 25},
+		},
+	},
+	["9:21"] = {
+		name = "Blade Mastery",
+		description = "Increase your Melee skill by an additional 3 points per level.",
+		effect = {
+			{type = "condition", name = "Sword Skill", value = 3},
+		},
+	},
+	["9:22"] = {
 		name = "God of Spears",
-		description = "Lightning Spear is no longer range but its damage is increased by 4% (per level) and grants you a Elusive Charge for 10 seconds. (this will refresh old charges of Elusive Charge)",
+		description = "Lightning Spear is no longer ranged but its damage is increased by 4% per level and grants you an Elusive Charge for 10 seconds. This will refresh old charges of Elusive Charge.",
 		effect = {
 			{type = "storage", name = "GodOfSpears", value = 1},
 		},
 	},
-	["9:13"] = {
-		name = "Elusibe Blade",
-		description = "Learn Elusive Blade spell",
+	["9:23"] = {
+		name = "Blade Style",
+		description = "Choose your blade specialization.",
+	},
+	["9:24"] = {
+		name = "Elusive Blade",
+		description = "Learn the spell Elusive Blade.",
 		effect = {
 			{type = "spell", name = "Elusive Blade"},
 		},
 	},
-	["9:14"] = {
+	["9:25"] = {
 		name = "Dancing Edge",
-		description = "Elusive Blade now has a 12% (per level) chance to trigger a second time at 50% effectiveness granting you a Elusive Charge for 10 seconds. (this will refresh old charges of Elusive Charge)",
+		description = "Elusive Blade now has a 12% chance per level to trigger a second time at 50% effectiveness, granting you an Elusive Charge for 10 seconds. This will refresh old charges of Elusive Charge.",
 		effect = {
 			{type = "storage", name = "DancingEdge", value = 12},
 		},
 	},
-	["9:15"] = {
+	["9:26"] = {
 		name = "Veil of Echos",
-		description = "If you have 2 or more Elusive Charges, Veil of swords now turns into veil of Echos. Veil of Echos consume all Elusive Charges and  deals high amounts of physical damage.",
+		description = "If you have 2 or more Elusive Charges, Veil of Swords now turns into Veil of Echos. Veil of Echos consumes all Elusive Charges and deals high amounts of physical damage.",
 		effect = {
 			{type = "storage", name = "VeilOfEchos", value = 1},
 		},
 	},
-	["9:16"] = {
+	["9:27"] = {
 		name = "Reverberation",
-		description = "Increase Veil of Echos and Veil of Swords damage by an aditional 4% (per level)",
+		description = "Increase Veil of Echos and Veil of Swords damage by an additional 4% per level.",
 		effect = {
 			{type = "storage", name = "Reverberation", value = 4},
 		},
 	},
-	["9:17"] = {
-		name = "Light's ON",
-		description = "Your short circuit procs now restore 0.5% of your total mana per hit. (per level)",
+	["9:28"] = {
+		name = "Echo Storm",
+		description = "When you consume Elusive Charges for Veil of Echos, each charge consumed has a 20% chance to trigger an additional Echo at 75% effectiveness.",
 		effect = {
-			{type = "storage", name = "LightsON", value = 0},
+			{type = "storage", name = "VeilOfEchos", value = 20},
 		},
 	},
-	["9:18"] = {
-		name = "Critical Flow",
-		description = "Increase your critical chance by an aditional 3% (per level)",
+	["9:30"] = {
+		name = "Storm Blade",
+		description = "Your storm and blade combine. Increases energy damage by 3% and sword skill by 3 while you have unlocked High Voltage and Elusive Blade.",
 		effect = {
-			{type = "condition", name = "Critical Strike", value = 3},
+			{type = "condition", name = "Energy Damage", value = 3},
+			{type = "condition", name = "Sword Skill", value = 3},
+		},
+	},
+	["9:31"] = {
+		name = "Charged Ward",
+		description = "Your ward and blade combine. Increases dodge by 3% and critical hit chance by 3% while you have unlocked Critical Flow and Dancing Edge.",
+		effect = {
+			{type = "condition", name = "Dodge", value = 3},
+			{type = "condition", name = "Critical Hit Chance", value = 3},
 		},
 	},
 	["10:0"] = {
