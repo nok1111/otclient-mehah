@@ -151,6 +151,7 @@ SpelllistSettings = {
       'Focus Healing',
       'Ice Shatter',
       'Frost Armor',
+      'Ice Strike',
 
       --light dancer
       'Charged Strike',
@@ -228,6 +229,8 @@ SpelllistSettings = {
       'Blood Walk',
       'Crimson Chains',
       'Blood Ritual',
+      'Vital Surge',
+      'Exsanguinate',
 
 
       'Shield Wall',
@@ -530,15 +533,15 @@ SpellInfo = {
     ['Blood Eruption'] = {id = 265, words = 'blood eruption', icon = 259, description = 'Erupt in an AoE dealing lifedrain damage. Consumes all active bleeds on targets hit: +20% damage per bleed consumed. Grants a shield equal to 5% max HP per bleed consumed (cap 30%). Generates 15 Blood Essence. Costs 7% max HP.', exhaustion = 10000, premium = false, type = 'Instant', mana = 0, level = 60, soul = 0, group = {[1] = 1900}, vocations = {14}},
     ['Blood Lance'] = {id = 266, words = 'blood lance', icon = 258, description = 'Thrust a blood lance in a straight line dealing heavy physical damage. Consumes all Blood Orbs for bonus damage and applies a bleed. Synergizes with Blood Frenzy for increased damage. Costs 6% max HP.', exhaustion = 10000, premium = false, type = 'Instant', mana = 0, level = 70, soul = 0, group = {[1] = 1900}, vocations = {14}},
     ['Blood Detonation'] = {id = 267, words = 'blood detonation', icon = 263, description = 'Detonate all bleeds on nearby enemies dealing burst physical damage. Only affects targets with active bleeds. Consumes both manual and condition bleeds. Costs 8% max HP.', exhaustion = 16000, premium = false, type = 'Instant', mana = 0, level = 80, soul = 0, group = {[1] = 1900}, vocations = {14}},
-    ['Blood Curse'] = {id = 298, words = 'blood curse', icon = 263, description = 'Debuff a target for 6 seconds: target takes +15% damage and healing received is reduced by 50%. Costs 3% max HP.', exhaustion = 12000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[1] = 1900}, vocations = {14}},
-    ['Crimson Rain'] = {id = 299, words = 'crimson rain', icon = 263, description = 'Call down a rain of blood on a 3x3 area for 5 seconds, applying bleeds to all enemies standing in it. Costs 5% max HP.', exhaustion = 10000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[1] = 1900}, vocations = {14}},
-    ['Sanguine Shield'] = {id = 300, words = 'sanguine shield', icon = 263, description = 'For 5 seconds, 20% of incoming damage is converted to Blood Essence instead of dealing damage. Costs 3% max HP.', exhaustion = 15000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {14}},
-    ['Vampiric Aura'] = {id = 301, words = 'vampiric aura', icon = 263, description = 'For 10 seconds, all allies within 5 tiles gain 10% lifesteal. Costs 5% max HP.', exhaustion = 20000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {14}},
-    ['Blood Walk'] = {id = 302, words = 'blood walk', icon = 263, description = 'Teleport to a bleeding target within 6 tiles, dealing AoE damage on arrival. Costs 3% max HP.', exhaustion = 6000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1900}, vocations = {14}},
-    ['Crimson Chains'] = {id = 303, words = 'crimson chains', icon = 263, description = 'Root all enemies within 3 tiles for 3 seconds. Costs 4% max HP.', exhaustion = 12000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {14}},
-    ['Blood Ritual'] = {id = 304, words = 'blood ritual', icon = 263, description = 'Toggle: sacrifice 5% HP per second for 15 Blood Essence per second. Cast again to toggle off.', exhaustion = 1000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {14}},
-    ['Vital Surge'] = {id = 311, words = 'vital surge', icon = 263, description = 'Sacrifice 5% max HP to heal yourself and nearby allies in a 5x5 area. Scales with missing HP: the lower your health, the stronger the heal. Generates 10 Blood Essence.', exhaustion = 8000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[2] = 1100}, vocations = {14}},
-    ['Exsanguinate'] = {id = 312, words = 'exsanguinate', icon = 263, description = 'Drain life from your target dealing heavy lifedrain damage. +50% damage if target is below 30% HP. Consumes all Blood Orbs for +10% damage each. 30% lifesteal. Costs 12% max HP.', exhaustion = 15000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[1] = 1900}, vocations = {14}},
+    ['Blood Curse'] = {id = 298, words = 'blood curse', icon = 66, description = 'Debuff a target for 6 seconds: target takes +15% damage and healing received is reduced by 50%. Costs 3% max HP.', exhaustion = 12000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[1] = 1900}, vocations = {14}},
+    ['Crimson Rain'] = {id = 299, words = 'crimson rain', icon = 58, description = 'Call down a rain of blood on a 3x3 area for 5 seconds, applying bleeds to all enemies standing in it. Costs 5% max HP.', exhaustion = 10000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[1] = 1900}, vocations = {14}},
+    ['Sanguine Shield'] = {id = 300, words = 'sanguine shield', icon = 70, description = 'For 5 seconds, 20% of incoming damage is converted to Blood Essence instead of dealing damage. Costs 3% max HP.', exhaustion = 15000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {14}},
+    ['Vampiric Aura'] = {id = 301, words = 'vampiric aura', icon = 256, description = 'For 10 seconds, all allies within 5 tiles gain 10% lifesteal. Costs 5% max HP.', exhaustion = 20000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {14}},
+    ['Blood Walk'] = {id = 302, words = 'blood walk', icon = 251, description = 'Teleport to a bleeding target within 6 tiles, dealing AoE damage on arrival. Costs 3% max HP.', exhaustion = 6000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1900}, vocations = {14}},
+    ['Crimson Chains'] = {id = 303, words = 'crimson chains', icon = 264, description = 'Root all enemies within 3 tiles for 3 seconds. Costs 4% max HP.', exhaustion = 12000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {14}},
+    ['Blood Ritual'] = {id = 304, words = 'blood ritual', icon = 274, description = 'Toggle: sacrifice 5% HP per second for 15 Blood Essence per second. Cast again to toggle off.', exhaustion = 1000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {14}},
+    ['Vital Surge'] = {id = 311, words = 'vital surge', icon = 257, description = 'Sacrifice 5% max HP to heal yourself and nearby allies in a 5x5 area. Scales with missing HP: the lower your health, the stronger the heal. Generates 10 Blood Essence.', exhaustion = 8000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[2] = 1100}, vocations = {14}},
+    ['Exsanguinate'] = {id = 312, words = 'exsanguinate', icon = 265, description = 'Drain life from your target dealing heavy lifedrain damage. +50% damage if target is below 30% HP. Consumes all Blood Orbs for +10% damage each. 30% lifesteal. Costs 12% max HP.', exhaustion = 15000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[1] = 1900}, vocations = {14}},
 
 
     -- Bard
