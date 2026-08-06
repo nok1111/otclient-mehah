@@ -290,7 +290,6 @@ function onBuffCooldown(iconId, duration, spellName, bgId, count)
   icon:setParent(buffsPanel)
   if duration == -1 or duration == 4294967295000 then
 	  icon:setTooltip(spellName)
-	  icon:getChildById('icon'):setTooltip(spellName)
 	  -- Update count/stacks for permanent buffs
 	  if count and count > 0 and count < 10 then
 	    icon:recursiveGetChildById('count'):setText(count)
@@ -339,7 +338,7 @@ function onBuffCooldown(iconId, duration, spellName, bgId, count)
   end
 
   progressRect:setPercent(0)
-  progressRect:setTooltip(spellName)
+  icon:setTooltip(spellName)
 
   local updateFunc = function()
     updateBuffCooldown(progressRect, duration, timee)

@@ -4,6 +4,25 @@ SpellIcon < UIWidget
   image-source: /images/game/buffs/0
   focusable: false
   margin-right: 4
+  &onMousePress: |
+    function(self, mousePos, button)
+      if button == MouseRightButton then
+        return modules.game_buffs.cooldownSettings(self, mousePos, button)
+      end
+      local window = self:getParent():getParent()
+      if window and button == MouseLeftButton then
+        window:dragEnter(mousePos, button)
+        return true
+      end
+      return false
+    end
+  &onDragMove: |
+    function(self, mousePos, mouseMoved)
+      local window = self:getParent():getParent()
+      if window then
+        window:dragMove(mousePos, mouseMoved)
+      end
+    end
 
   UIWidget
     id: icon
@@ -14,10 +33,12 @@ SpellIcon < UIWidget
     size: 42 42
     image-size: 42 42
     focusable: false
+    phantom: true
 
   UIWidget
     id: count
     focusable: false
+    phantom: true
     font: verdana-11px-rounded
     color: #ffffffff
     anchors.top: icon.top
