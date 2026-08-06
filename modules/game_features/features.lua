@@ -196,6 +196,7 @@ controller:registerEvents(g_game, {
         if version >= 1098 then
             g_game.enableFeature(GameThingQuickLoot)
             g_game.enableFeature(GameThingUpgradeClassification)
+            g_game.enableFeature(GameUshortSpell)
         end
         
         if version >= 1100 then
