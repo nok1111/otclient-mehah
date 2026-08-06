@@ -21,6 +21,8 @@
  */
 
 #include "missile.h"
+#include "game.h"
+#include "gameconfig.h"
 #include "map.h"
 #include "thingtypemanager.h"
 #include "tile.h"
@@ -33,7 +35,24 @@ void Missile::draw(const Point& dest, const bool drawThings, const LightViewPtr&
     if (!canDraw() || isHided())
         return;
 
+    // Position interpolation uses m_animationTimer, which must never be reset
+    // by the frame animation logic, otherwise the missile stops moving.
     const float fraction = m_duration > 0 ? m_animationTimer.ticksElapsed() / m_duration : 1;
+
+    // Sprite animation frames loop infinitely while the missile is sliding,
+    // using a separate timer (m_frameTimer) so the position is unaffected.
+    // The loop only wraps around after all phases have been shown.
+    int animationPhase = 0;
+    if (canAnimate() && getAnimationPhases() > 1) {
+        if (g_game.getFeature(Otc::GameEnhancedAnimations)) {
+            const auto* animator = getThingType()->getIdleAnimator();
+            if (animator)
+                animationPhase = animator->getPhaseAt(m_frameTimer);
+        } else {
+            const int ticks = g_gameConfig.getMissileTicksPerFrame();
+            animationPhase = static_cast<int>(m_frameTimer.ticksElapsed() / ticks) % getAnimationPhases();
+        }
+    }
 
     if (g_drawPool.getCurrentType() == DrawPoolType::MAP) {
         g_drawPool.setDrawOrder(DrawOrder::FOURTH);
@@ -44,7 +63,7 @@ void Missile::draw(const Point& dest, const bool drawThings, const LightViewPtr&
     if (hasShader())
         g_drawPool.setShaderProgram(g_shaders.getShaderById(m_shaderId), true/*, shaderAction*/);
 
-    getThingType()->draw(dest + m_delta * fraction * g_drawPool.getScaleFactor(), 0, m_numPatternX, m_numPatternY, 0, 0, Color::white, drawThings, lightView);
+    getThingType()->draw(dest + m_delta * fraction * g_drawPool.getScaleFactor(), 0, m_numPatternX, m_numPatternY, 0, animationPhase, Color::white, drawThings, lightView);
     g_drawPool.resetDrawOrder();
 }
 
@@ -66,6 +85,7 @@ void Missile::setPath(const Position& fromPosition, const Position& toPosition)
     m_duration = (g_gameConfig.getMissileTicksPerFrame() * 2) * std::sqrt(deltaLength);
     m_delta *= g_gameConfig.getSpriteSize();
     m_animationTimer.restart();
+    m_frameTimer.restart();
     m_distance = fromPosition.distance(toPosition);
 
     // schedule removal

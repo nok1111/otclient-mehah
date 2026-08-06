@@ -46,6 +46,7 @@ protected:
 
 private:
     Timer m_animationTimer;
+    Timer m_frameTimer;
     Point m_delta;
 
     float m_duration{ 0.f };

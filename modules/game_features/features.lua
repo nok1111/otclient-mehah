@@ -19,6 +19,7 @@ controller:registerEvents(g_game, {
         g_game.enableFeature(GameAllowPreWalk)
         g_game.enableFeature(GameMapCache)
         g_game.enableFeature(GameMagicEffectU16)
+        g_game.enableFeature(GameDistanceEffectU16)
 		g_game.enableFeature(GameSpritesAlphaChannel)
         -- g_game.enableFeature(GameSmoothWalkElevation)
 
