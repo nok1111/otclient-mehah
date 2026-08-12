@@ -135,7 +135,7 @@ ChannelEventFormats = {
 
 MAX_HISTORY = 500
 MAX_LINES = 100
-HELP_CHANNEL = 9
+HELP_CHANNEL = 7
 
 consolePanel = nil
 consoleContentPanel = nil
@@ -638,7 +638,7 @@ function setTextEditText(text)
 end
 
 function openHelp()
-    local helpChannel = 9
+    local helpChannel = 7
     if g_game.getClientVersion() <= 810 then
         helpChannel = 8
     end
@@ -1058,6 +1058,10 @@ function addTabText(text, speaktype, tab, creatureName)
         return
     end
 
+    -- Convert Discord emojis to display format
+    -- Discord sends Unicode emojis (😄), convert to shortcode (:smile:) then to text emoticon (:))
+    text = discordEmojiFromShortcode(discordEmojiToShortcode(text))
+
     if modules.client_options.getOption('showTimestampsInConsole') then
         text = os.date('%H:%M') .. ' ' .. text
     end
@@ -1416,6 +1420,9 @@ function sendMessage(message, tab)
     if not tab then
         return
     end
+
+    -- Convert any Unicode emojis the player types to Discord shortcodes
+    message = discordEmojiToShortcode(message)
 
     for k, func in pairs(filters) do
         if func(message) then
@@ -2116,6 +2123,15 @@ function online()
                     end
                 end
             end
+        end
+    end
+
+    -- auto-open Discord bridge channels (English Chat=4, Advertising=5, Help=7)
+    local discordChannels = {4, 5, 7}
+    for _, channelId in ipairs(discordChannels) do
+        if not table.find(channels, channelId) then
+            g_game.joinChannel(channelId)
+            table.insert(ignoredChannels, channelId)
         end
     end
     scheduleEvent(function()
