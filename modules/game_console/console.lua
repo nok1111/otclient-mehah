@@ -533,6 +533,34 @@ function isEnabledWASD()
     return consoleToggleChat.isChecked --note: testing required
 end
 
+function openVoiceWindow()
+    g_logger.info("Voice button clicked!")
+    local voiceModule = g_modules.getModule('game_voice')
+    if not voiceModule then
+        g_logger.error("game_voice module not found")
+        return
+    end
+    if not voiceModule:isLoaded() then
+        g_logger.error("game_voice module not loaded")
+        return
+    end
+    local env = voiceModule:getSandbox()
+    if env and env.showVoiceWindow then
+        g_logger.info("Calling showVoiceWindow...")
+        env.showVoiceWindow()
+    else
+        g_logger.error("showVoiceWindow not found in sandbox")
+        -- Try getEnvironment
+        env = voiceModule:getEnvironment()
+        if env and env.showVoiceWindow then
+            g_logger.info("Found in getEnvironment, calling...")
+            env.showVoiceWindow()
+        else
+            g_logger.error("showVoiceWindow not found in environment either")
+        end
+    end
+end
+
 function onTabChange(tabBar, tab)
     local player = g_game.getLocalPlayer()
     local message = consoleTextEdit:getText()

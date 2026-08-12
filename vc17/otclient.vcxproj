@@ -155,6 +155,7 @@
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
     <VcpkgAutoLink>true</VcpkgAutoLink>
     <VcpkgInstalledDir>vcpkg_installed</VcpkgInstalledDir>
+    <VcpkgRoot>C:\vcpkg</VcpkgRoot>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <VcpkgTriplet>x86-windows-static</VcpkgTriplet>
@@ -165,13 +166,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>$(PREPROCESSOR_DEFS);_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>$(PREPROCESSOR_DEFS);_SCL_SECURE_NO_WARNINGS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>
-        $(VcpkgRoot)\installed\$(VcpkgTriplet)\include\luajit;
-        $(GITHUB_WORKSPACE)\vcpkg\installed\$(VcpkgTriplet)\include\;
+        $(ProjectDir)vcpkg_installed\$(VcpkgTriplet)\include\luajit;
+        $(ProjectDir)vcpkg_installed\$(VcpkgTriplet)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -190,13 +191,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>$(PREPROCESSOR_DEFS);_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>$(PREPROCESSOR_DEFS);_SCL_SECURE_NO_WARNINGS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>
-        $(VcpkgRoot)\installed\$(VcpkgTriplet)\include\luajit;
-        $(GITHUB_WORKSPACE)\vcpkg\installed\$(VcpkgTriplet)\include\;
+        $(ProjectDir)vcpkg_installed\$(VcpkgTriplet)\include\luajit;
+        $(ProjectDir)vcpkg_installed\$(VcpkgTriplet)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -213,15 +214,15 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='OpenGL|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>$(PREPROCESSOR_DEFS);NDEBUG;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>$(PREPROCESSOR_DEFS);NDEBUG;NOMINMAX;</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>
-        $(VcpkgRoot)\installed\$(VcpkgTriplet)\include\luajit;
-        $(GITHUB_WORKSPACE)\vcpkg\installed\$(VcpkgTriplet)\include\;
+        $(ProjectDir)vcpkg_installed\$(VcpkgTriplet)\include\luajit;
+        $(ProjectDir)vcpkg_installed\$(VcpkgTriplet)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -243,15 +244,15 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DirectX|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>$(PREPROCESSOR_DEFS);NDEBUG;OPENGL_ES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>$(PREPROCESSOR_DEFS);NDEBUG;OPENGL_ES;NOMINMAX</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>
-        $(VcpkgRoot)\installed\$(VcpkgTriplet)\include\luajit;
-        $(GITHUB_WORKSPACE)\vcpkg\installed\$(VcpkgTriplet)\include\;
+        $(ProjectDir)vcpkg_installed\$(VcpkgTriplet)\include\luajit;
+        $(ProjectDir)vcpkg_installed\$(VcpkgTriplet)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -274,15 +275,15 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='OpenGL|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>$(PREPROCESSOR_DEFS);NDEBUG;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>$(PREPROCESSOR_DEFS);NDEBUG;NOMINMAX;</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>
-        $(VcpkgRoot)\installed\$(VcpkgTriplet)\include\luajit;
-        $(GITHUB_WORKSPACE)\vcpkg\installed\$(VcpkgTriplet)\include\;
+        $(ProjectDir)vcpkg_installed\$(VcpkgTriplet)\include\luajit;
+        $(ProjectDir)vcpkg_installed\$(VcpkgTriplet)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -303,15 +304,15 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DirectX|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>$(PREPROCESSOR_DEFS);NDEBUG;OPENGL_ES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>$(PREPROCESSOR_DEFS);NDEBUG;OPENGL_ES;NOMINMAX</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>
-        $(VcpkgRoot)\installed\$(VcpkgTriplet)\include\luajit;
-        $(GITHUB_WORKSPACE)\vcpkg\installed\$(VcpkgTriplet)\include\;
+        $(ProjectDir)vcpkg_installed\$(VcpkgTriplet)\include\luajit;
+        $(ProjectDir)vcpkg_installed\$(VcpkgTriplet)\include\;
         generated;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
@@ -435,6 +436,8 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(InputDir)\$(IntDir)\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\src\framework\luafunctions.cpp" />
+    <ClCompile Include="..\src\framework\voice\voicemanager.cpp" />
+    <ClCompile Include="..\src\framework\voice\luafunctions_voice.cpp" />
     <ClCompile Include="..\src\framework\net\connection.cpp" />
     <ClCompile Include="..\src\framework\net\httplogin.cpp" />
     <ClCompile Include="..\src\framework\net\inputmessage.cpp" />

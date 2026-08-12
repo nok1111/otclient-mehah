@@ -192,6 +192,7 @@ find_package(pugixml CONFIG REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(httplib CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
+find_package(Opus CONFIG REQUIRED)
 
 if(APPLE)
 	# Required for Physfs
@@ -309,6 +310,8 @@ set(SOURCE_FILES
 	framework/proxy/proxy_client.cpp
 	framework/net/packet_player.cpp
 	framework/net/packet_recorder.cpp
+	framework/voice/voicemanager.cpp
+	framework/voice/luafunctions_voice.cpp
 
 	client/animatedtext.cpp
 	client/animator.cpp
@@ -519,6 +522,7 @@ if(MSVC)
 		winmm.lib
 		pugixml::pugixml
 		fmt::fmt-header-only
+		Opus::opus
 	)
 elseif(ANDROID)
 	target_include_directories(${PROJECT_NAME}

@@ -280,10 +280,10 @@ Panel
     !tooltip: tr('Ignore players')
     image-source: /images/ui/console_buttons
     image-clip: 0 32 16 16
-    anchors.right: readOnlyButton.left
+    anchors.right: voiceButton.left
     anchors.bottom: consoleContentPanel.top
     margin-bottom: 5
-    margin-right: 5
+    margin-right: 1
     size: 16 16
     @onClick: onClickIgnoreButton()
 
@@ -292,6 +292,24 @@ Panel
 
     $pressed:
       image-clip: 16 32 16 16
+
+  TabButton
+    id: voiceButton
+    !tooltip: tr('Voice Chat') .. ' (F6)'
+    image-source: /images/ui/console_buttons
+    image-clip: 0 0 16 16
+    anchors.right: readOnlyButton.left
+    anchors.bottom: consoleContentPanel.top
+    margin-bottom: 5
+    margin-right: 5
+    size: 16 16
+    @onClick: openVoiceWindow()
+
+    $hover !disabled:
+      image-clip: 0 0 16 16
+
+    $pressed:
+      image-clip: 16 0 16 16
 
   UIButton
     id: readOnlyButton

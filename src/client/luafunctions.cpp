@@ -882,6 +882,8 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<LocalPlayer>("setMana", &LocalPlayer::setMana);
     g_lua.bindClassMemberFunction<LocalPlayer>("setFocusStacks", &LocalPlayer::setFocusStacks);
     g_lua.bindClassMemberFunction<LocalPlayer>("getFocusStacks", &LocalPlayer::getFocusStacks);
+    g_lua.bindClassMemberFunction<LocalPlayer>("setScrapStacks", &LocalPlayer::setScrapStacks);
+    g_lua.bindClassMemberFunction<LocalPlayer>("getScrapStacks", &LocalPlayer::getScrapStacks);
     g_lua.bindClassMemberFunction<LocalPlayer>("setBloodEssence", &LocalPlayer::setBloodEssence);
     g_lua.bindClassMemberFunction<LocalPlayer>("getBloodEssence", &LocalPlayer::getBloodEssence);
     g_lua.bindClassMemberFunction<LocalPlayer>("setBloodFrenzy", &LocalPlayer::setBloodFrenzy);

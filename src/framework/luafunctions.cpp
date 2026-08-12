@@ -65,6 +65,7 @@
 
 #include "net/inputmessage.h"
 #include "net/outputmessage.h"
+#include "voice/luafunctions_voice.h"
 
 void Application::registerLuaFunctions()
 {
@@ -1046,4 +1047,7 @@ void Application::registerLuaFunctions()
     g_lua.bindClassMemberFunction<SoundChannel>("isEnabled", &SoundChannel::isEnabled);
     g_lua.bindClassMemberFunction<SoundChannel>("getId", &SoundChannel::getId);
 #endif
+
+    // Voice system
+    Voice_registerFunctions();
 }
