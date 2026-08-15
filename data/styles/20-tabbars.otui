@@ -38,7 +38,6 @@ TabBarPanel < Panel
 TabBarButton < UIButton
   size: 20 21
   image-source: /images/ui/tabbutton_square
-  image-source: /images/ui/tabbutton_square
   image-color: #dfdfdf
   image-clip: 0 0 20 21
   image-border: 3
