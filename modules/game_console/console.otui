@@ -312,7 +312,9 @@ Panel
     margin-right: 5
     margin-bottom: 5
     size: 96 34
+    image-source: /images/ui/buttons/tabbar_button
     image-clip: 0 0 116 34
+    image-border: 12
     icon: /images/game/console/readOnly
     color: #dfdfdfff
     font: verdana-11px-rounded
