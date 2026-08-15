@@ -73,7 +73,7 @@ HorizontalScrollBar < UIScrollBar
   image-repeated: false
 
   $disabled:
-    color: #bbbbbb88
+    color: #c0c0c088
 
   UIButton
     id: decrementButton

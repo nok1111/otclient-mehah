@@ -42,7 +42,7 @@ PopupScrollMenuButton < UIButton
   text-align: left
   font: verdana-11px-antialised
 
-  color: #aaaaaa
+  color: #c0c0c0
   background-color: alpha
 
   $hover !disabled:

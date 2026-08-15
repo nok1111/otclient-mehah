@@ -12,7 +12,7 @@ MiniWindow < UIMiniWindow
   image-border-bottom: 12
   focusable: false
   &minimizedHeight: 24
-  color: #909090
+  color: #c0c0c0
   
   
   $on:

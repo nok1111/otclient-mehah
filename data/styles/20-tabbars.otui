@@ -103,13 +103,13 @@ TabBarVertical < UITabBar
 TabBarVerticalPanel < Panel
 TabBarVerticalButton < UIButton
   size: 48 48
-  color: #aaaaaa
+  color: #c0c0c0
   anchors.left: parent.left
   anchors.right: parent.right
   text-align: bottom
   icon-align: top
   icon-offset-y: 2
-  icon-color: #888888
+  icon-color: #c0c0c0
   $first:
     anchors.top: parent.top
   $!first:

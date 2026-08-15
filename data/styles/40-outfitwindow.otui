@@ -18,7 +18,7 @@ MiniPanel < Panel
   padding-bottom: 6
   padding-top: 25
   padding-right: 6
-  color: #929292
+  color: #c0c0c0
 
 RotateButton < UIButton
   anchors.bottom: parent.bottom
@@ -132,7 +132,7 @@ SelectionButton < Panel
 OutfitWindow < MainWindow
   size: 735 575
   text: Customise Character
-  color: #929292
+  color: #c0c0c0
   @onEnter: modules.game_outfit.accept()
   @onEscape: modules.game_outfit.destroy()
 
