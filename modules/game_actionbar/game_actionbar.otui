@@ -59,7 +59,6 @@ UIWindow
   anchors.right: parent.right
   padding-top: 3
   text-align: center
-  //background-color: gray
   auto-focus: first
   draggable: false
   phantom: false
@@ -105,8 +104,6 @@ UIWindow
     anchors.top: parent.top
     anchors.left: prevButton.right
     anchors.right: nextButton.left
-    //anchors.left: parent.left
-    //anchors.right: parent.right
     anchors.bottom: parent.bottom
     horizontal-scrollbar: horizontalScroll
     inverted-scroll: false

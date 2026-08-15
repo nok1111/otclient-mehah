@@ -80,9 +80,8 @@ UIWindow
   &save: true
   opacity: 0.9
   border: 0 #ffffffff
-  //border: 1 #FF0000
   &onMousePress: modules.game_buffs.cooldownSettings
-  $hover: 
+  $hover:
     border: 3 #202e35
 
   Panel
@@ -91,5 +90,4 @@ UIWindow
     layout:
       type: horizontalBox
     height: 62
-    //padding: 3
     anchors.fill: parent
