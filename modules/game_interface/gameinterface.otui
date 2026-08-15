@@ -6,7 +6,6 @@ GameSidePanel < UIMiniWindowContainer
   width: 176
   layout:
     type: verticalBox
-    //spacing: 1
 
 SelectColumnButton < CheckBox
   visible: false
@@ -18,7 +17,7 @@ GameBottomPanel < UIWindow
   image-source: /images/ui/background_dark
   image-repeated: true
   padding-top: 6
-  draggable:false
+  draggable: false
 
   UIWidget
     image-source: /images/ui/divider_horizontal
@@ -69,7 +68,7 @@ UIWidget
     anchors.right: gameRightExtraPanel.left
     anchors.top: gameTopPanel.bottom
     anchors.bottom: gameBottomPanel.top
-    
+
     focusable: false
 
     Button
@@ -158,7 +157,7 @@ UIWidget
     id: gameSelectRightExtraColumn
     anchors.right: gameRightExtraPanel.right
     anchors.bottom: gameRightExtraPanel.bottom
-    
+
   SelectColumnButton
     id: gameSelectLeftExtraColumn
     anchors.right: gameLeftExtraPanel.right
