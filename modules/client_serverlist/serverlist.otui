@@ -16,7 +16,7 @@ ServerWidget < UIWidget
 
   Label
     id: details
-    color: #aaaaaa
+    color: #c0c0c0
     anchors.top: parent.top
     anchors.left: parent.left
     font: verdana-11px-monochrome
@@ -30,7 +30,7 @@ ServerWidget < UIWidget
   Label
     id: protocol
     color: #ffffff
-    color: #aaaaaa
+    color: #c0c0c0
     anchors.top: parent.top
     anchors.right: next.left
     margin-right: 5

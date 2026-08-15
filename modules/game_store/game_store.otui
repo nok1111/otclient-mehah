@@ -95,7 +95,7 @@ MenuCategoryStore < UIWidget
 StoreWindow
   size: 780 537
   !text: tr('Store')
-  color: #909090
+  color: #c0c0c0
   visible: false
   @onEscape: modules.game_store.toggle()
 

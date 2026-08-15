@@ -93,7 +93,7 @@ LobbyListRow < Panel
     id: lobbyCreatorLabel
     font: verdana-11px-antialised
     height: 18
-    color: #888888
+    color: #c0c0c0
     margin-left: 5
     width: 90
 
@@ -536,7 +536,7 @@ MainWindow
         !text: tr('No muted players. Right-click a player to mute/unmute voice.')
         font: verdana-11px-antialised
         text-align: center
-        color: #888888
+        color: #c0c0c0
         anchors.top: prev.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -650,7 +650,7 @@ MainWindow
         id: micSelectionLabel
         !text: tr('Microphone selection is not available in this build.')
         font: verdana-11px-antialised
-        color: #888888
+        color: #c0c0c0
         anchors.top: prev.bottom
         anchors.left: parent.left
         anchors.right: parent.right

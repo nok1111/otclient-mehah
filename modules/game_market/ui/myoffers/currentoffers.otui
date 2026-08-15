@@ -1,13 +1,13 @@
 OfferTableRow < TableRow
   font: verdana-11px-monochrome
-  color: #cccccc
+  color: #dfdfdf
   height: 15
 
 OfferTableColumn < TableColumn
   font: verdana-11px-monochrome
   background-color: alpha
   text-offset: 5 0
-  color: #cccccc
+  color: #dfdfdf
   width: 80
 
 OfferTableWarningColumn < OfferTableColumn
@@ -15,13 +15,13 @@ OfferTableWarningColumn < OfferTableColumn
 
 OfferTableHeaderRow < TableHeaderRow
   font: verdana-11px-monochrome
-  color: #cccccc
+  color: #dfdfdf
   height: 20
 
 OfferTableHeaderColumn < SortableTableHeaderColumn
   font: verdana-11px-monochrome
   text-offset: 2 0
-  color: #cccccc
+  color: #dfdfdf
 
   $focus:
     background-color: #294f6d

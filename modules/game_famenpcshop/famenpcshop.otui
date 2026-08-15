@@ -77,7 +77,7 @@ FameItemCard < UICheckBox
     anchors.horizontalCenter: parent.horizontalCenter
     margin-bottom: 5
     font: verdana-11px-rounded
-    color: #aaaaaa
+    color: #c0c0c0
     text-auto-resize: true
 
   UIWidget
@@ -383,7 +383,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         margin: 3 10 0 10
-        color: #aaaaaa
+        color: #c0c0c0
         text-align: center
 
       Label
@@ -409,7 +409,7 @@ MainWindow
         change-cursor-image: false
         focusable: false
         selectable: false
-        color: #cccccc
+        color: #dfdfdf
         background-color: #1a1a1a
 
       HorizontalScrollBar

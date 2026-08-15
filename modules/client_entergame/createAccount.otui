@@ -14,7 +14,7 @@ WorldWidget < UIWidget
 
   Label
     id: details
-    color: #aaaaaa
+    color: #c0c0c0
     anchors.top: parent.top
     anchors.left: parent.left
     font: verdana-11px-monochrome

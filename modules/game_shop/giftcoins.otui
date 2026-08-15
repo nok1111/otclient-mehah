@@ -5,7 +5,7 @@ MainWindow
   id: transferWindow
   !text: tr('Gift Tibia Coins')
   size: 280 238
-  color: #909090
+  color: #c0c0c0
   @onEscape: modules.game_shop.cancelGiftCoins()
   $on:
     size: 280 300

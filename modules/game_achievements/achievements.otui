@@ -37,7 +37,7 @@ AchievementItem < Panel
     text: ?
     text-align: center
     font: verdana-11px-rounded
-    color: #888888
+    color: #c0c0c0
 
   // Content
   Panel
@@ -132,7 +132,7 @@ AchievementItem < Panel
       margin-left: 80
       text: Hint: Complete the task to earn this achievement
       font: verdana-11px-rounded
-      color: #888888
+      color: #c0c0c0
       text-wrap: true
 
 // Reward Item Widget (outfit card for rewards shop)

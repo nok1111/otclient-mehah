@@ -103,7 +103,7 @@ TaskCard < Panel
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
       font: verdana-11px-rounded
-      color: #aaaaaa
+      color: #c0c0c0
       
     Panel
       id: modifiersList
@@ -135,7 +135,7 @@ TaskCard < Panel
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
       font: verdana-11px-rounded
-      color: #aaaaaa
+      color: #c0c0c0
       
     Panel
       id: rewardsContainer
@@ -459,7 +459,7 @@ MainWindow
         id: activeTaskStatus
         !text: tr('No active task')
         font: verdana-11px-rounded
-        color: #888888
+        color: #c0c0c0
         anchors.left: activeTaskTitle.right
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 8

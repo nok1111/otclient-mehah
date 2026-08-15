@@ -221,7 +221,7 @@ UIWidget
     Label
       id: yourLimitLabel
       !text: tr('Your Limit:')
-      color: #909090
+      color: #c0c0c0
       anchors.left: AuctionText.left
       anchors.top: AuctionText.bottom
       margin-left: 15
@@ -244,7 +244,7 @@ UIWidget
     Label
       id: transferLabel
       !text: tr('Price:')
-      color: #909090
+      color: #c0c0c0
       anchors.left: subAuctionText.left
       anchors.top: subAuctionText.bottom
       margin-left: 64
@@ -287,7 +287,7 @@ UIWidget
     !text: tr('Place Your Bid')
     text-align: top
     text-offset: 0 1
-    color: #909090
+    color: #c0c0c0
     size: 413 358
     anchors.top: LateralBase.top
     anchors.left: LateralBase.right
@@ -325,7 +325,7 @@ UIWidget
       color: #F7F7F7
     Label
       !text: tr('Name:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -340,7 +340,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Size:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: name.bottom
@@ -355,7 +355,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Max. Beds:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: size.bottom
@@ -370,7 +370,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Rent:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: beds.bottom
@@ -399,7 +399,7 @@ UIWidget
     !text: tr('Select Move Date')
     text-align: top
     text-offset: 0 1
-    color: #909090
+    color: #c0c0c0
     size: 413 358
     anchors.top: LateralBase.top
     anchors.left: LateralBase.right
@@ -437,7 +437,7 @@ UIWidget
       color: #F7F7F7
     Label
       !text: tr('Name:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -452,7 +452,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Size:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: name.bottom
@@ -467,7 +467,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Max. Beds:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: size.bottom
@@ -482,7 +482,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Rent:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: beds.bottom
@@ -508,7 +508,7 @@ UIWidget
       color: #F7F7F7
     Label
       !text: tr('Paid until:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -523,7 +523,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Move Date:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: paid.bottom
@@ -593,7 +593,7 @@ UIWidget
     !text: tr('Configure House Transfer')
     text-align: top
     text-offset: 0 1
-    color: #909090
+    color: #c0c0c0
     size: 413 358
     anchors.top: LateralBase.top
     anchors.left: LateralBase.right
@@ -631,7 +631,7 @@ UIWidget
       color: #F7F7F7
     Label
       !text: tr('Name:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -646,7 +646,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Size:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: name.bottom
@@ -661,7 +661,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Max. Beds:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: size.bottom
@@ -676,7 +676,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Rent:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: beds.bottom
@@ -702,7 +702,7 @@ UIWidget
       color: #F7F7F7
     Label
       !text: tr('Paid until:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -717,7 +717,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Transfer Date:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: paid.bottom
@@ -777,7 +777,7 @@ UIWidget
       image-source: /images/icons/show_gui_help_grey
     Label
       !text: tr('New Owner:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: year.bottom
@@ -807,7 +807,7 @@ UIWidget
       image-source: /images/icons/show_gui_help_grey
     Label
       !text: tr('Transfer Price:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: owner.bottom
@@ -839,7 +839,7 @@ UIWidget
     !text: tr('Cancel House Transfer')
     text-align: top
     text-offset: 0 1
-    color: #909090
+    color: #c0c0c0
     size: 413 358
     anchors.top: LateralBase.top
     anchors.left: LateralBase.right
@@ -877,7 +877,7 @@ UIWidget
       color: #F7F7F7
     Label
       !text: tr('Name:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -892,7 +892,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Size:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: name.bottom
@@ -907,7 +907,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Max. Beds:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: size.bottom
@@ -922,7 +922,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Rent:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: beds.bottom
@@ -948,7 +948,7 @@ UIWidget
       color: #F7F7F7
     Label
       !text: tr('Paid until:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -963,7 +963,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('New Owner:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -978,7 +978,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Transfer Date:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -993,7 +993,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Price:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -1024,7 +1024,7 @@ UIWidget
     !text: tr('Accept House Transfer')
     text-align: top
     text-offset: 0 1
-    color: #909090
+    color: #c0c0c0
     size: 413 358
     anchors.top: LateralBase.top
     anchors.left: LateralBase.right
@@ -1062,7 +1062,7 @@ UIWidget
       color: #F7F7F7
     Label
       !text: tr('Name:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -1077,7 +1077,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Size:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: name.bottom
@@ -1092,7 +1092,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Max. Beds:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: size.bottom
@@ -1107,7 +1107,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Rent:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: beds.bottom
@@ -1133,7 +1133,7 @@ UIWidget
       color: #F7F7F7
     Label
       !text: tr('Paid until:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -1148,7 +1148,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('New Owner:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -1163,7 +1163,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Transfer Date:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -1178,7 +1178,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Price:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -1209,7 +1209,7 @@ UIWidget
     !text: tr('Reject House Transfer')
     text-align: top
     text-offset: 0 1
-    color: #909090
+    color: #c0c0c0
     size: 413 358
     anchors.top: LateralBase.top
     anchors.left: LateralBase.right
@@ -1247,7 +1247,7 @@ UIWidget
       color: #F7F7F7
     Label
       !text: tr('Name:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -1262,7 +1262,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Size:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: name.bottom
@@ -1277,7 +1277,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Max. Beds:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: size.bottom
@@ -1292,7 +1292,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Rent:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: beds.bottom
@@ -1318,7 +1318,7 @@ UIWidget
       color: #F7F7F7
     Label
       !text: tr('Paid until:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -1333,7 +1333,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('New Owner:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -1348,7 +1348,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Transfer Date:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom
@@ -1363,7 +1363,7 @@ UIWidget
       margin-left: 8
     Label
       !text: tr('Price:')
-      color: #909090
+      color: #c0c0c0
       text-align: right
       size: 90 15
       anchors.top: prev.bottom

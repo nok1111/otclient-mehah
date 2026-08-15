@@ -329,7 +329,7 @@ MainWindow
   id: shopWindow
   !text: 'Store'
   size: 776 533
-  color: #909090
+  color: #c0c0c0
   @onEscape: modules.game_shop.hide()
   @onEnter: modules.game_shop.onSearch()
 

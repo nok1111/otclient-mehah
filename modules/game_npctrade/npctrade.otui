@@ -7,7 +7,7 @@ NPCOfferLabel < Label
 NPCItemBox < UICheckBox
   border-width: 1
   border-color: #000000
-  color: #aaaaaa
+  color: #c0c0c0
   text-align: center
   text-offset: 0 20
   @onCheckChange: modules.game_npctrade.onItemBoxChecked(self)

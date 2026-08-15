@@ -81,7 +81,7 @@ StashItemBox < UICheckBox
   id: itemBox
   border-width: 1
   border-color: #000000
-  color: #aaaaaa
+  color: #c0c0c0
   text-align: center
 
   Item

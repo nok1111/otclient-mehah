@@ -179,7 +179,7 @@ ExpeditionPanel < UIWidget
       margin-top: 2
       text: No buffs available
       font: verdana-11px-antialised
-      color: #888888
+      color: #c0c0c0
       width: 200
       text-wrap: true
       text-align: center

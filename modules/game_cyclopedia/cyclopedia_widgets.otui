@@ -6,7 +6,7 @@ HouseBidArea < UIWidget
   margin-top: 2
   Label
     !text: tr('Set bid limit:')
-    color: #909090
+    color: #c0c0c0
     text-align: right
     size: 90 15
     anchors.top: parent.top
@@ -42,7 +42,7 @@ HouseBidArea < UIWidget
 House < UICheckBox
   text-align: top
   text-offset: 0 1
-  color: #909090
+  color: #c0c0c0
   image-source: /images/ui/widget-borderimage
   image-border: 5
   padding: 5
@@ -55,14 +55,14 @@ House < UICheckBox
     id: size
     size: 100 15
     !text: tr('Size: 17sqm')
-    color: #909090
+    color: #c0c0c0
     anchors.top: parent.top
     anchors.left: parent.left
   Label
     id: status
     !text: tr('Status: auctioned (no bid yet)')
     text-auto-resize: true
-    color: #909090
+    color: #c0c0c0
     anchors.top: size.bottom
     anchors.left: parent.left
     margin-top: 2
@@ -70,13 +70,13 @@ House < UICheckBox
     id: beds
     size: 95 15
     !text: tr('Max. Beds: 1')
-    color: #909090
+    color: #c0c0c0
     anchors.top: size.top
     anchors.left: size.right
   Label
     text-auto-resize: true
     !text: tr('Rent:   ')
-    color: #909090
+    color: #c0c0c0
     anchors.top: beds.top
     anchors.left: beds.right
   Label
@@ -201,7 +201,7 @@ Achievement < UICheckBox
   UIWidget
     id: title
     text-auto-resize: true
-    color: #909090
+    color: #c0c0c0
     anchors.top: parent.top
     margin-top: 2
     anchors.horizontalCenter: parent.horizontalCenter
@@ -368,7 +368,7 @@ SlotBossSlots < UIWidget
   size: 222 360
   image-source: /images/ui/outfits/minipanel
   image-border: 20
-  color: #929292
+  color: #c0c0c0
   text-offset: 0 3
   text-align: top
   Label
@@ -631,7 +631,7 @@ SubPanel < UIWidget
   image-source: /images/ui/outfits/minipanel
   image-border: 3
   image-border-top: 22
-  color: #929292
+  color: #c0c0c0
   text-offset: 0 3
   text-align: top
 ItemCategory < UIWidget
@@ -694,7 +694,7 @@ CharmItem < UICheckBox
   image-source: /images/ui/outfits/minipanel
   image-border: 3
   image-border-top: 22
-  color: #929292
+  color: #c0c0c0
   text-offset: 0 3
   text-align: top
   border: 0 white
@@ -828,7 +828,7 @@ BestiaryCategory < UIWidget
   !text: tr('Name')
   text-align: top
   text-offset: 0 4
-  color: #909090
+  color: #c0c0c0
   UIWidget
     id: ClassBase
     anchors.top: parent.top
@@ -1213,7 +1213,7 @@ TrackerButton < Panel
     anchors.left: spacer.right
     anchors.top: creature.top
     text-auto-resize: true
-    color: #888888
+    color: #c0c0c0
     margin-left: 2
 
   Label
@@ -1222,7 +1222,7 @@ TrackerButton < Panel
     anchors.top: creature.top
     text-align: right
     text-auto-resize: true
-    color: #888888
+    color: #c0c0c0
     margin-left: 2
 
   LifeProgressBar

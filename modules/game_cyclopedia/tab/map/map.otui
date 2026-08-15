@@ -27,7 +27,7 @@ UIWidget
         height: 170
         image-source: /images/ui/window
         image-border: 20
-        color: #929292
+        color: #c0c0c0
         text-offset: 0 3
         text-align: top
         !text: tr('Display')
@@ -238,7 +238,7 @@ UIWidget
         height: 108
         image-source: /images/ui/window
         image-border: 20
-        color: #929292
+        color: #c0c0c0
         text-offset: 0 3
         text-align: top
         !text: tr('Navigation')

@@ -24,7 +24,7 @@ MarketRightTabBarButton < TabBarButton
   size: 20 25
   font: verdana-11px-rounded
   text-offset: 0 2
-  color: #929292
+  color: #c0c0c0
 
   $first:
     anchors.right: parent.right

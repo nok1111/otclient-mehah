@@ -11,7 +11,7 @@ UIWidget
     height: 50
     image-source: /images/ui/window_new
     image-border: 10
-    color: #929292
+    color: #c0c0c0
     text-offset: 0 3
     text-align: top
     !text: tr('Progress')

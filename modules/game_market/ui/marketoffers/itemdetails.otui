@@ -1,7 +1,7 @@
 DetailsTableRow < TableRow
   font: verdana-11px-monochrome
   focusable: true
-  color: #cccccc
+  color: #dfdfdf
   height: 45
   focusable: false
   padding: 2
@@ -12,7 +12,7 @@ DetailsTableColumn < TableColumn
   font: verdana-11px-monochrome
   background-color: alpha
   text-offset: 5 2
-  color: #cccccc
+  color: #dfdfdf
   width: 100
   focusable: false
 
