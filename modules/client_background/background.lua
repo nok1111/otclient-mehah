@@ -11,10 +11,17 @@ function init()
     background:lower()
 
     clientVersionLabel = background:getChildById('clientVersionLabel')
-    clientVersionLabel:setText(g_app.getName() .. ' ' .. g_app.getVersion() .. '\n' .. 'Rev  ' ..
-                                   g_app.getBuildRevision() .. ' (' .. g_app.getBuildCommit() .. ')\n' .. 'Built on ' ..
-                                   g_app.getBuildDate() .. '\n' .. g_app.getBuildCompiler() .. ' - ' ..
-                                   g_app.getBuildArch())
+    -- Show only app name + version by default for a cleaner login screen.
+    -- Full debug info (rev, commit, build date, compiler, arch) is available
+    -- by enabling debugVersionLabel in config.
+    if g_settings.getBoolean('debugVersionLabel') then
+        clientVersionLabel:setText(g_app.getName() .. ' ' .. g_app.getVersion() .. '\n' .. 'Rev  ' ..
+                                       g_app.getBuildRevision() .. ' (' .. g_app.getBuildCommit() .. ')\n' .. 'Built on ' ..
+                                       g_app.getBuildDate() .. '\n' .. g_app.getBuildCompiler() .. ' - ' ..
+                                       g_app.getBuildArch())
+    else
+        clientVersionLabel:setText(g_app.getName() .. ' ' .. g_app.getVersion())
+    end
 
     if not g_game.isOnline() then
         addEvent(function()
