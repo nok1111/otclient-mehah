@@ -138,7 +138,7 @@ TabBarQtVerticalButton < UIButton
   icon-offset: 6 0
   text-align: center
   text-offset: 0 2
-  color: #b9b9b9ff
+  color: #dfdfdfff
   image-source: /images/ui/tabbutton_new_shadowed
   image-clip: 0 0 114 21
   $first:

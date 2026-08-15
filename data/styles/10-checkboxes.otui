@@ -113,7 +113,7 @@ fakeCheckBox < UICheckBox
   image-border: 3
   padding: 5 10 5 10
   opacity: 1.0
-  color: #b9b9b9ff
+  color: #dfdfdfff
 
   $hover !disabled:
     color: #ffffff
