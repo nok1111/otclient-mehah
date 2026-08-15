@@ -306,6 +306,17 @@ function PassiveSkills.showAscensionTab()
 end
 
 
+------ Node Border Config (per-kind image, size, and offset)
+------ Applies globally to all constellation nodes. waypoint uses the old border.
+PassiveSkills.nodeBorderConfigs = {
+	core        = { image = 'images/new_borders/node.png', width = 60, height = 55, offsetX = 0, offsetY = 0 },
+	keystone    = { image = 'images/new_borders/keystone.png',     width = 70, height = 70, offsetX = 0, offsetY = 0 },
+	notable     = { image = 'images/new_borders/star.png',          width = 60, height = 57, offsetX = 0, offsetY = 0 },
+	nexus       = { image = 'images/new_borders/constellation.png',          width = 60, height = 57, offsetX = 0, offsetY = 0 },
+	fork        = { image = 'images/new_borders/node.png',          width = 60, height = 52, offsetX = 0, offsetY = 0 },
+	star        = { image = 'images/new_borders/node.png',          width = 60, height = 57, offsetX = 0, offsetY = 0 },
+}
+
 ------ Paragon Board Config (client-side mirror)
 
 PassiveSkills.paragonConfig = {
@@ -754,7 +765,7 @@ function PassiveSkills.applyTooltip(nodeData, state, blockReason)
 
 	-- Subtitle: kind (white/gray) and state (color)
 	local kindIcons = {
-		core = "Talent", keystone = "Keystone", notable = "Notable",
+		core = "Talent", keystone = "Keystone", notable = "Constellation",
 		nexus = "Nexus", fork = "Choice", star = "Talent",
 	}
 	local kindLabel = kindIcons[nodeData.kind] or "Talent"
@@ -2004,47 +2015,29 @@ function PassiveSkills.createConstellationNode(panel, treeData, nodeData, nodePi
 
 	-- Border first (behind icon)
 	local border = g_ui.createWidget("NodeEntryBorder", node)
-	border:setImageSource('images/borders/21')
+	local borderConfig = PassiveSkills.nodeBorderConfigs[nodeData.kind]
+	if borderConfig then
+		border:setImageSource(borderConfig.image)
+		border:setSize({width = borderConfig.width, height = borderConfig.height})
+		border:setMarginLeft(borderConfig.offsetX)
+		border:setMarginTop(borderConfig.offsetY)
+	else
+		border:setImageSource('images/borders/21')
+	end
 
-	-- Border color based on node kind first, then modified by state
-	local kindColors = {
-		core = '#f4ca16',
-		keystone = '#ff8040',
-		notable = '#a040ff',
-		nexus = '#40ff80',
-		fork = '#40a0ff',
-		star = '#c0c0c0',
-		waypoint = '#808080',
-	}
-	-- Get base color from kind
-	local borderColor = kindColors[nodeData.kind] or '#c0c0c0'
-
-	-- Override with state-based colors (state takes priority for visibility)
-	if proposedLevel > cachedLevel then
-		-- Pending allocation: green tint
-		borderColor = '#60ff60'
-	elseif state == "maxed" then
-		borderColor = '#f4ca16'
-	elseif state == "unlocked" then
-		-- Keep kind color but brighten it
-		borderColor = kindColors[nodeData.kind] or '#ffffff'
-	elseif state == "available" then
-		-- Dimmed version of kind color
-		local stateColors = {
-			core = '#d4b830',
-			keystone = '#d46030',
-			notable = '#8030c0',
-			nexus = '#30c060',
-			fork = '#3080c0',
-			star = '#909090',
-		}
-		borderColor = stateColors[nodeData.kind] or '#a098b0'
-	elseif state == "blocked" then
+	-- Border color: no tint by default (show image as-is), only red for blocked
+	local borderColor = '#ffffff'
+	if state == "blocked" then
 		borderColor = '#ff4040'
-	elseif state == "locked" then
-		borderColor = '#3a3045'
 	end
 	border:setImageColor(borderColor)
+
+	-- Border opacity: dim locked nodes, full opacity otherwise
+	if state == "locked" then
+		border:setOpacity(0.5)
+	else
+		border:setOpacity(1.0)
+	end
 
 	-- Icon on top of border
 	local iconPath = 'images/no_image.png'

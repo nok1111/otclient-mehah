@@ -214,124 +214,81 @@ MainWindow
     border: 1 #2a2040
 
     Panel
-      id: legendStar
+      id: legendConstellation
       anchors.top: parent.top
       anchors.bottom: parent.bottom
       anchors.left: parent.left
       width: 225
+      margin-left: 60
 
       NodeEntry
-        id: legendStarIcon
+        id: legendConstellationIcon
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        margin-left: 8
+        margin-left: 12
         size: 36 36
-        image-source: images/icons/node.png
+        background-color: #1a1525
 
         NodeEntryBorder
-          id: legendStarBorder
+          id: legendConstellationBorder
           anchors.centerIn: parent
-          size: 42 42
-          image-color: #c0c0c0
+          size: 50 47
+          image-source: images/new_borders/star.png
 
       Label
-        id: legendStarTitle
-        anchors.left: legendStarIcon.right
+        id: legendConstellationTitle
+        anchors.left: legendConstellationIcon.right
         anchors.top: parent.top
-        margin-top: 8
-        margin-left: 8
+        margin-top: 20
+        margin-left: 16
         text-auto-resize: true
-        color: #f4ca16
-        !text: tr('Star / Notable')
+        color: #dfdfdf
+        !text: tr('Constellation')
 
       Label
-        id: legendStarDesc
-        anchors.left: legendStarIcon.right
-        anchors.top: legendStarTitle.bottom
+        id: legendConstellationDesc
+        anchors.left: legendConstellationIcon.right
+        anchors.top: legendConstellationTitle.bottom
         anchors.right: parent.right
         margin-top: 2
-        margin-left: 8
+        margin-left: 16
         margin-right: 8
         text-wrap: true
         text-auto-resize: true
         text-align: left
         color: #a0a0b0
-        !text: tr('Stat and passive bonuses. Most common node type.')
-
-    Panel
-      id: legendFork
-      anchors.top: parent.top
-      anchors.bottom: parent.bottom
-      anchors.left: legendStar.right
-      width: 225
-
-      NodeEntry
-        id: legendForkIcon
-        anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 8
-        size: 36 36
-        image-source: images/icons/node.png
-
-        NodeEntryBorder
-          id: legendForkBorder
-          anchors.centerIn: parent
-          size: 42 42
-          image-color: #40a0ff
-
-      Label
-        id: legendForkTitle
-        anchors.left: legendForkIcon.right
-        anchors.top: parent.top
-        margin-top: 8
-        margin-left: 8
-        text-auto-resize: true
-        color: #40a0ff
-        !text: tr('Fork')
-
-      Label
-        id: legendForkDesc
-        anchors.left: legendForkIcon.right
-        anchors.top: legendForkTitle.bottom
-        anchors.right: parent.right
-        margin-top: 2
-        margin-left: 8
-        margin-right: 8
-        text-wrap: true
-        text-auto-resize: true
-        text-align: left
-        color: #a0a0b0
-        !text: tr('Mutually exclusive choice. Locks the other path.')
+        !text: tr('Notable passive bonus. Choose wisely.')
 
     Panel
       id: legendKeystone
       anchors.top: parent.top
       anchors.bottom: parent.bottom
-      anchors.left: legendFork.right
+      anchors.left: legendConstellation.right
       width: 225
+      margin-left: 60
 
       NodeEntry
         id: legendKeystoneIcon
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        margin-left: 8
+        margin-left: 16
         size: 36 36
-        image-source: images/icons/node.png
+        background-color: #1a1525
 
         NodeEntryBorder
           id: legendKeystoneBorder
           anchors.centerIn: parent
-          size: 42 42
-          image-color: #ff8040
+          size: 58 58
+          image-source: images/new_borders/keystone.png
 
       Label
         id: legendKeystoneTitle
         anchors.left: legendKeystoneIcon.right
         anchors.top: parent.top
-        margin-top: 8
-        margin-left: 8
+        margin-top: 20
+        margin-left: 16
         text-auto-resize: true
-        color: #ff8040
+        color: #dfdfdf
         !text: tr('Keystone')
 
       Label
@@ -340,7 +297,7 @@ MainWindow
         anchors.top: legendKeystoneTitle.bottom
         anchors.right: parent.right
         margin-top: 2
-        margin-left: 8
+        margin-left: 16
         margin-right: 8
         text-wrap: true
         text-auto-resize: true
@@ -354,29 +311,30 @@ MainWindow
       anchors.bottom: parent.bottom
       anchors.left: legendKeystone.right
       width: 225
+      margin-left: 60
 
       NodeEntry
         id: legendNexusIcon
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        margin-left: 8
+        margin-left: 12
         size: 36 36
-        image-source: images/icons/node.png
+        background-color: #1a1525
 
         NodeEntryBorder
           id: legendNexusBorder
           anchors.centerIn: parent
-          size: 42 42
-          image-color: #40ff80
+          size: 50 47
+          image-source: images/new_borders/constellation.png
 
       Label
         id: legendNexusTitle
         anchors.left: legendNexusIcon.right
         anchors.top: parent.top
-        margin-top: 8
-        margin-left: 8
+        margin-top: 20
+        margin-left: 16
         text-auto-resize: true
-        color: #40ff80
+        color: #dfdfdf
         !text: tr('Nexus')
 
       Label
@@ -385,7 +343,7 @@ MainWindow
         anchors.top: legendNexusTitle.bottom
         anchors.right: parent.right
         margin-top: 2
-        margin-left: 8
+        margin-left: 16
         margin-right: 8
         text-wrap: true
         text-auto-resize: true
