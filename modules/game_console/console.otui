@@ -1,7 +1,7 @@
 ConsoleLabel < UITextEdit
   font: verdana-11px-antialised
   height: 14
-  color: yellow
+  color: #FFFF00
   margin-left: 2
   text-wrap: true
   text-auto-resize: true
@@ -17,7 +17,7 @@ ConsoleLabel < UITextEdit
 ConsolePhantomLabel < UILabel
   font: verdana-11px-antialised
   height: 14
-  color: yellow
+  color: #FFFF00
   text-wrap: true
   text-auto-resize: true
   selection-color: #111416
