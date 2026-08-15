@@ -2,7 +2,6 @@ EnterGameWindow < MainWindow
   !text: tr('Enter Game')
   size: 236 316
 
-
 EnterGameButton < Button
   width: 64
 
@@ -30,17 +29,14 @@ EnterGameWindow
   size: 280 302
   @onEnter: EnterGame.doLogin()
 
-
-
   Label
     id: emailLabel
-    !text: tr('Acc Name:') 
+    !text: tr('Acc Name:')
     anchors.left: parent.left
     anchors.top: parent.top
 
     opacity: 0.8
 
-      
   Label
     id: passwordLabel
     !text: tr('Password:')
@@ -54,7 +50,7 @@ EnterGameWindow
     anchors.right: accountPasswordTextEdit.right
     anchors.verticalCenter: emailLabel.verticalCenter
     anchors.left: accountPasswordTextEdit.left
-    
+
   HiddenTextQtEdit
     id: accountPasswordTextEdit
     anchors.right: parent.right
@@ -100,7 +96,7 @@ EnterGameWindow
     opacity: 0.8
     margin-top: 5
     @onClick: g_platform.openUrl(Services.websites)
-    @onSetup: | 
+    @onSetup: |
         if Services and Services.websites then
             self:setVisible(true)
         else
@@ -261,7 +257,7 @@ EnterGameWindow
       self:disable()
       createWidgetAccount()
 
-    @onSetup: | 
+    @onSetup: |
       if Services and Servers_init and table.size(Servers_init) == 1 and Services.createAccount then
         self:setVisible(true)
       else
