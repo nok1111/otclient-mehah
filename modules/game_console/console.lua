@@ -2382,7 +2382,7 @@ function activateReadOnlyMode(channelName)
             if consoleTabBar:getCurrentTab() == tab then
                 tab:setColor('#dfdfdfff')
             else
-                tab:setColor('#7f7f7fff')
+                tab:setColor('#c0c0c0ff')
             end
             tab.isOnRedMessage = false
         end

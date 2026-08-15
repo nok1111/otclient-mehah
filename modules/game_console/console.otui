@@ -61,7 +61,7 @@ ConsoleTabBarButton < UIButton
   image-source: /images/ui/buttons/tabbar_button
   image-clip: 0 0 116 34
   image-border: 12
-  color: #7f7f7fff
+  color: #c0c0c0ff
   font: verdana-11px-rounded
   &ignoreTextResize: true
   anchors.top: parent.top
@@ -79,7 +79,7 @@ ConsoleTabBarButton < UIButton
 
   $on !checked:
     image-clip: 0 0 116 34
-    color: #7f7f7fff
+    color: #c0c0c0ff
 
 Panel
   id: consolePanel
