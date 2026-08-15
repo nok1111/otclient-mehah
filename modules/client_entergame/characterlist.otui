@@ -21,7 +21,7 @@ CharacterWidget < UIWidget
 
   Label
     id: name
-    color: #cccccc
+    color: #dfdfdf
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
@@ -45,7 +45,7 @@ CharacterWidget < UIWidget
 
   Label
     id: charInfo
-    color: #778899
+    color: #c0c0c0
     anchors.top: outfitCreatureBox.bottom
     anchors.left: parent.left
     anchors.right: parent.right
@@ -57,11 +57,11 @@ CharacterWidget < UIWidget
     background-color: alpha
 
     $on:
-      color: #aabbcc
+      color: #dfdfdf
 
   Label
     id: worldName
-    color: #556677
+    color: #c0c0c0
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right: parent.right
@@ -73,7 +73,7 @@ CharacterWidget < UIWidget
     &baseText: '%s'
 
     $on:
-      color: #778899
+      color: #c0c0c0
 
   Label
     id: mainCharacter
@@ -147,7 +147,7 @@ MainWindow
   Label
     id: accountStatusCaption
     !text: tr('Account Status') .. ':'
-    color: #778899
+    color: #c0c0c0
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: next.top
@@ -165,7 +165,7 @@ MainWindow
   Label
     id: accountStatusLabel
     !text: tr('Free Account')
-    color: #bbbbbb
+    color: #c0c0c0
     anchors.left: parent.left
     anchors.right: parent.right
     text-auto-resize: true
@@ -173,7 +173,7 @@ MainWindow
     anchors.bottom: separator.top
 
     $on:
-      color: #FF0000
+      color: #F55E5E
 
   HorizontalSeparator
     id: separator
