@@ -17,7 +17,7 @@ PingWidget < UIWidget
       height: 12
       width: 33
       margin-left: 2
-      anchors.left: Img_ping.right
+      anchors.left: imgPing.right
       text-horizontal-auto-resize: true
       text-auto-resize: true
       focusable: false
@@ -32,8 +32,8 @@ PingWidget < UIWidget
       text-align: center
       focusable: false
       font: verdana-11px-rounded
-      
-TopMenuPanel 
+
+TopMenuPanel
   id: topMenu
   anchors.top: parent.top
   anchors.horizontalCenter: parent.horizontalCenter
