@@ -136,7 +136,6 @@ EnterGameWindow
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.top: prev.bottom
-    margin-top: 6
     margin-top: -16
     visible: false
 
