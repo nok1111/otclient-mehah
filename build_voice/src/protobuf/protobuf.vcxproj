@@ -1,0 +1,477 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C2A5252D-D59C-3402-B9F8-5CE2890FEE55}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <VcpkgEnabled>false</VcpkgEnabled>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>protobuf</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="do_not_import_user.props" Condition="exists('do_not_import_user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">protobuf.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">protobuf</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">protobuf.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">protobuf</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">protobuf.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">protobuf</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">protobuf.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">protobuf</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/vcpkg_installed/x64-windows/include" /FS</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_DISABLE_VECTOR_ANNOTATION;_DISABLE_STRING_ANNOTATION;PROTOBUF_USE_DLLS;ABSL_CONSUME_DLL;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\Debug\protobuf.pdb</ProgramDataBaseFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_DISABLE_VECTOR_ANNOTATION;_DISABLE_STRING_ANNOTATION;PROTOBUF_USE_DLLS;ABSL_CONSUME_DLL;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/vcpkg_installed/x64-windows/include" /FS</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_DISABLE_VECTOR_ANNOTATION;_DISABLE_STRING_ANNOTATION;PROTOBUF_USE_DLLS;ABSL_CONSUME_DLL;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ProgramDataBaseFileName>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\Release\protobuf.pdb</ProgramDataBaseFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_DISABLE_VECTOR_ANNOTATION;_DISABLE_STRING_ANNOTATION;PROTOBUF_USE_DLLS;ABSL_CONSUME_DLL;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/vcpkg_installed/x64-windows/include" /FS</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_DISABLE_VECTOR_ANNOTATION;_DISABLE_STRING_ANNOTATION;PROTOBUF_USE_DLLS;ABSL_CONSUME_DLL;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ProgramDataBaseFileName>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\MinSizeRel\protobuf.pdb</ProgramDataBaseFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_DISABLE_VECTOR_ANNOTATION;_DISABLE_STRING_ANNOTATION;PROTOBUF_USE_DLLS;ABSL_CONSUME_DLL;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/vcpkg_installed/x64-windows/include" /FS</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_DISABLE_VECTOR_ANNOTATION;_DISABLE_STRING_ANNOTATION;PROTOBUF_USE_DLLS;ABSL_CONSUME_DLL;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\RelWithDebInfo\protobuf.pdb</ProgramDataBaseFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_DISABLE_VECTOR_ANNOTATION;_DISABLE_STRING_ANNOTATION;PROTOBUF_USE_DLLS;ABSL_CONSUME_DLL;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\CMakeFiles\ba41a92816acbf0969d4ea685850025c\appearances.pb.h.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Running cpp protocol buffer compiler on C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/appearances.proto</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+..\..\vcpkg_installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf -I C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/appearances.proto
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\appearances.proto;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\appearances.pb.h;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\appearances.pb.cc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Running cpp protocol buffer compiler on C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/appearances.proto</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+..\..\vcpkg_installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf -I C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/appearances.proto
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\appearances.proto;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\appearances.pb.h;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\appearances.pb.cc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Running cpp protocol buffer compiler on C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/appearances.proto</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+..\..\vcpkg_installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf -I C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/appearances.proto
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\appearances.proto;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\appearances.pb.h;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\appearances.pb.cc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Running cpp protocol buffer compiler on C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/appearances.proto</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+..\..\vcpkg_installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf -I C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/appearances.proto
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\appearances.proto;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\appearances.pb.h;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\appearances.pb.cc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\CMakeFiles\ba41a92816acbf0969d4ea685850025c\sounds.pb.h.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Running cpp protocol buffer compiler on C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/sounds.proto</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+..\..\vcpkg_installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf -I C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/sounds.proto
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\sounds.proto;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\sounds.pb.h;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\sounds.pb.cc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Running cpp protocol buffer compiler on C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/sounds.proto</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+..\..\vcpkg_installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf -I C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/sounds.proto
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\sounds.proto;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\sounds.pb.h;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\sounds.pb.cc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Running cpp protocol buffer compiler on C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/sounds.proto</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+..\..\vcpkg_installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf -I C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/sounds.proto
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\sounds.proto;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\sounds.pb.h;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\sounds.pb.cc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Running cpp protocol buffer compiler on C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/sounds.proto</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+..\..\vcpkg_installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf -I C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/sounds.proto
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\sounds.proto;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\sounds.pb.h;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\sounds.pb.cc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\CMakeFiles\ba41a92816acbf0969d4ea685850025c\staticdata.pb.h.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Running cpp protocol buffer compiler on C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/staticdata.proto</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+..\..\vcpkg_installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf -I C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/staticdata.proto
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\staticdata.proto;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\staticdata.pb.h;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\staticdata.pb.cc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Running cpp protocol buffer compiler on C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/staticdata.proto</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+..\..\vcpkg_installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf -I C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/staticdata.proto
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\staticdata.proto;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\staticdata.pb.h;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\staticdata.pb.cc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Running cpp protocol buffer compiler on C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/staticdata.proto</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+..\..\vcpkg_installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf -I C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/staticdata.proto
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\staticdata.proto;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\staticdata.pb.h;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\staticdata.pb.cc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Running cpp protocol buffer compiler on C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/staticdata.proto</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+..\..\vcpkg_installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf -I C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/staticdata.proto
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\staticdata.proto;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\staticdata.pb.h;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\staticdata.pb.cc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/nokturno/Desktop/mehah-withupstream2/otclient -BC:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice --check-stamp-file C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeFindDependencyMacro.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeParseArguments.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckCSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckIncludeFile.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindPackageMessage.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindThreads.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\SelectLibraryConfigurations.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslConfig.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslConfigVersion.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslTargets-debug.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslTargets-release.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslTargets.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-config-version.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-config.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-generate.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-module.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-options.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-targets-debug.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-targets-release.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-targets.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\vcpkg-cmake-wrapper.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-config.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-targets-debug.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-targets-release.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-targets.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/nokturno/Desktop/mehah-withupstream2/otclient -BC:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice --check-stamp-file C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeFindDependencyMacro.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeParseArguments.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckCSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckIncludeFile.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindPackageMessage.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindThreads.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\SelectLibraryConfigurations.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslConfig.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslConfigVersion.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslTargets-debug.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslTargets-release.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslTargets.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-config-version.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-config.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-generate.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-module.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-options.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-targets-debug.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-targets-release.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-targets.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\vcpkg-cmake-wrapper.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-config.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-targets-debug.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-targets-release.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-targets.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/nokturno/Desktop/mehah-withupstream2/otclient -BC:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice --check-stamp-file C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeFindDependencyMacro.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeParseArguments.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckCSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckIncludeFile.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindPackageMessage.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindThreads.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\SelectLibraryConfigurations.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslConfig.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslConfigVersion.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslTargets-debug.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslTargets-release.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslTargets.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-config-version.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-config.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-generate.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-module.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-options.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-targets-debug.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-targets-release.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-targets.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\vcpkg-cmake-wrapper.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-config.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-targets-debug.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-targets-release.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-targets.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/src/protobuf/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/nokturno/Desktop/mehah-withupstream2/otclient -BC:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice --check-stamp-file C:/Users/nokturno/Desktop/mehah-withupstream2/otclient/build_voice/src/protobuf/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeFindDependencyMacro.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CMakeParseArguments.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckCSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckIncludeFile.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindPackageMessage.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\FindThreads.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.29\Modules\SelectLibraryConfigurations.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslConfig.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslConfigVersion.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslTargets-debug.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslTargets-release.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\absl\abslTargets.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-config-version.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-config.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-generate.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-module.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-options.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-targets-debug.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-targets-release.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\protobuf-targets.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\protobuf\vcpkg-cmake-wrapper.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-config.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-targets-debug.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-targets-release.cmake;C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\vcpkg_installed\x64-windows\share\utf8_range\utf8_range-targets.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\appearances.proto">
+    </None>
+    <None Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\sounds.proto">
+    </None>
+    <None Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\staticdata.proto">
+    </None>
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\appearances.pb.h" />
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\appearances.pb.cc" />
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\sounds.pb.h" />
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\sounds.pb.cc" />
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\staticdata.pb.h" />
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\staticdata.pb.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\ZERO_CHECK.vcxproj">
+      <Project>{BC8E5946-4561-3B9D-98F1-FDB87DD28F72}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

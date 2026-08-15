@@ -326,6 +326,8 @@ function onBuffCooldown(iconId, duration, spellName, bgId, count)
     counterLabel:addAnchor(AnchorBottom, 'parent', AnchorBottom)
     counterLabel:setTextAlign(AlignTopCenter)
     counterLabel:setFont('verdana-11px-rounded')
+    counterLabel:setPhantom(true)
+    counterLabel:setFocusable(false)
 
     print('DEBUG count value:', count, 'type:', type(count))
   end

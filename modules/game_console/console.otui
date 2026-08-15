@@ -296,20 +296,13 @@ Panel
   TabButton
     id: voiceButton
     !tooltip: tr('Voice Chat') .. ' (F6)'
-    image-source: /images/ui/console_buttons
-    image-clip: 0 0 16 16
+    image-source: /images/icons/voice
     anchors.right: readOnlyButton.left
     anchors.bottom: consoleContentPanel.top
     margin-bottom: 5
     margin-right: 5
-    size: 16 16
+    size: 22 22
     @onClick: openVoiceWindow()
-
-    $hover !disabled:
-      image-clip: 0 0 16 16
-
-    $pressed:
-      image-clip: 16 0 16 16
 
   UIButton
     id: readOnlyButton

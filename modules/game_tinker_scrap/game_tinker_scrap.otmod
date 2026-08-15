@@ -1,0 +1,11 @@
+Module
+  name: game_tinker_scrap
+  description: Tinker Scrap stacks widget under player mana bar
+  author: Custom
+  version: 1.0.0
+
+  autoload: true
+  sandboxed: true
+  scripts: [ game_tinker_scrap ]
+  @onLoad: init()
+  @onUnload: terminate()

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\appearances.pb.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\sounds.pb.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\staticdata.pb.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\appearances.pb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\sounds.pb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\protobuf\staticdata.pb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\CMakeFiles\ba41a92816acbf0969d4ea685850025c\appearances.pb.h.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\CMakeFiles\ba41a92816acbf0969d4ea685850025c\sounds.pb.h.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\CMakeFiles\ba41a92816acbf0969d4ea685850025c\staticdata.pb.h.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\appearances.proto" />
+    <None Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\sounds.proto" />
+    <None Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\protobuf\staticdata.proto" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{B87A1CA0-7DFD-3567-B248-0E9B5BE7E45D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{682799FE-7027-3FE5-9CFB-DB2C589118ED}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{1821C496-C0B2-37A3-AA6B-03983AF36003}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -2150,48 +2150,55 @@ PassiveSkills.nodeInfo = {
 	},
 	["13:2"] = {
 		name = "Focus Mastery",
-		description = "Maximum Focus stacks increased by 1 per level (up to 6).",
+		description = "Maximum Focus stacks increased by 1 per level (up to 6). Synergy: Meditation can grant up to 6 Focus, and Blade Master triggers at max stacks.",
 		effect = {
 			{type = "storage", name = "FocusMastery", value = 1},
 		},
 	},
 	["13:3"] = {
 		name = "Sword Style",
-		description = "Choose your offensive specialization.",
+		description = "Choose your offensive specialization: War Cry (party damage buff), Death Mark (debuff + execute synergy), or Blade Flurry (multi-hit that applies Exposed).",
 	},
 	["13:4"] = {
-		name = "Flash Steel",
-		description = "Learn the spell Flash Steel. Hurl a blade of energy at a target up to 4 tiles away, dealing physical damage and generating +1 Focus. 3s cooldown.",
+		name = "War Cry",
+		description = "Learn the spell War Cry. Grant +10% damage to yourself and nearby party members for 8 seconds. Support spell that complements any build. 15s cooldown.",
 		effect = {
-			{type = "storage", name = "FlashSteel", value = 1},
+			{type = "storage", name = "WarCry", value = 1},
 		},
 	},
 	["13:5"] = {
 		name = "Death Mark",
-		description = "Learn the spell Death Mark. Mark a target for 8 seconds. Your finisher spells deal +20% damage to marked targets. 15s cooldown.",
+		description = "Learn the spell Death Mark. Mark a target for 8 seconds. Marked targets take +20% damage from all your attacks. Synergy: Merciful End gets +10% execute threshold and +15% damage on marked targets. 15s cooldown.",
 		effect = {
 			{type = "storage", name = "DeathMark", value = 1},
 		},
 	},
 	["13:6"] = {
 		name = "Bloodletting",
-		description = "Crimson Lotus bleed duration +2s per level and bleed damage +10% per level. When a bleeding target dies, restore 5% max HP.",
+		description = "Crimson Lotus bleed duration +2s per level and bleed damage +10% per level. When a bleeding target dies, restore 5% max HP. Synergy: bleeding targets take +50% execute damage from Merciful End and Iaijutsu consumes bleeds for +20% damage.",
 		effect = {
 			{type = "storage", name = "Bloodletting", value = 10},
 		},
 	},
 	["13:7"] = {
 		name = "Executioner's Edge",
-		description = "Merciful End execute threshold +5% per level (up to 40%). Execute damage +10% per level.",
+		description = "Merciful End execute threshold +5% per level (up to 40%). Execute damage +10% per level. Synergy: bleeding targets get +10% threshold, Death Mark gives +10% threshold.",
 		effect = {
 			{type = "storage", name = "ExecutionersEdge", value = 5},
 		},
 	},
 	["13:8"] = {
 		name = "Blade Master",
-		description = "At maximum Focus, your finisher spells consume 0 Focus and deal +30% damage. 10 second cooldown after triggering.",
+		description = "At maximum Focus, your finisher spells consume 0 Focus and deal +30% damage. 10s cooldown after triggering. This allows finishers to be used without losing your Focus stacks.",
 		effect = {
 			{type = "storage", name = "BladeMaster", value = 1},
+		},
+	},
+	["13:9"] = {
+		name = "Blade Flurry",
+		description = "Learn the spell Blade Flurry. Strike a target 3 times in rapid succession, dealing physical damage. The final hit applies Exposed (max 3 stacks, 8s). Exposed targets take +10% damage from finishers per stack (up to +30%). Builder: generates +1 Focus. 3.5s cooldown.",
+		effect = {
+			{type = "storage", name = "BladeFlurry", value = 1},
 		},
 	},
 	["13:11"] = {
@@ -2210,13 +2217,13 @@ PassiveSkills.nodeInfo = {
 	},
 	["13:13"] = {
 		name = "Shield Style",
-		description = "Choose your defensive specialization.",
+		description = "Choose your specialization: Phantom Slash (line dash + damage), Second Wind (heal), or Counter Strike (reactive counter-attack while Guardian Stance is active).",
 	},
 	["13:14"] = {
-		name = "Iron Skin",
-		description = "Learn the spell Iron Skin. For 3 seconds, reduce all damage taken by 30% + 10% per Focus stack consumed. Consumes all Focus. 15s cooldown.",
+		name = "Phantom Slash",
+		description = "Learn the spell Phantom Slash. Dash through all enemies in a line up to 4 tiles, dealing physical damage to each. Leaves after-images along the path. 6s cooldown.",
 		effect = {
-			{type = "storage", name = "IronSkin", value = 1},
+			{type = "storage", name = "PhantomSlash", value = 1},
 		},
 	},
 	["13:15"] = {
@@ -2228,7 +2235,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["13:16"] = {
 		name = "Parry",
-		description = "+3% dodge per level. When you dodge an attack, gain 1 Focus stack.",
+		description = "+3% dodge per level. When you dodge an attack, gain 1 Focus stack. Synergy: Counter Strike chance scales with Parry levels (+3% per level).",
 		effect = {
 			{type = "storage", name = "Parry", value = 3},
 		},
@@ -2242,9 +2249,16 @@ PassiveSkills.nodeInfo = {
 	},
 	["13:18"] = {
 		name = "Fortress",
-		description = "Guardian Stance now reflects 50% of melee damage to attackers. While Guardian Stance is active, you generate 1 Focus stack per second.",
+		description = "Guardian Stance now reflects 50% of melee damage to attackers. While Guardian Stance is active, you generate 1 Focus when hit (1s cooldown). Synergy: enables Counter Strike proc.",
 		effect = {
 			{type = "storage", name = "Fortress", value = 1},
+		},
+	},
+	["13:19"] = {
+		name = "Counter Strike",
+		description = "Learn Counter Strike (passive). While Guardian Stance is active, you have a chance to automatically counter-attack when hit, dealing physical damage and generating +1 Focus. Chance: 10% base + 3% per Parry level. Scales with Parry levels.",
+		effect = {
+			{type = "storage", name = "CounterStrike", value = 1},
 		},
 	},
 	["13:21"] = {
@@ -2256,7 +2270,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["13:22"] = {
 		name = "Wind Step Mastery",
-		description = "Wind Step range +1 tile per level and cooldown -1s per level.",
+		description = "Wind Step range +1 tile per level.",
 		effect = {
 			{type = "storage", name = "WindStepMastery", value = 1},
 		},
@@ -2266,50 +2280,50 @@ PassiveSkills.nodeInfo = {
 		description = "Choose your utility specialization.",
 	},
 	["13:24"] = {
-		name = "Cyclone Slash",
-		description = "Learn the spell Cyclone Slash. Spin in a whirlwind, dealing physical damage to all enemies within 3 tiles. Generates +1 Focus. 4s cooldown.",
+		name = "Blade Dash",
+		description = "Learn the spell Blade Dash. Strike a target up to 3 tiles away, dash through them, and heal for 25% of damage dealt. Mobility + sustain spell. 6s cooldown.",
 		effect = {
-			{type = "storage", name = "CycloneSlash", value = 1},
+			{type = "storage", name = "BladeDash", value = 1},
 		},
 	},
 	["13:25"] = {
 		name = "Searing Wind",
-		description = "Learn the spell Searing Wind. Your Wind Step leaves a trail of fire for 3 seconds that burns enemies standing in it. Passive enhancement.",
+		description = "Learn the spell Searing Wind. Your Wind Step leaves a trail of fire for 3 seconds that burns enemies standing in it. Passive enhancement to Wind Step.",
 		effect = {
 			{type = "storage", name = "SearingWind", value = 1},
 		},
 	},
 	["13:26"] = {
 		name = "Meditation",
-		description = "Learn the spell Meditation. Channel for 1 second to instantly gain 3 Focus stacks. 15s cooldown.",
+		description = "Learn the spell Meditation. Channel for 1 second to instantly gain 3 Focus stacks. Respects Focus Mastery (up to 6 max). 15s cooldown.",
 		effect = {
 			{type = "storage", name = "Meditation", value = 1},
 		},
 	},
 	["13:27"] = {
 		name = "Flowing Water",
-		description = "After using Wind Step, your next attack within 3s deals +15% damage per level and generates +1 Focus.",
+		description = "After using Wind Step, your next direct attack within 3s deals +15% damage per level and generates +1 Focus. Synergy: stacks with Wind Step → Iaijutsu combo for burst damage.",
 		effect = {
 			{type = "storage", name = "FlowingWater", value = 15},
 		},
 	},
 	["13:28"] = {
 		name = "Storm Spirit",
-		description = "Wind Step cooldown reduced by 50%. After dashing, gain Storm Spirit for 5s: +20% attack speed and your attacks hit all enemies within 2 tiles.",
+		description = "After dashing, gain Storm Spirit for 5s: +20% attack speed, +15% cooldown reduction, and your attacks hit all enemies within 2 tiles (50% splash damage).",
 		effect = {
 			{type = "storage", name = "StormSpirit", value = 1},
 		},
 	},
 	["13:30"] = {
 		name = "Bushido",
-		description = "When you consume 3 Focus stacks on a finisher, gain Bushido for 6 seconds: +10% damage and +10% damage reduction.",
+		description = "When you consume 3+ Focus stacks on a finisher, gain Bushido for 6 seconds: +10% damage and +10% damage reduction. Synergy: pairs with Blade Master for sustained finisher pressure.",
 		effect = {
 			{type = "storage", name = "Bushido", value = 1},
 		},
 	},
 	["13:31"] = {
 		name = "Zanshin",
-		description = "After consuming all Focus, your next builder spell within 3 seconds generates 2 Focus stacks instead of 1 and deals +25% damage.",
+		description = "After consuming all Focus, your next builder spell within 3 seconds generates 2 Focus stacks instead of 1 and deals +25% damage. Synergy: enables rapid Focus rebuilding after a finisher for combo chains.",
 		effect = {
 			{type = "storage", name = "Zanshin", value = 1},
 		},
@@ -2673,6 +2687,253 @@ PassiveSkills.nodeInfo = {
 		description = "When you cast a shield spell, all allies within 3 tiles gain 10% of the shield amount and Guardian's Resolve stacks are doubled for 5s. When you cast a heal, all allies within 3 tiles gain 10% lifesteal for 5s. At 5 Guardian's Resolve stacks, your next shield spell costs no mana.",
 		effect = {
 			{type = "storage", name = "GuardiansOath", value = 1},
+		},
+	},
+	["12:0"] = {
+		name = "Tinker's Ingenuity",
+		description = "Increases max Scrap by 1 and all damage by 2% per Scrap stack.",
+		effect = {
+			{type = "storage", name = "Ingenuity", value = 1},
+		},
+	},
+	["12:1"] = {
+		name = "Bot Mastery",
+		description = "+3% bot damage per level.",
+		effect = {
+			{type = "storage", name = "BotMastery", value = 3},
+		},
+	},
+	["12:2"] = {
+		name = "Reinforced Chassis",
+		description = "+5% bot HP per level.",
+		effect = {
+			{type = "storage", name = "ReinforcedChassis", value = 5},
+		},
+	},
+	["12:3"] = {
+		name = "Fork: Combat Protocol",
+		description = "Choose a combat protocol for your bots.",
+	},
+	["12:4"] = {
+		name = "Assault Module",
+		description = "All bots gain a second attack spell. +1 extra attack per level.",
+		effect = {
+			{type = "storage", name = "AssaultModule", value = 1},
+		},
+	},
+	["12:5"] = {
+		name = "Swarm Protocol",
+		description = "+1 max mines and +5% mine damage per level.",
+		effect = {
+			{type = "storage", name = "SwarmProtocol", value = 1},
+		},
+	},
+	["12:6"] = {
+		name = "Overclocked Servos",
+		description = "Bots move 15% faster and attack 10% faster per level.",
+		effect = {
+			{type = "storage", name = "OverclockedServos", value = 1},
+		},
+	},
+	["12:7"] = {
+		name = "Fork: Bot Blueprint",
+		description = "Choose a new bot blueprint to deploy.",
+	},
+	["12:8"] = {
+		name = "Laser Bot",
+		description = "Unlocks Deploy Laser Bot — melee bot with a wave laser attack (3-tile line AoE).",
+		effect = {
+			{type = "storage", name = "LaserBotUnlock", value = 1},
+		},
+	},
+	["12:9"] = {
+		name = "Ranger Bot",
+		description = "Unlocks Deploy Ranger Bot — long-range sniper bot (range 6, high damage).",
+		effect = {
+			{type = "storage", name = "RangerBotUnlock", value = 1},
+		},
+	},
+	["12:10"] = {
+		name = "War Bot MK2",
+		description = "War Bot transforms into War Bot MK2: gains energy beam spell, shield aura, and +50% HP.",
+		effect = {
+			{type = "storage", name = "WarBotMK2", value = 1},
+		},
+	},
+	["12:11"] = {
+		name = "Targeting Matrix",
+		description = "+2% critical hit chance for all bots per level.",
+		effect = {
+			{type = "storage", name = "TargetingMatrix", value = 2},
+		},
+	},
+	["12:12"] = {
+		name = "EMP Overload",
+		description = "Bots explode on death dealing energy AoE damage equal to 20% of their max HP.",
+		effect = {
+			{type = "storage", name = "EMPOverload", value = 1},
+		},
+	},
+	["12:13"] = {
+		name = "Mech Commander",
+		description = "+1 max robot. Mech Suite enhanced: player +30% damage, bots +40% damage, +5s duration.",
+		effect = {
+			{type = "storage", name = "MechCommander", value = 1},
+		},
+	},
+	["12:14"] = {
+		name = "Explosive Force",
+		description = "+3% explosion damage per level (Grenade, Mine, Bomber).",
+		effect = {
+			{type = "storage", name = "ExplosiveForce", value = 3},
+		},
+	},
+	["12:15"] = {
+		name = "Shrapnel",
+		description = "Explosions leave a 3s bleed on hit targets. +2% bleed damage per level.",
+		effect = {
+			{type = "storage", name = "Shrapnel", value = 2},
+		},
+	},
+	["12:16"] = {
+		name = "Fork: Detonation Style",
+		description = "Choose a detonation enhancement.",
+	},
+	["12:17"] = {
+		name = "Chain Reaction",
+		description = "Explosions have 20% chance per level to chain to a nearby enemy.",
+		effect = {
+			{type = "storage", name = "ChainReaction", value = 20},
+		},
+	},
+	["12:18"] = {
+		name = "Thermite",
+		description = "Explosions deal +15% fire damage over 3s per level.",
+		effect = {
+			{type = "storage", name = "Thermite", value = 15},
+		},
+	},
+	["12:19"] = {
+		name = "Cluster Bomb",
+		description = "Grenade Toss spawns 3 mini explosions around impact point.",
+		effect = {
+			{type = "storage", name = "ClusterBomb", value = 1},
+		},
+	},
+	["12:20"] = {
+		name = "Mine Field",
+		description = "+2 max Land Mines, mine cooldown reduced by 2s.",
+		effect = {
+			{type = "storage", name = "MineField", value = 1},
+		},
+	},
+	["12:21"] = {
+		name = "Volatile Mixture",
+		description = "+5% fire damage per level.",
+		effect = {
+			{type = "storage", name = "VolatileMixture", value = 5},
+		},
+	},
+	["12:22"] = {
+		name = "Concussion Blast",
+		description = "Explosions have 25% chance to stun targets for 1s.",
+		effect = {
+			{type = "storage", name = "ConcussionBlast", value = 25},
+		},
+	},
+	["12:23"] = {
+		name = "Demolitionist",
+		description = "Grenade Toss costs 0 Scrap. Land Mines detonate in 2x2 area.",
+		effect = {
+			{type = "storage", name = "Demolitionist", value = 1},
+		},
+	},
+	["12:24"] = {
+		name = "Plated Armor",
+		description = "+2% max health per level.",
+		effect = {
+			{type = "condition", name = "Max Health", value = 2},
+		},
+	},
+	["12:25"] = {
+		name = "Shield Generator",
+		description = "Casting Repair also gives addShield() for 5% of max HP per level.",
+		effect = {
+			{type = "storage", name = "ShieldGenerator", value = 5},
+		},
+	},
+	["12:26"] = {
+		name = "Fork: Defense System",
+		description = "Choose a defensive system.",
+	},
+	["12:27"] = {
+		name = "Barrier Bot",
+		description = "Unlocks Deploy Barrier Bot — stationary bot that casts addShield() on allies in range.",
+		effect = {
+			{type = "storage", name = "BarrierBotUnlock", value = 1},
+		},
+	},
+	["12:28"] = {
+		name = "Reactive Armor",
+		description = "Taking damage has 15% chance per level to knockback the attacker.",
+		effect = {
+			{type = "storage", name = "ReactiveArmor", value = 15},
+		},
+	},
+	["12:29"] = {
+		name = "Field Medic",
+		description = "Repair Bots also heals the player for 50% of the amount healed.",
+		effect = {
+			{type = "storage", name = "FieldMedic", value = 1},
+		},
+	},
+	["12:30"] = {
+		name = "Power Core",
+		description = "+1 max Scrap per level.",
+		effect = {
+			{type = "storage", name = "PowerCore", value = 1},
+		},
+	},
+	["12:31"] = {
+		name = "Emergency Protocol",
+		description = "Below 30% HP: auto-deploy a War Bot and gain shield. 60s cooldown.",
+		effect = {
+			{type = "storage", name = "EmergencyProtocol", value = 1},
+		},
+	},
+	["12:32"] = {
+		name = "Nanite Repair",
+		description = "+3% HP regeneration per level.",
+		effect = {
+			{type = "condition", name = "HP Regeneration", value = 3},
+		},
+	},
+	["12:33"] = {
+		name = "Mech Suite",
+		description = "Unlocks Mech Suite spell: +20% damage and attack speed to self and bots, 15s duration.",
+		effect = {
+			{type = "spell", name = "Mech Suite"},
+		},
+	},
+	["12:34"] = {
+		name = "Scrap Munitions",
+		description = "When you deploy a bot, your next Grenade Toss costs 0 Scrap. 10s cooldown.",
+		effect = {
+			{type = "storage", name = "Scrap Munitions", value = 1},
+		},
+	},
+	["12:35"] = {
+		name = "Juggernaut Protocol",
+		description = "Mech Suite also grants +10% max HP and repairs all active bots to full on activation.",
+		effect = {
+			{type = "storage", name = "Juggernaut Protocol", value = 1},
+		},
+	},
+	["12:36"] = {
+		name = "Controlled Detonation",
+		description = "Land Mines and Grenade Toss heal you for 5% of max HP per explosion hit.",
+		effect = {
+			{type = "storage", name = "Controlled Detonation", value = 5},
 		},
 	},
 }

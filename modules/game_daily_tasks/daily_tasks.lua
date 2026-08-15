@@ -332,6 +332,7 @@ end
 function DailyTasks.hide()
   if window and not window:isDestroyed() then
     window:hide()
+    modules.game_interface.getRootPanel():focus()
   end
 end
 

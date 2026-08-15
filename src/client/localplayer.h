@@ -47,6 +47,8 @@ public:
     void setMana(uint32_t mana, uint32_t maxMana);
     void setFocusStacks(uint8_t stacks) { m_focusStacks = stacks; }
     uint8_t getFocusStacks() { return m_focusStacks; }
+    void setScrapStacks(uint8_t stacks) { m_scrapStacks = stacks; }
+    uint8_t getScrapStacks() { return m_scrapStacks; }
     void setBloodEssence(uint8_t essence) { m_bloodEssence = essence; }
     uint8_t getBloodEssence() { return m_bloodEssence; }
     void setBloodFrenzy(bool active) { m_bloodFrenzy = active; }
@@ -195,6 +197,7 @@ private:
     uint32_t m_mana{ 0 };
     uint32_t m_maxMana{ 0 };
     uint8_t m_focusStacks{ 0 };
+    uint8_t m_scrapStacks{ 0 };
     uint8_t m_bloodEssence{ 0 };
     bool m_bloodFrenzy{ false };
     uint8_t m_bloodOrbs{ 0 };

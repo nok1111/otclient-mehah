@@ -3,15 +3,24 @@ SpellIcon < UIWidget
   image-size: 52 52
   image-source: /images/game/buffs/0
   focusable: false
+  draggable: true
   margin-right: 4
   &onMousePress: |
     function(self, mousePos, button)
       if button == MouseRightButton then
         return modules.game_buffs.cooldownSettings(self, mousePos, button)
       end
+      return false
+    end
+  &onDragEnter: |
+    function(self, mousePos)
       local window = self:getParent():getParent()
-      if window and button == MouseLeftButton then
-        window:dragEnter(mousePos, button)
+      if window then
+        window:breakAnchors()
+        window.movingReference = {
+          x = mousePos.x - window:getX(),
+          y = mousePos.y - window:getY()
+        }
         return true
       end
       return false
@@ -19,8 +28,13 @@ SpellIcon < UIWidget
   &onDragMove: |
     function(self, mousePos, mouseMoved)
       local window = self:getParent():getParent()
-      if window then
-        window:dragMove(mousePos, mouseMoved)
+      if window and window.movingReference then
+        local pos = {
+          x = mousePos.x - window.movingReference.x,
+          y = mousePos.y - window.movingReference.y
+        }
+        window:setPosition(pos)
+        window:bindRectToParent()
       end
     end
 
@@ -53,6 +67,7 @@ BuffProgressRect < UIProgressRect
   opacity: 0.0
   percent: 100
   focusable: false
+  phantom: true
 
 GroupCooldownParticles < UIParticles
   effect: groupcooldown-effect

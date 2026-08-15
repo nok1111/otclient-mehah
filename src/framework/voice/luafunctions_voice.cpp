@@ -230,7 +230,7 @@ static int Voice_setPlayerVolume(lua_State* L)
 {
     uint32_t cid = static_cast<uint32_t>(g_lua.toNumber(1));
     float volume = static_cast<float>(g_lua.toNumber(2));
-    
+
     if (g_voiceManager) {
         g_voiceManager->setPlayerVolume(cid, volume);
         g_lua.pushBoolean(true);
@@ -238,6 +238,141 @@ static int Voice_setPlayerVolume(lua_State* L)
         g_lua.pushBoolean(false);
     }
     return 1;
+}
+
+static int Voice_isPlayerSpeaking(lua_State* L)
+{
+    uint32_t cid = static_cast<uint32_t>(g_lua.toNumber(1));
+    bool speaking = false;
+    if (g_voiceManager) {
+        speaking = g_voiceManager->isPlayerSpeaking(cid);
+    }
+    g_lua.pushBoolean(speaking);
+    return 1;
+}
+
+static int Voice_getSpeakingPlayers(lua_State* L)
+{
+    if (g_voiceManager) {
+        auto players = g_voiceManager->getSpeakingPlayers();
+        g_lua.newTable();
+        for (size_t i = 0; i < players.size(); ++i) {
+            g_lua.pushInteger(i + 1);
+            g_lua.pushNumber(players[i]);
+            g_lua.setTable();
+        }
+    } else {
+        g_lua.newTable();
+    }
+    return 1;
+}
+
+static int Voice_setPushToTalk(lua_State* L)
+{
+    bool enabled = g_lua.toBoolean(1);
+    if (g_voiceManager) {
+        g_voiceManager->setPushToTalk(enabled);
+    }
+    return 0;
+}
+
+static int Voice_isPushToTalk(lua_State* L)
+{
+    bool ptt = false;
+    if (g_voiceManager) {
+        ptt = g_voiceManager->isPushToTalk();
+    }
+    g_lua.pushBoolean(ptt);
+    return 1;
+}
+
+static int Voice_setPTTActive(lua_State* L)
+{
+    bool active = g_lua.toBoolean(1);
+    if (g_voiceManager) {
+        g_voiceManager->setPTTActive(active);
+    }
+    return 0;
+}
+
+static int Voice_setVAD(lua_State* L)
+{
+    bool enabled = g_lua.toBoolean(1);
+    float threshold = static_cast<float>(g_lua.toNumber(2));
+    if (g_voiceManager) {
+        g_voiceManager->setVAD(enabled, threshold);
+    }
+    return 0;
+}
+
+static int Voice_setMasterVolume(lua_State* L)
+{
+    float volume = static_cast<float>(g_lua.toNumber(1));
+    if (g_voiceManager) {
+        g_voiceManager->setMasterVolume(volume);
+    }
+    return 0;
+}
+
+static int Voice_getMasterVolume(lua_State* L)
+{
+    float volume = 1.0f;
+    if (g_voiceManager) {
+        volume = g_voiceManager->getMasterVolume();
+    }
+    g_lua.pushNumber(volume);
+    return 1;
+}
+
+static int Voice_getMicLevel(lua_State* L)
+{
+    float level = 0.0f;
+    if (g_voiceManager) {
+        level = g_voiceManager->getMicLevel();
+    }
+    g_lua.pushNumber(level);
+    return 1;
+}
+
+static int Voice_getConnectedPlayers(lua_State* L)
+{
+    if (g_voiceManager) {
+        auto players = g_voiceManager->getConnectedPlayers();
+        g_lua.newTable();
+        for (size_t i = 0; i < players.size(); ++i) {
+            g_lua.pushInteger(i + 1);
+            g_lua.pushNumber(players[i]);
+            g_lua.setTable();
+        }
+    } else {
+        g_lua.newTable();
+    }
+    return 1;
+}
+
+static int Voice_getMutedPlayers(lua_State* L)
+{
+    if (g_voiceManager) {
+        auto players = g_voiceManager->getMutedPlayers();
+        g_lua.newTable();
+        for (size_t i = 0; i < players.size(); ++i) {
+            g_lua.pushInteger(i + 1);
+            g_lua.pushNumber(players[i]);
+            g_lua.setTable();
+        }
+    } else {
+        g_lua.newTable();
+    }
+    return 1;
+}
+
+static int Voice_sendControlMessage(lua_State* L)
+{
+    std::string message = g_lua.toString(1);
+    if (g_voiceManager) {
+        g_voiceManager->sendControlMessage(message);
+    }
+    return 0;
 }
 
 void Voice_registerFunctions()
@@ -284,5 +419,29 @@ void Voice_registerFunctions()
     g_lua.setField("isTestMode");
     g_lua.pushCFunction(Voice_setPlayerVolume);
     g_lua.setField("setPlayerVolume");
+    g_lua.pushCFunction(Voice_isPlayerSpeaking);
+    g_lua.setField("isPlayerSpeaking");
+    g_lua.pushCFunction(Voice_getSpeakingPlayers);
+    g_lua.setField("getSpeakingPlayers");
+    g_lua.pushCFunction(Voice_setPushToTalk);
+    g_lua.setField("setPushToTalk");
+    g_lua.pushCFunction(Voice_isPushToTalk);
+    g_lua.setField("isPushToTalk");
+    g_lua.pushCFunction(Voice_setPTTActive);
+    g_lua.setField("setPTTActive");
+    g_lua.pushCFunction(Voice_setVAD);
+    g_lua.setField("setVAD");
+    g_lua.pushCFunction(Voice_setMasterVolume);
+    g_lua.setField("setMasterVolume");
+    g_lua.pushCFunction(Voice_getMasterVolume);
+    g_lua.setField("getMasterVolume");
+    g_lua.pushCFunction(Voice_getMicLevel);
+    g_lua.setField("getMicLevel");
+    g_lua.pushCFunction(Voice_getConnectedPlayers);
+    g_lua.setField("getConnectedPlayers");
+    g_lua.pushCFunction(Voice_getMutedPlayers);
+    g_lua.setField("getMutedPlayers");
+    g_lua.pushCFunction(Voice_sendControlMessage);
+    g_lua.setField("sendControlMessage");
     g_lua.pop();
 }

@@ -1,217 +1,659 @@
+SpeakingIndicator < UIWidget
+  size: 14 14
+  image-source: /images/icons/with_voice
+  phantom: true
+  focusable: false
+
+MutedVoiceIndicator < UIWidget
+  size: 14 14
+  image-source: /images/icons/no_voice
+  phantom: true
+  focusable: false
+
+PlayerNameLabel < UILabel
+  font: verdana-11px-antialised
+  height: 16
+  color: #CCCCCC
+  text-wrap: false
+
+PlayerListRow < Panel
+  height: 24
+  margin-top: 1
+  layout:
+    type: horizontalBox
+
+  PlayerNameLabel
+    id: playerNameLabel
+    font: verdana-11px-antialised
+    height: 16
+    color: #CCCCCC
+    text-wrap: false
+    flex: true
+
+  HorizontalScrollBar
+    id: playerVolumeSlider
+    width: 70
+    height: 16
+    margin-left: 4
+    minimum: 0
+    maximum: 100
+    value: 100
+    step: 5
+
+  Button
+    id: playerMuteButton
+    width: 45
+    height: 18
+    margin-left: 4
+    !text: tr('Mute')
+
+RoomListLabel < UILabel
+  font: verdana-11px-antialised
+  height: 18
+  color: #FFFFFF
+
+RoomListJoinButton < UIButton
+  width: 60
+  height: 18
+  margin-left: 5
+
+LobbyListRow < Panel
+  height: 40
+  margin-top: 2
+  layout:
+    type: horizontalBox
+
+  Label
+    id: lobbyNameLabel
+    font: verdana-11px-antialised
+    height: 30
+    color: #FFFFFF
+    text-wrap: true
+    text-auto-resize: false
+    width: 140
+    margin-left: 2
+
+  Label
+    id: lobbyLockLabel
+    font: verdana-11px-antialised
+    height: 18
+    color: #FF6600
+    margin-left: 5
+    width: 70
+
+  Label
+    id: lobbyCountLabel
+    font: verdana-11px-antialised
+    height: 18
+    color: #AAAAAA
+    margin-left: 5
+    width: 50
+
+  Label
+    id: lobbyCreatorLabel
+    font: verdana-11px-antialised
+    height: 18
+    color: #888888
+    margin-left: 5
+    width: 90
+
+  Button
+    id: lobbyJoinButton
+    width: 60
+    height: 22
+    margin-left: 5
+    !text: tr('Join')
+
 MainWindow
   id: voiceWindow
   !text: tr('Voice Chat')
-  size: 380 420
+  size: 440 650
   @onEscape: self:hide()
 
   Panel
-    id: voicePanel
-    anchors.fill: parent
-    margin: 5
-
-    Label
-      id: titleLabel
-      !text: tr('Voice Chat Manager')
-      font: verdana-11px-rounded
-      text-align: center
-      anchors.top: parent.top
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 25
-
-    Panel
-      id: statusPanel
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      margin-top: 10
-      height: 60
-
-      Label
-        id: statusLabel
-        !text: tr('Status: Disconnected')
-        font: verdana-11px-rounded
-        anchors.top: parent.top
-        width: 420
-        anchors.left: parent.left
-
-      Label
-        id: roomLabel
-        !text: tr('Room: None')
-        font: verdana-11px-rounded
-        anchors.top: prev.bottom
-        anchors.left: parent.left
-        margin-top: 5
-        width: 420
-
-
-    Panel
-      id: channelPanel
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      margin-top: 10
-      height: 95
-
-      Label
-        id: channelTitleLabel
-        !text: tr('Voice Channels')
-        font: verdana-11px-rounded
-        text-align: center
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 22
-
-      Button
-        id: worldChannelButton
-        !text: tr('World')
-        anchors.top: prev.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        margin-top: 8
-        margin-left: -80
-        width: 75
-        height: 28
-        @onClick: modules.game_voice.joinPublicVoiceRoom()
-
-      Button
-        id: partyChannelButton
-        !text: tr('Party')
-        anchors.top: prev.top
-        anchors.left: prev.right
-        margin-left: 8
-        width: 75
-        height: 28
-        @onClick: modules.game_voice.joinPartyVoiceRoom()
-
-      Button
-        id: guildChannelButton
-        !text: tr('Guild')
-        anchors.top: prev.top
-        anchors.left: prev.right
-        margin-left: 8
-        width: 75
-        height: 28
-        @onClick: modules.game_voice.joinGuildVoiceRoom()
-
-      Label
-        id: privateRoomLabel
-        !text: tr('Private Room Name:')
-        font: verdana-11px-rounded
-        anchors.top: worldChannelButton.bottom
-        anchors.left: parent.left
-        margin-top: 10
-        height: 18
-
-      TextEdit
-        id: roomNameEdit
-        anchors.top: prev.top
-        anchors.left: prev.right
-        anchors.right: parent.right
-        margin-left: 5
-        height: 20
-        phantom: false
-
-    Panel
-      id: roomPanel
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      margin-top: 10
-      height: 90
-
-      Label
-        id: passwordLabel
-        !text: tr('Password (optional):')
-        font: verdana-11px-rounded
-        anchors.top: parent.top
-        anchors.left: parent.left
-        height: 18
-
-      TextEdit
-        id: passwordEdit
-        anchors.top: prev.top
-        anchors.left: prev.right
-        anchors.right: parent.right
-        margin-left: 5
-        height: 20
-        phantom: false
-
-      Button
-        id: createPrivateButton
-        !text: tr('Create Private')
-        anchors.top: prev.bottom
-        anchors.left: parent.left
-        margin-top: 8
-        width: 110
-        height: 28
-        @onClick: modules.game_voice.createPrivateRoom()
-
-      Button
-        id: joinPrivateButton
-        !text: tr('Join Private')
-        anchors.top: prev.top
-        anchors.left: prev.right
-        margin-left: 5
-        width: 105
-        height: 28
-        @onClick: modules.game_voice.joinPrivateRoom()
-
-      Button
-        id: roomListButton
-        !text: tr('Room List')
-        anchors.top: prev.top
-        anchors.left: prev.right
-        anchors.right: parent.right
-        margin-left: 5
-        height: 28
-        @onClick: modules.game_voice.showRoomList()
-
-    Panel
-      id: controlPanel
-      anchors.top: prev.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      margin-top: 10
-      height: 60
-
-      Label
-        id: controlTitleLabel
-        !text: tr('Voice Controls')
-        font: verdana-11px-rounded
-        text-align: center
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 22
-
-      Button
-        id: muteButton
-        !text: tr('Mute')
-        anchors.top: prev.bottom
-        anchors.left: parent.left
-        margin-top: 5
-        width: 95
-        height: 28
-        @onClick: modules.game_voice.toggleMute()
-
-      Button
-        id: leaveButton
-        !text: tr('Leave Room')
-        anchors.top: prev.top
-        anchors.left: prev.right
-        anchors.right: next.left
-        margin-left: 5
-        height: 28
-        width: 155
-        @onClick: modules.game_voice.leaveRoom()
+    id: tabsPanel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 30
 
     Button
-      id: closeButton
-      !text: tr('Close')
-      anchors.bottom: parent.bottom
-      anchors.right: parent.right
-      width: 80
-      height: 28
-      margin-bottom: 5
-      @onClick: self:getParent():getParent():hide()
+      id: voiceTabButton
+      !text: tr('Voice')
+      anchors.top: parent.top
+      anchors.left: parent.left
+      margin-top: 3
+      width: 95
+      height: 24
+      @onClick: modules.game_voice.selectVoiceTab('voice')
+
+    Button
+      id: lobbiesTabButton
+      !text: tr('Lobbies')
+      anchors.top: prev.top
+      anchors.left: prev.right
+      margin-left: 2
+      width: 95
+      height: 24
+      @onClick: modules.game_voice.selectVoiceTab('lobbies')
+
+    Button
+      id: whitelistTabButton
+      !text: tr('Whitelist')
+      anchors.top: prev.top
+      anchors.left: prev.right
+      margin-left: 2
+      width: 95
+      height: 24
+      @onClick: modules.game_voice.selectVoiceTab('whitelist')
+
+    Button
+      id: settingsTabButton
+      !text: tr('Settings')
+      anchors.top: prev.top
+      anchors.left: prev.right
+      margin-left: 2
+      width: 95
+      height: 24
+      @onClick: modules.game_voice.selectVoiceTab('settings')
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    width: 80
+    height: 28
+    margin-bottom: 5
+    @onClick: modules.game_voice.hideVoiceWindow()
+
+  Panel
+    id: contentPanel
+    anchors.top: tabsPanel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin: 5
+    margin-bottom: 40
+
+    Panel
+      id: voiceTab
+      anchors.fill: parent
+      visible: true
+
+      Panel
+        id: statusPanel
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 55
+
+        Label
+          id: statusLabel
+          !text: tr('Status: Disconnected')
+          font: verdana-11px-rounded
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+
+        Label
+          id: roomLabel
+          !text: tr('Room: None')
+          font: verdana-11px-rounded
+          anchors.top: prev.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 2
+
+        Label
+          id: infoLabel
+          !text: tr('')
+          font: verdana-11px-antialised
+          color: #FFFF00
+          anchors.top: prev.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 2
+          height: 15
+
+      Panel
+        id: autoChannelsPanel
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 5
+        height: 70
+
+        Label
+          id: autoChannelsTitle
+          !text: tr('Auto Channels')
+          font: verdana-11px-rounded
+          text-align: center
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 18
+
+        Button
+          id: worldChannelButton
+          !text: tr('World')
+          !tooltip: tr('Proximity voice - hear players within 20 SQM on your floor')
+          anchors.top: prev.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 5
+          margin-left: -130
+          width: 80
+          height: 28
+          @onClick: modules.game_voice.joinPublicVoiceRoom()
+
+        Button
+          id: partyChannelButton
+          !text: tr('Party')
+          !tooltip: tr('Auto-join your current party voice channel')
+          anchors.top: prev.top
+          anchors.left: prev.right
+          margin-left: 5
+          width: 80
+          height: 28
+          @onClick: modules.game_voice.joinPartyVoiceRoom()
+
+        Button
+          id: guildChannelButton
+          !text: tr('Guild')
+          !tooltip: tr('Auto-join your current guild voice channel')
+          anchors.top: prev.top
+          anchors.left: prev.right
+          margin-left: 5
+          width: 80
+          height: 28
+          @onClick: modules.game_voice.joinGuildVoiceRoom()
+
+      Panel
+        id: playersPanel
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 5
+        height: 170
+
+        Label
+          id: playersTitleLabel
+          !text: tr('Connected Players')
+          font: verdana-11px-rounded
+          text-align: center
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 18
+
+        ScrollablePanel
+          id: playersList
+          anchors.top: prev.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+          margin-top: 3
+          vertical-scrollbar: playersScrollBar
+          layout:
+            type: verticalBox
+          padding: 2
+
+        VerticalScrollBar
+          id: playersScrollBar
+          anchors.top: playersTitleLabel.bottom
+          anchors.bottom: parent.bottom
+          anchors.right: parent.right
+          margin-top: 3
+          step: 14
+          pixels-scroll: true
+
+      Panel
+        id: micPanel
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 5
+        height: 25
+
+        Label
+          id: micTitleLabel
+          !text: tr('Mic Level')
+          font: verdana-11px-rounded
+          anchors.verticalCenter: parent.verticalCenter
+          anchors.left: parent.left
+          height: 18
+
+        Panel
+          id: vuMeterBg
+          anchors.verticalCenter: parent.verticalCenter
+          anchors.left: prev.right
+          anchors.right: parent.right
+          margin-left: 5
+          height: 12
+          background-color: #222222
+          border-width: 1
+          border-color: #555555
+
+          Panel
+            id: vuMeterFill
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            width: 0
+            background-color: #00FF00
+
+      Panel
+        id: controlPanel
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 5
+        height: 65
+
+        Button
+          id: muteButton
+          !text: tr('Mute')
+          anchors.top: parent.top
+          anchors.left: parent.left
+          width: 80
+          height: 28
+          @onClick: modules.game_voice.toggleMute()
+
+        Button
+          id: leaveButton
+          !text: tr('Leave Room')
+          anchors.top: prev.top
+          anchors.left: prev.right
+          anchors.right: parent.right
+          margin-left: 5
+          height: 28
+          @onClick: modules.game_voice.leaveRoom()
+
+        Button
+          id: reconnectButton
+          !text: tr('Reconnect')
+          anchors.top: prev.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 5
+          height: 28
+          enabled: false
+          @onClick: modules.game_voice.reconnectRoom()
+
+    Panel
+      id: lobbiesTab
+      anchors.fill: parent
+      visible: false
+
+      Panel
+        id: createLobbyPanel
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 130
+
+        Label
+          id: createLobbyTitle
+          !text: tr('Create Lobby')
+          font: verdana-11px-rounded
+          text-align: center
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 18
+
+        Label
+          id: lobbyNameLabel
+          !text: tr('Name:')
+          font: verdana-11px-rounded
+          anchors.top: prev.bottom
+          anchors.left: parent.left
+          margin-top: 5
+          height: 18
+
+        TextEdit
+          id: lobbyNameEdit
+          anchors.top: prev.top
+          anchors.left: prev.right
+          anchors.right: parent.right
+          margin-left: 5
+          height: 20
+          phantom: false
+
+        Label
+          id: lobbyPasswordLabel
+          !text: tr('Password:')
+          font: verdana-11px-rounded
+          anchors.top: prev.bottom
+          anchors.left: parent.left
+          margin-top: 5
+          height: 18
+
+        TextEdit
+          id: lobbyPasswordEdit
+          anchors.top: prev.top
+          anchors.left: prev.right
+          anchors.right: parent.right
+          margin-left: 5
+          height: 20
+          phantom: false
+          text-hidden: true
+
+        Label
+          id: maxMembersLabel
+          !text: tr('Max Members: 50')
+          font: verdana-11px-rounded
+          anchors.top: prev.bottom
+          anchors.left: parent.left
+          margin-top: 5
+          height: 18
+
+        HorizontalQtScrollBar
+          id: maxMembersSlider
+          anchors.top: prev.top
+          anchors.left: prev.right
+          anchors.right: parent.right
+          margin-left: 5
+          height: 16
+          minimum: 1
+          maximum: 50
+          value: 50
+          step: 1
+          @onValueChange: |
+            local label = self:getParent():recursiveGetChildById('maxMembersLabel')
+            if label then
+              label:setText('Max Members: ' .. self:getValue())
+            end
+
+        Button
+          id: createLobbyButton
+          !text: tr('Create Lobby')
+          anchors.top: prev.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 5
+          height: 25
+          @onClick: modules.game_voice.createLobby()
+
+      Label
+        id: lobbyListTitle
+        !text: tr('Available Lobbies')
+        font: verdana-11px-rounded
+        text-align: center
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 5
+        height: 18
+
+      Button
+        id: refreshLobbiesButton
+        !text: tr('Refresh')
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 3
+        height: 22
+        @onClick: modules.game_voice.refreshLobbyList()
+
+      ScrollablePanel
+        id: lobbyList
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin-top: 5
+        vertical-scrollbar: lobbyListScrollBar
+        layout:
+          type: verticalBox
+        padding: 2
+
+      VerticalScrollBar
+        id: lobbyListScrollBar
+        anchors.top: lobbyList.top
+        anchors.bottom: lobbyList.bottom
+        anchors.right: parent.right
+        step: 20
+        pixels-scroll: true
+
+    Panel
+      id: whitelistTab
+      anchors.fill: parent
+      visible: false
+
+      Label
+        id: whitelistTitleLabel
+        !text: tr('Muted Players')
+        font: verdana-11px-rounded
+        text-align: center
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 18
+
+      Label
+        id: whitelistEmptyLabel
+        !text: tr('No muted players. Right-click a player to mute/unmute voice.')
+        font: verdana-11px-antialised
+        text-align: center
+        color: #888888
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 20
+        visible: false
+
+      ScrollablePanel
+        id: whitelistList
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin-top: 5
+        vertical-scrollbar: whitelistScrollBar
+        layout:
+          type: verticalBox
+        padding: 2
+
+      VerticalScrollBar
+        id: whitelistScrollBar
+        anchors.top: whitelistTitleLabel.bottom
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        margin-top: 5
+        step: 14
+        pixels-scroll: true
+
+    Panel
+      id: settingsTab
+      anchors.fill: parent
+      visible: false
+
+      Panel
+        id: volumePanel
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 45
+
+        Label
+          id: volumeTitleLabel
+          !text: tr('Master Volume')
+          font: verdana-11px-rounded
+          anchors.top: parent.top
+          anchors.left: parent.left
+          height: 18
+
+        Label
+          id: volumeValueLabel
+          !text: tr('100%')
+          font: verdana-11px-rounded
+          anchors.top: parent.top
+          anchors.right: parent.right
+          height: 18
+          color: #00FF00
+
+        HorizontalScrollBar
+          id: masterVolumeSlider
+          anchors.top: prev.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 3
+          height: 16
+          minimum: 0
+          maximum: 100
+          value: 100
+          step: 5
+          @onValueChange: |
+            modules.game_voice.setMasterVolume(self:getValue() / 100)
+
+      Panel
+        id: settingsControlPanel
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 5
+        height: 70
+
+        Button
+          id: pttButton
+          !text: tr('PTT: Off')
+          !tooltip: tr('Push-to-talk - hold V to speak')
+          anchors.top: parent.top
+          anchors.left: parent.left
+          width: 120
+          height: 28
+          @onClick: modules.game_voice.togglePushToTalk()
+
+        Button
+          id: vadButton
+          !text: tr('VAD: Off')
+          !tooltip: tr('Voice Activity Detection - transmit when speaking')
+          anchors.top: prev.top
+          anchors.left: prev.right
+          margin-left: 5
+          width: 120
+          height: 28
+          @onClick: modules.game_voice.toggleVAD()
+
+        Label
+          id: pttKeyLabel
+          !text: tr('PTT key: V')
+          font: verdana-11px-antialised
+          color: #AAAAAA
+          anchors.top: prev.bottom
+          anchors.left: parent.left
+          margin-top: 5
+          height: 18
+
+      Label
+        id: micSelectionLabel
+        !text: tr('Microphone selection is not available in this build.')
+        font: verdana-11px-antialised
+        color: #888888
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 10
+        text-align: center
+        height: 18

@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 #include <queue>
+#include <unordered_set>
 #include <chrono>
 #include <opus/opus.h>
 #include <framework/core/eventdispatcher.h>
@@ -31,7 +32,7 @@ public:
     bool isConnected() const { return m_connected; }
     bool isAuthenticated() const { return m_authenticated; }
     bool isMuted() const { return m_muted; }
-    
+
     // Test mode - echoes your own voice back after 2 seconds
     bool enableTest();  // Returns true if test mode was successfully enabled
     void disableTest();
@@ -40,6 +41,32 @@ public:
     void processAudio();
     void sendVoicePacket(const std::vector<uint8_t>& opusData, uint32_t sequence, uint32_t timestamp);
     void receiveVoicePacket(const std::vector<uint8_t>& data);
+
+    // Push-to-talk and VAD
+    void setPushToTalk(bool enabled) { m_pushToTalk = enabled; }
+    bool isPushToTalk() const { return m_pushToTalk; }
+    void setPTTActive(bool active) { m_pttActive = active; }
+    bool isPTTActive() const { return m_pttActive; }
+    void setVAD(bool enabled, float threshold) { m_vadEnabled = enabled; m_vadThreshold = threshold; }
+    bool isVAD() const { return m_vadEnabled; }
+
+    // Speaking indicator
+    bool isPlayerSpeaking(uint32_t cid) const;
+    std::vector<uint32_t> getSpeakingPlayers() const;
+
+    // Master volume
+    void setMasterVolume(float volume) { m_masterVolume = std::max(0.0f, std::min(1.0f, volume)); }
+    float getMasterVolume() const { return m_masterVolume; }
+
+    // Microphone input level (RMS) for VU meter
+    float getMicLevel() const { return m_lastMicLevel.load(); }
+
+    // Connected players list
+    std::vector<uint32_t> getConnectedPlayers() const;
+    void clearConnectedPlayers();
+
+    // Muted players list (broadcast by relay)
+    std::vector<uint32_t> getMutedPlayers() const;
     
     // Voice channel system - public access
     enum class VoiceChannelType {
@@ -66,6 +93,9 @@ public:
     std::vector<VoiceChannel> getAvailableChannels();
     void setPlayerVolume(uint32_t cid, float volume);
     float getPlayerVolume(uint32_t cid) const;
+
+    // Send raw JSON control message to relay (for room registration, etc.)
+    void sendControlMessage(const std::string& message);
 
 private:
     bool initializeAudio();
@@ -110,6 +140,27 @@ private:
     
     void processTestPackets();
 
+    // Framing helpers
+    std::vector<uint8_t> framePacket(const std::vector<uint8_t>& data);
+    std::vector<std::vector<uint8_t>> unframePacket(const std::vector<uint8_t>& data);
+    void handleRelayMessage(const std::string& message);
+
+    // Auto-reconnect
+    void attemptReconnect();
+
+    // Jitter buffer
+    struct JitterBufferEntry {
+        std::vector<int16_t> pcmData;
+        uint32_t senderCid;
+        uint32_t sequence;
+        std::chrono::steady_clock::time_point arrivalTime;
+    };
+    void processJitterBuffers();
+    std::map<uint32_t, std::vector<JitterBufferEntry>> m_jitterBuffers;
+    std::mutex m_jitterMutex;
+    static constexpr int JITTER_BUFFER_MS = 100;
+    static constexpr int JITTER_MAX_ENTRIES = 10;
+
 private:
     std::atomic<bool> m_connected;
     std::atomic<bool> m_authenticated;
@@ -121,6 +172,36 @@ private:
     std::string m_roomId;
     std::string m_token;
     uint32_t m_cid;
+
+    // Push-to-talk and VAD
+    std::atomic<bool> m_pushToTalk{false};
+    std::atomic<bool> m_pttActive{false};
+    std::atomic<bool> m_vadEnabled{false};
+    float m_vadThreshold = 500.0f;
+    std::atomic<float> m_lastMicLevel{0.0f};
+
+    // Speaking indicator: cid -> last packet timestamp
+    std::map<uint32_t, std::chrono::steady_clock::time_point> m_speakingPlayers;
+    std::mutex m_speakingMutex;
+    static constexpr int SPEAKING_TIMEOUT_MS = 300;
+
+    // Master volume
+    float m_masterVolume = 1.0f;
+
+    // Connected players
+    std::vector<uint32_t> m_connectedPlayers;
+    std::mutex m_connectedPlayersMutex;
+
+    // Muted players (broadcast by relay)
+    std::unordered_set<uint32_t> m_mutedPlayers;
+    mutable std::mutex m_mutedPlayersMutex;
+
+    // Auto-reconnect
+    std::atomic<int> m_reconnectAttempts{0};
+    std::atomic<bool> m_reconnecting{false};
+
+    // Framing receive buffer
+    std::vector<uint8_t> m_recvBuffer;
     
     // Test mode delayed packet queue
     struct DelayedPacket {

@@ -5116,3 +5116,4 @@ AttachedEffectManager.register(700, 'Ice Lance Distance', 38, ThingCategoryMissi
     -- fade = { 0, 100, 400 },
     -- shader = 'Red Glow',
 })
+

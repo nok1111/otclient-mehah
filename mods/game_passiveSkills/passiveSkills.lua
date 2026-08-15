@@ -1019,7 +1019,7 @@ function PassiveSkills.setupTreeUI()
 			PassiveSkills.UI.background:setImageSource("images/backgrounds/default")
 		end
 		PassiveSkills.UI.background:setBackgroundColor('#00000000')
-		PassiveSkills.UI.background:setOpacity(0.6)
+		PassiveSkills.UI.background:setOpacity(0.20)
 	end
 
 	-- Constellation 2D format (new)
@@ -1778,17 +1778,56 @@ function PassiveSkills.setupConstellationUI(treeData)
 		addNode(nodeData)
 		wpNodeCount = wpNodeCount + 1
 	end
-	-- Count routeWaypoints on nodes
-	local rwCount = 0
-	for _, nodeData in pairs(treeData.branches or {}) do
-		for _, n in ipairs(nodeData.nodes or {}) do
-			if n.routeWaypoints then
-				for _ in pairs(n.routeWaypoints) do rwCount = rwCount + 1 end
+	-- Use saved layout bounds so the layout stays stable across reloads and
+	-- matches exactly what the user saw when they saved in dev mode. Without this,
+	-- recomputed bounds from node positions change auto-scaling and centering,
+	-- causing the tree to "compact and center" differently in normal preview mode.
+	if treeData.layoutBounds then
+		local lb = treeData.layoutBounds
+		minX = tonumber(lb.minX) or minX
+		maxX = tonumber(lb.maxX) or maxX
+		minY = tonumber(lb.minY) or minY
+		maxY = tonumber(lb.maxY) or maxY
+	end
+	-- Inject cachedRouteWaypoints (sent separately by server) back into the
+	-- owning node objects so that onDevSave collects both old AND new routes.
+	-- cachedRouteWaypoints is a flat dict keyed by connKey "minId-maxId".
+	-- We assign each route to the node with the smaller ID (deterministic),
+	-- falling back to the larger ID if the smaller one isn't a tree node.
+	local cachedRoutes = PassiveSkills.cachedRouteWaypoints or {}
+	for connKey, wpList in pairs(cachedRoutes) do
+		if type(wpList) == "table" and #wpList > 0 then
+			local minIdStr, maxIdStr = connKey:match("(%d+)-(%d+)")
+			local minId = tonumber(minIdStr)
+			local maxId = tonumber(maxIdStr)
+			local owner = nil
+			if minId and nodesById[minId] and nodesById[minId].kind ~= "waypoint" then
+				owner = nodesById[minId]
+			elseif maxId and nodesById[maxId] and nodesById[maxId].kind ~= "waypoint" then
+				owner = nodesById[maxId]
+			end
+			if owner then
+				if not owner.routeWaypoints then
+					owner.routeWaypoints = {}
+				end
+				-- Only inject if not already present (avoid overwriting in-session edits)
+				if not owner.routeWaypoints[connKey] then
+					-- Convert wp IDs to numbers for consistency with in-session creation
+					local numList = {}
+					for _, wpId in ipairs(wpList) do
+						table.insert(numList, tonumber(wpId) or wpId)
+					end
+					owner.routeWaypoints[connKey] = numList
+				end
 			end
 		end
 	end
-	if treeData.core and treeData.core.routeWaypoints then
-		for _ in pairs(treeData.core.routeWaypoints) do rwCount = rwCount + 1 end
+	-- Count routeWaypoints on nodes (now includes injected cached routes)
+	local rwCount = 0
+	for _, nodeData in pairs(nodesById) do
+		if nodeData.routeWaypoints then
+			for _ in pairs(nodeData.routeWaypoints) do rwCount = rwCount + 1 end
+		end
 	end
 	print(string.format("[PassiveSkills] setupConstellationUI: waypointNodes=%d, routeWaypoints=%d", wpNodeCount, rwCount))
 
@@ -1856,6 +1895,9 @@ function PassiveSkills.setupConstellationUI(treeData)
 	PassiveSkills.devProgress = progress
 	PassiveSkills.devAvailablePoints = availablePoints
 	PassiveSkills.devTreeData = treeData
+	-- Store the layout bounds used for rendering so onDevSave can persist them.
+	-- This ensures the exact same layout (spacing, centering) is reproduced on reload.
+	PassiveSkills.devBounds = {minX = minX, maxX = maxX, minY = minY, maxY = maxY}
 
 	-- Dev mode: show grid overlay aligned to node positions
 	if PassiveSkills.devMode then
@@ -2342,11 +2384,23 @@ function PassiveSkills.onDevSave()
 			end
 		end
 	end
-	-- Convert positions to string keys to avoid sparse array
+	-- Convert positions to string keys to avoid sparse array.
+	-- Send ALL node positions (not just dragged ones) so the server has the
+	-- complete layout. This ensures bounds are consistent across reloads.
 	local positions = {}
-	for nodeId, pos in pairs(PassiveSkills.devNodePositions or {}) do
-		positions[tostring(nodeId)] = {x = pos.x, y = pos.y}
+	local allNodes = PassiveSkills.devNodesById
+	if allNodes then
+		for nodeId, nodeData in pairs(allNodes) do
+			if nodeData.pos and nodeData.kind ~= "waypoint" then
+				positions[tostring(nodeId)] = {x = nodeData.pos.x, y = nodeData.pos.y}
+			end
+		end
 	end
+
+	-- Include layout bounds so the exact same spacing/centering is reproduced on
+	-- reload. Without this, recomputed bounds from moved nodes change the
+	-- auto-scaling and centering, causing the tree to "compact and center".
+	local layoutBounds = PassiveSkills.devBounds or nil
 
 	-- Debug: count what we're sending
 	local wpCount = 0
@@ -2362,7 +2416,8 @@ function PassiveSkills.onDevSave()
 		treeId = PassiveSkills.cachedTreeId,
 		positions = positions,
 		waypoints = waypoints,
-		routeWaypoints = routeWaypoints
+		routeWaypoints = routeWaypoints,
+		layoutBounds = layoutBounds
 	})
 end
 

@@ -22,20 +22,22 @@ SpelllistSettings = {
 
       --Samurai
       'Rending Slash',
-      'Blade Tempest',
+      'Triple Slash',
       'Wind Step',
+      'Blade Tempest',
       'Guardian Stance',
       'Iaijutsu',
-      'Triple Slash',
       'Crimson Lotus',
       'Merciful End',
-      'Flash Steel',
+      'War Cry',
       'Death Mark',
-      'Iron Skin',
+      'Phantom Slash',
       'Second Wind',
-      'Cyclone Slash',
+      'Blade Dash',
       'Searing Wind',
       'Meditation',
+      'Blade Flurry',
+      'Counter Strike',
 
       --Templar
       'Divine Punishment',
@@ -231,6 +233,22 @@ SpelllistSettings = {
       'Blood Ritual',
       'Vital Surge',
       'Exsanguinate',
+
+      --Tinker
+      'Wrench Throw',
+      'Grenade Toss',
+      'Deploy Scout',
+      'Deploy Mini Tank',
+      'Repair',
+      'Repair Bots',
+      'Rocket Boots',
+      'Overclock',
+      'Deploy War Bot',
+      'Deploy Drone',
+      'Deploy Bomber',
+      'Land Mine',
+      'Deploy Med Bot',
+      'Deploy CC Bot',
 
 
       'Shield Wall',
@@ -505,21 +523,23 @@ SpellInfo = {
 
        
     --Samurai
-    ['Rending Slash'] = {id = 250, words = 'rending slash', icon = 287, description = 'strike your target with a quick slash dealing physical damage. Generates 1 Focus.', exhaustion = 2500, premium = false, type = 'Instant', mana = 15, level = 1, soul = 0, group = {[1] = 1900}, vocations = {13}},
-    ['Blade Tempest'] = {id = 251, words = 'blade tempest', icon = 289, description = 'unleash a circular fan of blades around you dealing physical damage to nearby enemies. Generates 1 Focus.', exhaustion = 6000, premium = false, type = 'Instant', mana = 35, level = 38, soul = 0, group = {[1] = 1900}, vocations = {13}},
-    ['Wind Step'] = {id = 252, words = 'wind step', icon = 252, description = 'dash 5 tiles in a straight line leaving an after-image trail and damaging enemies along the path.', exhaustion = 8000, premium = false, type = 'Instant', mana = 30, level = 45, soul = 0, group = {[3] = 1900}, vocations = {13}, crosshair = true, area = 'WIND_STEP', range = 5, areaSprite = 1178},
-    ['Guardian Stance'] = {id = 253, words = 'guardian stance', icon = 297, description = 'enter a defensive stance that heals you and reduces damage taken. Consumes all Focus on cast.', exhaustion = 18000, premium = false, type = 'Instant', mana = 50, level = 53, soul = 0, group = {[3] = 1100}, vocations = {13}},
-    ['Iaijutsu'] = {id = 254, words = 'iaijutsu', icon = 292, description = 'draw your blade with blinding speed to strike the target for heavy holy damage. Consumes all Focus.', exhaustion = 12000, premium = false, type = 'Instant', mana = 60, level = 60, soul = 0, group = {[1] = 1900}, vocations = {13}},
-    ['Triple Slash'] = {id = 257, words = 'triple slash', icon = 293, description = 'perform 1 to 3 rapid slashes on the target based on current Focus. Consumes all Focus.', exhaustion = 6000, premium = false, type = 'Instant', mana = 40, level = 38, soul = 0, group = {[1] = 1900}, vocations = {13}},
-    ['Crimson Lotus'] = {id = 255, words = 'crimson lotus', icon = 298, description = 'ignite the area in front of you with a fiery lotus, dealing fire damage over time. Scales with Focus.', exhaustion = 25000, premium = false, type = 'Instant', mana = 90, level = 70, soul = 0, group = {[1] = 1900}, vocations = {13}},
-    ['Merciful End'] = {id = 256, words = 'merciful end', icon = 290, description = 'finish off a wounded target with a devastating strike. Scales with Focus.', exhaustion = 30000, premium = false, type = 'Instant', mana = 75, level = 80, soul = 0, group = {[1] = 1900}, vocations = {13}},
-    ['Flash Steel'] = {id = 291, words = 'flash steel', icon = 287, description = 'hurl a blade of energy at a target up to 4 tiles away. Generates 1 Focus.', exhaustion = 3000, premium = false, needLearn = true, type = 'Instant', mana = 20, level = 1, soul = 0, group = {[1] = 1900}, vocations = {13}},
-    ['Death Mark'] = {id = 292, words = 'death mark', icon = 292, description = 'mark a target for 8 seconds. Your finisher spells deal +20% damage to marked targets.', exhaustion = 15000, premium = false, needLearn = true, type = 'Instant', mana = 25, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
-    ['Iron Skin'] = {id = 293, words = 'iron skin', icon = 297, description = 'reduce all damage taken by 30% + 10% per Focus stack consumed for 3 seconds. Consumes all Focus.', exhaustion = 15000, premium = false, needLearn = true, type = 'Instant', mana = 40, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
-    ['Second Wind'] = {id = 294, words = 'second wind', icon = 297, description = 'instantly heal 15% max HP + 10% per Focus stack consumed. Consumes all Focus.', exhaustion = 20000, premium = false, needLearn = true, type = 'Instant', mana = 50, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
-    ['Cyclone Slash'] = {id = 295, words = 'cyclone slash', icon = 289, description = 'spin in a whirlwind dealing physical damage to all enemies within 3 tiles. Generates 1 Focus.', exhaustion = 4000, premium = false, needLearn = true, type = 'Instant', mana = 30, level = 1, soul = 0, group = {[1] = 1900}, vocations = {13}},
-    ['Searing Wind'] = {id = 296, words = 'searing wind', icon = 252, description = 'passive: your Wind Step leaves a trail of fire that burns enemies.', exhaustion = 1000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
-    ['Meditation'] = {id = 297, words = 'meditation', icon = 297, description = 'channel for 1 second to instantly gain 3 Focus stacks.', exhaustion = 15000, premium = false, needLearn = true, type = 'Instant', mana = 20, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
+    ['Rending Slash'] = {id = 250, words = 'rending slash', icon = 287, description = 'Strike your target with a quick slash dealing physical damage. Builder: generates 1 Focus stack.', exhaustion = 3000, premium = false, type = 'Instant', mana = 15, level = 1, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Triple Slash'] = {id = 257, words = 'triple slash', icon = 293, description = 'Perform 1 to 3 rapid slashes on the target (1 + Focus stacks). Finisher: each strike scales with Focus. Consumes Exposed for +10-30% damage. Consumes all Focus.', exhaustion = 8000, premium = false, type = 'Instant', mana = 30, level = 8, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Wind Step'] = {id = 252, words = 'wind step', icon = 252, description = 'Dash up to 6 tiles in a straight line, damaging enemies along the path. Combo: next Iaijutsu within 4s costs 0 Focus and deals +30% damage. Flowing Water: next attack deals +15% and generates +1 Focus. Storm Spirit: +20% attack speed, +15% CDR, and attacks splash for 5s.', exhaustion = 8000, premium = false, type = 'Instant', mana = 25, level = 20, soul = 0, group = {[3] = 1900}, vocations = {13}, crosshair = true, area = 'WIND_STEP', range = 5, areaSprite = 1178},
+    ['Blade Tempest'] = {id = 251, words = 'blade tempest', icon = 289, description = 'Unleash a circular fan of blades around you dealing physical damage to all nearby enemies. Builder: generates 1 Focus stack.', exhaustion = 8000, premium = false, type = 'Instant', mana = 40, level = 38, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Guardian Stance'] = {id = 253, words = 'guardian stance', icon = 297, description = 'Enter a defensive stance for 5s +2.5s per Focus: +50% shield, +20% dodge, +15% block, and heals 5% per Focus. Synergy: generates 1 Focus per second when hit while active. Fortress: reflects 50% melee damage and generates 1 Focus/s.', exhaustion = 18000, premium = false, type = 'Instant', mana = 50, level = 53, soul = 0, group = {[3] = 1100}, vocations = {13}},
+    ['Iaijutsu'] = {id = 254, words = 'iaijutsu', icon = 292, description = 'Draw your blade with blinding speed for heavy physical damage. Finisher: +35% damage per Focus stack. Synergy: after Wind Step, costs 0 Focus and deals +30%. Consumes bleeds for +20%. Consumes Exposed for +10-30%.', exhaustion = 12000, premium = false, type = 'Instant', mana = 50, level = 60, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Crimson Lotus'] = {id = 255, words = 'crimson lotus', icon = 298, description = 'Unleash a crimson lotus in a frontal cone, dealing physical damage and applying bleed. Finisher: +20% damage per Focus stack. Bleed scales with Focus. Bloodletting: +2s duration and +10% bleed damage per level. Consumes Exposed from all targets. Consumes all Focus.', exhaustion = 20000, premium = false, type = 'Instant', mana = 80, level = 70, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Merciful End'] = {id = 256, words = 'merciful end', icon = 290, description = 'Execute a wounded target. Finisher: deals massive bonus damage below 25% HP threshold (+5% per Executioners Edge level). Synergy: bleeding targets get +10% threshold and +50% execute damage. Death Mark: +10% threshold and +15% damage. Exposed: consumed for +10-30%. Consumes all Focus.', exhaustion = 25000, premium = false, type = 'Instant', mana = 60, level = 80, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['War Cry'] = {id = 291, words = 'war cry', icon = 287, description = 'Grant +10% damage to yourself and nearby party members for 8 seconds. Support spell that complements any build.', exhaustion = 18000, premium = false, needLearn = true, type = 'Instant', mana = 30, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
+    ['Death Mark'] = {id = 292, words = 'death mark', icon = 292, description = 'Mark a monster for 8 seconds. Marked targets take +20% damage from all your attacks. Synergy: Merciful End gets +10% execute threshold and +15% damage on marked targets.', exhaustion = 15000, premium = false, needLearn = true, type = 'Instant', mana = 20, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
+    ['Phantom Slash'] = {id = 293, words = 'phantom slash', icon = 289, description = 'Dash through all enemies in a line up to 4 tiles, dealing physical damage to each. Leaves after-images along the path.', exhaustion = 8000, premium = false, needLearn = true, type = 'Instant', mana = 35, level = 1, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Second Wind'] = {id = 294, words = 'second wind', icon = 297, description = 'Instantly heal 15% max HP + 10% per Focus stack consumed. Consumes all Focus.', exhaustion = 20000, premium = false, needLearn = true, type = 'Instant', mana = 50, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
+    ['Blade Dash'] = {id = 295, words = 'blade dash', icon = 289, description = 'Strike a target up to 3 tiles away, dash through them, and heal for 25% of damage dealt. Mobility + sustain spell.', exhaustion = 8000, premium = false, needLearn = true, type = 'Instant', mana = 30, level = 1, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Searing Wind'] = {id = 296, words = 'searing wind', icon = 252, description = 'Passive: your Wind Step leaves a trail of fire for 3 seconds that burns enemies standing in it.', exhaustion = 1000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
+    ['Meditation'] = {id = 297, words = 'meditation', icon = 297, description = 'Channel for 1 second to instantly gain 3 Focus stacks. Respects Focus Mastery (up to 6 max).', exhaustion = 18000, premium = false, needLearn = true, type = 'Instant', mana = 25, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
+    ['Blade Flurry'] = {id = 298, words = 'blade flurry', icon = 287, description = 'Strike a target 3 times in rapid succession, dealing physical damage. The final hit applies Exposed (max 3 stacks, 8s). Exposed targets take +10% damage from finishers per stack. Builder: generates 1 Focus stack.', exhaustion = 4000, premium = false, needLearn = true, type = 'Instant', mana = 20, level = 1, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Counter Strike'] = {id = 299, words = 'counter strike', icon = 297, description = 'Passive: while Guardian Stance is active, you have a chance to automatically counter-attack when hit, dealing physical damage and generating 1 Focus. Chance: 10% base + 3% per Parry level.', exhaustion = 1000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
 
 
         --Blood Mage
@@ -542,6 +562,22 @@ SpellInfo = {
     ['Blood Ritual'] = {id = 304, words = 'blood ritual', icon = 274, description = 'Toggle: sacrifice 5% HP per second for 15 Blood Essence per second. Cast again to toggle off.', exhaustion = 1000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {14}},
     ['Vital Surge'] = {id = 311, words = 'vital surge', icon = 257, description = 'Sacrifice 5% max HP to heal yourself and nearby allies in a 5x5 area. Scales with missing HP: the lower your health, the stronger the heal. Generates 10 Blood Essence.', exhaustion = 8000, premium = false, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[2] = 1100}, vocations = {14}},
     ['Exsanguinate'] = {id = 312, words = 'exsanguinate', icon = 265, description = 'Strike your target dealing heavy death damage. +50% damage if target is below 30% HP. Consumes all Blood Orbs for +10% damage each. Heals you based on your level, max HP and magic level. Costs 12% max HP.', exhaustion = 15000, premium = false, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[1] = 1900}, vocations = {14}},
+
+    -- Tinker
+    ['Wrench Throw'] = {id = 320, words = 'wrench throw', icon = 200, description = 'Throw your wrench at the target dealing physical damage. Generates 1 Scrap.', exhaustion = 2000, premium = false, type = 'Instant', mana = 15, level = 1, soul = 0, group = {[1] = 1900}, vocations = {12}},
+    ['Grenade Toss'] = {id = 321, words = 'grenade toss', icon = 201, description = 'Lob a grenade at the target dealing physical damage in a 5x5 area. +5% damage per Scrap. Consumes 2 Scrap.', exhaustion = 0, premium = false, type = 'Instant', mana = 30, level = 12, soul = 0, group = {[1] = 1900}, vocations = {12}},
+    ['Deploy Scout'] = {id = 322, words = 'deploy scout', icon = 202, description = 'Deploy a Scout Bot that fights for you. Max 2 robots at once.', exhaustion = 8000, premium = false, type = 'Instant', mana = 40, level = 8, soul = 0, group = {[3] = 1100}, vocations = {12}},
+    ['Deploy Mini Tank'] = {id = 323, words = 'deploy tank', icon = 203, description = 'Deploy a Mini Tank with high HP and strong resistances. Mobile ranged tank.', exhaustion = 15000, premium = false, type = 'Instant', mana = 50, level = 25, soul = 0, group = {[3] = 1100}, vocations = {12}},
+    ['Repair'] = {id = 324, words = 'repair', icon = 204, description = 'Heal yourself. +10% healing per Scrap. Consumes 1 Scrap.', exhaustion = 6000, premium = false, type = 'Instant', mana = 35, level = 15, soul = 0, group = {[2] = 1100}, vocations = {12}},
+    ['Repair Bots'] = {id = 343, words = 'repair bots', icon = 204, description = 'Heal all active robots based on your stats. +10% healing per Scrap. Consumes 1 Scrap.', exhaustion = 8000, premium = false, type = 'Instant', mana = 45, level = 30, soul = 0, group = {[2] = 1100}, vocations = {12}},
+    ['Rocket Boots'] = {id = 325, words = 'rocket boots', icon = 205, description = 'Dash up to 4 tiles in the target direction.', exhaustion = 10000, premium = false, type = 'Instant', mana = 25, level = 25, soul = 0, group = {[3] = 1100}, vocations = {12}, crosshair = true, area = 'ROCKET_BOOTS', range = 4, areaSprite = 1178},
+    ['Overclock'] = {id = 326, words = 'overclock', icon = 206, description = 'Consume 3 Scrap to gain +25% attack speed and make spells cost no Scrap for 8 seconds.', exhaustion = 30000, premium = false, type = 'Instant', mana = 60, level = 35, soul = 0, group = {[3] = 1100}, vocations = {12}},
+    ['Deploy War Bot'] = {id = 327, words = 'deploy warbot', icon = 207, description = 'Deploy a heavy War Bot with high HP and taunting capabilities. Robotics specialization.', exhaustion = 12000, premium = false, needLearn = true, type = 'Instant', mana = 70, level = 1, soul = 0, group = {[3] = 1100}, vocations = {12}},
+    ['Deploy Drone'] = {id = 328, words = 'deploy drone', icon = 208, description = 'Deploy a Combat Drone that attacks from range with energy bolts. Robotics specialization.', exhaustion = 10000, premium = false, needLearn = true, type = 'Instant', mana = 55, level = 1, soul = 0, group = {[3] = 1100}, vocations = {12}},
+    ['Deploy Bomber'] = {id = 329, words = 'deploy bomber', icon = 209, description = 'Deploy a suicide Bomber Bot that rushes enemies and explodes on contact. Demolition specialization.', exhaustion = 8000, premium = false, needLearn = true, type = 'Instant', mana = 50, level = 1, soul = 0, group = {[3] = 1100}, vocations = {12}},
+    ['Land Mine'] = {id = 340, words = 'land mine', icon = 210, description = 'Place a hidden mine at the target location that explodes when enemies step on it. Max 3 mines. Lasts 60 seconds. Demolition specialization.', exhaustion = 12000, premium = false, type = 'Instant', mana = 40, level = 20, soul = 0, group = {[3] = 1100}, vocations = {12}, crosshair = true, area = 'AREA_MINE', range = 5, areaSprite = 1178},
+    ['Deploy Med Bot'] = {id = 341, words = 'deploy medbot', icon = 211, description = 'Deploy a Med Bot that heals you and nearby allies. Nanobiotic specialization.', exhaustion = 15000, premium = false, needLearn = true, type = 'Instant', mana = 60, level = 1, soul = 0, group = {[3] = 1100}, vocations = {12}},
+    ['Deploy CC Bot'] = {id = 342, words = 'deploy ccbot', icon = 212, description = 'Deploy a CC Bot that slows and hinders enemies from range. Nanobiotic specialization.', exhaustion = 12000, premium = false, needLearn = true, type = 'Instant', mana = 55, level = 1, soul = 0, group = {[3] = 1100}, vocations = {12}},
 
 
     -- Bard
@@ -803,6 +839,8 @@ SpellAreaOffsets = {
     ['AREA_HEALING_BARREL'] = '-1,-1;0,-1;1,-1;-1,0;0,0;1,0;-1,1;0,1;1,1',
     ['AREA_EXPLOSIVE_BARREL'] = '-1,-1;0,-1;1,-1;-1,0;0,0;1,0;-1,1;0,1;1,1',
     ['WIND_STEP'] = '0,0',
+    ['ROCKET_BOOTS'] = '0,0',
+    ['AREA_MINE'] = '0,0',
     ['AREA_BEAM5'] = '0,-4;0,-3;0,-2;0,-1;0,0'
 }
 

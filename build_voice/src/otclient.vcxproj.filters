@@ -1,0 +1,608 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\cmake_pch.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_20_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_19_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_18_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_17_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_16_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_15_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_14_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_13_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_12_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_11_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_10_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_9_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_8_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_7_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_6_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_5_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_4_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_3_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_2_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_1_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Unity\unity_0_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\asyncdispatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\binarytree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\clock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\configmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\eventdispatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\filestream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\modulemanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\resourcemanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\scheduledevent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\unzipper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\discord\discord.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\luaengine\luaexception.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\luaengine\luainterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\luaengine\luaobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\luaengine\luavaluecasts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\luafunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\net\connection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\net\inputmessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\net\outputmessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\net\protocol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\net\protocolhttp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\net\httplogin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\net\server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\otml\otmldocument.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\otml\otmlemitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\otml\otmlexception.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\otml\otmlnode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\otml\otmlparser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\androidgameactivity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\androidmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\androidwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\platform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\platformwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\unixcrashhandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\unixplatform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\win32crashhandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\win32platform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\stdext\demangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\stdext\math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\stdext\net.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\stdext\string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\stdext\time.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\stdext\uri.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\stdext\qrcodegen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\util\color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\util\crypt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\proxy\proxy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\proxy\proxy_client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\net\packet_player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\net\packet_recorder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\voice\voicemanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\voice\luafunctions_voice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\animatedtext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\animator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\attachableobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\attachedeffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\attachedeffectmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\container.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\creature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\creatures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\effect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\gameconfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\houses.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\item.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\itemtype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\lightview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\localplayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\luafunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\luavaluecasts_client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\mapio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\mapview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\minimap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\missile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\outfit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\position.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\protocolcodes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\protocolgame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\protocolgameparse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\protocolgamesend.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\spriteappearances.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\spritemanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\statictext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\thing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\thingtype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\thingtypemanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\tile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\towns.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\uicreature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\uigraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\uiitem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\uieffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\uimissile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\uimap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\uimapanchorlayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\uiminimap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\uiprogressrect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\client\uisprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\androidmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\adaptativeframecounter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\graphicalapplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\garbagecollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\input\mouse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\animatedtexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\apngloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\bitmapfont.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\cachedtext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\coordsbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\textureatlas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\drawpool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\drawpoolmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\fontmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\graphics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\painter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\paintershaderprogram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\particleaffector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\particleeffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\particleemitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\particlemanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\particlesystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\particletype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\shaderprogram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\texturemanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\graphics\shadermanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\win32window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\x11window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uianchorlayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uiboxlayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uigridlayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uihorizontallayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uilayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uimanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uiparticles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uitextedit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uitranslator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uiverticallayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uiwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uiwidgetbasestyle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uiwidgetimage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uiwidgettext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\ui\uiqrcode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\sound\combinedsoundsource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\sound\oggsoundfile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\sound\soundbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\sound\soundchannel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\sound\soundfile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\sound\soundmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\sound\soundsource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\sound\streamsoundsource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\sound\soundeffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\core\unzipper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\androidmanager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\framework\platform\androidwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Debug\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\Release\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\MinSizeRel\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\build_voice\src\CMakeFiles\otclient.dir\RelWithDebInfo\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C:\Users\nokturno\Desktop\mehah-withupstream2\otclient\cmake\icon\otcicon.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{682799FE-7027-3FE5-9CFB-DB2C589118ED}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompile Header File">
+      <UniqueIdentifier>{63ACBC08-5AB2-382C-9EDF-113B9390BC2C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{1821C496-C0B2-37A3-AA6B-03983AF36003}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

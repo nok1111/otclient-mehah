@@ -89,6 +89,7 @@ function ensureWindow()
     
     Expeditions.window = winOrErr
     Expeditions.window:hide()
+    modules.game_interface.getRootPanel():focus()
     return true
 end
 
@@ -699,4 +700,5 @@ function closeExpeditionPanel()
         removeEvent(countdownEvent)
         countdownEvent = nil
     end
+    modules.game_interface.getRootPanel():focus()
 end

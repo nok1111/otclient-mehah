@@ -472,6 +472,28 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
                     }
                 }
             }
+
+            // Draw Tinker Scrap stacks under the mana bar (only for local player, vocation 12)
+            const uint8_t scrap = localPlayer->getScrapStacks();
+            if (scrap > 0 || localPlayer->getVocation() == 12) {
+                static constexpr int scrapSize = 5;
+                static constexpr int scrapSpacing = 8;
+                static constexpr int scrapMax = 5;
+                static constexpr Color scrapEmpty(80, 80, 80);
+                static constexpr Color scrapFull(255, 165, 0);
+
+                const int scrapBarWidth = (scrapMax * scrapSpacing) - (scrapSpacing - scrapSize);
+                const int scrapX = backgroundRect.x() + (backgroundRect.width() - scrapBarWidth) / 2;
+                const int scrapY = backgroundRect.bottom() + 3;
+
+                for (int i = 0; i < scrapMax; ++i) {
+                    Rect scrapRect(scrapX + (i * scrapSpacing), scrapY, scrapSize, scrapSize);
+                    g_drawPool.addBoundingRect(scrapRect, scrapEmpty, 1);
+                    if (i < scrap) {
+                        g_drawPool.addFilledRect(scrapRect.expanded(-1), scrapFull);
+                    }
+                }
+            }
         }
         
         // Draw barrier bar above health bar if barrier exists (grows right to left)
