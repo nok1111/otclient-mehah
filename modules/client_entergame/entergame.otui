@@ -269,6 +269,6 @@ EnterGameWindow
     anchors.top: prev.top
     anchors.left: parent.left
     margin-top: 5
-    color: green
+    color: #00BC00
     text-auto-resize: true
 

@@ -87,7 +87,7 @@ TextEditQuestLog < Panel
       image-color: white
     $pressed:
       opacity: 1.0
-      image-color: gray
+      image-color: #c0c0c0
 
 QuestLogLabel < UIWidget
   color: #C0C0C0

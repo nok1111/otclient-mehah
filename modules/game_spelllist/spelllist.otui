@@ -45,7 +45,7 @@ FilterButton < Button
   margin: 5 0 0 6
   color: #630000
   $on:
-    color: green
+    color: #00BC00
 
 MainWindow
   id: spelllistWindow

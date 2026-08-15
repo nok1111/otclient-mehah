@@ -41,7 +41,7 @@ MainWindow
     text: Name
     anchors.top: parent.top
     anchors.left: parent.left
-    color: green
+    color: #00BC00
     width: 180
   HorizontalSeparator
     anchors.left: parent.left

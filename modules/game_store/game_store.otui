@@ -261,7 +261,7 @@ StoreWindow
       image-color: white
     $pressed:
       opacity: 1.0
-      image-color: gray
+      image-color: #c0c0c0
 
   StoreLightFlatPanel
     id: panelItem

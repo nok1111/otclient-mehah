@@ -176,7 +176,7 @@ UIWidget
       image-color: white
     $pressed:
       opacity: 1.0
-      image-color: gray
+      image-color: #c0c0c0
   UIWidget
     id: LootValue
     height: 64
