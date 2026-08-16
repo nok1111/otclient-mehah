@@ -1076,9 +1076,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["6:7"] = {
 		name = "Celestial Insight",
-		description = "Increases your Magic Level by 2 points per level.",
+		description = "Increases your Magic Level by 2 points per level. Also increases Chain Spell damage by 5% per level.",
 		effect = {
 			{type = "condition", name = "Magic Level", value = 2},
+			{type = "storage", name = "CelestialInsight", value = 5},
 		},
 	},
 	["6:8"] = {
