@@ -4831,8 +4831,98 @@ AttachedEffectManager.register(616, 'crimson threads', 0, 0, {
 })
 
 -- =============================================================
--- Bard Class Effects
+-- Samurai Iaijutsu Effects
 -- =============================================================
+
+-- 617: Iaijutsu Stance — golden glow on the samurai while charging (brief, before the draw)
+AttachedEffectManager.register(617, 'iaijutsu stance', 0, 0, {
+    duration = 150,
+    onAttach = function(effect, owner)
+        owner:setShader('Golden')
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setShader('Outfit - Default')
+    end
+})
+
+-- 618: Iaijutsu Flash — white-gold flash on the samurai at the moment of the draw
+AttachedEffectManager.register(618, 'iaijutsu flash', 0, 0, {
+    duration = 1000,
+    shader  = "Clouds White",
+    onDetach = function(effect, oldOwner)
+        oldOwner:setShader('Outfit - Default')
+    end
+})
+
+-- 619-624: Iaijutsu Cut — directional silver/platinum slash marks on the target
+-- Direction mapping: WEST=619(slash1), NORTH=622(slash2), EAST=623(slash3), SOUTH=624(slash4)
+AttachedEffectManager.register(619, 'iaijutsu cut left', '/images/game/effects/slash1', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    size = { 130, 130 },
+    offset = { 90, 60, true },
+    onTop = true,
+    shader = 'iaijutsu cut',
+})
+
+AttachedEffectManager.register(622, 'iaijutsu cut north', '/images/game/effects/slash2', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    size = { 130, 130 },
+    offset = { 65, 90, true },
+    onTop = true,
+    shader = 'iaijutsu cut',
+})
+
+AttachedEffectManager.register(623, 'iaijutsu cut right', '/images/game/effects/slash3', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    size = { 130, 130 },
+    offset = { 20, 60, true },
+    onTop = true,
+    shader = 'iaijutsu cut',
+})
+
+AttachedEffectManager.register(624, 'iaijutsu cut south', '/images/game/effects/slash4', ThingExternalTexture, {
+    loop = 1,
+    speed = 1.0,
+    size = { 130, 130 },
+    offset = { 60, 20, true },
+    onTop = true,
+    shader = 'iaijutsu cut',
+})
+
+-- =============================================================
+-- Samurai Crimson Lotus Effects (3 layers)
+-- =============================================================
+
+-- 625: Crimson Lotus — Layer 1 (core burst)
+-- Note: size + shader breaks animation on ThingCategoryEffect (framebuffer scaling issue)
+AttachedEffectManager.register(625, 'crimson lotus core', 1079, ThingCategoryEffect, {
+    duration = 2000,
+    opacity = 0.75,
+    speed = 1.0,
+    --size = { 220, 220 },
+    offset = { -45, -32, false },
+    shader = 'Clouds White',
+    fade = { 0, 100, 600 },
+})
+
+-- 626: Crimson Lotus — Layer 2 (mid ring)
+AttachedEffectManager.register(626, 'crimson lotus mid', 1115, ThingCategoryEffect, {
+    loop = 1,
+    speed = 0.85,
+    offset = { -64, -64, false },
+    shader = 'Clouds White',
+})
+
+-- 627: Crimson Lotus — Layer 3 (outer wave)
+AttachedEffectManager.register(627, 'crimson lotus outer', 1478, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -132, -132, true },
+    --shader = 'Clouds White',
+})
 
 AttachedEffectManager.register(620, 'Dark Crescendo Aura', 0, 0, {
     duration = 5000,
@@ -4843,7 +4933,9 @@ AttachedEffectManager.register(620, 'Dark Crescendo Aura', 0, 0, {
         owner:setPulse(0, 15, 800)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setPulse(0, 0)
+        if oldOwner and oldOwner.setPulse then
+            oldOwner:setPulse(0, 0)
+        end
     end
 })
 
@@ -4857,8 +4949,10 @@ AttachedEffectManager.register(621, 'Grand Finale Aura', 0, 0, {
         owner:setBounce(0, 12, 600)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setPulse(0, 0)
-        oldOwner:setBounce(0, 0)
+        if oldOwner and oldOwner.setPulse then
+            oldOwner:setPulse(0, 0)
+            oldOwner:setBounce(0, 0)
+        end
     end
 })
 --1307 tambien podriamos usarlo
@@ -5117,3 +5211,84 @@ AttachedEffectManager.register(700, 'Ice Lance Distance', 38, ThingCategoryMissi
     -- shader = 'Red Glow',
 })
 
+
+AttachedEffectManager.register(801, 'Fire Beam Horizontal', 1024, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -32, -32, true },
+  --  size = { 256, 64 }  -- Beam horizontal ancho
+})
+
+AttachedEffectManager.register(802, 'merciful end', 1025, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1,
+    offset = { -32, -32, true },
+   -- size = { 256, 64 }  -- Beam horizontal ancho
+})
+
+AttachedEffectManager.register(803, 'samurai warcry', 1368, ThingCategoryEffect, {
+    duration = 8000,
+    speed = 0.75,
+    offset = { -20, -25, false },
+   -- size = { 256, 64 }  -- Beam horizontal ancho
+})
+
+AttachedEffectManager.register(804, 'death mark', 1206, ThingCategoryEffect, {
+    duration = 8000,
+    speed = 0.75,
+    offset = { 0, 0, true },
+   -- size = { 256, 64 }  -- Beam horizontal ancho
+})
+
+AttachedEffectManager.register(805, 'triple slash samurai', 1110, ThingCategoryEffect, {
+    loop = 1,
+    speed = 0.7,
+    offset = { -120, -120, true },
+    size = { 100, 100 }  -- Beam horizontal ancho
+})
+
+AttachedEffectManager.register(806, 'triple slash samurai', 1431, ThingCategoryEffect, {
+    loop = 1,
+    speed = 0.7,
+    offset = { -55, -55, true },
+    --size = { 100, 100 }  -- Beam horizontal ancho
+})
+
+AttachedEffectManager.register(807, 'second wind', 1570, ThingCategoryEffect, {
+    loop = 1,
+    speed = 0.7,
+    offset = { -34, -34, false },
+    shader = 'Clouds White',
+    --size = { 100, 100 }  -- Beam horizontal ancho
+})
+
+AttachedEffectManager.register(808, 'second wind', 1717, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.8,
+    offset = { -5, -5, false },
+    shader = 'Clouds White',
+    --size = { 100, 100 }  -- Beam horizontal ancho
+})
+
+AttachedEffectManager.register(809, 'ressonance', 1353, ThingCategoryEffect, {
+    duration = 6000,
+    speed = 1.0,
+    offset = { -78, -45, true },
+   -- shader = 'Clouds White',
+    --size = { 100, 100 }  -- Beam horizontal ancho
+})
+
+AttachedEffectManager.register(810, 'resonating aura', 1167 , ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { -32, -32, false}, 
+})
+
+AttachedEffectManager.register(811, 'menacing stuned', 32, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 1500,
+    speed = 1,
+    offset = { 22, 22, true},
+    
+})
