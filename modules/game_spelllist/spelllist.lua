@@ -324,7 +324,7 @@ function updateSpellInformation(widget)
 
     -- New UI only
     if descriptionValueLabel then
-        descriptionValueLabel:setText(tr(description))
+        descriptionValueLabel:setColoredText(tr(description))
     else
         print('[SpellList] WARN: descriptionValueLabel not found')
     end
