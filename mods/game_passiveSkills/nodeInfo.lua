@@ -143,14 +143,14 @@ PassiveSkills.nodeInfo = {
 	},
 	["1:21"] = {
 		name = "Mana Infusion",
-		description = "+2% max mana per level.",
+		description = "+2% max mana per level. Your max mana increases arcane spell damage by 0.5% per level per 100 max mana.",
 		effect = {
 			{type = "storage", name = "MaxMana", value = 2},
 		},
 	},
 	["1:22"] = {
 		name = "Scholar's Wit",
-		description = "+2% magic level per level.",
+		description = "+2% magic level per level. Critical hits with arcane spells restore 2% of max mana per level.",
 		effect = {
 			{type = "storage", name = "MagicLevel", value = 2},
 		},
@@ -161,7 +161,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["1:24"] = {
 		name = "Spellweaver",
-		description = "Spells deal 2% additional damage per level.",
+		description = "Spells deal 2% additional damage per level per active buff on you (max 5 buffs).",
 		effect = {
 			{type = "storage", name = "Spellweaver", value = 2},
 		},
@@ -196,14 +196,14 @@ PassiveSkills.nodeInfo = {
 	},
 	["1:29"] = {
 		name = "Mana Surge",
-		description = "Casting spells restores 2% of max mana per level.",
+		description = "Casting spells restores 2% of max mana per level. While below 30% mana, restoration is doubled.",
 		effect = {
 			{type = "storage", name = "ManaSurge", value = 2},
 		},
 	},
 	["1:30"] = {
 		name = "Arcanist",
-		description = "Spending mana grants a stack of Arcane Momentum, increasing spell damage by 2% per stack for 6 seconds. Stacks up to 5 times.",
+		description = "Spending mana grants a stack of Arcane Momentum, increasing spell damage by 2% per stack for 6 seconds. Stacks up to 5 times. At max stacks, your next spell costs no mana and fires an additional Arcane Missile.",
 		effect = {
 			{type = "storage", name = "ArcanistKeystone", value = 2},
 		},
@@ -502,14 +502,14 @@ PassiveSkills.nodeInfo = {
 	},
 	["3:11"] = {
 		name = "Quickstep",
-		description = "Increases dodge chance by 2% per level.",
+		description = "Increases dodge chance by 2% per level. Dodging an attack reduces Lethal Dagger's cooldown by 0.5s per level.",
 		effect = {
 			{type = "condition", name = "Dodge", value = 2},
 		},
 	},
 	["3:12"] = {
 		name = "Frenzied Blades",
-		description = "Increases attack speed by 2% per level.",
+		description = "Each consecutive melee hit increases attack speed by 2% per level, stacking up to 5 times. Resets if you don't hit for 3 seconds.",
 		effect = {
 			{type = "condition", name = "Attack Speed", value = 2},
 		},
@@ -534,21 +534,21 @@ PassiveSkills.nodeInfo = {
 	},
 	["3:16"] = {
 		name = "Killing Instinct",
-		description = "Increases critical hit chance by 2% per level.",
+		description = "Increases critical hit chance by 2% per level. Critical hits have a 10% chance per level to apply bleed for 3 seconds.",
 		effect = {
 			{type = "condition", name = "Critical Hit Chance", value = 2},
 		},
 	},
 	["3:17"] = {
 		name = "Blur",
-		description = "Increases dodge chance by 3% per level.",
+		description = "Increases dodge chance by 3% per level. While Stealth is active, your first attack from stealth gains +15% crit chance per level.",
 		effect = {
 			{type = "condition", name = "Dodge", value = 3},
 		},
 	},
 	["3:18"] = {
 		name = "Bulwark of the Martyr",
-		description = "Increases max health by 2% per level.",
+		description = "Increases max health by 2% per level. When you take damage below 30% HP, gain +10% dodge per level for 5 seconds. 30s cooldown.",
 		effect = {
 			{type = "condition", name = "Max Health", value = 2},
 		},
@@ -655,7 +655,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["4:2"] = {
 		name = "Colossal Blows",
-		description = "Increase physical damage done by 2% per level.",
+		description = "Your physical attacks have a 5% chance per level to trigger a Heavy Hit, dealing a second strike at 60% damage. Heavy Hits can trigger on-hit effects.",
 		effect = {
 			{type = "condition", name = "Physical Damage", value = 2},
 		},
@@ -687,21 +687,21 @@ PassiveSkills.nodeInfo = {
 	},
 	["4:7"] = {
 		name = "Rebound Strike",
-		description = "Brutal Swing has a 10% chance per level to heal you for 8% of your max health.",
+		description = "Brutal Swing has a 10% chance per level to heal you for 8% of your max health and reset Rend's cooldown.",
 		effect = {
 			{type = "storage", name = "ReboundStrike", value = 10},
 		},
 	},
 	["4:8"] = {
 		name = "Bloodlust",
-		description = "Learn the spell Bloodlust.",
+		description = "Learn the spell Bloodlust. While Bloodlust is active, Rend applies bleed and Brutal Swing hits all nearby enemies.",
 		effect = {
 			{type = "spell", name = "Bloodlust"},
 		},
 	},
 	["4:11"] = {
 		name = "Goliath",
-		description = "Increase max health by 4% per level.",
+		description = "Increase max health by 4% per level. When you drop below 30% HP, gain a shield equal to 10% of your max HP per level for 5 seconds. 30s cooldown.",
 		effect = {
 			{type = "condition", name = "Max Health", value = 4},
 		},
@@ -740,7 +740,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["4:17"] = {
 		name = "Emberhide",
-		description = "Increase elemental resistance by 2% per level.",
+		description = "Increase elemental resistance by 2% per level. While a burning enemy is nearby, your physical damage increases by 3% per level.",
 		effect = {
 			{type = "storage", name = "Emberhide", value = 2},
 		},
@@ -1891,7 +1891,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["10:22"] = {
 		name = "Hunter's Mercy",
-		description = "Your Phantom Shot now deals 4% per level additional damage if the target is below 50% health.",
+		description = "Your Phantom Shot now deals 4% per level additional damage if the target is below 50% health and executes targets below 5% HP per level. Additionally, killing a target with Phantom Shot resets its cooldown.",
 		effect = {
 			{type = "storage", name = "HunterMercy", value = 4},
 		},
@@ -1917,21 +1917,21 @@ PassiveSkills.nodeInfo = {
 	},
 	["10:26"] = {
 		name = "Focused Fire",
-		description = "Increase the damage done by your Phantom Shot, Falcon Shot and Rapid Fire by an additional 4% per level.",
+		description = "Phantom Shot, Falcon Shot and Rapid Fire deal +4% damage per level for each debuff on the target (slow, burn, bleed, freeze).",
 		effect = {
 			{type = "storage", name = "FocusedFire", value = 4},
 		},
 	},
 	["10:27"] = {
 		name = "Scorched Mark",
-		description = "Dead from Above now increases your critical strike chance by 4% per level every time it triggers. This effect does not stack.",
+		description = "Dead from Above now marks the target for 5 seconds. Marked targets take +4% damage per level from all your attacks and increase your critical strike chance by 4% per level.",
 		effect = {
 			{type = "storage", name = "DeadFromAbove", value = 4},
 		},
 	},
 	["10:28"] = {
 		name = "Apex Predator",
-		description = "When you kill an enemy, you gain Apex Predator for 8 seconds: +15% physical damage and +15% fire damage. 30 second cooldown.",
+		description = "When you kill an enemy, reset Phantom Shot's cooldown and gain Apex Predator for 8 seconds: +15% physical damage and +15% fire damage. 30 second cooldown.",
 		effect = {
 			{type = "condition", name = "Physical Damage", value = 15},
 			{type = "condition", name = "Fire Damage", value = 15},
@@ -2229,7 +2229,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["13:15"] = {
 		name = "Second Wind",
-		description = "Learn the spell Second Wind. Instantly heal 15% max HP + 10% per Focus stack consumed. Consumes all Focus. 20s cooldown.",
+		description = "Learn the spell Second Wind. Instantly heal 30% max HP + 20% per Focus stack consumed. Consumes all Focus. 20s cooldown.",
 		effect = {
 			{type = "storage", name = "SecondWind", value = 1},
 		},
