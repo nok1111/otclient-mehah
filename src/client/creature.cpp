@@ -587,6 +587,7 @@ void Creature::drawDashEffect(const Point& dest)
     }
 
     const int animationPhase = getCurrentAnimationPhase();
+    const bool useFramebuffer = hasShader() && g_shaders.getShaderById(m_shaderId)->useFramebuffer();
 
     // draw farthest (most transparent) ghost first so closer ones overlap it
     for (int j = ghosts; j >= 1; --j) {
@@ -597,23 +598,69 @@ void Creature::drawDashEffect(const Point& dest)
         const Point ghostDest = dest + dirStep * (j * stepLen);
 
         g_drawPool.setOpacity(opacity, true);
-        datType->draw(ghostDest, 0, m_numPatternX, 0, m_numPatternZ, animationPhase, Color::white);
 
-        if (m_drawOutfitColor && getLayers() > 1) {
-            g_drawPool.setCompositionMode(CompositionMode::MULTIPLY, true);
-            g_drawPool.setOpacity(opacity, true);
-            datType->draw(ghostDest, SpriteMaskYellow, m_numPatternX, 0, m_numPatternZ, animationPhase, m_outfit.getHeadColor());
-            g_drawPool.setCompositionMode(CompositionMode::MULTIPLY, true);
-            g_drawPool.setOpacity(opacity, true);
-            datType->draw(ghostDest, SpriteMaskRed, m_numPatternX, 0, m_numPatternZ, animationPhase, m_outfit.getBodyColor());
-            g_drawPool.setCompositionMode(CompositionMode::MULTIPLY, true);
-            g_drawPool.setOpacity(opacity, true);
-            datType->draw(ghostDest, SpriteMaskGreen, m_numPatternX, 0, m_numPatternZ, animationPhase, m_outfit.getLegsColor());
-            g_drawPool.setCompositionMode(CompositionMode::MULTIPLY, true);
-            g_drawPool.setOpacity(opacity, true);
-            datType->draw(ghostDest, SpriteMaskBlue, m_numPatternX, 0, m_numPatternZ, animationPhase, m_outfit.getFeetColor());
+        // Draw attached effects (on bottom: auras, wings shader, etc.)
+        drawAttachedEffect(ghostDest, nullptr, false);
+
+        // Draw mount if present
+        Point mountDest = ghostDest;
+        if (m_outfit.hasMount()) {
+            mountDest -= getMountThingType()->getDisplacement() * g_drawPool.getScaleFactor();
+            if (!m_mountOffset.isNull()) {
+                mountDest += m_mountOffset * g_drawPool.getScaleFactor();
+            }
+            if (hasMountShader()) {
+                g_drawPool.setShaderProgram(g_shaders.getShaderById(m_mountShaderId), true);
+            }
+            getMountThingType()->draw(mountDest, 0, m_numPatternX, 0, 0, getCurrentAnimationPhase(true), Color::white);
+            g_drawPool.resetShaderProgram();
         }
+
+        // Draw creature with addons, shader, and outfit colors
+        const auto& drawGhost = [&](const Point& d) {
+            for (int yPattern = 0; yPattern < getNumPatternY(); ++yPattern) {
+                if (yPattern > 0 && !(m_outfit.getAddons() & (1 << (yPattern - 1))))
+                    continue;
+
+                if (hasShader() && !useFramebuffer) {
+                    g_drawPool.setShaderProgram(g_shaders.getShaderById(m_shaderId), true);
+                }
+
+                datType->draw(d, 0, m_numPatternX, yPattern, m_numPatternZ, animationPhase, Color::white);
+
+                if (m_drawOutfitColor && getLayers() > 1) {
+                    g_drawPool.setCompositionMode(CompositionMode::MULTIPLY, true);
+                    g_drawPool.setOpacity(opacity, true);
+                    datType->draw(d, SpriteMaskYellow, m_numPatternX, yPattern, m_numPatternZ, animationPhase, m_outfit.getHeadColor());
+                    datType->draw(d, SpriteMaskRed, m_numPatternX, yPattern, m_numPatternZ, animationPhase, m_outfit.getBodyColor());
+                    datType->draw(d, SpriteMaskGreen, m_numPatternX, yPattern, m_numPatternZ, animationPhase, m_outfit.getLegsColor());
+                    datType->draw(d, SpriteMaskBlue, m_numPatternX, yPattern, m_numPatternZ, animationPhase, m_outfit.getFeetColor());
+                    g_drawPool.resetCompositionMode();
+                }
+            }
+        };
+
+        if (useFramebuffer) {
+            const int size = static_cast<int>(g_gameConfig.getSpriteSize() * std::max<int>(datType->getSize().area(), 2) * g_drawPool.getScaleFactor());
+            const auto& p = (Point(size) - Point(datType->getExactHeight())) / 2;
+            const auto& destFB = Rect(ghostDest - p, Size{ size });
+
+            g_drawPool.setShaderProgram(g_shaders.getShaderById(m_shaderId), true);
+            g_drawPool.bindFrameBuffer(destFB.size());
+            drawGhost(p);
+            g_drawPool.releaseFrameBuffer(destFB);
+            g_drawPool.resetShaderProgram();
+        } else {
+            drawGhost(ghostDest);
+        }
+
+        // Draw attached effects (on top: wings, auras on top, etc.)
+        drawAttachedEffect(ghostDest, nullptr, true);
+        drawAttachedParticlesEffect(ghostDest);
     }
+
+    // Restore opacity
+    g_drawPool.setOpacity(1.0f, true);
 }
 
 void Creature::internalDraw(Point dest, const Color& color)

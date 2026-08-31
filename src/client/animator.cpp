@@ -22,6 +22,7 @@
 
 #include "animator.h"
 #include "declarations.h"
+#include "gameconfig.h"
 
 #include <framework/core/clock.h>
 #include <framework/core/filestream.h>
@@ -34,7 +35,13 @@ void Animator::unserializeAppearance(const appearances::SpriteAnimation& animati
     m_startPhase = animation.default_start_phase();
 
     for (const auto& phase : animation.sprite_phase()) {
-        m_phaseDurations.emplace_back(phase.duration_min(), phase.duration_max());
+        const auto minDur = phase.duration_min();
+        const auto maxDur = phase.duration_max();
+        // Fix: if both durations are 0, use default effect ticks per frame
+        if (minDur == 0 && maxDur == 0)
+            m_phaseDurations.emplace_back(g_gameConfig.getEffectTicksPerFrame(), g_gameConfig.getEffectTicksPerFrame());
+        else
+            m_phaseDurations.emplace_back(minDur, maxDur);
     }
 
     m_phase = getStartPhase();
@@ -53,6 +60,11 @@ void Animator::unserialize(const int animationPhases, const FileStreamPtr& fin)
     for (int i = 0; i < m_animationPhases; ++i) {
         int minimum = fin->getU32();
         int maximum = fin->getU32();
+        // Fix: if both durations are 0, use default effect ticks per frame
+        if (minimum == 0 && maximum == 0) {
+            minimum = g_gameConfig.getEffectTicksPerFrame();
+            maximum = minimum;
+        }
         m_phaseDurations.emplace_back(minimum, maximum);
 
         m_minDuration = m_minDuration == 0 ? minimum :
