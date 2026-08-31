@@ -136,6 +136,8 @@ OUTFIT_SHADERS = { {
     {name = 'Ghost', frag = 'shaders/fragment/ghost.frag'},
     {name = 'Metallic', frag = 'shaders/fragment/metallic.frag', drawColor = false},
     {name = 'Golden', frag = 'shaders/fragment/outline_golden.frag', drawColor = false},
+    {name = 'iaijutsu flash', frag = 'shaders/fragment/iaijutsu_flash.frag', drawColor = false},
+    {name = 'iaijutsu cut', frag = 'shaders/fragment/iaijutsu_cut.frag', drawColor = false},
     {name = 'frost armor', frag = 'shaders/fragment/frost_armor.frag', drawColor = false},
     {name = 'Red Glow', frag = 'shaders/fragment/red_glow.frag'},
     {name = 'Soul',  frag = 'shaders/fragment/soul.frag'},
