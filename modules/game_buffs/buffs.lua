@@ -291,7 +291,7 @@ function onBuffCooldown(iconId, duration, spellName, bgId, count)
   if duration == -1 or duration == 4294967295000 then
 	  icon:setTooltip(spellName)
 	  -- Update count/stacks for permanent buffs
-	  if count and count > 0 and count < 10 then
+	  if count and count > 0 then
 	    icon:recursiveGetChildById('count'):setText(count)
 	  else
 	    icon:recursiveGetChildById('count'):setText("")
@@ -333,7 +333,7 @@ function onBuffCooldown(iconId, duration, spellName, bgId, count)
   end
 
   -- Always update the count label, regardless of widget creation
-  if count > 0 and count < 10 then
+  if count and count > 0 then
     icon:recursiveGetChildById('count'):setText(count)
   else
     icon:recursiveGetChildById('count'):setText("")

@@ -60,6 +60,7 @@ SpellIcon < UIWidget
     margin-top: 2
     margin-right: 2
     text-align: topRight
+    text-auto-resize: true
     font-scale: 1.2
 
 BuffProgressRect < UIProgressRect
