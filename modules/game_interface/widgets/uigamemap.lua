@@ -86,6 +86,12 @@ function UIGameMap:onMouseRelease(mousePosition, mouseButton)
         return true
     end
 
+    -- When the mouse is grabbed (crosshair spell targeting), let the
+    -- grabber handle the release instead of processing map actions.
+    if g_ui.isMouseGrabbed() then
+        return false
+    end
+
     local autoWalkPos = self:getPosition(mousePosition)
 
     -- happens when clicking outside of map boundaries
