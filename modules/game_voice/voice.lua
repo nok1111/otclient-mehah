@@ -111,7 +111,7 @@ local voiceState = {
     myPosition = nil,
     pushToTalk = false,
     vadEnabled = false,
-    lastHost = "127.0.0.1",
+    lastHost = G.host or "127.0.0.1",
     lastPort = 7331
 }
 
@@ -976,7 +976,7 @@ function joinPublicVoiceRoom()
     local cid = player:getId()
     local token = tostring(cid) .. "-" .. room .. "-proximity"
 
-    local RELAY_HOST = "127.0.0.1"
+    local RELAY_HOST = G.host or "127.0.0.1"
     local RELAY_PORT = 7331
 
     local success = Voice.join(RELAY_HOST, RELAY_PORT, room, token, cid)
@@ -1012,7 +1012,7 @@ function joinPartyVoiceRoom()
     local cid = player:getId()
     local token = tostring(cid) .. "-" .. room .. "-party"
 
-    local success = Voice.join("127.0.0.1", 7331, room, token, cid)
+    local success = Voice.join(G.host or "127.0.0.1", 7331, room, token, cid)
     if success then
         voiceState.connected = true
         voiceState.room = room
@@ -1044,7 +1044,7 @@ function joinGuildVoiceRoom()
     local cid = player:getId()
     local token = tostring(cid) .. "-" .. room .. "-guild"
 
-    local success = Voice.join("127.0.0.1", 7331, room, token, cid)
+    local success = Voice.join(G.host or "127.0.0.1", 7331, room, token, cid)
     if success then
         voiceState.connected = true
         voiceState.room = room
@@ -1274,7 +1274,7 @@ function createPrivateRoom()
     local cid = player:getId()
     local token = tostring(cid) .. "-" .. room .. "-private"
 
-    local success = Voice.join("127.0.0.1", 7331, room, token, cid)
+    local success = Voice.join(G.host or "127.0.0.1", 7331, room, token, cid)
     if success then
         voiceState.connected = true
         voiceState.room = room
@@ -1311,7 +1311,7 @@ function joinPrivateRoom()
     local cid = player:getId()
     local token = tostring(cid) .. "-" .. room .. "-private"
 
-    local success = Voice.join("127.0.0.1", 7331, room, token, cid)
+    local success = Voice.join(G.host or "127.0.0.1", 7331, room, token, cid)
     if success then
         voiceState.connected = true
         voiceState.room = room
@@ -1383,7 +1383,7 @@ end
 
 -- ==================== LOBBY SYSTEM ====================
 
-local RELAY_HTTP_HOST = "http://127.0.0.1:7332"
+local RELAY_HTTP_HOST = "http://" .. (G.host or "127.0.0.1") .. ":7332"
 local lobbyListData = {}
 local passwordModalRoom = nil
 
@@ -1501,7 +1501,7 @@ function createLobby()
 
     local token = tostring(cid) .. "-" .. room .. "-lobby"
 
-    local success = Voice.join("127.0.0.1", 7331, room, token, cid)
+    local success = Voice.join(G.host or "127.0.0.1", 7331, room, token, cid)
     if success then
         voiceState.connected = true
         voiceState.room = room
@@ -1604,7 +1604,7 @@ function joinLobby(roomId, displayName, password)
     local cid = player:getId()
     local token = tostring(cid) .. "-" .. actualRoom .. "-lobby"
 
-    local success = Voice.join("127.0.0.1", 7331, actualRoom, token, cid)
+    local success = Voice.join(G.host or "127.0.0.1", 7331, actualRoom, token, cid)
     if success then
         voiceState.connected = true
         voiceState.room = actualRoom
