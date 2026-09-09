@@ -2282,7 +2282,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["13:24"] = {
 		name = "Blade Dash",
-		description = "Learn the spell Blade Dash. Strike a target up to 3 tiles away, dash through them, and heal for 25% of damage dealt. Mobility + sustain spell. 6s cooldown.",
+		description = "Learn the spell Blade Dash. Strike a target up to 3 tiles away, dash through them, heal for 25% of damage dealt, and stun + knock up enemies around the target for 1s. 8s cooldown.",
 		effect = {
 			{type = "storage", name = "BladeDash", value = 1},
 		},
