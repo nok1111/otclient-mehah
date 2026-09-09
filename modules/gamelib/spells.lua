@@ -38,6 +38,9 @@ SpelllistSettings = {
       'Meditation',
       'Blade Flurry',
       'Counter Strike',
+      'Cyclone Slash',
+      'Flash Steel',
+      'Iron Skin',
 
       --Templar
       'Divine Punishment',
@@ -543,8 +546,11 @@ SpellInfo = {
     ['Blade Dash'] = {id = 295, words = 'blade dash', icon = 309, description = 'Strike a target up to 3 tiles away, dash through them, and heal for 25% of damage dealt. Mobility + sustain spell.', exhaustion = 8000, premium = false, needLearn = true, type = 'Instant', mana = 30, level = 1, soul = 0, group = {[1] = 1900}, vocations = {13}},
     ['Searing Wind'] = {id = 296, words = 'searing wind', icon = 252, description = 'Passive: your Wind Step leaves a trail of fire for 3 seconds that burns enemies standing in it.', exhaustion = 1000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
     ['Meditation'] = {id = 297, words = 'meditation', icon = 294, description = 'Channel for 1 second to instantly gain 3 Focus stacks. Respects Focus Mastery (up to 6 max).', exhaustion = 18000, premium = false, needLearn = true, type = 'Instant', mana = 25, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
-    ['Blade Flurry'] = {id = 298, words = 'blade flurry', icon = 287, description = 'Strike a target 3 times in rapid succession, dealing physical damage. The final hit applies Exposed (max 3 stacks, 8s). Exposed targets take +10% damage from finishers per stack. Builder: generates 1 Focus stack.', exhaustion = 4000, premium = false, needLearn = true, type = 'Instant', mana = 20, level = 1, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Blade Flurry'] = {id = 298, words = 'blade flurry', icon = 293, description = 'Strike a target 3 times in rapid succession, dealing physical damage. The final hit applies Exposed (max 3 stacks, 8s). Exposed targets take +10% damage from finishers per stack. Builder: generates 1 Focus stack.', exhaustion = 4000, premium = false, needLearn = true, type = 'Instant', mana = 20, level = 1, soul = 0, group = {[1] = 1900}, vocations = {13}},
     ['Counter Strike'] = {id = 299, words = 'counter strike', icon = 297, description = 'Passive: while Guardian Stance is active, you have a chance to automatically counter-attack when hit, dealing physical damage and generating 1 Focus. Chance: 10% base + 3% per Parry level.', exhaustion = 1000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {13}},
+    ['Cyclone Slash'] = {id = 313, words = 'cyclone slash', icon = 300, description = 'Spin in a 3-tile radius dealing physical damage to all nearby enemies. Builder: generates 1 Focus stack.', exhaustion = 8000, premium = false, type = 'Instant', mana = 35, level = 30, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Flash Steel'] = {id = 314, words = 'flash steel', icon = 301, description = 'Hurl your blade at a target up to 4 tiles away dealing physical damage. Builder: generates 1 Focus stack.', exhaustion = 5000, premium = false, type = 'Instant', mana = 20, level = 15, soul = 0, group = {[1] = 1900}, vocations = {13}},
+    ['Iron Skin'] = {id = 315, words = 'iron skin', icon = 302, description = 'Consume all Focus to harden your skin, reducing damage by 30% + 10% per Focus stack for 3 seconds.', exhaustion = 30000, premium = false, type = 'Instant', mana = 40, level = 45, soul = 0, group = {[3] = 1100}, vocations = {13}},
 
 
         --Blood Mage
