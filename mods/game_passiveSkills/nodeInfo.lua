@@ -2263,10 +2263,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["13:21"] = {
-		name = "Swift Feet",
-		description = "+2% movement speed per level.",
+		name = "Wind Reader",
+		description = "Each dash grants +5% dodge and +2% damage for 4s per level. Stacks up to 3 times. Triggered by Wind Step, Phantom Slash, and Blade Dash.",
 		effect = {
-			{type = "condition", name = "Speed", value = 20},
+			{type = "storage", name = "WindReader", value = 1},
 		},
 	},
 	["13:22"] = {
