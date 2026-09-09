@@ -2724,7 +2724,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:5"] = {
 		name = "Swarm Protocol",
-		description = "+1 max robot per level (all types combined). +1 max of each robot type per level. Bots gain +5% max HP per level.",
+		description = "+1 max robot per level (all types combined). +1 max of each robot type per level. Bots gain +5% max HP per level. Each robot beyond the base cap (3) reduces all bot damage by 8%.",
 		effect = {
 			{type = "storage", name = "SwarmProtocol", value = 1},
 		},
@@ -2777,7 +2777,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:13"] = {
 		name = "Mech Commander",
-		description = "+1 max robot. Mech Suite enhanced: player +30% damage, bots +40% damage, +5s duration.",
+		description = "+1 max robot. Mech Suite enhanced: player +30% damage, bots +40% damage, +5s duration. Each robot beyond the base cap (3) reduces all bot damage by 8%.",
 		effect = {
 			{type = "storage", name = "MechCommander", value = 1},
 		},
