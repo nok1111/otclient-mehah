@@ -77,6 +77,7 @@ namespace Proto
         GameServerCreatureShader = 54,
         GameServerMapShader = 55,
         GameServerCreatureTyping = 56,
+        GameServerCreatureConditionIcons = 58,
         GameServerAttachedEffectWithTargets = 62,
         GameServerAttachedEffectWithTargetsEx = 63,
         GameServerProgressbar = 59,

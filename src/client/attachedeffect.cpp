@@ -77,6 +77,22 @@ int getBounce(const AttachedEffect::Bounce bounce, const ticks_t ticks) {
     return minHeight + (height - std::abs(height - static_cast<int>(ticks / (bounce.speed / 100.f)) % static_cast<int>(height * 2)));
 }
 
+int getJump(const AttachedEffect::Jump& jump, const ticks_t ticks) {
+    if (jump.duration == 0 || jump.height == 0)
+        return 0;
+
+    const auto height = jump.height * g_drawPool.getScaleFactor();
+    const int totalLoops = jump.loops <= 0 ? 1 : jump.loops;
+    const auto totalDuration = jump.duration * totalLoops;
+
+    if (ticks >= totalDuration)
+        return 0;
+
+    const auto progress = (ticks % jump.duration) / static_cast<float>(jump.duration);
+    // Parabolic arc: 0 -> peak (height) -> 0, smooth like a real jump
+    return static_cast<int>(height * 4.f * progress * (1.f - progress));
+}
+
 static std::pair<int, int> getMissilePatternFromDirection(const Otc::Direction dir)
 {
     switch (dir) {
@@ -147,7 +163,13 @@ void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightView
             if (length < 1.f)
                 continue;
 
-            const float halfW = m_lineWidth * 0.5f * scaleFactor;
+            // Pulse animates line width: expands then contracts (triangle wave)
+            float lineWidth = static_cast<float>(m_lineWidth);
+            if (m_pulse.height > 0 && m_pulse.speed > 0) {
+                lineWidth += getBounce(m_pulse, m_pulse.timer.ticksElapsed()) / 100.f * m_lineWidth;
+            }
+
+            const float halfW = lineWidth * 0.5f * scaleFactor;
             const float px = -dy / length * halfW;
             const float py = dx / length * halfW;
 
@@ -166,7 +188,7 @@ void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightView
             }
 
             // Glow: wider, semi-transparent line behind the main line
-            const float glowHalfW = (m_lineWidth + 4) * 0.5f * scaleFactor;
+            const float glowHalfW = (lineWidth + 4) * 0.5f * scaleFactor;
             const float gpx = -dy / length * glowHalfW;
             const float gpy = dx / length * glowHalfW;
             const Point ga1(dest.x + gpx, dest.y + gpy);
@@ -310,6 +332,10 @@ void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightView
                 point -= getBounce(m_bounce, m_bounce.timer.ticksElapsed());
             }
 
+            if (m_jump.height > 0 && m_jump.duration > 0) {
+                point -= getJump(m_jump, m_jump.timer.ticksElapsed());
+            }
+
             if (lightView && m_light.intensity > 0)
                 lightView->addLightSource(point, m_light);
 
@@ -395,6 +421,10 @@ void AttachedEffect::draw(const Point& dest, const bool isOnTop, const LightView
 
         if (m_bounce.height > 0 && m_bounce.speed > 0) {
             point -= getBounce(m_bounce, m_bounce.timer.ticksElapsed());
+        }
+
+        if (m_jump.height > 0 && m_jump.duration > 0) {
+            point -= getJump(m_jump, m_jump.timer.ticksElapsed());
         }
 
         if (lightView && m_light.intensity > 0)

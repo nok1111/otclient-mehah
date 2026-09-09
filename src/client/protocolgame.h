@@ -249,6 +249,7 @@ private:
     void parseCloseForgeWindow(const InputMessagePtr& msg);
     void parseCreatureData(const InputMessagePtr& msg);
     void parseCreatureHealth(const InputMessagePtr& msg);
+    void parseCreatureConditionIcons(const InputMessagePtr& msg);
     void parseCreatureLight(const InputMessagePtr& msg);
     void parseCreatureOutfit(const InputMessagePtr& msg) const;
     void parseCreatureSpeed(const InputMessagePtr& msg);

@@ -2692,7 +2692,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:0"] = {
 		name = "Tinker's Ingenuity",
-		description = "Increases max Scrap by 1 and all damage by 2% per Scrap stack.",
+		description = "Passively generates 1 Scrap every 5 seconds.",
 		effect = {
 			{type = "storage", name = "Ingenuity", value = 1},
 		},
@@ -2717,14 +2717,14 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:4"] = {
 		name = "Assault Module",
-		description = "All bots gain a second attack spell. +1 extra attack per level.",
+		description = "All bots gain a unique extra attack spell. Level 1: unlock. Level 2: +15% spell damage. Level 3: +30% spell damage.",
 		effect = {
 			{type = "storage", name = "AssaultModule", value = 1},
 		},
 	},
 	["12:5"] = {
 		name = "Swarm Protocol",
-		description = "+1 max mines and +5% mine damage per level.",
+		description = "+1 max robot per level (all types combined). +1 max of each robot type per level. Bots gain +5% max HP per level.",
 		effect = {
 			{type = "storage", name = "SwarmProtocol", value = 1},
 		},
@@ -2741,17 +2741,17 @@ PassiveSkills.nodeInfo = {
 		description = "Choose a new bot blueprint to deploy.",
 	},
 	["12:8"] = {
-		name = "Laser Bot",
-		description = "Unlocks Deploy Laser Bot — melee bot with a wave laser attack (3-tile line AoE).",
+		name = "Laser Drone",
+		description = "Unlocks Deploy Laser Drone — ranged drone that fires an energy laser at targets (range 4).",
 		effect = {
 			{type = "storage", name = "LaserBotUnlock", value = 1},
 		},
 	},
 	["12:9"] = {
-		name = "Ranger Bot",
-		description = "Unlocks Deploy Ranger Bot — long-range sniper bot (range 6, high damage).",
+		name = "Kitty Bot",
+		description = "Unlocks Deploy Kitty Bot — fast melee bot with rapid slash attacks.",
 		effect = {
-			{type = "storage", name = "RangerBotUnlock", value = 1},
+			{type = "storage", name = "KittyBotUnlock", value = 1},
 		},
 	},
 	["12:10"] = {
@@ -2763,9 +2763,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:11"] = {
 		name = "Targeting Matrix",
-		description = "+2% critical hit chance for all bots per level.",
+		description = "+2% energy damage per level.",
 		effect = {
-			{type = "storage", name = "TargetingMatrix", value = 2},
+			{type = "condition", name = "Energy Damage", value = 2},
 		},
 	},
 	["12:12"] = {
@@ -2784,14 +2784,14 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:14"] = {
 		name = "Explosive Force",
-		description = "+3% explosion damage per level (Grenade, Mine, Bomber).",
+		description = "+3% damage per level to Grenade Toss, Land Mine, Rocket Barrage, Napalm Strike, Gravity Bomb.",
 		effect = {
 			{type = "storage", name = "ExplosiveForce", value = 3},
 		},
 	},
 	["12:15"] = {
 		name = "Shrapnel",
-		description = "Explosions leave a 3s bleed on hit targets. +2% bleed damage per level.",
+		description = "Grenade Toss, Land Mine, Rocket Barrage, Napalm Strike, Gravity Bomb leave a 3s bleed on hit targets. +2% bleed damage per level.",
 		effect = {
 			{type = "storage", name = "Shrapnel", value = 2},
 		},
@@ -2801,22 +2801,22 @@ PassiveSkills.nodeInfo = {
 		description = "Choose a detonation enhancement.",
 	},
 	["12:17"] = {
-		name = "Chain Reaction",
-		description = "Explosions have 20% chance per level to chain to a nearby enemy.",
+		name = "Radioactive Reaction",
+		description = "Grenade Toss, Land Mine, Rocket Barrage, Napalm Strike, Gravity Bomb have 20% chance to chain to up to 1 nearby enemy per level.",
 		effect = {
-			{type = "storage", name = "ChainReaction", value = 20},
+			{type = "storage", name = "RadioactiveReaction", value = 20},
 		},
 	},
 	["12:18"] = {
-		name = "Thermite",
-		description = "Explosions deal +15% fire damage over 3s per level.",
+		name = "Napalm Strike",
+		description = "Unlocks Napalm Strike spell.",
 		effect = {
-			{type = "storage", name = "Thermite", value = 15},
+			{type = "spell", name = "Napalm Strike"},
 		},
 	},
 	["12:19"] = {
-		name = "Cluster Bomb",
-		description = "Grenade Toss spawns 3 mini explosions around impact point.",
+		name = "Rocket Munitions",
+		description = "Rocket Barrage fires +2 rockets per salvo (5 total). +15% Rocket Barrage damage.",
 		effect = {
 			{type = "storage", name = "ClusterBomb", value = 1},
 		},
@@ -2832,14 +2832,14 @@ PassiveSkills.nodeInfo = {
 		name = "Volatile Mixture",
 		description = "+5% fire damage per level.",
 		effect = {
-			{type = "storage", name = "VolatileMixture", value = 5},
+			{type = "condition", name = "Fire Damage", conditionType = CONDITION_ATTRIBUTES, params = {{param = CONDITION_PARAM_SPECIALSKILL_FIREDAMAGE, value = 5}}},
 		},
 	},
 	["12:22"] = {
-		name = "Concussion Blast",
-		description = "Explosions have 25% chance to stun targets for 1s.",
+		name = "Tesla Shot",
+		description = "Unlocks Tesla Shot spell. Tesla Shot paralyzes for 1s and marks targets for 5s: marked targets take bonus damage from Grenade Toss, Land Mine, Rocket Barrage, Napalm Strike, Gravity Bomb.",
 		effect = {
-			{type = "storage", name = "ConcussionBlast", value = 25},
+			{type = "spell", name = "Tesla Shot"},
 		},
 	},
 	["12:23"] = {
@@ -2850,15 +2850,15 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["12:24"] = {
-		name = "Plated Armor",
-		description = "+2% max health per level.",
+		name = "Energized Shots",
+		description = "Your bow/crossbow attacks gain bonus damage equal to 5% of your magic level per level.",
 		effect = {
-			{type = "condition", name = "Max Health", value = 2},
+			{type = "storage", name = "EnergizedShots", value = 5},
 		},
 	},
 	["12:25"] = {
 		name = "Shield Generator",
-		description = "Casting Repair also gives addShield() for 5% of max HP per level.",
+		description = "Casting Repair also grants you a shield equal to 5% of max HP per level.",
 		effect = {
 			{type = "storage", name = "ShieldGenerator", value = 5},
 		},
@@ -2869,16 +2869,16 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:27"] = {
 		name = "Barrier Bot",
-		description = "Unlocks Deploy Barrier Bot — stationary bot that casts addShield() on allies in range.",
+		description = "Unlocks Deploy Barrier Bot — a stationary bot that shields you and nearby allies every 3 seconds.",
 		effect = {
 			{type = "storage", name = "BarrierBotUnlock", value = 1},
 		},
 	},
 	["12:28"] = {
 		name = "Reactive Armor",
-		description = "Taking damage has 15% chance per level to knockback the attacker.",
+		description = "Taking damage has 5% chance per level to knockback the attacker and deal damage equal to 2% of max HP per level.",
 		effect = {
-			{type = "storage", name = "ReactiveArmor", value = 15},
+			{type = "storage", name = "ReactiveArmor", value = 5},
 		},
 	},
 	["12:29"] = {
@@ -2889,24 +2889,24 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["12:30"] = {
-		name = "Power Core",
-		description = "+1 max Scrap per level.",
+		name = "Reactor Meltdown",
+		description = "When a bot dies: gain 2 Scrap and +5% damage per level for 5s. +1 max Scrap per level.",
 		effect = {
 			{type = "storage", name = "PowerCore", value = 1},
 		},
 	},
 	["12:31"] = {
 		name = "Emergency Protocol",
-		description = "Below 30% HP: auto-deploy a War Bot and gain shield. 60s cooldown.",
+		description = "Below 30% HP: auto-deploy a War Bot for 20 seconds (no Scrap cost). 30s cooldown.",
 		effect = {
 			{type = "storage", name = "EmergencyProtocol", value = 1},
 		},
 	},
 	["12:32"] = {
-		name = "Nanite Repair",
-		description = "+3% HP regeneration per level.",
+		name = "Scout Hack",
+		description = "Scout Bot gains a Hack attack every 5s: 30% +5% per level chance to stun target for 2s.",
 		effect = {
-			{type = "condition", name = "HP Regeneration", value = 3},
+			{type = "storage", name = "NaniteRepair", value = 1},
 		},
 	},
 	["12:33"] = {
@@ -2918,7 +2918,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:34"] = {
 		name = "Scrap Munitions",
-		description = "When you deploy a bot, your next Grenade Toss costs 0 Scrap. 10s cooldown.",
+		description = "Gain 1 Scrap each time you deploy a bot.",
 		effect = {
 			{type = "storage", name = "Scrap Munitions", value = 1},
 		},
@@ -2932,7 +2932,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:36"] = {
 		name = "Controlled Detonation",
-		description = "Land Mines and Grenade Toss heal you for 5% of max HP per explosion hit.",
+		description = "Napalm Strike and Land Mine explosions knock back enemies from the blast center and stun them for 0.4s.",
 		effect = {
 			{type = "storage", name = "Controlled Detonation", value = 5},
 		},

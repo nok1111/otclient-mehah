@@ -108,6 +108,7 @@ public:
     void setType(uint8_t type);
     void setIcon(uint8_t icon);
     void setIcons(const std::vector<std::tuple<uint8_t, uint8_t, uint16_t>>& icons);
+    void setConditionStates(uint32_t states);
     void setSkullTexture(const std::string& filename);
     void setShieldTexture(const std::string& filename, bool blink);
     void setEmblemTexture(const std::string& filename);
@@ -167,6 +168,7 @@ public:
     uint8_t getEmblem() { return m_emblem; }
     uint8_t getType() { return m_type; }
     uint8_t getIcon() { return m_icon; }
+    uint32_t getConditionStates() { return m_conditionStates; }
     uint8_t getHealthPercent() { return m_healthPercent; }
     uint8_t getBarrierPercent() { return m_barrierPercent; }
     uint8_t getManaPercent() { return m_manaPercent; }
@@ -239,6 +241,11 @@ public:
 minHeight,
 .height = height, .speed = speed
         };
+    }
+
+    void setJump(const uint8_t height, const uint16_t duration, const int8_t loops) {
+        m_creatureJump = { .height = height, .duration = duration, .loops = loops };
+        m_creatureJump.timer.restart();
     }
 
     void setWidgetInformation(const UIWidgetPtr& info);
@@ -333,6 +340,7 @@ private:
     TexturePtr m_iconTexture;
     TexturePtr m_customIconTexture;
     TexturePtr m_typingIconTexture;
+    TexturePtr m_conditionStatesTexture;
 
     TexturePtr m_healthBarPlayerFrame;
     TexturePtr m_healthBarOwnSummonFrame;
@@ -374,6 +382,14 @@ private:
         uint16_t speed{ 0 };
     } m_bounce;
 
+    struct CreatureJump
+    {
+        uint8_t height{ 0 };
+        uint16_t duration{ 0 };
+        int8_t loops{ 1 };
+        Timer timer{};
+    } m_creatureJump;
+
     // jump related
     Timer m_jumpTimer;
     PointF m_jumpOffset;
@@ -396,6 +412,7 @@ private:
     uint8_t m_icon{ Otc::NpcIconNone };
     uint8_t m_shield{ Otc::ShieldNone };
     uint8_t m_emblem{ Otc::EmblemNone };
+    uint32_t m_conditionStates{ 0 };
 
     // walk related
     uint8_t m_walkAnimationPhase{ 0 };

@@ -273,11 +273,11 @@ AttachedEffectManager.register(22, 'ground break', 660, ThingCategoryEffect, {
     
 })
 
-AttachedEffectManager.register(23, 'stuned', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(23, 'stuned', 1590, ThingCategoryEffect, {
     opacity = 1,
     duration = 1200,
     speed = 1,
-    offset = { 22, 22, true},
+    offset = { 0, 0, true},
     
 })
 
@@ -310,14 +310,15 @@ AttachedEffectManager.register(27, 'vortex (water wave)', 242, ThingCategoryEffe
     offset = { -22, -32 }
 })
 
-AttachedEffectManager.register(28, 'stun jump', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(28, 'stun jump', 1590, ThingCategoryEffect, {
 
     duration = 3000,
     disableWalkAnimation = true,
+     offset = { 0, 0, true },
 
     onAttach = function(effect, owner)
         owner:setBounce(10, 15, 500)
-        effect:setBounce(20, 23, 2000)
+        effect:setBounce(10, 15, 2000)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setBounce(0, 0)
@@ -524,10 +525,11 @@ AttachedEffectManager.register(56, 'fire 1', 764, ThingCategoryEffect, {
     
 })
 
-AttachedEffectManager.register(60, 'cyclone stun jump', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(60, 'cyclone stun jump', 1590, ThingCategoryEffect, {
 
     duration = 750,
     disableWalkAnimation = true,
+    offset = { 0, 0, true},
 
     onAttach = function(effect, owner)
         owner:setBounce(0, 120, 2200)
@@ -552,11 +554,11 @@ AttachedEffectManager.register(61, 'cyclone bounce', 0, 0, {
     end
 })
 
-AttachedEffectManager.register(62, 'stuned cyclone', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(62, 'stuned cyclone', 1590, ThingCategoryEffect, {
     opacity = 2,
     duration = 2000,
     speed = 1,
-    offset = { 22, 22, true},
+    offset = { 0, 0, true},
     
 })
 
@@ -578,11 +580,11 @@ AttachedEffectManager.register(65, 'magic echo', 598, ThingCategoryEffect, {
     
 })
 
-AttachedEffectManager.register(66, 'stuned judment', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(66, 'stuned judment', 1590, ThingCategoryEffect, {
     opacity = 2,
     duration = 2000,
     speed = 1,
-    offset = { 22, 22, true},
+    offset = { 0, 0, true},
     
 })
 
@@ -972,11 +974,11 @@ AttachedEffectManager.register(115, 'carnivorous vile', 446, ThingCategoryEffect
     offset = { -32, -32, true },
 })
 
-AttachedEffectManager.register(116, 'piercing wave stun', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(116, 'piercing wave stun', 1590, ThingCategoryEffect, {
     opacity = 1,
     duration = 3000,
     speed = 1,
-    offset = { 22, 22, true},
+    offset = { 0, 0, true},
     
 })
 
@@ -1165,11 +1167,11 @@ AttachedEffectManager.register(142, 'Falling star', 874, ThingCategoryEffect, {
     offset = { -85, -30, true },
 })
 
-AttachedEffectManager.register(143, 'stuned falling star', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(143, 'stuned falling star', 1590, ThingCategoryEffect, {
     opacity = 1,
     duration = 3000,
     speed = 1,
-    offset = { 22, 22, true},
+    offset = { 0, 0, true},
     
 })
 
@@ -1661,11 +1663,11 @@ AttachedEffectManager.register(192, 'vortex (water wave) 2', 242, ThingCategoryE
     end
 })
 
-AttachedEffectManager.register(193, 'vortex stun', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(193, 'vortex stun', 1590, ThingCategoryEffect, {
     opacity = 1,
     duration = 1000,
     speed = 1,
-    offset = { 22, 22, true},
+    offset = { 0, 0, true},
     
 })
 
@@ -1675,11 +1677,11 @@ AttachedEffectManager.register(194, 'water torrent', 923 , ThingCategoryEffect, 
     offset = { -96, -96, true},
 })
 
-AttachedEffectManager.register(195, 'thunder leap stun', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(195, 'thunder leap stun', 1590, ThingCategoryEffect, {
     opacity = 1,
     duration = 1000,
     speed = 1,
-    offset = { 22, 22, true},
+    offset = { 0, 0, true},
     
 })
 
@@ -1751,27 +1753,27 @@ AttachedEffectManager.register(203, 'blood aura 1', 1156 , ThingCategoryEffect, 
     end
 })
 
-AttachedEffectManager.register(204, 'shadowstep stun', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(204, 'shadowstep stun', 1590, ThingCategoryEffect, {
     opacity = 1,
     duration = 500,
     speed = 1,
-    offset = { 22, 22, true},
+    offset = { 0, 0, true},
     
 })
 
-AttachedEffectManager.register(205, 'charge stun', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(205, 'charge stun', 1590, ThingCategoryEffect, {
     opacity = 1,
     duration = 1000,
     speed = 1,
-    offset = { 22, 22, true},
+    offset = { 0, 0, true},
     
 })
 
-AttachedEffectManager.register(206, 'light-dash stun', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(206, 'light-dash stun', 1590, ThingCategoryEffect, {
     opacity = 1,
     duration = 1800,
     speed = 1,
-    offset = { 22, 22, true},
+    offset = { 0, 0, true},
     
 })
 
@@ -4639,11 +4641,11 @@ AttachedEffectManager.register(395, 'pomelo explosion', 1132, ThingCategoryEffec
     offset = { -128, -128, true},
 })
 
-AttachedEffectManager.register(396, 'stuned', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(396, 'stuned', 1590, ThingCategoryEffect, {
     opacity = 1,
     duration = 5000,
     speed = 1,
-    offset = { 22, 22, true},
+    offset = { 0, 0, true},
     
 })
 
@@ -5271,7 +5273,6 @@ AttachedEffectManager.register(808, 'second wind', 1717, ThingCategoryEffect, {
 })
 
 AttachedEffectManager.register(809, 'ressonance', 1353, ThingCategoryEffect, {
-    duration = 6000,
     speed = 1.0,
     offset = { -78, -45, true },
    -- shader = 'Clouds White',
@@ -5285,10 +5286,142 @@ AttachedEffectManager.register(810, 'resonating aura', 1167 , ThingCategoryEffec
     offset = { -32, -32, false}, 
 })
 
-AttachedEffectManager.register(811, 'menacing stuned', 32, ThingCategoryEffect, {
+AttachedEffectManager.register(811, 'menacing stuned', 1590, ThingCategoryEffect, {
     opacity = 1,
     duration = 1500,
     speed = 1,
-    offset = { 22, 22, true},
+    offset = { 0, 0, true},
     
+})
+
+AttachedEffectManager.register(812, 'menacing stuned', 1647, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { -40, -40, false},
+
+})
+
+AttachedEffectManager.register(813, 'grand finale dissonance self', 1529, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { -64, -64, true},
+
+})
+
+AttachedEffectManager.register(814, 'grand finale dissonance target', 1440, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    duration = 8000,
+    speed = 1,
+    offset = { -56, -56, true},
+
+})
+
+AttachedEffectManager.register(815, 'grand finale harmony self', 1529, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { -64, -64, true},
+    shader = 'Galaxy',
+
+})
+
+AttachedEffectManager.register(816, 'grand finale harmony target', 1529, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { -64, -64, true},
+    shader = 'Galaxy',
+
+})
+
+AttachedEffectManager.register(817, 'reverberation shield', 1246, ThingCategoryEffect, {
+    duration = 6000,
+    opacity = 1,
+    speed = 1,
+    offset = { 0, 0, true},
+   -- shader = 'Galaxy',
+
+})
+
+AttachedEffectManager.register(818, 'monster stun', 1590, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 2000,
+    speed = 1,
+    offset = { 0, 0, true},
+    
+})
+
+AttachedEffectManager.register(819, 'boss stun', 1590, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 3000,
+    speed = 1,
+    offset = { 0, 0, true},
+    
+})
+
+AttachedEffectManager.register(820, 'monster fear', 1579, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 2000,
+    speed = 1,
+    offset = { -10, -15, true},
+    
+})
+
+AttachedEffectManager.register(821, 'boss fear', 1579, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 3000,
+    speed = 1,
+    offset = { -10, -15, true},
+
+})
+
+AttachedEffectManager.register(822, 'rocket jump', 755, ThingCategoryEffect, {
+    duration = 800,
+    disableWalkAnimation = true,
+    speed = 2,
+    offset = { -21, -21, false },
+    jump = { 45, 800, 1 },
+
+    onAttach = function(effect, owner)
+        owner:setJump(45, 800, 1)
+    end,
+    onDetach = function(effect, oldOwner)
+        safeAddTileEffect(oldOwner, 17)
+    end
+})
+
+AttachedEffectManager.register(823, 'rocket fire explosion', 3, ThingCategoryEffect, {
+    loop = 3,
+    opacity = 1,
+    speed = 1,
+    offset = { 0, 0, false},
+   -- size = { 100, 100 }  -- Beam horizontal ancho
+})
+
+AttachedEffectManager.register(824, 'knockback jump', 755, ThingCategoryEffect, {
+    duration = 400,
+    disableWalkAnimation = true,
+    speed = 2,
+    offset = { -21, -21, false },
+    jump = { 25, 400, 1 },
+
+    onAttach = function(effect, owner)
+        owner:setJump(25, 400, 1)
+    end,
+    onDetach = function(effect, oldOwner)
+        safeAddTileEffect(oldOwner, 17)
+    end
+})
+
+AttachedEffectManager.register(825, 'tesla laser', 0, 0, {
+    duration = 500,
+    lineMode = true,
+    lineColor = { r = 40, g = 180, b = 255, a = 255 },
+    lineWidth = 2,
+    pulse = { 0, 400, 500 },
+    fade = { 0, 100, 500 },
+    onTop = true,
 })

@@ -49,6 +49,10 @@ local executeConfig = function(attachedEffect, config)
         attachedEffect:setBounce(config.bounce[1], config.bounce[2], config.bounce[3] or 1000)
     end
 
+    if config.jump then
+        attachedEffect:setJump(config.jump[1], config.jump[2], config.jump[3] or 1)
+    end
+
     if config.pulse then
         attachedEffect:setPulse(config.pulse[1], config.pulse[2], config.pulse[3] or 1000)
     end

@@ -39,6 +39,7 @@ PassiveSkills.spellInfo = {
 	["Frost Barrel"] = {desc = "Throw a barrel of frost that freezes enemies in a 3x3 area for 3 seconds.", cooldown = "25s", mana = "55"},
 	["Falcon Shot"] = {desc = "Fire a falcon-shaped arrow that seeks the target and deals bonus damage to flying enemies.", cooldown = "15s", mana = "40"},
 	["Phantom Shot"] = {desc = "Fire a phantom arrow that passes through walls and enemies, dealing damage to all hit.", cooldown = "18s", mana = "45"},
+	["Deploy Barrier Bot"] = {desc = "Deploys a Barrier Bot that shields you and nearby allies with 20% of their max HP every 10 seconds for 5 seconds. Also attacks nearby enemies.", cooldown = "15s", mana = "65"},
 }
 
 ------ Initialization and Termination
@@ -831,6 +832,9 @@ function PassiveSkills.applyTooltip(nodeData, state, blockReason)
 	desc = tr(desc):gsub("\\n", "\n")
 
 	-- Build effects as part of description
+	-- Only spell effects get auto-generated lines; storage/condition effects
+	-- are already explained in the node description, so we skip them to avoid
+	-- showing confusing internal names like "+1% Ingenuity".
 	local effects = nodeData.effect or (clientInfo and clientInfo.effect) or nil
 	if effects and #effects > 0 then
 		local extraLines = {}
@@ -846,10 +850,6 @@ function PassiveSkills.applyTooltip(nodeData, state, blockReason)
 					if spellInfo.mana then table.insert(parts, "Mana: " .. spellInfo.mana) end
 					if #parts > 0 then table.insert(extraLines, table.concat(parts, "  ")) end
 				end
-			elseif eff.type == "storage" then
-				table.insert(extraLines, "+" .. (eff.value or 0) .. "% " .. (eff.name or "Bonus"))
-			elseif eff.type == "condition" then
-				table.insert(extraLines, "+" .. (eff.value or 0) .. "% " .. (eff.name or "Condition"))
 			end
 		end
 		if #extraLines > 0 then

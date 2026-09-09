@@ -89,6 +89,10 @@ end,
 .speed = speed
         };
     }
+    void setJump(const uint8_t height, const uint16_t duration, const int8_t loops) {
+        m_jump = { .height = height, .duration = duration, .loops = loops };
+        m_jump.timer.restart();
+    }
 
     void setOnTop(const bool onTop) { for (auto& control : m_offsetDirections) control.onTop = onTop; }
     void setOffset(int16_t x, int16_t y) { for (auto& control : m_offsetDirections) control.offset = { x, y }; }
@@ -139,6 +143,14 @@ onTop,
         Timer timer{};
     };
 
+    struct Jump
+    {
+        uint8_t height{ 0 };
+        uint16_t duration{ 0 };
+        int8_t loops{ 1 };
+        Timer timer{};
+    };
+
 private:
     int getCurrentAnimationPhase();
 
@@ -186,6 +198,7 @@ private:
     Bounce m_bounce;
     Bounce m_pulse;
     Bounce m_fade;
+    Jump m_jump;
 
     PainterShaderProgramPtr m_shader;
     TexturePtr m_texture;

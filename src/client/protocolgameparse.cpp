@@ -147,6 +147,9 @@ void ProtocolGame::parseMessage(const InputMessagePtr& msg)
                 case Proto::GameServerCreatureTyping:
                     parseCreatureTyping(msg);
                     break;
+                case Proto::GameServerCreatureConditionIcons:
+                    parseCreatureConditionIcons(msg);
+                    break;
                 case Proto::GameServerAttachedEffectWithTargets:
                     parseAttachedEffectWithTargets(msg);
                     break;
@@ -2032,6 +2035,19 @@ void ProtocolGame::parseCreatureHealth(const InputMessagePtr& msg)
 
     creature->setHealthPercent(healthPercent);
     creature->setBarrierPercent(barrierPercent);
+}
+
+void ProtocolGame::parseCreatureConditionIcons(const InputMessagePtr& msg)
+{
+    const uint32_t creatureId = msg->getU32();
+    const uint32_t conditionStates = msg->getU32();
+
+    const auto& creature = g_map.getCreatureById(creatureId);
+    if (!creature) {
+        return;
+    }
+
+    creature->setConditionStates(conditionStates);
 }
 
 void ProtocolGame::parseCreatureLight(const InputMessagePtr& msg)

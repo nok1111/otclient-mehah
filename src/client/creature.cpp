@@ -548,6 +548,27 @@ void Creature::drawInformation(const MapPosInfo& mapRect, const Point& dest, con
     if (g_gameConfig.drawTyping() && getTyping() && m_typingIconTexture)
         g_drawPool.addTexturedPos(m_typingIconTexture, p.x + (nameSize.width() / 2.0) + 2, textRect.y() - 6);
 
+    // Draw condition state icons to the left of the health bar (horizontal, right-to-left)
+    if (m_conditionStates > 0) {
+        if (!m_conditionStatesTexture)
+            m_conditionStatesTexture = g_textures.getTexture("/images/game/states/player-state-flags");
+        if (m_conditionStatesTexture) {
+            constexpr int condIconSize = 9;
+            constexpr int condGap = 1; // gap between health bar and first icon
+            int condIconCount = 0;
+            for (int bit = 0; bit < 32; ++bit) {
+                if (!(m_conditionStates & (1u << bit)))
+                    continue;
+                const int iconX = static_cast<int>(backgroundRect.x()) - condGap - (condIconCount + 1) * condIconSize;
+                const int iconY = healthBarY - 1; // vertically centered on 6px health bar
+                const Rect dest(iconX, iconY, condIconSize, condIconSize);
+                const Rect clip(bit * condIconSize, 0, condIconSize, condIconSize);
+                g_drawPool.addTexturedRect(dest, m_conditionStatesTexture, clip);
+                ++condIconCount;
+            }
+        }
+    }
+
     if (g_game.getClientVersion() >= 1281 && m_icons && !m_icons->atlasGroups.empty()) {
         int iconOffset = 0;
         for (const auto& iconTex : m_icons->atlasGroups) {
@@ -704,6 +725,14 @@ void Creature::internalDraw(Point dest, const Color& color)
             if (!m_jumpOffset.isNull()) {
                 const auto& jumpOffset = m_jumpOffset * g_drawPool.getScaleFactor();
                 dest -= Point(std::round(jumpOffset.x), std::round(jumpOffset.y));
+            } else if (m_creatureJump.height > 0 && m_creatureJump.duration > 0) {
+                const auto ticks = m_creatureJump.timer.ticksElapsed();
+                const auto totalDuration = m_creatureJump.duration * (m_creatureJump.loops <= 0 ? 1 : m_creatureJump.loops);
+                if (ticks < totalDuration) {
+                    const auto height = m_creatureJump.height * g_drawPool.getScaleFactor();
+                    const auto progress = (ticks % m_creatureJump.duration) / static_cast<float>(m_creatureJump.duration);
+                    dest -= static_cast<int>(height * 4.f * progress * (1.f - progress));
+                }
             } else if (m_bounce.height > 0 && m_bounce.speed > 0) {
                 const auto minHeight = m_bounce.minHeight * g_drawPool.getScaleFactor();
                 const auto height = m_bounce.height * g_drawPool.getScaleFactor();
@@ -1306,6 +1335,14 @@ void Creature::setIcons(const std::vector<std::tuple<uint8_t, uint8_t, uint16_t>
     for (const auto& [icon, category, count] : icons) {
         callLuaField("onIconsChange", icon, category, count);
     }
+}
+void Creature::setConditionStates(const uint32_t states)
+{
+    if (m_conditionStates == states)
+        return;
+
+    m_conditionStates = states;
+    callLuaField("onConditionStatesChange", states);
 }
 void Creature::setSkull(const uint8_t v) { if (m_skull != v) callLuaField("onSkullChange", m_skull = v); }
 void Creature::setShield(const uint8_t v) { if (m_shield != v) callLuaField("onShieldChange", m_shield = v); }

@@ -591,6 +591,8 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<Creature>("getType", &Creature::getType);
     g_lua.bindClassMemberFunction<Creature>("getIcon", &Creature::getIcon);
     g_lua.bindClassMemberFunction<Creature>("getIcons", &Creature::getIcons);
+    g_lua.bindClassMemberFunction<Creature>("getConditionStates", &Creature::getConditionStates);
+    g_lua.bindClassMemberFunction<Creature>("setConditionStates", &Creature::setConditionStates);
     g_lua.bindClassMemberFunction<Creature>("setOutfit", &Creature::setOutfit);
     g_lua.bindClassMemberFunction<Creature>("getOutfit", &Creature::getOutfit);
     g_lua.bindClassMemberFunction<Creature>("getDirection", &Creature::getDirection);
@@ -634,6 +636,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<Creature>("isStaticSquareVisible", &Creature::isStaticSquareVisible);
     g_lua.bindClassMemberFunction<Creature>("getStaticSquareColor", &Creature::getStaticSquareColor);
     g_lua.bindClassMemberFunction<Creature>("setBounce", &Creature::setBounce);
+    g_lua.bindClassMemberFunction<Creature>("setJump", &Creature::setJump);
     g_lua.bindClassMemberFunction<Creature>("setDash", &Creature::setDash);
     g_lua.bindClassMemberFunction<Creature>("isDash", &Creature::isDash);
     g_lua.bindClassMemberFunction<Creature>("setDashGhosts", &Creature::setDashGhosts);
@@ -835,6 +838,7 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<AttachedEffect>("setDrawOrder", &AttachedEffect::setDrawOrder);
     g_lua.bindClassMemberFunction<AttachedEffect>("setLight", &AttachedEffect::setLight);
     g_lua.bindClassMemberFunction<AttachedEffect>("setBounce", &AttachedEffect::setBounce);
+    g_lua.bindClassMemberFunction<AttachedEffect>("setJump", &AttachedEffect::setJump);
     g_lua.bindClassMemberFunction<AttachedEffect>("setPulse", &AttachedEffect::setPulse);
     g_lua.bindClassMemberFunction<AttachedEffect>("setFade", &AttachedEffect::setFade);
 
