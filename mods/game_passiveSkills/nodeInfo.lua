@@ -815,7 +815,7 @@ PassiveSkills.nodeInfo = {
 		name = "Burning Soul",
 		description = "Burning effects last 1 additional second per level and deal 5% more damage per level.",
 		effect = {
-			{type = "storage", name = "EmberTouch", value = 5},
+			{type = "storage", name = "BurningSoul", value = 5},
 		},
 	},
 	["4:27"] = {
