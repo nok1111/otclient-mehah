@@ -567,7 +567,7 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["3:18"] = {
-		name = "Vanish Strike",
+		name = "Shadow Revenant",
 		description = "After exiting Stealth, gain +5% dodge and +5% physical damage per level for 6 seconds.",
 		effect = {
 			{type = "storage", name = "VanishStrike", value = 5},
