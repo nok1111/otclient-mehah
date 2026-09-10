@@ -1,7 +1,7 @@
 PassiveSkills.nodeInfo = {
 	["1:0"] = {
-		name = "Arcane Attunement",
-		description = "You are attuned to all elements. Increases max mana by 2% and all magic damage by 1%.",
+		name = "Elemental Attunement",
+		description = "You are attuned to fire, ice, and arcane. Increases max mana by 2% and fire, ice, and arcane damage by 5%.",
 		effect = {
 			{type = "condition", name = "MaxMana", value = 2},
 			{type = "condition", name = "ElementalDamage", value = 1},
@@ -100,10 +100,11 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["1:15"] = {
-		name = "Mirror of Winter",
-		description = "Increases the damage of your ice clones by 10% per level.",
+		name = "Hailstorm",
+		description = "Ice Barrage fires 1 additional shard per level and each shard fires 50ms faster per level.",
 		effect = {
-			{type = "storage", name = "IceCloneDamage", value = 10},
+			{type = "storage", name = "IceBarrage", value = 1},
+			{type = "storage", name = "IceBarrageSpeed", value = 50},
 		},
 	},
 	["1:16"] = {
@@ -115,7 +116,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["1:17"] = {
 		name = "Ice Nova",
-		description = "Unlocks the spell Ice Nova. An AoE ice explosion around you that damages and stuns all nearby enemies for 2 seconds.",
+		description = "Unlocks the spell Ice Nova. An AoE ice explosion around you that damages and slows all nearby enemies by 70% for 2 seconds.",
 		effect = {
 			{type = "spell", name = "Ice Nova"},
 		},
@@ -353,9 +354,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["2:18"] = {
 		name = "Bulwark of the Martyr",
-		description = "Increases max health by 2% per level.",
+		description = "Increases max health by 2% per level. When you take damage below 40% HP, gain a shield equal to 10% of your max health per level for 5 seconds. 30s cooldown.",
 		effect = {
 			{type = "condition", name = "Max Health", value = 2},
+			{type = "storage", name = "BulwarkMartyr", value = 10},
 		},
 	},
 	["2:19"] = {
