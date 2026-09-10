@@ -362,7 +362,7 @@ SpellInfo = {
     ['Dragon Aura'] = {id = 9, words = 'dragon aura', icon = 9, description = 'create a dragon aura that deals fire damage to enemies around you.', exhaustion = 35000, premium = false, type = 'Instant', mana = 70, level = 53, soul = 0, group = {[1] = 1900}, vocations = {4}},
     ['Dragons Call'] = {id = 10, words = 'dragons call', icon = 10, description = 'strike your target high a powerfull blow dealing high amounts of fire damage.', exhaustion = 45000, premium = false, type = 'Instant', mana = 180, level = 80, soul = 0, group = {[1] = 1900}, vocations = {4}},
     ['Draconic Chains'] = {id = 11, words = 'draconic chains', icon = 11, description = 'unleash your dragon chains pullin all enemies into you dealing physical damage to all enemies. [magic]', exhaustion = 18000, premium = false, type = 'Instant', mana = 300, level = 1, soul = 0, group = {[3] = 1900}, vocations = {4}, needLearn = true},
-    ['Seismic Jump'] = {id = 12, words = 'seismic jump', icon = 12, description = 'leap to a target location, dealing physical damage and knocking enemies into the air on landing. [skill+attack]', exhaustion = 10000, premium = false, type = 'Instant', mana = 40, level = 1, soul = 0, group = {[1] = 1900}, vocations = {4}, needLearn = true},
+    ['Seismic Jump'] = {id = 12, words = 'seismic jump', icon = 12, description = 'leap to a target location, dealing physical damage and knocking enemies into the air on landing. [skill+attack]', exhaustion = 10000, premium = false, type = 'Instant', mana = 40, level = 1, soul = 0, group = {[1] = 1900}, vocations = {4}, needLearn = true, crosshair = true, area = 'AREA_SEISMIC_JUMP', range = 5, areaSprite = 1178},
     ['Bloodlust'] = {id = 13, words = 'bloodlust', icon = 13, description = 'for the next 8 seconds enter a frenzy state increasing your melee skill, attack speed and critical hit chance by 50%. While active, Rend applies bleed to all nearby enemies and Brutal Swing hits all nearby enemies.', exhaustion = 30000, premium = false, type = 'Instant', mana = 85, level = 1, soul = 0, group = {[3] = 1100}, vocations = {4}, needLearn = true},
     ['Dragon Soul'] = {id = 14, words = 'dragon soul', icon = 14, description = 'restore high amounts of max health scaled by your max health percent and magic.', exhaustion = 2000, premium = false, type = 'Instant', mana = 20, level = 1, soul = 0, group = {[2] = 1100}, vocations = {4}, needLearn = true},
     
@@ -850,6 +850,7 @@ SpellAreaOffsets = {
     ['AREA_EXPLOSIVE_BARREL'] = '-1,-1;0,-1;1,-1;-1,0;0,0;1,0;-1,1;0,1;1,1',
     ['WIND_STEP'] = '0,0',
     ['ROCKET_BOOTS'] = '0,0',
+    ['AREA_SEISMIC_JUMP'] = '0,0',
     ['AREA_MINE'] = '0,0',
     ['AREA_BEAM5'] = '0,-4;0,-3;0,-2;0,-1;0,0'
 }
