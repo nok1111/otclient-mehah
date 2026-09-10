@@ -201,6 +201,13 @@ PassiveSkills.nodeInfo = {
 			{type = "storage", name = "ManaSurge", value = 2},
 		},
 	},
+	["1:34"] = {
+		name = "Riftwalker",
+		description = "Increases teleport distance by 1 tile per level and grants 10% magic level for 5 seconds after teleporting.",
+		effect = {
+			{type = "storage", name = "TeleportDistance", value = 1},
+		},
+	},
 	["1:30"] = {
 		name = "Arcanist",
 		description = "Spending mana grants a stack of Arcane Momentum, increasing spell damage by 2% per stack for 6 seconds. Stacks up to 5 times. At max stacks, your next spell costs no mana and fires an additional Arcane Missile.",
@@ -956,6 +963,13 @@ PassiveSkills.nodeInfo = {
 		description = "Learn the spell Summon Void Guard.",
 		effect = {
 			{type = "spell", name = "Summon Void Guard"},
+		},
+	},
+	["5:19"] = {
+		name = "Pactmaster's Gift",
+		description = "Increases the damage of your summons by an additional 12%.",
+		effect = {
+			{type = "storage", name = "InfernalCommand", value = 12},
 		},
 	},
 	["5:21"] = {
