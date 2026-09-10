@@ -415,9 +415,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["2:27"] = {
 		name = "Holy Ascendancy",
-		description = "Increase all holy damage by 2% per level.",
+		description = "Increase all holy damage by 2% per level and healing effectiveness by 2% per level.",
 		effect = {
 			{type = "condition", name = "Holy Damage", value = 2},
+			{type = "condition", name = "Healing Effectiveness", value = 2},
 		},
 	},
 	["2:28"] = {
