@@ -54,10 +54,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["1:8"] = {
-		name = "Blazing Decree",
-		description = "+2% fire damage per level.",
+		name = "Hells Core",
+		description = "Unlocks the spell Hells Core. A massive fire AoE that devastates a large area.",
 		effect = {
-			{type = "storage", name = "BlazingDecree", value = 2},
+			{type = "spell", name = "Hells Core"},
 		},
 	},
 	["1:9"] = {
@@ -82,10 +82,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["1:12"] = {
-		name = "Frozen Core",
-		description = "+2% max health per level.",
+		name = "Ice Clones",
+		description = "Unlocks the spell Ice Clones. Summons 4 ice clones around you that attack nearby enemies for 20 seconds.",
 		effect = {
-			{type = "storage", name = "MaxHealth", value = 2},
+			{type = "spell", name = "Ice Clones"},
 		},
 	},
 	["1:13"] = {
@@ -100,10 +100,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["1:15"] = {
-		name = "Ice Shards",
-		description = "Ice damage has a 5% chance per level to launch shards at nearby enemies.",
+		name = "Mirror of Winter",
+		description = "Increases the damage of your ice clones by 10% per level.",
 		effect = {
-			{type = "storage", name = "IceShardsProc", value = 5},
+			{type = "storage", name = "IceCloneDamage", value = 10},
 		},
 	},
 	["1:16"] = {
@@ -114,10 +114,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["1:17"] = {
-		name = "Wand Specialist",
-		description = "+3% wand damage per level.",
+		name = "Ice Nova",
+		description = "Unlocks the spell Ice Nova. An AoE ice explosion around you that damages and stuns all nearby enemies for 2 seconds.",
 		effect = {
-			{type = "storage", name = "WandDamage", value = 3},
+			{type = "spell", name = "Ice Nova"},
 		},
 	},
 	["1:18"] = {
@@ -174,24 +174,24 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["1:26"] = {
-		name = "Riftwalker",
-		description = "Increases teleport distance by 1 tile and grants 10% magic level for 5 seconds after teleporting.",
+		name = "Surge Recovery",
+		description = "Increases the mana restored by Energy Blast by 10% per level.",
 		effect = {
-			{type = "storage", name = "TeleportDistance", value = 1},
+			{type = "storage", name = "SurgeRecovery", value = 10},
 		},
 	},
 	["1:27"] = {
 		name = "Arcane Barrage",
-		description = "Arcane spells deal 3% additional damage per level.",
+		description = "Arcane spells deal 3% additional damage per level. Additionally, casting Energy Blast reduces the cooldown of Arcane Missiles by 0.5 seconds per level.",
 		effect = {
 			{type = "storage", name = "ArcaneBarrage", value = 3},
 		},
 	},
 	["1:28"] = {
-		name = "Archmage Mastery",
-		description = "All spells cost 1% less mana per level (max 5).",
+		name = "Mana Distortion",
+		description = "Unlocks the spell Mana Distortion. Creates a field that restores mana and grants +20% magic level to you and nearby allies for 15 seconds.",
 		effect = {
-			{type = "storage", name = "ArchmageMastery", value = 1},
+			{type = "spell", name = "Mana Distortion"},
 		},
 	},
 	["1:29"] = {
@@ -1153,9 +1153,11 @@ PassiveSkills.nodeInfo = {
 	},
 	["6:22"] = {
 		name = "Sacred Constitution",
-		description = "Increases max health by 4% per level.",
+		description = "Increases max health by 4% per level, health regeneration by 3 every 3 seconds per level, and healing effectiveness by 2% per level.",
 		effect = {
 			{type = "condition", name = "Max Health", value = 4},
+			{type = "condition", name = "Health Regen", value = 3},
+			{type = "condition", name = "Healing Effectiveness", value = 2},
 		},
 	},
 	["6:23"] = {
@@ -1447,9 +1449,11 @@ PassiveSkills.nodeInfo = {
 	},
 	["8:7"] = {
 		name = "Nature's Wrath",
-		description = "Increases earth damage by 3% per level.",
+		description = "Increases earth, physical and ice damage by 3% per level.",
 		effect = {
 			{type = "condition", name = "Earth Damage", value = 3},
+			{type = "condition", name = "Physical Damage", value = 3},
+			{type = "condition", name = "Ice Damage", value = 3},
 		},
 	},
 	["8:8"] = {
@@ -1500,9 +1504,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["8:17"] = {
 		name = "Nature's Endurance",
-		description = "Increases max health by 5% per level.",
+		description = "Increases max health by 5% per level and healing effectiveness by 2% per level.",
 		effect = {
 			{type = "condition", name = "Max Health", value = 5},
+			{type = "condition", name = "Extra Healing", value = 2},
 		},
 	},
 	["8:18"] = {
