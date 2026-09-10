@@ -699,10 +699,17 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["4:6"] = {
-		name = "Shockwave",
-		description = "Learn the spell Shockwave.",
+		name = "Seismic Jump",
+		description = "Learn the spell Seismic Jump. Leap to a target location, dealing physical damage and knocking enemies into the air on landing.",
 		effect = {
-			{type = "spell", name = "Shockwave"},
+			{type = "spell", name = "Seismic Jump"},
+		},
+	},
+	["4:36"] = {
+		name = "Draconic Steps",
+		description = "Seismic Jump deals +5% damage per level and its cooldown is reduced by 0.5 seconds per level.",
+		effect = {
+			{type = "storage", name = "DraconicSteps", value = 5},
 		},
 	},
 	["4:7"] = {
