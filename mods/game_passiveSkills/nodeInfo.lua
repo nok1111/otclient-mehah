@@ -566,10 +566,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["3:18"] = {
-		name = "Bulwark of the Martyr",
-		description = "Increases max health by 2% per level. When you take damage below 30% HP, gain +10% dodge per level for 5 seconds. 30s cooldown.",
+		name = "Vanish Strike",
+		description = "After exiting Stealth, gain +5% dodge and +5% physical damage per level for 6 seconds.",
 		effect = {
-			{type = "condition", name = "Max Health", value = 2},
+			{type = "storage", name = "VanishStrike", value = 5},
 		},
 	},
 	["3:19"] = {
