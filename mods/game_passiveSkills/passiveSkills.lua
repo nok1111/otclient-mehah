@@ -13,7 +13,7 @@ PassiveSkills.spellInfo = {
 	["Assassination"] = {desc = "A lethal strike that deals massive physical damage. Bonus damage if target is bleeding.", cooldown = "15s", mana = "35"},
 	["Blackout"] = {desc = "Vanish into shadows, becoming invisible and gaining a critical hit bonus on next attack.", cooldown = "30s", mana = "50"},
 	["Void Execution"] = {desc = "Execute the target with void energy. Instant kill if target is below 20% health.", cooldown = "40s", mana = "80"},
-	["Shockwave"] = {desc = "Release a shockwave that knocks back and damages all nearby enemies.", cooldown = "18s", mana = "45"},
+	["Seismic Jump"] = {desc = "Leap to a target location, dealing physical damage and knocking enemies into the air on landing.", cooldown = "10s", mana = "40"},
 	["Bloodlust"] = {desc = "Enter a bloodlust frenzy, increasing attack speed by 30% and life leech by 10%.", cooldown = "60s", mana = "70"},
 	["Fire Within"] = {desc = "Ignite your inner flame, gaining fire damage immunity and reflecting fire damage.", cooldown = "45s", mana = "55"},
 	["Draconic Chains"] = {desc = "Chain a target with draconic energy, rooting them and dealing fire damage over time.", cooldown = "20s", mana = "40"},
@@ -2043,7 +2043,15 @@ function PassiveSkills.createConstellationNode(panel, treeData, nodeData, nodePi
 	local iconPath = 'images/no_image.png'
 	-- Try custom icon from talents/icons folder first
 	if nodeData.icon then
-		local customPath = 'images/talents/icons/' .. nodeData.icon .. '.png'
+		local iconStr = tostring(nodeData.icon)
+		local customPath
+		if tonumber(iconStr) then
+			-- Numeric icon: use tree-specific subfolder (e.g. tree1/0.png)
+			local treeBg = treeData.background or '1'
+			customPath = 'images/talents/icons/tree' .. treeBg .. '/' .. iconStr .. '.png'
+		else
+			customPath = 'images/talents/icons/' .. iconStr .. '.png'
+		end
 		if g_resources.fileExists(customPath) then
 			iconPath = customPath
 		end
