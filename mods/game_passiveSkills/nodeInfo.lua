@@ -500,16 +500,17 @@ PassiveSkills.nodeInfo = {
 	},
 	["3:6"] = {
 		name = "Blood Drinker",
-		description = "Increases life leech by 2% per level.",
+		description = "Increases life leech by 2% per level. Your attacks deal +4% physical damage per level to bleeding targets.",
 		effect = {
 			{type = "condition", name = "Life Leech", value = 2},
+			{type = "storage", name = "BloodDrinkerDamage", value = 4},
 		},
 	},
 	["3:7"] = {
 		name = "Crimson Feast",
-		description = "Killing a bleeding target restores 5% of your max health per level.",
+		description = "Killing a bleeding target restores 5% of your max health per level and spreads bleed to nearby enemies.",
 		effect = {
-			{type = "condition", name = "Max Health", value = 2},
+			{type = "storage", name = "CrimsonFeast", value = 5},
 		},
 	},
 	["3:8"] = {
