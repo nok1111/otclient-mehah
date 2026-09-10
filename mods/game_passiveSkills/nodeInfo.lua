@@ -460,10 +460,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["3:0"] = {
 		name = "Shadowborn Pact",
-		description = "Bind your soul to the shadows. Increases dodge chance by 2% and attack speed by 2%.",
+		description = "Bind your soul to the shadows. Increases dodge chance by 5% and attack speed by 5%.",
 		effect = {
-			{type = "condition", name = "Dodge", value = 2},
-			{type = "condition", name = "Attack Speed", value = 2},
+			{type = "condition", name = "Dodge", value = 5},
+			{type = "condition", name = "Attack Speed", value = 5},
 		},
 	},
 	["3:1"] = {
