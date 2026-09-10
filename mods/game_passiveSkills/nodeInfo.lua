@@ -127,6 +127,14 @@ PassiveSkills.nodeInfo = {
 			{type = "storage", name = "IceBarrage", value = 5},
 		},
 	},
+	["1:35"] = {
+		name = "Eternal Winter",
+		description = "Increases the number of ice clones summoned by 1 per level and their damage by 10% per level.",
+		effect = {
+			{type = "storage", name = "IceCloneCount", value = 1},
+			{type = "storage", name = "IceCloneDamage", value = 10},
+		},
+	},
 	["1:19"] = {
 		name = "Winter's Grasp",
 		description = "Frost spells have a 5% chance per level to freeze the target for 1.5 seconds.",
