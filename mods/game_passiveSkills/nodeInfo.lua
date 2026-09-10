@@ -468,9 +468,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["3:1"] = {
 		name = "Veiled Might",
-		description = "Increase physical damage done by 6% per level.",
+		description = "Increase physical damage done by 4% per level.",
 		effect = {
-			{type = "condition", name = "Physical Damage", value = 6},
+			{type = "condition", name = "Physical Damage", value = 4},
 		},
 	},
 	["3:2"] = {
