@@ -660,10 +660,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["4:0"] = {
 		name = "Draconic Heritage",
-		description = "Dragon blood flows through your veins. Increases max health by 2% and physical damage by 2%.",
+		description = "Dragon blood flows through your veins. Increases max health by 4% and physical damage by 4%.",
 		effect = {
-			{type = "condition", name = "Max Health", value = 2},
-			{type = "condition", name = "Physical Damage", value = 2},
+			{type = "condition", name = "Max Health", value = 4},
+			{type = "condition", name = "Physical Damage", value = 4},
 		},
 	},
 	["4:1"] = {
