@@ -767,7 +767,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["4:17"] = {
 		name = "Emberhide",
-		description = "Increase elemental resistance by 2% per level. While a burning enemy is nearby, your physical damage increases by 3% per level.",
+		description = "Reduce damage taken from burning enemies by 10% per level.",
 		effect = {
 			{type = "storage", name = "Emberhide", value = 2},
 		},
