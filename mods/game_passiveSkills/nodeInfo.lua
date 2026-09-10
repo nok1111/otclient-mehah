@@ -500,9 +500,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["3:6"] = {
 		name = "Blood Drinker",
-		description = "Increases life leech by 1% per level.",
+		description = "Increases life leech by 2% per level.",
 		effect = {
-			{type = "condition", name = "Life Leech", value = 1},
+			{type = "condition", name = "Life Leech", value = 2},
 		},
 	},
 	["3:7"] = {
