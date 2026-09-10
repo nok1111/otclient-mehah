@@ -819,10 +819,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["4:27"] = {
-		name = "Cinder Armor",
-		description = "Increase max health by 2% per level while a burning enemy is nearby.",
+		name = "Cinder Burst",
+		description = "Fire damage has a 5% chance per level to trigger a secondary explosion dealing fire damage in a 2x2 area around the target.",
 		effect = {
-			{type = "condition", name = "Max Health", value = 2},
+			{type = "storage", name = "CinderBurst", value = 5},
 		},
 	},
 	["4:28"] = {
