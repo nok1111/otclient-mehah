@@ -316,9 +316,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["2:12"] = {
 		name = "Consecrated Protection",
-		description = "Reduce all damage taken while standing on holy ground by 2% per level.",
+		description = "Reduce all damage taken while standing on holy ground by 4% per level.",
 		effect = {
-			{type = "storage", name = "ConsecratedProtection", value = 2},
+			{type = "storage", name = "ConsecratedProtection", value = 4},
 		},
 	},
 	["2:13"] = {
