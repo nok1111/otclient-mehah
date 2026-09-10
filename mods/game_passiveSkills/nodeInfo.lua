@@ -294,9 +294,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["2:7"] = {
 		name = "Blessed Judgment",
-		description = "Judgement now heals 2% of your max health per level.",
+		description = "Judgement now heals 2% of your max health per level and grants +3% critical strike chance per level for 8 seconds.",
 		effect = {
 			{type = "storage", name = "BlessedJudgment", value = 2},
+			{type = "storage", name = "BlessedJudgmentCrit", value = 3},
 		},
 	},
 	["2:8"] = {
