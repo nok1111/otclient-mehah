@@ -1173,7 +1173,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["6:17"] = {
 		name = "Mana Feather",
-		description = "Aery now restores 0.2% of your max mana per basic attack per level.",
+		description = "Aery now restores 2% of your max mana per basic attack per level.",
 		effect = {
 			{type = "storage", name = "AeryManaRestore", value = 2},
 		},
