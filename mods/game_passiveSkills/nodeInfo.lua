@@ -1235,10 +1235,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["6:31"] = {
 		name = "Astral Harmony",
-		description = "Your astral bond and lunarity combine. Increases healing effectiveness by 3% and max health by 3% while you have unlocked Luminous Bond and Sacred Constitution.",
+		description = "When you heal an ally, you have a 10% chance to summon an Aery Echo that heals a second nearby ally for 3 seconds. Requires Luminous Bond and Sacred Constitution.",
 		effect = {
-			{type = "condition", name = "Healing Effectiveness", value = 3},
-			{type = "condition", name = "Max Health", value = 3},
+			{type = "storage", name = "AeryEcho", value = 1},
 		},
 	},
 	["7:0"] = {
