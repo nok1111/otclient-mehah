@@ -933,7 +933,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["5:9"] = {
 		name = "Haunt",
-		description = "Learn the spell Haunt.",
+		description = "Learn the spell Haunt. Haunts the target with death damage over 10 seconds, applying a curse that deals damage every second.",
 		effect = {
 			{type = "spell", name = "Haunt"},
 		},
