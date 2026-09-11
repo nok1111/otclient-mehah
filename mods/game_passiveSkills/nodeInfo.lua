@@ -919,7 +919,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["5:7"] = {
 		name = "Soulstorm",
-		description = "Drain Soul now also affects additional nearby cursed enemies around your targets. +1 additional enemy per level.",
+		description = "Drain Soul now also affects additional nearby cursed enemies around your targets. +1 additional cursed enemy per level.",
 		effect = {
 			{type = "storage", name = "Soulstorm", value = 1},
 		},
