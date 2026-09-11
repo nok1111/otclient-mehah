@@ -1152,7 +1152,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["6:16"] = {
 		name = "Cosmic Convergence",
-		description = "When your mana drops below 20%, you enter Cosmic Convergence for 6 seconds: +10% magic level and all spells cost 50% less mana. 30 second cooldown.",
+		description = "Each tick of Rain Fall has a 10% chance to trigger a Starfall on a random enemy near the healed area, dealing energy damage.",
 		effect = {
 			{type = "storage", name = "CosmicConvergence", value = 1},
 		},
