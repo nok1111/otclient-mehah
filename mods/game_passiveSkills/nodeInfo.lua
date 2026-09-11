@@ -1144,11 +1144,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["6:15"] = {
 		name = "Sacred Constitution",
-		description = "Increases max health by 4% per level, health regeneration by 3 every 3 seconds per level, and healing effectiveness by 2% per level.",
+		description = "Increases max health by 3% per level and healing effectiveness by 3% per level.",
 		effect = {
-			{type = "condition", name = "Max Health", value = 4},
-			{type = "condition", name = "Health Regen", value = 3},
-			{type = "condition", name = "Healing Effectiveness", value = 2},
+			{type = "condition", name = "Max Health", value = 3},
+			{type = "condition", name = "Healing Effectiveness", value = 3},
 		},
 	},
 	["6:16"] = {
