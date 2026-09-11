@@ -966,7 +966,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["5:15"] = {
 		name = "Post Mortem",
-		description = "Your summons explode on death, dealing death damage equal to 50% of their maximum health to nearby enemies.",
+		description = "Your summons explode on death, dealing death damage equal to 10% + 7% per level of their maximum health to nearby enemies.",
 		effect = {
 			{type = "storage", name = "AbyssalRefund", value = 7},
 		},
