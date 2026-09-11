@@ -1078,9 +1078,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["6:1"] = {
 		name = "Cosmic Focus",
-		description = "Increase the energy damage done by 2% per level.",
+		description = "Reduce spell cooldowns by 2% per level.",
 		effect = {
-			{type = "condition", name = "Energy Damage", value = 2},
+			{type = "condition", name = "Cooldown Reduction", value = 2},
 		},
 	},
 	["6:2"] = {
