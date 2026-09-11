@@ -1008,7 +1008,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["5:22"] = {
 		name = "Dark Aura",
-		description = "Learn the spell Dark Aura.",
+		description = "Learn the spell Dark Aura: reduces damage taken by 25% and increases death damage by 15%.",
 		effect = {
 			{type = "spell", name = "Dark Aura"},
 		},

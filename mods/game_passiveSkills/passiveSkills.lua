@@ -19,7 +19,7 @@ PassiveSkills.spellInfo = {
 	["Draconic Chains"] = {desc = "Chain a target with draconic energy, rooting them and dealing fire damage over time.", cooldown = "20s", mana = "40"},
 	["Phoenix Wrath"] = {desc = "Unleash phoenix fire, dealing massive fire damage in a large area. Revives you if you die within 10s.", cooldown = "180s", mana = "200"},
 	["Dragon Soul"] = {desc = "Channel your dragon soul, gaining 20% damage reduction and 15% increased damage for 15 seconds.", cooldown = "90s", mana = "120"},
-	["Dark Aura"] = {desc = "Emit a dark aura that damages and weakens nearby enemies, reducing their damage by 10%.", cooldown = "30s", mana = "60"},
+	["Dark Aura"] = {desc = "Emit a dark aura, reducing damage taken by 25% and increasing your death damage by 15%.", cooldown = "20s", mana = "0"},
 	["Malediction"] = {desc = "Curse the target, increasing damage taken by 15% and reducing healing by 50% for 10 seconds.", cooldown = "25s", mana = "45"},
 	["Dark Plague"] = {desc = "Infect the target with a plague that spreads to nearby enemies, dealing damage over time.", cooldown = "35s", mana = "65"},
 	["Summon Void Mender"] = {desc = "Summon a void mender that heals you and nearby allies for 20 seconds.", cooldown = "60s", mana = "90"},
