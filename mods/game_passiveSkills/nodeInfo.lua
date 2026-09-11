@@ -933,7 +933,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["5:9"] = {
 		name = "Haunt",
-		description = "Learn the spell Haunt. Haunts the target with death damage over 10 seconds, applying a curse that deals damage every second. Deals 100% increased damage to targets already afflicted by a curse.",
+		description = "Learn the spell Haunt. Haunts the target with death damage over 10 seconds, applying a curse that deals damage every second. Deals 100% increased damage to targets already afflicted by a curse. Consumes 20% of your maximum mana to cast.",
 		effect = {
 			{type = "spell", name = "Haunt"},
 		},
