@@ -958,8 +958,8 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["5:15"] = {
-		name = "Abyssal Refund",
-		description = "Your Void Mender restores part of your mana every time it heals a target. Increase healing efficiency by 7% per level.",
+		name = "Post Mortem",
+		description = "Your summons explode on death, dealing death damage equal to 50% of their maximum health to nearby enemies.",
 		effect = {
 			{type = "storage", name = "AbyssalRefund", value = 7},
 		},
