@@ -931,6 +931,13 @@ PassiveSkills.nodeInfo = {
 			{type = "storage", name = "SoulstormTicks", value = 1},
 		},
 	},
+	["5:9"] = {
+		name = "Haunt",
+		description = "Learn the spell Haunt.",
+		effect = {
+			{type = "spell", name = "Haunt"},
+		},
+	},
 	["5:11"] = {
 		name = "Demonic Bulwark",
 		description = "Increase the max health of your summons by an additional 18% per level.",
