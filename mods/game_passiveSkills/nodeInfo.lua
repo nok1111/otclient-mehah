@@ -1235,7 +1235,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["6:31"] = {
 		name = "Astral Harmony",
-		description = "When you heal an ally, you have a 10% chance to summon an Aery Echo that heals a second nearby ally for 3 seconds. Requires Luminous Bond and Sacred Constitution.",
+		description = "When you heal an ally, you have a 10% chance to summon Nova, a stellar echo that heals nearby allies for 3 seconds. Requires Luminous Bond and Sacred Constitution.",
 		effect = {
 			{type = "storage", name = "AeryEcho", value = 1},
 		},
