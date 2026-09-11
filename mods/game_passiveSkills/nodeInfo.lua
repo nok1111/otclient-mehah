@@ -1070,10 +1070,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["6:0"] = {
 		name = "Astral Communion",
-		description = "Commune with the cosmos. Increases energy damage by 2% and max mana by 2%.",
+		description = "Commune with the cosmos. Increases energy damage by 5% and holy damage by 5%.",
 		effect = {
-			{type = "condition", name = "Energy Damage", value = 2},
-			{type = "condition", name = "Max Mana", value = 2},
+			{type = "condition", name = "Energy Damage", value = 5},
+			{type = "condition", name = "Holy Damage", value = 5},
 		},
 	},
 	["6:1"] = {
