@@ -1102,30 +1102,15 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["6:5"] = {
-		name = "Aery's Rapidfire",
-		description = "Increase Aery's Strikes shots by 1 per level.",
+		name = "Guiding Constellation",
+		description = "Cosmic Force now restores 3% of your max mana per level.",
 		effect = {
-			{type = "storage", name = "AeryRapidfire", value = 1},
+			{type = "storage", name = "CosmicForceManaRestore", value = 3},
 		},
 	},
 	["6:6"] = {
-		name = "Holy Flare",
-		description = "Learn the spell Holy Flare.",
-		effect = {
-			{type = "spell", name = "Holy Flare"},
-		},
-	},
-	["6:7"] = {
-		name = "Celestial Insight",
-		description = "Increases your Magic Level by 2 points per level. Also increases Chain Spell damage by 5% per level.",
-		effect = {
-			{type = "condition", name = "Magic Level", value = 2},
-			{type = "storage", name = "CelestialInsight", value = 5},
-		},
-	},
-	["6:8"] = {
 		name = "Full Moon",
-		description = "Learn the spell Full Moon.",
+		description = "Learn the spell Full Moon. A self-buff that periodically triggers Starfall on nearby enemies.",
 		effect = {
 			{type = "spell", name = "Full Moon"},
 		},
@@ -1158,24 +1143,26 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["6:15"] = {
-		name = "Luminous Bond",
-		description = "Increase the passive healing of Aery by 6% per level.",
+		name = "Sacred Constitution",
+		description = "Increases max health by 4% per level, health regeneration by 3 every 3 seconds per level, and healing effectiveness by 2% per level.",
 		effect = {
-			{type = "storage", name = "LuminousBond", value = 6},
+			{type = "condition", name = "Max Health", value = 4},
+			{type = "condition", name = "Health Regen", value = 3},
+			{type = "condition", name = "Healing Effectiveness", value = 2},
 		},
 	},
 	["6:16"] = {
-		name = "Guiding Constellation",
-		description = "Cosmic Force now restores 3% of your max mana per level.",
+		name = "Cosmic Convergence",
+		description = "When your mana drops below 20%, you enter Cosmic Convergence for 6 seconds: +10% magic level and all spells cost 50% less mana. 30 second cooldown.",
 		effect = {
-			{type = "storage", name = "CosmicForceManaRestore", value = 3},
+			{type = "storage", name = "CosmicConvergence", value = 1},
 		},
 	},
 	["6:17"] = {
-		name = "Mana Feather",
-		description = "Aery now restores 2% of your max mana per basic attack per level.",
+		name = "Astral Vigor",
+		description = "Increases healing effectiveness by 3% per level.",
 		effect = {
-			{type = "storage", name = "AeryManaRestore", value = 2},
+			{type = "condition", name = "Healing Effectiveness", value = 3},
 		},
 	},
 	["6:18"] = {
@@ -1186,72 +1173,70 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["6:21"] = {
-		name = "Back to Basics",
-		description = "Increase wand damage by 4% per level.",
+		name = "Radiant Smite",
+		description = "Increase holy damage by 2% per level.",
 		effect = {
-			{type = "storage", name = "WandDamage", value = 4},
+			{type = "condition", name = "Holy Damage", value = 2},
 		},
 	},
 	["6:22"] = {
-		name = "Sacred Constitution",
-		description = "Increases max health by 4% per level, health regeneration by 3 every 3 seconds per level, and healing effectiveness by 2% per level.",
+		name = "Aery's Rapidfire",
+		description = "Increase Aery's Strikes shots by 1 per level.",
 		effect = {
-			{type = "condition", name = "Max Health", value = 4},
-			{type = "condition", name = "Health Regen", value = 3},
-			{type = "condition", name = "Healing Effectiveness", value = 2},
+			{type = "storage", name = "AeryRapidfire", value = 1},
 		},
 	},
 	["6:23"] = {
-		name = "Cosmic Bond",
-		description = "Choose your cosmic bond.",
+		name = "Divine Path",
+		description = "Choose your divine path.",
 	},
 	["6:24"] = {
-		name = "Arcane Resonance",
-		description = "Increases max mana by 3% per level and reduces spell mana costs by 2% per level.",
+		name = "Holy Flare",
+		description = "Learn the spell Holy Flare. A ranged holy-damage AoE that applies Fear.",
 		effect = {
-			{type = "condition", name = "Max Mana", value = 3},
+			{type = "spell", name = "Holy Flare"},
 		},
 	},
 	["6:25"] = {
-		name = "Vital Resonance",
-		description = "Increases max health by 3% per level and life leech by 1% per level.",
+		name = "Luminous Bond",
+		description = "Increase the passive healing of Aery by 6% per level.",
 		effect = {
-			{type = "condition", name = "Max Health", value = 3},
-			{type = "condition", name = "Life Leech", value = 1},
+			{type = "storage", name = "LuminousBond", value = 6},
 		},
 	},
 	["6:26"] = {
-		name = "Stellar Alignment",
-		description = "When you cast a spell, you have a 4% chance per level to restore 5% of your max mana.",
+		name = "Celestial Insight",
+		description = "Increases your Magic Level by 2 points per level. Also increases Chain Spell damage by 5% per level.",
 		effect = {
-			{type = "storage", name = "CosmicForceManaRestore", value = 4},
+			{type = "condition", name = "Magic Level", value = 2},
+			{type = "storage", name = "CelestialInsight", value = 5},
 		},
 	},
 	["6:27"] = {
-		name = "Astral Vigor",
-		description = "Increases healing effectiveness by 3% per level.",
+		name = "Mana Feather",
+		description = "Aery now restores 2% of your max mana per basic attack per level.",
 		effect = {
-			{type = "condition", name = "Healing Effectiveness", value = 3},
+			{type = "storage", name = "AeryManaRestore", value = 2},
 		},
 	},
 	["6:28"] = {
-		name = "Cosmic Convergence",
-		description = "When your mana drops below 20%, you enter Cosmic Convergence for 6 seconds: +10% magic level and all spells cost 50% less mana. 30 second cooldown.",
+		name = "Aery Wrath",
+		description = "Learn the spell Aery Wrath. Holy chain-lightning that hits up to 10 enemies and summons Aery.",
 		effect = {
-			{type = "condition", name = "Magic Level", value = 10},
+			{type = "spell", name = "Aery Wrath"},
 		},
 	},
 	["6:30"] = {
 		name = "Starweaver",
-		description = "Your radiance and lunarity combine. Increases energy damage by 3% and max mana by 3% while you have unlocked Falling Stars and Moonshower.",
+		description = "Your radiance and astral bond combine. Increases energy damage by 3% and holy damage by 3% while you have unlocked Falling Stars and Holy Flare.",
 		effect = {
 			{type = "condition", name = "Energy Damage", value = 3},
-			{type = "condition", name = "Max Mana", value = 3},
+			{type = "condition", name = "Holy Damage", value = 3},
 		},
 	},
 	["6:31"] = {
 		name = "Astral Harmony",
-		description = "Your lunarity and astral bond combine. Increases healing effectiveness by 3% and max health by 3% while you have unlocked Luminous Bond and Vital Resonance.",
+		description = "Your astral bond and lunarity combine. Increases healing effectiveness by 3% and max health by 3% while you have unlocked Luminous Bond and Sacred Constitution.",
 		effect = {
 			{type = "condition", name = "Healing Effectiveness", value = 3},
 			{type = "condition", name = "Max Health", value = 3},
