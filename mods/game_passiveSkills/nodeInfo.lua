@@ -1095,7 +1095,7 @@ PassiveSkills.nodeInfo = {
 		description = "Choose your star specialization.",
 	},
 	["6:4"] = {
-		name = "Falling Stars",
+		name = "Star Cascade",
 		description = "Dealing energy damage has a 2% chance per level to trigger a Starfall on the target.",
 		effect = {
 			{type = "storage", name = "FallingStars", value = 2},
@@ -1243,7 +1243,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["6:30"] = {
 		name = "Starweaver",
-		description = "Your radiance and lunarity combine. Increases energy damage by 3% and max mana by 3% while you have unlocked Falling Stars and Moonshower.",
+		description = "Your radiance and lunarity combine. Increases energy damage by 3% and max mana by 3% while you have unlocked Star Cascade and Moonshower.",
 		effect = {
 			{type = "condition", name = "Energy Damage", value = 3},
 			{type = "condition", name = "Max Mana", value = 3},
