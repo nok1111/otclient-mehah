@@ -1047,10 +1047,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["5:30"] = {
 		name = "Plaguebringer",
-		description = "Your blight and vitality combine. Increases death damage by 3% and max health by 3% while you have unlocked Lasting Blight and Lingering Darkness.",
+		description = "Your blight and vitality combine. Increases death damage by 8% and max health by 8% while you have unlocked Lasting Blight and Lingering Darkness.",
 		effect = {
-			{type = "condition", name = "Death Damage", value = 3},
-			{type = "condition", name = "Max Health", value = 3},
+			{type = "condition", name = "Death Damage", value = 8},
+			{type = "condition", name = "Max Health", value = 8},
 		},
 	},
 	["5:31"] = {
