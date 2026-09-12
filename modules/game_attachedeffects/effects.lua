@@ -5425,3 +5425,10 @@ AttachedEffectManager.register(825, 'tesla laser', 0, 0, {
     fade = { 0, 100, 500 },
     onTop = true,
 })
+
+AttachedEffectManager.register(826, 'living thorns snare', 460, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { 0, 0, true },
+})
