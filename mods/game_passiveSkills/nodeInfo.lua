@@ -1551,7 +1551,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["8:22"] = {
 		name = "Ice Shatter",
-		description = "Learn the spell Ice Shatter. Turn the target into a solid ice block dealing ice damage and a second AOE damage when it ends.",
+		description = "Learn the spell Ice Shatter. Deal ice damage to the target and slow it, then deal a second AoE ice damage after a delay.",
 		effect = {
 			{type = "spell", name = "Ice Shatter"},
 		},
