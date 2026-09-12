@@ -1530,10 +1530,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["8:17"] = {
 		name = "Nature's Endurance",
-		description = "Increases max health by 5% per level and healing effectiveness by 2% per level.",
+		description = "Dealing ice damage or casting a healing spell has a 2% chance per level to transform you into the Water Spirit for 5 seconds, increasing your ice damage and healing effectiveness by 15%.",
 		effect = {
-			{type = "condition", name = "Max Health", value = 5},
-			{type = "condition", name = "Extra Healing", value = 2},
+			{type = "storage", name = "NaturesEndurance", value = 2},
 		},
 	},
 	["8:18"] = {
