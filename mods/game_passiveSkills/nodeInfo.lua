@@ -1714,9 +1714,11 @@ PassiveSkills.nodeInfo = {
 	},
 	["9:18"] = {
 		name = "Magnetic Mastery",
-		description = "While Magnetic Shield is active, you also reflect 25% of incoming damage back as energy damage to attackers.",
+		description = "While Magnetic Shield is active, you reflect 25% of incoming damage as energy damage to attackers. Additionally, increases your dodge by 3% and critical hit chance by 3%.",
 		effect = {
 			{type = "storage", name = "MagneticMastery", value = 25},
+			{type = "condition", name = "Dodge", value = 3},
+			{type = "condition", name = "Critical Hit Chance", value = 3},
 		},
 	},
 	["9:21"] = {
@@ -1770,18 +1772,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["9:30"] = {
 		name = "Storm Blade",
-		description = "Your storm and blade combine. Increases energy damage by 3% and sword skill by 3 while you have unlocked High Voltage and Elusive Blade.",
+		description = "Your storm and blade combine. Increases energy damage by 3% and sword skill by 3. Requires significant investment in both Storm and Blade branches.",
 		effect = {
 			{type = "condition", name = "Energy Damage", value = 3},
 			{type = "condition", name = "Sword Skill", value = 3},
-		},
-	},
-	["9:31"] = {
-		name = "Charged Ward",
-		description = "Your ward and blade combine. Increases dodge by 3% and critical hit chance by 3% while you have unlocked Critical Flow and Dancing Edge.",
-		effect = {
-			{type = "condition", name = "Dodge", value = 3},
-			{type = "condition", name = "Critical Hit Chance", value = 3},
 		},
 	},
 	["10:0"] = {
