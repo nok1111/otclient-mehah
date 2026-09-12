@@ -1529,7 +1529,7 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["8:17"] = {
-		name = "Nature's Endurance",
+		name = "Water Spirit",
 		description = "Dealing ice damage or casting a healing spell has a 2% chance per level to transform you into the Water Spirit for 5 seconds, increasing your ice damage and healing effectiveness by 15%.",
 		effect = {
 			{type = "storage", name = "NaturesEndurance", value = 2},
@@ -1605,7 +1605,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["8:31"] = {
 		name = "Frozen Sanctuary",
-		description = "Your verdancy and frost combine. Increases max health by 3% and ice damage by 3% while you have unlocked Nature's Endurance and Permafrost Trap. Piercing Wave becomes ice damage.",
+		description = "Your verdancy and frost combine. Increases max health by 3% and ice damage by 3% while you have unlocked Water Spirit and Permafrost Trap. Piercing Wave becomes ice damage.",
 		effect = {
 			{type = "condition", name = "Max Health", value = 3},
 			{type = "condition", name = "Ice Damage", value = 3},
