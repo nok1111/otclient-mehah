@@ -1483,10 +1483,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["8:8"] = {
-		name = "Force of Nature",
-		description = "Increase the damage done by Wrath of Nature by 4% per level.",
+		name = "Living Thorns",
+		description = "Learn the spell Living Thorns. Unleash a wave of thorns forward, dealing earth damage to enemies in a 3-tile wide line.",
 		effect = {
-			{type = "storage", name = "ForceOfNature", value = 4},
+			{type = "spell", name = "Living Thorns"},
 		},
 	},
 	["8:11"] = {
