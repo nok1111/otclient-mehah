@@ -1650,7 +1650,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["9:6"] = {
 		name = "Tempest Coin",
-		description = "Learn the spell Tempest Coin. Toss a tempest coin in the air that will grant you Tempest Charges. Tempest Charges will determine the times Charged Strike will be triggered on next cast based on token results (1-3).",
+		description = "Learn the spell Tempest Coin. Toss a tempest coin in the air that will grant you Tempest Charges. Tempest Charges will determine the times Charged Strike will be triggered on next cast based on token results (1-3). Extra procs deal 50% damage.",
 		effect = {
 			{type = "spell", name = "Tempest Coin"},
 		},
