@@ -1634,10 +1634,6 @@ PassiveSkills.nodeInfo = {
 			{type = "condition", name = "Energy Damage", value = 2},
 		},
 	},
-	["9:3"] = {
-		name = "Storm Style",
-		description = "Choose your storm specialization.",
-	},
 	["9:4"] = {
 		name = "High Voltage",
 		description = "Your Short Circuit now has a 25% chance to grant you High Voltage, which increases your magic level by 10% per level for 6 seconds.",
@@ -1688,10 +1684,6 @@ PassiveSkills.nodeInfo = {
 			{type = "storage", name = "LightningWaltzparry", value = 3},
 		},
 	},
-	["9:13"] = {
-		name = "Guard Style",
-		description = "Choose your guard specialization.",
-	},
 	["9:14"] = {
 		name = "Magnetic Shield",
 		description = "Learn the spell Magnetic Shield. Gain damage immunity for 5 seconds to all damage types but reduce your damage done by 80%.",
@@ -1740,10 +1732,6 @@ PassiveSkills.nodeInfo = {
 		effect = {
 			{type = "storage", name = "GodOfSpears", value = 4},
 		},
-	},
-	["9:23"] = {
-		name = "Blade Style",
-		description = "Choose your blade specialization.",
 	},
 	["9:24"] = {
 		name = "Elusive Blade",
