@@ -1606,7 +1606,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["8:31"] = {
 		name = "Frozen Sanctuary",
-		description = "Your verdancy and frost combine. Increases max health by 3% and ice damage by 3% while you have unlocked Nature's Endurance and Permafrost Trap.",
+		description = "Your verdancy and frost combine. Increases max health by 3% and ice damage by 3% while you have unlocked Nature's Endurance and Permafrost Trap. Piercing Wave becomes ice damage.",
 		effect = {
 			{type = "condition", name = "Max Health", value = 3},
 			{type = "condition", name = "Ice Damage", value = 3},
