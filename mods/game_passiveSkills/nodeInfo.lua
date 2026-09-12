@@ -1352,7 +1352,7 @@ PassiveSkills.nodeInfo = {
 		name = "Eternal Mountain",
 		description = "While Mountain Stance is active, you also reflect 15% of incoming damage back to attackers as ice damage.",
 		effect = {
-			{type = "storage", name = "FrostBlossom", value = 15},
+			{type = "storage", name = "EternalMountain", value = 15},
 		},
 	},
 	["7:21"] = {
@@ -1405,7 +1405,7 @@ PassiveSkills.nodeInfo = {
 		name = "Enlightened State",
 		description = "When you heal an ally below 30% health, you enter Enlightened State for 5 seconds: +10% healing effectiveness and your next punch costs no mana. 20 second cooldown.",
 		effect = {
-			{type = "condition", name = "Healing Effectiveness", value = 10},
+			{type = "storage", name = "EnlightenedState", value = 1},
 		},
 	},
 	["7:30"] = {
