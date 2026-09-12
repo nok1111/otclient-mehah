@@ -1242,10 +1242,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["7:0"] = {
 		name = "Inner Peace",
-		description = "Balance your body and spirit. Increases max health by 2% and healing effectiveness by 2%.",
+		description = "Balance your body and spirit. Increases max health by 5% and healing effectiveness by 5%.",
 		effect = {
-			{type = "condition", name = "Max Health", value = 2},
-			{type = "condition", name = "Healing Effectiveness", value = 2},
+			{type = "condition", name = "Max Health", value = 5},
+			{type = "condition", name = "Healing Effectiveness", value = 5},
 		},
 	},
 	["7:1"] = {
