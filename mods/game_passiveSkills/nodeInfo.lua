@@ -1474,18 +1474,19 @@ PassiveSkills.nodeInfo = {
 	},
 	["8:7"] = {
 		name = "Nature's Wrath",
-		description = "Increases earth, physical and ice damage by 3% per level.",
+		description = "Increases earth, physical and ice damage by 3% per level. When an enemy affected by Insect Swarm or Thorned Rose bleed dies, it has a 20% chance per level to explode dealing nature damage equal to 10% of its maximum health to nearby enemies.",
 		effect = {
 			{type = "condition", name = "Earth Damage", value = 3},
 			{type = "condition", name = "Physical Damage", value = 3},
 			{type = "condition", name = "Ice Damage", value = 3},
+			{type = "storage", name = "NaturesWrath", value = 20},
 		},
 	},
 	["8:8"] = {
 		name = "Force of Nature",
-		description = "Wrath of Nature damage increased by 6% per level. Wrath of Nature now infects all targets hit with Insect Swarm.",
+		description = "Increase the damage done by Wrath of Nature by 4% per level.",
 		effect = {
-			{type = "storage", name = "ForceOfNature", value = 6},
+			{type = "storage", name = "ForceOfNature", value = 4},
 		},
 	},
 	["8:11"] = {
