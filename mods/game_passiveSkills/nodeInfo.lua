@@ -1418,10 +1418,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["7:31"] = {
 		name = "Serene Storm",
-		description = "Your stone and chi combine. Increases max health by 3% and healing effectiveness by 3% while you have unlocked Glacial Palm and Life Pulse.",
+		description = "Your stone and chi combine. Increases max health by 8% and healing effectiveness by 8% while you have unlocked Glacial Palm and Life Pulse.",
 		effect = {
-			{type = "condition", name = "Max Health", value = 3},
-			{type = "condition", name = "Healing Effectiveness", value = 3},
+			{type = "condition", name = "Max Health", value = 8},
+			{type = "condition", name = "Healing Effectiveness", value = 8},
 		},
 	},
 	["8:0"] = {
