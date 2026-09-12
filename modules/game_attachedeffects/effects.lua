@@ -1228,6 +1228,7 @@ AttachedEffectManager.register(150, 'magnetic shield', 878, ThingCategoryEffect,
     duration = 5000,
     speed = 1,
     offset = { -22, -22, true},
+    shader = 'Blueveins',
     
 })
 
@@ -5427,6 +5428,20 @@ AttachedEffectManager.register(825, 'tesla laser', 0, 0, {
 })
 
 AttachedEffectManager.register(826, 'living thorns snare', 460, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 0.5,
+    offset = { 0, 0, true },
+})
+
+AttachedEffectManager.register(827, 'charged strike hit', 320, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { 0, 0, true },
+})
+
+AttachedEffectManager.register(828, 'charged strike static', 371, ThingCategoryEffect, {
     loop = 1,
     opacity = 1,
     speed = 1,
