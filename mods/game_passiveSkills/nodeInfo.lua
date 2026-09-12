@@ -1220,9 +1220,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["6:28"] = {
 		name = "Aery Wrath",
-		description = "Learn the spell Aery Wrath. Holy chain-lightning that hits up to 10 enemies and summons Aery.",
+		description = "Empower Aery Wrath: after the forward chain ends, Aery makes a return trip from the last target back to the first, damaging each enemy again with holy damage.",
 		effect = {
-			{type = "spell", name = "Aery Wrath"},
+			{type = "storage", name = "AeryWrathKeystone", value = 1},
 		},
 	},
 	["6:30"] = {
