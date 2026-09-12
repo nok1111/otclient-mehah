@@ -1770,14 +1770,6 @@ PassiveSkills.nodeInfo = {
 			{type = "storage", name = "EchoStorm", value = 20},
 		},
 	},
-	["9:30"] = {
-		name = "Storm Blade",
-		description = "Your storm and blade combine. Increases energy damage by 3% and sword skill by 3. Requires significant investment in both Storm and Blade branches.",
-		effect = {
-			{type = "condition", name = "Energy Damage", value = 3},
-			{type = "condition", name = "Sword Skill", value = 3},
-		},
-	},
 	["10:0"] = {
 		name = "Eagle Eye",
 		description = "Sharpen your aim. Increases physical damage by 2% and fire damage by 2%.",
