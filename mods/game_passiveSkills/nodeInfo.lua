@@ -1410,10 +1410,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["7:30"] = {
 		name = "Tempest Mountain",
-		description = "Your fury and stone combine. Increases critical hit chance by 3% and max health by 3% while you have unlocked Inner Tempo and Mountain Stance.",
+		description = "Your fury and stone combine. Increases critical hit chance by 5% and max health by 8% while you have unlocked Inner Tempo and Mountain Stance.",
 		effect = {
-			{type = "condition", name = "Critical Hit Chance", value = 3},
-			{type = "condition", name = "Max Health", value = 3},
+			{type = "condition", name = "Critical Hit Chance", value = 5},
+			{type = "condition", name = "Max Health", value = 8},
 		},
 	},
 	["7:31"] = {
