@@ -5447,3 +5447,10 @@ AttachedEffectManager.register(828, 'charged strike static', 371, ThingCategoryE
     speed = 1,
     offset = { 0, 0, true },
 })
+
+AttachedEffectManager.register(829, 'charged strike sword', 347, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { 0, 0, true },
+})
