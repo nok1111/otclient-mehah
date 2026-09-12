@@ -1375,9 +1375,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["7:24"] = {
 		name = "Mystic Reserves",
-		description = "Increase your maximum mana by 5% per level.",
+		description = "Increase your maximum mana by 5% per level. Each punch has a 10% chance per level to restore 5% of your max mana to all nearby allies.",
 		effect = {
 			{type = "condition", name = "Max Mana", value = 5},
+			{type = "storage", name = "MysticReserves", value = 10},
 		},
 	},
 	["7:25"] = {
