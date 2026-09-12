@@ -1336,9 +1336,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["7:16"] = {
 		name = "Frozen Lotus",
-		description = "Triggering Glacial Palm or Mystic Punch will now heal you by 15% per level of the damage done.",
+		description = "Triggering Glacial Palm or Mystic Punch will now heal you by 7% per level of the damage done.",
 		effect = {
-			{type = "storage", name = "FrozenLotus", value = 15},
+			{type = "storage", name = "FrozenLotus", value = 7},
 		},
 	},
 	["7:17"] = {
