@@ -1435,7 +1435,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["8:1"] = {
 		name = "Savage Bloom",
-		description = "Increase Terra Strike and Carnivorous Vile damage by 3% per level.",
+		description = "Increase Terra Strike, Carnivorous Vile, and Wrath of Nature damage by 3% per level.",
 		effect = {
 			{type = "storage", name = "SavageBloom", value = 3},
 		},
@@ -1483,7 +1483,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["8:8"] = {
 		name = "Force of Nature",
-		description = "Increase the damage done by Wrath of Nature by 4% per level.",
+		description = "Increase Wrath of Nature damage by 4% per level. If you have unlocked Swarm of Insects, Wrath of Nature infects all enemies hit for 5 seconds.",
 		effect = {
 			{type = "storage", name = "ForceOfNature", value = 4},
 		},
