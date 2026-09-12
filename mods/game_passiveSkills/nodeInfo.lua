@@ -1404,7 +1404,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["7:28"] = {
 		name = "Enlightened State",
-		description = "When you heal an ally below 30% health, you enter Enlightened State for 5 seconds: +10% healing effectiveness and your next punch costs no mana. 20 second cooldown.",
+		description = "When you heal an ally below 30% health, your next 3 punches deal bonus damage equal to the amount healed and each hit heals the lowest HP nearby ally. 20 second cooldown.",
 		effect = {
 			{type = "storage", name = "EnlightenedState", value = 1},
 		},
