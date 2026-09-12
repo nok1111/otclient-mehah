@@ -1661,7 +1661,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["9:7"] = {
 		name = "Gambler's Luck",
-		description = "Increase the max number result from Tempest Coin by 1 per level.",
+		description = "Increase the max number result from Tempest Coin by 1 per level. Additionally, when Charged Strike consumes Tempest Charges, Tempest Coin's cooldown is reduced by 1 second per level per charge consumed.",
 		effect = {
 			{type = "storage", name = "GamblerLuck", value = 1},
 		},
@@ -1724,7 +1724,7 @@ PassiveSkills.nodeInfo = {
 		name = "Magnetic Mastery",
 		description = "While Magnetic Shield is active, you also reflect 25% of incoming damage back as energy damage to attackers.",
 		effect = {
-			{type = "storage", name = "LightningRiposte", value = 25},
+			{type = "storage", name = "MagneticMastery", value = 25},
 		},
 	},
 	["9:21"] = {
@@ -1738,7 +1738,7 @@ PassiveSkills.nodeInfo = {
 		name = "God of Spears",
 		description = "Lightning Spear is no longer ranged but its damage is increased by 4% per level and grants you an Elusive Charge for 10 seconds. This will refresh old charges of Elusive Charge.",
 		effect = {
-			{type = "storage", name = "GodOfSpears", value = 1},
+			{type = "storage", name = "GodOfSpears", value = 4},
 		},
 	},
 	["9:23"] = {
@@ -1777,7 +1777,7 @@ PassiveSkills.nodeInfo = {
 		name = "Echo Storm",
 		description = "When you consume Elusive Charges for Veil of Echos, each charge consumed has a 20% chance to trigger an additional Echo at 75% effectiveness.",
 		effect = {
-			{type = "storage", name = "VeilOfEchos", value = 20},
+			{type = "storage", name = "EchoStorm", value = 20},
 		},
 	},
 	["9:30"] = {
