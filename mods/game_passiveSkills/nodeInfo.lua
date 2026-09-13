@@ -1892,11 +1892,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["10:24"] = {
-		name = "Arrowstorm",
-		description = "Increase the shots from Rapid Fire by 1 per level and reduce its cast time.",
+		name = "Falcon's Mark",
+		description = "Your Falcon Shot marks the target for 5 seconds. Marked targets take +3% damage per level from your Phantom Shot and bow attacks.",
 		effect = {
-			{type = "storage", name = "Arrowstorm", value = 1},
-			{type = "storage", name = "Arrowstorm", value = 10},
+			{type = "storage", name = "FalconMark", value = 3},
 		},
 	},
 	["10:25"] = {
@@ -1908,24 +1907,24 @@ PassiveSkills.nodeInfo = {
 	},
 	["10:26"] = {
 		name = "Focused Fire",
-		description = "Phantom Shot, Falcon Shot and Rapid Fire deal +4% damage per level for each debuff on the target (slow, burn, bleed, freeze).",
+		description = "Phantom Shot, Falcon Shot and Rapid Fire deal +5% damage per level for each debuff on the target (slow, burn, bleed, freeze).",
 		effect = {
-			{type = "storage", name = "FocusedFire", value = 4},
+			{type = "storage", name = "FocusedFire", value = 5},
 		},
 	},
 	["10:27"] = {
-		name = "Scorched Mark",
-		description = "Dead from Above now marks the target for 5 seconds. Marked targets take +4% damage per level from all your attacks and increase your critical strike chance by 4% per level.",
+		name = "Deadeye",
+		description = "Your Phantom Shot and Falcon Shot gain +2% critical hit chance per level. Critical hits with these spells apply bleed for 3 seconds.",
 		effect = {
-			{type = "storage", name = "DeadFromAbove", value = 4},
+			{type = "storage", name = "Deadeye", value = 2},
 		},
 	},
 	["10:28"] = {
 		name = "Apex Predator",
-		description = "When you kill an enemy, reset Phantom Shot's cooldown and gain Apex Predator for 8 seconds: +15% physical damage and +15% fire damage. 30 second cooldown.",
+		description = "When you kill an enemy, reset Phantom Shot and Falcon Shot cooldowns and gain Apex Predator for 8 seconds: +15% physical damage and +15% critical hit chance. 30 second cooldown.",
 		effect = {
 			{type = "condition", name = "Physical Damage", value = 15},
-			{type = "condition", name = "Fire Damage", value = 15},
+			{type = "condition", name = "Critical Hit Chance", value = 15},
 		},
 	},
 	["10:30"] = {
@@ -1938,7 +1937,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["10:31"] = {
 		name = "Eternal Hunter",
-		description = "Your frost and survival combine. Increases max health by 3% and ice damage by 3% while you have unlocked Frost Barrage and Tenacious Spirit.",
+		description = "Your frost and survival combine. Increases max health by 3% and ice damage by 3% while you have unlocked Frost Barrage and Frozen Rain.",
 		effect = {
 			{type = "condition", name = "Max Health", value = 3},
 			{type = "condition", name = "Ice Damage", value = 3},
