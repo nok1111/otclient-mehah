@@ -1657,14 +1657,14 @@ PassiveSkills.nodeInfo = {
 	},
 	["9:7"] = {
 		name = "Gambler's Luck",
-		description = "Increase the max number result from Tempest Coin by 1 per level. Additionally, when Charged Strike consumes Tempest Charges, Tempest Coin's cooldown is reduced by 1 second per level per charge consumed.",
+		description = "Increase the max number result from Tempest Coin by 1 per level. Additionally, increases the chance to proc empowered Charged Strike from basic attacks by 3% per level (15% base).",
 		effect = {
 			{type = "storage", name = "GamblerLuck", value = 1},
 		},
 	},
 	["9:8"] = {
 		name = "Jackpot",
-		description = "Increase the damage of your casted Charged Strike based on your Tempest Coin roll by 1% per level per roll.",
+		description = "Increase the damage of your empowered Charged Strike based on your Tempest Coin roll by 1% per level per roll. Additionally, empowered Charged Strike procs apply Static Charge to the target for 1 second per level.",
 		effect = {
 			{type = "storage", name = "Jackpot", value = 1},
 		},
