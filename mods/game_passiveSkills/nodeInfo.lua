@@ -1864,11 +1864,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["10:17"] = {
-		name = "Tenacious Spirit",
-		description = "Increase your maximum health by 2% per level and gain 3 health points regeneration every 3 seconds per level.",
+		name = "Frozen Rain",
+		description = "Arrow Rain now deals ice damage and uses ice arrow visuals. Increase the damage of Arrow Rain by an additional 3% per level.",
 		effect = {
-			{type = "condition", name = "Health Regen", value = 3},
-			{type = "condition", name = "Max Health", value = 2},
+			{type = "storage", name = "FrozenRain", value = 3},
 		},
 	},
 	["10:18"] = {
