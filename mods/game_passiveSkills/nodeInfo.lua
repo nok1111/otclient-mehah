@@ -1793,10 +1793,6 @@ PassiveSkills.nodeInfo = {
 			{type = "spell", name = "Explosive Shot"},
 		},
 	},
-	["10:3"] = {
-		name = "Blast Style",
-		description = "Choose your blast specialization.",
-	},
 	["10:4"] = {
 		name = "Demolition",
 		description = "Your fire damage has a 2% chance per level to trigger Demolition, which deals AOE physical damage on impact.",
@@ -1845,10 +1841,6 @@ PassiveSkills.nodeInfo = {
 		effect = {
 			{type = "condition", name = "Ice Damage", value = 2},
 		},
-	},
-	["10:13"] = {
-		name = "Frost Style",
-		description = "Choose your frost specialization.",
 	},
 	["10:14"] = {
 		name = "Frost Barrel",
@@ -1899,10 +1891,6 @@ PassiveSkills.nodeInfo = {
 		effect = {
 			{type = "storage", name = "HunterMercy", value = 4},
 		},
-	},
-	["10:23"] = {
-		name = "Marksman Style",
-		description = "Choose your marksman specialization.",
 	},
 	["10:24"] = {
 		name = "Arrowstorm",
