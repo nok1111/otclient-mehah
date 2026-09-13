@@ -5461,39 +5461,46 @@ AttachedEffectManager.register(829, 'charged strike sword', 347, ThingCategoryEf
 AttachedEffectManager.register(830, 'tempest coin roll 1', 1591, ThingCategoryEffect, {
     loop = 1,
     opacity = 1,
-    speed = 1,
+    speed = 2,
     offset = { 0, 0, true },
 })
 
 AttachedEffectManager.register(831, 'tempest coin roll 2', 1596, ThingCategoryEffect, {
     loop = 1,
     opacity = 1,
-    speed = 1,
+    speed = 2,
     offset = { 0, 0, true },
 })
 
 AttachedEffectManager.register(832, 'tempest coin roll 3', 1600, ThingCategoryEffect, {
     loop = 1,
     opacity = 1,
-    speed = 1,
+    speed = 2,
     offset = { 0, 0, true },
 })
 
 AttachedEffectManager.register(833, 'tempest coin roll 4', 1605, ThingCategoryEffect, {
     loop = 1,
     opacity = 1,
-    speed = 1,
+    speed = 2,
     offset = { 0, 0, true },
 })
 
 AttachedEffectManager.register(834, 'tempest coin roll 5', 1610, ThingCategoryEffect, {
     loop = 1,
     opacity = 1,
-    speed = 1,
+    speed = 2,
     offset = { 0, 0, true },
 })
 
 AttachedEffectManager.register(835, 'tempest coin roll 6', 1615, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 2,
+    offset = { 0, 0, true },
+})
+
+AttachedEffectManager.register(836, 'high voltage', 1715, ThingCategoryEffect, {
     loop = 1,
     opacity = 1,
     speed = 1,
