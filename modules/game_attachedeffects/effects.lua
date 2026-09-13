@@ -5509,7 +5509,7 @@ AttachedEffectManager.register(836, 'high voltage', 1713, ThingCategoryEffect, {
 })
 
 AttachedEffectManager.register(837, 'arrow rain north', 1159, ThingCategoryEffect, {
-    loop = 1,
+    duration = 3000,
     opacity = 1,
     speed = 1,
     offset = { 0, 0, true },
@@ -5517,7 +5517,7 @@ AttachedEffectManager.register(837, 'arrow rain north', 1159, ThingCategoryEffec
 })
 
 AttachedEffectManager.register(838, 'arrow rain south', 1159, ThingCategoryEffect, {
-    loop = 1,
+    duration = 3000,
     opacity = 1,
     speed = 1,
     offset = { 0, 0, true },
@@ -5525,7 +5525,7 @@ AttachedEffectManager.register(838, 'arrow rain south', 1159, ThingCategoryEffec
 })
 
 AttachedEffectManager.register(839, 'arrow rain east', 1159, ThingCategoryEffect, {
-    loop = 1,
+    duration = 3000,
     opacity = 1,
     speed = 1,
     offset = { 0, 0, true },
@@ -5533,7 +5533,7 @@ AttachedEffectManager.register(839, 'arrow rain east', 1159, ThingCategoryEffect
 })
 
 AttachedEffectManager.register(840, 'arrow rain west', 1159, ThingCategoryEffect, {
-    loop = 1,
+    duration = 3000,
     opacity = 1,
     speed = 1,
     offset = { 0, 0, true },
@@ -5541,7 +5541,7 @@ AttachedEffectManager.register(840, 'arrow rain west', 1159, ThingCategoryEffect
 })
 
 AttachedEffectManager.register(841, 'frozen rain', 1159, ThingCategoryEffect, {
-    loop = 1,
+    duration = 3000,
     opacity = 1,
     speed = 1,
     offset = { 0, 0, true },
