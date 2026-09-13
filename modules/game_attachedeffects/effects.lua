@@ -5513,7 +5513,7 @@ AttachedEffectManager.register(837, 'arrow rain north', 637, ThingCategoryEffect
     opacity = 1,
     speed = 1,
     offset = { 0, 0, true },
-    shader = 'frost armor',
+    
 })
 
 AttachedEffectManager.register(838, 'arrow rain south', 638, ThingCategoryEffect, {
@@ -5521,7 +5521,7 @@ AttachedEffectManager.register(838, 'arrow rain south', 638, ThingCategoryEffect
     opacity = 1,
     speed = 1,
     offset = { 0, 0, true },
-    shader = 'frost armor',
+    
 })
 
 AttachedEffectManager.register(839, 'arrow rain east', 636, ThingCategoryEffect, {
@@ -5529,7 +5529,7 @@ AttachedEffectManager.register(839, 'arrow rain east', 636, ThingCategoryEffect,
     opacity = 1,
     speed = 1,
     offset = { 0, 0, true },
-    shader = 'frost armor',
+    
 })
 
 AttachedEffectManager.register(840, 'arrow rain west', 639, ThingCategoryEffect, {
@@ -5537,10 +5537,42 @@ AttachedEffectManager.register(840, 'arrow rain west', 639, ThingCategoryEffect,
     opacity = 1,
     speed = 1,
     offset = { 0, 0, true },
-    shader = 'frost armor',
+    
 })
 
 AttachedEffectManager.register(841, 'frozen rain', 1159, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { 0, 0, true },
+    shader = 'frost armor',
+})
+
+AttachedEffectManager.register(842, 'frozen rain north', 637, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { 0, 0, true },
+    shader = 'frost armor',
+})
+
+AttachedEffectManager.register(843, 'frozen rain south', 638, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { 0, 0, true },
+    shader = 'frost armor',
+})
+
+AttachedEffectManager.register(844, 'frozen rain east', 636, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1,
+    offset = { 0, 0, true },
+    shader = 'frost armor',
+})
+
+AttachedEffectManager.register(845, 'frozen rain west', 639, ThingCategoryEffect, {
     loop = 1,
     opacity = 1,
     speed = 1,
