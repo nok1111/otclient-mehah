@@ -1865,7 +1865,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["10:17"] = {
 		name = "Frozen Rain",
-		description = "Arrow Rain now deals ice damage and uses ice arrow visuals. Increase the damage of Arrow Rain by an additional 3% per level.",
+		description = "Transform your Arrow Rain into frost arrows dealing ice damage plus an additional 3% damage per talent point.",
 		effect = {
 			{type = "storage", name = "FrozenRain", value = 3},
 		},
