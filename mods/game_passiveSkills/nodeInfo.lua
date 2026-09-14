@@ -2007,7 +2007,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["11:8"] = {
 		name = "Apocalypse Master",
-		description = "Apocalypse Crescendo consumes all your Resonance marks, dealing +15% holy damage per mark consumed to each marked target. Removes the self-vulnerability penalty after casting.",
+		description = "Apocalypse Crescendo consumes all your Resonance marks, dealing 15% more damage per mark consumed to each marked target. Removes the self-vulnerability penalty after casting.",
 		effect = {
 			{type = "storage", name = "ApocalypseMaster", value = 1},
 		},
