@@ -1963,7 +1963,7 @@ PassiveSkills.nodeInfo = {
 		name = "Sonic Amplification",
 		description = "+3% energy damage per level.",
 		effect = {
-			{type = "storage", name = "SonicAmplification", value = 3},
+			{type = "condition", name = "Energy Damage", value = 3},
 		},
 	},
 	["11:2"] = {
@@ -1979,9 +1979,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["11:4"] = {
 		name = "Resonance Spread",
-		description = "Resonant Chorus now applies Resonance to up to 2 additional enemies per level hit by the spell.",
+		description = "Resonant Chorus applies Resonance to ALL enemies hit by the spell. Additionally, resonating targets hit by Resonant Chorus take +4% energy damage per level and spread Resonance to nearby enemies within 1 tile per level.",
 		effect = {
-			{type = "storage", name = "ResonanceSpread", value = 2},
+			{type = "storage", name = "ResonanceSpread", value = 4},
 		},
 	},
 	["11:5"] = {
@@ -1993,7 +1993,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["11:6"] = {
 		name = "Harmonic Overload",
-		description = "Harmonic Collapse detonations leave a sonic field for 3 seconds that deals energy damage per second to enemies inside. +10% explosion damage per level.",
+		description = "Harmonic Collapse detonations overload affected enemies with sonic energy for 3 seconds, dealing constant energy damage. +10% explosion damage per level.",
 		effect = {
 			{type = "storage", name = "HarmonicOverload", value = 10},
 		},
@@ -2007,7 +2007,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["11:8"] = {
 		name = "Apocalypse Master",
-		description = "Grand Finale (Dissonance mode) now also consumes all Resonance marks, each adding 15% damage. Requiem storage increased to 30%. Self-vulnerability debuff removed entirely.",
+		description = "Apocalypse Crescendo consumes all your Resonance marks, dealing +15% holy damage per mark consumed to each marked target. Removes the self-vulnerability penalty after casting.",
 		effect = {
 			{type = "storage", name = "ApocalypseMaster", value = 1},
 		},
@@ -2021,7 +2021,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["11:12"] = {
 		name = "Extended Performance",
-		description = "Melody pulse range +1 per level and duration +3s per level.",
+		description = "Melody pulse range +1 per level, duration +3s per level, and melody effectiveness +10% per level.",
 		effect = {
 			{type = "storage", name = "ExtendedPerformance", value = 1},
 		},
@@ -2032,7 +2032,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["11:14"] = {
 		name = "Cheerful Cleansing",
-		description = "Cheerful Melody now cleanses 1 negative condition per level from allies on application. Burst heal +10% per level.",
+		description = "Cheerful Melody cleanses 1 negative condition per level from allies on entry. Heal-over-time +10% per level.",
 		effect = {
 			{type = "storage", name = "CheerfulCleansing", value = 1},
 		},
@@ -2085,7 +2085,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["11:24"] = {
 		name = "Reverb Cascade",
-		description = "While Reverberation is active, sonic waves also heal nearby allies for 3% of damage dealt per level.",
+		description = "Reverberation shield is shared with 1 additional party member per level. Each resonating enemy also increases shield effectiveness by +1% max HP per level.",
 		effect = {
 			{type = "storage", name = "ReverbCascade", value = 3},
 		},
@@ -2106,14 +2106,14 @@ PassiveSkills.nodeInfo = {
 	},
 	["11:27"] = {
 		name = "Finale Mastery",
-		description = "Grand Finale deals +8% damage and heals +8% per level. After casting Grand Finale, your resources reset to 65 instead of 50.",
+		description = "After casting Grand Finale, gain +4% spell cooldown reduction per level for 10s. Fosters burst windows after your finale.",
 		effect = {
 			{type = "storage", name = "FinaleMastery", value = 8},
 		},
 	},
 	["11:28"] = {
 		name = "Virtuoso's Finale",
-		description = "When you cast Grand Finale, all allies in range gain Crescendo Inspiration for 10s: +15% damage and +15% healing. Your Dissonance/Harmony resets to 75 instead of 50.",
+		description = "When you cast Grand Finale, a replica triggers 6s later at 50% effectiveness. The replica deals half damage or heals for half, with no resource cost or vulnerability.",
 		effect = {
 			{type = "storage", name = "VirtuososFinale", value = 1},
 		},
