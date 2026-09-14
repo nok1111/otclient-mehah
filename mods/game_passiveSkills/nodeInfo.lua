@@ -1915,14 +1915,14 @@ PassiveSkills.nodeInfo = {
 	},
 	["10:26"] = {
 		name = "Exploit Weakness",
-		description = "Phantom Shot, Falcon Shot and Rapid Fire deal +5% damage per level for each debuff on the target (slow, burn, bleed, freeze, poison, cursed, electrified).",
+		description = "Phantom Shot, Falcon Shot and Rapid Fire deal +5% damage per level for each debuff on the target (slow, burn, bleed, freeze, poison, cursed, electrified). Also increases the duration of your bleed and poison effects by 2 seconds per level.",
 		effect = {
 			{type = "storage", name = "FocusedFire", value = 5},
 		},
 	},
 	["10:27"] = {
 		name = "Deadeye",
-		description = "Your Phantom Shot and Falcon Shot gain +2% critical hit chance per level. Critical hits with these spells apply poison for 3 seconds.",
+		description = "Your Phantom Shot and Falcon Shot gain +2% critical hit chance per level. Critical hits with these spells apply poison for 3 seconds. Also increases the duration of your bleed and poison effects by 2 seconds per level.",
 		effect = {
 			{type = "storage", name = "Deadeye", value = 2},
 		},
