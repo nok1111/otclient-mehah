@@ -1914,8 +1914,8 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["10:26"] = {
-		name = "Focused Fire",
-		description = "Phantom Shot, Falcon Shot and Rapid Fire deal +5% damage per level for each debuff on the target (slow, burn, bleed, freeze).",
+		name = "Exploit Weakness",
+		description = "Phantom Shot, Falcon Shot and Rapid Fire deal +5% damage per level for each debuff on the target (slow, burn, bleed, freeze, poison, cursed, electrified).",
 		effect = {
 			{type = "storage", name = "FocusedFire", value = 5},
 		},

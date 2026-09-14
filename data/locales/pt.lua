@@ -1814,6 +1814,7 @@ locale = {
  ["FlameEater"] = "FlameEater",
  ["FocusHealing"] = "FocusHeal",
  ["Focused Fire"] = "Focused Fire",
+["Exploit Weakness"] = "Exploit Weakness",
  ["FocusedFire"] = "FocusedFire",
  ["Force of Nature"] = "Force of Nature",
  ["ForceOfNature"] = "ForceOfNature",
