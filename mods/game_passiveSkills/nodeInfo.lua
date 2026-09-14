@@ -2729,7 +2729,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:6"] = {
 		name = "Overclocked Servos",
-		description = "Bots move 15% faster and attack 10% faster per level. Additionally, when Overclock expires, all Deploy spell cooldowns are reduced by 3 seconds per level.",
+		description = "Bots attack 10% faster per level. Additionally, when Overclock expires, all Deploy spell cooldowns are reduced by 3 seconds per level.",
 		effect = {
 			{type = "storage", name = "OverclockedServos", value = 1},
 		},
