@@ -1908,7 +1908,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["10:25"] = {
 		name = "Falcon Shot",
-		description = "Learn the spell Falcon Shot. Shoot a powerful shot that deals physical damage to the target and nearby enemies, slowing them for 3 seconds.",
+		description = "Learn the spell Falcon Shot. Shoot a powerful shot that deals physical damage to the target and nearby enemies, slowing them for 3 seconds and causing them to bleed for 4 seconds.",
 		effect = {
 			{type = "spell", name = "Falcon Shot"},
 		},
