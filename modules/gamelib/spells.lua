@@ -589,7 +589,7 @@ SpellInfo = {
     ['Rocket Barrage'] = {id = 348, words = 'rocket barrage', icon = 337, description = 'Fire a rocket in a straight line (range 8) that explodes on impact dealing physical + fire damage in 3x3 area. Consumes 3 Scrap.', exhaustion = 15000, premium = false, type = 'Instant', mana = 50, level = 30, soul = 0, group = {[1] = 1900}, vocations = {12}},
     ['Napalm Strike'] = {id = 349, words = 'napalm strike', icon = 338, description = 'Launch a napalm meteor at target location. After a brief warning, it explodes dealing fire damage in a 3x3 area, then burns for 5s. Consumes 2 Scrap.', exhaustion = 12000, premium = false, needLearn = true, type = 'Instant', mana = 45, level = 35, soul = 0, group = {[1] = 1900}, vocations = {12}, crosshair = true, area = 'AREA_SQUARE1X1', range = 5, areaSprite = 1178},
     ['Tesla Shot'] = {id = 350, words = 'tesla shot', icon = 340, description = 'Fire an electric shot at target dealing energy damage. Paralyzes for 1s and marks them for 5s: marked targets take bonus damage from Grenade Toss, Land Mine, Rocket Barrage, Napalm Strike, Gravity Bomb. Consumes 1 Scrap.', exhaustion = 6000, premium = false, needLearn = true, type = 'Instant', mana = 25, level = 20, soul = 0, group = {[1] = 1900}, vocations = {12}},
-    ['Gravity Bomb'] = {id = 351, words = 'gravity bomb', icon = 343, description = 'Charge a gravity bomb at target location. After 2s, explodes dealing physical damage, pulls enemies to the impact point and stuns them for 1s. Consumes 2 Scrap.', exhaustion = 10000, premium = false, needLearn = true, type = 'Instant', mana = 35, level = 25, soul = 0, group = {[1] = 1900}, vocations = {12}, crosshair = true, area = 'AREA_SQUARE3X3', range = 5, areaSprite = 1178},
+    ['Gravity Bomb'] = {id = 351, words = 'gravity bomb', icon = 343, description = 'Charge a gravity bomb at target location. After 2s, explodes dealing physical damage, pulls enemies to the impact point and stuns them for 1s. Consumes 2 Scrap.', exhaustion = 10000, premium = false, needLearn = true, type = 'Instant', mana = 35, level = 25, soul = 0, group = {[1] = 1900}, vocations = {12}, crosshair = true, area = 'AREA_SQUARE1X1', range = 5, areaSprite = 1178},
 
 
     -- Bard
@@ -854,8 +854,7 @@ SpellAreaOffsets = {
     ['ROCKET_BOOTS'] = '0,0',
     ['AREA_SEISMIC_JUMP'] = '0,0',
     ['AREA_MINE'] = '0,0',
-    ['AREA_BEAM5'] = '0,-4;0,-3;0,-2;0,-1;0,0',
-    ['AREA_SQUARE3X3'] = '-3,-3;-2,-3;-1,-3;0,-3;1,-3;2,-3;3,-3;-3,-2;-2,-2;-1,-2;0,-2;1,-2;2,-2;3,-2;-3,-1;-2,-1;-1,-1;0,-1;1,-1;2,-1;3,-1;-3,0;-2,0;-1,0;0,0;1,0;2,0;3,0;-3,1;-2,1;-1,1;0,1;1,1;2,1;3,1;-3,2;-2,2;-1,2;0,2;1,2;2,2;3,2;-3,3;-2,3;-1,3;0,3;1,3;2,3;3,3'
+    ['AREA_BEAM5'] = '0,-4;0,-3;0,-2;0,-1;0,0'
 }
 
 function Spells.getAreaOffsets(areaName)
