@@ -1922,7 +1922,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["10:27"] = {
 		name = "Deadeye",
-		description = "Your Phantom Shot and Falcon Shot gain +2% critical hit chance per level. Critical hits with these spells apply bleed for 3 seconds.",
+		description = "Your Phantom Shot and Falcon Shot gain +2% critical hit chance per level. Critical hits with these spells apply poison for 3 seconds.",
 		effect = {
 			{type = "storage", name = "Deadeye", value = 2},
 		},
