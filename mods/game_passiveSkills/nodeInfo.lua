@@ -2295,7 +2295,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["13:25"] = {
 		name = "Searing Wind",
-		description = "Learn the spell Searing Wind. Your Wind Step leaves a trail of fire for 3 seconds that burns enemies standing in it. Passive enhancement to Wind Step.",
+		description = "Your Wind Step leaves a trail of fire for 3 seconds that burns enemies standing in it. Passive enhancement to Wind Step.",
 		effect = {
 			{type = "storage", name = "SearingWind", value = 1},
 		},
