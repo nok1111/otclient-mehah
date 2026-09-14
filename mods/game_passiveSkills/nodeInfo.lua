@@ -2729,7 +2729,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:6"] = {
 		name = "Overclocked Servos",
-		description = "Bots move 15% faster and attack 10% faster per level.",
+		description = "Bots move 15% faster and attack 10% faster per level. Additionally, when Overclock expires, all Deploy spell cooldowns are reduced by 3 seconds per level.",
 		effect = {
 			{type = "storage", name = "OverclockedServos", value = 1},
 		},
@@ -2842,8 +2842,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:23"] = {
 		name = "Demolitionist",
-		description = "Grenade Toss costs 0 Scrap. Land Mines detonate in 2x2 area.",
+		description = "Unlocks Gravity Bomb spell. Grenade Toss costs 0 Scrap. Land Mines detonate in a 3x3 area. Gravity Bomb pull range +2.",
 		effect = {
+			{type = "spell", name = "Gravity Bomb"},
 			{type = "storage", name = "Demolitionist", value = 1},
 		},
 	},
@@ -2908,10 +2909,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["12:33"] = {
-		name = "Mech Suite",
-		description = "Unlocks Mech Suite spell: +20% damage and attack speed to self and bots, 15s duration.",
+		name = "Apex Mech",
+		description = "Mech Suite enhanced: +3s duration, bots gain +20% attack speed, you gain +15% max HP shield and cleanse all negative conditions on activation.",
 		effect = {
-			{type = "spell", name = "Mech Suite"},
+			{type = "storage", name = "MechSuite", value = 1},
 		},
 	},
 	["12:34"] = {
