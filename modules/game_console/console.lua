@@ -1449,6 +1449,20 @@ function sendMessage(message, tab)
         return
     end
 
+    -- Intercept crosshair spells typed in chat: activate crosshair instead of sending
+    local trimmed = message:trim()
+    local spell = Spells.getByWords(trimmed)
+    if spell and spell.crosshair then
+        modules.game_interface.startSpellCrosshair(
+            spell.words,
+            spell.range,
+            Spells.getAreaOffsets(spell.area),
+            spell.areaSprite,
+            spell.area
+        )
+        return true
+    end
+
     -- Convert any Unicode emojis the player types to Discord shortcodes
     message = discordEmojiToShortcode(message)
 
