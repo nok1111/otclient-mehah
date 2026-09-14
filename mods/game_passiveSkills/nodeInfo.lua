@@ -2729,7 +2729,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:6"] = {
 		name = "Overclocked Servos",
-		description = "Bots attack 10% faster per level. Additionally, when Overclock expires, all Deploy spell cooldowns are reduced by 3 seconds per level.",
+		description = "Bots move 15% faster and attack 10% faster per level. Additionally, when Overclock expires, all Deploy spell cooldowns are reduced by 3 seconds per level.",
 		effect = {
 			{type = "storage", name = "OverclockedServos", value = 1},
 		},
@@ -2842,7 +2842,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["12:23"] = {
 		name = "Demolitionist",
-		description = "Unlocks Gravity Bomb spell. Grenade Toss costs 0 Scrap. Land Mines detonate in a 3x3 area. Gravity Bomb pull range +2.",
+		description = "Unlocks Gravity Bomb spell. Grenade Toss costs 0 Scrap. Land Mines detonate in a 3x3 area.",
 		effect = {
 			{type = "spell", name = "Gravity Bomb"},
 			{type = "storage", name = "Demolitionist", value = 1},
