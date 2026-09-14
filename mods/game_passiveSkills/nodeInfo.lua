@@ -1891,6 +1891,14 @@ PassiveSkills.nodeInfo = {
 			{type = "storage", name = "HunterMercy", value = 4},
 		},
 	},
+	["10:23"] = {
+		name = "Arrowstorm",
+		description = "Increase the shots from Rapid Fire by 1 per level, reduce its interval by 10ms per level, and Rapid Fire now applies slow for 2 seconds.",
+		effect = {
+			{type = "storage", name = "Arrowstorm", value = 1},
+			{type = "storage", name = "ArrowstormcastTime", value = 10},
+		},
+	},
 	["10:24"] = {
 		name = "Falcon's Mark",
 		description = "Your Falcon Shot marks the target for 5 seconds. Marked targets take +3% damage per level from your Phantom Shot and bow attacks.",

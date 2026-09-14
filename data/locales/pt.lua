@@ -1690,6 +1690,7 @@ locale = {
  ["Are you sure you want to reset all your Paragon points? All stat allocations will be refunded."] = "Tem certeza que deseja redefinir todos os pontos Paragon? Todas as alocaes sero reembolsadas.",
  ["Arrow Barrage now deals ice damage and slows all enemies for 4 seconds\\nIncrease the damage of Ice Arrow and Arrow Barrage by an adicional 2% (por nível)"] = "Arrow Barrage agora causa dano de gelo e desacelera todos os inimigos por 4 segundos.\\nAumenta o dano de Ice Arrow e Arrow Barrage em 2% adicional (por nível)",
  ["Falcon's Mark"] = "Falcon's Mark",
+["Arrowstorm"] = "Arrowstorm",
  ["Assassin's Mastery"] = "Assassin's Mastery",
  ["Assassination"] = "Assassination",
  ["AssassinsMastery"] = "AssassinsMastery",
