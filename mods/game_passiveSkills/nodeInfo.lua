@@ -2149,7 +2149,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["13:2"] = {
 		name = "Focus Mastery",
-		description = "Maximum Focus stacks increased by 1 per level (up to 6). Synergy: Meditation can grant up to 6 Focus, and Blade Master triggers at max stacks.",
+		description = "Maximum Focus stacks increased by 1 per level (up to 6). Additionally, consuming 3 or more Focus on a finisher reduces the cooldown of all your Samurai spells by 1 second per Focus consumed per level.",
 		effect = {
 			{type = "storage", name = "FocusMastery", value = 1},
 		},
@@ -2162,6 +2162,7 @@ PassiveSkills.nodeInfo = {
 		name = "War Cry",
 		description = "Learn the spell War Cry. Grant +10% damage to yourself and nearby party members for 8 seconds. Support spell that complements any build. 15s cooldown.",
 		effect = {
+			{type = "spell", name = "War Cry"},
 			{type = "storage", name = "WarCry", value = 1},
 		},
 	},
@@ -2169,6 +2170,7 @@ PassiveSkills.nodeInfo = {
 		name = "Death Mark",
 		description = "Learn the spell Death Mark. Mark a target for 8 seconds. Marked targets take +20% damage from all your attacks. Synergy: Merciful End gets +10% execute threshold and +15% damage on marked targets. 15s cooldown.",
 		effect = {
+			{type = "spell", name = "Death Mark"},
 			{type = "storage", name = "DeathMark", value = 1},
 		},
 	},
@@ -2197,6 +2199,7 @@ PassiveSkills.nodeInfo = {
 		name = "Blade Flurry",
 		description = "Learn the spell Blade Flurry. Strike a target 3 times in rapid succession, dealing physical damage. The final hit applies Exposed (max 3 stacks, 8s). Exposed targets take +10% damage from finishers per stack (up to +30%). Builder: generates +1 Focus. 3.5s cooldown.",
 		effect = {
+			{type = "spell", name = "Blade Flurry"},
 			{type = "storage", name = "BladeFlurry", value = 1},
 		},
 	},
@@ -2222,6 +2225,7 @@ PassiveSkills.nodeInfo = {
 		name = "Phantom Slash",
 		description = "Learn the spell Phantom Slash. Dash through all enemies in a line up to 4 tiles, dealing physical damage to each. Leaves after-images along the path. 6s cooldown.",
 		effect = {
+			{type = "spell", name = "Phantom Slash"},
 			{type = "storage", name = "PhantomSlash", value = 1},
 		},
 	},
@@ -2229,6 +2233,7 @@ PassiveSkills.nodeInfo = {
 		name = "Second Wind",
 		description = "Learn the spell Second Wind. Instantly heal 30% max HP + 20% per Focus stack consumed. Consumes all Focus. 20s cooldown.",
 		effect = {
+			{type = "spell", name = "Second Wind"},
 			{type = "storage", name = "SecondWind", value = 1},
 		},
 	},
@@ -2236,7 +2241,8 @@ PassiveSkills.nodeInfo = {
 		name = "Parry",
 		description = "+3% dodge per level. When you dodge an attack, gain 1 Focus stack. Synergy: Counter Strike chance scales with Parry levels (+3% per level).",
 		effect = {
-			{type = "storage", name = "Parry", value = 3},
+			{type = "condition", name = "Dodge", value = 3},
+			{type = "storage", name = "Parry", value = 1},
 		},
 	},
 	["13:17"] = {
@@ -2257,6 +2263,7 @@ PassiveSkills.nodeInfo = {
 		name = "Counter Strike",
 		description = "Learn Counter Strike (passive). While Guardian Stance is active, you have a chance to automatically counter-attack when hit, dealing physical damage and generating +1 Focus. Chance: 10% base + 3% per Parry level. Scales with Parry levels.",
 		effect = {
+			{type = "spell", name = "Counter Strike"},
 			{type = "storage", name = "CounterStrike", value = 1},
 		},
 	},
@@ -2282,6 +2289,7 @@ PassiveSkills.nodeInfo = {
 		name = "Blade Dash",
 		description = "Learn the spell Blade Dash. Strike a target up to 3 tiles away, dash through them, heal for 25% of damage dealt, and stun + knock up enemies around the target for 1s. 8s cooldown.",
 		effect = {
+			{type = "spell", name = "Blade Dash"},
 			{type = "storage", name = "BladeDash", value = 1},
 		},
 	},
@@ -2296,6 +2304,7 @@ PassiveSkills.nodeInfo = {
 		name = "Meditation",
 		description = "Learn the spell Meditation. Channel for 1 second to instantly gain 3 Focus stacks. Respects Focus Mastery (up to 6 max). 15s cooldown.",
 		effect = {
+			{type = "spell", name = "Meditation"},
 			{type = "storage", name = "Meditation", value = 1},
 		},
 	},
