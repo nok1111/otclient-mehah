@@ -2338,10 +2338,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:0"] = {
 		name = "Sanguine Heritage",
-		description = "Blood is power. Increases lifesteal by 2% and max Blood Essence by 5.",
+		description = "Blood is power. Increases lifesteal by 5%.",
 		effect = {
-			{type = "condition", name = "Lifesteal", value = 2},
-			{type = "storage", name = "EssenceFlow", value = 5},
+			{type = "condition", name = "Lifesteal", value = 5},
 		},
 	},
 	["14:1"] = {
