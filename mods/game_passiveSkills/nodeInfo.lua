@@ -2345,9 +2345,9 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:1"] = {
 		name = "Blood Power",
-		description = "+3% damage per level.",
+		description = "+2% physical and death damage per level.",
 		effect = {
-			{type = "condition", name = "Physical Damage", value = 3},
+			{type = "condition", name = "Blood Power", value = 2},
 		},
 	},
 	["14:2"] = {
