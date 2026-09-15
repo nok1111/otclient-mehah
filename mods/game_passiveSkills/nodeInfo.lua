@@ -2393,7 +2393,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:8"] = {
 		name = "Crimson Devastation",
-		description = "Blood Detonation damage +50%. Survivors of Blood Detonation get a new bleed applied (4 ticks, 25% heal).",
+		description = "Blood Eruption damage +50%. Survivors of Blood Eruption get a new bleed applied (4 ticks, 25% heal).",
 		effect = {
 			{type = "storage", name = "CrimsonDevastation", value = 1},
 		},
@@ -2433,8 +2433,8 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["14:16"] = {
-		name = "Pool Mastery",
-		description = "Sanguine Pool duration +1s per level and shield +5% per level.",
+		name = "Sanguine Mastery",
+		description = "Sanguine Shield duration +1s per level and damage converted to essence +5% per level.",
 		effect = {
 			{type = "storage", name = "PoolMastery", value = 5},
 		},
@@ -2448,7 +2448,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:18"] = {
 		name = "Sanguine Fortress",
-		description = "Sanguine Pool now cleanses all debuffs on cast and grants CC immunity for its duration.",
+		description = "Sanguine Shield now cleanses all debuffs on cast and grants CC immunity for its duration.",
 		effect = {
 			{type = "storage", name = "SanguineFortress", value = 1},
 		},
@@ -2495,8 +2495,8 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["14:26"] = {
-		name = "Tether Mastery",
-		description = "Blood Tether duration +1s per level and damage +10% per level.",
+		name = "Ritual Mastery",
+		description = "Blood Ritual essence generation +5 per level and HP cost -1% per level.",
 		effect = {
 			{type = "storage", name = "TetherMastery", value = 10},
 		},
@@ -2511,7 +2511,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:28"] = {
 		name = "Hemomancy Mastery",
-		description = "Blood Lance only consumes 50% of orbs (rounded down). During Blood Frenzy, Blood Lance applies 2 bleeds instead of 1.",
+		description = "Exsanguinate only consumes 50% of Blood Orbs (rounded down). During Blood Frenzy, Exsanguinate damage +25%.",
 		effect = {
 			{type = "storage", name = "HemomancyMastery", value = 1},
 		},
