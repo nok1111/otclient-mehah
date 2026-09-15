@@ -487,6 +487,7 @@ function initializeSpelllist()
     end, spellsPanel:getParent())
 
     local learnedSpells = getLearnedSpells and getLearnedSpells() or {}
+    local collectedSpells = {}
     for spellProfile, _ in pairs(SpelllistSettings) do
         local localPlayer = g_game.getLocalPlayer()
         local playerVocation = localPlayer and localPlayer:getVocation() or nil
@@ -500,40 +501,68 @@ function initializeSpelllist()
                 show = true
             end
             if show then
-                local tmpLabel = g_ui.createWidget('SpellListLabel', spellsPanel)
-                tmpLabel:setId(spell)
-                local spellText = tr(spell) .. " (" .. tr('Lv. ') .. tostring(info.level or "?") .. ")"
-                local formulaText = "'" .. info.words .. "'"
-                local localPlayerLevel = localPlayer and localPlayer:getLevel() or 0
-                if info.level and localPlayerLevel >= info.level then
-                    tmpLabel:setColoredText("{" .. spellText .. ", #00F000}\n" .. formulaText)
-                else
-                    tmpLabel:setColoredText("{" .. spellText .. ", #FF0000}\n" .. formulaText)
-                end
-                tmpLabel:setPhantom(false)
-                tmpLabel.defaultHeight = tmpLabel:getHeight()
-                tmpLabel.words = info.words:lower()
-                tmpLabel.name = spell:lower()
-
-
-                local iconId = tonumber(info.icon)
-                if not iconId and SpellIcons[info.icon] then
-                    iconId = SpellIcons[info.icon][1]
-                end
-
-                if not (iconId) then
-                    perror('Spell icon ' .. tostring(info.icon) .. ' not found.')
-                end
-
-                tmpLabel:setHeight(SpelllistSettings[spellProfile].iconSize.height + 4)
-                tmpLabel:setTextOffset(topoint((SpelllistSettings[spellProfile].iconSize.width + 10) .. ' ' ..
-                                               (SpelllistSettings[spellProfile].iconSize.height - 32) / 2 + 3))
-                --tmpLabel:setImageSource(SpelllistSettings[spellProfile].iconFile)
-                tmpLabel:setImageSource(Spells.getIconId(iconId, spellProfile))
-                tmpLabel:setImageSize(tosize(SpelllistSettings[spellProfile].iconSize.width .. ' ' ..
-                                             SpelllistSettings[spellProfile].iconSize.height))
+                local sortLevel = info.needLearn and 1 or (info.level or 999)
+                table.insert(collectedSpells, {
+                    spell = spell,
+                    info = info,
+                    profile = spellProfile,
+                    sortLevel = sortLevel,
+                })
             end
         end
+    end
+
+    table.sort(collectedSpells, function(a, b)
+        if a.sortLevel ~= b.sortLevel then
+            return a.sortLevel < b.sortLevel
+        end
+        return a.spell < b.spell
+    end)
+
+    local localPlayer = g_game.getLocalPlayer()
+    local localPlayerLevel = localPlayer and localPlayer:getLevel() or 0
+    for _, entry in ipairs(collectedSpells) do
+        local spell = entry.spell
+        local info = entry.info
+        local spellProfile = entry.profile
+
+        local tmpLabel = g_ui.createWidget('SpellListLabel', spellsPanel)
+        tmpLabel:setId(spell)
+        local spellText
+        if info.needLearn then
+            spellText = tr(spell) .. " (" .. tr('talent') .. ")"
+        else
+            spellText = tr(spell) .. " (" .. tr('Lv. ') .. tostring(info.level or "?") .. ")"
+        end
+        local formulaText = "'" .. info.words .. "'"
+        if not info.needLearn and info.level and localPlayerLevel >= info.level then
+            tmpLabel:setColoredText("{" .. spellText .. ", #00F000}\n" .. formulaText)
+        elseif info.needLearn then
+            tmpLabel:setColoredText("{" .. spellText .. ", #00F000}\n" .. formulaText)
+        else
+            tmpLabel:setColoredText("{" .. spellText .. ", #FF0000}\n" .. formulaText)
+        end
+        tmpLabel:setPhantom(false)
+        tmpLabel.defaultHeight = tmpLabel:getHeight()
+        tmpLabel.words = info.words:lower()
+        tmpLabel.name = spell:lower()
+
+        local iconId = tonumber(info.icon)
+        if not iconId and SpellIcons[info.icon] then
+            iconId = SpellIcons[info.icon][1]
+        end
+
+        if not (iconId) then
+            perror('Spell icon ' .. tostring(info.icon) .. ' not found.')
+        end
+
+        tmpLabel:setHeight(SpelllistSettings[spellProfile].iconSize.height + 4)
+        tmpLabel:setTextOffset(topoint((SpelllistSettings[spellProfile].iconSize.width + 10) .. ' ' ..
+                                       (SpelllistSettings[spellProfile].iconSize.height - 32) / 2 + 3))
+        --tmpLabel:setImageSource(SpelllistSettings[spellProfile].iconFile)
+        tmpLabel:setImageSource(Spells.getIconId(iconId, spellProfile))
+        tmpLabel:setImageSize(tosize(SpelllistSettings[spellProfile].iconSize.width .. ' ' ..
+                                     SpelllistSettings[spellProfile].iconSize.height))
     end
 
     for v, k in ipairs(spellsPanel:getChildren()) do
