@@ -2366,6 +2366,7 @@ PassiveSkills.nodeInfo = {
 		name = "Blood Curse",
 		description = "Learn the spell Blood Curse. Debuff a target for 6 seconds: target takes +15% damage and healing received is reduced by 50%. 12s cooldown.",
 		effect = {
+			{type = "spell", name = "Blood Curse"},
 			{type = "storage", name = "BloodCurse", value = 1},
 		},
 	},
@@ -2373,6 +2374,7 @@ PassiveSkills.nodeInfo = {
 		name = "Crimson Rain",
 		description = "Learn the spell Crimson Rain. Call down a rain of blood on a 3x3 area for 5 seconds, applying bleeds to all enemies standing in it. 10s cooldown.",
 		effect = {
+			{type = "spell", name = "Crimson Rain"},
 			{type = "storage", name = "CrimsonRain", value = 1},
 		},
 	},
@@ -2419,6 +2421,7 @@ PassiveSkills.nodeInfo = {
 		name = "Sanguine Shield",
 		description = "Learn the spell Sanguine Shield. For 5 seconds, 20% of incoming damage is converted to Blood Essence instead of dealing damage. 15s cooldown.",
 		effect = {
+			{type = "spell", name = "Sanguine Shield"},
 			{type = "storage", name = "SanguineShield", value = 1},
 		},
 	},
@@ -2426,6 +2429,7 @@ PassiveSkills.nodeInfo = {
 		name = "Vampiric Aura",
 		description = "Learn the spell Vampiric Aura. For 10 seconds, all allies within 5 tiles gain 10% lifesteal. 20s cooldown.",
 		effect = {
+			{type = "spell", name = "Vampiric Aura"},
 			{type = "storage", name = "VampiricAura", value = 1},
 		},
 	},
@@ -2450,6 +2454,13 @@ PassiveSkills.nodeInfo = {
 			{type = "storage", name = "SanguineFortress", value = 1},
 		},
 	},
+	["14:32"] = {
+		name = "Sanguine Strike",
+		description = "Exsanguinate generates 1 Blood Orb per level on cast and HP cost reduced by 2% per level.",
+		effect = {
+			{type = "storage", name = "SanguineStrike", value = 1},
+		},
+	},
 	["14:21"] = {
 		name = "Essence Flow",
 		description = "+5 max Blood Essence per level (up to 115).",
@@ -2472,6 +2483,7 @@ PassiveSkills.nodeInfo = {
 		name = "Blood Walk",
 		description = "Learn the spell Blood Walk. Teleport to a bleeding target within 6 tiles, dealing AoE damage on arrival. 6s cooldown.",
 		effect = {
+			{type = "spell", name = "Blood Walk"},
 			{type = "storage", name = "BloodWalk", value = 1},
 		},
 	},
@@ -2479,6 +2491,7 @@ PassiveSkills.nodeInfo = {
 		name = "Crimson Chains",
 		description = "Learn the spell Crimson Chains. Root all enemies within 3 tiles for 3 seconds. 12s cooldown.",
 		effect = {
+			{type = "spell", name = "Crimson Chains"},
 			{type = "storage", name = "CrimsonChains", value = 1},
 		},
 	},
@@ -2493,6 +2506,7 @@ PassiveSkills.nodeInfo = {
 		name = "Blood Ritual",
 		description = "Learn the spell Blood Ritual. Toggle: sacrifice 5% HP per second for 15 Blood Essence per second. 1s cooldown to toggle off.",
 		effect = {
+			{type = "spell", name = "Blood Ritual"},
 			{type = "storage", name = "BloodRitual", value = 1},
 		},
 	},
