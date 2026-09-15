@@ -2351,8 +2351,8 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["14:2"] = {
-		name = "Bleed Mastery",
-		description = "Bleed damage +15% per level and bleed duration +1s per level.",
+		name = "Bleed & Curse Mastery",
+		description = "Bleed and curse damage +15% per level. Bleed duration +1s per level.",
 		effect = {
 			{type = "storage", name = "BleedMastery", value = 15},
 		},
