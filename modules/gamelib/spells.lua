@@ -34,7 +34,6 @@ SpelllistSettings = {
       'Phantom Slash',
       'Second Wind',
       'Blade Dash',
-      'Searing Wind',
       'Meditation',
       'Blade Flurry',
       'Counter Strike',
