@@ -2386,7 +2386,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:7"] = {
 		name = "Frenzy Mastery",
-		description = "Blood Frenzy duration +2s per level and damage bonus +5% per level.",
+		description = "Blood Frenzy duration +1s per level and damage bonus +5% per level.",
 		effect = {
 			{type = "storage", name = "FrenzyMastery", value = 5},
 		},
