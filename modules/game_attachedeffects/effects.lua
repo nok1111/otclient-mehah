@@ -968,6 +968,12 @@ AttachedEffectManager.register(114, 'Insect swarm', 503, ThingCategoryEffect, {
     offset = { -15, -15, true },
 })
 
+AttachedEffectManager.register(846, 'Blood Plague', 1576, ThingCategoryEffect, {
+    speed = 1,
+    duration = 8000,
+    offset = { -15, -15, true },
+})
+
 AttachedEffectManager.register(115, 'carnivorous vile', 446, ThingCategoryEffect, {
     speed = 1.3,
     loop = 1,
