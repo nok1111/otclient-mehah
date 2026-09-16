@@ -16,6 +16,8 @@ formulaValueLabel = nil
 cooldownValueLabel = nil
 levelValueLabel = nil
 manaValueLabel = nil
+manaRowIcon = nil
+manaRowLabel = nil
 spellIcon = nil
 
 
@@ -74,6 +76,8 @@ function init()
     cooldownValueLabel = spelllistWindow:recursiveGetChildById('labelCooldownValue')
     levelValueLabel    = spelllistWindow:recursiveGetChildById('labelLevelValue')
     manaValueLabel     = spelllistWindow:recursiveGetChildById('labelManaValue')
+    manaRowIcon        = spelllistWindow:recursiveGetChildById('iconMana')
+    manaRowLabel       = spelllistWindow:recursiveGetChildById('labelMana')
 
    
 
@@ -302,7 +306,22 @@ function updateSpellInformation(widget)
 
         type = info.type
         level = info.level
-        mana = info.mana .. ' / ' .. info.soul
+        -- Build cost string: HP% / Mana / Soul, hide when 0
+        local hpCost = info.hpCost or 0
+        local manaVal = info.mana or 0
+        local soulVal = info.soul or 0
+        local costParts = {}
+        if hpCost > 0 then
+            table.insert(costParts, 'HP ' .. hpCost .. '%')
+        end
+        if manaVal > 0 then
+            table.insert(costParts, 'Mana ' .. manaVal)
+        end
+        if soulVal > 0 then
+            table.insert(costParts, 'Soul ' .. soulVal)
+        end
+        mana = table.concat(costParts, ' / ')
+        if mana == '' then mana = '' end
         description = info.description or '-'
 
         -- Update icon (if available)
@@ -341,6 +360,15 @@ function updateSpellInformation(widget)
     if cooldownValueLabel then cooldownValueLabel:setText(cooldown) end
     if levelValueLabel then levelValueLabel:setText(level) end
     if manaValueLabel then manaValueLabel:setText(mana) end
+
+    -- Hide mana row entirely when there is no cost
+    local hasCost = mana ~= ''
+    if manaRowIcon then manaRowIcon:setVisible(hasCost) end
+    if manaRowLabel then
+        manaRowLabel:setVisible(hasCost)
+        if hasCost then manaRowLabel:setText('Cost:') end
+    end
+    if manaValueLabel then manaValueLabel:setVisible(hasCost) end
 end
 
 function toggle()

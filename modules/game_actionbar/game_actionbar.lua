@@ -338,6 +338,7 @@ function showSpellTooltip(slot)
     end
 
     local mana = spell.mana or 0
+    local hpCost = spell.hpCost or 0
     local level = spell.level or 0
     local baseCdMs = 0
     if type(spell.exhaustion) == 'number' then baseCdMs = spell.exhaustion end
@@ -359,7 +360,19 @@ function showSpellTooltip(slot)
         cdText = tr('Cooldown: —')
     end
 
-    statsLbl:setText(tr('Mana: %s    Level: %s    %s', tostring(mana), tostring(level), cdText))
+    -- Build cost string: HP% / Mana / Soul, hide when 0
+    local costParts = {}
+    if hpCost > 0 then table.insert(costParts, 'HP ' .. hpCost .. '%') end
+    if mana > 0 then table.insert(costParts, 'Mana ' .. mana) end
+    local costStr = table.concat(costParts, ' / ')
+
+    local statsLine
+    if costStr ~= '' then
+        statsLine = tr('Cost: %s    Level: %s    %s', costStr, tostring(level), cdText)
+    else
+        statsLine = tr('Level: %s    %s', tostring(level), cdText)
+    end
+    statsLbl:setText(statsLine)
     descLbl:setColoredText(tr(spell.description or ''))
 
     -- Size/position
