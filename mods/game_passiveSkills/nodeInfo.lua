@@ -2370,10 +2370,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["14:5"] = {
-		name = "Crimson Rain",
-		description = "Learn the spell Crimson Rain. Call down a rain of blood on a 3x3 area for 5 seconds, applying bleeds to all enemies standing in it. 10s cooldown.",
+		name = "Blood Plague",
+		description = "Learn the spell Blood Plague. Infect a target with a spreading blood plague: death damage DoT that spreads to one nearby enemy per tick. Each infected target counts as a bleed for Blood Eruption. 10s cooldown.",
 		effect = {
-			{type = "spell", name = "Crimson Rain"},
+			{type = "spell", name = "Blood Plague"},
 			{type = "storage", name = "CrimsonRain", value = 1},
 		},
 	},
