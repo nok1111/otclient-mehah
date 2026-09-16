@@ -2434,7 +2434,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:16"] = {
 		name = "Sanguine Mastery",
-		description = "Sanguine Shield duration +1s per level and damage converted to essence +5% per level.",
+		description = "Sanguine Shield duration +1s per level.",
 		effect = {
 			{type = "storage", name = "PoolMastery", value = 5},
 		},
