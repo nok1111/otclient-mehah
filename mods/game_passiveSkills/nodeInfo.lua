@@ -2393,7 +2393,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:8"] = {
 		name = "Crimson Devastation",
-		description = "Blood Eruption {damage +50%., #e74c3c} Survivors of Blood Eruption get a new {bleed, #c0392b} applied (4 ticks, 25% heal).",
+		description = "Blood Eruption damage +50%. Survivors of Blood Eruption get a new bleed applied (4 ticks, 25% heal).",
 		effect = {
 			{type = "storage", name = "CrimsonDevastation", value = 1},
 		},
