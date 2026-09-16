@@ -2426,7 +2426,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:15"] = {
 		name = "Vampiric Aura",
-		description = "Learn the spell Vampiric Aura. For 10 seconds, all allies within 5 tiles gain 10% lifesteal. 20s cooldown.",
+		description = "Learn the spell Vampiric Aura. For 30 minutes, all party members gain 5% lifesteal. 30s cooldown.",
 		effect = {
 			{type = "spell", name = "Vampiric Aura"},
 			{type = "storage", name = "VampiricAura", value = 1},
