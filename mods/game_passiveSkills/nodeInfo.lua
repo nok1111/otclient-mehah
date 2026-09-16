@@ -2447,8 +2447,8 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["14:18"] = {
-		name = "Sanguine Fortress",
-		description = "Sanguine Shield now cleanses all debuffs on cast and grants CC immunity for its duration.",
+		name = "Bat Form",
+		description = "Learn the spell Bat Form. Transform into a bat for 15 seconds: +40% movement speed, 50% dodge chance, and heal 2% max HP per second. Cast again to cancel.",
 		effect = {
 			{type = "storage", name = "SanguineFortress", value = 1},
 		},

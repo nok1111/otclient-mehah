@@ -226,6 +226,7 @@ SpelllistSettings = {
       'Blood Walk',
       'Crimson Chains',
       'Blood Ritual',
+      'Bat Form',
       'Exsanguinate',
 
       --Tinker
@@ -555,6 +556,7 @@ SpellInfo = {
     ['Crimson Chains'] = {id = 303, words = 'crimson chains', icon = 264, description = 'Root all enemies within 3 tiles for 3 seconds. {Costs 4% max HP., #e74c3c}', exhaustion = 12000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {14}},
     ['Blood Ritual'] = {id = 304, words = 'blood ritual', icon = 274, description = 'Toggle: sacrifice 5% HP per second for {15 Blood Essence per second., #c0392b} Cast again to toggle off.', exhaustion = 1000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {14}},
     ['Exsanguinate'] = {id = 312, words = 'exsanguinate', icon = 265, description = 'Strike your target dealing heavy death damage. +50% damage if target is below 30% HP. {Consumes ALL Blood Orbs, #8b0000} for +10% damage each. Heals you based on your level, max HP and magic level. {Costs 12% max HP., #e74c3c} Sanguine Strike: on kill or execute, refunds Blood Orbs.', exhaustion = 15000, premium = false, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[1] = 1900}, vocations = {14}},
+    ['Bat Form'] = {id = 305, words = 'bat form', icon = 70, description = 'Transform into a bat for 15 seconds. +40% movement speed, 50% dodge chance, and heal 2% max HP per second. Cast again to cancel. {Costs 5% max HP., #e74c3c}', exhaustion = 2000, premium = false, needLearn = true, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 1100}, vocations = {14}},
 
     -- Tinker
     ['Wrench Throw'] = {id = 320, words = 'wrench throw', icon = 320, description = 'Throw your wrench at the target dealing physical damage. Generates 1 Scrap.', exhaustion = 2000, premium = false, type = 'Instant', mana = 15, level = 1, soul = 0, group = {[1] = 1900}, vocations = {12}},
