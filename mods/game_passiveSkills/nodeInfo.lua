@@ -2379,7 +2379,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:6"] = {
 		name = "Eruption Mastery",
-		description = "Blood Eruption damage bonus per bleed consumed +10% per level and shield cap +5% per level.",
+		description = "Blood Eruption: +10% damage per bleed/curse consumed per level, +5% heal cap per level, and +2% max HP heal per Blood Orb consumed per level.",
 		effect = {
 			{type = "storage", name = "EruptionMastery", value = 10},
 		},
