@@ -974,6 +974,12 @@ AttachedEffectManager.register(846, 'Blood Plague', 1576, ThingCategoryEffect, {
     offset = { -15, -15, true },
 })
 
+AttachedEffectManager.register(847, 'Blood Curse', 1206, ThingCategoryEffect, {
+    speed = 0.75,
+    duration = 6000,
+    offset = { 0, 0, true },
+})
+
 AttachedEffectManager.register(115, 'carnivorous vile', 446, ThingCategoryEffect, {
     speed = 1.3,
     loop = 1,
