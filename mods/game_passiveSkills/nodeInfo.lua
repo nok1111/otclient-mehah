@@ -2455,7 +2455,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:32"] = {
 		name = "Sanguine Strike",
-		description = "Exsanguinate generates 1 Blood Orb per level on cast and HP cost reduced by 2% per level.",
+		description = "Exsanguinate HP cost -1% per level, lifesteal +5% per level. On kill or execute, refund 1 Blood Orb per level.",
 		effect = {
 			{type = "storage", name = "SanguineStrike", value = 1},
 		},
