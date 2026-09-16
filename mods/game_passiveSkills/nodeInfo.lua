@@ -2371,7 +2371,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:5"] = {
 		name = "Blood Plague",
-		description = "Learn the spell Blood Plague. Infect a target with a spreading blood plague: death damage DoT that spreads to one nearby enemy per tick. Each infected target counts as a bleed for Blood Eruption. 10s cooldown.",
+		description = "Learn the spell Blood Plague. Curse your target with a spreading blood plague that leaves a bleeding wound dealing death damage over 8 seconds. Each tick spreads the plague to one nearby uninfected enemy within 3 tiles. Infected targets count as bleeding for Blood Eruption and other bleed synergies. 10s cooldown.",
 		effect = {
 			{type = "spell", name = "Blood Plague"},
 			{type = "storage", name = "CrimsonRain", value = 1},
