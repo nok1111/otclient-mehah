@@ -2363,7 +2363,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:4"] = {
 		name = "Blood Curse",
-		description = "Learn the spell Blood Curse. Strike your target with strong death damage, heal yourself, and amplify all existing bleeds on the target by 50%. Also applies a curse bleed (5 ticks, 30% heal). 12s cooldown.",
+		description = "Learn the spell Blood Curse. Infect a target with a powerful death damage DoT for 6 seconds that heals you for 30% of damage dealt. While cursed, the target takes +25% damage from ALL damage-over-time effects (any class). 12s cooldown.",
 		effect = {
 			{type = "spell", name = "Blood Curse"},
 			{type = "storage", name = "BloodCurse", value = 1},
