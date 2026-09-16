@@ -263,16 +263,7 @@ SpelllistSettings = {
       'Haste',
       'Levitate',
       'Light',
-      'Light Healing',
       'Magic Rope',
-      'Protect Party',
-      'Protector',
-      'Strong Haste',
-      'Train Party',
-      'Kings Call',
-      'Protection',
-      'Shield Bash',
-      'Sphere',
 
      
      
@@ -529,16 +520,7 @@ SpellInfo = {
     ['Haste'] = {id = 211, words = 'utani hur', icon = 211, description = 'Increases movement speed for a short duration.', exhaustion = 2000, premium = false, type = 'Instant', mana = 60, level = 14, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}},
     ['Levitate'] = {id = 212, words = 'exani hur', icon = 212, description = 'Allows the caster to move up or down floors.', exhaustion = 2000, premium = false, type = 'Instant', mana = 50, level = 12, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}},
     ['Light'] = {id = 213, words = 'utevo lux', icon = 213, description = 'Creates a light source around the caster.', exhaustion = 2000, premium = false, type = 'Instant', mana = 20, level = 8, soul = 0, group = {[2] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}},
-    ['Light Healing'] = {id = 214, words = 'exura', icon = 214, description = 'Heal yourself for a small amount based on your magic level.', exhaustion = 1000, premium = false, type = 'Instant', mana = 20, level = 1, soul = 0, group = {[2] = 1900}, vocations = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}},
     ['Magic Rope'] = {id = 215, words = 'exani tera', icon = 215, description = 'Use magic to climb up from a rope spot.', exhaustion = 2000, premium = false, type = 'Instant', mana = 20, level = 8, soul = 0, group = {[3] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}},
-    ['Protect Party'] = {id = 216, words = 'utamo mas sio', icon = 216, description = 'Increase fist and shield skills of you and your party members by 3 for 2 minutes.', exhaustion = 2000, premium = false, type = 'Instant', mana = 90, level = 32, soul = 0, group = {[3] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}},
-    ['Protector'] = {id = 217, words = 'utamo tempo', icon = 217, description = 'Increase your defense and max health for a period of time.', exhaustion = 2000, premium = false, type = 'Instant', mana = 200, level = 55, soul = 0, group = {[3] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}},
-    ['Strong Haste'] = {id = 218, words = 'utani gran hur', icon = 218, description = 'Increases movement speed for a longer duration.', exhaustion = 2000, premium = false, type = 'Instant', mana = 100, level = 40, soul = 0, group = {[3] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}},
-    ['Train Party'] = {id = 219, words = 'utito mas sio', icon = 219, description = 'Increase magic level of you and your party members by 1 for 2 minutes.', exhaustion = 2000, premium = false, type = 'Instant', mana = 60, level = 32, soul = 0, group = {[3] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}},
-    ['Kings Call'] = {id = 221, words = 'kings call', icon = 221, description = 'Teleport to your hometown.', exhaustion = 3600000, premium = false, type = 'Instant', mana = 0, level = 1, soul = 0, group = {[3] = 2000}, vocations = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}, needLearn = true},
-    ['Protection'] = {id = 204, words = 'protection', icon = 204, description = 'Increase your defense for 3.5 seconds. Requires a shield.', exhaustion = 25000, premium = false, type = 'Instant', mana = 50, level = 50, soul = 0, group = {[3] = 1100}, vocations = {2,4}},
-    ['Shield Bash'] = {id = 205, words = 'shield bash', icon = 205, description = 'Bash your target with your shield dealing physical damage and stunning it for 3 seconds. Requires a shield.', exhaustion = 15000, premium = false, type = 'Instant', mana = 65, level = 25, soul = 0, group = {[3] = 12000}, vocations = {2,4}},
-    ['Sphere'] = {id = 206, words = 'sphere', icon = 206, description = 'Create an energy sphere around you dealing energy damage to nearby enemies.', exhaustion = 10000, premium = false, type = 'Instant', mana = 100, level = 100, soul = 0, group = {[3] = 1100}, vocations = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}},
 
 
     --Samurai
