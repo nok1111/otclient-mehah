@@ -70,7 +70,6 @@ SpelllistSettings = {
       'Ice Wall',
       'Ice Clones',
       'Eruption',
-      'Ice Tomb',
 
       --warlock
       'Zombie Wall',
@@ -392,7 +391,6 @@ SpellInfo = {
     ['Ice Wall'] = {id = 56, words = 'ice wall', icon = 56, description = 'create a ice wall wich extends horizontally blocking paths and enemies.', exhaustion = 12000, premium = false, type = 'Instant', mana = 200, level = 70, soul = 0, group = {[3] = 1900}, vocations = {1}},
     ['Ice Clones'] = {id = 57, words = 'ice clones', icon = 57, description = 'create a 4 clones of yourself wich will follow you and deal ice damage to enemies.', exhaustion = 70000, premium = false, type = 'Instant', mana = 350, level = 1, soul = 0, group = {[1] = 1900}, vocations = {1}, needLearn = true},
     ['Eruption'] = {id = 58, words = 'eruption', icon = 58, description = 'prepare a area for eruption, wich explodes after a quick delay dealing fire damage to all enemies reached.', exhaustion = 4000, premium = false, type = 'Instant', mana = 140, level = 60, soul = 0, group = {[1] = 1900}, vocations = {1}},
-    ['Ice Tomb'] = {id = 59, words = 'ice tomb', icon = 59, description = 'trap your target in a ring of ice for 5 seconds.', exhaustion = 4000, premium = false, type = 'Instant', mana = 10, level = 1019, soul = 0, group = {[1] = 1900}, vocations = {1}, range = 5},
     
     --Warlock
     ['Zombie Wall'] = {id = 61, words = 'zombie wall', icon = 61, description = 'create a zombie wall wich extends horizontally 2 tiles from your current position.', exhaustion = 20000, premium = false, type = 'Instant', mana = 80, level = 1, soul = 0, group = {[3] = 1900}, vocations = {5}, needLearn = true},
