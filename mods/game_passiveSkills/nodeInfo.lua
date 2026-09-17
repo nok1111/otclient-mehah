@@ -2530,6 +2530,102 @@ PassiveSkills.nodeInfo = {
 			{type = "storage", name = "EternalThirst", value = 1},
 		},
 	},
+	["14:40"] = {
+		name = "Blood Combat",
+		description = "+2% physical and death damage per level.",
+		effect = {
+			{type = "storage", name = "BloodCombat", value = 2},
+		},
+	},
+	["14:41"] = {
+		name = "Combat Path",
+		description = "Choose your combat specialization.",
+	},
+	["14:42"] = {
+		name = "Martial Blood",
+		description = "Increase your Melee Skill by 30% of your Magic Level. Your combat becomes martial-focused. Subsequent talents enhance melee combat.",
+		effect = {
+			{type = "storage", name = "MartialBlood", value = 1},
+		},
+	},
+	["14:43"] = {
+		name = "Arcane Blood",
+		description = "Increase your Arcana Skill (Axe Skill) by 30% of your Magic Level. Your combat remains arcane-focused. Subsequent talents enhance wand/caster combat.",
+		effect = {
+			{type = "storage", name = "ArcaneBlood", value = 1},
+		},
+	},
+	["14:44"] = {
+		name = "Bloodbound Combat",
+		description = "Your melee and wand attacks have a chance to deal extra death damage based on your max health (0.2% per level).",
+		effect = {
+			{type = "storage", name = "BloodboundCombat", value = 10},
+		},
+	},
+	["14:45"] = {
+		name = "Tempo Path",
+		description = "Choose your combat tempo.",
+	},
+	["14:46"] = {
+		name = "Blood Walk",
+		description = "Learn the spell Blood Walk. Blink to a nearby tile, leaving a blood trail that damages enemies.",
+		effect = {
+			{type = "spell", name = "Blood Walk"},
+		},
+	},
+	["14:47"] = {
+		name = "Crimson Chains",
+		description = "Learn the spell Crimson Chains. Tether nearby enemies with blood chains, rooting and damaging them.",
+		effect = {
+			{type = "spell", name = "Crimson Chains"},
+		},
+	},
+	["14:48"] = {
+		name = "Vampiric Bites",
+		description = "Your melee or wand attacks have 10% chance per level to restore 1% of your total health per level.",
+		effect = {
+			{type = "storage", name = "CombatMomentum", value = 10},
+		},
+	},
+	["14:52"] = {
+		name = "Crimson Flow",
+		description = "+3% attack speed and +3% wand damage per level.",
+		effect = {
+			{type = "storage", name = "CrimsonFlow", value = 3},
+		},
+	},
+	["14:53"] = {
+		name = "Overdrive Path",
+		description = "Choose your combat overdrive.",
+	},
+	["14:54"] = {
+		name = "Martial Overdrive",
+		description = "Melee attacks gain +10% of your Magic Level as bonus physical damage. Blood spells gain +10% damage for 5s after a melee kill.",
+		effect = {
+			{type = "storage", name = "MartialOverdrive", value = 1},
+		},
+	},
+	["14:55"] = {
+		name = "Arcane Overdrive",
+		description = "Wand attacks gain +10% of your Magic Level as bonus death damage. Blood spells gain +10% damage for 5s after a wand kill. Wand attacks generate 1 Blood Essence.",
+		effect = {
+			{type = "storage", name = "ArcaneOverdrive", value = 1},
+		},
+	},
+	["14:56"] = {
+		name = "Blood Surge",
+		description = "Martial: melee damage from Magic Level +5% per level, +1% attack speed burst per level on kill. Arcane: wand damage from Magic Level +5% per level, +1 Blood Essence per wand hit per level.",
+		effect = {
+			{type = "storage", name = "BloodSurge", value = 5},
+		},
+	},
+	["14:57"] = {
+		name = "Crimson Unity",
+		description = "Your physical and magical power become one. All Blood Mage spell damage scales with the higher of your Melee Skill or Arcana Skill. Blood Frenzy also grants +15% attack speed and +15% cast speed.",
+		effect = {
+			{type = "storage", name = "CrimsonUnity", value = 1},
+		},
+	},
 	["15:0"] = {
 		name = "Nature's Guardian",
 		description = "+2% max HP. When you apply an Elemental Mark, gain 1 stack of Guardian's Resolve (max 5). Each stack: +1% damage and +1% shield strength. Stacks decay after 8s of no mark application.",
