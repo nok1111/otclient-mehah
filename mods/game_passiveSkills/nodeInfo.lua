@@ -2589,7 +2589,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:52"] = {
 		name = "Crimson Flow",
-		description = "+3% attack speed and +3% wand damage per level.",
+		description = "+3% attack speed per level. Melee and wand attacks generate 1 Blood Essence per level.",
 		effect = {
 			{type = "storage", name = "CrimsonFlow", value = 3},
 		},
