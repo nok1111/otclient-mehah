@@ -2596,7 +2596,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:57"] = {
 		name = "Crimson Unity",
-		description = "Your physical and magical power become one. All Blood Mage spell damage scales with the higher of your Melee Skill or Arcana Skill. Blood Frenzy also grants +15% attack speed and +15% cast speed.",
+		description = "Your physical and magical power become one. All Blood Mage spell damage scales with the higher of your Melee Skill or Arcana Skill. Blood Frenzy also grants +15% attack speed.",
 		effect = {
 			{type = "storage", name = "CrimsonUnity", value = 1},
 		},
