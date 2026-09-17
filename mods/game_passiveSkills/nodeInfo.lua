@@ -2594,31 +2594,6 @@ PassiveSkills.nodeInfo = {
 			{type = "storage", name = "CrimsonFlow", value = 3},
 		},
 	},
-	["14:53"] = {
-		name = "Overdrive Path",
-		description = "Choose your combat overdrive.",
-	},
-	["14:54"] = {
-		name = "Martial Overdrive",
-		description = "Melee attacks gain +10% of your Magic Level as bonus physical damage. Blood spells gain +10% damage for 5s after a melee kill.",
-		effect = {
-			{type = "storage", name = "MartialOverdrive", value = 1},
-		},
-	},
-	["14:55"] = {
-		name = "Arcane Overdrive",
-		description = "Wand attacks gain +10% of your Magic Level as bonus death damage. Blood spells gain +10% damage for 5s after a wand kill. Wand attacks generate 1 Blood Essence.",
-		effect = {
-			{type = "storage", name = "ArcaneOverdrive", value = 1},
-		},
-	},
-	["14:56"] = {
-		name = "Blood Surge",
-		description = "Martial: melee damage from Magic Level +5% per level, +1% attack speed burst per level on kill. Arcane: wand damage from Magic Level +5% per level, +1 Blood Essence per wand hit per level.",
-		effect = {
-			{type = "storage", name = "BloodSurge", value = 5},
-		},
-	},
 	["14:57"] = {
 		name = "Crimson Unity",
 		description = "Your physical and magical power become one. All Blood Mage spell damage scales with the higher of your Melee Skill or Arcana Skill. Blood Frenzy also grants +15% attack speed and +15% cast speed.",
