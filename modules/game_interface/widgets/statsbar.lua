@@ -37,6 +37,10 @@ local currentStats = {
     placement = "hide"
 }
 
+local hiddenStates = {
+    [PlayerStates.PartyBuff] = true,
+}
+
 local skillsLineHeight = 20
 local skillsTuples = {
     {skill = nil,               key = 'experience', icon = '/images/icons/icon_experience',  placement = 'center',   order = 0,  name = "Level"},
@@ -281,6 +285,10 @@ local function getStatsBarsIconContent()
 end
 
 local function toggleIcon(bitChanged)
+    if hiddenStates[bitChanged] then
+        return
+    end
+
     local contents = getStatsBarsIconContent()
 
     local iconId = Icons[bitChanged]
