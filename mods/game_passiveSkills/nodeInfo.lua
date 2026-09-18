@@ -2575,7 +2575,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:47"] = {
 		name = "Crimson Chains",
-		description = "Learn the spell Crimson Chains. Tether nearby enemies with blood chains, rooting and damaging them.",
+		description = "Learn the spell Crimson Chains. Tether nearby enemies with blood chains, rooting and cursing them for 3 seconds.",
 		effect = {
 			{type = "spell", name = "Crimson Chains"},
 		},

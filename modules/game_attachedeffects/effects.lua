@@ -968,17 +968,7 @@ AttachedEffectManager.register(114, 'Insect swarm', 503, ThingCategoryEffect, {
     offset = { -15, -15, true },
 })
 
-AttachedEffectManager.register(846, 'Blood Plague', 1576, ThingCategoryEffect, {
-    speed = 1,
-    duration = 8000,
-    offset = { -15, -15, true },
-})
 
-AttachedEffectManager.register(847, 'Blood Curse', 1206, ThingCategoryEffect, {
-    speed = 0.75,
-    duration = 6000,
-    offset = { 0, 0, true },
-})
 
 AttachedEffectManager.register(115, 'carnivorous vile', 446, ThingCategoryEffect, {
     speed = 1.3,
@@ -5590,4 +5580,47 @@ AttachedEffectManager.register(845, 'frozen rain west', 639, ThingCategoryEffect
     speed = 1,
     offset = { 0, 0, true },
     shader = 'frost armor',
+})
+
+AttachedEffectManager.register(846, 'Blood Plague', 1443, ThingCategoryEffect, {
+    speed = 0.5,
+    duration = 8000,
+    offset = { 0, 0, true },
+    --shader = 'Ashes',
+})
+
+AttachedEffectManager.register(847, 'Blood Curse', 1576, ThingCategoryEffect, {
+    speed = 1.1,
+    duration = 6000,
+    offset = { -15, -15, true },
+})
+
+-- Crimson Chains (Blood Mage): chain sprites tinted red, played randomly
+-- once per second on rooted/cursed targets
+AttachedEffectManager.register(848, 'crimson chains 1', 825, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.8,
+    offset = { -128, -128, true },
+    shader = 'Red Glow',
+})
+
+AttachedEffectManager.register(849, 'crimson chains 2', 826, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.8,
+    offset = { -128, -128, true },
+    shader = 'Red Glow',
+})
+
+AttachedEffectManager.register(850, 'crimson chains 3', 827, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.8,
+    offset = { -128, -128, true },
+    shader = 'Red Glow',
+})
+
+AttachedEffectManager.register(851, 'crimson chains 4', 828, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.8,
+    offset = { -128, -128, true },
+    shader = 'Red Glow',
 })
