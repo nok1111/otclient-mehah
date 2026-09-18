@@ -2338,7 +2338,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:0"] = {
 		name = "Sanguine Heritage",
-		description = "Blood is power. Increases your Magic Level by 1 point for each 100 max health points.",
+		description = "Blood is power. Increases your Magic Level by 1 point for each 200 max health points.",
 		effect = {
 			{type = "condition", name = "Magic Level", value = 1},
 		},
