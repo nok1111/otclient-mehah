@@ -2568,7 +2568,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["14:46"] = {
 		name = "Blood Walk",
-		description = "Learn the spell Blood Walk. Blink to a nearby tile, leaving a blood trail that damages enemies.",
+		description = "Learn the spell Blood Walk. Teleport to a nearby bleeding target within 6 tiles, dealing AoE damage on arrival. Consumes a Blood Orb for +50% damage and applies bleed to nearby enemies.",
 		effect = {
 			{type = "spell", name = "Blood Walk"},
 		},
