@@ -117,12 +117,7 @@ OUTFIT_SHADERS = { {
     name = 'Outfit - Warden Frost Aura',
     frag = 'shaders/fragment/warden_frost_aura.frag'
 },
-{
-    name = 'Outfit - Stoneform',
-    frag = 'shaders/fragment/stoneform.frag',
-    tex1 = '/images/shaders/rock1.jpg',
-    drawColor = false
-},
+
 
  {      name = 'Aura',
         frag = 'shaders/fragment/radialblur.frag',
@@ -201,6 +196,13 @@ OUTFIT_SHADERS = { {
     {name = 'Golden', frag = 'shaders/fragment/creature_texture_sample.frag', tex1 = '/images/shaders/golden.png', drawColor = false},
     {name = 'Slime', frag = 'shaders/fragment/creature_texture_zoom.frag', tex1 = '/images/shaders/slime.png', drawColor = false},
     {name = 'Sky', frag = 'shaders/fragment/creature_texture_zoom.frag', tex1 = '/images/shaders/sky.png', drawColor = false},
+
+    {
+    name = 'Outfit - Stoneform',
+    frag = 'shaders/fragment/stoneform.frag',
+    tex1 = '/images/shaders/rock1.png',
+    drawColor = false
+},
 
 
 
