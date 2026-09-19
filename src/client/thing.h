@@ -212,14 +212,15 @@ public:
     uint8_t getPatternZ()const { return m_numPatternZ; }
 
     float getScaleFactor() {
-        if (m_scale.value == 100)
-            return 1.f;
+        if (m_scale.speed == 0)
+            return m_scale.value / 100.f;
 
-        const auto scale = m_scale.value * (m_scale.speed == 0 ? 1.f : m_scale.timer.ticksElapsed() / static_cast<float>(m_scale.speed));
-        return std::min<float>(scale, m_scale.value) / 100.f;
+        const auto progress = std::min<float>(m_scale.timer.ticksElapsed() / static_cast<float>(m_scale.speed), 1.f);
+        return (m_scale.from + (m_scale.value - m_scale.from) * progress) / 100.f;
     }
 
     void setScaleFactor(float v, uint16_t ms = 0) {
+        m_scale.from = getScaleFactor() * 100.f;
         m_scale.value = v * 100;
         m_scale.speed = ms;
         m_scale.timer.restart();
@@ -251,6 +252,7 @@ protected:
         Timer timer;
         uint16_t speed{ 0 };
         uint16_t value{ 100 };
+        float from{ 100.f };
     } m_scale;
 
     Position m_position;

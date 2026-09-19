@@ -33,36 +33,49 @@ end
 -- instead of snapping back to 1.0. Contributions stack additively:
 -- two x1.5 effects -> 1 + 0.5 + 0.5 = 2.0. (For multiplicative
 -- stacking, change the sum below to scale * mult.)
+--
+-- NOTE: owner/effect arrive as fresh userdata wrappers on every C++
+-- push, so they cannot be used as table keys. State lives in the
+-- objects' Lua fields tables (stored on the C++ object itself), which
+-- do persist across wrappers.
 -- =============================================================
-local creatureScaleStack = setmetatable({}, { __mode = 'k' }) -- owner -> { [effect] = mult }
 
 local function applyCreatureScale(owner, ms)
-    local contributions = creatureScaleStack[owner]
+    local stack = owner._scaleStack
     local scale = 1.0
-    if contributions then
-        for _effect, mult in pairs(contributions) do
-            scale = scale + (mult - 1.0)
+    if stack then
+        for _i, entry in ipairs(stack) do
+            scale = scale + (entry.mult - 1.0)
         end
     end
     owner:setScaleFactor(scale, ms or 0)
 end
 
 local function addCreatureScale(effect, owner, mult, ms)
-    local contributions = creatureScaleStack[owner]
-    if not contributions then
-        contributions = {}
-        creatureScaleStack[owner] = contributions
+    local stack = owner._scaleStack
+    if not stack then
+        stack = {}
+        owner._scaleStack = stack
     end
-    contributions[effect] = mult
+    local entry = { mult = mult }
+    stack[#stack + 1] = entry
+    effect._scaleEntry = entry
     applyCreatureScale(owner, ms)
 end
 
 local function removeCreatureScale(effect, owner, ms)
-    local contributions = creatureScaleStack[owner]
-    if contributions then
-        contributions[effect] = nil
-        if not next(contributions) then
-            creatureScaleStack[owner] = nil
+    local stack = owner._scaleStack
+    local entry = effect._scaleEntry
+    if stack and entry then
+        for i, e in ipairs(stack) do
+            if e == entry then
+                table.remove(stack, i)
+                break
+            end
+        end
+        effect._scaleEntry = nil
+        if #stack == 0 then
+            owner._scaleStack = nil
         end
     end
     applyCreatureScale(owner, ms)
