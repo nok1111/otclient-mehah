@@ -2612,7 +2612,7 @@ PassiveSkills.nodeInfo = {
 		name = "Earth Power",
 		description = "+3% earth damage per level.",
 		effect = {
-			{type = "condition", name = "Physical Damage", value = 3},
+			{type = "condition", name = "Earth Damage", value = 3},
 		},
 	},
 	["15:2"] = {
@@ -2635,7 +2635,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:5"] = {
 		name = "Seismic Slam",
-		description = "Learn the spell Seismic Slam. Leap to a target location (5 tiles), dealing earth damage in 3x3 on impact. If you have Earth Mark, consume it to stun all hit enemies for 2s and create a Fissure on the landing spot for 5s. 8s cooldown.",
+		description = "Learn the spell Seismic Slam. Leap to a target location (5 tiles), dealing earth damage in a cross area on impact. If you have Earth Mark, consume it to stun all hit enemies for 2s and create a Fissure on the landing spot for 5s that deals earth damage to enemies standing on it. 8s cooldown.",
 		effect = {
 			{type = "storage", name = "SeismicSlam", value = 1},
 		},
@@ -2726,6 +2726,7 @@ PassiveSkills.nodeInfo = {
 		description = "+2% movement speed per level. After casting any spell, your next melee attack within 3s deals +15% damage per level and applies both Earth and Frost Mark.",
 		effect = {
 			{type = "storage", name = "NaturesSwiftness", value = 15},
+			{type = "condition", name = "Speed", value = 20},
 		},
 	},
 	["15:23"] = {
@@ -2734,7 +2735,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:24"] = {
 		name = "Root Grasp",
-		description = "Learn the spell Root Grasp. Root a target for 3s. If the target has Earth Mark, consume it: root spreads to all enemies within 2 tiles and duration becomes 5s. Rooted enemies take +15% damage. 10s cooldown.",
+		description = "Learn the spell Root Grasp. Root a target for 3s. If you have Earth Mark, consume it: root spreads to all enemies within 2 tiles and duration becomes 5s. Rooted enemies take +15% damage from all sources. 10s cooldown.",
 		effect = {
 			{type = "storage", name = "RootGrasp", value = 1},
 		},
@@ -2755,7 +2756,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:27"] = {
 		name = "Sanctuary Mastery",
-		description = "Verdant Sanctuary duration +2s per level. Final explosion damage +15% per level and applies Earth Mark to all enemies hit.",
+		description = "Verdant Sanctuary duration +2s per level. Final explosion damage +15% per level and grants you Earth Mark.",
 		effect = {
 			{type = "storage", name = "SanctuaryMastery", value = 15},
 		},
@@ -2769,7 +2770,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:30"] = {
 		name = "Elemental Harmony",
-		description = "When you consume an Earth Mark, gain Frost Charge for 5s: next Frost spell deals +40% damage. When you consume a Frost Mark, gain Earth Charge for 5s: next Earth spell deals +40% damage and its shield/heal is empowered by 40%.",
+		description = "When you consume an Earth Mark, gain Frost Charge for 5s: next Frost spell deals +40% damage and applies Frost Mark. When you consume a Frost Mark, gain Earth Charge for 5s: next Earth spell deals +40% damage and its shield/heal is empowered by 40%.",
 		effect = {
 			{type = "storage", name = "ElementalHarmony", value = 1},
 		},
