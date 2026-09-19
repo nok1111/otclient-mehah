@@ -26,6 +26,48 @@ local function safeAddTileEffect(owner, effectId)
     tile:addThing(e)
 end
 
+-- =============================================================
+-- Shared creature scale stack
+-- Each attached effect registers a scale multiplier; when one expires,
+-- the owner's scale is recomputed from the remaining active effects
+-- instead of snapping back to 1.0. Contributions stack additively:
+-- two x1.5 effects -> 1 + 0.5 + 0.5 = 2.0. (For multiplicative
+-- stacking, change the sum below to scale * mult.)
+-- =============================================================
+local creatureScaleStack = setmetatable({}, { __mode = 'k' }) -- owner -> { [effect] = mult }
+
+local function applyCreatureScale(owner, ms)
+    local contributions = creatureScaleStack[owner]
+    local scale = 1.0
+    if contributions then
+        for _effect, mult in pairs(contributions) do
+            scale = scale + (mult - 1.0)
+        end
+    end
+    owner:setScaleFactor(scale, ms or 0)
+end
+
+local function addCreatureScale(effect, owner, mult, ms)
+    local contributions = creatureScaleStack[owner]
+    if not contributions then
+        contributions = {}
+        creatureScaleStack[owner] = contributions
+    end
+    contributions[effect] = mult
+    applyCreatureScale(owner, ms)
+end
+
+local function removeCreatureScale(effect, owner, ms)
+    local contributions = creatureScaleStack[owner]
+    if contributions then
+        contributions[effect] = nil
+        if not next(contributions) then
+            creatureScaleStack[owner] = nil
+        end
+    end
+    applyCreatureScale(owner, ms)
+end
+
 AttachedEffectManager.register(1, 'Spoke Lighting', 12, ThingCategoryEffect, {
     speed = 0.5,
     onAttach = function(effect, owner)
@@ -1504,10 +1546,10 @@ AttachedEffectManager.register(179, '[Vampiric]', 2911, ThingCategoryCreature, {
     offset = { -38, -38, true},
 
     onAttach = function(effect, owner)       
-        owner:setScaleFactor(1.4, 1000)
+        addCreatureScale(effect, owner, 1.4, 1000)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 1000)
+        removeCreatureScale(effect, oldOwner, 1000)
     end
     
 })
@@ -1517,10 +1559,10 @@ AttachedEffectManager.register(180, '[Sacred]', 2906, ThingCategoryCreature, {
     speed = 2.5,
     offset = { -38, -38, true},
     onAttach = function(effect, owner)       
-        owner:setScaleFactor(1.4, 1000)
+        addCreatureScale(effect, owner, 1.4, 1000)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 1000)
+        removeCreatureScale(effect, oldOwner, 1000)
     end
     
 })
@@ -1530,10 +1572,10 @@ AttachedEffectManager.register(181, '[Arcane]', 2908, ThingCategoryCreature, {
     speed = 2.5,
     offset = { -38, -38, true},
     onAttach = function(effect, owner)       
-        owner:setScaleFactor(1.4, 1000)
+        addCreatureScale(effect, owner, 1.4, 1000)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 1000)
+        removeCreatureScale(effect, oldOwner, 1000)
     end
     
 })
@@ -1543,10 +1585,10 @@ AttachedEffectManager.register(182, '[Corrosive]', 2907, ThingCategoryCreature, 
     speed = 2.5,
     offset = { -38, -38, true},
     onAttach = function(effect, owner)       
-        owner:setScaleFactor(1.4, 1000)
+        addCreatureScale(effect, owner, 1.4, 1000)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 1000)
+        removeCreatureScale(effect, oldOwner, 1000)
     end    
 })
 
@@ -1556,10 +1598,10 @@ AttachedEffectManager.register(183, '[Frostbound]', 2905, ThingCategoryCreature,
     offset = { -38, -38, true},
     shader = "frost armor",
     onAttach = function(effect, owner)       
-        owner:setScaleFactor(1.4, 1000)
+        addCreatureScale(effect, owner, 1.4, 1000)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 1000)
+        removeCreatureScale(effect, oldOwner, 1000)
     end    
 })
 
@@ -1568,10 +1610,10 @@ AttachedEffectManager.register(184, '[Plagued]', 2907, ThingCategoryCreature, {
     speed = 2.5,
     offset = { -38, -38, true},
     onAttach = function(effect, owner)       
-        owner:setScaleFactor(1.4, 1000)
+        addCreatureScale(effect, owner, 1.4, 1000)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 1000)
+        removeCreatureScale(effect, oldOwner, 1000)
     end    
 })
 
@@ -1580,10 +1622,10 @@ AttachedEffectManager.register(185, '[Burning]', 2902, ThingCategoryCreature, {
     speed = 2.5,
     offset = { -38, -38, true},
     onAttach = function(effect, owner)       
-        owner:setScaleFactor(1.4, 1000)
+        addCreatureScale(effect, owner, 1.4, 1000)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 1000)
+        removeCreatureScale(effect, oldOwner, 1000)
     end    
 })
 
@@ -1592,10 +1634,10 @@ AttachedEffectManager.register(186, '[Reaper]', 2904, ThingCategoryCreature, {
     speed = 2.5,
     offset = { -38, -38, true},
     onAttach = function(effect, owner)       
-        owner:setScaleFactor(1.4, 1000)
+        addCreatureScale(effect, owner, 1.4, 1000)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 1000)
+        removeCreatureScale(effect, oldOwner, 1000)
     end    
 })
 
@@ -1604,10 +1646,10 @@ AttachedEffectManager.register(187, '[Darkness]', 2903, ThingCategoryCreature, {
     speed = 2.5,
     offset = { -38, -38, true},
     onAttach = function(effect, owner)       
-        owner:setScaleFactor(1.4, 1000)
+        addCreatureScale(effect, owner, 1.4, 1000)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 1000)
+        removeCreatureScale(effect, oldOwner, 1000)
     end    
 })
 
@@ -2122,12 +2164,12 @@ AttachedEffectManager.register(249, 'mountain stance', 952, ThingCategoryEffect,
 AttachedEffectManager.register(250, 'Miniaturize', 0, 0, {
     duration = 8000,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(0.5, 300)
+        addCreatureScale(effect, owner, 0.5, 300)
         
         safeAddTileEffect(owner, 53)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 300)
+        removeCreatureScale(effect, oldOwner, 300)
         
         safeAddTileEffect(oldOwner, 54)
     end
@@ -2137,11 +2179,11 @@ AttachedEffectManager.register(251, 'Growing Rage', 590, ThingCategoryEffect, {
 
     onAttach = function(effect, owner)
         
-        owner:setScaleFactor(1.2, 650)
+        addCreatureScale(effect, owner, 1.2, 650)
         owner:setShader('Monster Might')
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         oldOwner:setShader('Outfit - Default')
     end
 })
@@ -2153,12 +2195,12 @@ AttachedEffectManager.register(252, 'Titan Form', 497, ThingCategoryEffect, {
     shader = 'Monster Might',
     onAttach = function(effect, owner)
         
-        owner:setScaleFactor(2.0, 1000)
+        addCreatureScale(effect, owner, 2.0, 1000)
         
         safeAddTileEffect(owner, 497)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 1000)
+        removeCreatureScale(effect, oldOwner, 1000)
         
         safeAddTileEffect(oldOwner, 497)
     end
@@ -2167,23 +2209,23 @@ AttachedEffectManager.register(252, 'Titan Form', 497, ThingCategoryEffect, {
 AttachedEffectManager.register(253, 'Tiny Creature (dwarf)', 0, 0, {
     duration = 5000,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(0.75, 400)
+        addCreatureScale(effect, owner, 0.75, 400)
        -- owner:setBounce(10, 5, 2000)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 400)
+        removeCreatureScale(effect, oldOwner, 400)
         --oldOwner:setBounce(0, 0)
     end
 })
 AttachedEffectManager.register(254, 'Size +5%', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.05, 500)
+        addCreatureScale(effect, owner, 1.05, 500)
         
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         
         safeAddTileEffect(oldOwner, 50)
     end
@@ -2192,12 +2234,12 @@ AttachedEffectManager.register(254, 'Size +5%', 0, 0, {
 AttachedEffectManager.register(255, 'Size +10%', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.10, 500)
+        addCreatureScale(effect, owner, 1.10, 500)
         
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         
         safeAddTileEffect(oldOwner, 50)
     end
@@ -2206,12 +2248,12 @@ AttachedEffectManager.register(255, 'Size +10%', 0, 0, {
 AttachedEffectManager.register(256, 'Size +15%', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.15, 500)
+        addCreatureScale(effect, owner, 1.15, 500)
         
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         
         safeAddTileEffect(oldOwner, 50)
     end
@@ -2220,12 +2262,12 @@ AttachedEffectManager.register(256, 'Size +15%', 0, 0, {
 AttachedEffectManager.register(257, 'Size +20%', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.20, 500)
+        addCreatureScale(effect, owner, 1.20, 500)
         
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         
         safeAddTileEffect(oldOwner, 50)
     end
@@ -2234,12 +2276,12 @@ AttachedEffectManager.register(257, 'Size +20%', 0, 0, {
 AttachedEffectManager.register(258, 'Size +25%', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.25, 500)
+        addCreatureScale(effect, owner, 1.25, 500)
         
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         
         safeAddTileEffect(oldOwner, 50)
     end
@@ -2248,12 +2290,12 @@ AttachedEffectManager.register(258, 'Size +25%', 0, 0, {
 AttachedEffectManager.register(259, 'Size +30%', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.30, 500)
+        addCreatureScale(effect, owner, 1.30, 500)
         
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         
         safeAddTileEffect(oldOwner, 50)
     end
@@ -2262,12 +2304,12 @@ AttachedEffectManager.register(259, 'Size +30%', 0, 0, {
 AttachedEffectManager.register(260, 'Size +35%', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.35, 500)
+        addCreatureScale(effect, owner, 1.35, 500)
         
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         
         safeAddTileEffect(oldOwner, 50)
     end
@@ -2276,12 +2318,12 @@ AttachedEffectManager.register(260, 'Size +35%', 0, 0, {
 AttachedEffectManager.register(261, 'Size +40%', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.40, 500)
+        addCreatureScale(effect, owner, 1.40, 500)
         
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         
         safeAddTileEffect(oldOwner, 50)
     end
@@ -2290,12 +2332,12 @@ AttachedEffectManager.register(261, 'Size +40%', 0, 0, {
 AttachedEffectManager.register(262, 'Size +45%', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.45, 500)
+        addCreatureScale(effect, owner, 1.45, 500)
         
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         
         safeAddTileEffect(oldOwner, 50)
     end
@@ -2304,12 +2346,12 @@ AttachedEffectManager.register(262, 'Size +45%', 0, 0, {
 AttachedEffectManager.register(263, 'Size +50%', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.50, 500)
+        addCreatureScale(effect, owner, 1.50, 500)
         
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         
         safeAddTileEffect(oldOwner, 50)
     end
@@ -4664,11 +4706,11 @@ AttachedEffectManager.register(398, 'Growing Rage', 590, ThingCategoryEffect, {
 
     onAttach = function(effect, owner)
         
-        owner:setScaleFactor(1.5, 650)
+        addCreatureScale(effect, owner, 1.5, 650)
         owner:setShader('Monster Might')
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         oldOwner:setShader('Outfit - Default')
     end
 })
@@ -4705,33 +4747,33 @@ AttachedEffectManager.register(401, 'parasite', 899, ThingCategoryEffect, {
 AttachedEffectManager.register(600, 'Vulcanys Phase 1', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.0, 500)
+        addCreatureScale(effect, owner, 1.0, 500)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
     end
 })
 
 AttachedEffectManager.register(601, 'Vulcanys Phase 2', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.4, 800)
+        addCreatureScale(effect, owner, 1.4, 800)
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
     end
 })
 
 AttachedEffectManager.register(602, 'Vulcanys Phase 3', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.8, 800)
+        addCreatureScale(effect, owner, 1.8, 800)
         owner:setShader('Red Flames')
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         oldOwner:setShader('Outfit - Default')
     end
 })
@@ -4739,12 +4781,12 @@ AttachedEffectManager.register(602, 'Vulcanys Phase 3', 0, 0, {
 AttachedEffectManager.register(603, 'Vulcanys Phase 4', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(2.3, 1000)
+        addCreatureScale(effect, owner, 2.3, 1000)
         owner:setShader('Red Flames')
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         oldOwner:setShader('Outfit - Default')
     end
 })
@@ -4752,12 +4794,12 @@ AttachedEffectManager.register(603, 'Vulcanys Phase 4', 0, 0, {
 AttachedEffectManager.register(604, 'Vulcanys Phase 5 (Enrage)', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(3.0, 1200)
+        addCreatureScale(effect, owner, 3.0, 1200)
         owner:setShader('Red Flames')
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         oldOwner:setShader('Outfit - Default')
     end
 })
@@ -4775,23 +4817,23 @@ AttachedEffectManager.register(605, 'Vulcanys Chain Seal', 1227, ThingCategoryEf
 AttachedEffectManager.register(610, 'Drakkomir Empowered (Phase 2)', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.3, 800)
+        addCreatureScale(effect, owner, 1.3, 800)
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
     end
 })
 
 AttachedEffectManager.register(611, 'Drakkomir Enrage (Phase 3)', 0, 0, {
     permanent = true,
     onAttach = function(effect, owner)
-        owner:setScaleFactor(1.6, 1000)
+        addCreatureScale(effect, owner, 1.6, 1000)
         owner:setShader('Blueveins')
         safeAddTileEffect(owner, 7)
     end,
     onDetach = function(effect, oldOwner)
-        oldOwner:setScaleFactor(1.0, 500)
+        removeCreatureScale(effect, oldOwner, 500)
         oldOwner:setShader('Outfit - Default')
     end
 })
@@ -5209,11 +5251,11 @@ AttachedEffectManager.register(650, 'Warden Stoneform', 1314, ThingCategoryEffec
     duration = 8000,
     onAttach = function(effect, owner)
         owner:setDrawOutfitColor(false)
-        owner:setScaleFactor(1.5, 800)
+        addCreatureScale(effect, owner, 1.5, 800)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setDrawOutfitColor(true)
-        oldOwner:setScaleFactor(1.0, 800)
+        removeCreatureScale(effect, oldOwner, 800)
     end
 })
 
