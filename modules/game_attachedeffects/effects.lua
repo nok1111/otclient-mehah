@@ -5201,6 +5201,20 @@ AttachedEffectManager.register(660, 'Warden Frost Aura', 1314, ThingCategoryEffe
     offset = { -18, -20, true }
 })
 
+-- Warden Stoneform: the effect sprite stays invisible; it only carries the
+-- ownerShader that turns the creature into rock for the buff duration.
+AttachedEffectManager.register(650, 'Warden Stoneform', 1314, ThingCategoryEffect, {
+    ownerShader = 'Outfit - Stoneform',
+    opacity = 0,
+    duration = 8000,
+    onAttach = function(effect, owner)
+        owner:setDrawOutfitColor(false)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setDrawOutfitColor(true)
+    end
+})
+
 -- =============================================================
 -- Distance effects (travel from caster to each target)
 -- Sent from the server with: creature:attachDistanceEffectWithTargets(effectId, {targetId1, targetId2, ...})
@@ -5633,4 +5647,30 @@ AttachedEffectManager.register(852, 'crimson chains player aura', 1558, ThingCat
     offset = { -23, -20, false },
     size = { 200, 200 }
     --shader = 'Red Glow',
+})
+
+AttachedEffectManager.register(853, 'marked avalanche', 1406, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.0,
+    offset = { -110, -110, false },
+   -- size = { 200, 200 }
+    --shader = 'Red Glow',
+})
+
+AttachedEffectManager.register(854, 'not marked avalanche', 1361, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1.0,
+    offset = { -100, -110, false},
+    size = { 140, 140 }
+   -- shader = 'Zaphire',
+    
+})
+
+AttachedEffectManager.register(855, 'acalanche stun', 1590, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 1500,
+    speed = 1,
+    offset = { 0, 0, true},
+    
 })

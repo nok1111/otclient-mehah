@@ -117,6 +117,12 @@ OUTFIT_SHADERS = { {
     name = 'Outfit - Warden Frost Aura',
     frag = 'shaders/fragment/warden_frost_aura.frag'
 },
+{
+    name = 'Outfit - Stoneform',
+    frag = 'shaders/fragment/stoneform.frag',
+    tex1 = '/images/shaders/rock1.jpg',
+    drawColor = false
+},
 
  {      name = 'Aura',
         frag = 'shaders/fragment/radialblur.frag',
