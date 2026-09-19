@@ -5209,9 +5209,11 @@ AttachedEffectManager.register(650, 'Warden Stoneform', 1314, ThingCategoryEffec
     duration = 8000,
     onAttach = function(effect, owner)
         owner:setDrawOutfitColor(false)
+        owner:setScaleFactor(1.5, 800)
     end,
     onDetach = function(effect, oldOwner)
         oldOwner:setDrawOutfitColor(true)
+        oldOwner:setScaleFactor(1.0, 800)
     end
 })
 
