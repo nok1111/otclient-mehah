@@ -5189,6 +5189,7 @@ AttachedEffectManager.register(659, 'Warden Earth Aura', 1314, ThingCategoryEffe
     shader = 'Outfit - Warden Earth Aura',
     opacity = 0.7,
     speed = 0.7,
+    duration = 15000,
     offset = { -18, -20, true }
 })
 
@@ -5196,6 +5197,7 @@ AttachedEffectManager.register(660, 'Warden Frost Aura', 1314, ThingCategoryEffe
     shader = 'Outfit - Warden Frost Aura',
     opacity = 0.7,
     speed = 0.7,
+    duration = 15000,
     offset = { -18, -20, true }
 })
 
@@ -5597,30 +5599,38 @@ AttachedEffectManager.register(847, 'Blood Curse', 1576, ThingCategoryEffect, {
 
 -- Crimson Chains (Blood Mage): chain sprites tinted red, played randomly
 -- once per second on rooted/cursed targets
-AttachedEffectManager.register(848, 'crimson chains 1', 825, ThingCategoryEffect, {
+AttachedEffectManager.register(848, 'crimson chains 1', 1346, ThingCategoryEffect, {
     loop = 1,
     speed = 1.8,
-    offset = { -128, -128, true },
-    shader = 'Red Glow',
+    offset = { 0, -25, true },
+    --shader = 'Red Glow',
 })
 
-AttachedEffectManager.register(849, 'crimson chains 2', 826, ThingCategoryEffect, {
+AttachedEffectManager.register(849, 'crimson chains 2', 1348, ThingCategoryEffect, {
     loop = 1,
     speed = 1.8,
-    offset = { -128, -128, true },
-    shader = 'Red Glow',
+    offset = { -32, -45, true },
+   -- shader = 'Red Glow',
 })
 
-AttachedEffectManager.register(850, 'crimson chains 3', 827, ThingCategoryEffect, {
+AttachedEffectManager.register(850, 'crimson chains 3', 1349, ThingCategoryEffect, {
     loop = 1,
     speed = 1.8,
-    offset = { -128, -128, true },
-    shader = 'Red Glow',
+    offset = { -32, 5, true },
+  --  shader = 'Red Glow',
 })
 
-AttachedEffectManager.register(851, 'crimson chains 4', 828, ThingCategoryEffect, {
+AttachedEffectManager.register(851, 'crimson chains 4', 1347, ThingCategoryEffect, {
     loop = 1,
     speed = 1.8,
-    offset = { -128, -128, true },
-    shader = 'Red Glow',
+    offset = { -64, -32, true },
+    --shader = 'Red Glow',
+})
+
+AttachedEffectManager.register(852, 'crimson chains player aura', 1558, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.8,
+    offset = { -23, -20, false },
+    size = { 200, 200 }
+    --shader = 'Red Glow',
 })
