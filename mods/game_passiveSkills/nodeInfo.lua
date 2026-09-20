@@ -2602,10 +2602,10 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["15:0"] = {
-		name = "Nature's Guardian",
-		description = "+2% max HP. When you apply an Elemental Mark, gain 1 stack of Guardian's Resolve (max 5). Each stack: +1% damage and +1% shield strength. Stacks decay after 8s of no mark application, refunding 3% max mana each.",
+		name = "Bulwark Backflow",
+		description = "When a shield is fully absorbed, restore 8% of the absorbed amount as mana.",
 		effect = {
-			{type = "condition", name = "Max Health", value = 2},
+			{type = "storage", name = "BulwarkBackflow", value = 1},
 		},
 	},
 	["15:1"] = {
@@ -2670,7 +2670,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:12"] = {
 		name = "Shield Mastery",
-		description = "All shields +10% per level. When you take damage while a shield is active, restore 0.5% of your max mana per level. (Bulwark Backflow is baseline: fully absorbed shields always return 8% of the absorbed amount as mana.)",
+		description = "All shields +10% per level. When you take damage while a shield is active, restore 0.5% of your max mana per level.",
 		effect = {
 			{type = "storage", name = "ShieldMastery", value = 10},
 			{type = "condition", name = "Shield Power", value = 10},
