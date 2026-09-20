@@ -2656,7 +2656,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:8"] = {
 		name = "Tectonic Wrath",
-		description = "When you consume an Earth Mark, all enemies within 3 tiles take earth damage equal to 5% of your max HP and are knocked back 2 tiles. If this kills a target, instantly refresh Earth Mark on yourself.",
+		description = "When you consume an Earth Mark, all enemies within 3 tiles take earth damage equal to 5% of your max HP and you heal for each enemy hit. If this kills a target, instantly refresh Earth Mark on yourself.",
 		effect = {
 			{type = "storage", name = "TectonicWrath", value = 1},
 		},
