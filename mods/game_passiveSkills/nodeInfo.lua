@@ -2642,7 +2642,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:6"] = {
 		name = "Cleave Mastery",
-		description = "Crystal Cleave has +15% chance per level to apply Earth Mark twice. Crystal Cleave damage +10% per level.",
+		description = "Crystal Cleave has +15% chance per level to apply Earth Mark twice (refreshes duration and gains 1 Guardian's Resolve). Crystal Cleave damage +10% per level.",
 		effect = {
 			{type = "storage", name = "CleaveMastery", value = 15},
 		},
