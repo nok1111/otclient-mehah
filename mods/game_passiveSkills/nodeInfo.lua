@@ -2670,9 +2670,10 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:12"] = {
 		name = "Shield Mastery",
-		description = "All shields +10% per level. When a shield is fully absorbed, gain 1 Guardian's Resolve stack. (Bulwark Backflow is baseline: fully absorbed shields always return 8% of the absorbed amount as mana.)",
+		description = "All shields +10% per level. When you take damage while a shield is active, restore 0.5% of your max mana per level. (Bulwark Backflow is baseline: fully absorbed shields always return 8% of the absorbed amount as mana.)",
 		effect = {
 			{type = "storage", name = "ShieldMastery", value = 10},
+			{type = "condition", name = "Shield Power", value = 10},
 		},
 	},
 	["15:13"] = {
