@@ -2635,7 +2635,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:5"] = {
 		name = "Seismic Slam",
-		description = "Learn the spell Seismic Slam. Leap to a target location (5 tiles), dealing earth damage in a cross area on impact. If you have Earth Mark, consume it to stun all hit enemies for 2s and create a Fissure on the landing spot for 5s that deals earth damage to enemies standing on it. 8s cooldown.",
+		description = "Learn the spell Seismic Slam. Leap to a target location (8 tiles), jumping over enemies, and slam down dealing earth damage in a small area on landing — enemies hit are knocked into the air and stunned for 1s. Consumes Earth Mark to empower the impact (+35%) and create a Fissure on the landing spot for 5s that deals earth damage to enemies standing on it. 8s cooldown.",
 		effect = {
 			{type = "storage", name = "SeismicSlam", value = 1},
 		},
