@@ -2603,7 +2603,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:0"] = {
 		name = "Nature's Guardian",
-		description = "+2% max HP. When you apply an Elemental Mark, gain 1 stack of Guardian's Resolve (max 5). Each stack: +1% damage and +1% shield strength. Stacks decay after 8s of no mark application.",
+		description = "+2% max HP. When you apply an Elemental Mark, gain 1 stack of Guardian's Resolve (max 5). Each stack: +1% damage and +1% shield strength. Stacks decay after 8s of no mark application, refunding 3% max mana each.",
 		effect = {
 			{type = "condition", name = "Max Health", value = 2},
 		},
@@ -2617,7 +2617,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:2"] = {
 		name = "Resonating Marks",
-		description = "When you apply an Elemental Mark, 20% chance per level to trigger an echo: deal 10% of the spell's damage again as earth damage to all enemies within 2 tiles.",
+		description = "When you apply an Elemental Mark, 20% chance per level to trigger an echo: deal earth damage equal to 10% of your attack power to all enemies within 2 tiles.",
 		effect = {
 			{type = "storage", name = "ResonatingMarks", value = 20},
 		},
@@ -2627,10 +2627,10 @@ PassiveSkills.nodeInfo = {
 		description = "Choose your offensive specialization.",
 	},
 	["15:4"] = {
-		name = "Thorned Skin",
-		description = "Learn the spell Thorned Skin. For 8 seconds, reflect 25% of melee damage as earth. Each reflect grants 1 Thorn Stack (max 5). When Thorned Skin ends, each stack explodes for earth damage around you. 15s cooldown.",
+		name = "Brambleward",
+		description = "Learn the spell Brambleward. For 8 seconds, reflect 25% of melee damage as earth and chill melee attackers (-30% speed for 3s). Each hit grants 1 Bramble Stack (max 5). When Brambleward ends, each stack fires an elemental shard at the nearest enemy. 15s cooldown.",
 		effect = {
-			{type = "storage", name = "ThornedSkin", value = 1},
+			{type = "storage", name = "Brambleward", value = 1},
 		},
 	},
 	["15:5"] = {
@@ -2670,7 +2670,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:12"] = {
 		name = "Shield Mastery",
-		description = "All shields +10% per level. When a shield is fully absorbed, gain 1 Guardian's Resolve stack.",
+		description = "All shields +10% per level. When a shield is fully absorbed, gain 1 Guardian's Resolve stack. (Bulwark Backflow is baseline: fully absorbed shields always return 8% of the absorbed amount as mana.)",
 		effect = {
 			{type = "storage", name = "ShieldMastery", value = 10},
 		},
@@ -2680,10 +2680,10 @@ PassiveSkills.nodeInfo = {
 		description = "Choose your defensive specialization.",
 	},
 	["15:14"] = {
-		name = "Ice Barrier",
-		description = "Learn the spell Ice Barrier. For 6 seconds, gain a shield absorbing 20% max HP. Melee attackers are slowed 30% for 3s and you gain 1 Frost Stack per hit (max 5). When the shield expires, each Frost Stack releases a frozen shard at the nearest enemy. 12s cooldown.",
+		name = "Glacial Prison",
+		description = "Learn the spell Glacial Prison. Freeze a monster solid for 2s, dealing ice damage. If you have Frost Mark, consume it: the freeze lasts 3s and spreads to adjacent enemies for 1.5s. 12s cooldown.",
 		effect = {
-			{type = "storage", name = "IceBarrier", value = 1},
+			{type = "storage", name = "GlacialPrison", value = 1},
 		},
 	},
 	["15:15"] = {
@@ -2695,28 +2695,28 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:16"] = {
 		name = "Frozen Heart",
-		description = "When a shield expires or is fully absorbed, freeze all enemies within 2 tiles for 1s + 0.5s per level. 10s cooldown per level.",
+		description = "When a shield expires or is fully absorbed, freeze all enemies within 2 tiles for 1s + 0.5s per level. 10s cooldown.",
 		effect = {
 			{type = "storage", name = "FrozenHeart", value = 1},
 		},
 	},
 	["15:17"] = {
 		name = "Cold Blooded",
-		description = "When you drop below 40% HP, automatically cast Permafrost Shell (if off cooldown) and gain 20% damage reduction for 4s. 30s cooldown per level.",
+		description = "When you drop below 40% HP, automatically cast Permafrost Shell (if off cooldown) and gain 20% damage reduction for 4s. Cooldown: 30s, -3s per level.",
 		effect = {
 			{type = "storage", name = "ColdBlooded", value = 1},
 		},
 	},
 	["15:18"] = {
 		name = "Permafrost",
-		description = "Permafrost Shell grants CC immunity for its duration. When fully absorbed, instantly refresh its cooldown and apply Frost Mark to all enemies within 3 tiles.",
+		description = "Permafrost Shell grants CC immunity for its duration. When fully absorbed, instantly refresh its cooldown, chill all enemies within 3 tiles (-30% speed for 3s) and gain Frost Mark.",
 		effect = {
 			{type = "storage", name = "Permafrost", value = 1},
 		},
 	},
 	["15:21"] = {
 		name = "Healing Touch",
-		description = "Sylvan Mend heal +10% per level. When you heal a target with an active shield, the shield is also strengthened by 10% per level.",
+		description = "Ironbark Mend heal +10% per level. When you heal a target with an active shield, the shield is also strengthened by 10% per level.",
 		effect = {
 			{type = "storage", name = "HealingTouch", value = 10},
 		},
@@ -2763,7 +2763,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:28"] = {
 		name = "Nature's Wrath",
-		description = "20% chance when applying a Mark to also apply the opposite Mark. Both marks can now be active simultaneously. When both marks are active, your spells deal +15% damage and shields are +15% stronger.",
+		description = "20% chance when applying a Mark to also apply the opposite Mark. Both marks can now be active simultaneously. When both marks are active, your spells deal +15% damage and shields are +15% stronger. Learn Primordial Convergence: consume both marks to unleash a freezing earth/ice nova and shield your party.",
 		effect = {
 			{type = "storage", name = "NaturesWrath", value = 1},
 		},
