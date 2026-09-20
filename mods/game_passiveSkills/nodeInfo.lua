@@ -2617,7 +2617,7 @@ PassiveSkills.nodeInfo = {
 	},
 	["15:2"] = {
 		name = "Resonating Marks",
-		description = "When you apply an Elemental Mark, 20% chance per level to trigger an echo: deal earth damage equal to 3% of your attack power per level to all enemies within 2 tiles.",
+		description = "When you apply an Elemental Mark, 3% chance per level to trigger an echo: deal earth damage equal to 10% of your attack power to all enemies within 2 tiles.",
 		effect = {
 			{type = "storage", name = "ResonatingMarks", value = 20},
 		},
