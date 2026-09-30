@@ -72,7 +72,7 @@ function terminate()
   disconnect(g_game, { onGameStart = online })
   disconnect(g_game, { onGameEnd = offline })
                        --onBuffCooldown     = onBuffCooldown    ]]-- })
-  --ProtocolGame.unregisterExtendedOpcode(57, true) 
+  ProtocolGame.unregisterExtendedOpcode(65, true) 
   ProtocolGame.unregisterExtendedOpcode(66, true) 
   
   if buffsWindow then

@@ -9,7 +9,7 @@ void main(void)
   // Build frame-local UV from atlas UV to avoid reset/flicker when outfit
   // animation switches atlas frame while walking.
   float frameSizePx = 64.0;
-  float rockScale = 0.3;
+  float rockScale = 1.2;
   vec2 atlasSize = vec2(
     1.0 / max(abs(u_TextureMatrix[0][0]), 0.00001),
     1.0 / max(abs(u_TextureMatrix[1][1]), 0.00001)

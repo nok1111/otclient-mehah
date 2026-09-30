@@ -87,7 +87,6 @@ Creature::Creature() :m_type(Proto::CreatureTypeUnknown)
     m_healthBarNpcFrame = g_textures.getTexture("/images/lifebars/npc");
     m_healthBarKillerFrame = g_textures.getTexture("/images/lifebars/killer");
     m_healthBarPlayersFrame = g_textures.getTexture("/images/lifebars/players");
-    m_customIconTexture = g_textures.getTexture("/images/game/npcicons/icon_default");
 }
 
 Creature::~Creature() {

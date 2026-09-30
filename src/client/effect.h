@@ -36,6 +36,9 @@ public:
     bool isEffect() override { return true; }
     bool waitFor(const EffectPtr&);
 
+    void setDrawBelow(const bool drawBelow) { m_drawBelow = drawBelow; }
+    bool isDrawBelow() { return m_drawBelow; }
+
     EffectPtr asEffect() { return static_self_cast<Effect>(); }
 
 protected:
@@ -47,4 +50,6 @@ private:
 
     uint16_t m_duration{ 0 };
     uint16_t m_timeToStartDrawing{ 0 };
+
+    bool m_drawBelow{ false };
 };

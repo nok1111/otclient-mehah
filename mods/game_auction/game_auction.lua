@@ -1070,7 +1070,6 @@ function Auction.init()
     }
   )
   ProtocolGame.registerExtendedOpcode(Auction.opCode, Auction.onExtendedOpcode)
-  g_keyboard.bindKeyDown('Ctrl+A', Auction.toggle)
   if g_game.isOnline() then
     Auction.onGameStart()
   end
@@ -1087,7 +1086,6 @@ function Auction.terminate()
   )
   ProtocolGame.unregisterExtendedOpcode(Auction.opCode, Auction.onExtendedOpcode)
   -- If client terminates while in-game, ensure cleanup
-  g_keyboard.unbindKeyDown('Ctrl+A')
   if Auction.window then Auction.window:destroy() Auction.window = nil end
 end
 

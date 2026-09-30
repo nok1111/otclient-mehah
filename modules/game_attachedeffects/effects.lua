@@ -421,7 +421,7 @@ AttachedEffectManager.register(30, 'holy 4 Light', 0, 0, {
 
 AttachedEffectManager.register(31, 'quest marker', 669, ThingCategoryEffect, {
     speed = 0.7,
-    size = { 5, 5 },
+   -- size = { 32, 32 },
     offset = { 35, 35, true },
     bounce = { 0, 5, 10000 },
     --shader = 'Rainbow',
@@ -474,98 +474,98 @@ AttachedEffectManager.register(39, 'monsters ground break', 660, ThingCategoryEf
 AttachedEffectManager.register(40, 'inlove', 36, ThingCategoryEffect, {
     speed = 0.7,
     duration = 9000,
-    size = { 40, 40 },
+   -- size = { 40, 40 },
     offset = { 32, 32, true },
     bounce = { 0, 5, 10000 },
     --shader = 'Rainbow',
 })
 
 AttachedEffectManager.register(41, 'fire 1', 758, ThingCategoryEffect, {
-    size = { 40, 40 },
+   -- size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(42, 'ice 1', 759, ThingCategoryEffect, {
-    size = { 40, 40 },
+   -- size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(43, 'holy 1', 760, ThingCategoryEffect, {
-    size = { 40, 40 },
+   -- size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(44, 'fire 2', 755, ThingCategoryEffect, {
-    size = { 40, 40 },
+   -- size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(45, 'ice 2', 756, ThingCategoryEffect, {
-    size = { 40, 40 },
+   -- size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(46, 'life 2', 757, ThingCategoryEffect, {
-    size = { 40, 40 },
+    --size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(47, 'fire_ice 2', 761, ThingCategoryEffect, {
-    size = { 40, 40 },
+    --size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(48, 'fire_life 2', 762, ThingCategoryEffect, {
-    size = { 40, 40 },
+    --size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(49, 'ice_life 2', 763, ThingCategoryEffect, {
-    size = { 40, 40 },
+    --size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(50, 'fire 1', 760, ThingCategoryEffect, {
-    size = { 40, 40 },
+  --  size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(51, 'fire 1', 760, ThingCategoryEffect, {
-    size = { 40, 40 },
+   -- size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(52, 'fire 1', 760, ThingCategoryEffect, {
-    size = { 40, 40 },
+    --size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(53, 'fire 1', 760, ThingCategoryEffect, {
-    size = { 40, 40 },
+   -- size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(54, 'fire 1', 760, ThingCategoryEffect, {
-    size = { 40, 40 },
+   -- size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
 })
 AttachedEffectManager.register(55, 'fire 1', 760, ThingCategoryEffect, {
-    size = { 40, 40 },
+   -- size = { 40, 40 },
     speed = 1.2,
     offset = { -21, -21, false},
     
@@ -573,7 +573,7 @@ AttachedEffectManager.register(55, 'fire 1', 760, ThingCategoryEffect, {
 
 
 AttachedEffectManager.register(56, 'fire 1', 764, ThingCategoryEffect, {
-    size = { 40, 40 },
+   -- size = { 40, 40 },
     speed = 1.2,
     offset = { 15, -40, false},
     duration = 3000,
@@ -5730,4 +5730,159 @@ AttachedEffectManager.register(855, 'acalanche stun', 1590, ThingCategoryEffect,
     speed = 1,
     offset = { 0, 0, true},
     
+})
+
+AttachedEffectManager.register(856, 'branbleward', 1497, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 8000,
+    speed = 1,
+    offset = { -64, -64, true},
+    size = { 96, 96 },
+    shader = 'Outfit - Warden Earth Aura'
+    
+})
+
+AttachedEffectManager.register(857, 'reverberation shield', 1246, ThingCategoryEffect, {
+    loop = 1,
+    opacity = 1,
+    speed = 1.6,
+    offset = { 0, 0, true},
+   -- shader = 'Galaxy',
+
+})
+
+AttachedEffectManager.register(858, 'frostbite frozen', 842, ThingCategoryEffect, {
+    opacity = 0.65,
+    duration = 2800,
+    speed = 1,
+    offset = { -15, -15, true},
+    
+    onAttach = function(effect, owner)
+        owner:setShader('frost armor')
+    end,
+    onDetach = function(effect, oldOwner)
+        if oldOwner and oldOwner:getTile() then
+            local e = Effect.create()
+            e:setId(44)
+            oldOwner:getTile():addThing(e)
+            oldOwner:setShader('Outfit - Default')
+        end
+    end
+})    
+
+AttachedEffectManager.register(859, 'frost armor aura 2', 616, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 1000,
+    speed = 1.3,
+    offset = { -64, -64, false},
+    shader = 'frost armor',
+})
+
+AttachedEffectManager.register(860, 'frost armor', 493, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 1000,
+    speed = 1,
+    offset = { -5, 0, true},
+    --shader = 'frost armor',
+
+    onAttach = function(effect, owner)
+        owner:setShader('Outfit - ice')     
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setShader('Outfit - Default')
+    end
+})
+
+AttachedEffectManager.register(861, 'frost armor initial', 53, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { 0, 0, true},
+    shader = 'frost armor',
+})
+
+AttachedEffectManager.register(862, 'marked avalanche', 1401, ThingCategoryEffect, {
+    loop = 1,
+    speed = 1.0,
+    offset = { -100, -110, true},
+    size = { 140, 140 }
+})
+
+AttachedEffectManager.register(863, 'bubble', 1253, ThingCategoryEffect, {
+    opacity = 0.65,
+    duration = 5000,
+    speed = 1,
+    offset = { -32, -32, true},
+    
+
+    onAttach = function(effect, owner)
+        owner:setBounce(0, 10, 1000)
+       -- effect:setBounce(0, 10, 1000)
+    end,
+    onDetach = function(effect, oldOwner)
+        oldOwner:setBounce(0, 0)
+    end
+
+})    
+
+AttachedEffectManager.register(864, 'bubble start', 1258, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -15, -15, true},
+    
+ 
+})    
+
+AttachedEffectManager.register(865, 'bubble start', 1254, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -32, -32, true},
+    
+ 
+}) 
+
+AttachedEffectManager.register(866, 'frost armor initial', 618, ThingCategoryEffect, {
+    opacity = 0.6,
+    duration = 8000,
+    speed = 1,
+    offset = { -128, -128, true},
+    --shader = 'frost armor',
+})
+
+AttachedEffectManager.register(867, 'bloodlust start', 1519, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { -32, -32, true},
+    --shader = 'frost armor',
+})
+
+AttachedEffectManager.register(868, 'bloodlust duration', 1518, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 15000,
+    speed = 1,
+    offset = { -25, -20, false},
+    --shader = 'frost armor',
+})
+
+AttachedEffectManager.register(869, 'bloodlust start', 1541, ThingCategoryEffect, {
+    opacity = 1,
+    loop = 1,
+    speed = 1,
+    offset = { 15, 15, true},
+    --shader = 'frost armor',
+})
+
+AttachedEffectManager.register(870, 'warlock Curse', 1576, ThingCategoryEffect, {
+    speed = 1.1,
+    loop = 1,
+    offset = { -15, -15, true },
+})
+
+AttachedEffectManager.register(871, 'warlock Curse', 1537, ThingCategoryEffect, {
+    speed = 1.1,
+    duration = 15000,
+    offset = { -22, -22, true },
 })

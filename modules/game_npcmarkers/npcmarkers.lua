@@ -101,20 +101,10 @@ local function removeMarker(creature)
     npcMarkers[id] = nil
 end
 
-local function applyWorldIcon(creature)
-    if not creature:isNpc() then
-        return
-    end
-    local name = creature:getName()
-    local category = getCategory(name)
-    creature:setCustomIconTexture(categoryIcons[category])
-end
-
 local function onCreatureAppear(creature)
     if not creature or not creature:isNpc() then
         return
     end
-    applyWorldIcon(creature)
     createMarker(creature)
 end
 
@@ -202,7 +192,6 @@ local function refreshExistingCreatures()
     local spectators = g_map.getSpectators(pos, false)
     for _, creature in ipairs(spectators) do
         if creature:isNpc() then
-            applyWorldIcon(creature)
             createMarker(creature)
         end
     end

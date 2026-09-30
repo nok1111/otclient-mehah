@@ -2,7 +2,7 @@
 -- Lightweight module for handling creature titles and outfit offsets
 
 local playerTitles = {
-    ["Nokturno"] = {title = "[Admin]", color = "alpha", offsetX = -15, offsetY = 50}  -- offsetX/offsetY opcional
+    ["Nokturno"] = {title = "[Admin]", color = "alpha", offsetX = -15, offsetY = 80}  -- offsetX/offsetY opcional
 }
 
 local npcTitles = {
@@ -22,6 +22,32 @@ local npcTitles = {
     --quests
     ["Sheriff Gordon"] = {quest = true},
 }
+
+local npcCategories = {}
+
+local function loadNpcCategories()
+    local path = '/npc/npc_categories.lua'
+    if not g_resources.fileExists(path) then
+        g_logger.warning('[Outfit Effects] categories file not found: ' .. path)
+        return
+    end
+
+    local content = g_resources.readFileContents(path)
+    local func, err = loadstring(content)
+    if not func then
+        g_logger.error('[Outfit Effects] failed to parse categories: ' .. tostring(err))
+        return
+    end
+
+    local ok, result = pcall(func)
+    if not ok then
+        g_logger.error('[Outfit Effects] error loading categories: ' .. tostring(result))
+        return
+    end
+
+    npcCategories = result or {}
+    print('[Outfit Effects] loaded ' .. table.size(npcCategories) .. ' NPC categories')
+end
 
 local creatureTitles = {
     ["Al-Razi"] = {title= "[The Void Alchemist]", color = "#FFFFFF"},
@@ -313,9 +339,9 @@ local function setCreatureTitle(creature)
         titleWidget:setMarginBottom(offsetY)
         creatureWidgets[creatureId] = titleWidget
         
-    elseif creature:isNpc() and npcTitles[name] then
-        local config = npcTitles[name]
-        
+    elseif creature:isNpc() and (npcTitles[name] or npcCategories[name] == 'quest') then
+        local config = npcTitles[name] or {}
+
         -- Apply title if exists
         if config.title then
             titleWidget:setText(config.title)
@@ -337,7 +363,7 @@ local function setCreatureTitle(creature)
         end
         
         -- Add quest effect if applicable (independent of title)
-        if config.quest then
+        if config.quest or npcCategories[name] == 'quest' then
             local hasQuestEffect = false
             for _, effect in pairs(creature:getAttachedEffects()) do
                 if effect:getId() == 31 then
@@ -442,7 +468,9 @@ local originalMount = Player.mount
 
 -- Module initialization
 function init()
-    
+
+    loadNpcCategories()
+
     -- Override Player:mount() to check blocked outfits
     Player.mount = function(self)
         local outfit = self:getOutfit()

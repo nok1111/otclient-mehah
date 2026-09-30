@@ -145,6 +145,10 @@ void Client::registerLuaFunctions()
     g_lua.bindSingletonFunction("g_map", "getTiles", &Map::getTiles, &g_map);
     g_lua.bindSingletonFunction("g_map", "setCentralPosition", &Map::setCentralPosition, &g_map);
     g_lua.bindSingletonFunction("g_map", "getCentralPosition", &Map::getCentralPosition, &g_map);
+    g_lua.bindSingletonFunction("g_map", "addBelowEffectId", &Map::addBelowEffectId, &g_map);
+    g_lua.bindSingletonFunction("g_map", "removeBelowEffectId", &Map::removeBelowEffectId, &g_map);
+    g_lua.bindSingletonFunction("g_map", "clearBelowEffectIds", &Map::clearBelowEffectIds, &g_map);
+    g_lua.bindSingletonFunction("g_map", "isBelowEffectId", &Map::isBelowEffectId, &g_map);
     g_lua.bindSingletonFunction("g_map", "getCreatureById", &Map::getCreatureById, &g_map);
     g_lua.bindSingletonFunction("g_map", "removeCreatureById", &Map::removeCreatureById, &g_map);
     g_lua.bindSingletonFunction("g_map", "getSpectators", &Map::getSpectators, &g_map);
@@ -803,6 +807,8 @@ void Client::registerLuaFunctions()
     g_lua.registerClass<Effect, Thing>();
     g_lua.bindClassStaticFunction<Effect>("create", [] { return std::make_shared<Effect>(); });
     g_lua.bindClassMemberFunction<Effect>("setId", &Effect::setId);
+    g_lua.bindClassMemberFunction<Effect>("setDrawBelow", &Effect::setDrawBelow);
+    g_lua.bindClassMemberFunction<Effect>("isDrawBelow", &Effect::isDrawBelow);
 
     g_lua.registerClass<Missile, Thing>();
     g_lua.bindClassStaticFunction<Missile>("create", [] { return std::make_shared<Missile>(); });

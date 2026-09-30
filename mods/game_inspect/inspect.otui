@@ -87,7 +87,7 @@ VerticalSeparator < Panel
 MainWindow
   id: inspectWindow
   text: Inspect Player
-  size: 700 550
+  size: 1000 740
   visible: false
 
   Panel

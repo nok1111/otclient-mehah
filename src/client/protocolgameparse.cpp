@@ -1759,6 +1759,7 @@ void ProtocolGame::parseMagicEffect(const InputMessagePtr& msg)
 
                     const auto& effect = std::make_shared<Effect>();
                     effect->setId(effectId);
+                    effect->setDrawBelow(g_map.isBelowEffectId(effectId));
                     g_map.addThing(effect, pos);
                     break;
                 }
@@ -1804,6 +1805,7 @@ void ProtocolGame::parseMagicEffect(const InputMessagePtr& msg)
 
     const auto& effect = std::make_shared<Effect>();
     effect->setId(effectId);
+    effect->setDrawBelow(g_map.isBelowEffectId(effectId));
 
     g_map.addThing(effect, pos);
 }

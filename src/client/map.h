@@ -24,6 +24,7 @@
 
 #include "animatedtext.h"
 #include "tile.h"
+#include <unordered_set>
 
 #ifdef FRAMEWORK_EDITOR
 #include "creatures.h"
@@ -306,6 +307,11 @@ public:
     void setFloatingEffect(const bool enable) { m_floatingEffect = enable; }
     bool isDrawingFloatingEffects() { return m_floatingEffect; }
 
+    void addBelowEffectId(const uint16_t id) { m_belowEffectIds.insert(id); }
+    void removeBelowEffectId(const uint16_t id) { m_belowEffectIds.erase(id); }
+    void clearBelowEffectIds() { m_belowEffectIds.clear(); }
+    bool isBelowEffectId(const uint16_t id) { return m_belowEffectIds.find(id) != m_belowEffectIds.end(); }
+
     std::map<std::string, std::tuple<int, int, int, std::string>> findEveryPath(const Position& start, int maxDistance, const std::map<std::string, std::string>& params);
     std::vector<CreaturePtr> getSpectatorsByPattern(const Position& centerPos, const std::string& pattern, Otc::Direction direction);
 
@@ -332,6 +338,8 @@ private:
     std::vector<MapViewPtr> m_mapViews;
 
     std::unordered_map<uint32_t, CreaturePtr> m_knownCreatures;
+
+    std::unordered_set<uint16_t> m_belowEffectIds;
 
     std::unordered_map<UIWidgetPtr, AttachableObjectPtr> m_attachedObjectWidgetMap;
 

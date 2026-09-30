@@ -309,6 +309,7 @@ function updateSpellInformation(widget)
         -- Build cost string: HP% / Mana / Soul, hide when 0
         local hpCost = info.hpCost or 0
         local manaVal = info.mana or 0
+        local manaPct = info.manaPct or 0
         local soulVal = info.soul or 0
         local costParts = {}
         if hpCost > 0 then
@@ -316,6 +317,9 @@ function updateSpellInformation(widget)
         end
         if manaVal > 0 then
             table.insert(costParts, 'Mana ' .. manaVal)
+        end
+        if manaPct > 0 then
+            table.insert(costParts, 'Mana ' .. manaPct .. '%')
         end
         if soulVal > 0 then
             table.insert(costParts, 'Soul ' .. soulVal)

@@ -34,8 +34,18 @@ UIWidget
     text-auto-resize: true
 
   Label
-    id: desc
+    id: cooldown
     anchors.top: stats.bottom
+    anchors.left: icon.right
+    anchors.right: parent.right
+    margin-top: 2
+    margin-left: 8
+    color: #c0c0c0
+    text-auto-resize: true
+
+  Label
+    id: desc
+    anchors.top: cooldown.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     margin-top: 6

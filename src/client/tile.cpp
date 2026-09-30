@@ -56,6 +56,8 @@ void drawThing(const ThingPtr& thing, const Point& dest, const int flags, uint8_
             g_drawPool.setDrawOrder(DrawOrder::FIRST);
         else if (thing->isSingleGroundBorder())
             g_drawPool.setDrawOrder(DrawOrder::SECOND);
+        else if (thing->isEffect() && thing->static_self_cast<Effect>()->isDrawBelow())
+            g_drawPool.setDrawOrder(DrawOrder::SECOND);
         else if (thing->isEffect() && g_app.isDrawingEffectsOnTop())
             g_drawPool.setDrawOrder(DrawOrder::FOURTH);
         else
@@ -95,6 +97,11 @@ void Tile::draw(const Point& dest, const int flags, const LightViewPtr& lightVie
         }
     }
 
+    if (m_effectsBelow) {
+        for (const auto& effect : *m_effectsBelow)
+            drawThing(effect, dest, flags & Otc::DrawThings, drawElevation);
+    }
+
     // after we render 2x2 lying corpses, we must redraw previous creatures/ontop above them
     if (m_tilesRedraw) {
         for (const auto& tile : *m_tilesRedraw) {
@@ -123,6 +130,11 @@ void Tile::drawLight(const Point& dest, const LightViewPtr& lightView) {
 
     if (m_effects) {
         for (const auto& effect : *m_effects)
+            effect->draw(dest - drawElevation * g_drawPool.getScaleFactor(), false, lightView);
+    }
+
+    if (m_effectsBelow) {
+        for (const auto& effect : *m_effectsBelow)
             effect->draw(dest - drawElevation * g_drawPool.getScaleFactor(), false, lightView);
     }
 
@@ -246,14 +258,15 @@ void Tile::addThing(const ThingPtr& thing, int stackPos)
         return;
 
     if (thing->isEffect()) {
-        if (!m_effects)
-            m_effects = std::make_unique<std::vector<EffectPtr>>();
-
         const auto& newEffect = thing->static_self_cast<Effect>();
+        auto& effects = newEffect->isDrawBelow() ? m_effectsBelow : m_effects;
+
+        if (!effects)
+            effects = std::make_unique<std::vector<EffectPtr>>();
 
         const bool mustOptimize = g_app.mustOptimize() || g_app.isForcedEffectOptimization();
 
-        for (const auto& prevEffect : *m_effects) {
+        for (const auto& prevEffect : *effects) {
             if (!prevEffect->canDraw())
                 continue;
 
@@ -266,9 +279,9 @@ void Tile::addThing(const ThingPtr& thing, int stackPos)
         }
 
         if (!newEffect->isTopEffect())
-            m_effects->insert(m_effects->begin(), newEffect);
+            effects->insert(effects->begin(), newEffect);
         else
-            m_effects->emplace_back(newEffect);
+            effects->emplace_back(newEffect);
 
         setThingFlag(thing);
 
@@ -336,13 +349,17 @@ bool Tile::removeThing(const ThingPtr thing)
 {
     if (!thing) return false;
 
-    if (m_effects && thing->isEffect()) {
+    if (thing->isEffect()) {
         const auto& effect = thing->static_self_cast<Effect>();
-        const auto it = std::find(m_effects->begin(), m_effects->end(), effect);
-        if (it == m_effects->end())
+        auto& effects = effect->isDrawBelow() ? m_effectsBelow : m_effects;
+        if (!effects)
             return false;
 
-        m_effects->erase(it);
+        const auto it = std::find(effects->begin(), effects->end(), effect);
+        if (it == effects->end())
+            return false;
+
+        effects->erase(it);
         return true;
     }
 
@@ -446,6 +463,12 @@ EffectPtr Tile::getEffect(const uint16_t id) const
 {
     if (m_effects) {
         for (const auto& effect : *m_effects)
+            if (effect->getId() == id)
+                return effect;
+    }
+
+    if (m_effectsBelow) {
+        for (const auto& effect : *m_effectsBelow)
             if (effect->getId() == id)
                 return effect;
     }

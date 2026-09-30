@@ -2669,11 +2669,11 @@ PassiveSkills.nodeInfo = {
 		},
 	},
 	["15:12"] = {
-		name = "Shield Mastery",
-		description = "All shields +10% per level. When you take damage while a shield is active, restore 0.5% of your max mana per level.",
+		name = "Frostbite",
+		description = "Your frost damage applies Frostbite stacks to enemies (max 10, decay after 10s). At the stack threshold, the enemy is frozen for 2.5s and stacks reset. +3% frost damage per level. Stack threshold: 10 minus level.",
 		effect = {
-			{type = "storage", name = "ShieldMastery", value = 10},
-			{type = "condition", name = "Shield Power", value = 10},
+			{type = "storage", name = "Frostbite", value = 3},
+			{type = "condition", name = "Ice Damage", value = 3},
 		},
 	},
 	["15:13"] = {
@@ -2681,106 +2681,107 @@ PassiveSkills.nodeInfo = {
 		description = "Choose your defensive specialization.",
 	},
 	["15:14"] = {
-		name = "Glacial Prison",
-		description = "Learn the spell Glacial Prison. Freeze a monster solid for 2s, dealing ice damage. If you have Frost Mark, consume it: the freeze lasts 3s and spreads to adjacent enemies for 1.5s. 12s cooldown.",
+		name = "Frost Aura",
+		description = "Learn the spell Frost Aura. Pulse ice damage around you each second for 6s. With Frost Mantle talent, gain +1 pulse and +1% max mana damage per pulse per level.",
 		effect = {
 			{type = "storage", name = "GlacialPrison", value = 1},
 		},
 	},
 	["15:15"] = {
-		name = "Taunting Roar",
-		description = "Learn the spell Taunting Roar. Force all enemies within 4 tiles to attack you for 4s. Marked targets are also rooted for 2s. While taunted, enemies deal 15% less damage to you. 20s cooldown.",
+		name = "Bulwark's Call",
+		description = "Empowers your Taunt spell. Taunt grants you a shield for 15% of your max HP for 5s and taunted enemies deal -15% damage to you.",
 		effect = {
 			{type = "storage", name = "TauntingRoar", value = 1},
 		},
 	},
 	["15:16"] = {
-		name = "Frozen Heart",
-		description = "When a shield expires or is fully absorbed, freeze all enemies within 2 tiles for 1s + 0.5s per level. 10s cooldown.",
+		name = "Shatterstrike",
+		description = "When a frozen enemy takes damage, it shatters: deals ice splash damage equal to 20% of the hit per level to enemies within 2 tiles. +10% damage to frozen enemies per level.",
 		effect = {
-			{type = "storage", name = "FrozenHeart", value = 1},
+			{type = "storage", name = "Shatterstrike", value = 10},
 		},
 	},
 	["15:17"] = {
-		name = "Cold Blooded",
-		description = "When you drop below 40% HP, automatically cast Permafrost Shell (if off cooldown) and gain 20% damage reduction for 4s. Cooldown: 30s, -3s per level.",
+		name = "Frost Mantle",
+		description = "Frost Aura spell gains +1 pulse per level (base 6) and +1% max mana as ice damage per pulse per level (base 5%). Taunt applies Frostbite stacks equal to your Frost Mantle level to each taunted enemy.",
 		effect = {
-			{type = "storage", name = "ColdBlooded", value = 1},
+			{type = "storage", name = "FrostAura", value = 1},
 		},
 	},
 	["15:18"] = {
-		name = "Permafrost",
-		description = "Permafrost Shell grants CC immunity for its duration. When fully absorbed, instantly refresh its cooldown, chill all enemies within 3 tiles (-30% speed for 3s) and gain Frost Mark.",
+		name = "Eternal Winter",
+		description = "Frozen enemies take +20% damage from all sources. When you consume a Frost Mark, your next ice spell costs no mana and applies freeze to all enemies in a 3x3 area around the target.",
 		effect = {
-			{type = "storage", name = "Permafrost", value = 1},
+			{type = "storage", name = "EternalWinter", value = 1},
 		},
 	},
 	["15:21"] = {
-		name = "Healing Touch",
-		description = "Ironbark Mend heal +10% per level. When you heal a target with an active shield, the shield is also strengthened by 10% per level.",
+		name = "Guardian's Will",
+		description = "+3% max HP per level and +5% healing received per level.",
 		effect = {
-			{type = "storage", name = "HealingTouch", value = 10},
+			{type = "condition", name = "Max Health", value = 3},
+			{type = "storage", name = "GuardiansWill", value = 5},
 		},
 	},
 	["15:22"] = {
-		name = "Nature's Swiftness",
-		description = "+2% movement speed per level. After casting any spell, your next melee attack within 3s deals +15% damage per level and applies both Earth and Frost Mark.",
+		name = "Primal Renewal",
+		description = "Whenever you consume an Earth or Frost Mark, you heal for 1.5% of your max HP per level.",
 		effect = {
-			{type = "storage", name = "NaturesSwiftness", value = 15},
-			{type = "condition", name = "Speed", value = 20},
+			{type = "storage", name = "MarkRenewal", value = 1},
 		},
 	},
 	["15:23"] = {
-		name = "Wilderness Fork",
-		description = "Choose your utility specialization.",
+		name = "Guardian Fork",
+		description = "Choose your protection specialization.",
 	},
 	["15:24"] = {
-		name = "Root Grasp",
-		description = "Learn the spell Root Grasp. Root a target for 3s. If you have Earth Mark, consume it: root spreads to all enemies within 2 tiles and duration becomes 5s. Rooted enemies take +15% damage from all sources. 10s cooldown.",
+		name = "Sanctuary",
+		description = "Learn the spell Sanctuary. Emit a defensive aura (5x5) for 8s: allies inside take -20% damage and enemies inside are slowed. 25s cooldown.",
 		effect = {
-			{type = "storage", name = "RootGrasp", value = 1},
+			{type = "storage", name = "Sanctuary", value = 1},
 		},
 	},
 	["15:25"] = {
-		name = "Spring of Life",
-		description = "Learn the spell Spring of Life. Create a healing spring on a 3x3 area for 8s. Allies standing in it heal 4% max HP/s and gain 5% damage reduction. If you have Earth Mark, consume it: spring also cleanses debuffs on entry. 20s cooldown.",
+		name = "Absolute Zero",
+		description = "Learn the spell Absolute Zero. Target a zone (3x3): allies inside are encased in ice for 5s, unable to act but immune to all damage. When the ice breaks, they gain a shield for 30% of their max HP for 3s. 45s cooldown.",
 		effect = {
-			{type = "storage", name = "SpringOfLife", value = 1},
+			{type = "storage", name = "AbsoluteZero", value = 1},
 		},
 	},
 	["15:26"] = {
-		name = "Bulwark Mastery",
-		description = "Guardian's Bulwark radius +1 tile per level. Allies shielded gain +5% damage reduction per level for the shield's duration.",
+		name = "Ironbound",
+		description = "Increase the effectiveness of Guardian's Bulwark and Permafrost Shell when casted on yourself by 20% per level and reduce their cooldowns by 0.5 seconds per level.",
 		effect = {
 			{type = "storage", name = "BulwarkMastery", value = 5},
 		},
 	},
 	["15:27"] = {
-		name = "Sanctuary Mastery",
-		description = "Verdant Sanctuary duration +2s per level. Final explosion damage +15% per level and grants you Earth Mark.",
+		name = "Resolve Amplification",
+		description = "Each Resolve stack also grants 4% damage reduction per level.",
 		effect = {
-			{type = "storage", name = "SanctuaryMastery", value = 15},
+			{type = "storage", name = "GuardianResolveAmp", value = 1},
 		},
 	},
 	["15:28"] = {
-		name = "Nature's Wrath",
-		description = "20% chance when applying a Mark to also apply the opposite Mark. Both marks can now be active simultaneously. When both marks are active, your spells deal +15% damage and shields are +15% stronger. Learn Primordial Convergence: consume both marks to unleash a freezing earth/ice nova and shield your party.",
+		name = "Last Stand",
+		description = "When you drop below 25% HP, consume all Resolve stacks: gain a shield for 15% of your max HP per stack and heal for 10% of your max HP per stack. 120s cooldown.",
 		effect = {
-			{type = "storage", name = "NaturesWrath", value = 1},
+			{type = "storage", name = "LastStand", value = 1},
 		},
 	},
 	["15:30"] = {
 		name = "Elemental Harmony",
 		description = "When you consume an Earth Mark, gain Frost Charge for 5s: next Frost spell deals +40% damage and applies Frost Mark. When you consume a Frost Mark, gain Earth Charge for 5s: next Earth spell deals +40% damage and its shield/heal is empowered by 40%.",
 		effect = {
-			{type = "storage", name = "ElementalHarmony", value = 1},
+			{type = "storage", name = "WardenElementalHarmony", value = 1},
 		},
 	},
 	["15:31"] = {
 		name = "Guardian's Oath",
-		description = "When you cast a shield spell, all allies within 3 tiles gain 10% of the shield amount and Guardian's Resolve stacks are doubled for 5s. When you cast a heal, all allies within 3 tiles gain 10% lifesteal for 5s. At 5 Guardian's Resolve stacks, your next shield spell costs no mana.",
+		description = "+10% max health and +10% max mana.",
 		effect = {
-			{type = "storage", name = "GuardiansOath", value = 1},
+			{type = "condition", name = "Max Health", value = 10},
+			{type = "condition", name = "Max Mana", value = 10},
 		},
 	},
 	["12:0"] = {

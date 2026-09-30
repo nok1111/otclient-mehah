@@ -140,7 +140,26 @@ function Inspect.init()
             _G.Codex = prevCodex
         end
     end
-    
+
+    -- Load talent node info (names/descriptions/effects) from game_passiveSkills.
+    -- The server omits descriptions from the inspect payload to stay under the
+    -- 8192-byte extended opcode string limit.
+    Inspect.nodeInfo = {}
+    local nodeInfoPath = "/mods/game_passiveSkills/nodeInfo.lua"
+    if g_resources.fileExists(nodeInfoPath) then
+        local prevPS = rawget(_G, "PassiveSkills")
+        _G.PassiveSkills = _G.PassiveSkills or {}
+        local ok, err = pcall(dofile, nodeInfoPath)
+        if ok and _G.PassiveSkills.nodeInfo then
+            Inspect.nodeInfo = _G.PassiveSkills.nodeInfo
+        end
+        if prevPS == nil then
+            _G.PassiveSkills = nil
+        else
+            _G.PassiveSkills = prevPS
+        end
+    end
+
     connect(g_game, { onGameStart = Inspect.onGameStart, onGameEnd = Inspect.onGameEnd })
     ProtocolGame.registerExtendedOpcode(Inspect.opCode, Inspect.onExtendedOpcode)
     
@@ -480,12 +499,378 @@ function Inspect.updateStatsTab()
     end
 end
 
+-- Node border configs (mirror of game_passiveSkills constellation borders)
+Inspect.nodeBorderConfigs = {
+    core     = { image = '/mods/game_passiveSkills/images/new_borders/node.png',          width = 60, height = 55 },
+    keystone = { image = '/mods/game_passiveSkills/images/new_borders/keystone.png',      width = 70, height = 70 },
+    notable  = { image = '/mods/game_passiveSkills/images/new_borders/star.png',          width = 60, height = 57 },
+    nexus    = { image = '/mods/game_passiveSkills/images/new_borders/constellation.png', width = 60, height = 57 },
+    fork     = { image = '/mods/game_passiveSkills/images/new_borders/node.png',          width = 60, height = 52 },
+    star     = { image = '/mods/game_passiveSkills/images/new_borders/node.png',          width = 60, height = 57 },
+}
+
+function Inspect.getNodeBranchAndIndex(treeData, nodeId)
+    if treeData.core and treeData.core.id == nodeId then
+        return 0, 0
+    end
+    if treeData.nexusNodes then
+        for index, nodeData in ipairs(treeData.nexusNodes) do
+            if nodeData.id == nodeId then
+                return 0, index
+            end
+        end
+    end
+    for branchId, branchData in ipairs(treeData.branches or {}) do
+        for index, nodeData in ipairs(branchData.nodes or {}) do
+            if nodeData.id == nodeId then
+                return branchId, index
+            end
+        end
+    end
+    return nil
+end
+
+function Inspect.getNodeLevelFromProgress(progress, branchId, nodeIndex)
+    local branchData = progress[branchId] or progress[tostring(branchId)]
+    if not branchData then return 0 end
+    return branchData[nodeIndex] or branchData[tostring(nodeIndex)] or 0
+end
+
+-- Read-only state: inspecting another player, no pending allocations
+function Inspect.getInspectNodeState(treeData, progress, nodeData)
+    local branchId, nodeIndex = Inspect.getNodeBranchAndIndex(treeData, nodeData.id)
+    local level = Inspect.getNodeLevelFromProgress(progress, branchId or -1, nodeIndex or -1)
+    local maxLevel = nodeData.maxLevel or 1
+    if maxLevel > 0 and level >= maxLevel then return "maxed", level end
+    if level > 0 then return "unlocked", level end
+    return "locked", level
+end
+
+-- Route through waypoint nodes between two connected nodes
+function Inspect.calculateRoute(fromNode, toNode, nodesById, cachedRoutes)
+    local route = {}
+    local minId = math.min(fromNode.id, toNode.id)
+    local maxId = math.max(fromNode.id, toNode.id)
+    local connKey = minId .. "-" .. maxId
+    local wpList = (cachedRoutes and cachedRoutes[connKey])
+        or (fromNode.routeWaypoints and fromNode.routeWaypoints[connKey])
+        or (toNode.routeWaypoints and toNode.routeWaypoints[connKey])
+    if wpList then
+        for _, wpId in ipairs(wpList) do
+            local numId = tonumber(wpId) or wpId
+            if nodesById[numId] then
+                table.insert(route, numId)
+            end
+        end
+    end
+    return route
+end
+
+function Inspect.drawConnectionLine(parent, x1, y1, x2, y2, color)
+    local dx = x2 - x1
+    local dy = y2 - y1
+    local distance = math.sqrt(dx * dx + dy * dy)
+    if distance < 1 then return nil end
+    local angle = math.atan2(dy, dx) * 180 / math.pi
+
+    local line = g_ui.createWidget("Panel", parent)
+    line:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+    line:addAnchor(AnchorTop, 'parent', AnchorTop)
+    line:setMarginLeft((x1 + x2) / 2 - distance / 2)
+    line:setMarginTop((y1 + y2) / 2 - 1)
+    line:setSize({width = math.floor(distance), height = 2})
+    line:setRotation(angle)
+    line:setBackgroundColor(color)
+    line:setPhantom(true)
+    return line
+end
+
+function Inspect.drawWaypointNode(panel, wpNode, offsetX, offsetY, nodeSpacingX, nodeSpacingY)
+    local wpSize = 20
+    local cx = offsetX + wpNode.pos.x * nodeSpacingX
+    local cy = offsetY + wpNode.pos.y * nodeSpacingY
+
+    local wp = g_ui.createWidget("Panel", panel)
+    wp:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+    wp:addAnchor(AnchorTop, 'parent', AnchorTop)
+    wp:setMarginLeft(cx - math.floor(wpSize / 2))
+    wp:setMarginTop(cy - math.floor(wpSize / 2))
+    wp:setSize({width = wpSize, height = wpSize})
+    wp:setImageSource('/images/icons/node')
+    wp:setImageColor('#f4ca16')
+    wp:setImageFixedRatio(true)
+    wp:setPhantom(true)
+    return wp
+end
+
+function Inspect.createConstellationNode(panel, treeData, nodeData, nodePixelPos, progress, nodeSize)
+    nodeSize = nodeSize or 44
+    local branchId, nodeIndex = Inspect.getNodeBranchAndIndex(treeData, nodeData.id)
+    local state, level = Inspect.getInspectNodeState(treeData, progress, nodeData)
+    local maxLevel = nodeData.maxLevel or 1
+    local x, y = nodePixelPos(nodeData)
+    x = tonumber(x) or 0
+    y = tonumber(y) or 0
+
+    local node = g_ui.createWidget("TalentNode", panel)
+    node:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+    node:addAnchor(AnchorTop, 'parent', AnchorTop)
+    node:setMarginLeft(x)
+    node:setMarginTop(y)
+    node:setSize({width = nodeSize, height = nodeSize})
+
+    -- Border behind icon
+    local border = g_ui.createWidget("TalentNodeBorder", node)
+    local borderConfig = Inspect.nodeBorderConfigs[nodeData.kind]
+    if borderConfig then
+        border:setImageSource(borderConfig.image)
+        border:setSize({width = borderConfig.width, height = borderConfig.height})
+    else
+        border:setImageSource('/mods/game_passiveSkills/images/new_borders/node.png')
+    end
+    border:setImageColor('#ffffff')
+    border:setOpacity(state == "locked" and 0.5 or 1.0)
+
+    -- Icon on top of border
+    local iconPath = '/mods/game_passiveSkills/images/no_image.png'
+    if nodeData.icon then
+        local iconStr = tostring(nodeData.icon)
+        local treeBg = treeData.background or '1'
+        local customPath
+        if tonumber(iconStr) then
+            customPath = '/mods/game_passiveSkills/images/talents/icons/tree' .. treeBg .. '/' .. iconStr .. '.png'
+        else
+            customPath = '/mods/game_passiveSkills/images/talents/icons/' .. iconStr .. '.png'
+        end
+        if g_resources.fileExists(customPath) then
+            iconPath = customPath
+        end
+    end
+    -- Fallback to legacy tree images (cycling 1-6)
+    if iconPath == '/mods/game_passiveSkills/images/no_image.png' and branchId and nodeIndex then
+        local treeBg = treeData.background or '1'
+        local imgIdx = ((nodeIndex - 1) % 6) + 1
+        local branchPath = '/mods/game_passiveSkills/images/tree' .. treeBg .. '/branch' .. branchId .. '/' .. imgIdx .. '.png'
+        if g_resources.fileExists(branchPath) then
+            iconPath = branchPath
+        end
+    end
+    node:setImageSource(iconPath)
+    node:setOpacity(state == "locked" and 0.5 or 1.0)
+
+    -- Level label bottom-right of node
+    local label = g_ui.createWidget("TalentNodeLevel", panel)
+    label:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+    label:addAnchor(AnchorTop, 'parent', AnchorTop)
+    label:setMarginLeft(x + nodeSize - 6)
+    label:setMarginTop(y + nodeSize - 8)
+    label:setText(level .. "/" .. maxLevel)
+
+    -- Hover tooltip
+    node.nodeData = nodeData
+    node.currentLevel = level
+    node.onHoverChange = Inspect.onTalentHoverChange
+    border.nodeData = nodeData
+    border.currentLevel = level
+    border.onHoverChange = Inspect.onTalentHoverChange
+
+    return node
+end
+
+function Inspect.renderConstellationTree(scrollArea, treeData, progress, routeWaypoints)
+    local nodeSize = 44
+    local nodeSpacingX = 48
+    local nodeSpacingY = 44
+
+    local viewWidth = scrollArea:getWidth()
+    local viewHeight = scrollArea:getHeight()
+
+    -- Collect all nodes and compute bounds
+    local nodesById = {}
+    local minX, maxX, minY, maxY = 0, 0, 0, 0
+    local function addNode(nodeData)
+        if not nodeData or not nodeData.pos then return end
+        nodesById[nodeData.id] = nodeData
+        minX = math.min(minX, nodeData.pos.x)
+        maxX = math.max(maxX, nodeData.pos.x)
+        minY = math.min(minY, nodeData.pos.y)
+        maxY = math.max(maxY, nodeData.pos.y)
+    end
+
+    addNode(treeData.core)
+    for _, branchData in ipairs(treeData.branches or {}) do
+        for _, nodeData in ipairs(branchData.nodes or {}) do
+            addNode(nodeData)
+        end
+    end
+    for _, nodeData in ipairs(treeData.nexusNodes or {}) do
+        addNode(nodeData)
+    end
+    for _, nodeData in ipairs(treeData.waypointNodes or {}) do
+        addNode(nodeData)
+    end
+
+    -- Prefer saved layout bounds for a stable layout
+    if treeData.layoutBounds then
+        local lb = treeData.layoutBounds
+        minX = tonumber(lb.minX) or minX
+        maxX = tonumber(lb.maxX) or maxX
+        minY = tonumber(lb.minY) or minY
+        maxY = tonumber(lb.maxY) or maxY
+    end
+
+    -- Same behavior as the original module: node size stays 44 and only the
+    -- spacing shrinks to fit the view (setupConstellationUI lines 1877-1884)
+    local contentWidth = (maxX - minX) * nodeSpacingX + nodeSize * 2
+    local contentHeight = (maxY - minY) * nodeSpacingY + nodeSize * 2
+    if contentWidth > viewWidth and (maxX - minX) * nodeSpacingX > 0 then
+        local scale = (viewWidth - nodeSize * 2) / ((maxX - minX) * nodeSpacingX)
+        nodeSpacingX = math.floor(nodeSpacingX * scale)
+    end
+    if contentHeight > viewHeight and (maxY - minY) * nodeSpacingY > 0 then
+        local scale = (viewHeight - nodeSize * 2) / ((maxY - minY) * nodeSpacingY)
+        nodeSpacingY = math.floor(nodeSpacingY * scale)
+    end
+    contentWidth = (maxX - minX) * nodeSpacingX + nodeSize * 2
+    contentHeight = (maxY - minY) * nodeSpacingY + nodeSize * 2
+
+    -- Container sized to the content (never smaller than the viewport) so the
+    -- scroll area range covers all nodes
+    local panel = g_ui.createWidget("Panel", scrollArea)
+    panel:setId("constellationContainer")
+    panel:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+    panel:addAnchor(AnchorTop, 'parent', AnchorTop)
+    panel:setSize({
+        width = math.max(viewWidth, contentWidth),
+        height = math.max(viewHeight, contentHeight)
+    })
+    panel:setPhantom(true)
+
+    local panelWidth = panel:getWidth()
+    local panelHeight = panel:getHeight()
+    local offsetX = math.floor((panelWidth - contentWidth) / 2) - minX * nodeSpacingX + math.floor(nodeSize / 2)
+    local offsetY = math.floor((panelHeight - contentHeight) / 2) - minY * nodeSpacingY + math.floor(nodeSize / 2)
+
+    local function nodePixelPos(nodeData)
+        local cx = offsetX + nodeData.pos.x * nodeSpacingX
+        local cy = offsetY + nodeData.pos.y * nodeSpacingY
+        return cx - math.floor(nodeSize / 2), cy - math.floor(nodeSize / 2)
+    end
+
+    -- Draw connections first (behind nodes)
+    local drawnConnections = {}
+    for _, fromNode in pairs(nodesById) do
+        if fromNode.kind ~= "waypoint" then
+            for _, connId in ipairs(fromNode.connections or {}) do
+                local toNode = nodesById[connId]
+                if toNode and toNode.kind ~= "waypoint" then
+                    local minId = math.min(fromNode.id, toNode.id)
+                    local maxId = math.max(fromNode.id, toNode.id)
+                    local connKey = minId .. "-" .. maxId
+                    if not drawnConnections[connKey] then
+                        drawnConnections[connKey] = true
+                        local x1, y1 = nodePixelPos(fromNode)
+                        local x2, y2 = nodePixelPos(toNode)
+                        local cx1, cy1 = x1 + math.floor(nodeSize / 2), y1 + math.floor(nodeSize / 2)
+                        local cx2, cy2 = x2 + math.floor(nodeSize / 2), y2 + math.floor(nodeSize / 2)
+
+                        local state1 = Inspect.getInspectNodeState(treeData, progress, fromNode)
+                        local state2 = Inspect.getInspectNodeState(treeData, progress, toNode)
+                        local color = '#3a3045'
+                        if (state1 == "unlocked" or state1 == "maxed") and (state2 == "unlocked" or state2 == "maxed") then
+                            color = '#f4ca16'
+                        elseif state1 ~= "locked" or state2 ~= "locked" then
+                            color = '#7a7090'
+                        end
+
+                        local route = Inspect.calculateRoute(fromNode, toNode, nodesById, routeWaypoints)
+                        local prevX, prevY = cx1, cy1
+                        for _, wpId in ipairs(route) do
+                            local wpNode = nodesById[wpId]
+                            if wpNode then
+                                local wpx = offsetX + wpNode.pos.x * nodeSpacingX
+                                local wpy = offsetY + wpNode.pos.y * nodeSpacingY
+                                Inspect.drawConnectionLine(panel, prevX, prevY, wpx, wpy, color)
+                                Inspect.drawWaypointNode(panel, wpNode, offsetX, offsetY, nodeSpacingX, nodeSpacingY)
+                                prevX, prevY = wpx, wpy
+                            end
+                        end
+                        Inspect.drawConnectionLine(panel, prevX, prevY, cx2, cy2, color)
+                    end
+                end
+            end
+        end
+    end
+
+    -- Draw nodes (skip waypoints, already drawn with their routes)
+    for _, nodeData in pairs(nodesById) do
+        if nodeData.kind ~= "waypoint" then
+            Inspect.createConstellationNode(panel, treeData, nodeData, nodePixelPos, progress, nodeSize)
+        end
+    end
+end
+
+function Inspect.renderLegacyTree(scrollArea, treeData, progress, treeId)
+    local totalBranches = #treeData.branches
+    local nodeWidth = 42
+    local marginBetweenBranches = 40
+    local totalWidth = totalBranches * nodeWidth + (totalBranches + 1) * marginBetweenBranches
+    local parentWidth = scrollArea:getWidth()
+    local treeLeftOffset = math.max(0, math.floor((parentWidth - totalWidth) / 2))
+
+    for branchIndex, branchData in ipairs(treeData.branches) do
+        local leftMargin = treeLeftOffset + (branchIndex - 1) * (nodeWidth + marginBetweenBranches) + marginBetweenBranches
+        local prevNode = nil
+
+        for nodeIndex, nodeData in ipairs(branchData.nodes) do
+            local nodeId = "branch" .. branchIndex .. "/" .. nodeIndex
+
+            local node = g_ui.createWidget("TalentNode", scrollArea)
+            node:setId(nodeId)
+            node:setImageSource("/mods/game_passiveSkills/images/tree" .. (treeId or 0) .. "/branch" .. branchIndex .. "/" .. nodeIndex)
+            node:addAnchor(AnchorLeft, "parent", AnchorLeft)
+            node:setMarginLeft(leftMargin)
+
+            local border = g_ui.createWidget("TalentNodeBorder", node)
+            border:setImageSource("/mods/game_passiveSkills/images/borders/" .. (branchData.border or "default"))
+            border:setImageColor(branchData.color or "#ffffff")
+
+            if prevNode then
+                node:addAnchor(AnchorTop, prevNode:getId(), AnchorBottom)
+                node:setMarginTop(20)
+
+                local sep = g_ui.createWidget("VerticalSeparator", scrollArea)
+                sep:addAnchor(AnchorTop, prevNode:getId(), AnchorBottom)
+                sep:addAnchor(AnchorBottom, node:getId(), AnchorTop)
+                sep:addAnchor(AnchorHorizontalCenter, node:getId(), AnchorHorizontalCenter)
+            else
+                node:addAnchor(AnchorTop, "parent", AnchorTop)
+                node:setMarginTop(20)
+            end
+
+            local nodeLevel = g_ui.createWidget("TalentNodeLevel", scrollArea)
+            nodeLevel:addAnchor(AnchorLeft, nodeId, AnchorLeft)
+            nodeLevel:addAnchor(AnchorTop, nodeId, AnchorTop)
+            nodeLevel:addAnchor(AnchorHorizontalCenter, nodeId, AnchorHorizontalCenter)
+
+            local currentLevel = Inspect.getNodeLevelFromProgress(progress, branchIndex, nodeIndex)
+            nodeLevel:setText(currentLevel .. "/" .. (nodeData.maxLevel or 1))
+
+            border.nodeData = nodeData
+            border.currentLevel = currentLevel
+            border.onHoverChange = Inspect.onTalentHoverChange
+
+            prevNode = node
+        end
+    end
+end
+
 function Inspect.updateTalentsTab()
     if not Inspect.UI then return end
     local scrollArea = findWidget(Inspect.UI, "talentsScrollArea")
     if not scrollArea then return end
     scrollArea:destroyChildren()
-    
+
     if not Inspect.cachedData.talents or not Inspect.cachedData.talents.treeData then
         local msg = g_ui.createWidget("Label", scrollArea)
         msg:setText(tr("No talent data available"))
@@ -495,76 +880,25 @@ function Inspect.updateTalentsTab()
         msg:setMarginTop(50)
         return
     end
-    
+
     local talents = Inspect.cachedData.talents
     local treeData = talents.treeData
     local progress = talents.progress or {}
-    
+
     -- Tree name
     local treeName = findWidget(Inspect.UI, "talentsTreeName")
     if treeName then treeName:setText(tr(treeData.name) or tr("Talent Tree")) end
-    
-    -- Background (skip - causes overlap issues)
-    
-    -- Calculate centering
-    local totalBranches = #treeData.branches
-    local nodeWidth = 42
-    local marginBetweenBranches = 40
-    local totalWidth = totalBranches * nodeWidth + (totalBranches + 1) * marginBetweenBranches
-    local parentWidth = scrollArea:getWidth()
-    local treeLeftOffset = math.max(0, math.floor((parentWidth - totalWidth) / 2))
-    
-    -- Render branches
-    for branchIndex, branchData in ipairs(treeData.branches) do
-        local leftMargin = treeLeftOffset + (branchIndex - 1) * (nodeWidth + marginBetweenBranches) + marginBetweenBranches
-        local prevNode = nil
-        
-        for nodeIndex, nodeData in ipairs(branchData.nodes) do
-            local nodeId = "branch" .. branchIndex .. "/" .. nodeIndex
-            
-            -- Create node
-            local node = g_ui.createWidget("TalentNode", scrollArea)
-            node:setId(nodeId)
-            node:setImageSource("/mods/game_passiveSkills/images/tree" .. (talents.treeId or 0) .. "/branch" .. branchIndex .. "/" .. nodeIndex)
-            node:addAnchor(AnchorLeft, "parent", AnchorLeft)
-            node:setMarginLeft(leftMargin)
-            
-            -- Border
-            local border = g_ui.createWidget("TalentNodeBorder", node)
-            border:setImageSource("/mods/game_passiveSkills/images/borders/" .. (branchData.border or "default"))
-            border:setImageColor(branchData.color or "#ffffff")
-            
-            -- Position vertically
-            if prevNode then
-                node:addAnchor(AnchorTop, prevNode:getId(), AnchorBottom)
-                node:setMarginTop(20)
-                
-                -- Separator line
-                local sep = g_ui.createWidget("VerticalSeparator", scrollArea)
-                sep:addAnchor(AnchorTop, prevNode:getId(), AnchorBottom)
-                sep:addAnchor(AnchorBottom, node:getId(), AnchorTop)
-                sep:addAnchor(AnchorHorizontalCenter, node:getId(), AnchorHorizontalCenter)
-            else
-                node:addAnchor(AnchorTop, "parent", AnchorTop)
-                node:setMarginTop(20)
-            end
-            
-            -- Level indicator
-            local nodeLevel = g_ui.createWidget("TalentNodeLevel", scrollArea)
-            nodeLevel:addAnchor(AnchorLeft, nodeId, AnchorLeft)
-            nodeLevel:addAnchor(AnchorTop, nodeId, AnchorTop)
-            nodeLevel:addAnchor(AnchorHorizontalCenter, nodeId, AnchorHorizontalCenter)
-            
-            local currentLevel = progress[branchIndex] and progress[branchIndex][nodeIndex] or 0
-            nodeLevel:setText(currentLevel .. "/" .. (nodeData.maxLevel or 1))
-            
-            -- Store node data for tooltip on the border (same pattern as PassiveSkills)
-            border.nodeData = nodeData
-            border.currentLevel = currentLevel
-            border.onHoverChange = Inspect.onTalentHoverChange
-            
-            prevNode = node
+
+    if treeData.core then
+        -- Constellation 2D format (new talent system)
+        -- Waypoint nodes are sent alongside treeData, not inside it
+        if talents.waypointNodes and not treeData.waypointNodes then
+            treeData.waypointNodes = talents.waypointNodes
         end
+        Inspect.renderConstellationTree(scrollArea, treeData, progress, talents.routeWaypoints)
+    else
+        -- Legacy linear format
+        Inspect.renderLegacyTree(scrollArea, treeData, progress, talents.treeId)
     end
 end
 
@@ -711,13 +1045,20 @@ function Inspect.onTalentHoverChange(widget, hovered)
     if hovered and widget.nodeData then
         local node = widget.nodeData
         local currentLevel = widget.currentLevel or 0
-        
+
+        -- Resolve name/description from client-side nodeInfo ("treeId:nodeId")
+        local info = nil
+        local treeId = Inspect.cachedData.talents and Inspect.cachedData.talents.treeId
+        if Inspect.nodeInfo and treeId and node.id ~= nil then
+            info = Inspect.nodeInfo[tostring(treeId) .. ":" .. tostring(node.id)]
+        end
+
         local tooltipName = findWidget(Inspect.UI, "tooltipCardName")
         local tooltipLevel = findWidget(Inspect.UI, "tooltipCardLevel")
         local tooltipDesc = findWidget(Inspect.UI, "tooltipCardDescription")
-        
+
         if tooltipName then
-            tooltipName:setText(tr(node.name) or tr("Talent Node"))
+            tooltipName:setText(tr((info and info.name) or node.name) or tr("Talent Node"))
             tooltipName:setColor("#f4ca16")
         end
         
@@ -726,7 +1067,7 @@ function Inspect.onTalentHoverChange(widget, hovered)
         end
         
         if tooltipDesc then
-            local desc = tr(node.description) or tr("No description")
+            local desc = tr((info and info.description) or node.description) or tr("No description")
             if type(desc) == "table" then
                 desc = desc[currentLevel > 0 and currentLevel or 1] or desc[1] or "No description"
             end
@@ -805,7 +1146,12 @@ function Inspect.onExtendedOpcode(protocol, opcode, buffer)
             Inspect.cachedData.stats = data.stats
         end
         if data.talents then
-            Inspect.cachedData.talents = data.talents
+            -- Talents arrive split across messages (progress / treeData) to
+            -- stay under the 8192-byte extended opcode limit; merge fields
+            Inspect.cachedData.talents = Inspect.cachedData.talents or {}
+            for k, v in pairs(data.talents) do
+                Inspect.cachedData.talents[k] = v
+            end
         end
         if data.codex then
             Inspect.cachedData.codex = data.codex

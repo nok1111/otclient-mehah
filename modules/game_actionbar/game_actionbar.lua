@@ -322,11 +322,13 @@ function showSpellTooltip(slot)
     local nameLbl = spellTooltipWnd:getChildById('name')
     local iconW = spellTooltipWnd:getChildById('icon')
     local statsLbl = spellTooltipWnd:getChildById('stats')
+    local cdLbl = spellTooltipWnd:getChildById('cooldown')
     local descLbl = spellTooltipWnd:getChildById('desc')
 
     -- Ensure auto-resize in case UI came from .otui without these flags
     if nameLbl.setTextAutoResize then nameLbl:setTextAutoResize(true) end
     if statsLbl.setTextAutoResize then statsLbl:setTextAutoResize(true) end
+    if cdLbl and cdLbl.setTextAutoResize then cdLbl:setTextAutoResize(true) end
     if descLbl.setTextAutoResize then descLbl:setTextAutoResize(true) end
 
     nameLbl:setText(tr(spellName) or tr('Unknown'))
@@ -338,6 +340,7 @@ function showSpellTooltip(slot)
     end
 
     local mana = spell.mana or 0
+    local manaPct = spell.manaPct or 0
     local hpCost = spell.hpCost or 0
     local level = spell.level or 0
     local baseCdMs = 0
@@ -353,26 +356,28 @@ function showSpellTooltip(slot)
 
     local cdText
     if remainingMs > 0 then
-        cdText = tr('Cooldown: %.1fs', remainingMs / 1000)
+        cdText = string.format('Cooldown: %.1fs', remainingMs / 1000)
     elseif baseCdMs > 0 then
-        cdText = tr('Cooldown: %.1fs', baseCdMs / 1000)
+        cdText = string.format('Cooldown: %.1fs', baseCdMs / 1000)
     else
-        cdText = tr('Cooldown: —')
+        cdText = 'Cooldown: —'
     end
 
     -- Build cost string: HP% / Mana / Soul, hide when 0
     local costParts = {}
     if hpCost > 0 then table.insert(costParts, 'HP ' .. hpCost .. '%') end
     if mana > 0 then table.insert(costParts, 'Mana ' .. mana) end
+    if manaPct > 0 then table.insert(costParts, 'Mana ' .. manaPct .. '%') end
     local costStr = table.concat(costParts, ' / ')
 
     local statsLine
     if costStr ~= '' then
-        statsLine = tr('Cost: %s    Level: %s    %s', costStr, tostring(level), cdText)
+        statsLine = tr('Cost: %s    Level: %s', costStr, tostring(level))
     else
-        statsLine = tr('Level: %s    %s', tostring(level), cdText)
+        statsLine = tr('Level: %s', tostring(level))
     end
     statsLbl:setText(statsLine)
+    if cdLbl then cdLbl:setText(cdText) end
     descLbl:setColoredText(tr(spell.description or ''))
 
     -- Size/position
@@ -393,6 +398,11 @@ function showSpellTooltip(slot)
             local ts = statsLbl:getTextSize()
             if ts and ts.height then statsH = ts.height end
         end
+        local cdH = 14
+        if cdLbl and cdLbl.getTextSize then
+            local ts = cdLbl:getTextSize()
+            if ts and ts.height then cdH = ts.height end
+        end
         local descH = 14
         if descLbl and descLbl.getTextSize then
             local ts = descLbl:getTextSize()
@@ -400,6 +410,7 @@ function showSpellTooltip(slot)
         end
         h = h + nameH
         h = h + 2 + statsH
+        h = h + 2 + cdH
         h = h + 6 + descH
         spellTooltipWnd:setHeight(math.max(h, 60))
     end

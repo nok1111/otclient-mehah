@@ -1,0 +1,11 @@
+Module
+  name: game_effectfilter
+  description: Magic effect ID filter - render selected effect IDs below creatures
+  author: Custom
+  version: 1.0.0
+
+  autoload: true
+  sandboxed: true
+  scripts: [ game_effectfilter ]
+  @onLoad: init()
+  @onUnload: terminate()
