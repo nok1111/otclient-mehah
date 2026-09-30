@@ -343,11 +343,11 @@ function createAchievementWidget(parent, achievement)
   -- Set name
   local nameLabel = widget:recursiveGetChildById('achievementName')
   if nameLabel then
-    nameLabel:setText(achievement.name or "Unknown")
+    nameLabel:setText(tr(achievement.name or "Unknown"))
     
     -- Add secret marker if needed
     if achievement.secret and not achievement.completed then
-      nameLabel:setText('??? (Secret)')
+      nameLabel:setText(tr('??? (Secret)'))
     end
   end
   
@@ -355,16 +355,16 @@ function createAchievementWidget(parent, achievement)
   local descLabel = widget:recursiveGetChildById('achievementDesc')
   if descLabel then
     if achievement.secret and not achievement.completed then
-      descLabel:setText('This is a secret achievement.')
+      descLabel:setText(tr('This is a secret achievement.'))
     else
-      descLabel:setText(achievement.description or "")
+      descLabel:setText(tr(achievement.description or ""))
     end
   end
   
   -- Set points
   local pointsLabel = widget:recursiveGetChildById('achievementPoints')
   if pointsLabel then
-    pointsLabel:setText((achievement.points or 0) .. ' pts')
+    pointsLabel:setText(tr('%d pts', achievement.points or 0))
   end
   
   -- Set progress
@@ -452,14 +452,14 @@ function createAchievementWidget(parent, achievement)
   local hintLabel = widget:recursiveGetChildById('hintLabel')
   if hintLabel then
     local hintText = achievement.hint or getDefaultHint(achievement)
-    hintLabel:setText(hintText)
+    hintLabel:setText(tr(hintText))
   end
 end
 
 function getDefaultHint(achievement)
   -- Generate hint based on achievement type/category
   if not achievement.progress then
-    return "Complete the required task"
+    return tr("Complete the required task")
   end
   
   local progressType = achievement.progress.type
@@ -467,34 +467,34 @@ function getDefaultHint(achievement)
   
   -- Map progress types to hints
   local hints = {
-    kills = "Kill " .. required .. " monsters",
-    humanoid_kills = "Defeat " .. required .. " humanoid creatures",
-    lizard_kills = "Defeat " .. required .. " lizard creatures", 
-    elemental_kills = "Defeat " .. required .. " elemental creatures",
-    undead_kills = "Defeat " .. required .. " undead creatures",
-    wild_kills = "Defeat " .. required .. " wild creatures",
-    boss_kills = "Defeat " .. required .. " different bosses",
-    level = "Reach level " .. required,
-    blacksmith_level = "Reach Blacksmith level " .. required,
-    mining_level = "Reach Mining level " .. required,
-    herbalism_level = "Reach Herbalism level " .. required,
-    woodcutting_level = "Reach Woodcutting level " .. required,
-    enchanting_level = "Reach Enchanting level " .. required,
-    alchemy_level = "Reach Alchemy level " .. required,
-    crafted_blacksmith = "Craft " .. required .. " Blacksmith items",
-    crafted_alchemy = "Craft " .. required .. " Alchemy items",
-    crafted_enchanting = "Craft " .. required .. " Enchanting items",
-    crafted_refinery = "Craft " .. required .. " Refinery items",
-    pets = "Collect " .. required .. " different pets",
-    pet_level = "Raise a pet to level " .. required,
-    gold = "Accumulate " .. required .. " gold coins",
-    distance = "Travel " .. required .. " sqm total",
-    deaths = "Die " .. required .. " times (hopefully less!)",
-    logins = "Login " .. required .. " days",
-    playtime = "Play for " .. required .. " hours"
+    kills = tr("Kill %d monsters", required),
+    humanoid_kills = tr("Defeat %d humanoid creatures", required),
+    lizard_kills = tr("Defeat %d lizard creatures", required), 
+    elemental_kills = tr("Defeat %d elemental creatures", required),
+    undead_kills = tr("Defeat %d undead creatures", required),
+    wild_kills = tr("Defeat %d wild creatures", required),
+    boss_kills = tr("Defeat %d different bosses", required),
+    level = tr("Reach level %d", required),
+    blacksmith_level = tr("Reach Blacksmith level %d", required),
+    mining_level = tr("Reach Mining level %d", required),
+    herbalism_level = tr("Reach Herbalism level %d", required),
+    woodcutting_level = tr("Reach Woodcutting level %d", required),
+    enchanting_level = tr("Reach Enchanting level %d", required),
+    alchemy_level = tr("Reach Alchemy level %d", required),
+    crafted_blacksmith = tr("Craft %d Blacksmith items", required),
+    crafted_alchemy = tr("Craft %d Alchemy items", required),
+    crafted_enchanting = tr("Craft %d Enchanting items", required),
+    crafted_refinery = tr("Craft %d Refinery items", required),
+    pets = tr("Collect %d different pets", required),
+    pet_level = tr("Raise a pet to level %d", required),
+    gold = tr("Accumulate %d gold coins", required),
+    distance = tr("Travel %d sqm total", required),
+    deaths = tr("Die %d times (hopefully less!)", required),
+    logins = tr("Login %d days", required),
+    playtime = tr("Play for %d hours", required)
   }
   
-  return hints[progressType] or "Complete the required objective"
+  return hints[progressType] or tr("Complete the required objective")
 end
 
 function updateStatsDisplay()
@@ -502,7 +502,7 @@ function updateStatsDisplay()
   
   local statsLabel = achievementWindow:recursiveGetChildById('statsLabel')
   if statsLabel then
-    statsLabel:setText(string.format(
+    statsLabel:setText(tr(
       'Completed: %d | Claimed: %d | Points: %d | Available: %d',
       playerStats.completed,
       playerStats.claimed,
@@ -601,12 +601,13 @@ function onReceiveAchievementComplete(protocol, opcode, buffer)
   if not data then return end
   
   -- Show visual popup notification
-  showAchievementPopup(data.name or 'Unknown', data.points or 0)
+  local achName = tr(data.name or 'Unknown')
+  showAchievementPopup(achName, data.points or 0)
   
   -- Also show text message as backup
-  modules.game_textmessage.displayGameMessage(string.format(
+  modules.game_textmessage.displayGameMessage(tr(
     'Achievement Unlocked: %s (+%d points)!',
-    data.name or 'Unknown',
+    achName,
     data.points or 0
   ))
   
@@ -668,7 +669,7 @@ function showAchievementPopup(achievementName, points)
   
   local pointsLabel = achievementPopup:recursiveGetChildById('popupPoints')
   if pointsLabel then
-    pointsLabel:setText('+' .. points .. ' points')
+    pointsLabel:setText(tr('+%s points', points))
   end
   
   -- Show popup with fade in animation
@@ -731,9 +732,9 @@ function onReceiveRewards(protocol, opcode, buffer)
   -- Handle purchase result message
   if data.type == "purchaseResult" then
     if data.success then
-      modules.game_textmessage.displayGameMessage('Purchase successful!')
+      modules.game_textmessage.displayGameMessage(tr('Purchase successful!'))
     else
-      modules.game_textmessage.displayGameMessage(data.message or 'Purchase failed.')
+      modules.game_textmessage.displayGameMessage(data.message or tr('Purchase failed.'))
     end
     return
   end
@@ -774,7 +775,7 @@ function updateRewardsList()
   -- Update points label
   local rewardsPointsLabel = rewardsContent:recursiveGetChildById('rewardsPointsLabel')
   if rewardsPointsLabel then
-    rewardsPointsLabel:setText('Available Points: ' .. rewardsAvailablePoints)
+    rewardsPointsLabel:setText(tr('Available Points: %s', rewardsAvailablePoints))
   end
   
   -- Get the list panel
@@ -798,14 +799,14 @@ function updateRewardsList()
     
     if rewardsCurrentPage > 1 then
       local prevBtn = g_ui.createWidget('Button', navWidget)
-      prevBtn:setText('< Prev')
+      prevBtn:setText(tr('< Prev'))
       prevBtn:setWidth(80)
       prevBtn:setHeight(30)
       prevBtn.onClick = function() requestRewardsData(rewardsCurrentPage - 1) end
     end
     
     local pageLabel = g_ui.createWidget('Label', navWidget)
-    pageLabel:setText('Page ' .. rewardsCurrentPage .. ' / ' .. rewardsTotalPages)
+    pageLabel:setText(tr('Page %d / %d', rewardsCurrentPage, rewardsTotalPages))
     pageLabel:setColor('#FFFFFF')
     pageLabel:setTextAlign(AlignCenter)
     pageLabel:setWidth(120)
@@ -813,7 +814,7 @@ function updateRewardsList()
     
     if rewardsCurrentPage < rewardsTotalPages then
       local nextBtn = g_ui.createWidget('Button', navWidget)
-      nextBtn:setText('Next >')
+      nextBtn:setText(tr('Next >'))
       nextBtn:setWidth(80)
       nextBtn:setHeight(30)
       nextBtn.onClick = function() requestRewardsData(rewardsCurrentPage + 1) end
@@ -852,19 +853,19 @@ function createRewardWidget(parent, reward)
   -- Set name
   local nameLabel = widget:recursiveGetChildById('rewardName')
   if nameLabel then
-    nameLabel:setText(reward.name or "Unknown")
+    nameLabel:setText(tr(reward.name or "Unknown"))
   end
   
   -- Set description
   local descLabel = widget:recursiveGetChildById('rewardDesc')
   if descLabel then
-    descLabel:setText(reward.description or "")
+    descLabel:setText(tr(reward.description or ""))
   end
   
   -- Set cost
   local costLabel = widget:recursiveGetChildById('rewardCost')
   if costLabel then
-    costLabel:setText('Cost: ' .. (reward.cost or 0) .. ' pts')
+    costLabel:setText(tr('Cost: %d pts', reward.cost or 0))
     if rewardsAvailablePoints >= (reward.cost or 0) and not reward.owned then
       costLabel:setColor('#00FF00')
     elseif reward.owned then
@@ -892,11 +893,11 @@ function createRewardWidget(parent, reward)
       nameLabel:setColor('#44FF44')
     end
     if descLabel then
-      descLabel:setText('You already own this outfit.')
+      descLabel:setText(tr('You already own this outfit.'))
       descLabel:setColor('#88CC88')
     end
     if costLabel then
-      costLabel:setText('Purchased')
+      costLabel:setText(tr('Purchased'))
       costLabel:setColor('#44FF44')
     end
   else

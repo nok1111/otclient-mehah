@@ -149,6 +149,8 @@ function displayMessage(mode, text)
         return
     end
 
+    text = trServerMsg(text)
+
     if msgtype.consoleTab ~= nil and
         (msgtype.consoleOption == nil or modules.client_options.getOption(msgtype.consoleOption)) then
         if msgtype == MessageSettings.loot then

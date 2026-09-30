@@ -101,7 +101,7 @@ function showLabelMessage(str)
     sendMessagesLabel:setParent( modules.game_interface.gameMapPanel)
     sendMessagesLabel:addAnchor(AnchorHorizontalCenter, 'parent', AnchorHorizontalCenter)
     sendMessagesLabel:addAnchor(AnchorTop, 'parent', AnchorTop)
-    sendMessagesLabel:setText(str)
+    sendMessagesLabel:setText(trServerMsg(str))
     sendMessagesLabel:show()
     scheduleEvent(function()
         sendMessagesLabel:hide()
@@ -138,7 +138,7 @@ function sendWindowNow(str)
     -- Set description text (centered below image)
     local msg_text = messageWindow:recursiveGetChildById('messageText')
     if msg_text then
-        msg_text:setText(cfg[2] or "")
+        msg_text:setText(trServerMsg(cfg[2] or ""))
     end
     
     messageWindow:show()

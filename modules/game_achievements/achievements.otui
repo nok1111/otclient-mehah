@@ -207,7 +207,7 @@ RewardItem < Panel
       anchors.verticalCenter: parent.verticalCenter
       anchors.right: parent.right
       margin-right: 10
-      text: OWNED
+      !text: tr('OWNED')
       font: verdana-11px-rounded
       color: #44FF44
       visible: false
@@ -305,7 +305,7 @@ MainWindow
       anchors.right: parent.right
       height: 25
       margin: 5
-      text: Categories
+      !text: tr('Categories')
       font: verdana-11px-rounded
       color: #FFD700
       text-align: center
@@ -881,7 +881,7 @@ MainWindow
         anchors.left: parent.left
         margin-top: 8
         margin-left: 15
-        text: Outfit Rewards Shop
+        !text: tr('Outfit Rewards Shop')
         font: verdana-11px-rounded
         color: #FFD700
 
@@ -947,7 +947,7 @@ AchievementPopup < UIWidget
     anchors.top: parent.top
     anchors.horizontalCenter: parent.horizontalCenter
     margin-top: 30
-    text: ACHIEVEMENT UNLOCKED!
+    !text: tr('ACHIEVEMENT UNLOCKED!')
     font: verdana-11px-rounded
     color: #FFD700
     text-align: center

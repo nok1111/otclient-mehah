@@ -257,6 +257,49 @@ function _G.tr(text, ...)
     return text
 end
 
+-- Patterns for server-composed messages; captures get tr()'d per index in trArgs
+local serverMsgPatterns = {
+    { pat = '^Main Quest: (.-) completed%.%s*$', tpl = 'Main Quest: %s completed.', trArgs = {1} },
+    { pat = '^Main Quest: (.-) started%.%s*$', tpl = 'Main Quest: %s started.', trArgs = {1} },
+    { pat = '^Main Quest: (.-) objective completed%.%s*$', tpl = 'Main Quest: %s objective completed.', trArgs = {1} },
+    { pat = '^Congratulations! You have completed the (.-) Quest, visit (.-) to claim your reward!%s*$', tpl = 'Congratulations! You have completed the %s Quest, visit %s to claim your reward!', trArgs = {1} },
+    { pat = '^You have defeated a (.-)%. %[(%d+)/(%d+)%] for: (.-) Quest%.%s*$', tpl = 'You have defeated a %s. [%s/%s] for: %s Quest.', trArgs = {4} },
+    { pat = '^%[Quest Reward%] %+(.-) Codex Essences!%s*$', tpl = '[Quest Reward] +%s Codex Essences!' },
+    { pat = '^%[Quest Reward%] %+(.-)x (.-)!%s*$', tpl = '[Quest Reward] +%sx %s!' },
+    { pat = '^This task will be available in (%d+) minutes%.%s*$', tpl = 'This task will be available in %s minutes.' },
+    { pat = "^You can't have more active tasks than (.-)!%s*$", tpl = "You can't have more active tasks than %s!" },
+    -- zones.lua zone events
+    { pat = '^You have entered the zone (.-)%s*$', tpl = 'You have entered the zone %s', trArgs = {1} },
+    { pat = '^The mighty (.-) has appeared in (.-)!%s*$', tpl = 'The mighty %s has appeared in %s!', trArgs = {2} },
+    { pat = '^Zone Event Started: (.-) %- (.-)%s*$', tpl = 'Zone Event Started: %s - %s', trArgs = {1,2} },
+    { pat = '^Zone Event Progress: (.-) %[(%d+)/(.-)%]%s*$', tpl = 'Zone Event Progress: %s [%s/%s]', trArgs = {1} },
+    { pat = "^Milestone reached: (%d+)%% of '(.-)' completed! %[(%d+)/(%d+)%]%s*$", tpl = "Milestone reached: %d%% of '%s' completed! [%s/%s]", trArgs = {2} },
+    { pat = '^(.-) complete! Thanks for dousing the fires%.%s*$', tpl = '%s complete! Thanks for dousing the fires.', trArgs = {1} },
+    { pat = '^(.-) ended due to inactivity%.%s*$', tpl = '%s ended due to inactivity.', trArgs = {1} },
+    { pat = '^%[Zone Reward%] %+(.-) Codex Essences!%s*$', tpl = '[Zone Reward] +%s Codex Essences!' },
+    { pat = '^%[Zone Reward%] %+(.-)!%s*$', tpl = '[Zone Reward] +%s!' },
+    { pat = '^%[Escort Leader Bonus%] %+(.-) Codex Essences!%s*$', tpl = '[Escort Leader Bonus] +%s Codex Essences!' },
+    { pat = '^Event Reward: (%d+)x Monster Essence%s*$', tpl = 'Event Reward: %sx Monster Essence' },
+    -- achievements rewards shop
+    { pat = '^Not enough Achievement Points%. You need (.-) but have (.-)%.%s*$', tpl = 'Not enough Achievement Points. You need %s but have %s.' },
+    { pat = '^You purchased the (.-) outfit!%s*$', tpl = 'You purchased the %s outfit!', trArgs = {1} },
+}
+
+-- Translates server-composed messages: exact tr() first, then template match
+-- translating captured args (e.g. quest names) with tr().
+function _G.trServerMsg(text)
+    for _, p in ipairs(serverMsgPatterns) do
+        local caps = { text:match(p.pat) }
+        if #caps > 0 then
+            for _, i in ipairs(p.trArgs or {}) do
+                caps[i] = tr(caps[i])
+            end
+            return tr(p.tpl, unpack(caps))
+        end
+    end
+    return tr(text)
+end
+
 -- Dumps all collected missing translation keys to data/missing_translations.lua
 -- Call from terminal: dumpMissingTranslations()
 function _G.dumpMissingTranslations()
