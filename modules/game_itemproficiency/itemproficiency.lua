@@ -14,6 +14,12 @@ local currentFilter = 0      -- 0 = all categories
 local searchText = ''
 local selectedCell = nil
 
+-- Static trait routes (no player state), used by other modules such as the
+-- crafting window to preview a result item's proficiency columns.
+-- routeCache[clientId] = route table | 'none' (known non-eligible)
+local routeCache = {}
+local routePending = {}      -- clientId -> callback to fire when the route arrives
+
 -- Mirror of server IP_CATEGORY (config.lua)
 local CATEGORY = {
     NONE = 0, ARMOR = 1, SHIELD = 2, WEAPON_1H = 3,
@@ -424,7 +430,34 @@ local function onExtendedOpcode(protocol, opcode, buffer)
         end
     elseif packet.action == 'inventory' then
         applyInventorySync(packet.data)
+    elseif packet.action == 'route_preview' then
+        local d = packet.data or {}
+        local clientId = tonumber(d.clientId) or 0
+        if clientId > 0 then
+            routeCache[clientId] = (d.eligible and d.route) and d.route or 'none'
+            local cb = routePending[clientId]
+            routePending[clientId] = nil
+            if cb then
+                cb(d.eligible and d.route or nil)
+            end
+        end
     end
+end
+
+-- Public: fetch the static proficiency trait route for an item (by clientId).
+-- callback(route | nil) fires when the server replies; nil = not eligible.
+function Proficiency.requestRoute(clientId, callback)
+    clientId = tonumber(clientId) or 0
+    if clientId <= 0 or not callback then
+        return
+    end
+    local cached = routeCache[clientId]
+    if cached then
+        callback(cached ~= 'none' and cached or nil)
+        return
+    end
+    routePending[clientId] = callback
+    sendAction('route_preview', { clientId = clientId })
 end
 
 -- ───────────────────────────────────────────────────────────────────────────

@@ -18,6 +18,40 @@ Recipe < UIWidget
   layout: horizontalBox
   spacing: 5
 
+CraftProfColumn < Panel
+  size: 28 96
+  fixed-size: true
+  focusable: false
+  layout:
+    type: verticalBox
+    spacing: 2
+
+CraftProfHeader < Label
+  height: 12
+  text-align: center
+  font: verdana-11px-antialised
+  color: #00BC00
+  focusable: false
+
+CraftProfNode < UIButton
+  size: 26 26
+  fixed-size: true
+  border-width: 1
+  border-color: #00000000
+  background-color: #00000022
+  focusable: false
+  text: ''
+  $hover:
+    border-color: #ffffff
+
+  UIWidget
+    id: icon
+    anchors.fill: parent
+    margin: 2
+    phantom: true
+    focusable: false
+    image-smooth: true
+
 Imagecraft < UIWidget
   size: 20 20
 
@@ -286,16 +320,46 @@ MainWindow
       height: 328
 
     Label
+      id: descLabel
       !text: tr('Description')
       anchors.top: ingredientsPanel.bottom
       anchors.left: ingredientsPanel.left
       anchors.right: ingredientsPanel.right
       margin-top: 15
 
+    Panel
+      id: profPreview
+      anchors.top: descLabel.bottom
+      anchors.left: ingredientsPanel.left
+      anchors.right: ingredientsPanel.right
+      anchors.bottom: parent.bottom
+      margin-top: 5
+      visible: false
+      focusable: false
+      layout:
+        type: verticalBox
+        spacing: 4
+
+      Panel
+        id: profColumns
+        height: 96
+        focusable: false
+        layout:
+          type: horizontalBox
+          spacing: 5
+
+      Label
+        id: profHint
+        !text: tr('Equip and use the item to unlock traits.')
+        height: 12
+        font: verdana-11px-antialised
+        color: #c0c0c0
+        focusable: false
+
     TextEdit
       id: recipeDesc
       !text: tr('Recipe Desc')
-      anchors.top: prev.bottom
+      anchors.top: descLabel.bottom
       anchors.left: ingredientsPanel.left
       anchors.right: ingredientsPanel.right
       anchors.bottom: parent.bottom

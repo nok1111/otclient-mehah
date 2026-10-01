@@ -18,6 +18,9 @@ local longestString = 0
 
 local cachedItems = {}
 local cachedByClientId = {}
+local craftCache = {}        -- crafting-window previews: stats hidden as "??"
+local hoveredCraft = false   -- true while hovering a widget flagged craftingPreview
+local hoveredCraftTier = 0   -- tier of the hovered crafting-preview widget
 
 local Colors = {
   Default = "#ffffff",
@@ -186,8 +189,12 @@ function init()
 end
 
 -- Show tooltip using cached clientId-based payload (for virtual UIItems)
-function showTooltipByClientId(clientId)
-  local cachedItem = cachedByClientId[clientId]
+function showTooltipByClientId(clientId, tier)
+  local key = clientId
+  if hoveredCraft then
+    key = clientId .. ':' .. (tonumber(tier) or 0)
+  end
+  local cachedItem = (hoveredCraft and craftCache or cachedByClientId)[key]
   if not cachedItem then return end
 
   -- Fill runtime fields
@@ -295,8 +302,10 @@ function newTooltip(data)
   local _sourceType = data.sourceType or nil
   local _qualityTier = data.qualityTier or nil
   local _qualityBonuses = data.qualityBonuses or nil
-  
-  
+  local _isCraftPreview = data.crafting == true
+  local _craftLevel = data.craftLevel or nil
+
+
   -- Cache by real item UID only if available (server 'new' path). Virtual items ('newByClientId') have no uid.
   if type(_itemUId) == 'number' and _itemUId > 0 then
     cachedItems[_itemUId] = {
@@ -326,14 +335,23 @@ function newTooltip(data)
       baseAttack = _baseAttack,
       baseDefense = _baseDefense,
       baseArmor = _baseArmor,
-      baseExtraDefense = _baseExtraDefense
+      baseExtraDefense = _baseExtraDefense,
+      craftLevel = _craftLevel
     }
   else
   end
 
-  -- Also cache by clientId for virtual widgets to reuse
+  -- Also cache by clientId for virtual widgets to reuse. Crafting previews get
+  -- their own table (keyed by clientId:tier, since the same item may be the
+  -- result of recipes with different tiers) so hovering the same clientId
+  -- outside the crafting window still shows its normal stats.
   if type(_itemId) == 'number' and _itemId > 0 then
-    cachedByClientId[_itemId] = {
+    local key = _itemId
+    if _isCraftPreview then
+      key = _itemId .. ':' .. (tonumber(data.craftTier) or 0)
+    end
+    local cache = _isCraftPreview and craftCache or cachedByClientId
+    cache[key] = {
       last = os.time(),
       name = _itemName,
       desc = _itemDesc,
@@ -360,20 +378,25 @@ function newTooltip(data)
       baseAttack = _baseAttack,
       baseDefense = _baseDefense,
       baseArmor = _baseArmor,
-      baseExtraDefense = _baseExtraDefense
+      baseExtraDefense = _baseExtraDefense,
+      craftLevel = _craftLevel
     }
   else
   end
 
   if hoveredItem and _itemId == hoveredItem:getId() then
-    -- Prefer showing by clientId for virtual items
-    showTooltipByClientId(_itemId)
+    -- Prefer showing by clientId for virtual items; for crafting previews use
+    -- the hovered widget's own tier so a reply for another tier isn't shown.
+    showTooltipByClientId(_itemId, hoveredCraft and hoveredCraftTier or nil)
   end
 end
 
 function resetData()
   cachedItems = {}
+  craftCache = {}
   hoveredItem = nil
+  hoveredCraft = false
+  hoveredCraftTier = 0
   player = nil
   protocolGame = nil
   tooltipWindow:hide()
@@ -405,15 +428,27 @@ function onHoverChange(widget, hovered)
   if hovered then
     local itemUId = item:getActionId()
     hoveredItem = item
+    hoveredCraft = widget.craftingPreview == true
+    hoveredCraftTier = tonumber(widget.craftingTier) or 0
 
     -- If this is a virtual widget, request by clientId and show like real items
     if widget:isVirtual() then
       local clientId = item:getId()
-      if cachedByClientId[clientId] then
-        showTooltipByClientId(clientId)
+      local tier = tonumber(widget.craftingTier) or 0
+      local key = hoveredCraft and (clientId .. ':' .. tier) or clientId
+      local cache = hoveredCraft and craftCache or cachedByClientId
+      if cache[key] then
+        showTooltipByClientId(clientId, tier)
       else
         if protocolGame then
           local payload = { action = "requestByClientId", data = { clientId = clientId } }
+          if hoveredCraft then
+            -- Crafting-window widgets flag themselves; the server replies with
+            -- "??" stats and the predicted item level for this player/tier.
+            payload.data.crafting = true
+            payload.data.tier = tier
+            payload.data.profId = tonumber(widget.craftingProfId) or 0
+          end
           protocolGame:sendExtendedOpcode(CODE_TOOLTIPS, json.encode(payload))
         end
       end
@@ -432,6 +467,8 @@ function onHoverChange(widget, hovered)
     end
   else
     hoveredItem = nil
+    hoveredCraft = false
+    hoveredCraftTier = 0
     tooltipWindow:hide()
   end
 end
@@ -524,6 +561,12 @@ function buildItemTooltip(item)
 
   if iLvl > 0 then
     addString("Item Level " .. iLvl, Colors.ItemLevel)
+  end
+
+  -- Crafting preview: stats are "??" (rolled at craft time); show the
+  -- predicted item-level range for this recipe tier + player profession level.
+  if item.craftLevel then
+    addString("Predicted level " .. item.craftLevel, Colors.ItemLevel)
   end
 
   -- Helper to format stat (shows only final value)

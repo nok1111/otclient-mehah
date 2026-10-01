@@ -32,6 +32,87 @@ local messageWindow = nil
 --craftingButton = nil
 local selectedCategory = 'All'
 local searchText = ''
+local pendingDetailsChild = nil  -- recipe widget whose details are scheduled
+local profPreviewClientId = 0    -- clientId of the recipe awaiting a route reply
+
+local function formatNumber(n)
+    n = math.floor(tonumber(n) or 0)
+    local s = tostring(n)
+    local out = s:reverse():gsub("(%d%d%d)", "%1,"):reverse()
+    return (out:gsub("^,", ""))
+end
+
+-- ── Proficiency route preview ───────────────────────────────────────────────
+local function clearProficiencyPreview()
+	if not craftingWindow or craftingWindow:isDestroyed() then return end
+	local panel = craftingWindow:recursiveGetChildById('profPreview')
+	if not panel then return end
+	local cols = panel:recursiveGetChildById('profColumns')
+	if cols then cols:destroyChildren() end
+	panel:setVisible(false)
+end
+
+local function renderProficiencyPreview(route)
+	if not craftingWindow or craftingWindow:isDestroyed() then return end
+	local panel = craftingWindow:recursiveGetChildById('profPreview')
+	if not panel then return end
+	local cols = panel:recursiveGetChildById('profColumns')
+	if not cols then return end
+	cols:destroyChildren()
+
+	for _, colData in ipairs(route.columns or {}) do
+		local col = g_ui.createWidget('CraftProfColumn', cols)
+
+		local hdr = g_ui.createWidget('CraftProfHeader', col)
+		hdr:setText('M' .. tostring(colData.column))
+		if (colData.reqXp or 0) > 0 then
+			hdr:setTooltip(string.format('Milestone %d\n%s proficiency XP', colData.column, formatNumber(colData.reqXp)))
+		end
+
+		for i, trait in ipairs(colData.traits or {}) do
+			if i > 3 then break end -- profColumns height fits 3 nodes
+			local node = g_ui.createWidget('CraftProfNode', col)
+			local icon = node:getChildById('icon')
+			if icon and trait.icon and trait.icon ~= '' then
+				icon:setImageSource(trait.icon)
+			end
+			node:setTooltip(string.format('%s\n%s', trait.name or '', trait.desc or ''))
+		end
+	end
+
+	local descLabel = craftingWindow:recursiveGetChildById('descLabel')
+	if descLabel then
+		descLabel:setText('Proficiency (' .. (route.categoryName or 'Gear') .. ')')
+	end
+end
+
+local function updateProficiencyPreview(recipe)
+	clearProficiencyPreview()
+	profPreviewClientId = 0
+	if not recipe then return end
+
+	local panel = craftingWindow:recursiveGetChildById('profPreview')
+	if panel then
+		panel:setVisible(true) -- show the panel while the route loads
+	end
+
+	local ip = modules.game_itemproficiency
+	if not ip or not ip.requestRoute then return end
+
+	local clientId = tonumber(recipe.spriteId) or 0
+	profPreviewClientId = clientId
+	-- The reply arrives inside extended-opcode packet parsing; defer the widget
+	-- building out of that context.
+	ip.requestRoute(clientId, function(route)
+		if profPreviewClientId ~= clientId then return end
+		if not route then return end
+		addEvent(function()
+			if profPreviewClientId ~= clientId then return end
+			renderProficiencyPreview(route)
+		end)
+	end)
+end
+-- ────────────────────────────────────────────────────────────────────────────
 
 function init()
 --craftingButton = modules.client_topmenu.addRightGameToggleButton('craftingButton', tr('Crafting'), '/game_crafting/img/hammer', toggle)
@@ -50,8 +131,8 @@ function init()
 	
 
 	craftingWindow:recursiveGetChildById("recipeList").onChildFocusChange = onRecipeSelected
-	craftingWindow:recursiveGetChildById("leftButton").onClick = onRecipeSelected
-	craftingWindow:recursiveGetChildById("rightButton").onClick = onRecipeSelected
+	craftingWindow:recursiveGetChildById("leftButton").onClick = onLeftAmount
+	craftingWindow:recursiveGetChildById("rightButton").onClick = onRightAmount
 
 	connect(g_game, { onGameEnd = hide })
 
@@ -72,15 +153,69 @@ function show()
 end
 
 function hide()
+	pendingDetailsChild = nil
+	profPreviewClientId = 0
+	clearProficiencyPreview()
 	craftingWindow:hide()
 	craftingWindow:ungrabKeyboard()
     modules.game_interface.getRootPanel():focus()
 end
 
 
+function onLeftAmount()
+	local recipeList = craftingWindow:recursiveGetChildById("recipeList")
+	local child = recipeList and recipeList:getFocusedChild()
+	local recipe = child and child.recipe
+	if not recipe then return end
+
+	local amount = craftingWindow:getChildById("amount")
+	local value = tonumber(amount:getText())
+	if not value or value == 1 then
+		return
+	end
+
+	amount:setText(tostring(value - 1))
+	craftingWindow:getChildById("cost"):setText(recipe.cost * (value - 1) .. " Gold")
+	craftingWindow:getChildById("balance"):setText(tostring(balance .. " Gold"))
+end
+
+function onRightAmount()
+	local recipeList = craftingWindow:recursiveGetChildById("recipeList")
+	local child = recipeList and recipeList:getFocusedChild()
+	local recipe = child and child.recipe
+	if not recipe then return end
+
+	local amount = craftingWindow:getChildById("amount")
+	local value = tonumber(amount:getText())
+	if not value or value + 1 > amount.maxAmount then
+		return
+	end
+
+	amount:setText(tostring(math.min(100, value + 1)))
+	craftingWindow:getChildById("cost"):setText(recipe.cost * (value + 1) .. " Gold")
+	craftingWindow:getChildById("balance"):setText(tostring(balance .. " Gold"))
+end
+
 function onRecipeSelected(w, child)
+	local recipe = child and child.recipe
+	if not recipe then
+		return
+	end
+	pendingDetailsChild = child
+	-- Defer all detail-pane work out of the focus callback: creating or
+	-- destroying widgets here re-enters focus/layout code while the recipe
+	-- list or the packet parser is mid-update and can stall the client.
+	addEvent(function()
+		if not craftingWindow or craftingWindow:isDestroyed() then return end
+		if pendingDetailsChild ~= child or child:isDestroyed() then return end
+		applyRecipeDetails(child)
+	end)
+end
+
+function applyRecipeDetails(child)
 	-- update recipe details
-	local recipe = child.recipe
+	pendingDetailsChild = nil
+	local recipe = child and child.recipe
 	if not recipe then
 		return
 	end
@@ -95,37 +230,15 @@ function onRecipeSelected(w, child)
 	
 	
 	craftingWindow:getChildById("cost"):setText(recipe.cost .. " Gold")
-	
-	craftingWindow:getChildById("leftButton").onClick = function()
-		local amount = craftingWindow:getChildById("amount")
-		local costamount = recipe.cost
-		local value = tonumber(amount:getText())
-		if not value or value == 1 then
-			return
-		end
-
-		amount:setText(tostring(value - 1))
-		craftingWindow:getChildById("cost"):setText(costamount * (value - 1) .. " Gold")
-		craftingWindow:getChildById("balance"):setText(tostring(balance .. " Gold"))
-	end
-
-	craftingWindow:getChildById("rightButton").onClick = function()
-		local amount = craftingWindow:getChildById("amount")
-		local costamount = recipe.cost
-		local value = tonumber(amount:getText())
-		if not value or value + 1 > amount.maxAmount then
-			return
-		end
-
-		amount:setText(tostring(math.min(100, value + 1)))
-		craftingWindow:getChildById("cost"):setText(costamount * (value + 1) .. " Gold")
-		craftingWindow:getChildById("balance"):setText(tostring(balance .. " Gold"))
-	end
 
 	local item = craftingWindow:recursiveGetChildById("recipeItem")
 	item:setItemId(recipe.spriteId)
 	item:setVirtual(true)
 	item:setItemCount(recipe.count)
+	-- mark it so the custom tooltip mod shows "??" + predicted level on hover
+	item.craftingPreview = true
+	item.craftingTier = recipe.tier
+	item.craftingProfId = craftingWindow.profId
 	
 
 		
@@ -144,31 +257,16 @@ function onRecipeSelected(w, child)
 		widget:setTooltip("You got " .. ingredient.playerCount .. "/" .. ingredient.count .. " required " .. ingredient.name)
 	end
 
-	local items = {}
-	-- copy the list
+	-- compute max craft amount directly (the old while-loop froze the client
+	-- when a recipe had zero ingredients or an ingredient with required <= 0)
+	child.maxCraftAmount = math.huge
 	for _, item in pairs(recipe.ingredients) do
-		items[#items + 1] = {playerAmount = item.playerCount, required = item.count}
+		child.maxCraftAmount = math.min(child.maxCraftAmount, math.floor(item.playerCount / math.max(1, item.count)))
 	end
-
-	child.maxCraftAmount = 0
-	local proceed = true
-	while proceed do
-		for _, item in pairs(items) do
-			if item.playerAmount < item.required then
-				proceed = false
-				break
-			end
-		end
-		
-		if not proceed then
-			break
-		end
-
-		for _, item in pairs(items) do
-			item.playerAmount = item.playerAmount - item.required
-		end
-		child.maxCraftAmount = child.maxCraftAmount + 1
+	if child.maxCraftAmount == math.huge then
+		child.maxCraftAmount = recipe.cost > 0 and math.floor((tonumber(balance) or 0) / recipe.cost) or 1
 	end
+	child.maxCraftAmount = math.min(child.maxCraftAmount, 999)
 
 	craftingWindow:recursiveGetChildById("craftButton"):setEnabled(child.maxCraftAmount > 0)
 	craftingWindow:recursiveGetChildById("craftAllButton"):setEnabled(child.maxCraftAmount > 0)
@@ -182,7 +280,23 @@ function onRecipeSelected(w, child)
 	--craftingWindow:getChildById("cost"):setText("0")
 	--craftingWindow:getChildById("balance"):setText("0")
 
-	craftingWindow:recursiveGetChildById("recipeDesc"):setText(recipe.desc)
+	-- proficiency items replace the description box with a route preview
+	local descLabel = craftingWindow:recursiveGetChildById('descLabel')
+	local descBox = craftingWindow:recursiveGetChildById('recipeDesc')
+	local descScroll = craftingWindow:recursiveGetChildById('recipeDescScrollBar')
+	if recipe.hasProf then
+		if descLabel then descLabel:setText(tr('Proficiency')) end
+		if descBox then descBox:setVisible(false) end
+		if descScroll then descScroll:setVisible(false) end
+		updateProficiencyPreview(recipe)
+	else
+		clearProficiencyPreview()
+		if descLabel then descLabel:setText(tr('Description')) end
+		if descBox then
+			descBox:setVisible(true)
+			descBox:setText(recipe.desc)
+		end
+	end
 
 	local label = craftingWindow:recursiveGetChildById("recipeLabel")
 
@@ -323,6 +437,10 @@ function renderRecipeList(skill, recipes)
             item:setSize({width = 32, height = 32})
             item:setMarginLeft(5)
             item:setPosition({x = 5, y = 5})
+            -- mark it so the custom tooltip mod shows "??" + predicted level
+            item.craftingPreview = true
+            item.craftingTier = recipe.tier
+            item.craftingProfId = skill.profId
 
             widget.recipe = recipe
             widget.recipeId = i
@@ -354,6 +472,12 @@ function renderRecipeList(skill, recipes)
     end
 
     recipeList:focusChild(recipeList:getFirstChild())
+    -- a row auto-focused during createWidget won't re-trigger the focus
+    -- callback here; make sure details for the initial selection still apply
+    local focused = recipeList:getFocusedChild()
+    if focused then
+        onRecipeSelected(recipeList, focused)
+    end
 end
 
 function showMessageBox(success, err)
@@ -411,6 +535,7 @@ function parseServerInfo(protocol, msg)
             recipe.storagevalue = msg:getU16()
             recipe.requiredSkill = msg:getU16()
             recipe.category = msg:getString()
+            recipe.hasProf = msg:getU8() == 1 -- proficiency-eligible result
 
             -- ingredients
             local ingrSize = msg:getU8()
