@@ -553,24 +553,21 @@ uint8_t* ResourceManager::decrypt(uint8_t* data, const int32_t size)
     const auto& password = std::string(ENCRYPTION_PASSWORD);
     const int plen = password.length();
 
-    auto* const new_Data = new uint8_t[size];
-
     int j = 0;
     for (int i = -1; ++i < size;) {
         const int ct = data[i];
         if (i % 2) {
-            new_Data[i] = ct + password[j] - i;
+            data[i] = static_cast<uint8_t>(ct + password[j] - i);
         } else {
-            new_Data[i] = ct - password[j] + i;
+            data[i] = static_cast<uint8_t>(ct - password[j] + i);
         }
-        data[i] = new_Data[i];
         ++j;
 
         if (j >= plen)
             j = 0;
     }
 
-    return nullptr;
+    return data;
 }
 
 void ResourceManager::runEncryption(const std::string& password)
@@ -763,8 +760,11 @@ bool ResourceManager::launchCorrect(const std::vector<std::string>& args) { // c
         if (is_directory(entry.path()))
             continue;
 
-        auto fileName1 = entry.path().stem().string();
-        fileName1 = stdext::split(fileName1, "-")[0];
+        const auto stemParts = stdext::split(entry.path().stem().string(), "-");
+        if (stemParts.size() < 2)
+            continue; // never delete the base executable, only timestamped update copies
+
+        auto fileName1 = stemParts[0];
         stdext::tolower(fileName1);
         if (fileName1 != fileName2)
             continue;

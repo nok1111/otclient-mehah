@@ -104,8 +104,11 @@ bool ThingTypeManager::loadDat(std::string file)
         m_datLoaded = true;
         g_lua.callGlobalField("g_things", "onLoadDat", file);
         return true;
-    } catch (const stdext::exception& e) {
-        g_logger.error("Failed to read dat '{}': {}'", file, e.what());
+    } catch (const std::exception& e) {
+        g_logger.error("Failed to read dat '{}': {}", file, e.what());
+        return false;
+    } catch (...) {
+        g_logger.error("Failed to read dat '{}': unknown exception", file);
         return false;
     }
 }

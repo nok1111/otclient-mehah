@@ -186,6 +186,15 @@ function EnterGame.init()
         end
     end
 
+    -- if the saved version isn't installed, fall back to the highest installed one
+    if amountInstalledClients > 0 and not installedClients[tostring(clientVersion)] then
+        local maxInstalled = 0
+        for protoStr, _ in pairs(installedClients) do
+            maxInstalled = math.max(maxInstalled, tonumber(protoStr) or 0)
+        end
+        clientVersion = maxInstalled
+    end
+
     clientBox:setCurrentOption(clientVersion)
 
     connect(clientBox, {

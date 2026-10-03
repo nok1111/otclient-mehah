@@ -30,9 +30,10 @@
 #include <framework/util/color.h>
 #include "framework/core/graphicalapplication.h"
 
-#ifdef NDEBUG
+#include <mmsystem.h>
 #include <timeapi.h>
-#endif
+#pragma comment(lib, "winmm.lib")
+#include <framework/stdext/string.h>
 
 // Include for DWM API
 #include <dwmapi.h>

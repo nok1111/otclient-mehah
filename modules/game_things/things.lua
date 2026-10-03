@@ -103,4 +103,13 @@ function ThingsLoaderController:onInit()
     self:registerEvents(g_game, {
         onClientVersionChange = load
     })
+
+    -- the client version may have been set before this module loaded
+    -- (e.g. EnterGame.setUniqueServer preloads assets at init)
+    -- in that case the onClientVersionChange event was already fired
+    -- and won't fire again for the same version, so load them now
+    local version = g_game.getClientVersion()
+    if version and version > 0 then
+        load(version)
+    end
 end

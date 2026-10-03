@@ -42,7 +42,7 @@ Logger g_logger;
 namespace
 {
     constexpr std::string_view s_logPrefixes[] = { "", "", "", "WARNING: ", "ERROR: ", "FATAL ERROR: " };
-#if ENABLE_ENCRYPTION == 1
+#if ENABLE_ENCRYPTION == 1 && !defined(ENABLE_DEBUG_LOGS)
     bool s_ignoreLogs = true;
 #else
     bool s_ignoreLogs = false;

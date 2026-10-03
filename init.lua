@@ -3,21 +3,21 @@
 
 -- updater
 Services = {
-   -- updater = "http://23.191.72.22/api/updater.php", --./updater
+   --updater = "https://ascensionproject.online/updater.php", --./updater
     --status = "http://23.191.72.22/login.php", --./client_entergame | ./client_topmenu
-   --websites = "http://23.191.72.22/?subtopic=accountmanagement", --./client_entergame "Forgot password and/or email"
+   websites = "https://ascensionproject.online/", --./client_entergame "Forgot password and/or email"
    -- createAccount = "http://23.191.72.22/clientcreateaccount.php", --./client_entergame -- createAccount.lua
 }
 
---[[
+
 Servers_init = {
-   ["23.191.72.22"] = {
+   ["ascensionproject.online"] = {
         ["port"] = 7171,
         ["protocol"] = 1098,
         ["httpLogin"] = false
     },
 }
-]]
+
 
 g_app.setName("OTClient - Redemption");
 g_app.setCompactName("otclient");

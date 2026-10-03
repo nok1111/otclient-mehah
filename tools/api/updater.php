@@ -1,79 +1,43 @@
 <?php
-// CONFIG
-$files_dir = "/var/www/html/files"; // Directory where the files are located
-$files_url = "http://23.191.72.22/files"; // Url where the client will download the files
-$files_and_dirs = array("init.lua", "data", "modules", "mods");
-$checksum_file = "checksums.txt";
-$checksum_update_interval = 60; // seconds
+/**
+ * OTClient updater endpoint - thin version.
+ * Reads a PRE-GENERATED manifest (no per-request hashing = no lag).
+ * Regenerate with: /usr/local/bin/ascension-manifest
+ * Deployed at: /var/www/ascension-web/updater.php on the VPS.
+ */
+$manifest_file = "/var/www/updates/manifest.json";
+
 $binaries = array(
-    "WIN32-WGL" => "otclient_dx_x64.exe",
-    "WIN32-EGL" => "otclient_dx_x64.exe",
-    "WIN32-WGL-GCC" => "otclient_dx_x64.exe",
-    "WIN32-EGL-GCC" => "otclient_dx_x64.exe",
+    "WIN32-WGL" => "Ascension.exe",
+    "WIN32-EGL" => "Ascension.exe",
+    "WIN32-WGL-GCC" => "Ascension.exe",
+    "WIN32-EGL-GCC" => "Ascension.exe",
     "X11-GLX" => "otclient_linux",
     "X11-EGL" => "otclient_linux",
-    "ANDROID-EGL" => "", // we can't update android binary
-    "ANDROID64-EGL" => "" // we can't update android binary
+    "ANDROID-EGL" => "",   // android updates via store/apk
+    "ANDROID64-EGL" => ""
 );
-// CONFIG END
-
-function sendError($error) {
-    echo(json_encode(array("error" => $error)));
-    die();    
-}
 
 $data = json_decode(file_get_contents("php://input"));
-//if(!$data) {
-//    sendError("Invalid input data");
-//}
+$platform = ($data && !empty($data->platform)) ? $data->platform : "";
+$binary = isset($binaries[$platform]) ? $binaries[$platform] : "";
 
-$version = $data->version ?: 0; // APP_VERSION from init.lua
-$build = $data->build ?: ""; // 2.4, 2.4.1, 2.5, etc
-$os = $data->os ?: "unknown"; // android, windows, mac, linux, unknown
-$platform = $data->platform ?: ""; // WIN32-WGL, X11-GLX, ANDROID-EGL, etc
-$args = $data->args; // custom args when calling Updater.check()
-$binary = $binaries[$platform] ?: "";
-
-$cache = null;
-$cache_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $checksum_file;
-if (file_exists($cache_file) && (filemtime($cache_file) + $checksum_update_interval > time())) {
-    $cache = json_decode(file_get_contents($cache_file), true);
-}
-if(!$cache) { // update cache
-    $dir = realpath($files_dir);
-    $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
-    $cache = array(); 
-    foreach ($rii as $file) {
-        if (!$file->isFile())
-            continue;
-        $path = str_replace($dir, '', $file->getPathname());
-        $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
-        $checksum = hash_file("crc32b", $file->getPathname());
-
-        if ($checksum === true || $checksum != "") {
-            $parsed_checksum = ltrim($checksum, '0');
-            if ($parsed_checksum === '') {
-                $parsed_checksum = '0';
-            }
-            $cache[$path] = $parsed_checksum;
-        }
-    }
-    file_put_contents($cache_file . ".tmp", json_encode($cache));
-    rename($cache_file . ".tmp", $cache_file);
-}
-$ret = array("url" => $files_url, "files" => array(), "keepFiles" => false);
-foreach($cache as $file => $checksum) {
-    $base = trim(explode("/", ltrim($file, "/"))[0]); 
-    if(in_array($base, $files_and_dirs)) {
-        $ret["files"][$file] = $checksum;
-    }
-    if($base == $binary && !empty($binary)) {
-        $ret["binary"] = array("file" => $file, "checksum" => $checksum);
-    }
+$ret = json_decode(file_get_contents($manifest_file), true);
+if (!$ret) {
+    echo json_encode(array("error" => "Updater manifest not generated yet"));
+    die();
 }
 
-$body = json_encode($ret, JSON_PRETTY_PRINT);
+// binaries are handled separately (updated via updateExecutable, never written in-place)
+$binaryChecksum = ($binary !== "" && isset($ret["files"]["/" . $binary])) ? $ret["files"]["/" . $binary] : null;
+foreach (array("Ascension.exe", "otclient_dx_x64.exe", "otclient_linux") as $b) {
+    unset($ret["files"]["/" . $b]);
+}
+if ($binaryChecksum !== null) {
+    $ret["binary"] = array("file" => "/" . $binary, "checksum" => $binaryChecksum);
+}
+
+$body = json_encode($ret);
+header("Content-Type: application/json");
 header("Content-length: " . strlen($body));
-echo($body);
-
-?>
+echo $body;

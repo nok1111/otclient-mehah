@@ -77,48 +77,33 @@ local function updateFiles(data, keepCurrentFiles)
     return Updater.error("Invalid data from updater api: " .. json.encode(data, 2))
   end
 
-  if data.keepFiles then
-    keepCurrentFiles = true
+  local manifestFiles = {}
+  for file, checksum in pairs(data.files) do
+    table.insert(manifestFiles, { file, checksum })
   end
-
-  local newFiles = false
-  local finalFiles = {}
-  local localFiles = g_resources.filesChecksums()
 
   local toUpdate = {}
   local toUpdateFiles = {}
-  -- keep all files or files from data/things
-  for file, checksum in pairs(localFiles) do
-    if keepCurrentFiles or string.find(file, "data/things") then
-      table.insert(finalFiles, file)
-    end
-  end
+  local checkIndex = 1
 
-  -- update files
-  for file, checksum in pairs(data.files) do
-    table.insert(finalFiles, file)
-    if not localFiles[file] or localFiles[file] ~= checksum then
-      table.insert(toUpdate, { file, checksum })
-      table.insert(toUpdateFiles, file)
-      newFiles = true
-    end
-  end
+  local function finishCheck()
+    local newFiles = #toUpdateFiles > 0
 
-  -- update binary
-  local binary = nil
-  if type(data.binary) == "table" and data.binary.file:len() > 1 then
-    local selfChecksum = g_resources.selfChecksum()
-    if selfChecksum:len() > 0 and selfChecksum ~= data.binary.checksum then
-      binary = data.binary.file
-      table.insert(toUpdate, { binary, data.binary.checksum })
+    -- update binary
+    local binary = nil
+    if type(data.binary) == "table" and data.binary.file:len() > 1 then
+      local selfChecksum = g_resources.selfChecksum()
+      if selfChecksum:len() > 0 and selfChecksum ~= data.binary.checksum then
+        binary = data.binary.file
+        table.insert(toUpdate, { binary, data.binary.checksum })
+      end
     end
-  end
 
-  if #toUpdate == 0 then -- nothing to update
-    updaterWindow.mainProgress:setPercent(100)
-    scheduledEvent = scheduleEvent(Updater.abort, 20)
-    return
-  end
+    if #toUpdate == 0 then -- nothing to update
+      updaterWindow.mainProgress:setPercent(100)
+      scheduledEvent = scheduleEvent(Updater.abort, 20)
+      return
+    end
 
   -- update of some files require full client restart
   local forceRestart = false
@@ -155,6 +140,7 @@ local function updateFiles(data, keepCurrentFiles)
 
       if binary then
         g_resources.updateExecutable(binary)
+        g_resources.deleteFile(binary) -- remove downloaded copy, real exe is written as Ascension-<ts>.exe
       end
 
       if restart then
@@ -168,6 +154,31 @@ local function updateFiles(data, keepCurrentFiles)
       end
     end, 100)
   end)
+  end
+
+  -- check manifest files in chunks so the UI doesn't freeze
+  local function checkChunk()
+    if not updaterWindow then return end
+    local deadline = g_clock.millis() + 30
+    while checkIndex <= #manifestFiles do
+      local entry = manifestFiles[checkIndex]
+      if g_resources.fileChecksum(entry[1]) ~= entry[2] then
+        table.insert(toUpdate, entry)
+        table.insert(toUpdateFiles, entry[1])
+      end
+      checkIndex = checkIndex + 1
+      if g_clock.millis() >= deadline then break end
+    end
+    updaterWindow.mainProgress:setPercent(math.floor(60 + 40 * checkIndex / #manifestFiles))
+    if checkIndex <= #manifestFiles then
+      scheduledEvent = scheduleEvent(checkChunk, 1)
+    else
+      finishCheck()
+    end
+  end
+
+  updaterWindow.status:setText(tr("Checking %i files", #manifestFiles))
+  checkChunk()
 end
 
 -- public functions

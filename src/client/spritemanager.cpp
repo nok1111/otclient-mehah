@@ -87,8 +87,11 @@ bool SpriteManager::loadRegularSpr(std::string file)
         m_loaded = true;
         g_lua.callGlobalField("g_sprites", "onLoadSpr", file);
         return true;
-    } catch (const stdext::exception& e) {
+    } catch (const std::exception& e) {
         g_logger.error("Failed to load sprites from '{}': {}", file, e.what());
+        return false;
+    } catch (...) {
+        g_logger.error("Failed to load sprites from '{}': unknown exception", file);
         return false;
     }
 }
