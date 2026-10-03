@@ -2,10 +2,9 @@ LocalesMainLabel < Label
   font: roboto-rounded-30px
 
 LocalesButton < UIWidget
-  size: 288 480
-  image-size: 288 480
+  size: 262 480
+  image-size: 262 480
   image-smooth: true
-  image-fixed-ratio: true
   text-offset: 0 480
   font: verdana-11px-antialised
   border-width: 3
@@ -30,7 +29,7 @@ UIWindow
     margin-top: 30
     layout:
       type: grid
-      cell-size: 288 510
+      cell-size: 262 510
       cell-spacing: 64
       flow: true
 
