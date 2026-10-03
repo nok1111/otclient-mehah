@@ -316,7 +316,7 @@ Panel
       !text: tr('Voice')
       anchors.left: parent.left
       anchors.verticalCenter: parent.verticalCenter
-      margin-left: 15
+      margin-left: 45
       color: #dfdfdf
       font: verdana-11px-rounded
       phantom: true
