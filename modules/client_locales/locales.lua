@@ -44,7 +44,7 @@ function createWindow()
         if locale then
             local widget = g_ui.createWidget('LocalesButton', localesPanel)
             widget:setImageSource('/images/flags/' .. LOCALE_FLAGS[name])
-            widget:setText(locale.languageName)
+            widget:getChildById('flagLabel'):setText(locale.languageName)
             widget.onClick = function()
                 selectFirstLocale(name)
             end
