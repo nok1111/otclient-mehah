@@ -148,7 +148,7 @@ Panel
     anchors.bottom: consoleContentPanel.top
     anchors.right: closeChannelButton.left
     margin-right: 20
-    margin-left: 18
+    margin-left: 46
     margin-bottom: 0
     tab-spacing: 2
     movable: true
@@ -157,8 +157,9 @@ Panel
     id: prevChannelButton
     image-source: /images/ui/console_flash_left
     image-clip: 36 0 18 18
-    anchors.left: parent.left
+    anchors.left: voiceButton.right
     anchors.top: consoleTabBar.top
+    margin-left: 4
     size: 18 18
     enabled: false
     &dynamicNavigation: 96
@@ -280,10 +281,10 @@ Panel
     !tooltip: tr('Ignore players')
     image-source: /images/ui/console_buttons
     image-clip: 0 32 16 16
-    anchors.right: voiceButton.left
+    anchors.right: readOnlyButton.left
     anchors.bottom: consoleContentPanel.top
     margin-bottom: 5
-    margin-right: 1
+    margin-right: 5
     size: 16 16
     @onClick: onClickIgnoreButton()
 
@@ -297,10 +298,9 @@ Panel
     id: voiceButton
     !tooltip: tr('Voice Chat') .. ' (F6)'
     image-source: /images/icons/voice
-    anchors.right: readOnlyButton.left
-    anchors.bottom: consoleContentPanel.top
-    margin-bottom: 5
-    margin-right: 5
+    anchors.left: parent.left
+    anchors.top: consoleTabBar.top
+    margin-left: 2
     size: 22 22
     @onClick: openVoiceWindow()
 
