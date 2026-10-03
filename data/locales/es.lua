@@ -3234,8 +3234,8 @@ locale = {
  ["Monsters have +%s%% damage resistance"] = "Los monstruos tienen +%s%% resistencia al dano",
  ["Attacks drain %s%% mana"] = "Los ataques drenan %s%% de mana",
  ["+50% Fame | Monsters deal +25% damage"] = "+50% Fama | Los monstruos infligen +25% de dano",
- ["+10% Rare Loot | -15% Defense"] = "+10% Botin Raro | -15% Defensa",
- ["+25% Elite Spawn | Elites deal +20% damage"] = "+25% Aparicion de Elite | Las elites infligen +20% de dano",
+ ["+10% Rare Loot | +15% Damage Taken"] = "+10% Botin Raro | +15% Dano Recibido",
+ ["+25% Elite Spawn Chance"] = "+25% Probabilidad de Aparicion de Elite",
  ["Heal 5% HP on kill | Receive +15% damage"] = "Cura 5% PV al matar | Recibe +15% dano",
  ["+%s%% damage dealt | Receive +%s%% damage"] = "+%s%% dano infligido | Recibe +%s%% dano",
 
@@ -6014,6 +6014,8 @@ locale = {
 	["You hear them, don’t you? Beneath the sands. The wyrms have begun to stir... and they do not stir without reason."] = "Los oyes, ¿verdad? Bajo las arenas. Los wyrms han comenzado a agitarse... y no se agitan sin razón.",
 	["You’ve faced them and lived. I thank you. But this is just the beginning, mark my words."] = "Los enfrentaste y viviste. Te lo agradezco. Pero esto es solo el principio, recuerda mis palabras.",
 	["The tunnels northeast of here… they reek of fear and blood. If you’re brave enough, go there and drive the wyrms back."] = "Los túneles al noreste de aquí huelen a miedo y a sangre. Si eres lo bastante valiente, ve allí y haz retroceder a los wyrms.",
+	["Enemies reduce the first hit received every 5s by 80%."] = "Los enemigos reducen el primer golpe recibido cada 5s en un 80%.",
+	["Crystal Cave"] = "Cueva de Cristal",
 }
 
 }
