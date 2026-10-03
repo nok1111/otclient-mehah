@@ -8035,6 +8035,8 @@ locale = {
 	["Modes"] = "Modos",
 	["Modifiers"] = "Modificadores",
 	["- Minimum level %s"] = "- Nível mínimo %s",
+	["Voice"] = "Voz",
+	["Voice Chat"] = "Chat de voz",
 }
 
 }

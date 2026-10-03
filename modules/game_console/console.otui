@@ -148,7 +148,7 @@ Panel
     anchors.bottom: consoleContentPanel.top
     anchors.right: closeChannelButton.left
     margin-right: 20
-    margin-left: 46
+    margin-left: 120
     margin-bottom: 0
     tab-spacing: 2
     movable: true
@@ -297,12 +297,29 @@ Panel
   TabButton
     id: voiceButton
     !tooltip: tr('Voice Chat') .. ' (F6)'
-    image-source: /images/icons/voice
+    image-source: /images/ui/buttons/voice_button
+    image-clip: 0 0 116 34
     anchors.left: parent.left
     anchors.top: consoleTabBar.top
     margin-left: 2
-    size: 22 22
+    size: 96 34
     @onClick: openVoiceWindow()
+
+    $hover:
+      image-clip: 0 34 116 34
+
+    $pressed:
+      image-clip: 0 68 116 34
+
+    Label
+      id: voiceLabel
+      !text: tr('Voice')
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 15
+      color: #dfdfdf
+      font: verdana-11px-rounded
+      phantom: true
 
   UIButton
     id: readOnlyButton

@@ -6925,6 +6925,8 @@ locale = {
 	["Modes"] = "Modos",
 	["Modifiers"] = "Modificadores",
 	["- Minimum level %s"] = "- Nivel mínimo %s",
+	["Voice"] = "Voz",
+	["Voice Chat"] = "Chat de voz",
 }
 
 }
