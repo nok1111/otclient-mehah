@@ -394,6 +394,7 @@ locale = {
  ["Select object"] = "Seleccionar objeto",
  ["Select Outfit"] = "Seleccionar outfit",
  ["Select your language"] = "Seleccionar tu idioma",
+ ["Choose your language"] = "Elige tu idioma",
  ["Select"] = "Seleccionar",
  ["Sell All"] = "Vender todo",
  ["Sell Now"] = "Vender ahora",

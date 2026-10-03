@@ -31,15 +31,25 @@ function createWindow()
     local spacing = layout:getCellSpacing()
     local size = layout:getCellSize()
 
+    local LOCALE_ORDER = { 'en', 'pt', 'es' }
+    local LOCALE_FLAGS = {
+        en = 'flag_usa2',
+        pt = 'flag_brazil',
+        es = 'flag_mexico'
+    }
+
     local count = 0
-    for name, locale in pairs(installedLocales) do
-        local widget = g_ui.createWidget('LocalesButton', localesPanel)
-        widget:setImageSource('/images/flags/' .. name .. '')
-        widget:setText(locale.languageName)
-        widget.onClick = function()
-            selectFirstLocale(name)
+    for _, name in ipairs(LOCALE_ORDER) do
+        local locale = installedLocales[name]
+        if locale then
+            local widget = g_ui.createWidget('LocalesButton', localesPanel)
+            widget:setImageSource('/images/flags/' .. LOCALE_FLAGS[name])
+            widget:setText(locale.languageName)
+            widget.onClick = function()
+                selectFirstLocale(name)
+            end
+            count = count + 1
         end
-        count = count + 1
     end
 
     count = math.max(1, math.min(count, 3))
