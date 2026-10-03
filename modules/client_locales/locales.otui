@@ -1,12 +1,12 @@
 LocalesMainLabel < Label
-  font: sans-bold-16px
+  font: roboto-rounded-30px
 
 LocalesButton < UIWidget
-  size: 96 160
-  image-size: 96 160
+  size: 288 480
+  image-size: 288 480
   image-smooth: true
   image-fixed-ratio: true
-  text-offset: 0 160
+  text-offset: 0 480
   font: verdana-11px-antialised
   border-width: 3
   border-color: alpha
@@ -28,16 +28,16 @@ UIWindow
     text-auto-resize: true
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.verticalCenter: parent.verticalCenter
-    margin-top: -150
+    margin-top: -300
 
   Panel
     id: localesPanel
-    margin-top: 50
+    margin-top: 30
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: prev.bottom
     anchors.bottom: parent.bottom
     layout:
       type: grid
-      cell-size: 96 190
-      cell-spacing: 48
+      cell-size: 288 510
+      cell-spacing: 64
       flow: true
