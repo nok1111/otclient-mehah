@@ -23,21 +23,20 @@ UIWindow
   clipping: true
   anchors.fill: parent
 
-  LocalesMainLabel
-    !text: tr('Choose your language')
-    text-auto-resize: true
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.verticalCenter: parent.verticalCenter
-    margin-top: -300
-
   Panel
     id: localesPanel
-    margin-top: 30
     anchors.horizontalCenter: parent.horizontalCenter
-    anchors.top: prev.bottom
-    anchors.bottom: parent.bottom
+    anchors.verticalCenter: parent.verticalCenter
+    margin-top: 30
     layout:
       type: grid
       cell-size: 288 510
       cell-spacing: 64
       flow: true
+
+  LocalesMainLabel
+    !text: tr('Choose your language')
+    text-auto-resize: true
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottom: localesPanel.top
+    margin-bottom: 20

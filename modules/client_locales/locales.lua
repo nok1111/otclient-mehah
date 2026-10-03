@@ -54,6 +54,7 @@ function createWindow()
 
     count = math.max(1, math.min(count, 3))
     localesPanel:setWidth(size.width * count + spacing * (count - 1))
+    localesPanel:setHeight(size.height)
 
     addEvent(function()
         addEvent(function()
