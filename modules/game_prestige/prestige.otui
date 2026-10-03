@@ -75,7 +75,7 @@ PrestigeConfirmWindow < MainWindow
     text-auto-resize: true
     color: #E1D7B0
     font: verdana-11px-antialised
-    text: Are you sure?
+    !text: tr('Are you sure?')
 
   Button
     id: confirmYes
@@ -110,7 +110,7 @@ PrestigeWindow < MainWindow
     margin-top: 6
     margin-left: 14
     margin-right: 14
-    text: Choose a prestige mode to reset your character with new challenges.
+    !text: tr('Choose a prestige mode to reset your character with new challenges.')
     color: #C5E1FF
     font: verdana-11px-antialised
     text-align: center
@@ -124,7 +124,7 @@ PrestigeWindow < MainWindow
     margin-top: 4
     margin-left: 14
     margin-right: 14
-    text: Total prestiges: 0 | Hardcore completions: 0
+    !text: tr('Total prestiges: 0 | Hardcore completions: 0')
     color: #E7CF7A
     font: verdana-11px-rounded
     text-align: center
@@ -148,7 +148,7 @@ PrestigeWindow < MainWindow
       anchors.left: parent.left
       anchors.right: parent.right
       margin-top: 2
-      text: Modes
+      !text: tr('Modes')
       color: #E7CF7A
       font: verdana-11px-rounded
       text-align: center
@@ -194,7 +194,7 @@ PrestigeWindow < MainWindow
       anchors.top: parent.top
       anchors.left: parent.left
       anchors.right: parent.right
-      text: Select a mode
+      !text: tr('Select a mode')
       color: #E7CF7A
       font: verdana-11px-rounded
       text-align: center
@@ -234,7 +234,7 @@ PrestigeWindow < MainWindow
       Label
         id: detailRewardsTitle
         margin-top: 12
-        text: Rewards
+        !text: tr('Rewards')
         color: #C5E1FF
         font: verdana-11px-rounded
         text-auto-resize: true
@@ -276,7 +276,7 @@ PrestigeWindow < MainWindow
       Label
         id: detailDescriptionTitle
         margin-top: 10
-        text: Description
+        !text: tr('Description')
         color: #C5E1FF
         font: verdana-11px-rounded
         text-auto-resize: true
@@ -293,7 +293,7 @@ PrestigeWindow < MainWindow
       Label
         id: detailRequirementsTitle
         margin-top: 10
-        text: Requirements
+        !text: tr('Requirements')
         color: #C5E1FF
         font: verdana-11px-rounded
         text-auto-resize: true
@@ -310,7 +310,7 @@ PrestigeWindow < MainWindow
       Label
         id: detailModifiersTitle
         margin-top: 10
-        text: Modifiers
+        !text: tr('Modifiers')
         color: #C5E1FF
         font: verdana-11px-rounded
         text-auto-resize: true

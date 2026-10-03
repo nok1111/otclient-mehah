@@ -84,7 +84,7 @@ local function updateDetail()
 
   local mode = selectedModeId and findMode(selectedModeId) or nil
   if not mode then
-    if nameLabel then nameLabel:setText('Select a mode') end
+    if nameLabel then nameLabel:setText(tr('Select a mode')) end
     if availLabel then availLabel:setText('-') end
     if descLabel then descLabel:setText('-') end
     if reqLabel then reqLabel:setText('-') end
@@ -99,19 +99,19 @@ local function updateDetail()
     return
   end
 
-  if nameLabel then nameLabel:setText(mode.name or '-') end
+  if nameLabel then nameLabel:setText(trServerMsg(mode.name or '-')) end
 
   if availLabel then
     local isOngoing = (activeModeId == mode.id) and (activeState == 1)
     local wasCompleted = (activeModeId == 0) and mode.__completed -- placeholder (not used currently)
     if isOngoing then
-      availLabel:setText('Status: ONGOING - Challenge in progress.')
+      availLabel:setText(tr('Status: ONGOING - Challenge in progress.'))
       availLabel:setColor('#F2C72A') -- amber/gold
     elseif mode.unlocked then
-      availLabel:setText('Status: AVAILABLE')
+      availLabel:setText(tr('Status: AVAILABLE'))
       availLabel:setColor('#9FD49F')
     else
-      availLabel:setText('Status: LOCKED - ' .. (mode.lockedReason or 'requirements not met'))
+      availLabel:setText(tr('Status: LOCKED - ') .. trServerMsg(mode.lockedReason or 'requirements not met'))
       availLabel:setColor('#D47A7A')
     end
   end
@@ -145,20 +145,20 @@ local function updateDetail()
   if rewardWhenLabel then
     rewardWhenLabel:setVisible(hasAnyReward)
     if hasAnyReward and rewards and rewards.whenText then
-      rewardWhenLabel:setText('Granted ' .. rewards.whenText .. '.')
+      rewardWhenLabel:setText(tr('Granted %s.', tr(rewards.whenText)))
     end
   end
 
-  if descLabel then descLabel:setText(mode.description or '-') end
+  if descLabel then descLabel:setText(trServerMsg(mode.description or '-')) end
 
   if reqLabel then
     local lines = {}
     if type(mode.requirements) == 'table' then
       for _, line in ipairs(mode.requirements) do
-        lines[#lines + 1] = '- ' .. tostring(line)
+        lines[#lines + 1] = '- ' .. trServerMsg(tostring(line))
       end
     end
-    if #lines == 0 then lines[#lines + 1] = '- Minimum level ' .. tostring(mode.minLevel or '-') end
+    if #lines == 0 then lines[#lines + 1] = tr('- Minimum level %s', tostring(mode.minLevel or '-')) end
     reqLabel:setText(table.concat(lines, '\n'))
   end
 
@@ -171,7 +171,7 @@ local function updateDetail()
     if hasModifiers then
       local lines = {}
       for _, line in ipairs(mode.modifiers) do
-        lines[#lines + 1] = '- ' .. tostring(line)
+        lines[#lines + 1] = '- ' .. trServerMsg(tostring(line))
       end
       modifiersLabel:setText(table.concat(lines, '\n'))
     end
@@ -219,9 +219,9 @@ local function rebuildList()
 
     local nameLabel = entry:getChildById('modeName')
     if nameLabel then
-      local displayName = mode.name or ('Mode ' .. tostring(mode.id))
+      local displayName = trServerMsg(mode.name or tr('Mode %s', tostring(mode.id)))
       if isOngoing then
-        displayName = displayName .. '  [ONGOING]'
+        displayName = displayName .. '  ' .. tr('[ONGOING]')
         nameLabel:setColor('#F2C72A') -- amber/gold
       else
         nameLabel:setColor(mode.unlocked and '#FFFFFF' or '#888888')
@@ -304,9 +304,9 @@ local function openConfirm(mode)
   local no = confirmWindow:recursiveGetChildById('confirmNo')
 
   if text then
-    text:setText(string.format(
+    text:setText(tr(
       '%s\n\nThis will RESET your character (level, skills, talents, quests).\nThis action is IRREVERSIBLE.\n\nConfirm?',
-      mode.name or ('Mode ' .. tostring(mode.id))
+      trServerMsg(mode.name or tr('Mode %s', tostring(mode.id)))
     ))
   end
 
@@ -344,14 +344,14 @@ local function applyPayload(payload)
 
   local statusLabel = window and window:recursiveGetChildById('statusLabel')
   if statusLabel then
-    local baseText = string.format(
+    local baseText = tr(
       'Total prestiges: %d | Hardcore completions: %d',
       tonumber(payload.totalPrestiges) or 0,
       tonumber(payload.hardcoreCompletions) or 0
     )
     if activeModeId > 0 and activeState == 1 then
-      local name = MODE_DISPLAY_NAMES[activeModeId] or ('Mode ' .. activeModeId)
-      statusLabel:setText('ONGOING: ' .. name .. '  |  ' .. baseText)
+      local name = tr(MODE_DISPLAY_NAMES[activeModeId] or tr('Mode %s', tostring(activeModeId)))
+      statusLabel:setText(tr('ONGOING: ') .. name .. '  |  ' .. baseText)
       statusLabel:setColor('#F2C72A')
     else
       statusLabel:setText(baseText)
