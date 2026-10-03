@@ -1679,6 +1679,10 @@ function onTalk(name, level, mode, message, channelId, creaturePos)
         return
     end
 
+    if isNpcMode then
+        message = trServerMsg(message)
+    end
+
     local localPlayer = g_game.getLocalPlayer()
     if name ~= g_game.getCharacterName() and isUsingIgnoreList() and not (isUsingWhiteList()) or
         (isUsingWhiteList() and not (isWhitelisted(name)) and not (isAllowingVIPs() and localPlayer:hasVip(name))) then

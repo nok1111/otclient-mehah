@@ -98,7 +98,11 @@ function createDialog(value)
   outfitBox:setOutfit(Npc:getOutfit())
   
   labelMessage:clearText()
-  labelMessage:setText(tr(value.message))
+  if value.params and #value.params > 0 then
+    labelMessage:setText(tr(value.message, unpack(value.params)))
+  else
+    labelMessage:setText(trServerMsg(value.message))
+  end
   scrollPanel:setVisible(labelMessage:getTextSize().height > panelMessage.limitText)
   
   buttonHolder:destroyChildren()  
