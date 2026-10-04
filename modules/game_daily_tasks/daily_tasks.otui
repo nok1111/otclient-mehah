@@ -41,6 +41,9 @@ DailyTaskRow < Panel
     color: #C5E1FF
     font: verdana-11px-antialised
     !text: tr('Label')
+
+  // Task title
+  Label
     id: title
     anchors.top: parent.top
     anchors.left: categoryIcon.right

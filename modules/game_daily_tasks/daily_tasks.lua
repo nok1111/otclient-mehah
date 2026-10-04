@@ -111,8 +111,8 @@ local function buildTaskRow(list, task)
   row:getChildById('title'):setText(tr(task.title or 'Task'))
   row:getChildById('desc'):setText(tr(task.description or '-'))
 
-  -- Difficulty badge
-  local diffLabel = row:getChildById('diffLabel')
+  -- Difficulty badge (nested inside diffBadge panel -> needs recursive lookup)
+  local diffLabel = row:recursiveGetChildById('diffLabel')
   if diffLabel then
     diffLabel:setText(tr((task.difficulty or 'task'):upper()))
     diffLabel:setColor(DIFF_COLORS[task.difficulty] or '#FFFFFF')
@@ -166,12 +166,12 @@ local function buildTaskRow(list, task)
   local essIcon  = row:recursiveGetChildById('essIcon')
   local essValue = row:recursiveGetChildById('essValue')
 
-  print(string.format(
-    '[daily_tasks] row reward values -> ap=%s ess=%s | apValue=%s essValue=%s',
-    tostring(ap), tostring(ess),
-    tostring(apValue and apValue:getId() or 'nil'),
-    tostring(essValue and essValue:getId() or 'nil')
-  ))
+  -- print(string.format(
+  --   '[daily_tasks] row reward values -> ap=%s ess=%s | apValue=%s essValue=%s',
+  --   tostring(ap), tostring(ess),
+  --   tostring(apValue and apValue:getId() or 'nil'),
+  --   tostring(essValue and essValue:getId() or 'nil')
+  -- ))
   if apValue then
     apValue:setText('+' .. ap)
     apValue:setColor('#FFD56B')
