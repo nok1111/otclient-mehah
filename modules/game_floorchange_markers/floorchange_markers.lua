@@ -121,6 +121,8 @@ local function onGameEnd()
 end
 
 function init()
+    g_ui.importStyle('floorchange_markers.otui')
+
     local sampleTile = g_map.getTile(g_game.getLocalPlayer() and g_game.getLocalPlayer():getPosition() or {x=0,y=0,z=0})
     if sampleTile and not sampleTile.hasFloorChange then
         g_logger.warning('[FloorChange Markers] Tile:hasFloorChange() not available; rebuild C++ to enable.')

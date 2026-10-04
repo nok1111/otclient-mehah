@@ -221,6 +221,7 @@ end
 
 function init()
     -- print('[NPC Markers] init')
+    g_ui.importStyle('npcmarkers.otui')
     loadCategories()
 
     connect(Creature, {
