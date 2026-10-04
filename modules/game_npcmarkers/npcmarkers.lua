@@ -88,7 +88,7 @@ local function createMarker(creature)
     local pos = creature:getPosition()
     minimap:centerInPosition(widget, pos)
     npcMarkers[id] = widget
-    print('[NPC Markers] created marker for ' .. name .. ' (' .. category .. ')')
+    -- print('[NPC Markers] created marker for ' .. name .. ' (' .. category .. ')')
     updateMarkerPosition(creature)
 end
 
@@ -149,7 +149,7 @@ local function updateAllMarkers()
     logCounter = logCounter + 1
     if logCounter >= 20 then
         logCounter = 0
-        print('[NPC Markers] updateAllMarkers: ' .. count .. ' markers, minimap visible: ' .. tostring(minimap:isVisible()))
+        -- print('[NPC Markers] updateAllMarkers: ' .. count .. ' markers, minimap visible: ' .. tostring(minimap:isVisible()))
     end
 
     updateEvent = scheduleEvent(updateAllMarkers, 100)
@@ -176,7 +176,7 @@ local function loadCategories()
     end
 
     npcCategories = result or {}
-    print('[NPC Markers] loaded ' .. table.size(npcCategories) .. ' NPC categories')
+    -- print('[NPC Markers] loaded ' .. table.size(npcCategories) .. ' NPC categories')
 end
 
 local function refreshExistingCreatures()
@@ -220,7 +220,7 @@ local function onGameEnd()
 end
 
 function init()
-    print('[NPC Markers] init')
+    -- print('[NPC Markers] init')
     loadCategories()
 
     connect(Creature, {
@@ -236,7 +236,7 @@ function init()
 
     -- If game is already running, refresh immediately
     if g_game.isOnline() and g_game.getLocalPlayer() then
-        print('[NPC Markers] game already online, refreshing existing creatures')
+        -- print('[NPC Markers] game already online, refreshing existing creatures')
         onGameStart()
     end
 end
