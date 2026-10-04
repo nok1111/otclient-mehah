@@ -400,6 +400,8 @@ end
 
 -- Event handlers
 local function onAppear(creature)
+    local outfit = creature:getOutfit()
+    print(string.format('[OutfitFX] %-30s outfit: %d', creature:getName(), (outfit and outfit.type) or 0))
     setCreatureTitle(creature)
 end
 
