@@ -17,10 +17,10 @@ local DIFF_COLORS = {
 }
 
 local PROFESSION_LABELS = {
-  alchemy    = 'Alquimia',
-  enchanting = 'Encantamiento',
-  blacksmith = 'Herrero',
-  gathering  = 'Recoleccion',
+  alchemy    = 'Alchemy',
+  enchanting = 'Enchanting',
+  blacksmith = 'Blacksmithing',
+  gathering  = 'Gathering',
 }
 
 local PROFESSION_COLORS = {
@@ -109,7 +109,9 @@ local function buildTaskRow(list, task)
 
   -- Title + description
   row:getChildById('title'):setText(tr(task.title or 'Task'))
-  row:getChildById('desc'):setText(tr(task.description or '-'))
+  -- descriptions carry %d/%s payloads (incl. item names) -> use trServerMsg so
+  -- the sentence translates but captured item names stay as-is.
+  row:getChildById('desc'):setText(trServerMsg(task.description or '-'))
 
   -- Difficulty badge (nested inside diffBadge panel -> needs recursive lookup)
   local diffLabel = row:recursiveGetChildById('diffLabel')

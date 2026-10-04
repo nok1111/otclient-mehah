@@ -541,6 +541,28 @@ local serverMsgPatterns = {
     { pat = "^Nightmare (.-) active: %+(.-)%% damage taken%.$", tpl = "Nightmare %s active: +%s%% damage taken." },
     { pat = "^High Risk penalty: you lost (.-)x the normal experience and skill progress%.$", tpl = "High Risk penalty: you lost %sx the normal experience and skill progress." },
     { pat = "^Iron Man: you cannot equip items in the (.-) slot%.$", tpl = "Iron Man: you cannot equip items in the %s slot.", trArgs = {1} },
+    -- Daily tasks (descriptions carry item names -> captures stay untranslated)
+    { pat = "^Deliver (%d+) (.-) from mining%.$", tpl = "Deliver %d %s from mining." },
+    { pat = "^Deliver (%d+) (.-)%.$", tpl = "Deliver %d %s." },
+    { pat = "^Kill (%d+) monsters in a non%-PvP zone%.$", tpl = "Kill %d monsters in a non-PvP zone." },
+    { pat = "^Kill (%d+) monsters in a PvP zone%.$", tpl = "Kill %d monsters in a PvP zone." },
+    { pat = "^Kill (%d+) monsters inside an enforced%-PvP zone%.$", tpl = "Kill %d monsters inside an enforced-PvP zone." },
+    { pat = "^Kill (%d+) monsters in any zone%.$", tpl = "Kill %d monsters in any zone." },
+    { pat = "^Defeat (%d+) bosses%.$", tpl = "Defeat %d bosses." },
+    { pat = "^Complete (%d+) dungeons%.$", tpl = "Complete %d dungeons." },
+    { pat = "^Complete (%d+) zone events%.$", tpl = "Complete %d zone events." },
+    { pat = "^Level up your pet by (%d+) level%.$", tpl = "Level up your pet by %d level." },
+    { pat = "^Unlock (%d+) proficiency rank on your items%.$", tpl = "Unlock %d proficiency rank on your items." },
+    { pat = "^Complete (%d+) hunting tasks%.$", tpl = "Complete %d hunting tasks." },
+    { pat = "^Combine (%d+) actions: pet levels %+ proficiency ranks%.$", tpl = "Combine %d actions: pet levels + proficiency ranks." },
+    { pat = "^Combine (%d+) actions: bosses %+ dungeons %+ events%.$", tpl = "Combine %d actions: bosses + dungeons + events." },
+    -- Daily tasks feedback messages
+    { pat = "^%[Daily Tasks%] Task completed! %+(%d+) PA, %+(%d+) Codex Essence%.$", tpl = "[Daily Tasks] Task completed! +%d AP, +%d Codex Essence." },
+    { pat = "^Delivered (%d+)x (.-)%. %+(%d+) AP, %+(%d+) Codex Essence%.$", tpl = "Delivered %dx %s. +%d AP, +%d Codex Essence." },
+    { pat = "^Task completed: %+(%d+) AP, %+(%d+) Codex Essence%.$", tpl = "Task completed: +%d AP, +%d Codex Essence." },
+    { pat = "^You need (%d+)x (.-) %((%d+)/(%d+)%)%.$", tpl = "You need %dx %s (%d/%d)." },
+    { pat = "^You need (%d+) tasks completed %((%d+)/(%d+)%)%.$", tpl = "You need %d tasks completed (%d/%d)." },
+    { pat = "^Daily reward claimed: (%d+) Golden Crate!$", tpl = "Daily reward claimed: %d Golden Crate!" },
 }
 
 -- Translates server-composed messages: exact tr() first, then template match
