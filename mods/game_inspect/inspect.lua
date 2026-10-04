@@ -121,7 +121,7 @@ Inspect.rarityColors = {
 ------ Initialization and Termination ------
 
 function Inspect.init()
-    print("[Inspect] Module initializing...")
+    -- print("[Inspect] Module initializing...")
     
     -- Load card descriptions from game_codex mod (codex is sandboxed, we are not)
     Inspect.cardDescriptions = {}
@@ -167,7 +167,7 @@ function Inspect.init()
         Inspect.onGameStart()
     end
     
-    print("[Inspect] Module initialized successfully")
+    -- print("[Inspect] Module initialized successfully")
 end
 
 function Inspect.terminate()
@@ -180,11 +180,11 @@ function Inspect.onGameStart()
     -- Load UI with proper parent panel like other mods do
     Inspect.UI = g_ui.loadUI('inspect', modules.game_interface.getRootPanel())
     if not Inspect.UI then
-        print("[Inspect] ERROR: Failed to load inspect.otui")
+        -- print("[Inspect] ERROR: Failed to load inspect.otui")
         return
     end
     
-    print("[Inspect] UI loaded successfully")
+    -- print("[Inspect] UI loaded successfully")
     Inspect.UI:hide()
     Inspect.setupTabs()
 end
@@ -283,10 +283,10 @@ end
 
 function Inspect.openPlayerInspect(creatureId, playerName)
     if not Inspect.UI then
-        print("[Inspect] ERROR: UI not loaded, cannot open inspect window")
+        -- print("[Inspect] ERROR: UI not loaded, cannot open inspect window")
         -- Try to load UI if game is online
         if g_game.isOnline() then
-            print("[Inspect] Attempting to load UI...")
+            -- print("[Inspect] Attempting to load UI...")
             Inspect.onGameStart()
         end
         if not Inspect.UI then return end
@@ -1037,7 +1037,7 @@ function Inspect.onCardHoverChange(widget, hovered)
 end
 
 function Inspect.onTalentHoverChange(widget, hovered)
-    print("[Inspect] Talent hover: " .. tostring(hovered) .. " nodeData=" .. tostring(widget and widget.nodeData))
+    -- print("[Inspect] Talent hover: " .. tostring(hovered) .. " nodeData=" .. tostring(widget and widget.nodeData))
     if not Inspect.UI then return end
     local tooltip = findWidget(Inspect.UI, "cardTooltip")
     if not tooltip then print("[Inspect] no tooltip widget") return end
@@ -1169,7 +1169,7 @@ function Inspect.onExtendedOpcode(protocol, opcode, buffer)
     elseif data.topic == "inspect-error" then
         -- Show error and close
         if data.message then
-            print("[Inspect] Error: " .. data.message)
+            -- print("[Inspect] Error: " .. data.message)
         end
         Inspect.hide()
     end

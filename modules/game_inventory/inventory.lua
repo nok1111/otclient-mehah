@@ -535,7 +535,7 @@ end
 
 function extendedView(extendedView)
 
-        print("not extendedView inventory")
+        -- print("not extendedView inventory")
         --inventoryController.ui:setBorderColor('alpha')
         inventoryController.ui:setBorderWidth(0)
         local mainRightPanel = modules.game_interface.getRightPanel()

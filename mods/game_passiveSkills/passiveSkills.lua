@@ -971,14 +971,14 @@ function PassiveSkills.onNodeButtonClick(branchId, nodeId)
 end
 
 function PassiveSkills.onResetButtonClick()
-	print("[PassiveSkills] Reset button clicked")
+	-- print("[PassiveSkills] Reset button clicked")
 	PassiveSkills.sendOpcode({
 		topic = "reset-tree-request"
 	})
 end
 
 function PassiveSkills.handleResetRequirements(data)
-	print("[PassiveSkills] handleResetRequirements: " .. tostring(data.requirements))
+	-- print("[PassiveSkills] handleResetRequirements: " .. tostring(data.requirements))
 	local requirements = data.requirements
 	local message = tr("To reset the passive skills, you need:") .. "\n" .. requirements
 
@@ -1840,7 +1840,7 @@ function PassiveSkills.setupConstellationUI(treeData)
 			for _ in pairs(nodeData.routeWaypoints) do rwCount = rwCount + 1 end
 		end
 	end
-	print(string.format("[PassiveSkills] setupConstellationUI: waypointNodes=%d, routeWaypoints=%d", wpNodeCount, rwCount))
+	-- print(string.format("[PassiveSkills] setupConstellationUI: waypointNodes=%d, routeWaypoints=%d", wpNodeCount, rwCount))
 
 	local contentWidth = (maxX - minX) * nodeSpacingX + nodeSize * 2
 	local contentHeight = (maxY - minY) * nodeSpacingY + nodeSize * 2
@@ -1942,7 +1942,7 @@ function PassiveSkills.setupConstellationUI(treeData)
 					-- Calculate route through waypoint nodes if any
 					local route = PassiveSkills.calculateRoute(fromNode, toNode, nodesById)
 					if #route > 0 then
-						print(string.format("[PassiveSkills] calculateRoute: %d->%d connKey=%s route=%d waypoints", fromNode.id, toNode.id, tostring(fromNode.id) .. "-" .. tostring(toNode.id), #route))
+						-- print(string.format("[PassiveSkills] calculateRoute: %d->%d connKey=%s route=%d waypoints", fromNode.id, toNode.id, tostring(fromNode.id) .. "-" .. tostring(toNode.id), #route))
 					end
 					local connInfo = {
 						fromId = fromNode.id,
@@ -2004,7 +2004,7 @@ function PassiveSkills.createConstellationNode(panel, treeData, nodeData, nodePi
 	local x, y = nodePixelPos(nodeData)
 	x = tonumber(x) or 0
 	y = tonumber(y) or 0
-	print(string.format("[PassiveSkills] createConstellationNode: id=%s name=%s kind=%s pos=%d,%d", tostring(nodeData.id), tostring(nodeData.name), tostring(nodeData.kind), x, y))
+	-- print(string.format("[PassiveSkills] createConstellationNode: id=%s name=%s kind=%s pos=%d,%d", tostring(nodeData.id), tostring(nodeData.name), tostring(nodeData.kind), x, y))
 
 	local node = g_ui.createWidget("NodeEntry", panel)
 	node:addAnchor(AnchorLeft, 'parent', AnchorLeft)
@@ -2410,7 +2410,7 @@ function PassiveSkills.onDevSave()
 	for _ in pairs(routeWaypoints) do rwCount = rwCount + 1 end
 	local posCount = 0
 	for _ in pairs(positions) do posCount = posCount + 1 end
-	print(string.format("[PassiveSkills] Dev Save: positions=%d, waypoints=%d, routeWaypoints=%d", posCount, wpCount, rwCount))
+	-- print(string.format("[PassiveSkills] Dev Save: positions=%d, waypoints=%d, routeWaypoints=%d", posCount, wpCount, rwCount))
 
 	PassiveSkills.sendOpcode({
 		topic = "dev-save-positions",

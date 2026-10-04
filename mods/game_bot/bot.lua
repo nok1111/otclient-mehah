@@ -129,7 +129,7 @@ end
 
 function init()
   
-  print('[Bot] init() called')
+  -- print('[Bot] init() called')
   
   -- Ensure bot button exists early, even if botWindow UI fails later
   ensureBotButton()
@@ -206,7 +206,7 @@ function init()
     end)
     
     if not status then
-      print('[Bot] ERROR loading botWindow UI: ' .. tostring(err))
+      -- print('[Bot] ERROR loading botWindow UI: ' .. tostring(err))
     end
   end
   
@@ -217,13 +217,13 @@ function init()
   })
   
   if g_game.isOnline() then
-    print('[Bot] Game already online, calling onlineSimple from init')
+    -- print('[Bot] Game already online, calling onlineSimple from init')
     local success, error = pcall(onlineSimple)
     if not success then
-      print('[Bot] ERROR in onlineSimple: ' .. tostring(error))
+      -- print('[Bot] ERROR in onlineSimple: ' .. tostring(error))
     end
   else
-    print('[Bot] Game not online yet, waiting for onGameStart')
+    -- print('[Bot] Game not online yet, waiting for onGameStart')
   end
 end
 
@@ -300,7 +300,7 @@ end
 
 function ensureBotButton()
   if not modules.game_mainpanel or not modules.game_mainpanel.addToggleButton then
-    print('[Bot] ensureBotButton: game_mainpanel not available')
+    -- print('[Bot] ensureBotButton: game_mainpanel not available')
     return
   end
 
@@ -308,9 +308,9 @@ function ensureBotButton()
     if not botButton or botButton:isDestroyed() then
       botButton = modules.game_mainpanel.addToggleButton('botButton', tr('Bot'), '/images/options/bot', toggleSimple, true, BOT_BUTTON_INDEX)
       botButton:setOn(false)
-      print('[Bot] botButton created by ensureBotButton')
+      -- print('[Bot] botButton created by ensureBotButton')
     else
-      print('[Bot] botButton already exists, reusing')
+      -- print('[Bot] botButton already exists, reusing')
     end
 
     if botButton and not botButton:isDestroyed() then
@@ -320,9 +320,9 @@ function ensureBotButton()
       local parent = botButton:getParent()
       if parent then
         parent:moveChildToIndex(botButton, 1)
-        print('[Bot] botButton moved to front of parent: ' .. tostring(parent:getId()))
+        -- print('[Bot] botButton moved to front of parent: ' .. tostring(parent:getId()))
       else
-        print('[Bot] botButton has no parent!')
+        -- print('[Bot] botButton has no parent!')
       end
       if modules.game_mainpanel and modules.game_mainpanel.prioritizeButton then
         modules.game_mainpanel.prioritizeButton('botButton')
@@ -333,23 +333,23 @@ function ensureBotButton()
   end)
 
   if not status then
-    print('[Bot] ensureBotButton ERROR: ' .. tostring(err))
+    -- print('[Bot] ensureBotButton ERROR: ' .. tostring(err))
     return
   end
 
   -- Defer prioritization to ensure mainpanel config is loaded
   scheduleEvent(function()
-    print('[Bot] deferred ensureBotButton scheduleEvent running')
+    -- print('[Bot] deferred ensureBotButton scheduleEvent running')
     if botButton and not botButton:isDestroyed() then
-      print('[Bot] botButton still valid, index=' .. tostring(botButton.index) .. ', parent=' .. tostring(botButton:getParent() and botButton:getParent():getId() or 'nil'))
+      -- print('[Bot] botButton still valid, index=' .. tostring(botButton.index) .. ', parent=' .. tostring(botButton:getParent() and botButton:getParent():getId() or 'nil'))
       botButton.index = BOT_BUTTON_INDEX
       botButton:show()
       botButton:setVisible(true)
       if modules.game_mainpanel and modules.game_mainpanel.prioritizeButton then
-        print('[Bot] calling prioritizeButton from scheduleEvent')
+        -- print('[Bot] calling prioritizeButton from scheduleEvent')
         modules.game_mainpanel.prioritizeButton('botButton')
       else
-        print('[Bot] prioritizeButton not available, using parent moveChildToIndex')
+        -- print('[Bot] prioritizeButton not available, using parent moveChildToIndex')
         local parent = botButton:getParent()
         if parent then
           parent:moveChildToIndex(botButton, 1)
@@ -359,13 +359,13 @@ function ensureBotButton()
         end
       end
     else
-      print('[Bot] botButton invalid or destroyed in scheduleEvent')
+      -- print('[Bot] botButton invalid or destroyed in scheduleEvent')
     end
   end, 100)
 
   -- Extra safety: ensure bot button is visible after mainpanel onGameStart config load
   scheduleEvent(function()
-    print('[Bot] extra safety scheduleEvent running')
+    -- print('[Bot] extra safety scheduleEvent running')
     if botButton and not botButton:isDestroyed() then
       botButton:show()
       botButton:setVisible(true)
@@ -373,9 +373,9 @@ function ensureBotButton()
       local parent = botButton:getParent()
       if parent then
         parent:moveChildToIndex(botButton, 1)
-        print('[Bot] extra safety: botButton moved to front')
+        -- print('[Bot] extra safety: botButton moved to front')
       else
-        print('[Bot] extra safety: botButton has no parent')
+        -- print('[Bot] extra safety: botButton has no parent')
       end
       if modules.game_mainpanel and modules.game_mainpanel.prioritizeButton then
         modules.game_mainpanel.prioritizeButton('botButton')
@@ -388,7 +388,7 @@ end
 
 function onlineSimple()
   
-  print('[Bot] onlineSimple called')
+  -- print('[Bot] onlineSimple called')
   
   if not SimplifiedBot then
     return

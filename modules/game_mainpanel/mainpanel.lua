@@ -27,12 +27,12 @@ local ALWAYS_VISIBLE_BUTTONS = {
 
 local function forceAlwaysVisibleButtons()
     if not optionsController or not optionsController.ui then
-        print("[MainPanel] forceAlwaysVisibleButtons: optionsController not ready")
+        -- print("[MainPanel] forceAlwaysVisibleButtons: optionsController not ready")
         return
     end
     local optionsPanel = optionsController.ui.onPanel.options
     if not optionsPanel then
-        print("[MainPanel] forceAlwaysVisibleButtons: optionsPanel not found")
+        -- print("[MainPanel] forceAlwaysVisibleButtons: optionsPanel not found")
         return
     end
     for buttonId, _ in pairs(ALWAYS_VISIBLE_BUTTONS) do
@@ -51,9 +51,9 @@ local function forceAlwaysVisibleButtons()
             end
             table.insert(buttonOrder, 1, buttonId)
             button.index = 1
-            print("[MainPanel] Forced always-visible button '" .. buttonId .. "' to front")
+            -- print("[MainPanel] Forced always-visible button '" .. buttonId .. "' to front")
         else
-            print("[MainPanel] forceAlwaysVisibleButtons: button '" .. buttonId .. "' not found in optionsPanel")
+            -- print("[MainPanel] forceAlwaysVisibleButtons: button '" .. buttonId .. "' not found in optionsPanel")
         end
     end
 end
@@ -240,7 +240,7 @@ local function createButton(id, description, image, callback, special, front, in
         else
             panel:addChild(button)
         end
-        print("[MainPanel] createButton: created '" .. id .. "' in options panel (front=" .. tostring(front) .. ")")
+        -- print("[MainPanel] createButton: created '" .. id .. "' in options panel (front=" .. tostring(front) .. ")")
     end
 
     button:setId(id)
@@ -371,19 +371,19 @@ function addStoreButton(id, description, image, callback, front, index, customSt
 end
 
 function prioritizeButton(buttonId)
-    print("[MainPanel] prioritizeButton called for '" .. buttonId .. "'")
+    -- print("[MainPanel] prioritizeButton called for '" .. buttonId .. "'")
     if not optionsController or not optionsController.ui then
-        print("[MainPanel] prioritizeButton: optionsController/ui not ready")
+        -- print("[MainPanel] prioritizeButton: optionsController/ui not ready")
         return
     end
     local optionsPanel = optionsController.ui.onPanel.options
     if not optionsPanel then
-        print("[MainPanel] prioritizeButton: optionsPanel not found")
+        -- print("[MainPanel] prioritizeButton: optionsPanel not found")
         return
     end
     local button = optionsPanel:getChildById(buttonId)
     if not button then
-        print("[MainPanel] prioritizeButton: button '" .. buttonId .. "' not found")
+        -- print("[MainPanel] prioritizeButton: button '" .. buttonId .. "' not found")
         return
     end
 
@@ -407,7 +407,7 @@ function prioritizeButton(buttonId)
     updateAvailableButtonsList()
     saveButtonConfig()
     reloadMainPanelSizes()
-    print("[MainPanel] Prioritized button '" .. buttonId .. "'")
+    -- print("[MainPanel] Prioritized button '" .. buttonId .. "'")
 end
 
 function getButton(id)
@@ -717,9 +717,9 @@ function showButton(buttonId)
             end
             saveButtonConfig()
             reloadMainPanelSizes()
-            print("[MainPanel] Botón '" .. buttonId .. "' ahora visible y guardado")
+            -- print("[MainPanel] Botón '" .. buttonId .. "' ahora visible y guardado")
         else
-            print("[MainPanel ERROR] Botón '" .. buttonId .. "' no encontrado")
+            -- print("[MainPanel ERROR] Botón '" .. buttonId .. "' no encontrado")
         end
     end
 end
@@ -741,7 +741,7 @@ function showAllButtons()
         end
         saveButtonConfig()
         reloadMainPanelSizes()
-        print("[MainPanel] " .. count .. " botones ahora visibles y guardados")
+        -- print("[MainPanel] " .. count .. " botones ahora visibles y guardados")
     end
 end
 

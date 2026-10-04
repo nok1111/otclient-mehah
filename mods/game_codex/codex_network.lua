@@ -19,7 +19,7 @@ end
 
 function Codex.onExtendedOpcode(protocol, opcode, buffer)
 	local data = json.decode(buffer)
-	print("[Codex] Received opcode with topic: " .. (data.topic or "nil"))
+	-- print("[Codex] Received opcode with topic: " .. (data.topic or "nil"))
 	
 	if data.topic == "base-data-reply" then
 		Codex.cachedCards = {}

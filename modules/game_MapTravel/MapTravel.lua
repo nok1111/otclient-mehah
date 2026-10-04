@@ -227,7 +227,7 @@ function MapTravel.setupScrollbars(canvas, bounds)
                 effHost:setSize(m:getSize())
                 effHost:setMarginLeft(0)
                 effHost:setMarginTop(0)
-				print("creating player marker")
+				-- print("creating player marker")
 
                 -- Ensure the UICreature has a valid outfit so getCreature() returns an object
                 --[[
@@ -245,7 +245,7 @@ function MapTravel.setupScrollbars(canvas, bounds)
                 if creatureObj and creatureObj.attachEffect then
                     local effect = g_attachedEffects.getById(241)
                     if effect then
-                        print("attach effect")
+                        -- print("attach effect")
                         creatureObj:attachEffect(effect)
                     end
                 end
@@ -1458,7 +1458,7 @@ function MapTravel.setupDevMode()
 		local marginTop = globalMouse.y - mapPos.y
 		local marginsText = "{marginTop = " .. marginTop .. ", marginLeft = " .. marginLeft .. "}"
 
-		print("Clicked at: " .. marginsText)
+		-- print("Clicked at: " .. marginsText)
 		g_window.setClipboardText(marginsText)
 	end
 end
