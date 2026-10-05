@@ -4,6 +4,6 @@ Module
   author: Custom
   sandboxed: true
   autoload: true
-  scripts: [ wiki_data, wiki ]
+  scripts: [ item_client_ids, wiki_data, wiki ]
   @onLoad: init()
   @onUnload: terminate()

@@ -8,6 +8,12 @@ currentLanguage = 'en'
 currentCategory = nil
 currentSubCategory = nil
 
+-- Convert a server item id to the client id expected by Item:setItemId.
+-- Map generated from data/items/items.otb (item_client_ids.lua).
+local function wikiClientItemId(serverId)
+  return (WikiItemClientIds and WikiItemClientIds[serverId]) or serverId
+end
+
 function init()
   print("[Wiki] Module initializing...")
   connect(g_game, { onGameStart = online, onGameEnd = offline })
@@ -217,7 +223,7 @@ function displayListContent(items)
     descWidget:setText(item.description or '')
 
     if item.icon then
-      itemWidget:getChildById('icon'):setItemId(item.icon)
+      itemWidget:getChildById('icon'):setItemId(wikiClientItemId(item.icon))
     end
 
     -- Adjust height to fit wrapped description text
@@ -343,7 +349,7 @@ end
 local function wikiAddCard(parent, card)
   local widget = g_ui.createWidget('WikiRichCard', parent)
   if card.icon then
-    widget:getChildById('icon'):setItemId(card.icon)
+    widget:getChildById('icon'):setItemId(wikiClientItemId(card.icon))
   end
   local nameWidget = widget:getChildById('name')
   nameWidget:parseColoredText(wikiMarkupToColored(card.name or ''), card.color or '#ffcc00')
