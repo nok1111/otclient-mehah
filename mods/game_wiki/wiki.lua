@@ -67,7 +67,12 @@ local WIKI_ACCENT = '#ffd75e'
 --   **text**                   -> accent-colored inline highlight
 --   [color=#rrggbb]...[/color] -> passed through as-is
 local function wikiMarkupToColored(text)
-  return (text or ''):gsub('%*%*(.-)%*%*', '[color=' .. WIKI_ACCENT .. ']%1[/color]')
+  local t = text or ''
+  t = t:gsub('%*%*(.-)%*%*', '[color=' .. WIKI_ACCENT .. ']%1[/color]')
+  -- bullet lists: "- item" at line start -> gold bullet marker
+  t = ('\n' .. t):gsub('\n%s*%-%s+', '\n[color=#d4a843]•[/color]  ')
+  t = t:sub(2)
+  return t
 end
 
 local function wikiColoredLabel(style, parent, text, defaultColor)
@@ -361,7 +366,9 @@ function updateProgressLabel()
   end
   if total > 0 then
     local pct = math.floor(read / total * 100)
-    label:setText(tr('Wiki progress: %d%%', pct))
+    label:setText(tr('Wiki progress'))
+    local percentLabel = wikiWindow:recursiveGetChildById('percentLabel')
+    if percentLabel then percentLabel:setText(tr('%d%% COMPLETE', pct)) end
     local bar = wikiWindow:recursiveGetChildById('progressBar')
     if bar then bar:setPercent(pct) end
   end
@@ -628,7 +635,7 @@ function updateLanguageLabel()
   if wikiWindow then
     local langButton = wikiWindow:recursiveGetChildById('languageButton')
     if langButton then
-      langButton:setText(currentLanguage:upper())
+      langButton:setText(currentLanguage:upper() .. ' ▾')
     end
   end
 end

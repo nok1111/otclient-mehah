@@ -37,7 +37,7 @@ WikiCategoryItem < Button
 WikiSubCategoryItem < Button
   height: 28
   text-align: left
-  padding-left: 0
+  padding-left: 6
   margin-left: 8
   font: verdana-11px-rounded
   color: #c0c0c0
@@ -48,8 +48,8 @@ WikiSubCategoryItem < Button
     background-color: #355d8988
     color: #ffffff
   $on:
-    background-color: #d4a8432e
-    color: #ffd75e
+    background-color: #d4a84326
+    color: #ffffff
     border-width-left: 3
     border-color-left: #ffd75e
 
@@ -222,12 +222,13 @@ WikiRichSpacer < Panel
 WikiRichTitle < Label
   text-wrap: true
   text-auto-resize: true
-  text-align: center
+  text-align: left
   background-color: #00000000
-  font: eras-16px-bold
-  color: #ffd75e
+  font: exo-16px-ultra-bold-italic
+  color: #f4f4f4
   margin-top: 4
   margin-bottom: 2
+  margin-left: 8
 
 WikiRichSubtitle < Label
   text-wrap: true
@@ -406,7 +407,7 @@ WikiButton < Button
 
 MainWindow
   id: wikiWindow
-  !text: tr('Game Wiki')
+  !text: tr('WIKI')
   size: 900 600
   font: eras-16px-bold
   color: #ffd75e
@@ -629,13 +630,22 @@ MainWindow
       anchors.verticalCenter: parent.verticalCenter
       height: 8
       margin-left: 12
-      margin-right: 106
+      margin-right: 200
       background-color: #14100acc
       border-width: 1
       border-color: #d4a84333
 
       WikiProgressBar
         id: progressBar
+
+    Label
+      id: percentLabel
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 100
+      font: verdana-11px-rounded
+      color: #ffd75e
+      text-auto-resize: true
 
     WikiButton
       id: closeButton
