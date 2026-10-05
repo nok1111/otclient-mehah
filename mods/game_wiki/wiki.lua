@@ -243,8 +243,9 @@ function populateCategories()
       selectCategory(categoryName)
     end
     categoryWidget.onHoverChange = function(self, hovered)
-      if not self:isOn() and label then
-        label:setColor(hovered and '#ffffff' or '#dfdfdf')
+      if not self:isOn() then
+        if label then label:setColor(hovered and '#ffffff' or '#dfdfdf') end
+        if iconWidget then iconWidget:setImageColor(hovered and '#ffd75e' or '#d4a843') end
       end
     end
   end
@@ -629,6 +630,8 @@ function highlightSelectedCategory(categoryName)
     widget:setOn(on)
     local label = widget:getChildById('label')
     if label then label:setColor(on and '#ffd75e' or '#dfdfdf') end
+    local iconWidget = widget:getChildById('iconWidget')
+    if iconWidget then iconWidget:setImageColor(on and '#ffd75e' or '#d4a843') end
   end
 end
 
