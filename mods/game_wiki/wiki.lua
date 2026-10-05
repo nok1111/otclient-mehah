@@ -56,6 +56,12 @@ local function wikiAutoHeight(widget, label, minHeight, padding)
   end, 0)
 end
 
+-- Convert a server item id to the client id expected by Item:setItemId.
+-- Map generated from data/items/items.otb (item_client_ids.lua).
+local function wikiClientItemId(serverId)
+  return (WikiItemClientIds and WikiItemClientIds[serverId]) or serverId
+end
+
 local function wikiAddCard(parent, card)
   local widget = g_ui.createWidget('WikiRichCard', parent)
   if card.icon then
@@ -80,12 +86,6 @@ local function wikiAddNoteBox(parent, section, style)
   label:parseColoredText(wikiMarkupToColored(section.content or ''), section.color or '#dfdfdf')
   wikiAutoHeight(widget, label, 40, 24)
   return widget
-end
-
--- Convert a server item id to the client id expected by Item:setItemId.
--- Map generated from data/items/items.otb (item_client_ids.lua).
-local function wikiClientItemId(serverId)
-  return (WikiItemClientIds and WikiItemClientIds[serverId]) or serverId
 end
 
 function init()
