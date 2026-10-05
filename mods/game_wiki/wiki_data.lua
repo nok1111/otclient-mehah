@@ -1320,16 +1320,6 @@ Crafting tasks scale with profession tiers:
               { type = 'text', content = '**Building Your Deck**\n\n*DPS Cards:* Critical Surge, The Witch, Glass Cannon, The Dragon, Guns Lover, The Gunner, Svarog, Zeus\n\n*Tank/Survival Cards:* Golem, The Phoenix, The Behemoth, The Slime, Water Elemental, Soul Leech, Final Symphony\n\n*Healer Cards:* Undine, The Elf, Archangel, Blood Link, Blossom Dragon, The Naga, Yacy\n\n*Utility Cards:* Executioner (CDR), Essence Reaver (essence farm), The Child (EXP), Carnage Presence (clearing), The Necromancer (summons)\n\n**Tips**\n- Synergize cards with your build (e.g., The Witch with high mana pools)\n- Dragon cards (31-40) synergize with Dragon Lord for multiplicative bonuses\n- Healer cards like Blood Link and Archangel only work when healing party members\n- Guns Lover and The Gunner are mandatory for ranged builds\n- Glass Cannon is high-risk, high-reward (+32% damage but +32% damage taken at max)\n- Duplicate cards at max level become essences -- farm lower-tier crates for essence income' }
             }
           },
-          gear_meta = {
-            name = 'Gear & Tiers',
-            type = 'text',
-            content = 'Flat Armor is less important than Secondary Attributes. \n\n**Key Stats:**\n1. Critical Hit Chance\n2. % Max HP / Max Mana (Scales exponentially!)\n3. Life/Mana Leech (Crucial for high HP pools)\n4. Cooldown Reduction\n\n**Golden Rule:** Nobody uses permanent rings. Keep 3-4 rings in your backpack and swap them for bosses, speed farming, or tanking.'
-          },
-          endgame = {
-            name = 'End Game',
-            type = 'text',
-            content = '**Dungeons & Expeditions:** Instanced content with rare loot and challenging bosses.\n\n**Zones:** Grind specific areas for Zone Buffs.\n\n**Upgrade System:** Use extracted stones and dust to push your Tier 3 weapons to godly damage limits.'
-          }
         }
       },
       currencies = {
@@ -2783,16 +2773,6 @@ Las cartas se activan segun diferentes condiciones. Puedes ver el tipo de activa
 - Cartas duplicadas al nivel maximo se convierten en esencias -- farmea cajas de bajo tier para ingresos de esencias]] }
             }
           },
-          gear_meta = {
-            name = 'Equipo y Tiers',
-            type = 'text',
-            content = 'La Armadura plana importa mucho menos que los Atributos Secundarios.\n\n**Estadisticas Clave (Stats):**\n1. Critical Hit Chance (Probabilidad de Critico)\n2. % Max HP / Max Mana (Los porcentajes escalan de forma masiva!)\n3. Life/Mana Leech (Crucial para curarte cuando tienes demasiada HP)\n4. Cooldown Reduction\n\n**Regla de Oro:** Nadie usa anillos permanentes. Manten 3 o 4 anillos en tu mochila y cambialos segun vayas a un Jefe (Boss), a farmear rapido o a aguantar dano.'
-          },
-          endgame = {
-            name = 'End Game',
-            type = 'text',
-            content = '**Dungeons y Expeditions:** Instancias y mazmorras con botin raro y Jefes complejos.\n\n**Zones (Zonas):** Areas especificas donde puedes ganar Mejoras de Zona (Zone Buffs) mientras cazas.\n\n**Upgrade System:** Usa polvos y piedras extraidas para mejorar tus armas Tier 3 hasta limites inalcanzables.'
-          }
         }
       }
     }
