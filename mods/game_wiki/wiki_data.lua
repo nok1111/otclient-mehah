@@ -2057,13 +2057,13 @@ Crafting tasks scale with profession tiers:
                 { icon = 40423, name = 'Ice Essence', color = '#99ddff', description = 'Drops from [Frostbound] elite monsters.' },
                 { icon = 40424, name = 'Dark Essence', color = '#aa66cc', description = 'Drops from [Darkness] elite monsters.' },
                 { icon = 40425, name = 'Earth Essence', color = '#aadd66', description = 'Drops from [Plagued] elite monsters.' },
-                { icon = 40420, name = 'Spirit Essence', color = '#dddddd', description = 'Never drops - only obtainable through Refinement crafting.' },
+                { icon = 40420, name = 'Spirit Essence', color = '#dddddd', description = 'Drops from [Arcane] elite monsters alongside Mana Essence, or fused via Refinement crafting.' },
               }},
               { type = 'tip', content = 'Each elite variation kill also yields a **Guardian Essence** on top of its elemental drop - two birds, one hunt.' },
               { type = 'divider' },
 
               { type = 'subtitle', text = 'Refinement & Transmutation', color = '#ff9e5e' },
-              { type = 'text', content = 'The Alchemy profession can **fuse essences into other essences** (Refinement recipes): combine a Monster Essence with two elemental essences to produce the one you are missing. This is the only way to obtain **Spirit Essence**, and **Pure Essence** can be fused too if you have a Guardian Essence to spare.' },
+              { type = 'text', content = 'The Alchemy profession can **fuse essences into other essences** (Refinement recipes): combine a Monster Essence with two elemental essences to produce the one you are missing - handy when a specific elite variation is being camped. **Pure Essence** can even be fused directly if you have a Guardian Essence to spare.' },
               { type = 'text', content = '**Transmutation** goes the other way: it converts essences into consumables - **Life** becomes health potions, **Mana** becomes mana potions and **Spirit** becomes hybrid potions, in stacks. Higher-tier transmutations produce the powerful versions and even combat runes.' },
               { type = 'divider' },
 
