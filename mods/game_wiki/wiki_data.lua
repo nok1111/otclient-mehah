@@ -262,47 +262,161 @@ function getEnglishData()
         subcategories = {
           overview = {
             name = 'How Tasks Work',
-            type = 'text',
+            type = 'rich_text',
             order = 1,
-            content = 'The Task System is a dynamic mission board where you hunt monsters for rewards.\n\n**How it Works:**\n- You have 3 task slots available\n- Each task requires killing specific monsters\n- Complete tasks to earn gold, fame, and experience\n- Tasks have different tiers: Normal, Rare, Epic, Legendary\n- Each task has modifiers that affect difficulty and rewards\n\n**Getting Started:**\n1. Open the Task Board (click the Tasks Board button from menu)\n2. Choose a task from the 3 available slots\n3. Click "Start" to activate the task\n4. Hunt the required monsters\n5. Return and click "Complete" to claim your rewards\n\n**Important:**\n- You can only have 1 active task at a time\n- Tasks show monster outfits so you know what to hunt\n- Level ranges help you find appropriate hunting zones\n- You can abandon a task, but you lose all progress'
-          },
-          rerolls = {
-            name = 'Rerolls System',
-            type = 'text',
-            order = 4,
-            content = 'Rerolls let you refresh all 3 task slots to get new options.\n\n**Free Rerolls:**\n- Base: 5 free rerolls per day\n- Premium Bonus: +5 extra rerolls (10 total)\n- Fame Bonus: +1 reroll per 5 fame levels\n- Daily Reset: Resets every 24 hours\n\n**Paid Rerolls:**\n- Cost: 20 gold per reroll\n- Unlimited usage (if you have gold)\n- Use when you run out of free rerolls\n\n**Bonus Rerolls:**\n- Rare tasks: 25% chance for +1 reroll reward\n- Epic tasks: 40% chance for +1 reroll reward\n- Legendary tasks: +1-2 reroll rewards guaranteed\n- These stack with your daily rerolls\n\n**Strategy Tips:**\n- Save free rerolls for when you need better tasks\n- Lock good tasks before rerolling\n- Higher fame = more free rerolls'
-          },
-          locks = {
-            name = 'Lock System',
-            type = 'text',
-            order = 5,
-            content = 'Locks protect tasks from being rerolled, letting you keep good tasks while refreshing others.\n\n**Free Locks:**\n- Base: 3 free locks per day\n- Premium Bonus: +5 extra locks (8 total)\n- Daily Reset: Resets every 24 hours\n\n**Paid Locks:**\n- Cost: 10 gold per lock\n- Unlimited usage (if you have gold)\n- Use when you run out of free locks\n\n**Bonus Locks:**\n- Epic tasks: 30% chance for +1 lock reward\n- Legendary tasks: +1-2 lock rewards guaranteed\n- These stack with your daily locks\n\n**How to Use:**\n1. Find a task you want to keep\n2. Click the "Lock" button on that task\n3. Reroll other tasks without losing your locked one\n4. Click "Unlock" to remove the lock\n\n**Strategy Tips:**\n- Lock high-tier tasks (Epic/Legendary)\n- Lock tasks with good modifiers\n- Premium players get significantly more locks'
+            sections = {
+              { type = 'title', text = 'Task Board' },
+              { type = 'divider' },
+              { type = 'text', content = [[The Task Board is your main hunting engine. It offers **3 task offers** that regenerate daily and whenever you reroll. Pick one, hunt the listed monsters, and claim the rewards.
+
+- You can have **1 active task** at a time
+- Tasks are drawn from the pools closest to your level (**79 pools**: hunting zones, dungeon floors and bosses)
+- Each task shows the **monster outfits** so you know exactly what to hunt
+- Abandoning a task loses all progress]] },
+              { type = 'subtitle', text = 'The Flow' },
+              { type = 'cards', items = {
+                { image = '/images/icons/quest_marker.png', name = '1. Pick an offer', description = 'Open the Task Board and choose one of the 3 available slots.' },
+                { image = '/images/icons/prey_damage.png', name = '2. Hunt', description = 'Kill the required monsters (56-120 scaled by level). Boss tasks are a **single kill**.' },
+                { image = '/images/icons/treasure.png', name = '3. Claim', description = 'Return to the board and press Complete. Your **first completion each day** also grants **+100 Fame**.' },
+              }},
+              { type = 'tip', content = 'Dungeon pools cut the required kills in half but pay **double** rewards (triple for boss kills) - always check if a dungeon task is offered.' },
+            }
           },
           tiers = {
             name = 'Task Tiers & Rarity',
-            type = 'text',
+            type = 'rich_text',
             order = 2,
-            content = 'Tasks come in 4 tiers with different spawn rates and reward multipliers.\n\n**Normal (60% spawn rate)**\n- Reward Multiplier: 1.0x\n- Modifiers: 0-1\n- Common tasks, base rewards\n\n**Rare (25% spawn rate)**\n- Reward Multiplier: 1.25x\n- Modifiers: 1-2\n- 25% bonus rewards\n- 25% chance for +1 bonus reroll\n\n**Epic (10% spawn rate)**\n- Reward Multiplier: 1.5x\n- Modifiers: 2-3\n- 50% bonus rewards\n- 40% chance for +1 reroll\n- 30% chance for +1 lock\n- Unlocked at Fame Level 8\n\n**Legendary (5% spawn rate)**\n- Reward Multiplier: 2.0x\n- Modifiers: 3 (always)\n- 100% bonus rewards\n- +1-2 bonus rerolls guaranteed\n- +1-2 bonus locks guaranteed\n- Extremely rare, maximum rewards\n\n**Tier Unlocks:**\n- Normal, Rare: Available from start\n- Epic: Requires Fame Level 8\n- Legendary: Always available (if lucky)'
+            sections = {
+              { type = 'title', text = 'Task Tiers' },
+              { type = 'divider' },
+              { type = 'text', content = 'Every generated task rolls one of **4 tiers**. Higher tiers have more modifiers and bigger reward multipliers - and all tiers can roll from the start.' },
+              { type = 'cards', items = {
+                { image = '/images/icons/circle_10513369.png', name = 'Normal', color = '#dfdfdf', description = '**60%** weight - 1.0x rewards - 0-1 modifiers - 20% chance of 30-60 Codex Essences.' },
+                { image = '/images/ui/rarity_blue.png', name = 'Rare', color = '#58a6ff', description = '**25%** weight - 1.25x rewards - 1-2 modifiers - 35% essence roll + 12% Bronze Crate - 25% bonus reroll.' },
+                { image = '/images/ui/rarity_purple.png', name = 'Epic', color = '#c678dd', description = '**10%** weight - 1.5x rewards - 2-3 modifiers - 50% essence roll + 25% Bronze/Silver Crate - up to +1 reroll and +1 lock.' },
+                { image = '/images/ui/rarity_yellow.png', name = 'Legendary', color = '#ffa940', description = '**5%** weight - 2.0x rewards - 3 modifiers (first 2 always positive) - 70% essence roll + 40% crate - +1-2 rerolls and locks.' },
+              }},
+              { type = 'tip', content = 'Fame hunter ranks increase Rare/Epic/Legendary weights - see Fame & Premium Benefits.' },
+            }
           },
           rewards = {
             name = 'Rewards & Bonuses',
-            type = 'text',
+            type = 'rich_text',
             order = 3,
-            content = 'Tasks reward you based on multiple factors that stack together. Everything multiplies your **Gold, Fame, and Experience** at the end.\n\n**Base Rewards (from level range):**\n- Gold, Fame, and Experience scale with monster level\n- Higher level tasks = higher base rewards before any multipliers\n\n**1. Tier Multiplier (directly affects ALL rewards):**\n   - Normal: 1.0x (base rewards)\n   - Rare: 1.25x (+25% Gold, Fame, and XP)\n   - Epic: 1.5x (+50% Gold, Fame, and XP)\n   - Legendary: 2.0x (+100% Gold, Fame, and XP)\n\n**2. Monster Count Bonus (affects base reward):**\n   - 1 monster: 1.0x\n   - 2 monsters: 1.15x (+15% base Gold, Fame, XP)\n   - 3 monsters: 1.30x (+30% base Gold, Fame, XP)\n\n**3. Modifier Bonus (difficulty = more rewards):**\n   - Each negative modifier: +15% to all rewards\n   - Each mixed modifier: +10% to all rewards\n   - More modifiers = harder task but bigger payout\n\n**4. Kills Bonus (grind reward):**\n   - +5% per 50 kills completed (up to +25%)\n   - 50 kills: +5%\n   - 100 kills: +10%\n   - 150 kills: +15%\n   - 200 kills: +20%\n   - 250+ kills: +25% (capped)\n\n**How It All Stacks:**\nFinal Reward = Base x Tier Multiplier x Monster Count x (1 + Modifier Bonus) x (1 + Kills Bonus)\n\n**Example (Legendary task, 2 monsters, 1 negative mod, 150 kills):**\n- Base: 1000 of each reward\n- Legendary tier: x2.0 = 2000\n- 2 monsters: x1.15 = 2300\n- 1 negative mod: x1.15 = 2645\n- 150 kills: x1.15 = 3041\n\n**What does NOT scale with tier?**\n- Monster count required (set by level range)\n- Modifier difficulty (tier determines how many)\n- Spawn rate of the tier itself\n\n**Each Task Shows 2 Random Extra Rewards:**\n- Bonus Rerolls or Bonus Locks (separate from base Gold/Fame/XP)'
+            sections = {
+              { type = 'title', text = 'How Rewards Are Calculated' },
+              { type = 'divider' },
+              { type = 'text', content = [[Base rewards scale with the pool's average level (Lv):
+- **Experience:** 1600 x Lv^1.15
+- **Fame:** 0.6 x Lv^0.75
+- **Gold:** 50 + Lv^0.7]] },
+              { type = 'subtitle', text = 'Stacking Multipliers' },
+              { type = 'cards', items = {
+                { image = '/images/icons/star.png', name = 'Tier', description = 'Rare x1.25 / Epic x1.5 / Legendary x2.0 - applies to all three base rewards.' },
+                { image = '/images/icons/prey_damage.png', name = 'Monster Count', description = '+15% gold & exp per extra monster in the objective.' },
+                { image = '/images/icons/warning.png', name = 'Difficulty Pay', description = '+15% rewards per **negative** modifier, +10% per **mixed** modifier.' },
+                { image = '/images/icons/experience.png', name = 'Grind Bonus', description = '+5% rewards per 50 required kills, capped at **+25%**.' },
+                { image = '/images/icons/dungeon.png', name = 'Dungeon Tasks', description = 'Half the kills, **x2 rewards** (x3 on boss pools). Codex rewards also scale x1.5/x2.' },
+              }},
+              { type = 'warning', content = 'Each task only pays out **2 of the 3 base rewards** - gold, fame and experience are drawn randomly per task (bonus rerolls/locks join the pool when rolled). Check the offer before starting.' },
+              { type = 'subtitle', text = 'Codex Rewards (always on top)' },
+              { type = 'cards', items = {
+                { image = '/images/icons/bronce_crate.png', name = 'Bronze Crate', description = 'Rare 12% - Epic 25% (Bronze or Silver) - Legendary 40% (any tier).' },
+                { image = '/images/icons/golden_crate.png', name = 'Dungeon Bosses', description = 'Boss pools grant **2 crates** when a crate roll succeeds.' },
+                { image = '/images/codex/essence_icon.png', name = 'Essences', description = 'Normal 20% (30-60) - Rare 35% (60-120) - Epic 50% (120-240) - Legendary 70% (240-480).' },
+              }},
+            }
+          },
+          modifiers = {
+            name = 'Task Modifiers',
+            type = 'rich_text',
+            order = 4,
+            sections = {
+              { type = 'title', text = 'Task Modifiers' },
+              { type = 'divider' },
+              { type = 'text', content = 'Modifiers roll with the task tier and apply while the task is active. **Legendary tasks always get 3, the first two guaranteed positive.**' },
+              { type = 'subtitle', text = 'Positive', color = '#9fe89f' },
+              { type = 'cards', items = {
+                { image = '/images/icons/gold-bars.png', name = 'Golden Opportunity', color = '#9fe89f', description = '+50-100% gold from monsters.' },
+                { image = '/images/icons/fame.png', name = 'Fame Fortune', color = '#9fe89f', description = '+20-40 extra fame reward.' },
+                { image = '/images/icons/icon_magic.png', name = 'Experience Essence', color = '#9fe89f', description = '+10-25% green orb (experience) chance.' },
+                { image = '/images/icons/prey_star.png', name = 'Elite Surge', color = '#9fe89f', description = '+10-20% purple orb (elite) chance.' },
+                { image = '/images/icons/prey_loot.png', name = "Fortune's Favor", color = '#9fe89f', description = '+5-15% blue orb (rare loot) chance.' },
+                { image = '/images/icons/pet.png', name = 'Companion Training', color = '#9fe89f', description = '+15-25% pet experience.' },
+              }},
+              { type = 'subtitle', text = 'Negative', color = '#ff9a8a' },
+              { type = 'cards', items = {
+                { image = '/images/icons/prey_damage.png', name = 'Empowered Enemies', color = '#ff9a8a', description = 'Monsters deal +10-20% damage.' },
+                { image = '/images/icons/icon_health.png', name = 'Cursed Ground', color = '#ff9a8a', description = '-15-25% potion effectiveness.' },
+                { image = '/images/icons/icon_health.png', name = 'Weakened Vitality', color = '#ff9a8a', description = '-10-20% max health.' },
+                { image = '/images/icons/icon_mana.png', name = 'Mana Drain', color = '#ff9a8a', description = '-10-25% max mana.' },
+                { image = '/images/icons/prey_defense.png', name = 'Hardened Enemies', color = '#ff9a8a', description = 'Monsters gain +10-20% damage resistance.' },
+                { image = '/images/icons/icon_mana.png', name = 'Mana Burn', color = '#ff9a8a', description = 'Monster attacks drain 5-15% of your mana.' },
+              }},
+              { type = 'subtitle', text = 'Mixed', color = '#c9a0ff' },
+              { type = 'cards', items = {
+                { image = '/images/icons/prey_star.png', name = 'High Risk, High Reward', color = '#c9a0ff', description = '+50% fame, but monsters deal +25% damage.' },
+                { image = '/images/icons/prey_damage.png', name = 'Glass Cannon', color = '#c9a0ff', description = '+10% rare loot chance, but you take +15% damage.' },
+                { image = '/images/icons/prey_star.png', name = 'Elite Surge (mixed)', color = '#c9a0ff', description = '+25% elite spawn chance - more danger, more drops.' },
+                { image = '/images/icons/icon_health.png', name = 'Blood Hunt', color = '#c9a0ff', description = 'Heal 5% HP on every kill, but take +15% damage.' },
+                { image = '/images/icons/prey_damage.png', name = 'Berserker Mode', color = '#c9a0ff', description = 'Deal +15-25% damage, but take +15-25% damage too.' },
+              }},
+            }
+          },
+          rerolls = {
+            name = 'Rerolls System',
+            type = 'rich_text',
+            order = 5,
+            sections = {
+              { type = 'title', text = 'Rerolls' },
+              { type = 'divider' },
+              { type = 'text', content = 'Rerolling refreshes all **unlocked** task slots with new offers - lock the ones you want to keep first.' },
+              { type = 'cards', items = {
+                { image = '/images/icons/reroll.png', name = 'Free Rerolls', description = '**5 per day** base. Premium adds **+5**. Each **5 Fame levels** add **+1** more. Resets daily.' },
+                { image = '/images/icons/gold_coin.png', name = 'Paid Rerolls', description = '**20 gold** each once free rerolls run out - unlimited.' },
+                { image = '/images/icons/prey_star.png', name = 'Bonus Rerolls', description = 'Rare tasks 25% for +1, Epic 40% for +1, Legendary +1-2 guaranteed - granted through the task reward slot.' },
+              }},
+              { type = 'tip', content = 'Save free rerolls for higher tiers, and lock a good Legendary before rolling the rest.' },
+            }
+          },
+          locks = {
+            name = 'Lock System',
+            type = 'rich_text',
+            order = 6,
+            sections = {
+              { type = 'title', text = 'Locks' },
+              { type = 'divider' },
+              { type = 'text', content = 'A **locked** task survives rerolls - protect the good offers while you roll for better ones.' },
+              { type = 'cards', items = {
+                { image = '/images/icons/lock.png', name = 'Free Locks', description = '**3 per day** base. Premium adds **+5**. Resets daily.' },
+                { image = '/images/icons/gold_coin.png', name = 'Paid Locks', description = '**10 gold** each once free locks run out.' },
+                { image = '/images/icons/lock_small.png', name = 'Bonus Locks', description = 'Epic tasks 30% for +1, Legendary +1-2 guaranteed - through the task reward slot.' },
+              }},
+              { type = 'tip', content = 'Lock Epic/Legendary tasks or any task with a modifier set you like, then reroll the other slots freely.' },
+            }
           },
           fame_premium = {
             name = 'Fame & Premium Benefits',
-            type = 'text',
-            order = 6,
-            content = [[Your Fame Level and Premium status provide permanent bonuses that affect the Task System and overall progression.**Fame Level Requirements (Task Bonuses):** Level | Title | Points Needed | Task Bonus |
-|-------|-------|---------------|------------|
-| 3 | Experienced Hunter | 600 | Rare tier spawn rate +5% |
-| 5 | Veteran Hunter | 2,000 | Negative modifiers reduced by 15% |
-| 7 | Elite Hunter | 4,500 | +1 free reroll per day |
-| 8 | Master Hunter | 6,000 | Unlocks Epic tier tasks |
-| 10 | Legendary Hunter | 11,000 | +5% bonus to all task rewards |
-]]
-          }
+            type = 'rich_text',
+            order = 7,
+            sections = {
+              { type = 'title', text = 'Fame Hunter Ranks' },
+              { type = 'divider' },
+              { type = 'text', content = 'Your account-wide **Fame level** grants permanent task bonuses:' },
+              { type = 'cards', items = {
+                { image = '/images/icons/fame.png', name = 'Fame 3 - Experienced Hunter', description = '+5 weight on Rare tier rolls.' },
+                { image = '/images/icons/fame.png', name = 'Fame 5 - Veteran Hunter', description = '15% chance to convert a negative modifier into positive/mixed.' },
+                { image = '/images/icons/fame.png', name = 'Fame 7 - Elite Hunter', description = '+1 free reroll per day.' },
+                { image = '/images/icons/fame.png', name = 'Fame 8 - Master Hunter', description = 'Bonus weight on Epic rolls (applies from Fame 20+).' },
+                { image = '/images/icons/fame_big.png', name = 'Fame 10 - Legendary Hunter', description = '+5% to all task rewards.' },
+              }},
+              { type = 'subtitle', text = 'Premium Account' },
+              { type = 'cards', items = {
+                { image = '/images/icons/crown.png', name = 'Premium Perks', description = '+5 free rerolls and +5 free locks per day.' },
+              }},
+              { type = 'tip', content = 'The **+100 Fame daily bonus** is credited automatically with your first completed task of the day.' },
+            }
+          },
         }
       },
       daily_tasks = {
@@ -1237,9 +1351,27 @@ Crafting tasks scale with profession tiers:
         subcategories = {
           getting_started = {
             name = 'First Steps',
-            type = 'text',
+            type = 'rich_text',
             order = 1,
-            content = 'Welcome to Ascension! This is an ARPG style server with deep progression systems.\n\n**Your Priorities:**\n1. Level up and complete Tasks v2.\n2. Collect everything. Use Stash System and Quick Loot to manage items.\n3. Do not vendor trash items! Use the Recycler or Upgrade System to extract materials.'
+            sections = {
+              { type = 'title', text = 'Welcome to Ascension' },
+              { type = 'divider' },
+              { type = 'text', content = 'Ascension is an **ARPG-style** server built around deep progression: tasks, talents, codex cards, pets, prestige and more. This wiki explains every system - press **Ctrl+H** or the Wiki button to reopen it anytime.' },
+              { type = 'subtitle', text = 'Your First Priorities' },
+              { type = 'cards', items = {
+                { image = '/images/icons/quest_marker.png', name = 'Hunt & Task', description = 'Level up and complete **Task Board** offers - they are your main source of gold, fame and codex essences early on.' },
+                { image = '/images/icons/bag.png', name = 'Loot Everything', description = 'Use the **Stash** and **Quick Loot** to manage items. Keep materials - almost everything feeds a system.' },
+                { image = '/images/icons/gem.png', name = 'Do Not Vendor Trash', description = 'Use the **Recycler** or **Upgrade System** to extract essences and materials from unwanted items instead of selling them.' },
+                { image = '/images/icons/icon_sword.png', name = 'Pick Your Path', description = '**15 vocations** including Bard, Tinker, Samurai, Blood Mage and Warden - each with its own talent tree.' },
+              }},
+              { type = 'subtitle', text = 'Where To Next' },
+              { type = 'cards', items = {
+                { image = '/images/icons/star.png', name = 'Class Talents', description = 'Earn a talent point every **8 levels** and build your tree - see Class Talents.' },
+                { image = '/images/icons/clock.png', name = 'Daily Quests', description = 'Eight rotating objectives; complete **4+** for a Golden Crate - see Daily Quests.' },
+                { image = '/images/icons/wow_zone.png', name = 'Zones & Events', description = 'Hunting zones run rotating buffs and events - see Zones & Events.' },
+              }},
+              { type = 'tip', content = 'Progress in this wiki is saved - the bar below shows how much you have read.' },
+            }
           },
           class_talents = {
             name = 'Class Talents',
@@ -2712,7 +2844,7 @@ Tienes 6 espacios para equipar cartas activas. Requisitos de desbloqueo:
 - **Espacio 6:** Solo cuentas Premium
 
 Las cartas inactivas en tu coleccion no otorgan beneficios. Solo las cartas equipadas aplican sus efectos. Ve a la pestana Deck en el modulo de Codex para equipar o cambiar cartas.]] },
-              { type = 'image', path = '/images/wiki/codex_deck_slots.png', width = 380, height = 200 },
+              { type = 'image', path = '/images/codex/deck_bg.png', width = 380, height = 200 },
               { type = 'spacer', height = 8 },
 
               { type = 'text', content = [[**Cajas y Como Obtener Cartas**
@@ -2743,7 +2875,7 @@ Las Esencias son la moneda del sistema Codex. Usos:
 - **Pocion de Conocimiento:** +50% de ganancia de esencias mientras esta activa
 
 Puedes ver tus Esencias actuales en la parte superior del modulo de Codex.]] },
-              { type = 'image', path = '/images/wiki/codex_essences.png', width = 200, height = 60 },
+              { type = 'image', path = '/images/wiki/codex_esssences.png', width = 200, height = 60 },
               { type = 'spacer', height = 8 },
 
               { type = 'text', content = [[**Rareza de Cartas**
