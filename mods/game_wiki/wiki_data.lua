@@ -253,432 +253,6 @@ function getEnglishData()
               }
             }
           },
-          sample = {
-            name = 'Sample Category 1',
-            type = 'list',
-            items = {
-              {
-                name = 'Sample Item 1',
-                description = 'This is a sample item for testing',
-                icon = 2160
-              }
-            }
-          },
-          sample2 = {
-            name = 'Sample Category 2',
-            type = 'list',
-            items = {
-              {
-                name = 'Sample Item 2',
-                description = 'Another sample item',
-                icon = 2159
-              }
-            }
-          },
-          stat_enchantments = {
-            name = 'Stat Enchantments',
-            type = 'enchants',
-            items = {
-              {
-                name = 'Max HP',
-                description = 'Increases your maximum health points',
-                enchantType = 'Condition',
-                valuesPerLevel = '2.0 per level',
-                minLevel = 15,
-                equipment = 'Armor, Boots, Shield, Ring, Amulet, Necklace, Weapon, Ammo',
-                icon = 2392
-              },
-              {
-                name = 'Max Mana',
-                description = 'Increases your maximum mana points',
-                enchantType = 'Condition',
-                valuesPerLevel = '2.0 per level',
-                minLevel = 15,
-                equipment = 'Armor, Boots, Shield, Ring, Amulet, Necklace, Weapon, Ammo',
-                icon = 2392
-              },
-              {
-                name = 'Magic Level',
-                description = 'Boosts your magic level for stronger spells',
-                enchantType = 'Condition',
-                valuesPerLevel = '0.1 per level',
-                minLevel = 15,
-                equipment = 'Armor, Boots, Shield, Ring, Amulet, Necklace, Weapon, Ammo',
-                icon = 2392
-              },
-              {
-                name = 'Melee',
-                description = 'Improves sword, club and axe fighting skills',
-                enchantType = 'Condition',
-                valuesPerLevel = '0.1 per level',
-                minLevel = 15,
-                equipment = 'Armor, Boots, Shield, Ring, Amulet, Necklace, Weapon, Ammo',
-                icon = 2392
-              },
-              {
-                name = 'Arcana',
-                description = 'Enhances magical combat proficiency',
-                enchantType = 'Condition',
-                valuesPerLevel = '0.1 per level',
-                minLevel = 15,
-                equipment = 'Armor, Boots, Shield, Ring, Amulet, Necklace, Weapon, Ammo',
-                icon = 2392
-              },
-              {
-                name = 'Distance',
-                description = 'Increases accuracy with ranged weapons',
-                enchantType = 'Condition',
-                valuesPerLevel = '0.1 per level',
-                minLevel = 15,
-                equipment = 'Armor, Boots, Ring, Necklace, Weapon, Ammo',
-                icon = 2392
-              },
-              {
-                name = 'Defence',
-                description = 'Improves your shielding ability',
-                enchantType = 'Condition',
-                valuesPerLevel = '0.1 per level',
-                minLevel = 15,
-                equipment = 'Armor, Boots, Shield, Ring, Necklace, Weapon',
-                icon = 2392
-              }
-            }
-          },
-          combat_enchantments = {
-            name = 'Combat Enchantments',
-            type = 'enchants',
-            items = {
-              {
-                name = 'Critical Hit Chance',
-                description = 'Increases chance to deal critical damage',
-                enchantType = 'Condition',
-                valuesPerLevel = '0.1% per level',
-                minLevel = 15,
-                equipment = 'Necklace, Ring',
-                icon = 2393
-              },
-              {
-                name = 'Attack Speed',
-                description = 'Makes you attack faster',
-                enchantType = 'Condition',
-                valuesPerLevel = '0.1% per level',
-                minLevel = 15,
-                equipment = 'Weapon',
-                icon = 2393
-              },
-              {
-                name = 'Bonus Healing',
-                description = 'Increases effectiveness of healing spells and potions',
-                enchantType = 'Condition',
-                valuesPerLevel = '0.1% per level',
-                minLevel = 15,
-                equipment = 'Necklace, Ring, Shield',
-                icon = 2393
-              },
-              {
-                name = 'Life Steal',
-                description = 'Recovers health when dealing damage',
-                enchantType = 'Condition',
-                valuesPerLevel = '0.1% per level',
-                minLevel = 15,
-                equipment = 'Weapon',
-                icon = 2393
-              },
-              {
-                name = 'Mana Shield',
-                description = 'Absorbs damage using mana instead of health',
-                enchantType = 'Condition',
-                valuesPerLevel = 'On/Off effect',
-                minLevel = 5,
-                equipment = 'Ring',
-                icon = 2393
-              },
-              {
-                name = 'Experience',
-                description = 'Grants bonus experience from all sources',
-                enchantType = 'Special',
-                valuesPerLevel = '0.04% per level',
-                minLevel = 25,
-                equipment = 'Necklace, Ring',
-                icon = 2393
-              }
-            }
-          },
-          offensive_enchantments = {
-            name = 'Offensive Enchantments',
-            type = 'enchants',
-            items = {
-              {
-                name = 'Physical Damage',
-                description = 'Amplifies all physical damage dealt',
-                enchantType = 'Offensive',
-                valuesPerLevel = '0.2% per level',
-                minLevel = 25,
-                equipment = 'Weapon, Necklace, Ring, Shield',
-                icon = 2394
-              },
-              {
-                name = 'Fire Damage',
-                description = 'Increases fire element damage',
-                enchantType = 'Offensive',
-                valuesPerLevel = '0.2% per level',
-                minLevel = 25,
-                equipment = 'Weapon, Necklace, Ring, Shield',
-                icon = 2394
-              },
-              {
-                name = 'Ice Damage',
-                description = 'Increases ice element damage',
-                enchantType = 'Offensive',
-                valuesPerLevel = '0.2% per level',
-                minLevel = 25,
-                equipment = 'Weapon, Necklace, Ring, Shield',
-                icon = 2394
-              },
-              {
-                name = 'Energy Damage',
-                description = 'Increases energy element damage',
-                enchantType = 'Offensive',
-                valuesPerLevel = '0.2% per level',
-                minLevel = 25,
-                equipment = 'Weapon, Necklace, Ring, Shield',
-                icon = 2394
-              },
-              {
-                name = 'Holy Damage',
-                description = 'Increases holy element damage',
-                enchantType = 'Offensive',
-                valuesPerLevel = '0.2% per level',
-                minLevel = 25,
-                equipment = 'Weapon, Necklace, Ring, Shield',
-                icon = 2394
-              },
-              {
-                name = 'Death Damage',
-                description = 'Increases death element damage',
-                enchantType = 'Offensive',
-                valuesPerLevel = '0.2% per level',
-                minLevel = 25,
-                equipment = 'Weapon, Necklace, Ring, Shield',
-                icon = 2394
-              },
-              {
-                name = 'Earth Damage',
-                description = 'Increases earth element damage',
-                enchantType = 'Offensive',
-                valuesPerLevel = '0.2% per level',
-                minLevel = 25,
-                equipment = 'Weapon, Necklace, Ring, Shield',
-                icon = 2394
-              }
-            }
-          },
-          defensive_enchantments = {
-            name = 'Defensive Enchantments',
-            type = 'enchants',
-            items = {
-              {
-                name = 'Physical Protection',
-                description = 'Reduces physical damage taken',
-                enchantType = 'Defensive',
-                valuesPerLevel = '0.1% per level',
-                minLevel = 10,
-                equipment = 'Necklace, Ring',
-                icon = 2395
-              },
-              {
-                name = 'Fire Protection',
-                description = 'Reduces fire damage taken',
-                enchantType = 'Defensive',
-                valuesPerLevel = '0.1% per level',
-                minLevel = 10,
-                equipment = 'Necklace, Ring',
-                icon = 2395
-              },
-              {
-                name = 'Ice Protection',
-                description = 'Reduces ice damage taken',
-                enchantType = 'Defensive',
-                valuesPerLevel = '0.1% per level',
-                minLevel = 10,
-                equipment = 'Necklace, Ring',
-                icon = 2395
-              },
-              {
-                name = 'Energy Protection',
-                description = 'Reduces energy damage taken',
-                enchantType = 'Defensive',
-                valuesPerLevel = '0.08% per level',
-                minLevel = 10,
-                equipment = 'Necklace, Ring',
-                icon = 2395
-              }
-            }
-          },
-          trigger_enchantments = {
-            name = 'Trigger Enchantments (Special)',
-            type = 'enchants',
-            items = {
-              {
-                name = 'Flame Strike on Attack',
-                description = '5% chance to cast flame strike when attacking',
-                enchantType = 'Trigger: Attack',
-                valuesPerLevel = '2.5 damage per level',
-                minLevel = 10,
-                equipment = 'Weapon',
-                icon = 2396,
-                effect = '5% chance to cast on attack'
-              },
-              {
-                name = 'Flame Strike on Hit',
-                description = '20% chance to cast flame strike when hit',
-                enchantType = 'Trigger: Hit',
-                valuesPerLevel = '1.0 damage per level',
-                minLevel = 10,
-                equipment = 'Shield',
-                icon = 2396,
-                effect = '20% chance to cast when hit'
-              },
-              {
-                name = 'Ice Strike on Attack',
-                description = '5% chance to cast ice strike and slow enemy',
-                enchantType = 'Trigger: Attack',
-                valuesPerLevel = '1.7 damage per level',
-                minLevel = 10,
-                equipment = 'Weapon',
-                icon = 2396,
-                effect = '5% chance + slow effect'
-              },
-              {
-                name = 'Critical Damage Buff',
-                description = '5% chance on kill to gain critical damage buff',
-                enchantType = 'Trigger: Kill',
-                valuesPerLevel = '1.0% per level',
-                minLevel = 5,
-                equipment = 'Weapon, Necklace, Ring',
-                icon = 2396,
-                effect = '5% on kill: +crit for 20s'
-              },
-              {
-                name = 'Monk Teachings',
-                description = '8% chance on kill to gain attack speed boost',
-                enchantType = 'Trigger: Kill',
-                valuesPerLevel = '6% per level',
-                minLevel = 20,
-                equipment = 'Weapon',
-                icon = 2396,
-                effect = '8% on kill: +attack speed 20s'
-              },
-              {
-                name = 'Iron Skin Buff',
-                description = '20% chance on kill to gain deflect buff',
-                enchantType = 'Trigger: Kill',
-                valuesPerLevel = '3% per level',
-                minLevel = 5,
-                equipment = 'Shield',
-                icon = 2396,
-                effect = '20% on kill: deflect buff 20s'
-              },
-              {
-                name = 'Bob Bomb on Kill',
-                description = 'Chance to spawn a Bob Bomb helper on kill',
-                enchantType = 'Trigger: Kill',
-                valuesPerLevel = '0.6% per level',
-                minLevel = 5,
-                equipment = 'Weapon',
-                icon = 2396,
-                effect = 'Spawns Bob Bomb on kill'
-              },
-              {
-                name = 'Treasure Goblin on Kill',
-                description = 'Small chance to spawn treasure goblin on kill',
-                enchantType = 'Trigger: Kill',
-                valuesPerLevel = '0.2 per level',
-                minLevel = 20,
-                equipment = 'Necklace, Ring',
-                icon = 2396,
-                effect = '1/300 chance per kill'
-              }
-            }
-          }
-        }
-      },
-      dungeons = {
-        name = 'Dungeons',
-        subcategories = {
-          dungeon_stones = {
-            name = 'Dungeon Teleport Stones',
-            type = 'list',
-            items = {
-              {
-                name = 'Demon Dungeon Stone',
-                description = 'Teleports to the Demon Dungeon. Required level: 150',
-                icon = 1950
-              },
-              {
-                name = 'Dragon Lair Stone',
-                description = 'Teleports to the Dragon Lair. Required level: 100',
-                icon = 1951
-              },
-              {
-                name = 'Vampire Crypt Stone',
-                description = 'Teleports to the Vampire Crypt. Required level: 80',
-                icon = 1952
-              }
-            }
-          },
-          bosses = {
-            name = 'Boss Information',
-            type = 'list',
-            items = {
-              {
-                name = 'Demon Lord',
-                description = 'HP: 50,000 | Location: Demon Dungeon | Drops: Demon Armor, Demon Legs',
-                icon = 5080
-              },
-              {
-                name = 'Ancient Dragon',
-                description = 'HP: 35,000 | Location: Dragon Lair | Drops: Dragon Scale Mail',
-                icon = 5081
-              },
-              {
-                name = 'Vampire Prince',
-                description = 'HP: 25,000 | Location: Vampire Crypt | Drops: Vampire Shield',
-                icon = 5082
-              }
-            }
-          }
-        }
-      },
-      currencies = {
-        name = 'Currencies',
-        subcategories = {
-          fame = {
-            name = 'Fame Points',
-            type = 'text',
-            content = 'Fame points are earned by completing quests and defeating bosses.\n\nUses:\na Purchase exclusive items from NPC shops\na Unlock special areas\na Buy cosmetic items\n\nHow to earn:\na Daily quests: 10-50 fame\na Boss kills: 100-500 fame\na Events: varies'
-          },
-          valuable_pouches = {
-            name = 'Valuable Pouches',
-            type = 'list',
-            items = {
-              {
-                name = 'Bronze Pouch',
-                description = 'Contains 100-500 gold. Common drop from monsters.',
-                icon = 2853
-              },
-              {
-                name = 'Silver Pouch',
-                description = 'Contains 500-2000 gold. Rare drop from monsters.',
-                icon = 2854
-              },
-              {
-                name = 'Golden Pouch',
-                description = 'Contains 2000-10000 gold. Very rare drop.',
-                icon = 2855
-              }
-            }
-          }
         }
       },
       tasks = {
@@ -1757,7 +1331,378 @@ Crafting tasks scale with profession tiers:
             content = '**Dungeons & Expeditions:** Instanced content with rare loot and challenging bosses.\n\n**Zones:** Grind specific areas for Zone Buffs.\n\n**Upgrade System:** Use extracted stones and dust to push your Tier 3 weapons to godly damage limits.'
           }
         }
-      }
+      },
+      currencies = {
+        name = 'Currencies',
+        subcategories = {
+          overview = {
+            name = 'Currency Guide',
+            type = 'rich_text',
+            sections = {
+              { type = 'title', text = 'CURRENCIES OF ASCENSION', color = '#ffd75e' },
+              { type = 'text', content = 'Ascension uses several currencies for different systems. Here is what each one does and where to get it.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Core Currencies', color = '#ffd75e' },
+              { type = 'cards', items = {
+                { icon = 2148, name = 'Gold Coins', color = '#ffd700',
+                  description = 'The main currency. Earned from monster kills, [color=#ffd700]Gold Orbs[/color], tasks, quest rewards and the Auction House. Spent on NPC shops, task rerolls/locks and crafting fees.' },
+                { icon = 33904, name = 'Fame', color = '#ff9e5e',
+                  description = 'Account-wide progression currency with [color=#ffd700]30 levels[/color] (100 to 715,000 points). Earn fame from tasks, zone events, bounty kills and prestige rewards. Spend it at the [color=#ffd700]Fame NPC shops[/color] for exclusive items.' },
+                { icon = 2472, name = 'Codex Essences', color = '#cc66ff',
+                  description = 'Currency of the Codex card system. Earned from monster kills, crate bonus rolls and duplicate cards. Spent on crafting [color=#ffd700]Bronze / Silver / Golden Crates[/color] (100 / 200 / 350), upgrading cards, and unlocking deck slots early.' },
+                { icon = 30253, name = 'Achievement Points', color = '#66ccff',
+                  description = 'Earned by completing achievements across 19 categories. Points unlock titles and milestone rewards.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Monster Essences (crafting materials)', color = '#66ff99' },
+              { type = 'text', content = 'Dropped by monsters and used as ingredients for [color=#ffd700]crafted gear[/color]. The generic **Monster Essence** and **Boss Essence** are required by every blueprint recipe.' },
+              { type = 'cards', items = {
+                { icon = 6500, name = 'Monster Essence', color = '#66ff99',
+                  description = 'Core crafting material. Drops from regular monsters. Every blueprint recipe needs 30-35 of them.' },
+                { icon = 11223, name = 'Boss Essence', color = '#ff6666',
+                  description = 'Rare crafting material that only drops from bosses. Blueprints require 2 per craft.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Elite Essences', color = '#cc99ff' },
+              { type = 'text', content = 'Special essences dropped by [color=#ffd700]elite monster variants[/color] (the [bracketed] name prefixes you see in zones). Each variant drops its own element-themed essence, used in crafting and daily tasks.' },
+              { type = 'cards', items = {
+                { icon = 40418, name = 'Life Essence', color = '#ff8888', description = 'From [Vampiric] elites.' },
+                { icon = 40419, name = 'Mana Essence', color = '#66aaff', description = 'From [Arcane] elites.' },
+                { icon = 40420, name = 'Spirit Essence', color = '#dddddd', description = 'From spirit-themed elites.' },
+                { icon = 40421, name = 'Fire Essence', color = '#ff7733', description = 'From [Burning] elites.' },
+                { icon = 40422, name = 'Pure Essence', color = '#ffff88', description = 'From [Sacred] elites. Rarer - daily tasks ask for only 2.' },
+                { icon = 40423, name = 'Ice Essence', color = '#77ddff', description = 'From [Frostbound] elites.' },
+                { icon = 40424, name = 'Dark Essence', color = '#aa66cc', description = 'From [Darkness] elites.' },
+                { icon = 40425, name = 'Earth Essence', color = '#99cc66', description = 'From [Plagued] elites.' },
+              }},
+              { type = 'tip', content = 'Tip: keep a stack of each essence - Daily Tasks frequently ask for deliveries of 5 (2 for Pure Essence).' },
+            }
+          },
+        }
+      },
+
+      monster_orbs = {
+        name = 'Monster Orbs',
+        subcategories = {
+          overview = {
+            name = 'Orb Guide',
+            type = 'rich_text',
+            sections = {
+              { type = 'title', text = 'MONSTER ORBS', color = '#ffd75e' },
+              { type = 'text', content = 'When you kill a monster (level 2+), there is a chance a glowing orb drops on the floor. Walk over it to claim the reward - [color=#ff8888]only you can pick up your own orbs[/color].' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'The Four Orb Types', color = '#ffd75e' },
+              { type = 'cards', items = {
+                { icon = 39941, name = 'Gold Orb', color = '#ffd700',
+                  description = 'Grants instant gold: [color=#ffd700]monster level x 10[/color]. Drop chance ~2.7% (4 in 150).' },
+                { icon = 38694, name = 'Loot Orb', color = '#5599ff',
+                  description = 'Grants a loot item scaled to the monster level - this is where [color=#ffd700]custom gear[/color] enters the game. Drop chance ~1.3% (2 in 150).' },
+                { icon = 38693, name = 'Experience Orb', color = '#77ff77',
+                  description = 'Grants instant experience: [color=#ffd700]monster level x 100[/color]. Drop chance ~1.3% (2 in 150).' },
+                { icon = 38572, name = 'Death Orb', color = '#cc66ff',
+                  description = 'Summons an [color=#ff8888]elite version of the monster you just killed[/color] with double HP and a special prefix ([Shadow], [Aqua], [Volcanic], [Sacred], [Mighty], [Terra]). Elites have unique powers and drop elite essences. Drop chance ~1.3% (2 in 150).' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'How to get more orbs', color = '#66ff99' },
+              { type = 'cards', items = {
+                { icon = 38694, name = 'Orb Shower (Zone Buff)', color = '#44aaff',
+                  description = 'When a zone has the Orb Shower buff active, all orb drop chances are boosted while it lasts (~30 min).' },
+                { icon = 33904, name = 'Task Modifiers', color = '#ffcc66',
+                  description = 'Some task modifiers increase purple / blue / green orb drop chance - but only while the task monster is still incomplete.' },
+                { icon = 33621, name = 'High Risk Prestige', color = '#ff5544',
+                  description = 'The High Risk prestige mode raises blue orb chance by 20% and grants +1 extra drop from blue orbs.' },
+              }},
+              { type = 'warning', content = 'Orbs belong to the player who killed the monster - party members and bystanders cannot steal them.' },
+            }
+          },
+        }
+      },
+
+      zones = {
+        name = 'Zones & Events',
+        subcategories = {
+          overview = {
+            name = 'How Zones Work',
+            type = 'rich_text',
+            sections = {
+              { type = 'title', text = 'HUNTING ZONES', color = '#ffd75e' },
+              { type = 'text', content = 'The world is divided into ~99 hunting zones. Each zone has its own monster spawns, level range, weather, and a [color=#ffd700]zone boss[/color] that spawns after enough kills. Zones rotate random events and buffs - always check the zone panel before hunting.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Zone Events', color = '#66ff99' },
+              { type = 'text', content = 'Zones periodically run events: kill quotas, boss hunts and funnykill invasions (waves of spawned monsters). Top contributors earn podium rewards.' },
+              { type = 'cards', items = {
+                { icon = 30253, name = 'Podium Rewards (Top 3)', color = '#ffd700',
+                  description = '1st: 200 exp + Golden Crate + essences. 2nd: 100 exp + Golden Crate. 3rd: 75 exp + Golden Crate. Plus platinum coins.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Zone Buffs (rotate automatically)', color = '#66aaff' },
+              { type = 'text', content = 'Each zone can have an active buff. [color=#77ff77]Friendly buffs[/color] are pure bonuses; [color=#ff8888]aggressive buffs[/color] add risk or PvP pressure.' },
+              { type = 'cards', items = {
+                { icon = 38693, name = 'Double Experience', color = '#ffd700', description = 'Double exp from all monster kills. 40 min. (friendly)' },
+                { icon = 38694, name = 'Orb Shower', color = '#44aaff', description = 'All orb drop chances boosted. 30 min. (friendly)' },
+                { icon = 11223, name = 'Monster Rush', color = '#ff4444', description = 'Monster spawn rate doubled. 20 min. (aggressive)' },
+                { icon = 38572, name = 'Blood Pact', color = '#cc0000', description = 'Each kill permanently boosts your stats until you die or leave the zone. 40 min. (aggressive)' },
+                { icon = 33904, name = 'Bounty Hunt', color = '#ff0000', description = 'Monster kills may grant fame; player kills grant more. 40 min. (aggressive)' },
+                { icon = 35768, name = 'Rapid Regeneration', color = '#00ff88', description = 'HP and mana regeneration +200%. 40 min. (friendly)' },
+                { icon = 37416, name = 'Speed Demon', color = '#00ccff', description = '+50% movement speed, -20% spell cooldowns. 20 min. (friendly)' },
+                { icon = 29043, name = 'Survival Instinct', color = '#8888ff', description = '-25% damage taken, +20% max HP. 40 min. (friendly)' },
+                { icon = 38572, name = 'Blood Moon', color = '#cc0033', description = '+15% lifesteal; taking damage boosts your next attack by 10%. 35 min. (aggressive)' },
+                { icon = 2472, name = 'Codex Knowledge', color = '#9933ff', description = 'Monsters have a chance to grant +5 codex essence on kill. 35 min. (friendly)' },
+              }},
+              { type = 'tip', content = 'Check which buff is active before choosing a hunting zone - Double Exp and Orb Shower hours are the best farming windows.' },
+            }
+          },
+        }
+      },
+
+      dungeons = {
+        name = 'Dungeons',
+        subcategories = {
+          overview = {
+            name = 'Dungeon Guide',
+            type = 'rich_text',
+            sections = {
+              { type = 'title', text = 'DUNGEONS', color = '#ffd75e' },
+              { type = 'text', content = 'Dungeons are instanced runs entered through portal stones. Each has a mission objective - usually killing a final boss. A [color=#ffd700]daily mutation[/color] modifies every active dungeon with extra mechanics.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Difficulty', color = '#ff9e5e' },
+              { type = 'text', content = 'Difficulty scales monster damage and pressure from x0.85 (level 1) up to x1.60 (level 6). Pick a level you can clear - failed runs waste the entry.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Daily Mutators (one active per day)', color = '#cc66ff' },
+              { type = 'cards', items = {
+                { icon = 38572, name = 'Anti-Heal', color = '#ff6666', description = 'All healing received is reduced by 30%.' },
+                { icon = 38572, name = 'Elite Rage', color = '#ff4444', description = 'Monsters deal +20% damage.' },
+                { icon = 38572, name = 'Slow Fields', color = '#66aaff', description = 'Slowing fields (75% slow) spawn under players periodically.' },
+                { icon = 38572, name = 'Mana Burn', color = '#66ffee', description = 'Losing mana also burns 12% extra.' },
+                { icon = 38572, name = 'Unleashed Fury', color = '#ff8888', description = 'Below 30% HP, monsters deal +40% damage.' },
+                { icon = 38572, name = 'Ethereal Explosion', color = '#cc99ff', description = 'Monsters can explode on death for up to 10% of your max HP.' },
+                { icon = 38572, name = 'Adamantite Skin', color = '#aaaaaa', description = 'The first hit on each monster is reduced by 80% (5s cooldown per monster).' },
+                { icon = 38572, name = 'Profane Regeneration', color = '#77ff77', description = 'Monsters regen 2% HP per second after 2s without taking damage.' },
+                { icon = 38572, name = 'Arcane Storm', color = '#aa66ff', description = 'Arcane strikes hit random players every 8s.' },
+                { icon = 38572, name = 'Void Dominion', color = '#9933cc', description = 'Void zones appear; stepping in one triggers an explosion.' },
+                { icon = 38572, name = 'Mortal Convergence', color = '#ffcc66', description = 'Every 60s players must stack within 4sqm or take an explosion.' },
+                { icon = 38572, name = 'Unstable Mana', color = '#66ffcc', description = 'Dropping below 50% mana triggers a small explosion.' },
+                { icon = 38572, name = 'Vampiric Essence', color = '#ff6688', description = 'Monsters heal for 5% of the damage they deal.' },
+                { icon = 38572, name = 'Painful Reflection', color = '#ffaa55', description = 'Monsters reflect 15% of damage taken.' },
+                { icon = 38572, name = 'Global Enragement', color = '#ff5544', description = 'Every 60s monsters gain a stacking +5% damage buff.' },
+              }},
+              { type = 'warning', content = 'Check the daily mutator before entering! Some combos (Anti-Heal + Vampiric Essence, or Mortal Convergence on high difficulty) are brutal.' },
+            }
+          },
+          dungeon_list = {
+            name = 'Dungeon List',
+            type = 'list',
+            items = {
+              { name = 'Blackrock Caverns', description = 'Normal | Objective: Find and kill Gurzul, The Merciless.', icon = 33714 },
+              { name = 'Caverns of Betrayal', description = 'Easy | Objective: Find and kill Lucella, The Witch.', icon = 33714 },
+              { name = 'Forgotten Labs', description = 'Medium | Objective: Find and kill Doctor Pomelo.', icon = 33714 },
+              { name = 'The Aquarium', description = 'Medium | Objective: Find and kill Lady Undine.', icon = 33714 },
+              { name = 'Garona Madness', description = 'Medium | Objective: Kill Garona Madness.', icon = 33714 },
+              { name = 'Blackmist Prison', description = 'Medium | Defeat Fordraz the jailer.', icon = 33714 },
+              { name = 'Rotten Ruins', description = 'Medium | Defeat Lord Hamelin.', icon = 33714 },
+              { name = 'Sandstorm Coliseum', description = 'Medium | Defeat the coliseum champion.', icon = 33714 },
+              { name = 'The Verdant Runehold', description = 'Hard | Defeat Shelleon the Eternal Guardian. Hidden chambers inside.', icon = 33714 },
+              { name = 'Desolation Keep', description = 'Hard | Confront Malgorth the Devourer at the pinnacle.', icon = 33714 },
+              { name = 'Ashborne Deeps', description = 'Medium | Face Uzulaz, wielder of flame and fury.', icon = 33714 },
+              { name = 'Frozen Heart', description = 'Medium | Defeat Shawn the Dragon, the Frostlord.', icon = 33714 },
+              { name = "Santa's Workshop", description = 'Easy | Holiday dungeon - Santa guards the secrets.', icon = 33714 },
+              { name = 'Neuronal Enclave', description = 'Normal | DreamSoul Forest techno-natural sanctuary.', icon = 33714 },
+              { name = 'Dread Abyss', description = 'Normal | A rift leaking dark energy and nightmares.', icon = 33714 },
+            }
+          },
+        }
+      },
+
+      item_upgrades = {
+        name = 'Item Upgrades',
+        subcategories = {
+          overview = {
+            name = 'Upgrade System',
+            type = 'rich_text',
+            sections = {
+              { type = 'title', text = 'ITEM UPGRADE SYSTEM', color = '#ffd75e' },
+              { type = 'text', content = 'Use crystals on your equipment to raise its upgrade level, up to [color=#ffd700]+15[/color]. Higher levels have lower success rates - failures can downgrade or even destroy the item.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Success Chances', color = '#ff9e5e' },
+              { type = 'text', content = '**Standard crystal:** +1-2: 100/85% | +3-4: 70/50% | +5-6: 35/20% | +7: 10% | +8: 8% | +9-15: 3-2%\n**Breaker crystal:** same early rates, then 30% from +8 to +13, 25% at +14, 15% at +15.' },
+              { type = 'warning', content = 'Past +8, failing with a standard crystal can BREAK the item. Breaker crystals are safer for high levels.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Crystals & Scrolls', color = '#66aaff' },
+              { type = 'cards', items = {
+                { icon = 29032, name = 'Upgrade Crystal', color = '#66ff99', description = 'Raises item upgrade level by +1 on success.' },
+                { icon = 33621, name = 'Upgrade Crystal Breaker', color = '#ff8888', description = 'For +10 and beyond - better success rates at high levels.' },
+                { icon = 29033, name = 'Alteration Crystal', color = '#cc99ff', description = 'Rerolls the bonus attributes of an item.' },
+                { icon = 29035, name = 'Cleansing Crystal', color = '#77ddff', description = 'Removes upgrades/attributes to start over.' },
+                { icon = 29034, name = 'Fortune Crystal', color = '#ffd700', description = 'Luck-based crystal for bonus rolls.' },
+                { icon = 29043, name = 'Faith Crystal', color = '#ffff88', description = 'Rare rainbow crystal.' },
+                { icon = 33385, name = 'Limitless Crystal', color = '#ff66cc', description = 'Special end-game crystal.' },
+                { icon = 33386, name = 'Mirrored Crystal', color = '#99ddff', description = 'Special end-game crystal.' },
+                { icon = 33387, name = 'Void Crystal', color = '#9966cc', description = 'Special end-game crystal.' },
+                { icon = 26390, name = 'Upgrade Catalyst', color = '#ffaa55', description = 'Catalyst for the upgrade process.' },
+                { icon = 29080, name = 'Crystal Extractor', color = '#aaddaa', description = 'Extracts crystals from Crystal Fossils (1:5 break chance).' },
+                { icon = 29019, name = 'Scroll of Identification', color = '#ddddaa', description = 'Identifies unidentified items (1 in 12 drops) - can reveal [color=#ffd700]Unique[/color] items (1:30).' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Rarity Tiers', color = '#cc99ff' },
+              { type = 'text', content = 'Identified items roll a rarity: **Orbital** (rare, ~1:25), **Forged** (epic, ~1:900) and **Ascended** (legendary, ~1:500). Rarity adds to the item level budget for attributes.' },
+            }
+          },
+        }
+      },
+
+      proficiency = {
+        name = 'Item Proficiency',
+        subcategories = {
+          overview = {
+            name = 'Proficiency Guide',
+            type = 'rich_text',
+            sections = {
+              { type = 'title', text = 'ITEM PROFICIENCY', color = '#ffd75e' },
+              { type = 'text', content = 'Your equipped items gain proficiency XP as you kill monsters. Each milestone unlocks a [color=#ffd700]trait choice[/color] - pick one trait per column to customize that item.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'How XP works', color = '#66ff99' },
+              { type = 'text', content = 'Per monster kill, each eligible equipped item gains [color=#ffd700]300 + 15% of the monster exp[/color] proficiency XP. Progress is tracked per item id - swap gear and your progress stays saved.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Milestones (7 columns)', color = '#ff9e5e' },
+              { type = 'text', content = '**Col 1:** 91,000 XP | **Col 2:** 205,000 | **Col 3:** 455,000 | **Col 4:** 1,023,750 | **Col 5:** 2,275,000 | **Col 6:** 5,005,000 | **Col 7:** 11,375,000' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Example Traits', color = '#cc66ff' },
+              { type = 'cards', items = {
+                { icon = 34087, name = 'Executioner', color = '#ff6666', description = 'Deal +30% damage to enemies below 25% health.' },
+                { icon = 34087, name = 'Cleave', color = '#ffaa55', description = 'Melee hits have 35% chance to splash 60% damage to adjacent enemies.' },
+                { icon = 34087, name = 'Bloodfeast', color = '#ff8888', description = 'Heal for 4% of the damage you deal.' },
+                { icon = 34087, name = 'Last Stand', color = '#8888ff', description = 'Below 30% health, take 30% less damage.' },
+                { icon = 34087, name = 'Twin Strike', color = '#66ffee', description = '20% chance to instantly strike again for 70% damage.' },
+                { icon = 34087, name = 'Adrenaline', color = '#ffcc66', description = 'Below 40% health, gain +12% attack speed.' },
+              }},
+              { type = 'tip', content = 'Traits are per item type (weapons, bows, wands, shields, armor, rings, necklaces, boots each have their own trait route). Check the Proficiency window to preview all routes.' },
+            }
+          },
+        }
+      },
+
+      crafting = {
+        name = 'Crafting',
+        subcategories = {
+          overview = {
+            name = 'Crafting Guide',
+            type = 'rich_text',
+            sections = {
+              { type = 'title', text = 'CRAFTING & PROFESSIONS', color = '#ffd75e' },
+              { type = 'text', content = 'Crafted gear is a core progression path: blueprint recipes produce [color=#ffd700]pre-upgraded items[/color] with custom stats - often better than regular drops of the same tier.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'How to get materials', color = '#66ff99' },
+              { type = 'cards', items = {
+                { icon = 6500, name = 'Monster Essence', color = '#66ff99', description = 'Farm regular monsters - every recipe needs 30-35.' },
+                { icon = 11223, name = 'Boss Essence', color = '#ff6666', description = 'Kill zone bosses and dungeon bosses - 2 per craft.' },
+                { icon = 29080, name = 'Crystal Fossils', color = '#aaddaa', description = 'Drop from monsters (1:30 chance, level 10+). Extract crystals with the Crystal Extractor.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Professions', color = '#ff9e5e' },
+              { type = 'cards', items = {
+                { icon = 35768, name = 'Alchemy', color = '#77ff77', description = 'Brew custom potions. Level it by crafting.' },
+                { icon = 29034, name = 'Enchanting', color = '#cc99ff', description = 'Disenchant gear and craft stat runes (blue/green/yellow/purple/red tiers with unique rolls).' },
+                { icon = 6500, name = 'Herbalism', color = '#88cc66', description = 'Gather herbs from random herb nodes in the world.' },
+                { icon = 6500, name = 'Mining', color = '#ccaa77', description = 'Mine ore from random vein nodes.' },
+                { icon = 6500, name = 'Woodcutting', color = '#aa7744', description = 'Chop wood from random tree nodes.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Why crafted items are better', color = '#ffd75e' },
+              { type = 'text', content = '**Pre-upgraded:** blueprint items come out already upgraded, saving crystals and risk.\n**Custom stats:** they roll attributes from the item balance table (crit, leech, %HP, cooldown reduction, etc.) - real end-game stats, not flat armor.\n**Blueprints:** learn recipes like Fire Sword, Dragonbreath Crossbow, Grievous Axe, Fire Essence Wand and Fragment of Pure Life.' },
+            }
+          },
+        }
+      },
+
+      prestige = {
+        name = 'Prestige Modes',
+        subcategories = {
+          overview = {
+            name = 'Prestige Guide',
+            type = 'rich_text',
+            sections = {
+              { type = 'title', text = 'PRESTIGE CHALLENGES', color = '#ffd75e' },
+              { type = 'text', content = 'Prestige resets your character for a challenge run with permanent rewards. Your [color=#ffd700]pets, codex, achievements, blueprints and reborn bonuses are preserved[/color] across every prestige.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'The Modes', color = '#66aaff' },
+              { type = 'cards', items = {
+                { icon = 33904, name = 'Prestige Normal', color = '#77ff77',
+                  description = 'Requires level 300. Resets to level 8 with [color=#ffd700]+20% exp[/color]. Reach 300 again to complete: 50k gold + 5k fame + 5k codex.' },
+                { icon = 38572, name = 'Hardcore', color = '#ff4444',
+                  description = 'Start at level 10 or lower, reset to 1. [color=#ff8888]ONE LIFE - death deletes the character.[/color] Goal: level 200. Reward: 100k gold + 10k fame + 15k codex.' },
+                { icon = 33621, name = 'High Risk', color = '#ffaa55',
+                  description = 'Start at 10 or lower, reset to 1. +15% exp, bonus loot rolls, +20% blue orb chance. But death drops your backpack + 1 equipped item in a chest AND costs 2x exp loss. Goal: 300. Reward: 50k + 5k + 7.5k codex (paid on start).' },
+                { icon = 29032, name = 'Iron Man', color = '#aaaaaa',
+                  description = 'Start at 10 or lower, reset to 8. ONE LIFE + only weapon/shield slots allowed - all armor slots locked. Goal: 200. Reward: 150k + 12k fame + 10k codex.' },
+                { icon = 38572, name = 'Nightmare I', color = '#cc66ff',
+                  description = 'Start at 10 or lower, account needs a level 100+ char. +80% damage taken. Goal: 300. Reward: 75k + 7.5k + 10k codex.' },
+                { icon = 38572, name = 'Nightmare II', color = '#aa44dd',
+                  description = '+100% damage taken, -30% damage dealt. Goal: 300. Reward: 150k + 12k + 20k codex.' },
+                { icon = 38572, name = 'Nightmare III', color = '#8811cc',
+                  description = '+120% damage taken, -50% damage dealt, [color=#ff8888]ONE LIFE.[/color] Goal: 300. Reward: 250k + 20k + 30k codex.' },
+              }},
+              { type = 'warning', content = 'Hardcore, Iron Man and Nightmare III are one-life modes: a single death permanently deletes the character. Choose carefully!' },
+            }
+          },
+        }
+      },
+
+      reborn = {
+        name = 'Reborn',
+        subcategories = {
+          overview = {
+            name = 'Reborn Guide',
+            type = 'rich_text',
+            sections = {
+              { type = 'title', text = 'REBORN SYSTEM', color = '#ffd75e' },
+              { type = 'text', content = 'Reborn resets your character in exchange for a [color=#ffd700]Reborn Orb[/color] - a consumable that grants permanent, stacking bonuses to any character on your account.' },
+              { type = 'divider' },
+              { type = 'cards', items = {
+                { icon = 37416, name = 'Reborn Orb', color = '#66ffee',
+                  description = 'Granted on rebirth. Any character on your account can consume it for permanent bonuses: +exp gain, +skill gain, +max HP%, +max mana% and +damage%. Orbs stack - the more reborns, the stronger every character becomes.' },
+              }},
+              { type = 'tip', content = 'Reborn bonuses apply account-wide: your next character starts stronger. Prestige preserves your reborn progress.' },
+            }
+          },
+        }
+      },
+
+      achievements = {
+        name = 'Achievements',
+        subcategories = {
+          overview = {
+            name = 'Achievements Guide',
+            type = 'rich_text',
+            sections = {
+              { type = 'title', text = 'ACHIEVEMENTS', color = '#ffd75e' },
+              { type = 'text', content = 'Over [color=#ffd700]215 achievements[/color] reward achievement points, titles and items. Progress is preserved through prestige and reborn.' },
+              { type = 'divider' },
+              { type = 'subtitle', text = 'Categories', color = '#66aaff' },
+              { type = 'text', content = '**Combat** - kills, bosses, crits\n**Tasks & Daily** - task board and daily completions\n**Crafting & Professions** - recipes and profession levels\n**Gathering** - herb/vein/tree/pool nodes\n**Pets** - collecting and leveling\n**Codex** - cards, crates, deck milestones\n**Dungeons** - clears and mutator runs\n**Paragon / Prestige / Reborn** - end-game milestones\n**Proficiency** - trait unlocks\n**Exploration & Social** - map discovery, guild, party\n**Skills, Collection, Capture, Forge, Special**' },
+              { type = 'tip', content = 'Achievement points count toward titles and milestone rewards - check the Achievements window for progress and claim buttons.' },
+            }
+          },
+        }
+      },
     }
   }
 end

@@ -317,50 +317,53 @@ function displayEnchantsContent(enchants)
   end
 end
 
-local function parseBoldText(text)
-  local parts = {}
-  local pos = 1
-  while pos <= #text do
-    local startBold = text:find('%*%*', pos)
-    if not startBold then
-      if pos <= #text then
-        table.insert(parts, {text = text:sub(pos), bold = false})
-      end
-      break
-    end
+local WIKI_ACCENT = '#ffd75e'
 
-    if startBold > pos then
-      table.insert(parts, {text = text:sub(pos, startBold - 1), bold = false})
-    end
+-- Converts wiki markup into [color] spans understood by UIWidget:parseColoredText.
+--   **text**                  -> accent-colored inline highlight
+--   [color=#rrggbb]...[/color] -> passed through as-is
+local function wikiMarkupToColored(text)
+  return (text or ''):gsub('%*%*(.-)%*%*', '[color=' .. WIKI_ACCENT .. ']%1[/color]')
+end
 
-    local endBold = text:find('%*%*', startBold + 2)
-    if not endBold then
-      table.insert(parts, {text = text:sub(startBold), bold = false})
-      break
-    end
+local function wikiColoredLabel(style, parent, text, defaultColor)
+  local widget = g_ui.createWidget(style, parent)
+  widget:parseColoredText(wikiMarkupToColored(text), defaultColor or '#dfdfdf')
+  return widget
+end
 
-    local boldText = text:sub(startBold + 2, endBold - 1)
-    table.insert(parts, {text = boldText, bold = true})
-    pos = endBold + 2
+local function wikiAutoHeight(widget, label, minHeight, padding)
+  scheduleEvent(function()
+    if widget and not widget:isDestroyed() then
+      widget:setHeight(math.max(minHeight, label:getTextSize().height + padding))
+    end
+  end, 0)
+end
+
+local function wikiAddCard(parent, card)
+  local widget = g_ui.createWidget('WikiRichCard', parent)
+  if card.icon then
+    widget:getChildById('icon'):setItemId(card.icon)
   end
-  return parts
+  local nameWidget = widget:getChildById('name')
+  nameWidget:parseColoredText(wikiMarkupToColored(card.name or ''), card.color or '#ffcc00')
+  local descWidget = widget:getChildById('description')
+  descWidget:parseColoredText(wikiMarkupToColored(card.description or ''), card.descColor or '#cccccc')
+  wikiAutoHeight(widget, descWidget, 58, 8 + 14 + 2 + 10)
+  return widget
+end
+
+local function wikiAddNoteBox(parent, section, style)
+  local widget = g_ui.createWidget(style, parent)
+  local label = widget:getChildById('text')
+  label:parseColoredText(wikiMarkupToColored(section.content or ''), section.color or '#dfdfdf')
+  wikiAutoHeight(widget, label, 40, 24)
+  return widget
 end
 
 function displayTextContent(content)
   local contentPanel = wikiWindow:recursiveGetChildById('contentPanel')
-
-  local parts = parseBoldText(content)
-  for _, part in ipairs(parts) do
-    if part.text ~= '' then
-      if part.bold then
-        local boldWidget = g_ui.createWidget('WikiRichBoldTextSection', contentPanel)
-        boldWidget:setText(part.text)
-      else
-        local textWidget = g_ui.createWidget('WikiTextContent', contentPanel)
-        textWidget:setText(part.text)
-      end
-    end
-  end
+  wikiColoredLabel('WikiTextContent', contentPanel, content)
 end
 
 function displayRichTextContent(sections)
@@ -370,18 +373,23 @@ function displayRichTextContent(sections)
 
   for _, section in ipairs(sections) do
     if section.type == 'text' then
-      local parts = parseBoldText(section.content or '')
-      for _, part in ipairs(parts) do
-        if part.text ~= '' then
-          if part.bold then
-            local boldWidget = g_ui.createWidget('WikiRichBoldTextSection', contentPanel)
-            boldWidget:setText(part.text)
-          else
-            local textWidget = g_ui.createWidget('WikiRichTextSection', contentPanel)
-            textWidget:setText(part.text)
-          end
-        end
+      wikiColoredLabel('WikiRichColoredText', contentPanel, section.content, section.color)
+    elseif section.type == 'title' then
+      wikiColoredLabel('WikiRichTitle', contentPanel, section.text, section.color)
+    elseif section.type == 'subtitle' then
+      wikiColoredLabel('WikiRichSubtitle', contentPanel, section.text, section.color)
+    elseif section.type == 'card' then
+      wikiAddCard(contentPanel, section)
+    elseif section.type == 'cards' then
+      for _, card in ipairs(section.items or {}) do
+        wikiAddCard(contentPanel, card)
       end
+    elseif section.type == 'tip' then
+      wikiAddNoteBox(contentPanel, section, 'WikiRichTip')
+    elseif section.type == 'warning' then
+      wikiAddNoteBox(contentPanel, section, 'WikiRichWarn')
+    elseif section.type == 'divider' then
+      g_ui.createWidget('WikiRichDivider', contentPanel)
     elseif section.type == 'image' then
       local imgWidget = g_ui.createWidget('WikiRichImage', contentPanel)
       imgWidget:setImageSource(section.path or '')
