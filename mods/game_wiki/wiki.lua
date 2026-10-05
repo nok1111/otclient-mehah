@@ -20,6 +20,25 @@ local WIKI_CATEGORY_ORDER = {
   'prestige', 'reborn',
 }
 
+-- Sidebar icon per category (language-independent, lives in the client assets)
+local WIKI_CATEGORY_ICONS = {
+  ascension_guide = '/images/icons/star.png',
+  tasks           = '/images/icons/quest_marker.png',
+  daily_tasks     = '/images/icons/clock.png',
+  currencies      = '/images/icons/gold_coin.png',
+  items           = '/images/icons/icon_items.png',
+  item_upgrades   = '/images/icons/gem.png',
+  proficiency     = '/images/icons/skill_attack.png',
+  crafting        = '/images/icons/rock-hammer_17906119.png',
+  monster_orbs    = '/images/icons/crystal-ball_8034727.png',
+  zones           = '/images/icons/wow_zone.png',
+  dungeons        = '/images/icons/dungeon.png',
+  pets            = '/images/icons/pets.png',
+  achievements    = '/images/icons/icon_achievement.png',
+  prestige        = '/images/icons/crown.png',
+  reborn          = '/images/icons/flame.png',
+}
+
 local function wikiSortedKeys(tbl, orderList)
   local keys, seen, rest = {}, {}, {}
   for _, k in ipairs(orderList or {}) do
@@ -89,7 +108,6 @@ local function wikiAddNoteBox(parent, section, style)
 end
 
 function init()
-  print("[Wiki] Module initializing...")
   connect(g_game, { onGameStart = online, onGameEnd = offline })
   
   g_keyboard.bindKeyDown('Ctrl+H', toggle)
@@ -97,11 +115,9 @@ function init()
   if g_game.isOnline() then
     online()
   end
-  print("[Wiki] Module initialized successfully")
 end
 
 function terminate()
-  print("[Wiki] Module terminating...")
   
   disconnect(g_game, { onGameStart = online, onGameEnd = offline })
   g_keyboard.unbindKeyDown('Ctrl+H')
@@ -109,22 +125,17 @@ function terminate()
   -- Clean up if still online
   offline()
   
-  print("[Wiki] Module terminated")
 end
 
 function online()
-  print("[Wiki] online() called")
   
   -- Load UI first
   if not wikiWindow then
-    print("[Wiki] Loading wiki UI...")
     wikiWindow = g_ui.displayUI('wiki')
     
     if wikiWindow then
-      print("[Wiki] UI loaded successfully")
       wikiWindow:hide()
     else
-      print("[Wiki] ERROR: Failed to load wiki.otui")
       return
     end
   end
@@ -132,16 +143,12 @@ function online()
   -- Create button when entering game
   if not wikiButton then
     if modules.game_mainpanel then
-      print("[Wiki] Creating wiki button...")
       wikiButton = modules.game_mainpanel.addToggleButton('wikiButton', 
         tr('Wiki'), '/images/options/button_options', toggle, false, 14)
       wikiButton:setOn(false)
-      print("[Wiki] Wiki button created successfully")
     else
-      print("[Wiki] ERROR: game_mainpanel not available")
     end
   else
-    print("[Wiki] Button already exists")
   end
   
   -- Load wiki data when player connects
@@ -149,7 +156,6 @@ function online()
 end
 
 function offline()
-  print("[Wiki] offline() called - cleaning up")
   
   if wikiWindow then
     wikiWindow:destroy()
@@ -177,11 +183,9 @@ end
 
 function show()
   if not wikiWindow then
-    print("[Wiki] ERROR: wikiWindow not loaded yet")
     return
   end
   
-  print("[Wiki] Showing wiki window")
   
   -- Populate content on first show
   if not wikiWindow.initialized then
@@ -227,6 +231,11 @@ function populateCategories()
     local categoryWidget = g_ui.createWidget('WikiCategoryItem', categoryList)
     categoryWidget:setText(categoryData.name)
     categoryWidget:setId(categoryName)
+
+    local iconWidget = categoryWidget:getChildById('iconWidget')
+    if iconWidget and WIKI_CATEGORY_ICONS[categoryName] then
+      iconWidget:setImageSource(WIKI_CATEGORY_ICONS[categoryName])
+    end
 
     categoryWidget.onClick = function()
       selectCategory(categoryName)
@@ -303,8 +312,6 @@ function selectSubCategory(categoryName, subCategoryName)
     displayListContent(subCatData.items)
   elseif subCatData.type == 'pets' then
     displayPetsContent(subCatData.items)
-  elseif subCatData.type == 'enchants' then
-    displayEnchantsContent(subCatData.items)
   elseif subCatData.type == 'rich_text' then
     displayRichTextContent(subCatData.sections)
   else
@@ -313,6 +320,30 @@ function selectSubCategory(categoryName, subCategoryName)
   
   -- Highlight selected subcategory
   highlightSelectedSubCategory(subCategoryName)
+
+  -- Track reading progress for the footer bar
+  if WikiData.categories[categoryName] then
+    g_settings.set('wiki_read_' .. currentLanguage .. '_' .. categoryName .. '_' .. subCategoryName, true)
+    updateProgressLabel()
+  end
+end
+
+function updateProgressLabel()
+  local label = wikiWindow and wikiWindow:recursiveGetChildById('progressLabel')
+  if not label or not WikiData then return end
+
+  local total, read = 0, 0
+  for catName, catData in pairs(WikiData.categories) do
+    for subName in pairs(catData.subcategories or {}) do
+      total = total + 1
+      if g_settings.getBoolean('wiki_read_' .. currentLanguage .. '_' .. catName .. '_' .. subName) then
+        read = read + 1
+      end
+    end
+  end
+  if total > 0 then
+    label:setText(tr('Wiki progress: %d%%', math.floor(read / total * 100)))
+  end
 end
 
 function displayListContent(items)
@@ -410,23 +441,6 @@ function displayPetsContent(pets)
       end
     end
     petWidget:getChildById('petAbilities'):setText(abilitiesText)
-  end
-end
-
-function displayEnchantsContent(enchants)
-  local contentPanel = wikiWindow:recursiveGetChildById('contentPanel')
-  
-  for _, enchant in ipairs(enchants) do
-    local enchantWidget = g_ui.createWidget('WikiEnchantItem', contentPanel)
-    
-    enchantWidget:getChildById('name'):setText(enchant.name)
-    enchantWidget:getChildById('description'):setText(enchant.description or '')
-    enchantWidget:getChildById('enchantType'):setText('Type: ' .. enchant.enchantType)
-    enchantWidget:getChildById('valuesPerLevel'):setText('Values: ' .. enchant.valuesPerLevel)
-    enchantWidget:getChildById('minLevel'):setText('Min Level: ' .. enchant.minLevel)
-    enchantWidget:getChildById('equipment'):setText('Equipment: ' .. enchant.equipment)
-    
-    -- Icon is now a static PNG image defined in OTUI, no need to set it per item
   end
 end
 

@@ -1,10 +1,12 @@
 WikiCategoryItem < Button
-  height: 28
+  height: 30
   text-align: left
-  padding-left: 12
+  padding-left: 34
   font: verdana-11px-rounded
   color: #dfdfdf
   background-color: #ffffff08
+  border-width-bottom: 1
+  border-color-bottom: #ffffff0a
   $hover:
     background-color: #355d8988
     color: #ffffff
@@ -14,6 +16,15 @@ WikiCategoryItem < Button
     border-width-left: 3
     border-color-left: #ffd75e
 
+  UIWidget
+    id: iconWidget
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    size: 18 18
+    margin-left: 9
+    image-fixed-ratio: true
+    phantom: true
+
 WikiSubCategoryItem < Button
   height: 28
   text-align: left
@@ -21,6 +32,8 @@ WikiSubCategoryItem < Button
   font: verdana-11px-rounded
   color: #c0c0c0
   background-color: #ffffff08
+  border-width-bottom: 1
+  border-color-bottom: #ffffff0a
   $hover:
     background-color: #355d8988
     color: #ffffff
@@ -32,12 +45,9 @@ WikiSubCategoryItem < Button
 
 WikiListItem < Panel
   height: 60
-  background-color: #ffffff0d
-  border-width: 1
-  border-color: #ffffff14
-  border-width-left: 2
-  border-color-left: #d4a84355
-  margin: 2
+  image-source: /images/ui/windows/card_window_legendary
+  image-border: 10
+  margin: 3
 
   Item
     id: icon
@@ -63,7 +73,7 @@ WikiListItem < Panel
     margin-left: 10
     margin-top: 8
     font: verdana-11px-rounded
-    color: #ffcc00
+    color: #ffd75e
 
   Label
     id: description
@@ -73,7 +83,7 @@ WikiListItem < Panel
     margin-left: 10
     margin-top: 2
     font: verdana-11px-antialised
-    color: #cccccc
+    color: #c0c0c0
     text-wrap: true
     text-auto-resize: true
 
@@ -101,7 +111,7 @@ WikiPetItem < Panel
     margin-left: 12
     margin-top: 2
     font: verdana-11px-rounded
-    color: #ffcc00
+    color: #ffd75e
     text-align: left
     height: 20
   
@@ -157,7 +167,7 @@ WikiPetItem < Panel
     margin-right: 5
     margin-bottom: 5
     font: verdana-11px-antialised
-    color: #cccccc
+    color: #c0c0c0
     text-wrap: true
 
 WikiTextContent < Label
@@ -183,7 +193,7 @@ WikiRichBoldTextSection < Label
   padding: 10
   font: exo-16px-ultra-bold-italic
   margin: 2
-  color: #FFD700
+  color: #ffd75e
 
 WikiRichImage < UIWidget
   background-color: #00000000
@@ -228,21 +238,18 @@ WikiRichColoredText < Label
   margin: 1
 
 WikiRichDivider < Panel
-  height: 1
-  background-color: #ffffff33
+  height: 5
+  image-source: /images/ui/divider_horizontal
   margin-left: 12
   margin-right: 12
-  margin-top: 4
-  margin-bottom: 4
+  margin-top: 5
+  margin-bottom: 5
 
 WikiRichCard < Panel
   height: 58
-  background-color: #ffffff0d
-  border-width: 1
-  border-color: #ffffff14
-  border-width-left: 2
-  border-color-left: #d4a84355
-  margin: 2
+  image-source: /images/ui/windows/card_window_legendary
+  image-border: 10
+  margin: 3
 
   Item
     id: icon
@@ -268,7 +275,7 @@ WikiRichCard < Panel
     margin-left: 10
     margin-top: 8
     font: verdana-11px-rounded
-    color: #ffcc00
+    color: #ffd75e
     text-wrap: true
     text-auto-resize: true
 
@@ -281,16 +288,18 @@ WikiRichCard < Panel
     margin-top: 2
     margin-right: 8
     font: verdana-11px-antialised
-    color: #cccccc
+    color: #c0c0c0
     text-wrap: true
     text-auto-resize: true
 
 WikiRichTip < Panel
   height: 40
-  background-color: #44ff8811
+  background-color: #00BC0014
   border-width: 1
-  border-color: #44ff8844
-  margin: 2
+  border-color: #00BC0066
+  border-width-left: 3
+  border-color-left: #00BC00
+  margin: 3
 
   Label
     id: text
@@ -303,10 +312,12 @@ WikiRichTip < Panel
 
 WikiRichWarn < Panel
   height: 40
-  background-color: #ff554411
+  background-color: #F55E5E14
   border-width: 1
-  border-color: #ff554444
-  margin: 2
+  border-color: #F55E5E66
+  border-width-left: 3
+  border-color-left: #F55E5E
+  margin: 3
 
   Label
     id: text
@@ -317,110 +328,25 @@ WikiRichWarn < Panel
     text-wrap: true
     text-auto-resize: true
 
-WikiEnchantItem < Panel
-  height: 155
-  background-color: #ffffff11
-  margin: 3
-  padding: 12
-  
-  UIWidget
-    id: icon
-    anchors.left: parent.left
-    anchors.top: parent.top
-    size: 32 32
-    margin-left: 8
-    margin-top: 2
-    image-source: /images/icons/enchant.png
-  
-  Label
-    id: name
-    anchors.left: icon.right
-    anchors.top: parent.top
-    anchors.right: parent.right
-    margin-left: 12
-    margin-top: 1
-    font: verdana-11px-rounded
-    color: #ffcc00
-    text-align: left
-    height: 20
-  
-  Label
-    id: description
-    anchors.left: icon.right
-    anchors.top: name.bottom
-    anchors.right: parent.right
-    margin-left: 12
-    margin-top: 4
-    margin-right: 8
-    font: verdana-11px-antialised
-    color: #dddddd
-    text-wrap: true
-    height: 28
-  
-  Label
-    id: enchantType
-    anchors.left: icon.right
-    anchors.top: description.bottom
-    margin-left: 12
-    margin-top: 4
-    font: verdana-11px-antialised
-    color: #aaaaff
-    height: 16
-  
-  Label
-    id: valuesPerLevel
-    anchors.left: icon.right
-    anchors.top: enchantType.bottom
-    margin-left: 12
-    margin-top: 3
-    font: verdana-11px-antialised
-    color: #ffaa55
-    height: 16
-  
-  Label
-    id: minLevel
-    anchors.left: icon.right
-    anchors.top: valuesPerLevel.bottom
-    margin-left: 12
-    margin-top: 3
-    font: verdana-11px-antialised
-    color: #55ff55
-    height: 16
-  
-  Label
-    id: equipment
-    anchors.left: icon.right
-    anchors.top: minLevel.bottom
-    anchors.right: parent.right
-    margin-left: 12
-    margin-top: 4
-    margin-right: 8
-    font: verdana-11px-antialised
-    color: #cccccc
-    text-wrap: true
-    height: 32
-
 WikiSearchResult < Panel
   height: 70
-  background-color: #ffffff0d
-  border-width: 1
-  border-color: #ffffff14
-  margin: 2
+  image-source: /images/ui/windows/card_window_legendary
+  image-border: 10
+  margin: 3
   padding: 8
 
   $hover:
     background-color: #355d8955
-    border-color: #d4a84344
-  
+
   Label
     id: resultCategory
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
     font: verdana-11px-antialised
-    color: #aaaaaa
+    color: #dfdfdf88
     height: 15
-  
+
   Label
     id: resultName
     anchors.top: resultCategory.bottom
@@ -428,9 +354,9 @@ WikiSearchResult < Panel
     anchors.right: parent.right
     margin-top: 2
     font: verdana-11px-rounded
-    color: #ffcc00
+    color: #ffd75e
     height: 20
-  
+
   Label
     id: resultDesc
     anchors.top: resultName.bottom
@@ -438,14 +364,27 @@ WikiSearchResult < Panel
     anchors.right: parent.right
     margin-top: 2
     font: verdana-11px-antialised
-    color: #cccccc
+    color: #c0c0c0
     text-wrap: true
     height: 20
+
+WikiButton < Button
+  border-width: 1
+  border-color: #d4a84366
+  color: #ffd75e
+  $hover:
+    border-color: #ffd75e
+    color: #ffffff
+  $pressed:
+    border-color: #ffd75e
+    color: #d4a843
 
 MainWindow
   id: wikiWindow
   !text: tr('Game Wiki')
   size: 900 600
+  font: eras-16px-bold
+  color: #ffd75e
   @onEscape: modules.game_wiki.hide()
 
   Panel
@@ -457,11 +396,13 @@ MainWindow
     margin-top: 5
     margin-left: 5
     margin-bottom: 5
-    background-color: #00000088
-    
+    image-source: /images/ui/miniwindow_orange
+    image-border: 13
+    padding: 2
+
     Label
       id: categoriesLabel
-      !text: tr('Categories')
+      !text: tr('CATEGORIES')
       anchors.top: parent.top
       anchors.left: parent.left
       anchors.right: parent.right
@@ -470,6 +411,8 @@ MainWindow
       font: verdana-11px-rounded
       color: #ffd75e
       background-color: #d4a84322
+      border-width-bottom: 1
+      border-color-bottom: #d4a84355
       margin: 2
     
     ScrollablePanel
@@ -504,11 +447,13 @@ MainWindow
     margin-top: 5
     margin-left: 5
     margin-bottom: 5
-    background-color: #00000088
-    
+    image-source: /images/ui/miniwindow_orange
+    image-border: 13
+    padding: 2
+
     Label
       id: subCategoriesLabel
-      !text: tr('Subcategories')
+      !text: tr('SUBCATEGORIES')
       anchors.top: parent.top
       anchors.left: parent.left
       anchors.right: parent.right
@@ -517,6 +462,8 @@ MainWindow
       font: verdana-11px-rounded
       color: #ffd75e
       background-color: #d4a84322
+      border-width-bottom: 1
+      border-color-bottom: #d4a84355
       margin: 2
     
     ScrollablePanel
@@ -552,8 +499,10 @@ MainWindow
     margin-left: 5
     margin-right: 5
     margin-bottom: 5
-    background-color: #00000088
-    
+    image-source: /images/ui/miniwindow_orange
+    image-border: 13
+    padding: 2
+
     Panel
       id: searchPanel
       anchors.top: parent.top
@@ -562,29 +511,31 @@ MainWindow
       height: 35
       background-color: #d4a84314
       border-width-bottom: 1
-      border-color-bottom: #d4a84333
+      border-color-bottom: #d4a84355
       margin: 2
-      
-      Label
-        id: searchLabel
-        !text: tr('Search:')
+
+      UIWidget
+        id: searchIcon
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        width: 60
-        margin-left: 10
-        font: verdana-11px-rounded
-      
+        size: 16 16
+        margin-left: 12
+        image-source: /images/icons/search.png
+        image-fixed-ratio: true
+        phantom: true
+
       TextEdit
         id: searchEdit
-        anchors.left: searchLabel.right
+        anchors.left: searchIcon.right
         anchors.right: languageButton.left
         anchors.verticalCenter: parent.verticalCenter
-        margin-left: 5
+        margin-left: 8
         margin-right: 5
         height: 25
+        placeholder: 'Search the wiki...'
         @onTextChange: modules.game_wiki.onSearchTextChange()
-      
-      Button
+
+      WikiButton
         id: languageButton
         !text: EN
         anchors.right: parent.right
@@ -626,9 +577,20 @@ MainWindow
     margin-left: 5
     margin-right: 5
     margin-bottom: 5
-    background-color: #00000088
-    
-    Button
+    image-source: /images/ui/miniwindow_orange
+    image-border: 13
+    padding: 2
+
+    Label
+      id: progressLabel
+      !text: tr('Progress')
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 14
+      font: verdana-11px-antialised
+      color: #c0c0c0
+
+    WikiButton
       id: closeButton
       !text: tr('Close')
       anchors.right: parent.right
