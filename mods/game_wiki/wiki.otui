@@ -55,8 +55,10 @@ WikiSubCategoryItem < Button
 
 WikiListItem < Panel
   height: 60
-  image-source: /images/ui/windows/card_window_legendary
-  image-border: 10
+  image-source: /images/ui/windows/miniwindow_old
+  image-border: 5
+  border-width-left: 2
+  border-color-left: #d4a84355
   margin: 3
 
   Item
@@ -257,8 +259,10 @@ WikiRichDivider < Panel
 
 WikiRichCard < Panel
   height: 58
-  image-source: /images/ui/windows/card_window_legendary
-  image-border: 10
+  image-source: /images/ui/windows/miniwindow_old
+  image-border: 5
+  border-width-left: 2
+  border-color-left: #d4a84355
   margin: 3
 
   Item
@@ -340,8 +344,8 @@ WikiRichWarn < Panel
 
 WikiSearchResult < Panel
   height: 70
-  image-source: /images/ui/windows/card_window_legendary
-  image-border: 10
+  image-source: /images/ui/windows/miniwindow_old
+  image-border: 5
   margin: 3
   padding: 8
 
