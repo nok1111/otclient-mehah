@@ -70,8 +70,11 @@ local function wikiMarkupToColored(text)
   local t = text or ''
   t = t:gsub('%*%*(.-)%*%*', '[color=' .. WIKI_ACCENT .. ']%1[/color]')
   -- bullet lists: "- item" at line start -> gold bullet marker
-  t = ('\n' .. t):gsub('\n%s*%-%s+', '\n[color=#d4a843]·[/color]  ')
+  t = ('\n' .. t):gsub('\n%s*%-%s+', '\n[color=#d4a843]·[/color] ')
   t = t:sub(2)
+  -- the engine's wrapText collapses runs of spaces without remapping
+  -- color offsets, so normalized whitespace keeps color spans aligned
+  t = t:gsub('[ \t]+', ' '):gsub(' ?\n', '\n')
   return t
 end
 
