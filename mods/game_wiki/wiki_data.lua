@@ -19,6 +19,7 @@ function getEnglishData()
           dropable_spells = {
             name = 'Dropable Spells',
             type = 'list',
+            order = 1,
             items = {
               {
                 name = 'boots of teleportation',
@@ -235,6 +236,7 @@ function getEnglishData()
           runes = {
             name = 'Runes',
             type = 'list',
+            order = 2,
             items = {
               {
                 name = 'Ultimate Healing Rune',
@@ -261,31 +263,37 @@ function getEnglishData()
           overview = {
             name = 'How Tasks Work',
             type = 'text',
+            order = 1,
             content = 'The Task System is a dynamic mission board where you hunt monsters for rewards.\n\n**How it Works:**\n- You have 3 task slots available\n- Each task requires killing specific monsters\n- Complete tasks to earn gold, fame, and experience\n- Tasks have different tiers: Normal, Rare, Epic, Legendary\n- Each task has modifiers that affect difficulty and rewards\n\n**Getting Started:**\n1. Open the Task Board (click the Tasks Board button from menu)\n2. Choose a task from the 3 available slots\n3. Click "Start" to activate the task\n4. Hunt the required monsters\n5. Return and click "Complete" to claim your rewards\n\n**Important:**\n- You can only have 1 active task at a time\n- Tasks show monster outfits so you know what to hunt\n- Level ranges help you find appropriate hunting zones\n- You can abandon a task, but you lose all progress'
           },
           rerolls = {
             name = 'Rerolls System',
             type = 'text',
+            order = 4,
             content = 'Rerolls let you refresh all 3 task slots to get new options.\n\n**Free Rerolls:**\n- Base: 5 free rerolls per day\n- Premium Bonus: +5 extra rerolls (10 total)\n- Fame Bonus: +1 reroll per 5 fame levels\n- Daily Reset: Resets every 24 hours\n\n**Paid Rerolls:**\n- Cost: 20 gold per reroll\n- Unlimited usage (if you have gold)\n- Use when you run out of free rerolls\n\n**Bonus Rerolls:**\n- Rare tasks: 25% chance for +1 reroll reward\n- Epic tasks: 40% chance for +1 reroll reward\n- Legendary tasks: +1-2 reroll rewards guaranteed\n- These stack with your daily rerolls\n\n**Strategy Tips:**\n- Save free rerolls for when you need better tasks\n- Lock good tasks before rerolling\n- Higher fame = more free rerolls'
           },
           locks = {
             name = 'Lock System',
             type = 'text',
+            order = 5,
             content = 'Locks protect tasks from being rerolled, letting you keep good tasks while refreshing others.\n\n**Free Locks:**\n- Base: 3 free locks per day\n- Premium Bonus: +5 extra locks (8 total)\n- Daily Reset: Resets every 24 hours\n\n**Paid Locks:**\n- Cost: 10 gold per lock\n- Unlimited usage (if you have gold)\n- Use when you run out of free locks\n\n**Bonus Locks:**\n- Epic tasks: 30% chance for +1 lock reward\n- Legendary tasks: +1-2 lock rewards guaranteed\n- These stack with your daily locks\n\n**How to Use:**\n1. Find a task you want to keep\n2. Click the "Lock" button on that task\n3. Reroll other tasks without losing your locked one\n4. Click "Unlock" to remove the lock\n\n**Strategy Tips:**\n- Lock high-tier tasks (Epic/Legendary)\n- Lock tasks with good modifiers\n- Premium players get significantly more locks'
           },
           tiers = {
             name = 'Task Tiers & Rarity',
             type = 'text',
+            order = 2,
             content = 'Tasks come in 4 tiers with different spawn rates and reward multipliers.\n\n**Normal (60% spawn rate)**\n- Reward Multiplier: 1.0x\n- Modifiers: 0-1\n- Common tasks, base rewards\n\n**Rare (25% spawn rate)**\n- Reward Multiplier: 1.25x\n- Modifiers: 1-2\n- 25% bonus rewards\n- 25% chance for +1 bonus reroll\n\n**Epic (10% spawn rate)**\n- Reward Multiplier: 1.5x\n- Modifiers: 2-3\n- 50% bonus rewards\n- 40% chance for +1 reroll\n- 30% chance for +1 lock\n- Unlocked at Fame Level 8\n\n**Legendary (5% spawn rate)**\n- Reward Multiplier: 2.0x\n- Modifiers: 3 (always)\n- 100% bonus rewards\n- +1-2 bonus rerolls guaranteed\n- +1-2 bonus locks guaranteed\n- Extremely rare, maximum rewards\n\n**Tier Unlocks:**\n- Normal, Rare: Available from start\n- Epic: Requires Fame Level 8\n- Legendary: Always available (if lucky)'
           },
           rewards = {
             name = 'Rewards & Bonuses',
             type = 'text',
+            order = 3,
             content = 'Tasks reward you based on multiple factors that stack together. Everything multiplies your **Gold, Fame, and Experience** at the end.\n\n**Base Rewards (from level range):**\n- Gold, Fame, and Experience scale with monster level\n- Higher level tasks = higher base rewards before any multipliers\n\n**1. Tier Multiplier (directly affects ALL rewards):**\n   - Normal: 1.0x (base rewards)\n   - Rare: 1.25x (+25% Gold, Fame, and XP)\n   - Epic: 1.5x (+50% Gold, Fame, and XP)\n   - Legendary: 2.0x (+100% Gold, Fame, and XP)\n\n**2. Monster Count Bonus (affects base reward):**\n   - 1 monster: 1.0x\n   - 2 monsters: 1.15x (+15% base Gold, Fame, XP)\n   - 3 monsters: 1.30x (+30% base Gold, Fame, XP)\n\n**3. Modifier Bonus (difficulty = more rewards):**\n   - Each negative modifier: +15% to all rewards\n   - Each mixed modifier: +10% to all rewards\n   - More modifiers = harder task but bigger payout\n\n**4. Kills Bonus (grind reward):**\n   - +5% per 50 kills completed (up to +25%)\n   - 50 kills: +5%\n   - 100 kills: +10%\n   - 150 kills: +15%\n   - 200 kills: +20%\n   - 250+ kills: +25% (capped)\n\n**How It All Stacks:**\nFinal Reward = Base x Tier Multiplier x Monster Count x (1 + Modifier Bonus) x (1 + Kills Bonus)\n\n**Example (Legendary task, 2 monsters, 1 negative mod, 150 kills):**\n- Base: 1000 of each reward\n- Legendary tier: x2.0 = 2000\n- 2 monsters: x1.15 = 2300\n- 1 negative mod: x1.15 = 2645\n- 150 kills: x1.15 = 3041\n\n**What does NOT scale with tier?**\n- Monster count required (set by level range)\n- Modifier difficulty (tier determines how many)\n- Spawn rate of the tier itself\n\n**Each Task Shows 2 Random Extra Rewards:**\n- Bonus Rerolls or Bonus Locks (separate from base Gold/Fame/XP)'
           },
           fame_premium = {
             name = 'Fame & Premium Benefits',
             type = 'text',
+            order = 6,
             content = [[Your Fame Level and Premium status provide permanent bonuses that affect the Task System and overall progression.**Fame Level Requirements (Task Bonuses):** Level | Title | Points Needed | Task Bonus |
 |-------|-------|---------------|------------|
 | 3 | Experienced Hunter | 600 | Rare tier spawn rate +5% |
@@ -303,6 +311,7 @@ function getEnglishData()
           overview = {
             name = 'How Daily Quests Work',
             type = 'rich_text',
+            order = 1,
             sections = {
               { type = 'text', content = [[**What are Daily Quests?**
 Daily Quests are 8 tasks that reset every day, giving you consistent objectives and rewards. Open the Daily Quests window using the special item (Daily Task Scroll) to see your active tasks, track progress, and claim rewards.
@@ -385,6 +394,7 @@ Crafting tasks scale with profession tiers:
           epic_pets = {
             name = 'Epic Pets',
             type = 'pets',
+            order = 4,
             items = {
               {
                 name = 'Baby Nightmare',
@@ -492,6 +502,7 @@ Crafting tasks scale with profession tiers:
           rare_pets = {
             name = 'Rare Pets',
             type = 'pets',
+            order = 3,
             items = {
               {
                 name = 'Baby Fire Fenix',
@@ -688,6 +699,7 @@ Crafting tasks scale with profession tiers:
           uncommon_pets = {
             name = 'Uncommon Pets',
             type = 'pets',
+            order = 2,
             items = {
               {
                 name = 'Purple Chicken',
@@ -884,6 +896,7 @@ Crafting tasks scale with profession tiers:
           common_pets = {
             name = 'Common Pets',
             type = 'pets',
+            order = 1,
             items = {
               {
                 name = 'White Cat',
@@ -1225,11 +1238,13 @@ Crafting tasks scale with profession tiers:
           getting_started = {
             name = 'First Steps',
             type = 'text',
+            order = 1,
             content = 'Welcome to Ascension! This is an ARPG style server with deep progression systems.\n\n**Your Priorities:**\n1. Level up and complete Tasks v2.\n2. Collect everything. Use Stash System and Quick Loot to manage items.\n3. Do not vendor trash items! Use the Recycler or Upgrade System to extract materials.'
           },
           class_talents = {
             name = 'Class Talents',
             type = 'rich_text',
+            order = 2,
             sections = {
               { type = 'image', path = '/images/wiki/talents_overview.png', width = 400, height = 80 },        
               { type = 'text', content = '**What are Class Talents?**\n\nEvery character class has its own unique talent tree with multiple branches specializing in damage, defense, or utility. Each tree contains nodes that grant passive bonuses when leveled up. Talents are applied automatically on login, so plan your build carefully!' },
@@ -1253,6 +1268,7 @@ Crafting tasks scale with profession tiers:
           paragon_ascension = {
             name = 'Paragon Ascension',
             type = 'rich_text',
+            order = 3,
             sections = {
               { type = 'text', content = '**What is Paragon?**\n\nParagon is the endgame progression system unlocked at **Character Level 300**. After reaching this cap, XP you earn starts filling your Paragon bar instead. Each Paragon level grants a point to spend in one of three stat categories, cycling between them automatically.\n\nOpen the Ascension tab in your Class Talents window to view your Paragon board, allocate points, and track your progress.' },
               { type = 'image', path = '/images/wiki/paragon_overview.png', width = 400, height = 117 },
@@ -1288,6 +1304,7 @@ Crafting tasks scale with profession tiers:
           codex = {
             name = 'Codex System',
             type = 'rich_text',
+            order = 4,
             sections = {
               { type = 'text', content = '**What is the Codex?**\n\nThe Codex is a card collection system. Monsters can drop cards (or card crates) that you equip into your Deck for powerful passive and active bonuses. With 104 unique cards, building the right deck is essential for End-Game damage, survival, and utility.\n\nOpen the Codex module to see your Collection, active Deck, and Crate crafting tab.' },
               { type = 'image', path = '/images/wiki/codex_overview.png', width = 400, height = 220 },
@@ -1328,6 +1345,7 @@ Crafting tasks scale with profession tiers:
           overview = {
             name = 'Currency Guide',
             type = 'rich_text',
+            order = 1,
             sections = {
               { type = 'title', text = 'CURRENCIES OF ASCENSION', color = '#ffd75e' },
               { type = 'text', content = 'Ascension uses several currencies for different systems. Here is what each one does and where to get it.' },
@@ -1380,6 +1398,7 @@ Crafting tasks scale with profession tiers:
           overview = {
             name = 'Orb Guide',
             type = 'rich_text',
+            order = 1,
             sections = {
               { type = 'title', text = 'MONSTER ORBS', color = '#ffd75e' },
               { type = 'text', content = 'When you kill a monster (level 2+), there is a chance a glowing orb drops on the floor. Walk over it to claim the reward - [color=#ff8888]only you can pick up your own orbs[/color].' },
@@ -1419,6 +1438,7 @@ Crafting tasks scale with profession tiers:
           overview = {
             name = 'How Zones Work',
             type = 'rich_text',
+            order = 1,
             sections = {
               { type = 'title', text = 'HUNTING ZONES', color = '#ffd75e' },
               { type = 'text', content = 'The world is divided into ~99 hunting zones. Each zone has its own monster spawns, level range, weather, and a [color=#ffd700]zone boss[/color] that spawns after enough kills. Zones rotate random events and buffs - always check the zone panel before hunting.' },
@@ -1458,6 +1478,7 @@ Crafting tasks scale with profession tiers:
           overview = {
             name = 'Dungeon Guide',
             type = 'rich_text',
+            order = 1,
             sections = {
               { type = 'title', text = 'DUNGEONS', color = '#ffd75e' },
               { type = 'text', content = 'Dungeons are instanced runs entered through portal stones. Each has a mission objective - usually killing a final boss. A [color=#ffd700]daily mutation[/color] modifies every active dungeon with extra mechanics.' },
@@ -1490,6 +1511,7 @@ Crafting tasks scale with profession tiers:
           dungeon_list = {
             name = 'Dungeon List',
             type = 'list',
+            order = 2,
             items = {
               { name = 'The Aquarium', description = 'Boss: Lady Undine.', image = '/images/dungeons/The Aquarium.png' },
               { name = 'Black Temple', description = 'Boss: Lord Hamelin.', image = '/images/dungeons/Black Temple.png' },
@@ -1515,6 +1537,7 @@ Crafting tasks scale with profession tiers:
           overview = {
             name = 'Upgrade System',
             type = 'rich_text',
+            order = 1,
             sections = {
               { type = 'title', text = 'ITEM UPGRADE SYSTEM', color = '#ffd75e' },
               { type = 'text', content = 'Use crystals on your equipment to raise its upgrade level, up to [color=#ffd700]+15[/color]. Higher levels have lower success rates - failures can downgrade or even destroy the item.' },
@@ -1555,6 +1578,7 @@ Crafting tasks scale with profession tiers:
           overview = {
             name = 'Proficiency Guide',
             type = 'rich_text',
+            order = 1,
             sections = {
               { type = 'title', text = 'ITEM PROFICIENCY', color = '#ffd75e' },
               { type = 'text', content = 'Your equipped items gain proficiency XP as you kill monsters. Each milestone unlocks a [color=#ffd700]trait choice[/color] - pick one trait per column to customize that item.' },
@@ -1583,6 +1607,7 @@ Crafting tasks scale with profession tiers:
           traits = {
             name = 'Trait List',
             type = 'rich_text',
+            order = 2,
             sections = {
               { type = 'title', text = 'ALL PROFICIENCY TRAITS', color = '#ffd75e' },
               { type = 'text', content = 'Every trait available in proficiency routes. Icons match the in-game Proficiency window. Which traits appear depends on the item type route.' },
@@ -1781,6 +1806,7 @@ Crafting tasks scale with profession tiers:
           overview = {
             name = 'Crafting Guide',
             type = 'rich_text',
+            order = 1,
             sections = {
               { type = 'title', text = 'CRAFTING & PROFESSIONS', color = '#ffd75e' },
               { type = 'text', content = 'Crafted gear is a core progression path: blueprint recipes produce [color=#ffd700]pre-upgraded items[/color] with custom stats - often better than regular drops of the same tier.' },
@@ -1817,6 +1843,7 @@ Crafting tasks scale with profession tiers:
           overview = {
             name = 'Prestige Guide',
             type = 'rich_text',
+            order = 1,
             sections = {
               { type = 'title', text = 'PRESTIGE CHALLENGES', color = '#ffd75e' },
               { type = 'text', content = 'Prestige resets your character for a challenge run with permanent rewards. Your [color=#ffd700]pets, codex, achievements, blueprints and reborn bonuses are preserved[/color] across every prestige.' },
@@ -1851,6 +1878,7 @@ Crafting tasks scale with profession tiers:
           overview = {
             name = 'Reborn Guide',
             type = 'rich_text',
+            order = 1,
             sections = {
               { type = 'title', text = 'REBORN SYSTEM', color = '#ffd75e' },
               { type = 'text', content = 'Reborn resets your character in exchange for a [color=#ffd700]Reborn Orb[/color] - a consumable that grants permanent, stacking bonuses to any character on your account.' },
@@ -1871,6 +1899,7 @@ Crafting tasks scale with profession tiers:
           overview = {
             name = 'Achievements Guide',
             type = 'rich_text',
+            order = 1,
             sections = {
               { type = 'title', text = 'ACHIEVEMENTS', color = '#ffd75e' },
               { type = 'text', content = 'Over [color=#ffd700]215 achievements[/color] reward achievement points, titles and items. Progress is preserved through prestige and reborn.' },
@@ -1895,6 +1924,7 @@ function getSpanishData()
           dropable_spells = {
             name = 'Hechizos Dropeables',
             type = 'list',
+            order = 1,
             items = {
               {
                 name = 'boots of teleportation',
@@ -2111,6 +2141,7 @@ function getSpanishData()
           runes = {
             name = 'Runas',
             type = 'list',
+            order = 2,
             items = {
               {
                 name = 'Runa de Curacion Suprema',
@@ -2227,6 +2258,7 @@ function getSpanishData()
           overview = {
             name = 'Como Funcionan las Misiones Diarias',
             type = 'rich_text',
+            order = 1,
             sections = {
               { type = 'text', content = [[**Que son las Misiones Diarias?**
 
@@ -2342,31 +2374,37 @@ Las tareas de crafting escalan con los niveles de profesion:
           overview = {
             name = 'Como Funcionan las Tareas',
             type = 'text',
+            order = 1,
             content = 'El Sistema de Tareas es un tablero de misiones dinAmico donde cazas monstruos por recompensas.\n\n**Como Funciona:**\n- Tienes 3 slots de tareas disponibles\n- Cada tarea requiere matar monstruos especificos\n- Completa tareas para ganar oro, fama y experiencia\n- Las tareas tienen diferentes niveles: Normal, Rara, Apica, Legendaria\n- Cada tarea tiene modificadores que afectan dificultad y recompensas\n\n**Comenzando:**\n1. Abre el Tablero de Tareas (Ctrl+T o click en boton Tasks)\n2. Elige una tarea de los 3 slots disponibles\n3. Click "Start" para activar la tarea\n4. Caza los monstruos requeridos\n5. Regresa y click "Complete" para reclamar recompensas\n\n**Importante:**\n- Solo puedes tener 1 tarea activa a la vez\n- Las tareas muestran outfits de monstruos para saber quA(c) cazar\n- Los rangos de nivel te ayudan a encontrar zonas apropiadas\n- Puedes abandonar una tarea, pero pierdes todo el progreso'
           },
           rerolls = {
             name = 'Sistema de Rerolls',
             type = 'text',
+            order = 4,
             content = 'Los Rerolls te permiten refrescar los 3 slots de tareas para obtener nuevas opciones.\n\n**Rerolls Gratis:**\n- Base: 5 rerolls gratis por dia\n- Bono Premium: +5 rerolls extra (10 total)\n- Bono Fama: +1 reroll por cada 5 niveles de fama\n- Reinicio Diario: Se reinicia cada 24 horas\n\n**Rerolls Pagados:**\n- Costo: 20 oro por reroll\n- Uso ilimitado (si tienes oro)\n- Asalos cuando se acaben los gratis\n\n**Rerolls Bonus:**\n- Tareas Raras: 25% chance de +1 reroll de recompensa\n- Tareas Apicas: 40% chance de +1 reroll de recompensa\n- Tareas Legendarias: +1-2 rerolls garantizados\n- Estos se acumulan con tus rerolls diarios\n\n**Tips de Estrategia:**\n- Guarda rerolls gratis para cuando necesites mejores tareas\n- Bloquea buenas tareas antes de hacer reroll\n- Mayor fama = mAs rerolls gratis'
           },
           locks = {
             name = 'Sistema de Bloqueos',
             type = 'text',
+            order = 5,
             content = 'Los Bloqueos protegen tareas de ser rerolleadas, permitiendo mantener buenas tareas mientras refrescas otras.\n\n**Bloqueos Gratis:**\n- Base: 3 bloqueos gratis por dia\n- Bono Premium: +5 bloqueos extra (8 total)\n- Reinicio Diario: Se reinicia cada 24 horas\n\n**Bloqueos Pagados:**\n- Costo: 10 oro por bloqueo\n- Uso ilimitado (si tienes oro)\n- Asalos cuando se acaben los gratis\n\n**Bloqueos Bonus:**\n- Tareas Apicas: 30% chance de +1 bloqueo de recompensa\n- Tareas Legendarias: +1-2 bloqueos garantizados\n- Estos se acumulan con tus bloqueos diarios\n\n**Como Usar:**\n1. Encuentra una tarea que quieras mantener\n2. Click en el boton "Lock" en esa tarea\n3. Haz reroll de otras tareas sin perder la bloqueada\n4. Click "Unlock" para remover el bloqueo\n\n**Tips de Estrategia:**\n- Bloquea tareas de alto nivel (Apica/Legendaria)\n- Bloquea tareas con buenos modificadores\n- Jugadores premium obtienen significativamente mAs bloqueos'
           },
           tiers = {
             name = 'Niveles y Rareza de Tareas',
             type = 'text',
+            order = 2,
             content = 'Las tareas vienen en 4 niveles con diferentes tasas de aparicion y multiplicadores de recompensa.\n\n**Normal (60% tasa de aparicion)**\n- Multiplicador de Recompensa: 1.0x\n- Modificadores: 0-1\n- Tareas comunes, recompensas base\n\n**Rara (25% tasa de aparicion)**\n- Multiplicador de Recompensa: 1.25x\n- Modificadores: 1-2\n- 25% bonus de recompensas\n- 25% chance de +1 reroll bonus\n\n**Apica (10% tasa de aparicion)**\n- Multiplicador de Recompensa: 1.5x\n- Modificadores: 2-3\n- 50% bonus de recompensas\n- 40% chance de +1 reroll\n- 30% chance de +1 bloqueo\n- Desbloqueada en Nivel de Fama 8\n\n**Legendaria (5% tasa de aparicion)**\n- Multiplicador de Recompensa: 2.0x\n- Modificadores: 3 (siempre)\n- 100% bonus de recompensas\n- +1-2 rerolls bonus garantizados\n- +1-2 bloqueos bonus garantizados\n- Extremadamente rara, recompensas mAximas\n\n**Desbloqueos de Nivel:**\n- Normal, Rara: Disponibles desde el inicio\n- Apica: Requiere Nivel de Fama 8\n- Legendaria: Siempre disponible (si tienes suerte)'
           },
           rewards = {
             name = 'Recompensas y Bonificaciones',
             type = 'text',
+            order = 3,
             content = 'Las tareas te recompensan basAndose en mAoltiples factores que se acumulan.\n\n**Recompensas Base (del rango de nivel):**\n- Oro, Fama y Experiencia escalan con el nivel del monstruo\n- Tareas de mayor nivel = recompensas base mAs altas\n\n**Multiplicadores de Recompensa:**\n\n1. **Multiplicador de Nivel:**\n   - Normal: 1.0x\n   - Rara: 1.25x\n   - Apica: 1.5x\n   - Legendaria: 2.0x\n\n2. **Bonus por Cantidad de Monstruos:**\n   - 1 monstruo: 1.0x\n   - 2 monstruos: 1.15x (+15%)\n   - 3 monstruos: 1.30x (+30%)\n\n3. **Bonus por Modificadores:**\n   - Modificador negativo: +15% por modificador\n   - Modificador mixto: +10% por modificador\n   - Tareas mAs dificiles = mejores recompensas\n\n4. **Bonus por Kills (NUEVO):**\n   - +5% por cada 50 kills (hasta +25% mAx)\n   - 50 kills: +5%\n   - 100 kills: +10%\n   - 150 kills: +15%\n   - 200 kills: +20%\n   - 250+ kills: +25% (limite)\n\n**Formula Final:**\nRecompensa = Base A- Nivel A- CantidadMonstruos A- (1 + BonusMod) A- BonusKills\n\n**Ejemplo:**\n- Base: 1000 oro\n- Nivel Raro: 1.25x\n- 2 monstruos: 1.15x\n- 1 mod negativo: 1.15x\n- 150 kills: 1.15x\n= 1,913 oro\n\n**Cada Tarea Muestra 2 Recompensas Aleatorias:**\n- Oro, Fama, Experiencia, Rerolls Bonus, o Bloqueos Bonus'
           },
           fame_premium = {
             name = 'Beneficios de Fama y Premium',
             type = 'text',
+            order = 6,
             content = 'Tu Nivel de Fama y estado Premium proporcionan bonos permanentes.\n\n**Bonos de Nivel de Fama:**\n\n- **Nivel 3 - Cazador Experimentado:**\n  Tasa de aparicion de nivel Raro +5%\n\n- **Nivel 5 - Cazador Veterano:**\n  Modificadores negativos reducidos en 15%\n\n- **Nivel 7 - Cazador Alite:**\n  +1 reroll gratis por dia\n\n- **Nivel 8 - Cazador Maestro:**\n  Desbloquea tareas de nivel Apico\n\n- **Nivel 10 - Cazador Legendario:**\n  +5% bonus a todas las recompensas\n\n**Como Ganar Fama:**\n- Completa tareas para ganar puntos de fama\n- Tareas de mayor nivel dan mAs fama\n- La fama se acumula y nunca se reinicia\n- Revisa tu nivel de fama en el Tablero de Tareas\n\n**Beneficios de Cuenta Premium:**\n\n- **Rerolls Gratis:**\n  +5 extra por dia (10 total vs 5 gratis)\n\n- **Bloqueos Gratis:**\n  +5 extra por dia (8 total vs 3 gratis)\n\n- **Mejor Eficiencia:**\n  Bloquea mAs tareas mientras haces reroll\n  MAs flexibilidad en seleccion de tareas\n\n**Poder Combinado:**\nPremium + Nivel de Fama 10:\n- 10+ rerolls gratis por dia\n- 8 bloqueos gratis por dia\n- +5% recompensas en todas las tareas\n- Nivel Apico desbloqueado\n- Mejores chances de modificadores\n\n**Estrategia:**\n- Los bonos de fama son permanentes - siempre vale la pena farmear\n- Premium da QoL masivo para gestion de tareas\n- Mayor fama = mejor generacion de tareas'
           }
         }
@@ -2480,11 +2518,13 @@ Las tareas de crafting escalan con los niveles de profesion:
           getting_started = {
             name = 'Primeros Pasos',
             type = 'text',
+            order = 1,
             content = 'Bienvenido a Ascension! Este servidor funciona estilo ARPG con varios sistemas de progresion.\n\n**Tus Prioridades:**\n1. Sube de nivel y completa Tasks v2.\n2. Recoge todo el botin. Usa el Stash System y el Quick Loot para organizar todo.\n3. No vendas los items basura al NPC! Usa el Recycler o el Upgrade System para extraer minerales y gemas.'
           },
           class_talents = {
             name = 'Talentos de Clase',
             type = 'rich_text',
+            order = 2,
             sections = {
               { type = 'text', content = [[**Que son los Talentos de Clase?**
 
@@ -2543,6 +2583,7 @@ Abre la ventana de talentos y haz clic en el boton Reset para ver el costo exact
           paragon_ascension = {
             name = 'Ascension Paragon',
             type = 'rich_text',
+            order = 3,
             sections = {
               { type = 'text', content = [[**Que es Paragon?**
 
@@ -2649,6 +2690,7 @@ Los bonos de hito son automaticos y se acumulan con los bonos de estadisticas.]]
           codex = {
             name = 'Sistema Codex',
             type = 'rich_text',
+            order = 4,
             sections = {
               { type = 'text', content = [[**Que es el Codex?**
 

@@ -8,6 +8,80 @@ currentLanguage = 'en'
 currentCategory = nil
 currentSubCategory = nil
 
+-- Sidebar order for categories (by importance/context). Unknown keys go last,
+-- alphabetically. Subcategories honor an optional `order` field, then name.
+local WIKI_CATEGORY_ORDER = {
+  'ascension_guide',   -- First steps, talents, paragon, codex
+  'tasks', 'daily_tasks',
+  'currencies',
+  'items', 'item_upgrades', 'proficiency', 'crafting',
+  'monster_orbs', 'zones', 'dungeons',
+  'pets', 'achievements',
+  'prestige', 'reborn',
+}
+
+local function wikiSortedKeys(tbl, orderList)
+  local keys, seen, rest = {}, {}, {}
+  for _, k in ipairs(orderList or {}) do
+    if tbl[k] and not seen[k] then keys[#keys + 1] = k; seen[k] = true end
+  end
+  for k in pairs(tbl) do
+    if not seen[k] then rest[#rest + 1] = k end
+  end
+  table.sort(rest, function(a, b) return (tbl[a].name or a) < (tbl[b].name or b) end)
+  for _, k in ipairs(rest) do keys[#keys + 1] = k end
+  return keys
+end
+
+local WIKI_ACCENT = '#ffd75e'
+
+-- Converts wiki markup into [color] spans understood by UIWidget:parseColoredText.
+--   **text**                   -> accent-colored inline highlight
+--   [color=#rrggbb]...[/color] -> passed through as-is
+local function wikiMarkupToColored(text)
+  return (text or ''):gsub('%*%*(.-)%*%*', '[color=' .. WIKI_ACCENT .. ']%1[/color]')
+end
+
+local function wikiColoredLabel(style, parent, text, defaultColor)
+  local widget = g_ui.createWidget(style, parent)
+  widget:parseColoredText(wikiMarkupToColored(text), defaultColor or '#dfdfdf')
+  return widget
+end
+
+local function wikiAutoHeight(widget, label, minHeight, padding)
+  scheduleEvent(function()
+    if widget and not widget:isDestroyed() then
+      widget:setHeight(math.max(minHeight, label:getTextSize().height + padding))
+    end
+  end, 0)
+end
+
+local function wikiAddCard(parent, card)
+  local widget = g_ui.createWidget('WikiRichCard', parent)
+  if card.icon then
+    widget:getChildById('icon'):setItemId(wikiClientItemId(card.icon))
+  elseif card.image then
+    widget:getChildById('icon'):hide()
+    local img = widget:getChildById('imageIcon')
+    img:setImageSource(card.image)
+    img:show()
+  end
+  local nameWidget = widget:getChildById('name')
+  nameWidget:parseColoredText(wikiMarkupToColored(card.name or ''), card.color or '#ffcc00')
+  local descWidget = widget:getChildById('description')
+  descWidget:parseColoredText(wikiMarkupToColored(card.description or ''), card.descColor or '#cccccc')
+  wikiAutoHeight(widget, descWidget, 58, 8 + 14 + 2 + 10)
+  return widget
+end
+
+local function wikiAddNoteBox(parent, section, style)
+  local widget = g_ui.createWidget(style, parent)
+  local label = widget:getChildById('text')
+  label:parseColoredText(wikiMarkupToColored(section.content or ''), section.color or '#dfdfdf')
+  wikiAutoHeight(widget, label, 40, 24)
+  return widget
+end
+
 -- Convert a server item id to the client id expected by Item:setItemId.
 -- Map generated from data/items/items.otb (item_client_ids.lua).
 local function wikiClientItemId(serverId)
@@ -148,14 +222,21 @@ function populateCategories()
     loadWikiData()
   end
   
-  for categoryName, categoryData in pairs(WikiData.categories) do
+  for _, categoryName in ipairs(wikiSortedKeys(WikiData.categories, WIKI_CATEGORY_ORDER)) do
+    local categoryData = WikiData.categories[categoryName]
     local categoryWidget = g_ui.createWidget('WikiCategoryItem', categoryList)
     categoryWidget:setText(categoryData.name)
     categoryWidget:setId(categoryName)
-    
+
     categoryWidget.onClick = function()
       selectCategory(categoryName)
     end
+  end
+
+  -- Open the first category so the window never starts empty
+  if not currentCategory then
+    local first = wikiSortedKeys(WikiData.categories, WIKI_CATEGORY_ORDER)[1]
+    if first then selectCategory(first) end
   end
 end
 
@@ -172,19 +253,34 @@ function selectCategory(categoryName)
   local categoryData = WikiData.categories[categoryName]
   if not categoryData then return end
   
-  -- Show subcategories
-  for subCatName, subCatData in pairs(categoryData.subcategories) do
+  -- Show subcategories (sorted by optional `order`, then name)
+  local subKeys = {}
+  for k in pairs(categoryData.subcategories) do subKeys[#subKeys + 1] = k end
+  table.sort(subKeys, function(a, b)
+    local sa, sb = categoryData.subcategories[a], categoryData.subcategories[b]
+    local oa, ob = sa.order or 999, sb.order or 999
+    if oa ~= ob then return oa < ob end
+    return (sa.name or a) < (sb.name or b)
+  end)
+
+  for _, subCatName in ipairs(subKeys) do
+    local subCatData = categoryData.subcategories[subCatName]
     local subCatWidget = g_ui.createWidget('WikiSubCategoryItem', subCategoryList)
     subCatWidget:setText(subCatData.name)
     subCatWidget:setId(subCatName)
-    
+
     subCatWidget.onClick = function()
       selectSubCategory(categoryName, subCatName)
     end
   end
-  
+
   -- Highlight selected category
   highlightSelectedCategory(categoryName)
+
+  -- Show the first subcategory page right away
+  if subKeys[1] then
+    selectSubCategory(categoryName, subKeys[1])
+  end
 end
 
 function selectSubCategory(categoryName, subCategoryName)
@@ -195,7 +291,13 @@ function selectSubCategory(categoryName, subCategoryName)
   
   local subCatData = WikiData.categories[categoryName].subcategories[subCategoryName]
   if not subCatData then return end
-  
+
+  -- rich_text pages carry their own title; other types get one generated
+  if subCatData.type ~= 'rich_text' then
+    wikiColoredLabel('WikiRichTitle', contentPanel, subCatData.name)
+    g_ui.createWidget('WikiRichDivider', contentPanel)
+  end
+
   -- Display content based on subcategory type
   if subCatData.type == 'list' then
     displayListContent(subCatData.items)
@@ -328,58 +430,9 @@ function displayEnchantsContent(enchants)
   end
 end
 
-local WIKI_ACCENT = '#ffd75e'
-
--- Converts wiki markup into [color] spans understood by UIWidget:parseColoredText.
---   **text**                  -> accent-colored inline highlight
---   [color=#rrggbb]...[/color] -> passed through as-is
-local function wikiMarkupToColored(text)
-  return (text or ''):gsub('%*%*(.-)%*%*', '[color=' .. WIKI_ACCENT .. ']%1[/color]')
-end
-
-local function wikiColoredLabel(style, parent, text, defaultColor)
-  local widget = g_ui.createWidget(style, parent)
-  widget:parseColoredText(wikiMarkupToColored(text), defaultColor or '#dfdfdf')
-  return widget
-end
-
-local function wikiAutoHeight(widget, label, minHeight, padding)
-  scheduleEvent(function()
-    if widget and not widget:isDestroyed() then
-      widget:setHeight(math.max(minHeight, label:getTextSize().height + padding))
-    end
-  end, 0)
-end
-
-local function wikiAddCard(parent, card)
-  local widget = g_ui.createWidget('WikiRichCard', parent)
-  if card.icon then
-    widget:getChildById('icon'):setItemId(wikiClientItemId(card.icon))
-  elseif card.image then
-    widget:getChildById('icon'):hide()
-    local img = widget:getChildById('imageIcon')
-    img:setImageSource(card.image)
-    img:show()
-  end
-  local nameWidget = widget:getChildById('name')
-  nameWidget:parseColoredText(wikiMarkupToColored(card.name or ''), card.color or '#ffcc00')
-  local descWidget = widget:getChildById('description')
-  descWidget:parseColoredText(wikiMarkupToColored(card.description or ''), card.descColor or '#cccccc')
-  wikiAutoHeight(widget, descWidget, 58, 8 + 14 + 2 + 10)
-  return widget
-end
-
-local function wikiAddNoteBox(parent, section, style)
-  local widget = g_ui.createWidget(style, parent)
-  local label = widget:getChildById('text')
-  label:parseColoredText(wikiMarkupToColored(section.content or ''), section.color or '#dfdfdf')
-  wikiAutoHeight(widget, label, 40, 24)
-  return widget
-end
-
 function displayTextContent(content)
   local contentPanel = wikiWindow:recursiveGetChildById('contentPanel')
-  wikiColoredLabel('WikiTextContent', contentPanel, content)
+  wikiColoredLabel('WikiRichColoredText', contentPanel, content)
 end
 
 function displayRichTextContent(sections)

@@ -1,28 +1,42 @@
 WikiCategoryItem < Button
   height: 28
   text-align: left
-  padding-left: 10
+  padding-left: 12
   font: verdana-11px-rounded
-  background-color: #ffffff11
+  color: #dfdfdf
+  background-color: #ffffff08
   $hover:
-    background-color: #ffffff22
+    background-color: #355d8988
+    color: #ffffff
   $on:
-    background-color: #ffffff33
+    background-color: #d4a8432e
+    color: #ffd75e
+    border-width-left: 3
+    border-color-left: #ffd75e
 
 WikiSubCategoryItem < Button
   height: 28
   text-align: left
   padding-left: 15
   font: verdana-11px-rounded
-  background-color: #ffffff11
+  color: #c0c0c0
+  background-color: #ffffff08
   $hover:
-    background-color: #ffffff22
+    background-color: #355d8988
+    color: #ffffff
   $on:
-    background-color: #ffffff33
+    background-color: #d4a8432e
+    color: #ffd75e
+    border-width-left: 3
+    border-color-left: #ffd75e
 
 WikiListItem < Panel
   height: 60
-  background-color: #ffffff11
+  background-color: #ffffff0d
+  border-width: 1
+  border-color: #ffffff14
+  border-width-left: 2
+  border-color-left: #d4a84355
   margin: 2
 
   Item
@@ -65,7 +79,9 @@ WikiListItem < Panel
 
 WikiPetItem < Panel
   height: 150
-  background-color: #ffffff11
+  background-color: #ffffff0d
+  border-width: 1
+  border-color: #ffffff1a
   margin: 3
   padding: 12
   
@@ -185,7 +201,7 @@ WikiRichTitle < Label
   text-auto-resize: true
   text-align: center
   background-color: #00000000
-  font: sans-bold-16px
+  font: eras-16px-bold
   color: #ffd75e
   margin-top: 4
   margin-bottom: 2
@@ -221,7 +237,11 @@ WikiRichDivider < Panel
 
 WikiRichCard < Panel
   height: 58
-  background-color: #ffffff11
+  background-color: #ffffff0d
+  border-width: 1
+  border-color: #ffffff14
+  border-width-left: 2
+  border-color-left: #d4a84355
   margin: 2
 
   Item
@@ -382,12 +402,15 @@ WikiEnchantItem < Panel
 
 WikiSearchResult < Panel
   height: 70
-  background-color: #ffffff11
+  background-color: #ffffff0d
+  border-width: 1
+  border-color: #ffffff14
   margin: 2
   padding: 8
-  
+
   $hover:
-    background-color: #ffffff22
+    background-color: #355d8955
+    border-color: #d4a84344
   
   Label
     id: resultCategory
@@ -445,7 +468,8 @@ MainWindow
       height: 25
       text-align: center
       font: verdana-11px-rounded
-      background-color: #ffffff22
+      color: #ffd75e
+      background-color: #d4a84322
       margin: 2
     
     ScrollablePanel
@@ -491,7 +515,8 @@ MainWindow
       height: 25
       text-align: center
       font: verdana-11px-rounded
-      background-color: #ffffff22
+      color: #ffd75e
+      background-color: #d4a84322
       margin: 2
     
     ScrollablePanel
@@ -535,7 +560,9 @@ MainWindow
       anchors.left: parent.left
       anchors.right: parent.right
       height: 35
-      background-color: #ffffff11
+      background-color: #d4a84314
+      border-width-bottom: 1
+      border-color-bottom: #d4a84333
       margin: 2
       
       Label
