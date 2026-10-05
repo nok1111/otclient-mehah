@@ -1,7 +1,6 @@
 WikiCategoryItem < Button
   height: 30
   text-align: left
-  padding-left: 34
   font: verdana-11px-rounded
   color: #dfdfdf
   background-color: #ffffff08
@@ -25,10 +24,21 @@ WikiCategoryItem < Button
     image-fixed-ratio: true
     phantom: true
 
+  Label
+    id: label
+    anchors.left: iconWidget.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 8
+    font: verdana-11px-rounded
+    color: #dfdfdf
+    text-auto-resize: true
+    phantom: true
+
 WikiSubCategoryItem < Button
   height: 28
   text-align: left
-  padding-left: 15
+  padding-left: 0
+  margin-left: 8
   font: verdana-11px-rounded
   color: #c0c0c0
   background-color: #ffffff08
@@ -589,6 +599,7 @@ MainWindow
       margin-left: 14
       font: verdana-11px-antialised
       color: #c0c0c0
+      text-auto-resize: true
 
     WikiButton
       id: closeButton

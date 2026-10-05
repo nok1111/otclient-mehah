@@ -229,7 +229,6 @@ function populateCategories()
   for _, categoryName in ipairs(wikiSortedKeys(WikiData.categories, WIKI_CATEGORY_ORDER)) do
     local categoryData = WikiData.categories[categoryName]
     local categoryWidget = g_ui.createWidget('WikiCategoryItem', categoryList)
-    categoryWidget:setText(categoryData.name)
     categoryWidget:setId(categoryName)
 
     local iconWidget = categoryWidget:getChildById('iconWidget')
@@ -237,8 +236,16 @@ function populateCategories()
       iconWidget:setImageSource(WIKI_CATEGORY_ICONS[categoryName])
     end
 
+    local label = categoryWidget:getChildById('label')
+    if label then label:setText(categoryData.name) end
+
     categoryWidget.onClick = function()
       selectCategory(categoryName)
+    end
+    categoryWidget.onHoverChange = function(self, hovered)
+      if not self:isOn() and label then
+        label:setColor(hovered and '#ffffff' or '#dfdfdf')
+      end
     end
   end
 
@@ -615,11 +622,10 @@ end
 function highlightSelectedCategory(categoryName)
   local categoryList = wikiWindow:recursiveGetChildById('categoryList')
   for _, widget in ipairs(categoryList:getChildren()) do
-    if widget:getId() == categoryName then
-      widget:setOn(true)
-    else
-      widget:setOn(false)
-    end
+    local on = widget:getId() == categoryName
+    widget:setOn(on)
+    local label = widget:getChildById('label')
+    if label then label:setColor(on and '#ffd75e' or '#dfdfdf') end
   end
 end
 
