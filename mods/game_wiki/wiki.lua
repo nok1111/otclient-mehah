@@ -349,7 +349,10 @@ function updateProgressLabel()
     end
   end
   if total > 0 then
-    label:setText(tr('Wiki progress: %d%%', math.floor(read / total * 100)))
+    local pct = math.floor(read / total * 100)
+    label:setText(tr('Wiki progress: %d%%', pct))
+    local bar = wikiWindow:recursiveGetChildById('progressBar')
+    if bar then bar:setPercent(pct) end
   end
 end
 

@@ -22,6 +22,7 @@ WikiCategoryItem < Button
     size: 18 18
     margin-left: 9
     image-fixed-ratio: true
+    image-color: #d4a843
     phantom: true
 
   Label
@@ -55,10 +56,11 @@ WikiSubCategoryItem < Button
 
 WikiListItem < Panel
   height: 60
-  image-source: /images/ui/windows/miniwindow_old
-  image-border: 5
+  background-color: #ffffff09
+  border-width: 1
+  border-color: #d4a8431f
   border-width-left: 2
-  border-color-left: #d4a84355
+  border-color-left: #d4a84366
   margin: 3
 
   Item
@@ -259,10 +261,11 @@ WikiRichDivider < Panel
 
 WikiRichCard < Panel
   height: 58
-  image-source: /images/ui/windows/miniwindow_old
-  image-border: 5
+  background-color: #ffffff09
+  border-width: 1
+  border-color: #d4a8431f
   border-width-left: 2
-  border-color-left: #d4a84355
+  border-color-left: #d4a84366
   margin: 3
 
   Item
@@ -344,8 +347,11 @@ WikiRichWarn < Panel
 
 WikiSearchResult < Panel
   height: 70
-  image-source: /images/ui/windows/miniwindow_old
-  image-border: 5
+  background-color: #ffffff09
+  border-width: 1
+  border-color: #d4a8431f
+  border-width-left: 2
+  border-color-left: #d4a84366
   margin: 3
   padding: 8
 
@@ -382,6 +388,12 @@ WikiSearchResult < Panel
     text-wrap: true
     height: 20
 
+WikiProgressBar < UIProgressBar
+  height: 8
+  anchors.fill: parent
+  background-color: #d4a843
+  phantom: true
+
 WikiButton < Button
   border-width: 1
   border-color: #d4a84366
@@ -410,8 +422,9 @@ MainWindow
     margin-top: 5
     margin-left: 5
     margin-bottom: 5
-    image-source: /images/ui/miniwindow_orange
-    image-border: 13
+    background-color: #0b0e14
+    border-width: 1
+    border-color: #d4a8432e
     padding: 2
 
     Label
@@ -461,8 +474,9 @@ MainWindow
     margin-top: 5
     margin-left: 5
     margin-bottom: 5
-    image-source: /images/ui/miniwindow_orange
-    image-border: 13
+    background-color: #0b0e14
+    border-width: 1
+    border-color: #d4a8432e
     padding: 2
 
     Label
@@ -513,8 +527,9 @@ MainWindow
     margin-left: 5
     margin-right: 5
     margin-bottom: 5
-    image-source: /images/ui/miniwindow_orange
-    image-border: 13
+    background-color: #0b0e14
+    border-width: 1
+    border-color: #d4a8432e
     padding: 2
 
     Panel
@@ -546,6 +561,8 @@ MainWindow
         margin-left: 8
         margin-right: 5
         height: 25
+        border-width: 1
+        border-color: #d4a84344
         placeholder: 'Search the wiki...'
         @onTextChange: modules.game_wiki.onSearchTextChange()
 
@@ -591,8 +608,9 @@ MainWindow
     margin-left: 5
     margin-right: 5
     margin-bottom: 5
-    image-source: /images/ui/miniwindow_orange
-    image-border: 13
+    background-color: #0b0e14
+    border-width: 1
+    border-color: #d4a8432e
     padding: 2
 
     Label
@@ -604,6 +622,21 @@ MainWindow
       font: verdana-11px-antialised
       color: #c0c0c0
       text-auto-resize: true
+
+    Panel
+      id: progressTrack
+      anchors.left: progressLabel.right
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      height: 8
+      margin-left: 12
+      margin-right: 106
+      background-color: #14100acc
+      border-width: 1
+      border-color: #d4a84333
+
+      WikiProgressBar
+        id: progressBar
 
     WikiButton
       id: closeButton
