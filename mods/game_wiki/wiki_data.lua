@@ -1433,42 +1433,6 @@ Crafting tasks scale with profession tiers:
               { type = 'text', content = '**Tips**\n\n- Prioritize Primary points for raw DPS increase\n- Secondary HP has no cap, making it a safe long-term investment\n- Utility EXP Gain is valuable for faster Paragon progression itself\n- Codex Knowledge helps with card drops while farming\n- Milestone bonuses replace the previous tier (e.g., 100pt replaces 50pt, not stacking)\n- Death protection: be careful in dangerous zones to avoid losing XP progress' }
             }
           },
-          codex = {
-            name = 'Codex System',
-            type = 'rich_text',
-            order = 4,
-            sections = {
-              { type = 'text', content = '**What is the Codex?**\n\nThe Codex is a card collection system. Monsters can drop cards (or card crates) that you equip into your Deck for powerful passive and active bonuses. With 104 unique cards, building the right deck is essential for End-Game damage, survival, and utility.\n\nOpen the Codex module to see your Collection, active Deck, and Crate crafting tab.' },
-              { type = 'image', path = '/images/wiki/codex_overview.png', width = 400, height = 220 },
-              { type = 'spacer', height = 8 },
-
-              { type = 'text', content = '**Deck Slots**\n\nYou have 6 Deck Slots to equip active cards. Unlock requirements:\n\n- **Slot 1:** Free (always unlocked)\n- **Slot 2:** Character Level 80\n- **Slot 3:** Character Level 150\n- **Slot 4:** Paragon Level 1\n- **Slot 5:** Paragon Level 50\n- **Slot 6:** Premium Account only\n\nCards gain no benefit while inactive in your collection. Only equipped cards apply their effects. Go to the Deck tab in the Codex module to equip or swap cards.' },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
-
-              { type = 'text', content = '**Crates & How to Get Cards**\n\nCards are obtained by opening Crates. There are 3 crate tiers you can craft in the Codex Crate tab:\n\n| Crate | Craft Cost | Max Card Level | Common | Rare | Epic | Legendary | Bonus Essences |\n|-------|------------|----------------|--------|------|------|-----------|----------------|\n| Bronze | 100 Essences | Level 2 | 70% | 20% | 8% | 2% | 50 (25% chance) |\n| Silver | 200 Essences | Level 3 | 60% | 25% | 10% | 5% | 80 (30% chance) |\n| Golden | 350 Essences | Level 5 | 30% | 30% | 30% | 10% | 120 (35% chance) |\n\nCrates can also drop as loot from monsters and elites. You also receive **1 free Bronze Crate every 15 character levels**.' },
-              { type = 'image', path = '/images/wiki/codex_crates.png', width = 400, height = 250 },
-              { type = 'spacer', height = 8 },
-
-              { type = 'text', content = '**Codex Essences**\n\nEssences are the currency of the Codex system. Uses:\n- Craft crates (100/200/350 per crate)\n- Upgrade cards directly (10 EXP per essence spent, rarity cost multiplier applies)\n- Unlock deck slots early (500+ essences, cost doubles each time)\n\n**Ways to earn Essences:**\n- Monster and elite kills\n- Crate bonus rolls\n- Duplicate cards at max level convert to essences\n- **Knowledge Potion:** +50% essence gain while active\n\nYou can see your current Essences at the top of the Codex module.' },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
-
-              { type = 'text', content = '**Card Rarities**\n\nCards come in 4 rarities that determine drop rate and power:\n\n- **Common** (White): Basic effects, easiest to obtain\n- **Rare** (Blue): Stronger effects, moderate drop rate\n- **Epic** (Purple): Powerful build-enabling effects\n- **Legendary** (Gold): Game-changing effects, hardest to obtain' },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
-
-              { type = 'text', content = '**Card Leveling**\n\nEach card starts at Level 1 and can be leveled up to 10. Higher levels unlock stronger effects. You can level cards by getting duplicates (grants EXP) or by spending Essences directly in the card detail view.\n\n| Level | EXP to Next | Total EXP |\n|-------|-------------|-----------|\n| 1 | 500 | 0 |\n| 2 | 700 | 500 |\n| 3 | 1,000 | 1,200 |\n| 4 | 1,300 | 2,200 |\n| 5 | 1,600 | 3,500 |\n| 6 | 1,900 | 5,100 |\n| 7 | 2,200 | 7,000 |\n| 8 | 2,500 | 9,200 |\n| 9 | 3,000 | 11,700 |\n| 10 | -- | 14,700 (Max) |\n\n**Duplicate Cards:** When you get a card you already own, it grants EXP based on rarity (Common=100, Rare=200, Epic=300, Legendary=500). If the card is already at max level for the crate type, duplicates convert to essences instead.' },
-              { type = 'image', path = '/images/wiki/codex_level_comparison.png', width = 380, height = 280 },
-              { type = 'spacer', height = 8 },
-
-              { type = 'text', content = '**Card Trigger Types**\n\nCards activate based on different trigger conditions. You can see a cards trigger type in its tooltip:\n\n- **Passive:** Always active while equipped (stat boosts, resistances, auras)\n- **On Kill:** Triggers when you kill a monster (cooldown reduction, explosions, fear, summon)\n- **On Heal:** Triggers when you heal (mana restore, healing surge, party echo)\n- **On Spell:** Triggers when casting spells (fire fields, heal-on-cast)\n- **On Attack Spell:** Triggers only on offensive/damage spells (lightning, blood sacrifice)\n- **On Healing Spell:** Triggers only on healing spells (blossom dragon blast)\n- **On Party Heal:** Triggers when healing allies (divine punishment on enemies)\n- **On Death:** Cheat death once (The Phoenix revive)\n- **On Crit:** Triggers on critical hits\n- **On Low HP:** Triggers when health drops below threshold\n- **On Think:** Periodic trigger (interval-based effects)' },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
-
-              { type = 'text', content = '**Building Your Deck**\n\n*DPS Cards:* Critical Surge, The Witch, Glass Cannon, The Dragon, Guns Lover, The Gunner, Svarog, Zeus\n\n*Tank/Survival Cards:* Golem, The Phoenix, The Behemoth, The Slime, Water Elemental, Soul Leech, Final Symphony\n\n*Healer Cards:* Undine, The Elf, Archangel, Blood Link, Blossom Dragon, The Naga, Yacy\n\n*Utility Cards:* Executioner (CDR), Essence Reaver (essence farm), The Child (EXP), Carnage Presence (clearing), The Necromancer (summons)\n\n**Tips**\n- Synergize cards with your build (e.g., The Witch with high mana pools)\n- Dragon cards (31-40) synergize with Dragon Lord for multiplicative bonuses\n- Healer cards like Blood Link and Archangel only work when healing party members\n- Guns Lover and The Gunner are mandatory for ranged builds\n- Glass Cannon is high-risk, high-reward (+32% damage but +32% damage taken at max)\n- Duplicate cards at max level become essences -- farm lower-tier crates for essence income' }
-            }
-          },
         }
       },
       currencies = {
@@ -1978,7 +1942,7 @@ Crafting tasks scale with profession tiers:
             order = 1,
             sections = {
               { type = 'title', text = 'PRESTIGE CHALLENGES', color = '#ffd75e' },
-              { type = 'text', content = 'Prestige resets your character for a challenge run with permanent rewards. Your [color=#ffd700]pets, codex, achievements, blueprints and reborn bonuses are preserved[/color] across every prestige.' },
+              { type = 'text', content = 'Prestige resets your character for a challenge run with permanent rewards. Your [color=#ffd700]pets, codex, achievements and blueprints are preserved[/color] across every prestige.' },
               { type = 'divider' },
 
               { type = 'subtitle', text = 'The Modes', color = '#66aaff' },
@@ -2004,22 +1968,93 @@ Crafting tasks scale with profession tiers:
         }
       },
 
-      reborn = {
-        name = 'Reborn',
+      codex = {
+        name = 'Codex',
         subcategories = {
-          overview = {
-            name = 'Reborn Guide',
+          collection = {
+            name = 'Collection',
             type = 'rich_text',
             order = 1,
             sections = {
-              { type = 'title', text = 'REBORN SYSTEM', color = '#ffd75e' },
-              { type = 'text', content = 'Reborn resets your character in exchange for a [color=#ffd700]Reborn Orb[/color] - a consumable that grants permanent, stacking bonuses to any character on your account.' },
+              { type = 'title', text = 'Codex Collection' },
               { type = 'divider' },
+              { type = 'text', content = 'The Codex is a card collection system: monsters drop **cards and crates** that feed your Deck with passive and triggered bonuses. There are **104 unique cards** to collect.' },
+              { type = 'image', path = '/images/wiki/codex_overview.png', width = 400, height = 267 },
+              { type = 'spacer', height = 8 },
+              { type = 'subtitle', text = 'Card Rarities' },
               { type = 'cards', items = {
-                { icon = 37416, name = 'Reborn Orb', color = '#66ffee',
-                  description = 'Granted on rebirth. Any character on your account can consume it for permanent bonuses: +exp gain, +skill gain, +max HP%, +max mana% and +damage%. Orbs stack - the more reborns, the stronger every character becomes.' },
+                { image = '/images/ui/rarity_white.png', name = 'Common', color = '#dfdfdf', description = 'Basic effects - the easiest cards to obtain.' },
+                { image = '/images/ui/rarity_blue.png', name = 'Rare', color = '#58a6ff', description = 'Stronger effects, moderate drop rate.' },
+                { image = '/images/ui/rarity_purple.png', name = 'Epic', color = '#c678dd', description = 'Powerful, build-enabling effects.' },
+                { image = '/images/ui/rarity_yellow.png', name = 'Legendary', color = '#ffa940', description = 'Game-changing effects, hardest to roll.' },
               }},
-              { type = 'tip', content = 'Reborn bonuses apply account-wide: your next character starts stronger. Prestige preserves your reborn progress.' },
+              { type = 'image', path = '/images/wiki/codex_card_rarities.png', width = 400, height = 200 },
+              { type = 'spacer', height = 8 },
+              { type = 'subtitle', text = 'Duplicates & EXP' },
+              { type = 'text', content = 'Duplicate cards grant EXP to the card you own - **Common 100 / Rare 200 / Epic 300 / Legendary 500** EXP. If the card is already at the max level for its crate tier, duplicates convert into **Codex Essences** instead.' },
+              { type = 'subtitle', text = 'Trigger Types' },
+              { type = 'text', content = 'Cards activate on different conditions - shown on each card tooltip: **Passive** (always on), **On Kill**, **On Heal**, **On Spell**, **On Attack Spell**, **On Healing Spell**, **On Party Heal**, **On Crit**, **On Low HP**, **On Death**, **On Dash**, **On Shield** and **On Think** (periodic).' },
+              { type = 'image', path = '/images/wiki/codex_trigger_examples.png', width = 330, height = 200 },
+            }
+          },
+          deck = {
+            name = 'Deck',
+            type = 'rich_text',
+            order = 2,
+            sections = {
+              { type = 'title', text = 'Your Deck' },
+              { type = 'divider' },
+              { type = 'text', content = 'Cards only work while **equipped** in your Deck. You get **6 slots**, unlocked progressively:' },
+              { type = 'cards', items = {
+                { image = '/images/icons/star.png', name = 'Slots 1-3', description = 'Slot 1 free - Slot 2 at **Level 80** - Slot 3 at **Level 150**.' },
+                { image = '/images/icons/fame.png', name = 'Slots 4-5', description = 'Unlock at **Paragon Level 1** and **Paragon Level 50**.' },
+                { image = '/images/icons/crown.png', name = 'Slot 6', description = '**Premium account** only.' },
+                { image = '/images/codex/essence_icon.png', name = 'Early Unlock', description = 'Unlock the next slot early with essences: **500, then doubles each time** (1000, 2000...).' },
+              }},
+              { type = 'warning', content = 'Cards sitting in your Collection give **no bonus** - equip them in the Deck tab.' },
+              { type = 'subtitle', text = 'Building a Deck' },
+              { type = 'text', content = [[**DPS:** Critical Surge, The Witch, Glass Cannon, The Dragon, Guns Lover, The Gunner, Svarog, Zeus
+**Tank/Survival:** Golem, The Phoenix, The Behemoth, The Slime, Water Elemental, Soul Leech
+**Healer:** Undine, The Elf, Archangel, Blood Link, Blossom Dragon, The Naga
+**Utility:** Executioner (cooldown), Essence Reaver (essence farm), The Child (EXP), Carnage Presence]] },
+              { type = 'tip', content = 'Dragon cards synergize with Dragon Lord. Healer cards like Blood Link only trigger when healing **party members**.' },
+            }
+          },
+          crates = {
+            name = 'Crates',
+            type = 'rich_text',
+            order = 3,
+            sections = {
+              { type = 'title', text = 'Card Crates' },
+              { type = 'divider' },
+              { type = 'text', content = 'Craft crates in the Crates tab with **Codex Essences**, or loot them from monsters and elites. Higher crates roll better rarities and higher card levels.' },
+              { type = 'cards', items = {
+                { image = '/images/codex/bronzecrate.png', name = 'Bronze Crate - 100 essences', color = '#cd7f32', description = 'Cards up to **level 2**. Common 70% / Rare 20% / Epic 8% / Legendary 2%. 25% chance of +50 bonus essences.' },
+                { image = '/images/codex/silver-crate.png', name = 'Silver Crate - 200 essences', color = '#c0c0c0', description = 'Cards up to **level 3**. Common 60% / Rare 25% / Epic 10% / Legendary 5%. 30% chance of +80 bonus essences.' },
+                { image = '/images/codex/golden-crate.png', name = 'Golden Crate - 350 essences', color = '#ffd75e', description = 'Cards up to **level 5**. Common 30% / Rare 30% / Epic 30% / Legendary 10%. 35% chance of +120 bonus essences.' },
+              }},
+              { type = 'image', path = '/images/wiki/codex_crates.png', width = 400, height = 267 },
+              { type = 'spacer', height = 8 },
+              { type = 'tip', content = 'You get **1 free Bronze Crate every 15 character levels**. Task Board offers also roll crates - Legendary tasks can drop any tier.' },
+            }
+          },
+          upgrade = {
+            name = 'Upgrade',
+            type = 'rich_text',
+            order = 4,
+            sections = {
+              { type = 'title', text = 'Upgrading Cards' },
+              { type = 'divider' },
+              { type = 'text', content = 'Spend **Codex Essences** in the Upgrade tab to push a card toward its next level - **1 essence = 10 card EXP**. Max level is **10** (crate-rolled cards may start capped lower).' },
+              { type = 'image', path = '/images/wiki/codex_level_comparison.png', width = 380, height = 238 },
+              { type = 'spacer', height = 8 },
+              { type = 'subtitle', text = 'Essence Sources' },
+              { type = 'cards', items = {
+                { image = '/images/codex/essence_icon.png', name = 'Farming', description = 'Monster and elite kills, crate bonus rolls, task rewards.' },
+                { image = '/images/icons/repeat.png', name = 'Max-Level Duplicates', description = 'Dupes of crate-maxed cards convert straight into essences.' },
+                { image = '/images/icons/icon_magic.png', name = 'Knowledge Potion', description = '+50% essence gain while the potion buff is active.' },
+              }},
+              { type = 'tip', content = 'Farm lower-tier crates for essence income - maxed common cards turn every duplicate into essences.' },
             }
           },
         }
@@ -2034,10 +2069,10 @@ Crafting tasks scale with profession tiers:
             order = 1,
             sections = {
               { type = 'title', text = 'ACHIEVEMENTS', color = '#ffd75e' },
-              { type = 'text', content = 'Over [color=#ffd700]215 achievements[/color] reward achievement points, titles and items. Progress is preserved through prestige and reborn.' },
+              { type = 'text', content = 'Over [color=#ffd700]215 achievements[/color] reward achievement points, titles and items. Progress is preserved through prestige.' },
               { type = 'divider' },
               { type = 'subtitle', text = 'Categories', color = '#66aaff' },
-              { type = 'text', content = '**Combat** - kills, bosses, crits\n**Tasks & Daily** - task board and daily completions\n**Crafting & Professions** - recipes and profession levels\n**Gathering** - herb/vein/tree/pool nodes\n**Pets** - collecting and leveling\n**Codex** - cards, crates, deck milestones\n**Dungeons** - clears and mutator runs\n**Paragon / Prestige / Reborn** - end-game milestones\n**Proficiency** - trait unlocks\n**Exploration & Social** - map discovery, guild, party\n**Skills, Collection, Capture, Forge, Special**' },
+              { type = 'text', content = '**Combat** - kills, bosses, crits\n**Tasks & Daily** - task board and daily completions\n**Crafting & Professions** - recipes and profession levels\n**Gathering** - herb/vein/tree/pool nodes\n**Pets** - collecting and leveling\n**Codex** - cards, crates, deck milestones\n**Dungeons** - clears and mutator runs\n**Paragon / Prestige** - end-game milestones\n**Proficiency** - trait unlocks\n**Exploration & Social** - map discovery, guild, party\n**Skills, Collection, Capture, Forge, Special**' },
               { type = 'tip', content = 'Achievement points count toward titles and milestone rewards - check the Achievements window for progress and claim buttons.' },
             }
           },

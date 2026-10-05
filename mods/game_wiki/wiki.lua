@@ -16,8 +16,9 @@ local WIKI_CATEGORY_ORDER = {
   'currencies',
   'items', 'item_upgrades', 'proficiency', 'crafting',
   'monster_orbs', 'zones', 'dungeons',
+  'codex',
   'pets', 'achievements',
-  'prestige', 'reborn',
+  'prestige',
 }
 
 -- Sidebar icon per category. Gold-monochrome PNGs generated offline into
@@ -38,7 +39,7 @@ local WIKI_CATEGORY_ICONS = {
   pets            = 'pets',
   achievements    = 'achievements',
   prestige        = 'prestige',
-  reborn          = 'reborn',
+  codex           = 'codex',
 }
 
 local function wikiCatIcon(categoryName, hot)
