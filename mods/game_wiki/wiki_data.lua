@@ -1632,38 +1632,109 @@ Crafting tasks scale with profession tiers:
         name = 'Item Upgrades',
         subcategories = {
           overview = {
-            name = 'Upgrade System',
+            name = 'How It Works',
             type = 'rich_text',
             order = 1,
             sections = {
-              { type = 'title', text = 'ITEM UPGRADE SYSTEM', color = '#ffd75e' },
-              { type = 'text', content = 'Use crystals on your equipment to raise its upgrade level, up to [color=#ffd700]+15[/color]. Higher levels have lower success rates - failures can downgrade or even destroy the item.' },
+              { type = 'title', text = 'ITEM UPGRADES', color = '#ffd75e' },
+              { type = 'text', content = 'The **Orb of Performance** is the only upgrade item in the game. Use it on a piece of equipment to raise its upgrade level, shown as **+N** next to the item name - up to **+15**.' },
               { type = 'divider' },
 
-              { type = 'subtitle', text = 'Success Chances', color = '#ff9e5e' },
-              { type = 'text', content = '**Standard crystal:** +1-2: 100/85% | +3-4: 70/50% | +5-6: 35/20% | +7: 10% | +8: 8% | +9-15: 3-2%\n**Breaker crystal:** same early rates, then 30% from +8 to +13, 25% at +14, 15% at +15.' },
-              { type = 'warning', content = 'Past +8, failing with a standard crystal can BREAK the item. Breaker crystals are safer for high levels.' },
+              { type = 'subtitle', text = 'Using an Orb', color = '#66ff99' },
+              { type = 'text', content = '**1.** Put the item in your backpack - orbs cannot be used on equipped gear.\n**2.** Use the Orb of Performance on the item.\n**3.** On success the item gains +1 upgrade level; on failure only the orb is consumed.' },
+              { type = 'text', content = 'The item must be upgradable (weapons, shields, armor, legs, boots, rings and necklaces) and already have an **item level**. Unidentified or mirrored items cannot be modified.' },
               { type = 'divider' },
 
-              { type = 'subtitle', text = 'Crystals & Scrolls', color = '#66aaff' },
+              { type = 'subtitle', text = 'Success Chance per Level', color = '#ff9e5e' },
+              { type = 'text', content = '+1: 100% | +2: 85% | +3: 70% | +4: 50% | +5: 35% | +6: 20% | +7: 10% | +8: 8% | +9: 3% | +10 to +15: 2%' },
+              { type = 'tip', content = 'A failed roll only costs the orb - the item is never downgraded or destroyed. Past +8 the odds drop sharply, so budget several orbs for the last levels.' },
+            }
+          },
+          obtain = {
+            name = 'How to Obtain',
+            type = 'rich_text',
+            order = 2,
+            sections = {
+              { type = 'title', text = 'WHERE TO GET ORBS OF PERFORMANCE', color = '#ffd75e' },
+              { type = 'text', content = 'Orbs of Performance come from a few reliable sources - dungeons are by far the steadiest one.' },
+              { type = 'divider' },
               { type = 'cards', items = {
-                { icon = 29032, name = 'Upgrade Crystal', color = '#66ff99', description = 'Raises item upgrade level by +1 on success.' },
-                { icon = 33621, name = 'Upgrade Crystal Breaker', color = '#ff8888', description = 'For +10 and beyond - better success rates at high levels.' },
-                { icon = 29033, name = 'Alteration Crystal', color = '#cc99ff', description = 'Rerolls the bonus attributes of an item.' },
-                { icon = 29035, name = 'Cleansing Crystal', color = '#77ddff', description = 'Removes upgrades/attributes to start over.' },
-                { icon = 29034, name = 'Fortune Crystal', color = '#ffd700', description = 'Luck-based crystal for bonus rolls.' },
-                { icon = 29043, name = 'Faith Crystal', color = '#ffff88', description = 'Rare rainbow crystal.' },
-                { icon = 33385, name = 'Limitless Crystal', color = '#ff66cc', description = 'Special end-game crystal.' },
-                { icon = 33386, name = 'Mirrored Crystal', color = '#99ddff', description = 'Special end-game crystal.' },
-                { icon = 33387, name = 'Void Crystal', color = '#9966cc', description = 'Special end-game crystal.' },
-                { icon = 26390, name = 'Upgrade Catalyst', color = '#ffaa55', description = 'Catalyst for the upgrade process.' },
-                { icon = 29080, name = 'Crystal Extractor', color = '#aaddaa', description = 'Extracts crystals from Crystal Fossils (1:5 break chance).' },
-                { icon = 29019, name = 'Scroll of Identification', color = '#ddddaa', description = 'Identifies unidentified items (1 in 12 drops) - can reveal [color=#ffd700]Unique[/color] items (1:30).' },
+                { image = '/images/icons/dungeon.png', name = 'Dungeon Chests', color = '#66ff99', description = 'Every dungeon completion awards 3-5 orbs guaranteed. The most reliable farm once you can clear dungeons.' },
+                { image = '/images/icons/prey_loot.png', name = 'Blue Loot Orbs', color = '#77aaff', description = 'Around a 10% chance per blue orb loot roll, on any monster level. Stacks up while you hunt.' },
+                { image = '/images/icons/quest_marker.png', name = 'Task & Quest Rewards', color = '#ffd75e', description = 'Several NPC task list quests award 1-3 orbs on completion.' },
+                { image = '/images/icons/icon_axe.png', name = 'Crafting', color = '#ffaa55', description = 'Craftable in the Augments category of professions using enchanting powders.' },
               }},
               { type = 'divider' },
+              { type = 'tip', content = 'Daily dungeon runs plus orb drops while hunting will keep a steady supply - save them for gear you plan to keep.' },
+            }
+          },
+          bonuses = {
+            name = 'Upgrade Bonuses',
+            type = 'rich_text',
+            order = 3,
+            sections = {
+              { type = 'title', text = 'WHAT EACH UPGRADE ADDS', color = '#ffd75e' },
+              { type = 'text', content = 'Every upgrade level adds flat stats on top of the item\'s base values - the bonus scales with the +N level, so a +15 weapon is dramatically stronger than a +5 one.' },
+              { type = 'divider' },
+              { type = 'cards', items = {
+                { image = '/images/icons/icon_axe.png', name = 'One-Handed Weapons', color = '#ff8888', description = '+2 attack per upgrade level.' },
+                { image = '/images/icons/icon_axe.png', name = 'Two-Handed Weapons', color = '#ff6666', description = '+4 attack per upgrade level - double the bonus of one-handers.' },
+                { image = '/images/icons/shield-divided-four_16769380.png', name = 'Shields & Weapons', color = '#66aaff', description = '+2 defense per upgrade level.' },
+                { image = '/images/icons/shield-divided-four_16769380.png', name = 'Extra Defense', color = '#77ddff', description = '+1 extra defense per upgrade level on items that have it.' },
+                { image = '/images/icons/icon_health.png', name = 'Armor Pieces', color = '#9fe89f', description = '+1 armor per upgrade level on armor, legs and boots.' },
+              }},
+              { type = 'divider' },
+              { type = 'text', content = 'Upgrade bonuses are applied on top of the item\'s level-normalized stats, so upgrading a high **item level** piece is always more valuable than upgrading a low-level one.' },
+            }
+          },
+        }
+      },
 
-              { type = 'subtitle', text = 'Rarity Tiers', color = '#cc99ff' },
-              { type = 'text', content = 'Identified items roll a rarity: **Orbital** (rare, ~1:25), **Forged** (epic, ~1:900) and **Ascended** (legendary, ~1:500). Rarity adds to the item level budget for attributes.' },
+      item_level = {
+        name = 'Item Level',
+        subcategories = {
+          overview = {
+            name = 'What Is Item Level',
+            type = 'rich_text',
+            order = 1,
+            sections = {
+              { type = 'title', text = 'ITEM LEVEL', color = '#ffd75e' },
+              { type = 'text', content = 'Every piece of gear that drops has an **item level (iLvl)** - a hidden power rating that determines how strong its stats are. Two copies of the same sword can have very different attack because they dropped at different item levels.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'The Basics', color = '#66ff99' },
+              { type = 'text', content = '- iLvl is assigned when the item drops - equal to the level of the monster that dropped it.\n- Stats (attack, defense, armor) are scaled to that level, so higher iLvl = stronger item.\n- The item\'s tooltip shows its iLvl and a suggested character level to wield it.\n- iLvl caps at **500** - only the toughest endgame monsters reach it.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Why It Matters', color = '#ff9e5e' },
+              { type = 'text', content = 'Item level is the backbone of gearing: a high-iLvl common item can beat a low-iLvl rare one. Before spending **Orbs of Performance**, make sure the piece is worth it - upgrades multiply a good base, they do not fix a weak one.' },
+            }
+          },
+          calculation = {
+            name = 'How It\'s Calculated',
+            type = 'rich_text',
+            order = 2,
+            sections = {
+              { type = 'title', text = 'HOW ITEM LEVEL WORKS', color = '#ffd75e' },
+              { type = 'text', content = 'Item level is not random - it is derived from the source that produced the item, then passed through several modifiers.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'The Drop', color = '#66ff99' },
+              { type = 'text', content = 'When a monster dies, each eligible item in its corpse takes the **monster\'s level** as its item level. Hunting stronger zones is the only way to raise the iLvl floor of your drops.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Stat Normalization', color = '#ff9e5e' },
+              { type = 'text', content = 'The item\'s attack, defense and armor are then rebuilt around that level: each equipment slot has its own baseline plus a per-level growth rate. That is why iLvl, not the item\'s name, decides its real power.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Source Quality', color = '#cc99ff' },
+              { type = 'text', content = 'Where the item came from also matters - **elite** monsters, **bosses**, **orb drops** and **crafted** gear roll a source quality that can push stats above or below the level baseline.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Rarity Bonus', color = '#ffd75e' },
+              { type = 'text', content = 'Identified items with **Orbital**, **Forged** or **Ascended** rarity get a modest item level bump on top of everything else - rarity is the cherry on top, not the foundation.' },
+              { type = 'divider' },
+              { type = 'tip', content = 'Rule of thumb: monster level sets the ceiling, source quality and rarity decide where inside it the item lands.' },
             }
           },
         }

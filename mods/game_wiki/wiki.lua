@@ -14,7 +14,7 @@ local WIKI_CATEGORY_ORDER = {
   'ascension_guide',   -- First steps, talents, paragon, codex
   'tasks', 'daily_tasks',
   'currencies',
-  'items', 'item_upgrades', 'proficiency', 'crafting',
+  'items', 'item_level', 'item_upgrades', 'proficiency', 'crafting',
   'monster_orbs', 'zones', 'dungeons',
   'codex',
   'pets', 'achievements',
@@ -31,6 +31,7 @@ local WIKI_CATEGORY_ICONS = {
   currencies      = 'currencies',
   items           = 'items',
   item_upgrades   = 'item_upgrades',
+  item_level      = 'item_level',
   proficiency     = 'proficiency',
   crafting        = 'crafting',
   monster_orbs    = 'monster_orbs',
