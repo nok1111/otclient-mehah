@@ -32,6 +32,15 @@ WikiListItem < Panel
     size: 40 40
     margin-left: 10
 
+  Panel
+    id: imageIcon
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    size: 40 40
+    margin-left: 10
+    image-fixed-ratio: true
+    visible: false
+
   Label
     id: name
     anchors.left: icon.right
@@ -221,6 +230,15 @@ WikiRichCard < Panel
     anchors.verticalCenter: parent.verticalCenter
     size: 36 36
     margin-left: 10
+
+  Panel
+    id: imageIcon
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    size: 36 36
+    margin-left: 10
+    image-fixed-ratio: true
+    visible: false
 
   Label
     id: name

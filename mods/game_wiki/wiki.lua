@@ -224,6 +224,11 @@ function displayListContent(items)
 
     if item.icon then
       itemWidget:getChildById('icon'):setItemId(wikiClientItemId(item.icon))
+    elseif item.image then
+      itemWidget:getChildById('icon'):hide()
+      local img = itemWidget:getChildById('imageIcon')
+      img:setImageSource(item.image)
+      img:show()
     end
 
     -- Adjust height to fit wrapped description text
@@ -350,6 +355,11 @@ local function wikiAddCard(parent, card)
   local widget = g_ui.createWidget('WikiRichCard', parent)
   if card.icon then
     widget:getChildById('icon'):setItemId(wikiClientItemId(card.icon))
+  elseif card.image then
+    widget:getChildById('icon'):hide()
+    local img = widget:getChildById('imageIcon')
+    img:setImageSource(card.image)
+    img:show()
   end
   local nameWidget = widget:getChildById('name')
   nameWidget:parseColoredText(wikiMarkupToColored(card.name or ''), card.color or '#ffcc00')
