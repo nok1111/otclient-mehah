@@ -2002,6 +2002,35 @@ Crafting tasks scale with profession tiers:
               { type = 'text', content = '**Pre-upgraded:** blueprint items come out already upgraded, saving crystals and risk.\n**Custom stats:** they roll attributes from the item balance table (crit, leech, %HP, cooldown reduction, etc.) - real end-game stats, not flat armor.\n**Blueprints:** learn recipes like Fire Sword, Dragonbreath Crossbow, Grievous Axe, Fire Essence Wand and Fragment of Pure Life.' },
             }
           },
+          bonuses = {
+            name = 'Crafting Bonuses',
+            type = 'rich_text',
+            order = 2,
+            sections = {
+              { type = 'title', text = 'CRAFTING BONUSES', color = '#ffd75e' },
+              { type = 'text', content = 'Crafted items do not inherit a monster\'s level - their **item level is built from the recipe**, your profession level and a bit of luck. That is why a good crafter outclasses monster drops.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Where the Item Level Comes From', color = '#66ff99' },
+              { type = 'text', content = '**1.** Every recipe has a **tier** that sets the base item level - higher-tier blueprints produce much higher iLvl.\n**2.** Your **profession level** adds item levels on top of every craft.\n**3.** A lucky **rarity roll** (Orbital / Forged) pushes the item level even further.\nStats are then normalized to that final iLvl, exactly like a drop of the same level - but you control the tier.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Crafted Quality', color = '#ff9e5e' },
+              { type = 'text', content = 'Monster drops roll mostly Damaged, Worn or Normal quality. **Tier 1+ recipes always craft at Superior or better**, and the quality floor keeps rising with your profession level - Pristine and Perfect rolls become reachable at high level.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'What Leveling a Profession Gives You', color = '#cc99ff' },
+              { type = 'cards', items = {
+                { image = '/images/icons/star.png', name = 'Higher Item Level', color = '#ffd75e', description = 'Each profession level adds item levels to everything you craft - your gear scales with your skill, not with luck.' },
+                { image = '/images/icons/gem.png', name = 'Better Rarity Odds', color = '#cc99ff', description = 'Tiered recipes roll rarity with a bonus from your profession level - more Orbital and Forged results as you level.' },
+                { image = '/images/icons/crown.png', name = 'Higher Quality Floor', color = '#ffaa55', description = 'Profession level raises the minimum quality of your crafts, so bad rolls disappear over time.' },
+                { image = '/images/icons/quest_marker.png', name = 'Recipe Unlocks', color = '#66ff99', description = 'Higher-tier blueprints require a minimum profession level - leveling opens the strongest crafts.' },
+                { image = '/images/icons/icon_magic.png', name = 'Stronger Runes', color = '#77ddff', description = 'Enchanting crafts special runes whose item level scales with your Enchanting skill.' },
+              }},
+              { type = 'divider' },
+              { type = 'tip', content = 'Every craft also awards profession experience and Fame - leveling professions is progress even when the item itself is not an upgrade.' },
+            }
+          },
         }
       },
 
