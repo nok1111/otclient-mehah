@@ -10,8 +10,10 @@ WikiCategoryItem < Button
     background-color: #355d8988
     color: #ffffff
   $on:
-    background-color: #d4a8432e
+    background-color: #d4a8431e
     color: #ffd75e
+    border-width: 1
+    border-color: #d4a84344
     border-width-left: 3
     border-color-left: #ffd75e
 
@@ -411,6 +413,14 @@ MainWindow
   size: 900 600
   font: eras-16px-bold
   color: #ffd75e
+  image-source: /images/wiki/wiki_window
+  image-border: 4
+  image-border-top: 36
+  padding-top: 40
+  padding-left: 12
+  padding-right: 12
+  padding-bottom: 12
+  text-offset: 0 8
   @onEscape: modules.game_wiki.hide()
 
   Panel
@@ -422,7 +432,7 @@ MainWindow
     margin-top: 5
     margin-left: 5
     margin-bottom: 5
-    background-color: #0b0e14
+    background-color: #0f1219
     border-width: 1
     border-color: #d4a8432e
     padding: 2
@@ -474,7 +484,7 @@ MainWindow
     margin-top: 5
     margin-left: 5
     margin-bottom: 5
-    background-color: #0b0e14
+    background-color: #0f1219
     border-width: 1
     border-color: #d4a8432e
     padding: 2
@@ -527,7 +537,7 @@ MainWindow
     margin-left: 5
     margin-right: 5
     margin-bottom: 5
-    background-color: #0b0e14
+    background-color: #0f1219
     border-width: 1
     border-color: #d4a8432e
     padding: 2
@@ -608,24 +618,34 @@ MainWindow
     margin-left: 5
     margin-right: 5
     margin-bottom: 5
-    background-color: #0b0e14
+    background-color: #0f1219
     border-width: 1
     border-color: #d4a8432e
     padding: 2
 
-    Label
-      id: progressLabel
-      !text: tr('Progress')
+    UIWidget
+      id: updatedIcon
       anchors.left: parent.left
       anchors.verticalCenter: parent.verticalCenter
-      margin-left: 14
+      size: 14 14
+      margin-left: 12
+      image-source: /images/icons/clock.png
+      image-fixed-ratio: true
+      phantom: true
+
+    Label
+      id: lastUpdatedLabel
+      !text: tr('Last updated')
+      anchors.left: updatedIcon.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 6
       font: verdana-11px-antialised
       color: #c0c0c0
       text-auto-resize: true
 
     Panel
       id: progressTrack
-      anchors.left: progressLabel.right
+      anchors.left: lastUpdatedLabel.right
       anchors.right: parent.right
       anchors.verticalCenter: parent.verticalCenter
       height: 8

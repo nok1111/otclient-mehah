@@ -352,8 +352,12 @@ function selectSubCategory(categoryName, subCategoryName)
 end
 
 function updateProgressLabel()
-  local label = wikiWindow and wikiWindow:recursiveGetChildById('progressLabel')
-  if not label or not WikiData then return end
+  if not wikiWindow or not WikiData then return end
+
+  local updatedLabel = wikiWindow:recursiveGetChildById('lastUpdatedLabel')
+  if updatedLabel and WikiData.lastUpdated then
+    updatedLabel:setText(tr('Last updated: %s', WikiData.lastUpdated))
+  end
 
   local total, read = 0, 0
   for catName, catData in pairs(WikiData.categories) do
@@ -366,7 +370,6 @@ function updateProgressLabel()
   end
   if total > 0 then
     local pct = math.floor(read / total * 100)
-    label:setText(tr('Wiki progress'))
     local percentLabel = wikiWindow:recursiveGetChildById('percentLabel')
     if percentLabel then percentLabel:setText(tr('%d%% COMPLETE', pct)) end
     local bar = wikiWindow:recursiveGetChildById('progressBar')

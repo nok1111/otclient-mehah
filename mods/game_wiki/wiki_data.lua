@@ -12,6 +12,7 @@ end
 
 function getEnglishData()
   return {
+    lastUpdated = 'Oct 5, 2026',
     categories = {
       items = {
         name = 'Items',
