@@ -2073,6 +2073,15 @@ Crafting tasks scale with profession tiers:
               }},
               { type = 'divider' },
 
+              { type = 'subtitle', text = 'Disenchanting (Enchanters Rod)', color = '#ddbbff' },
+              { type = 'text', content = 'The **Enchanters Rod** destroys an item to salvage materials from it. What you get depends on what you disenchant - and every disenchant grants **Enchanting experience**.' },
+              { type = 'cards', items = {
+                { icon = 7735, name = 'Rarity Items', color = '#cc99ff', description = 'Disenchant **Orbital**, **Forged** or **unique** items for Arcane Powder (common), Mystic Powder and colored Crystal Essences. Higher rarity multiplies every drop chance - uniques pay out the most. Common items cannot be disenchanted.' },
+                { icon = 26170, name = 'Prismatic Cubes', color = '#77ddff', description = 'Cubes do not give powders - disenchanting one yields **Empty Enchanting Runes** instead, the raw material for rune crafting.' },
+              }},
+              { type = 'text', content = 'There are **three cube recipes**, each hiding a different rune pool: the basic cube (Arcane Powder) drops **Pelagos** and **Magellan** runes, the mid cube (Arcane + Mystic) drops **Elysium** and **Eldric**, and the high cube (Mystic Powder) drops **Solstice** and **Euphoria**.' },
+              { type = 'divider' },
+
               { type = 'subtitle', text = 'Alchemy Ingredients', color = '#77ff77' },
               { type = 'cards', items = {
                 { icon = 39093, name = 'Rough Leather', color = '#ccaa77', description = 'Blue orb drop - alchemy and gear recipes.' },
