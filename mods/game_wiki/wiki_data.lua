@@ -2031,6 +2031,58 @@ Crafting tasks scale with profession tiers:
               { type = 'tip', content = 'Every craft also awards profession experience and Fame - leveling professions is progress even when the item itself is not an upgrade.' },
             }
           },
+          materials = {
+            name = 'Materials',
+            type = 'rich_text',
+            order = 3,
+            sections = {
+              { type = 'title', text = 'CRAFTING MATERIALS', color = '#ffd75e' },
+              { type = 'text', content = 'Every recipe asks for a mix of **essences**, **gathered goods** and **powders**. Most come from hunting - blue loot orbs carry the bulk of the raw materials.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Core Essences', color = '#66ff99' },
+              { type = 'cards', items = {
+                { icon = 6500, name = 'Monster Essence', color = '#66ff99', description = 'The backbone material - nearly every recipe needs it. Drops from monsters and blue orb rolls.' },
+                { icon = 11223, name = 'Guardian Essence', color = '#ff8888', description = 'Boss-tier essence required by advanced recipes. Hunt zone and dungeon bosses.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Elemental Essences', color = '#77ddff' },
+              { type = 'text', content = 'Eight elemental essences - **Life, Mana, Spirit, Pure, Fire, Ice, Dark and Earth** - fuel mid and high-tier recipes.' },
+              { type = 'cards', items = {
+                { icon = 40418, name = 'Gathering Nodes', color = '#9fe89f', description = 'Mining veins and herb nodes have a small chance to yield an elemental essence on each gather.' },
+                { icon = 40421, name = 'Blue Orb Drops', color = '#77aaff', description = 'Essences also drop from blue loot orb rolls alongside other raw materials.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Gathering Professions', color = '#ccaa77' },
+              { type = 'cards', items = {
+                { icon = 40035, name = 'Mining', color = '#aaaaaa', description = 'Ore veins spawn in the world - copper first, then silver, gold, platinum and mythril as your skill rises. Also restores HP.' },
+                { icon = 39096, name = 'Herbalism', color = '#88cc66', description = 'Herb nodes yield plants for alchemy and a chance at essences. Grants mana passives per level.' },
+                { icon = 37763, name = 'Woodcutting', color = '#cc8844', description = 'Chop tree nodes for wood materials. Grants attack speed per level.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Enchanting Supplies', color = '#cc99ff' },
+              { type = 'cards', items = {
+                { icon = 13215, name = 'Arcane Powder', color = '#cc99ff', description = 'Main enchanting dust - also needed to craft Orbs of Performance.' },
+                { icon = 13197, name = 'Mystic Powder', color = '#aa88dd', description = 'Higher-grade powder used by advanced augment recipes.' },
+                { icon = 29020, name = 'Enchanting Powder', color = '#ddbbff', description = 'Base powder for rune crafting.' },
+                { icon = 33201, name = 'Crystal Essences', color = '#77ddff', description = 'Five colors - blue, green, purple, red and yellow. Rare drops used in crystal recipes.' },
+                { icon = 35377, name = 'Empty Enchanting Runes', color = '#ffff88', description = 'Blank rune stones - the base item every crafted rune starts from.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Alchemy Ingredients', color = '#77ff77' },
+              { type = 'cards', items = {
+                { icon = 39093, name = 'Rough Leather', color = '#ccaa77', description = 'Blue orb drop - alchemy and gear recipes.' },
+                { icon = 39094, name = 'Ember & Fire Leaf', color = '#ff8844', description = 'Blue orb drops - fire-themed alchemy ingredients.' },
+                { icon = 39161, name = 'Valuable Pouches', color = '#ffd75e', description = 'Blue orb drop - salvage into extra materials.' },
+              }},
+              { type = 'divider' },
+              { type = 'tip', content = 'Keep blue orb farming in mind while hunting - a couple of orbs often covers an entire craft.' },
+            }
+          },
         }
       },
 
