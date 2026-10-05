@@ -20,24 +20,32 @@ local WIKI_CATEGORY_ORDER = {
   'prestige', 'reborn',
 }
 
--- Sidebar icon per category (language-independent, lives in the client assets)
+-- Sidebar icon per category. Gold-monochrome PNGs generated offline into
+-- data/images/wiki/caticons/ ('<name>_hot.png' = brighter variant for
+-- hover/selected states).
 local WIKI_CATEGORY_ICONS = {
-  ascension_guide = '/images/icons/star.png',
-  tasks           = '/images/icons/quest_marker.png',
-  daily_tasks     = '/images/icons/clock.png',
-  currencies      = '/images/icons/gold_coin.png',
-  items           = '/images/icons/icon_items.png',
-  item_upgrades   = '/images/icons/gem.png',
-  proficiency     = '/images/icons/skill_attack.png',
-  crafting        = '/images/icons/rock-hammer_17906119.png',
-  monster_orbs    = '/images/icons/crystal-ball_8034727.png',
-  zones           = '/images/icons/wow_zone.png',
-  dungeons        = '/images/icons/dungeon.png',
-  pets            = '/images/icons/pets.png',
-  achievements    = '/images/icons/icon_achievement.png',
-  prestige        = '/images/icons/crown.png',
-  reborn          = '/images/icons/flame.png',
+  ascension_guide = 'ascension_guide',
+  tasks           = 'tasks',
+  daily_tasks     = 'daily_tasks',
+  currencies      = 'currencies',
+  items           = 'items',
+  item_upgrades   = 'item_upgrades',
+  proficiency     = 'proficiency',
+  crafting        = 'crafting',
+  monster_orbs    = 'monster_orbs',
+  zones           = 'zones',
+  dungeons        = 'dungeons',
+  pets            = 'pets',
+  achievements    = 'achievements',
+  prestige        = 'prestige',
+  reborn          = 'reborn',
 }
+
+local function wikiCatIcon(categoryName, hot)
+  local base = WIKI_CATEGORY_ICONS[categoryName]
+  if not base then return nil end
+  return '/images/wiki/caticons/' .. base .. (hot and '_hot' or '') .. '.png'
+end
 
 local function wikiSortedKeys(tbl, orderList)
   local keys, seen, rest = {}, {}, {}
@@ -232,8 +240,9 @@ function populateCategories()
     categoryWidget:setId(categoryName)
 
     local iconWidget = categoryWidget:getChildById('iconWidget')
-    if iconWidget and WIKI_CATEGORY_ICONS[categoryName] then
-      iconWidget:setImageSource(WIKI_CATEGORY_ICONS[categoryName])
+    local iconSrc = wikiCatIcon(categoryName, false)
+    if iconWidget and iconSrc then
+      iconWidget:setImageSource(iconSrc)
     end
 
     local label = categoryWidget:getChildById('label')
@@ -245,7 +254,7 @@ function populateCategories()
     categoryWidget.onHoverChange = function(self, hovered)
       if not self:isOn() then
         if label then label:setColor(hovered and '#ffffff' or '#dfdfdf') end
-        if iconWidget then iconWidget:setImageColor(hovered and '#ffd75e' or '#d4a843') end
+        if iconWidget then iconWidget:setImageSource(wikiCatIcon(categoryName, hovered) or '') end
       end
     end
   end
@@ -631,7 +640,8 @@ function highlightSelectedCategory(categoryName)
     local label = widget:getChildById('label')
     if label then label:setColor(on and '#ffd75e' or '#dfdfdf') end
     local iconWidget = widget:getChildById('iconWidget')
-    if iconWidget then iconWidget:setImageColor(on and '#ffd75e' or '#d4a843') end
+    local src = wikiCatIcon(widget:getId(), on)
+    if iconWidget and src then iconWidget:setImageSource(src) end
   end
 end
 
