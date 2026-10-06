@@ -267,7 +267,7 @@ function getEnglishData()
 
               { type = 'title', text = 'ACTIVE', color = '#d4a843' },
               { type = 'cards', items = {
-                { image = '/images/inventory/inventory_head.png', name = 'Spell Slot (Active)', color = '#c080ff', description = 'The head position. Holds helmets and head-slot gear - the client labels it the spell slot because head-slot equipment can carry activated effects.' },
+                { image = '/images/inventory/inventory_head.png', name = 'Spell Slot (Active)', color = '#c080ff', description = 'Equip your droppable spells here - spell items found as loot that grant an extra ability usable by any vocation (see Dropable Spells for the full list).' },
                 { image = '/images/inventory/inventory_feet.png', name = 'Boots (Active)', color = '#ffaa55', description = 'Feet items. This is where spell boots go - Boots of Teleportation, Wild, Timewalking and friends (see Dropable Spells) - plus regular boots.' },
                 { image = '/images/inventory/inventory_hip.png', name = 'Torch (Active)', color = '#77ddff', description = 'Utility slot for light sources and utility items like the Bless Item. Torches and utility tools equip here.' },
               }},
