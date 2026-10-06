@@ -1476,11 +1476,10 @@ Crafting tasks scale with profession tiers:
 
               { type = 'title', text = 'HOW THE TREE WORKS', color = '#d4a843' },
               { type = 'cards', items = {
-                { image = '/images/icons/star.png', name = 'Core Node', color = '#ffd75e', description = 'Every tree starts from a core node (like Elemental Attunement) that connects to all branches.' },
+                { image = '/images/new_borders/node.png', name = 'Core Node', color = '#ffd75e', description = 'Every tree starts from a core node (like Elemental Attunement) that connects to all branches.' },
                 { image = '/images/icons/icon_sword.png', name = 'Three Axes', color = '#ff8888', description = 'Offense, defense and utility axes with themed names per vocation. Spending points on an axis unlocks milestone effects at its thresholds.' },
                 { image = '/images/icons/icon_axe.png', name = 'Branches', color = '#9fe89f', description = 'Each tree has 3 specialization branches - e.g. the Magician splits into Pyromancy, Cryomancy and Arcana.' },
-                { image = '/images/icons/icon_health.png', name = 'Node Types', color = '#66aaff', description = 'Nodes grant stats (conditions), passive procs and masteries, or unlock real spells like Hand of God or Arcane Missiles.' },
-                { image = '/images/icons/crown.png', name = 'Keystones', color = '#c080ff', description = 'Each branch ends in a keystone node (Pyromancer, Cryomancer, Arcanist...) - the capstone bonus of that path.' },
+                { image = '/images/icons/icon_health.png', name = 'Node Effects', color = '#66aaff', description = 'Nodes grant stats (conditions), passive procs and masteries, or unlock real spells like Hand of God or Arcane Missiles.' },
               }},
               { type = 'divider' },
 
@@ -1516,6 +1515,13 @@ Crafting tasks scale with profession tiers:
 **Samurai** - Steel / Iron / Wind - Way of the Sword, Way of the Shield, Way of the Wind
 **Blood Mage** - Crimson / Sanguine / Battlemage - Crimson Path, Sanguine Path, Battlemage Path
 **Warden** - Earth / Frost / Wilderness - Earthshaker, Frostwarden, Guardian]] },
+              { type = 'divider' },
+              { type = 'title', text = 'IMPORTANT NODES', color = '#d4a843' },
+              { type = 'cards', items = {
+                { image = '/images/new_borders/star.png', name = 'Notable', color = '#9fe89f', description = 'Star-framed nodes - strong standalone bonuses worth planning around.' },
+                { image = '/images/new_borders/constellation.png', name = 'Nexus', color = '#66aaff', description = 'Constellation-framed nodes - junctions where branches connect, opening new paths across the tree.' },
+                { image = '/images/new_borders/keystone.png', name = 'Keystone', color = '#ffd75e', description = 'The large node at the end of each branch - the capstone bonus that defines the path (Pyromancer, Cryomancer, Arcanist...).' },
+              }},
               { type = 'divider' },
               { type = 'tip', content = 'Plan a branch first - keystone nodes are powerful but sit at the end of each path, so rushing three branches at once leaves you weak in all of them.' },
             }
