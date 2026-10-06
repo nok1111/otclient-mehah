@@ -149,7 +149,12 @@ function Blacksmith.renderInventory()
         w:setTooltip((it.name or '') .. '\n' .. (it.ilvl > 0 and ('Item Level ' .. it.ilvl) or 'No Item Level')
           .. (it.eligible and '' or ('\n' .. (it.reason or 'Cannot be refined'))))
         local uid = it.uid
-        w.onClick = function()
+        -- onMouseRelease fires during release propagation regardless of press
+        -- tracking; more reliable than onClick for virtual Item widgets.
+        w.onMouseRelease = function(self, mousePosition, mouseButton)
+          if mouseButton ~= MouseLeftButton or not self:containsPoint(mousePosition) then
+            return false
+          end
           if it.eligible then
             Blacksmith.send('BS_PLACE', { uid = uid })
           else
