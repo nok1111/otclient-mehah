@@ -112,6 +112,13 @@ function Blacksmith.show()
       end
     end
 
+    local closeButton = blacksmithWindow:recursiveGetChildById('closeButton')
+    if closeButton then
+      closeButton.onClick = function()
+        Blacksmith.hide()
+      end
+    end
+
     blacksmithWindow:hide()
   end
 

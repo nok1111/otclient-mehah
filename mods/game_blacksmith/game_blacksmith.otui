@@ -1233,10 +1233,18 @@ MainWindow
       !text: tr('')
       anchors.verticalCenter: parent.verticalCenter
       anchors.left: parent.left
-      anchors.right: parent.right
+      anchors.right: closeButton.left
       margin-left: 8
       margin-right: 8
       font: verdana-11px-rounded
       color: #de6f6f
       text-align: center
       text-wrap: true
+
+    Button
+      id: closeButton
+      !text: tr('Close')
+      width: 70
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.right: parent.right
+      margin-right: 6
