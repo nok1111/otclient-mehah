@@ -1,0 +1,10 @@
+Module
+  name: game_blacksmith
+  description: Blacksmith item refinement station
+  author: Nokturno
+  website:
+  sandboxed: true
+  autoload: true
+  scripts: [ game_blacksmith ]
+  @onLoad: Blacksmith.init()
+  @onUnload: Blacksmith.terminate()
