@@ -208,31 +208,24 @@ function Blacksmith.renderInventory()
           w:setOpacity(0.45)
         end
         -- Rich tooltip via mods/game_tooltips: a widget exposing
-        -- getItemTooltip() gets the full styled tooltip (rarity name/color,
-        -- item level, stats, enchant slots).
-        local tipDesc = it.desc or ''
-        if not it.eligible and it.reason then
-          tipDesc = (tipDesc ~= '' and (tipDesc .. '\n') or '') .. it.reason
-        end
+        -- getItemTooltip() gets the styled tooltip (rarity color/background).
+        -- The item name already carries its rarity prefix, so only the
+        -- fields already in the inventory payload are needed.
         local tip = {
           id = it.clientId or 0,
           name = it.name or '',
-          desc = tipDesc,
+          desc = (not it.eligible) and (it.reason or 'Cannot be refined') or '',
           iLvl = it.ilvl or 0,
           rarity = it.rarityId or 0,
           count = 1,
-          type = it.tipType or 'Common',
-          equipType = it.equipType,
-          first = (it.armor or 0) > 0 and it.armor or (it.attack or 0),
-          second = (it.hitChance or 0) > 0 and it.hitChance or (it.defense or 0),
-          third = (it.shootRange or 0) > 1 and it.shootRange or (it.extraDefense or 0),
-          weight = it.weight or 0,
-          uLvl = it.uLvl or 0,
-          maxAttributes = it.maxAttr or 0,
-          attributes = it.attr or {},
-          mirrored = it.mirrored,
-          unidentified = it.unidentified,
-          uniqueName = it.uniqueName,
+          type = 'Common',
+          first = 0,
+          second = 0,
+          third = 0,
+          weight = 0,
+          uLvl = 0,
+          maxAttributes = 0,
+          attributes = {},
         }
         w.getItemTooltip = function() return tip end
         local uid = it.uid
