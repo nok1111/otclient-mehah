@@ -815,7 +815,7 @@ MainWindow
         !text: tr('REFINE')
         anchors.top: infoPanel.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        margin-top: 6
+        margin-top: -8
         width: 160
         height: 30
         enabled: false
