@@ -4,7 +4,6 @@ BlacksmithSlot < Item
   phantom: false
   virtual: true
   focusable: true
-  accept-drop: true
   item-id: 0
   item-count: 0
   draggable: false
@@ -187,7 +186,7 @@ MainWindow
 
     Label
       id: invHint
-      !text: tr('Drag an item to the station, or click it.')
+      !text: tr('Click an item to place it in the station.')
       anchors.top: filterAll.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -283,16 +282,15 @@ MainWindow
         margin-top: 24
         phantom: false
         virtual: true
-        focusable: true
-        accept-drop: true
+        focusable: false
         draggable: false
         opacity: 0.55
         border-width: 1
         border-color: #ffffff22
 
       Label
-        id: emptyDropLabel
-        !text: tr('DRAG AN ITEM HERE')
+        id: emptyHintLabel
+        !text: tr('CLICK AN ITEM')
         anchors.top: anvilIcon.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         margin-top: 8
@@ -302,8 +300,8 @@ MainWindow
 
       Label
         id: emptySubLabel
-        !text: tr('Refine your loot into higher rarities. Only eligible equipment can be refined.')
-        anchors.top: emptyDropLabel.bottom
+        !text: tr('Select an eligible item from your inventory on the left to refine it.')
+        anchors.top: emptyHintLabel.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         margin-top: 4

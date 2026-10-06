@@ -48,34 +48,10 @@ function Blacksmith.show()
     blacksmithWindow = result
     print("[Blacksmith][Client] UI loaded")
 
-    local function dropHandler(self, draggedWidget, mousePos)
-      local srcItem = draggedWidget and draggedWidget.currentDragThing or nil
-      local it = draggedWidget and draggedWidget.getItem and draggedWidget:getItem() or nil
-      if it and srcItem and srcItem.getPosition then
-        local pos = srcItem:getPosition()
-        Blacksmith.send('BS_PLACE', { pos = { x = pos.x, y = pos.y, z = pos.z } })
-      end
-      return true
-    end
-
-    local function dropEnter(self, mousePos)
-      local dragging = g_ui.getDraggingWidget()
-      if not dragging or not dragging.currentDragThing then return end
-      local lbl = blacksmithWindow:recursiveGetChildById('emptyDropLabel')
-      if lbl then lbl:setText(tr('RELEASE TO REFINE')) end
-      self:setBorderColor('#80c7f8aa')
-    end
-    local function dropLeave(self, droppedWidget, mousePos)
-      local lbl = blacksmithWindow:recursiveGetChildById('emptyDropLabel')
-      if lbl then lbl:setText(tr('DRAG AN ITEM HERE')) end
-      self:setBorderColor('#ffffff55')
-    end
-
+    -- Click-only flow: no drag & drop. Clicking the placed slot removes
+    -- the item from the station.
     itemSlot = blacksmithWindow:recursiveGetChildById('itemSlot')
     if itemSlot then
-      itemSlot.onDrop = dropHandler
-      itemSlot.onDragEnter = dropEnter
-      itemSlot.onDragLeave = dropLeave
       itemSlot.onMouseRelease = function(self, mousePosition, mouseButton)
         if mouseButton == MouseLeftButton and placedUid then
           Blacksmith.send('BS_REMOVE', {})
@@ -83,14 +59,6 @@ function Blacksmith.show()
         end
         return false
       end
-    end
-
-    -- The anvil icon doubles as the empty-state drop target.
-    local anvil = blacksmithWindow:recursiveGetChildById('anvilIcon')
-    if anvil then
-      anvil.onDrop = dropHandler
-      anvil.onDragEnter = dropEnter
-      anvil.onDragLeave = dropLeave
     end
 
     for _, f in ipairs(FILTERS) do
