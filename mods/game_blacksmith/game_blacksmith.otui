@@ -1141,7 +1141,6 @@ MainWindow
           margin-right: 10
           width: 90
           height: 24
-          @onClick: Blacksmith.selectTab('specializationPage')
 
     VerticalScrollBar
       id: profScrollBar

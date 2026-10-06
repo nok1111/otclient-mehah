@@ -105,6 +105,13 @@ function Blacksmith.show()
       end
     end
 
+    local specJump = blacksmithWindow:recursiveGetChildById('specJumpBtn')
+    if specJump then
+      specJump.onClick = function()
+        Blacksmith.selectTab('specializationPage')
+      end
+    end
+
     blacksmithWindow:hide()
   end
 
