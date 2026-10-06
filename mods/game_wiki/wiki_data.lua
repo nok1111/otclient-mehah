@@ -1531,35 +1531,67 @@ Crafting tasks scale with profession tiers:
             type = 'rich_text',
             order = 3,
             sections = {
-              { type = 'text', content = '**What is Paragon?**\n\nParagon is the endgame progression system unlocked at **Character Level 300**. After reaching this cap, XP you earn starts filling your Paragon bar instead. Each Paragon level grants a point to spend in one of three stat categories, cycling between them automatically.\n\nOpen the Ascension tab in your Class Talents window to view your Paragon board, allocate points, and track your progress.' },
               { type = 'image', path = '/images/wiki/paragon_overview.png', width = 400, height = 117 },
-              { type = 'spacer', height = 8 },
+              { type = 'title', text = 'WHAT IS PARAGON', color = '#ffd75e' },
+              { type = 'text', content = 'Paragon is the endgame progression system that unlocks at **Character Level 300**. Once you hit the cap, all XP flows into your Paragon bar instead. Each Paragon level grants a point for one of three stat categories - the category rotates automatically as you level.\n\nOpen the **Ascension** tab in your Class Talents window to see your board and spend points.' },
+              { type = 'divider' },
 
-              { type = 'text', content = '**How Paragon XP Works**\n\n- Base XP for Paragon Level 1: **6,000,000**\n- Each next level costs **+12% more XP** than the previous\n- **Premium Bonus:** +15% Paragon XP gain\n- **Boost Token:** +25% Paragon XP (consumable buff)\n- **Death Penalty:** Lose 10% of current Paragon XP progress on death\n- Broadcast notification every 10 Paragon levels\n\nParagon XP is earned from the same sources as regular XP (monster kills, quests, etc.) once you are at max level.' },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
+              { type = 'title', text = 'PARAGON XP', color = '#d4a843' },
+              { type = 'cards', items = {
+                { image = '/images/icons/star.png', name = 'XP Curve', color = '#ffd75e', description = 'First level needs 6,000,000 XP. Each level adds +12% of the base cost on top (linear - about 720k more per level).' },
+                { image = '/images/icons/crown.png', name = 'Premium', color = '#9fe89f', description = 'Premium accounts gain +15% Paragon XP.' },
+                { icon = 40146, name = 'XP Boost Token', color = '#66aaff', description = 'Consumable: +25% Paragon XP for 1 hour. Requires Paragon Level 1 and does not stack - reuse when it expires.' },
+                { image = '/images/icons/icon_health.png', name = 'Death Penalty', color = '#ff8888', description = 'Dying costs 10% of your current Paragon XP progress - protect your bar.' },
+              }},
+              { type = 'divider' },
 
-              { type = 'text', content = '**Point Allocation & Rotation**\n\nPoints rotate automatically between categories as you level up:\n\n- **Paragon Lv 1, 4, 7...** -> **Primary** (Offense)\n- **Paragon Lv 2, 5, 8...** -> **Secondary** (Defense)\n- **Paragon Lv 3, 6, 9...** -> **Utility** (Progression)\n\nYou can spend earned points at any time. Points do not expire. Open the Ascension tab to allocate them into specific stats.' },
-              { type = 'spacer', height = 8 },
+              { type = 'title', text = 'POINT ROTATION', color = '#d4a843' },
+              { type = 'text', content = 'Paragon Lv 1 -> **Primary**, Lv 2 -> **Secondary**, Lv 3 -> **Utility**, then it repeats. Earned points never expire - spend them whenever you want in the Ascension tab.' },
+              { type = 'divider' },
 
-              { type = 'image', path = '/images/wiki/paragon_screen.png', width = 400, height = 300 },
-              
-              { type = 'text', content = '**Primary Stats (Offense)**\n\n| Stat | Per Point | Cap |\n|------|-----------|-----|\n| Physical Damage | +1% | 150% |\n| Elemental Damage | +1 flat | 200 |\n| Attack Speed | +1% | 100% |\n| Critical Chance | +1% | 75% |' },
-              { type = 'spacer', height = 8 },
+              { type = 'title', text = 'PRIMARY - OFFENSE', color = '#ff8888' },
+              { type = 'cards', items = {
+                { image = '/images/icons/icon_sword.png', name = 'Physical Damage', color = '#ff8888', description = '+1% per point - cap 150%' },
+                { image = '/images/icons/icon_axe.png', name = 'Elemental Damage', color = '#ff8888', description = '+1 flat per point - cap 200' },
+                { image = '/images/icons/star.png', name = 'Attack Speed', color = '#ff8888', description = '+1% per point - cap 100%' },
+                { image = '/images/icons/crown.png', name = 'Critical Chance', color = '#ff8888', description = '+1% per point - cap 75%' },
+              }},
+              { type = 'divider' },
 
-              { type = 'text', content = '**Secondary Stats (Defense)**\n\n| Stat | Per Point | Cap |\n|------|-----------|-----|\n| Block Chance | +1% | 30% |\n| Max HP | +50 flat | No cap |\n| Max Mana | +40 flat | No cap |\n| Healing Received | +1% | 100% |' },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
+              { type = 'title', text = 'SECONDARY - DEFENSE', color = '#66aaff' },
+              { type = 'cards', items = {
+                { image = '/images/inventory/inventory_right_hand.png', name = 'Block Chance', color = '#66aaff', description = '+1% per point - cap 30%' },
+                { image = '/images/icons/icon_health.png', name = 'Max HP', color = '#66aaff', description = '+50 per point - no cap, safe long-term investment' },
+                { image = '/images/icons/icon_health.png', name = 'Max Mana', color = '#66aaff', description = '+40 per point - no cap' },
+                { image = '/images/icons/icon_health.png', name = 'Healing Received', color = '#66aaff', description = '+1% per point - cap 100%' },
+              }},
+              { type = 'divider' },
 
-              { type = 'text', content = '**Utility Stats (Progression)**\n\n| Stat | Per Point | Cap |\n|------|-----------|-----|\n| EXP Gain | +1% | 100% |\n| Crafting Experience | +2% | 150% |\n| Fame Gain | +2% | 100% |\n| Codex Knowledge | +0.2% | 50 (~10%) |' },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
+              { type = 'title', text = 'UTILITY - PROGRESSION', color = '#9fe89f' },
+              { type = 'cards', items = {
+                { image = '/images/icons/star.png', name = 'EXP Gain', color = '#9fe89f', description = '+1% per point - cap 100%. Speeds up Paragon itself.' },
+                { image = '/images/icons/icon_axe.png', name = 'Crafting EXP', color = '#9fe89f', description = '+2% per point - cap 150%' },
+                { image = '/images/icons/crown.png', name = 'Fame Gain', color = '#9fe89f', description = '+2% per point - cap 100%' },
+                { image = '/images/icons/icon_health.png', name = 'Codex Knowledge', color = '#9fe89f', description = '+0.2% codex point chance per point - cap ~10%' },
+              }},
+              { type = 'divider' },
 
-              { type = 'text', content = '**Milestones**\n\nSpending points in a category unlocks milestone bonuses and titles:\n\n**Primary (Offense):**\n- 25 points -> Title: "Warrior"\n- 50 points -> +3% All Damage\n- 100 points -> +5% All Damage\n- 200 points -> Title: "Paragon of War", +8% All Damage\n\n**Secondary (Defense):**\n- 25 points -> Title: "Guardian"\n- 50 points -> +5% Max HP\n- 100 points -> +8% Max HP\n- 200 points -> Title: "Paragon of Fortitude", +12% Max HP\n\n**Utility (Progression):**\n- 25 points -> Title: "Explorer"\n- 50 points -> +3% All Gains\n- 100 points -> +5% All Gains\n- 200 points -> Title: "Paragon of Fortune", +8% All Gains\n\nMilestone bonuses are automatic and stack with stat bonuses.' },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
+              { type = 'title', text = 'MILESTONES', color = '#d4a843' },
+              { type = 'text', content = 'Points spent in a category unlock automatic milestones. Damage and HP bonuses **replace** the previous tier - they do not stack.' },
+              { type = 'cards', items = {
+                { image = '/images/icons/icon_sword.png', name = 'Primary', color = '#ff8888', description = '25 pts: "Warrior" title - 50: +3% all damage - 100: +5% - 200: "Paragon of War" title +8%' },
+                { image = '/images/inventory/inventory_right_hand.png', name = 'Secondary', color = '#66aaff', description = '25 pts: "Guardian" title - 50: +5% max HP - 100: +8% - 200: "Paragon of Fortitude" title +12%' },
+                { image = '/images/icons/star.png', name = 'Utility', color = '#9fe89f', description = '25 pts: "Explorer" title - 50: +3% all gains - 100: +5% - 200: "Paragon of Fortune" title +8%' },
+              }},
+              { type = 'divider' },
 
-              { type = 'text', content = '**Tips**\n\n- Prioritize Primary points for raw DPS increase\n- Secondary HP has no cap, making it a safe long-term investment\n- Utility EXP Gain is valuable for faster Paragon progression itself\n- Codex Knowledge helps with card drops while farming\n- Milestone bonuses replace the previous tier (e.g., 100pt replaces 50pt, not stacking)\n- Death protection: be careful in dangerous zones to avoid losing XP progress' }
+              { type = 'title', text = 'RESETTING', color = '#d4a843' },
+              { type = 'cards', items = {
+                { image = '/images/icons/star.png', name = 'Ascension Tab', color = '#9fe89f', description = 'The reset button on the Paragon board refunds all allocated points for free.' },
+                { icon = 40137, name = 'Reset Scroll', color = '#c080ff', description = 'Paragon Reset Scroll item: refunds every allocated point. Requires Paragon Level 5 and at least one spent point.' },
+              }},
+              { type = 'divider' },
+              { type = 'tip', content = 'Every 10 Paragon levels a broadcast announces your progress - milestone titles are broadcast too, so they double as flexes.' },
             }
           },
         }
