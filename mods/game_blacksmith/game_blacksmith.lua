@@ -9,6 +9,12 @@ local inventoryItems = {}
 local currentFilter = 'all'
 local filterButtons = {}
 local anvilClientId = 0
+local currentTab = 'refinementPage'
+local tabButtons = {}
+local materialsData = {}
+local smeltingData = {}
+local specData = nil
+local blacksmithLevel = 0
 
 -- Same palette as item tooltips (mods/game_tooltips/item_tooltip.lua)
 local rarityColors = {
@@ -23,6 +29,13 @@ local FILTERS = {
   { id = 'filterWeapons',   cat = 'weapon' },
   { id = 'filterArmor',     cat = 'armor' },
   { id = 'filterAccessory', cat = 'accessory' },
+}
+
+local TABS = {
+  { button = 'tabRefinement',     page = 'refinementPage' },
+  { button = 'tabMaterials',      page = 'materialsPage' },
+  { button = 'tabProgression',    page = 'progressionPage' },
+  { button = 'tabSpecialization', page = 'specializationPage' },
 }
 
 function Blacksmith.init()
@@ -72,6 +85,16 @@ function Blacksmith.show()
       end
     end
 
+    for _, t in ipairs(TABS) do
+      local btn = blacksmithWindow:recursiveGetChildById(t.button)
+      if btn then
+        tabButtons[t.page] = btn
+        btn.onClick = function()
+          Blacksmith.selectTab(t.page)
+        end
+      end
+    end
+
     local refineButton = blacksmithWindow:recursiveGetChildById('refineButton')
     if refineButton then
       refineButton.onClick = function()
@@ -88,6 +111,7 @@ function Blacksmith.show()
   blacksmithWindow:show()
   blacksmithWindow:raise()
   blacksmithWindow:focus()
+  Blacksmith.selectTab(currentTab)
 end
 
 function Blacksmith.hide()
@@ -103,6 +127,18 @@ function Blacksmith.send(event, data)
   local protocolGame = g_game.getProtocolGame()
   if protocolGame then
     protocolGame:sendExtendedOpcode(BLACKSMITH_OPCODE, json.encode({ e = event, d = data }))
+  end
+end
+
+function Blacksmith.selectTab(pageId)
+  currentTab = pageId
+  if not blacksmithWindow then return end
+  for _, t in ipairs(TABS) do
+    local page = blacksmithWindow:recursiveGetChildById(t.page)
+    local btn = tabButtons[t.page]
+    local active = (t.page == pageId)
+    if page then page:setVisible(active) end
+    if btn then btn:setColor(active and '#80c7f8' or '#dfdfdf') end
   end
 end
 
@@ -240,6 +276,166 @@ function Blacksmith.renderProfession(data)
   end
 end
 
+-- ==================== MATERIALS / FORGE TAB ====================
+
+function Blacksmith.renderMaterials()
+  if not blacksmithWindow then return end
+
+  local matScroll = blacksmithWindow:recursiveGetChildById('matScroll')
+  if matScroll then
+    matScroll:destroyChildren()
+    for _, mat in ipairs(materialsData) do
+      local row = g_ui.createWidget('BSMatRow', matScroll)
+      if row then
+        local icon = row:recursiveGetChildById('matItemIcon')
+        local name = row:recursiveGetChildById('matItemName')
+        local count = row:recursiveGetChildById('matItemCount')
+        if icon then icon:setItemId(mat.clientId or 0) end
+        if name then name:setText(mat.name or '') end
+        if count then
+          count:setText(string.format('x%d', mat.count or 0))
+          count:setColor((mat.count or 0) > 0 and '#dfdfdf' or '#de6f6f')
+        end
+        if name and (mat.count or 0) == 0 then
+          name:setColor('#dfdfdf88')
+        end
+      end
+    end
+  end
+
+  local forgeScroll = blacksmithWindow:recursiveGetChildById('forgeScroll')
+  if not forgeScroll then return end
+  forgeScroll:destroyChildren()
+
+  for _, rec in ipairs(smeltingData) do
+    local row = g_ui.createWidget('BSSmeltRow', forgeScroll)
+    if row then
+      local oreIcon = row:recursiveGetChildById('smeltOreIcon')
+      local oreLabel = row:recursiveGetChildById('smeltOreLabel')
+      local fuelIcon = row:recursiveGetChildById('smeltFuelIcon')
+      local fuelLabel = row:recursiveGetChildById('smeltFuelLabel')
+      local resultIcon = row:recursiveGetChildById('smeltResultIcon')
+      local resultLabel = row:recursiveGetChildById('smeltResultLabel')
+      local info = row:recursiveGetChildById('smeltInfo')
+      local btn = row:recursiveGetChildById('smeltButton')
+
+      if oreIcon then oreIcon:setItemId(rec.oreClientId or 0) end
+      if oreLabel then
+        oreLabel:setText(string.format('x%d (%d)', rec.oreNeed or 0, rec.oreHave or 0))
+        oreLabel:setColor((rec.oreHave or 0) >= (rec.oreNeed or 0) and '#dfdfdf' or '#de6f6f')
+        oreLabel:setTooltip(rec.oreName or '')
+      end
+      if fuelIcon then fuelIcon:setItemId(rec.fuelClientId or 0) end
+      if fuelLabel then
+        fuelLabel:setText(string.format('x%d (%d)', rec.fuelNeed or 0, rec.fuelHave or 0))
+        fuelLabel:setColor((rec.fuelHave or 0) >= (rec.fuelNeed or 0) and '#dfdfdf' or '#de6f6f')
+        fuelLabel:setTooltip(rec.fuelName or '')
+      end
+      if resultIcon then resultIcon:setItemId(rec.resultClientId or 0) end
+      if resultLabel then
+        resultLabel:setText(string.format('%s x%d', rec.resultName or '', rec.resultCount or 1))
+      end
+
+      local locked = blacksmithLevel < (rec.reqLevel or 0)
+      if info then
+        if locked then
+          info:setText(tr('Lv.%d', rec.reqLevel or 0))
+          info:setColor('#de6f6f')
+        else
+          info:setText(tr('+%d XP', rec.xp or 0))
+          info:setColor('#00BC00')
+        end
+      end
+      if btn then
+        btn.onClick = function()
+          if locked then
+            setLabel('statusLabel', tr('Requires Blacksmith Level %d', rec.reqLevel or 0), '#de6f6f')
+          else
+            Blacksmith.send('BS_SMELT', { recipe = rec.index })
+          end
+        end
+      end
+    end
+  end
+end
+
+-- ==================== SPECIALIZATION TAB ====================
+
+local SPEC_LABELS = {
+  weapon = 'weapons',
+  armor = 'armor',
+  accessory = 'accessories',
+}
+
+function Blacksmith.renderSpecialization()
+  if not blacksmithWindow then return end
+  local list = blacksmithWindow:recursiveGetChildById('specList')
+  if not list then return end
+  list:destroyChildren()
+
+  local current = specData and specData.current or 0
+  local unlocked = specData and specData.unlocked or false
+  local reqLevel = specData and specData.reqLevel or 30
+
+  for _, spec in ipairs(specData and specData.list or {}) do
+    local card = g_ui.createWidget('BSSpecCard', list)
+    if card then
+      local icon = card:recursiveGetChildById('specIcon')
+      local name = card:recursiveGetChildById('specName')
+      local cat = card:recursiveGetChildById('specCat')
+      local perks = card:recursiveGetChildById('specPerks')
+      local btn = card:recursiveGetChildById('specButton')
+
+      if icon then icon:setItemId(spec.iconClientId or 0) end
+      if name then
+        name:setText(spec.key:sub(1,1):upper() .. spec.key:sub(2))
+      end
+      if cat then
+        cat:setText(tr('%s items', SPEC_LABELS[spec.cat] or spec.cat))
+      end
+      if perks then
+        perks:setText(tr('-%d%% materials and +%d%% XP when refining %s',
+          spec.materialBonus or 0, spec.xpBonus or 0, SPEC_LABELS[spec.cat] or spec.cat))
+      end
+      if btn then
+        local isCurrent = spec.id == current
+        btn:setText(isCurrent and tr('ACTIVE') or tr('SELECT'))
+        btn:setColor(isCurrent and '#00BC00' or '#dfdfdf')
+        local specId = spec.id
+        btn.onClick = function()
+          if isCurrent then return end
+          if not unlocked then
+            setLabel('statusLabel', tr('Specializations unlock at Blacksmith Level %d', reqLevel), '#de6f6f')
+            return
+          end
+          Blacksmith.send('BS_CHOOSE_SPEC', { spec = specId })
+        end
+      end
+      if spec.id == current then
+        card:setBorderColor('#00BC00')
+      end
+    end
+  end
+
+  local cur = blacksmithWindow:recursiveGetChildById('specCurrent')
+  if cur then
+    if not unlocked then
+      cur:setText(tr('Locked - reach Blacksmith Level %d (current: %d)', reqLevel, specData and specData.level or 0))
+      cur:setColor('#dfdfdf88')
+    elseif current > 0 then
+      local name = ''
+      for _, spec in ipairs(specData.list or {}) do
+        if spec.id == current then name = spec.key:sub(1,1):upper() .. spec.key:sub(2) end
+      end
+      cur:setText(tr('Active specialization: %s', name))
+      cur:setColor('#00BC00')
+    else
+      cur:setText(tr('No specialization chosen'))
+      cur:setColor('#c0c0c0')
+    end
+  end
+end
+
 -- ==================== MAIN UPDATE ====================
 
 function Blacksmith.updateWindow(data)
@@ -336,6 +532,10 @@ function Blacksmith.updateWindow(data)
   if (data.xpBonus or 0) > 0 then
     effParts[#effParts + 1] = tr('XP Bonus +%d%%', data.xpBonus)
   end
+  if data.specActive and data.specKey then
+    local key = tostring(data.specKey)
+    effParts[#effParts + 1] = tr('%s active', key:sub(1,1):upper() .. key:sub(2))
+  end
   setLabel('effLabel', table.concat(effParts, '   '), '#c0c0c0')
 
   local status = ''
@@ -358,9 +558,29 @@ function Blacksmith.onInventory(data)
   Blacksmith.renderInventory()
 end
 
+function Blacksmith.onMaterials(data)
+  materialsData = (data and data.materials) or {}
+  smeltingData = (data and data.smelting) or {}
+  if data and data.level then blacksmithLevel = data.level end
+  Blacksmith.renderMaterials()
+end
+
+function Blacksmith.onSpec(data)
+  specData = data
+  if data and data.level then blacksmithLevel = data.level end
+  Blacksmith.renderSpecialization()
+  Blacksmith.renderMaterials() -- smelt lock state depends on player level
+end
+
 function Blacksmith.onResult(data)
   Blacksmith.setRefining(false)
   if data and data.success then
+    if data.smelt then
+      setLabel('statusLabel',
+        tr('Forged %dx %s (+%d XP)', data.count or 1, data.name or '', data.xp or 0),
+        '#00BC00')
+      return
+    end
     local matText = ''
     for _, mat in ipairs(data.materials or {}) do
       matText = matText .. (#matText > 0 and ', ' or '') .. string.format('-%d %s', mat.need or 0, mat.name or '')
@@ -401,6 +621,10 @@ function Blacksmith.onExtendedOpcode(protocol, opcode, buffer)
     Blacksmith.updateWindow(data)
   elseif event == 'BS_INVENTORY' then
     Blacksmith.onInventory(data)
+  elseif event == 'BS_MATERIALS' then
+    Blacksmith.onMaterials(data)
+  elseif event == 'BS_SPEC' then
+    Blacksmith.onSpec(data)
   elseif event == 'BS_RESULT' then
     Blacksmith.onResult(data)
   elseif event == 'BS_REJECTED' then

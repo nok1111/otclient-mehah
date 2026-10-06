@@ -73,6 +73,195 @@ MaterialRow < Panel
     color: #00BC00
     text-auto-resize: true
 
+-- Materials tab: inventory material row (icon + name + owned count)
+BSMatRow < Panel
+  height: 26
+  phantom: true
+
+  Item
+    id: matItemIcon
+    size: 24 24
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    phantom: false
+    virtual: true
+    item-id: 0
+    draggable: false
+
+  Label
+    id: matItemName
+    anchors.left: matItemIcon.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 8
+    font: verdana-11px-rounded
+    color: #dfdfdf
+    text-auto-resize: true
+
+  Label
+    id: matItemCount
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    font: verdana-11px-rounded
+    color: #c0c0c0
+    text-auto-resize: true
+
+-- Materials tab: smelting recipe row
+BSSmeltRow < Panel
+  height: 42
+  phantom: true
+
+  Item
+    id: smeltOreIcon
+    size: 30 30
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 2
+    phantom: false
+    virtual: true
+    item-id: 0
+    draggable: false
+
+  Label
+    id: smeltOreLabel
+    anchors.left: smeltOreIcon.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 4
+    font: small-9px
+    color: #dfdfdf
+    text-auto-resize: true
+
+  Item
+    id: smeltFuelIcon
+    size: 30 30
+    anchors.left: smeltOreLabel.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 14
+    phantom: false
+    virtual: true
+    item-id: 0
+    draggable: false
+
+  Label
+    id: smeltFuelLabel
+    anchors.left: smeltFuelIcon.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 4
+    font: small-9px
+    color: #dfdfdf
+    text-auto-resize: true
+
+  Label
+    id: smeltArrow
+    !text: tr('->')
+    anchors.left: smeltFuelLabel.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 12
+    font: verdana-11px-rounded
+    color: #80c7f8
+    text-auto-resize: true
+
+  Item
+    id: smeltResultIcon
+    size: 30 30
+    anchors.left: smeltArrow.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 8
+    phantom: false
+    virtual: true
+    item-id: 0
+    draggable: false
+
+  Label
+    id: smeltResultLabel
+    anchors.left: smeltResultIcon.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 4
+    font: small-9px
+    color: #dfdfdf
+    text-auto-resize: true
+
+  Button
+    id: smeltButton
+    !text: tr('FORGE')
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 4
+    width: 70
+    height: 24
+
+  Label
+    id: smeltInfo
+    anchors.right: smeltButton.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 8
+    font: small-9px
+    color: #00BC00
+    text-auto-resize: true
+
+-- Specialization tab: one card per spec
+BSSpecCard < Panel
+  size: 210 190
+  phantom: false
+  background-color: #00000055
+  border-width: 1
+  border-color: #ffffff33
+
+  Item
+    id: specIcon
+    size: 40 40
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 10
+    phantom: false
+    virtual: true
+    item-id: 0
+    draggable: false
+
+  Label
+    id: specName
+    anchors.top: specIcon.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 6
+    font: verdana-11px-rounded
+    color: #80c7f8
+    text-auto-resize: true
+
+  Label
+    id: specCat
+    anchors.top: specName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 2
+    font: small-9px
+    color: #c0c0c0
+    text-auto-resize: true
+
+  Label
+    id: specPerks
+    anchors.top: specCat.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 12
+    margin-right: 12
+    height: 38
+    font: small-9px
+    color: #dfdfdf
+    text-align: center
+    text-wrap: true
+
+  Button
+    id: specButton
+    !text: tr('SELECT')
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 8
+    width: 130
+    height: 24
+
+BSTabButton < Button
+  height: 34
+  font: verdana-11px-rounded
+
 MainWindow
   id: blacksmithWindow
   !text: tr('Blacksmith')
@@ -119,221 +308,512 @@ MainWindow
     color: #c0c0c0
     text-auto-resize: true
 
-  // ==================== LEFT: INVENTORY ====================
+  // ==================== SIDEBAR TABS ====================
   Panel
-    id: inventoryPanel
+    id: sideBar
     anchors.top: xpLabel.bottom
     anchors.bottom: statusPanel.top
     anchors.left: parent.left
-    width: 296
+    width: 104
     margin-top: 10
-    margin-left: 10
+    margin-left: 8
     margin-bottom: 8
     phantom: false
     background-color: #00000055
     border-width: 1
     border-color: #ffffff33
 
-    Label
-      id: invTitle
-      !text: tr('INVENTORY')
+    BSTabButton
+      id: tabRefinement
+      !text: tr('Refinement')
       anchors.top: parent.top
-      anchors.horizontalCenter: parent.horizontalCenter
-      margin-top: 6
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-auto-resize: true
-
-    Button
-      id: filterAll
-      !text: tr('All')
-      anchors.top: invTitle.bottom
       anchors.left: parent.left
-      margin-top: 6
-      margin-left: 8
-      width: 56
-      height: 20
+      anchors.right: parent.right
+      margin-top: 8
+      margin-left: 6
+      margin-right: 6
 
-    Button
-      id: filterWeapons
-      !text: tr('Weapons')
-      anchors.top: invTitle.bottom
-      anchors.left: filterAll.right
-      margin-top: 6
-      margin-left: 4
-      width: 66
-      height: 20
-
-    Button
-      id: filterArmor
-      !text: tr('Armor')
-      anchors.top: invTitle.bottom
-      anchors.left: filterWeapons.right
-      margin-top: 6
-      margin-left: 4
-      width: 56
-      height: 20
-
-    Button
-      id: filterAccessory
-      !text: tr('Access.')
-      anchors.top: invTitle.bottom
-      anchors.left: filterArmor.right
-      margin-top: 6
-      margin-left: 4
-      width: 60
-      height: 20
-
-    Label
-      id: invHint
-      !text: tr('Click an item to place it in the station.')
-      anchors.top: filterAll.bottom
+    BSTabButton
+      id: tabMaterials
+      !text: tr('Materials')
+      anchors.top: tabRefinement.bottom
       anchors.left: parent.left
       anchors.right: parent.right
       margin-top: 4
-      margin-left: 8
-      margin-right: 8
-      height: 24
-      font: small-9px
-      color: #c0c0c0
-      text-wrap: true
+      margin-left: 6
+      margin-right: 6
 
-    ScrollablePanel
-      id: invScroll
-      anchors.top: invHint.bottom
+    BSTabButton
+      id: tabProgression
+      !text: tr('Progression')
+      anchors.top: tabMaterials.bottom
       anchors.left: parent.left
       anchors.right: parent.right
-      anchors.bottom: parent.bottom
-      margin: 6
-      padding-right: 14
-      vertical-scrollbar: invScrollBar
-      border-width: 1
-      border-color: #ffffff22
-      background-color: #00000033
+      margin-top: 4
+      margin-left: 6
+      margin-right: 6
 
-      Panel
-        id: invGrid
-        width: 262
-        layout:
-          type: grid
-          cell-size: 42 42
-          cell-spacing: 2
-          num-columns: 6
-          flow: true
-          fit-children: true
+    BSTabButton
+      id: tabSpecialization
+      !text: tr('Spec')
+      anchors.top: tabProgression.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 4
+      margin-left: 6
+      margin-right: 6
 
-    VerticalScrollBar
-      id: invScrollBar
-      anchors.top: invScroll.top
-      anchors.right: invScroll.right
-      anchors.bottom: invScroll.bottom
-      step: 44
-      pixels-scroll: true
-
-    Label
-      id: invEmpty
-      !text: tr('No refinable equipment found.')
-      anchors.centerIn: invScroll
-      font: small-9px
-      color: #dfdfdf88
-      text-auto-resize: true
-
-  // ==================== CENTER: REFINEMENT ====================
+  // ==================== PAGE: REFINEMENT ====================
   Panel
-    id: centerPanel
+    id: refinementPage
     anchors.top: xpLabel.bottom
     anchors.bottom: statusPanel.top
-    anchors.left: inventoryPanel.right
-    anchors.right: professionPanel.left
+    anchors.left: sideBar.right
+    anchors.right: parent.right
     margin-top: 10
     margin-left: 8
     margin-right: 8
     margin-bottom: 8
-    phantom: false
-    background-color: #00000044
-    border-width: 1
-    border-color: #ffffff33
+    phantom: true
 
-    Label
-      id: centerTitle
-      !text: tr('REFINEMENT')
-      anchors.top: parent.top
-      anchors.horizontalCenter: parent.horizontalCenter
-      margin-top: 6
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-auto-resize: true
-
-    // --- Empty state ---
+    // LEFT: INVENTORY
     Panel
-      id: emptyState
-      anchors.top: centerTitle.bottom
+      id: inventoryPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
       anchors.left: parent.left
-      anchors.right: parent.right
-      height: 190
-      margin-top: 6
-      phantom: true
-
-      Item
-        id: anvilIcon
-        size: 64 64
-        anchors.top: parent.top
-        anchors.horizontalCenter: parent.horizontalCenter
-        margin-top: 24
-        phantom: false
-        virtual: true
-        focusable: false
-        draggable: false
-        opacity: 0.55
-        border-width: 1
-        border-color: #ffffff22
+      width: 296
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
 
       Label
-        id: emptyHintLabel
-        !text: tr('CLICK AN ITEM')
-        anchors.top: anvilIcon.bottom
+        id: invTitle
+        !text: tr('INVENTORY')
+        anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
-        margin-top: 8
+        margin-top: 6
         font: verdana-11px-rounded
         color: #dfdfdf
         text-auto-resize: true
 
+      Button
+        id: filterAll
+        !text: tr('All')
+        anchors.top: invTitle.bottom
+        anchors.left: parent.left
+        margin-top: 6
+        margin-left: 8
+        width: 56
+        height: 20
+
+      Button
+        id: filterWeapons
+        !text: tr('Weapons')
+        anchors.top: invTitle.bottom
+        anchors.left: filterAll.right
+        margin-top: 6
+        margin-left: 4
+        width: 66
+        height: 20
+
+      Button
+        id: filterArmor
+        !text: tr('Armor')
+        anchors.top: invTitle.bottom
+        anchors.left: filterWeapons.right
+        margin-top: 6
+        margin-left: 4
+        width: 56
+        height: 20
+
+      Button
+        id: filterAccessory
+        !text: tr('Access.')
+        anchors.top: invTitle.bottom
+        anchors.left: filterArmor.right
+        margin-top: 6
+        margin-left: 4
+        width: 60
+        height: 20
+
       Label
-        id: emptySubLabel
-        !text: tr('Select an eligible item from your inventory on the left to refine it.')
-        anchors.top: emptyHintLabel.bottom
+        id: invHint
+        !text: tr('Click an item to place it in the station.')
+        anchors.top: filterAll.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         margin-top: 4
-        margin-left: 12
-        margin-right: 12
-        height: 26
+        margin-left: 8
+        margin-right: 8
+        height: 24
         font: small-9px
         color: #c0c0c0
-        text-align: center
         text-wrap: true
 
-    // --- Filled state ---
-    Panel
-      id: filledState
-      anchors.top: centerTitle.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 190
-      margin-top: 6
-      phantom: true
-      visible: false
+      ScrollablePanel
+        id: invScroll
+        anchors.top: invHint.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin: 6
+        padding-right: 14
+        vertical-scrollbar: invScrollBar
+        border-width: 1
+        border-color: #ffffff22
+        background-color: #00000033
 
-      BlacksmithSlot
-        id: itemSlot
-        anchors.top: parent.top
-        anchors.horizontalCenter: parent.horizontalCenter
-        margin-top: 8
+        Panel
+          id: invGrid
+          width: 262
+          layout:
+            type: grid
+            cell-size: 42 42
+            cell-spacing: 2
+            num-columns: 6
+            flow: true
+            fit-children: true
+
+      VerticalScrollBar
+        id: invScrollBar
+        anchors.top: invScroll.top
+        anchors.right: invScroll.right
+        anchors.bottom: invScroll.bottom
+        step: 44
+        pixels-scroll: true
 
       Label
-        id: itemNameLabel
-        !text: tr('')
-        anchors.top: itemSlot.bottom
+        id: invEmpty
+        !text: tr('No refinable equipment found.')
+        anchors.centerIn: invScroll
+        font: small-9px
+        color: #dfdfdf88
+        text-auto-resize: true
+
+    // CENTER: REFINEMENT
+    Panel
+      id: centerPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: inventoryPanel.right
+      anchors.right: parent.right
+      margin-left: 8
+      phantom: false
+      background-color: #00000044
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: centerTitle
+        !text: tr('REFINEMENT')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      // --- Empty state ---
+      Panel
+        id: emptyState
+        anchors.top: centerTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 190
+        margin-top: 6
+        phantom: true
+
+        Item
+          id: anvilIcon
+          size: 64 64
+          anchors.top: parent.top
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 24
+          phantom: false
+          virtual: true
+          focusable: false
+          draggable: false
+          opacity: 0.55
+          border-width: 1
+          border-color: #ffffff22
+
+        Label
+          id: emptyHintLabel
+          !text: tr('CLICK AN ITEM')
+          anchors.top: anvilIcon.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 8
+          font: verdana-11px-rounded
+          color: #dfdfdf
+          text-auto-resize: true
+
+        Label
+          id: emptySubLabel
+          !text: tr('Select an eligible item from your inventory on the left to refine it.')
+          anchors.top: emptyHintLabel.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 4
+          margin-left: 12
+          margin-right: 12
+          height: 26
+          font: small-9px
+          color: #c0c0c0
+          text-align: center
+          text-wrap: true
+
+      // --- Filled state ---
+      Panel
+        id: filledState
+        anchors.top: centerTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 190
+        margin-top: 6
+        phantom: true
+        visible: false
+
+        BlacksmithSlot
+          id: itemSlot
+          anchors.top: parent.top
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 8
+
+        Label
+          id: itemNameLabel
+          !text: tr('')
+          anchors.top: itemSlot.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 6
+          font: verdana-11px-rounded
+          color: #dfdfdf
+          text-auto-resize: true
+
+        Label
+          id: itemInfoLabel
+          !text: tr('')
+          anchors.top: itemNameLabel.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 2
+          font: small-9px
+          color: #c0c0c0
+          text-auto-resize: true
+
+        // CURRENT -> TARGET
+        Label
+          id: currentRarity
+          !text: tr('-')
+          anchors.top: itemInfoLabel.bottom
+          anchors.right: parent.horizontalCenter
+          margin-top: 10
+          margin-right: 26
+          font: verdana-11px-rounded
+          color: #dfdfdf
+          text-auto-resize: true
+
+        Label
+          id: arrowLabel
+          !text: tr('>')
+          anchors.top: itemInfoLabel.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 10
+          font: verdana-11px-rounded
+          color: #80c7f8
+          text-auto-resize: true
+
+        Label
+          id: targetRarity
+          !text: tr('-')
+          anchors.top: itemInfoLabel.bottom
+          anchors.left: parent.horizontalCenter
+          margin-top: 10
+          margin-left: 26
+          font: verdana-11px-rounded
+          color: #dfdfdf
+          text-auto-resize: true
+
+        Label
+          id: currentSub
+          !text: tr('CURRENT')
+          anchors.top: currentRarity.bottom
+          anchors.horizontalCenter: currentRarity.horizontalCenter
+          margin-top: 1
+          font: small-9px
+          color: #c0c0c0
+          text-auto-resize: true
+
+        Label
+          id: targetSub
+          !text: tr('TARGET')
+          anchors.top: targetRarity.bottom
+          anchors.horizontalCenter: targetRarity.horizontalCenter
+          margin-top: 1
+          font: small-9px
+          color: #c0c0c0
+          text-auto-resize: true
+
+      // --- Materials ---
+      Label
+        id: materialsTitle
+        !text: tr('REQUIRED MATERIALS')
+        anchors.top: emptyState.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 4
+        font: verdana-11px-rounded
+        color: #c0c0c0
+        text-auto-resize: true
+
+      Panel
+        id: materialsPanel
+        anchors.top: materialsTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 4
+        margin-left: 14
+        margin-right: 14
+        height: 100
+        phantom: false
+        background-color: #00000055
+        border-width: 1
+        border-color: #ffffff33
+
+        Panel
+          id: materialsList
+          anchors.fill: parent
+          margin: 6
+          layout:
+            type: verticalBox
+            spacing: 3
+
+      // --- Refinement info ---
+      Panel
+        id: infoPanel
+        anchors.top: materialsPanel.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 8
+        margin-left: 14
+        margin-right: 14
+        height: 56
+        phantom: true
+
+        Label
+          id: xpGainLabel
+          !text: tr('')
+          anchors.top: parent.top
+          anchors.left: parent.left
+          font: verdana-11px-rounded
+          color: #00BC00
+          text-auto-resize: true
+
+        Label
+          id: effLabel
+          !text: tr('')
+          anchors.top: xpGainLabel.bottom
+          anchors.left: parent.left
+          margin-top: 2
+          font: small-9px
+          color: #c0c0c0
+          text-auto-resize: true
+
+        Label
+          id: resultLabel
+          !text: tr('')
+          anchors.top: parent.top
+          anchors.right: parent.right
+          font: verdana-11px-rounded
+          color: #dfdfdf
+          text-auto-resize: true
+
+      Button
+        id: refineButton
+        !text: tr('REFINE')
+        anchors.top: infoPanel.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        width: 160
+        height: 30
+        enabled: false
+
+  // ==================== PAGE: MATERIALS ====================
+  Panel
+    id: materialsPage
+    anchors.top: xpLabel.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: sideBar.right
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 8
+    phantom: true
+    visible: false
+
+    // LEFT: materials inventory
+    Panel
+      id: matInvPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      width: 296
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: matTitle
+        !text: tr('MATERIALS')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      ScrollablePanel
+        id: matScroll
+        anchors.top: matTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin: 6
+        padding-right: 14
+        vertical-scrollbar: matScrollBar
+        border-width: 1
+        border-color: #ffffff22
+        background-color: #00000033
+        layout:
+          type: verticalBox
+          spacing: 2
+
+      VerticalScrollBar
+        id: matScrollBar
+        anchors.top: matScroll.top
+        anchors.right: matScroll.right
+        anchors.bottom: matScroll.bottom
+        step: 26
+        pixels-scroll: true
+
+    // RIGHT: forge
+    Panel
+      id: forgePanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: matInvPanel.right
+      anchors.right: parent.right
+      margin-left: 8
+      phantom: false
+      background-color: #00000044
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: forgeTitle
+        !text: tr('FORGE - SMELT ORE INTO BARS')
+        anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         margin-top: 6
         font: verdana-11px-rounded
@@ -341,196 +821,159 @@ MainWindow
         text-auto-resize: true
 
       Label
-        id: itemInfoLabel
-        !text: tr('')
-        anchors.top: itemNameLabel.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        margin-top: 2
+        id: forgeHint
+        !text: tr('Smelt raw ore into bars used for refinement and crafting.')
+        anchors.top: forgeTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 4
+        margin-left: 12
+        margin-right: 12
+        height: 24
         font: small-9px
         color: #c0c0c0
-        text-auto-resize: true
+        text-align: center
+        text-wrap: true
 
-      // CURRENT -> TARGET
-      Label
-        id: currentRarity
-        !text: tr('-')
-        anchors.top: itemInfoLabel.bottom
-        anchors.right: parent.horizontalCenter
-        margin-top: 10
-        margin-right: 26
-        font: verdana-11px-rounded
-        color: #dfdfdf
-        text-auto-resize: true
+      ScrollablePanel
+        id: forgeScroll
+        anchors.top: forgeHint.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin: 6
+        padding-right: 14
+        vertical-scrollbar: forgeScrollBar
+        border-width: 1
+        border-color: #ffffff22
+        background-color: #00000033
+        layout:
+          type: verticalBox
+          spacing: 3
 
-      Label
-        id: arrowLabel
-        !text: tr('>')
-        anchors.top: itemInfoLabel.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        margin-top: 10
-        font: verdana-11px-rounded
-        color: #80c7f8
-        text-auto-resize: true
+      VerticalScrollBar
+        id: forgeScrollBar
+        anchors.top: forgeScroll.top
+        anchors.right: forgeScroll.right
+        anchors.bottom: forgeScroll.bottom
+        step: 42
+        pixels-scroll: true
 
-      Label
-        id: targetRarity
-        !text: tr('-')
-        anchors.top: itemInfoLabel.bottom
-        anchors.left: parent.horizontalCenter
-        margin-top: 10
-        margin-left: 26
-        font: verdana-11px-rounded
-        color: #dfdfdf
-        text-auto-resize: true
-
-      Label
-        id: currentSub
-        !text: tr('CURRENT')
-        anchors.top: currentRarity.bottom
-        anchors.horizontalCenter: currentRarity.horizontalCenter
-        margin-top: 1
-        font: small-9px
-        color: #c0c0c0
-        text-auto-resize: true
-
-      Label
-        id: targetSub
-        !text: tr('TARGET')
-        anchors.top: targetRarity.bottom
-        anchors.horizontalCenter: targetRarity.horizontalCenter
-        margin-top: 1
-        font: small-9px
-        color: #c0c0c0
-        text-auto-resize: true
-
-    // --- Materials ---
-    Label
-      id: materialsTitle
-      !text: tr('REQUIRED MATERIALS')
-      anchors.top: emptyState.bottom
-      anchors.horizontalCenter: parent.horizontalCenter
-      margin-top: 4
-      font: verdana-11px-rounded
-      color: #c0c0c0
-      text-auto-resize: true
+  // ==================== PAGE: PROGRESSION ====================
+  Panel
+    id: progressionPage
+    anchors.top: xpLabel.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: sideBar.right
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 8
+    phantom: true
+    visible: false
 
     Panel
-      id: materialsPanel
-      anchors.top: materialsTitle.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      margin-top: 4
-      margin-left: 14
-      margin-right: 14
-      height: 100
+      id: professionPanel
+      anchors.fill: parent
       phantom: false
       background-color: #00000055
       border-width: 1
       border-color: #ffffff33
 
-      Panel
-        id: materialsList
-        anchors.fill: parent
-        margin: 6
-        layout:
-          type: verticalBox
-          spacing: 3
-
-    // --- Refinement info ---
-    Panel
-      id: infoPanel
-      anchors.top: materialsPanel.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      margin-top: 8
-      margin-left: 14
-      margin-right: 14
-      height: 56
-      phantom: true
-
       Label
-        id: xpGainLabel
-        !text: tr('')
+        id: profTitle
+        !text: tr('PROGRESSION & BONUSES')
         anchors.top: parent.top
-        anchors.left: parent.left
-        font: verdana-11px-rounded
-        color: #00BC00
-        text-auto-resize: true
-
-      Label
-        id: effLabel
-        !text: tr('')
-        anchors.top: xpGainLabel.bottom
-        anchors.left: parent.left
-        margin-top: 2
-        font: small-9px
-        color: #c0c0c0
-        text-auto-resize: true
-
-      Label
-        id: resultLabel
-        !text: tr('')
-        anchors.top: parent.top
-        anchors.right: parent.right
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
         font: verdana-11px-rounded
         color: #dfdfdf
         text-auto-resize: true
 
-    Button
-      id: refineButton
-      !text: tr('REFINE')
-      anchors.top: infoPanel.bottom
-      anchors.horizontalCenter: parent.horizontalCenter
-      margin-top: 6
-      width: 160
-      height: 30
-      enabled: false
+      ScrollablePanel
+        id: profScroll
+        anchors.top: profTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin: 6
+        padding-right: 14
+        vertical-scrollbar: profScrollBar
+        layout:
+          type: verticalBox
+          spacing: 2
 
-  // ==================== RIGHT: PROFESSION ====================
+      VerticalScrollBar
+        id: profScrollBar
+        anchors.top: profScroll.top
+        anchors.right: profScroll.right
+        anchors.bottom: profScroll.bottom
+        step: 40
+        pixels-scroll: true
+
+  // ==================== PAGE: SPECIALIZATION ====================
   Panel
-    id: professionPanel
+    id: specializationPage
     anchors.top: xpLabel.bottom
     anchors.bottom: statusPanel.top
+    anchors.left: sideBar.right
     anchors.right: parent.right
-    width: 236
     margin-top: 10
-    margin-right: 10
+    margin-left: 8
+    margin-right: 8
     margin-bottom: 8
-    phantom: false
-    background-color: #00000055
-    border-width: 1
-    border-color: #ffffff33
+    phantom: true
+    visible: false
 
-    Label
-      id: profTitle
-      !text: tr('BLACKSMITH')
-      anchors.top: parent.top
-      anchors.horizontalCenter: parent.horizontalCenter
-      margin-top: 6
-      font: verdana-11px-rounded
-      color: #dfdfdf
-      text-auto-resize: true
+    Panel
+      id: specPanel
+      anchors.fill: parent
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
 
-    ScrollablePanel
-      id: profScroll
-      anchors.top: profTitle.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      anchors.bottom: parent.bottom
-      margin: 6
-      padding-right: 14
-      vertical-scrollbar: profScrollBar
-      layout:
-        type: verticalBox
-        spacing: 2
+      Label
+        id: specTitle
+        !text: tr('SPECIALIZATION')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
 
-    VerticalScrollBar
-      id: profScrollBar
-      anchors.top: profScroll.top
-      anchors.right: profScroll.right
-      anchors.bottom: profScroll.bottom
-      step: 40
-      pixels-scroll: true
+      Label
+        id: specSub
+        !text: tr('Unlocks at Blacksmith Level 30. Only one specialization can be active.')
+        anchors.top: specTitle.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 4
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
+      Panel
+        id: specList
+        anchors.top: specSub.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 16
+        width: 660
+        height: 200
+        layout:
+          type: horizontalBox
+          spacing: 14
+
+      Label
+        id: specCurrent
+        !text: tr('')
+        anchors.top: specList.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 14
+        font: verdana-11px-rounded
+        color: #80c7f8
+        text-auto-resize: true
 
   // ==================== BOTTOM: STATUS ====================
   Panel
