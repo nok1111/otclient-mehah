@@ -1476,7 +1476,7 @@ Crafting tasks scale with profession tiers:
 
               { type = 'title', text = 'HOW THE TREE WORKS', color = '#d4a843' },
               { type = 'cards', items = {
-                { image = '/images/new_borders/node.png', name = 'Core Node', color = '#ffd75e', description = 'Every tree starts from a core node (like Elemental Attunement) that connects to all branches.' },
+                { image = '/images/wiki/talent_node.png', name = 'Core Node', color = '#ffd75e', description = 'Every tree starts from a core node (like Elemental Attunement) that connects to all branches.' },
                 { image = '/images/icons/icon_sword.png', name = 'Three Axes', color = '#ff8888', description = 'Offense, defense and utility axes with themed names per vocation. Spending points on an axis unlocks milestone effects at its thresholds.' },
                 { image = '/images/icons/icon_axe.png', name = 'Branches', color = '#9fe89f', description = 'Each tree has 3 specialization branches - e.g. the Magician splits into Pyromancy, Cryomancy and Arcana.' },
                 { image = '/images/icons/icon_health.png', name = 'Node Effects', color = '#66aaff', description = 'Nodes grant stats (conditions), passive procs and masteries, or unlock real spells like Hand of God or Arcane Missiles.' },
@@ -1518,9 +1518,9 @@ Crafting tasks scale with profession tiers:
               { type = 'divider' },
               { type = 'title', text = 'IMPORTANT NODES', color = '#d4a843' },
               { type = 'cards', items = {
-                { image = '/images/new_borders/star.png', name = 'Notable', color = '#9fe89f', description = 'Star-framed nodes - strong standalone bonuses worth planning around.' },
-                { image = '/images/new_borders/constellation.png', name = 'Nexus', color = '#66aaff', description = 'Constellation-framed nodes - junctions where branches connect, opening new paths across the tree.' },
-                { image = '/images/new_borders/keystone.png', name = 'Keystone', color = '#ffd75e', description = 'The large node at the end of each branch - the capstone bonus that defines the path (Pyromancer, Cryomancer, Arcanist...).' },
+                { image = '/images/wiki/talent_notable.png', name = 'Notable', color = '#9fe89f', description = 'Star-framed nodes - strong standalone bonuses worth planning around.' },
+                { image = '/images/wiki/talent_nexus.png', name = 'Nexus', color = '#66aaff', description = 'Constellation-framed nodes - junctions where branches connect, opening new paths across the tree.' },
+                { image = '/images/wiki/talent_keystone.png', name = 'Keystone', color = '#ffd75e', description = 'The large node at the end of each branch - the capstone bonus that defines the path (Pyromancer, Cryomancer, Arcanist...).' },
               }},
               { type = 'divider' },
               { type = 'tip', content = 'Plan a branch first - keystone nodes are powerful but sit at the end of each path, so rushing three branches at once leaves you weak in all of them.' },
