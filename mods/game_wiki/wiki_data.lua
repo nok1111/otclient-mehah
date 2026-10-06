@@ -256,6 +256,51 @@ function getEnglishData()
               }
             }
           },
+          inventory = {
+            name = 'Inventory Slots',
+            type = 'rich_text',
+            order = 3,
+            sections = {
+              { type = 'title', text = 'THE INVENTORY WINDOW', color = '#ffd75e' },
+              { type = 'text', content = 'Your equipment window is split into three groups: **ACTIVE** for utility gear, **COMBAT** for weapon and armor, and **CRAFTING** for your three rune slots. Backpack, ring and necklace sit in between.' },
+              { type = 'divider' },
+
+              { type = 'title', text = 'ACTIVE', color = '#d4a843' },
+              { type = 'cards', items = {
+                { icon = 37072, name = 'Spell Slot (Active)', color = '#c080ff', description = 'The head position. Holds helmets and head-slot gear - the client labels it the spell slot because head-slot equipment can carry activated effects.' },
+                { icon = 37146, name = 'Boots (Active)', color = '#ffaa55', description = 'Feet items. This is where spell boots go - Boots of Teleportation, Wild, Timewalking and friends (see Dropable Spells) - plus regular boots.' },
+                { icon = 24683, name = 'Torch (Active)', color = '#77ddff', description = 'Utility slot for light sources and utility items like the Bless Item. Torches and utility tools equip here.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'title', text = 'COMBAT', color = '#d4a843' },
+              { type = 'cards', items = {
+                { icon = 33447, name = 'Weapon', color = '#ff8888', description = 'Main hand. Swords, axes, clubs, wands, rods and bows. A two-handed weapon occupies both hands and disables the shield slot.' },
+                { icon = 36228, name = 'Shield', color = '#66aaff', description = 'Off hand. Shields and spellbooks - anything with a shield slot type. Stays empty while a two-handed weapon is equipped.' },
+                { icon = 30239, name = 'Armor', color = '#9fe89f', description = 'Body slot. Chest armor and robes - your main defensive piece.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'title', text = 'EQUIPMENT', color = '#d4a843' },
+              { type = 'cards', items = {
+                { icon = 30497, name = 'Backpack', color = '#ffd75e', description = 'Your carried container - determines how much loot you can haul before needing a supply trip.' },
+                { icon = 38323, name = 'Ring', color = '#ffaa77', description = 'Ring slot. Custom rings add strong modifiers - watch out for charged rings that burn charges while equipped.' },
+                { icon = 38291, name = 'Necklace', color = '#77ddaa', description = 'Amulet/necklace slot. Necklaces carry passive stats and resistances; some are charged and wear out over time.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'title', text = 'CRAFTING RUNES', color = '#d4a843' },
+              { type = 'text', content = 'The three rune slots hold **crafted runes** - the "Rune of ..." items produced by the Enchanting profession from Empty Enchanting Runes. Each rune grants a passive bonus while equipped.' },
+              { type = 'cards', items = {
+                { icon = 35379, name = 'Rune Slot 1', color = '#c080ff', description = 'Accepts any crafted rune - sorcerer-flavored ones like Rune of the Magician, Rune of Chaos or Rune of Mana Insight.' },
+                { icon = 35387, name = 'Rune Slot 2', color = '#c080ff', description = 'Accepts any crafted rune - hunter/rogue-flavored ones like Rune of the Hunter, Rune of the Assassin or Rune of the Thief.' },
+                { icon = 35404, name = 'Rune Slot 3', color = '#c080ff', description = 'Accepts any crafted rune - knight-flavored ones like Rune of the Juggernaut, Rune of Aegis or Rune of the Berserker.' },
+              }},
+              { type = 'divider' },
+              { type = 'warning', content = 'You cannot equip the same rune twice - the three slots must each hold a different crafted rune.' },
+              { type = 'tip', content = 'Runes are made through Refinement and Transmutation in the Enchanting profession - check the Crafting section for recipes.' },
+            }
+          },
         }
       },
       tasks = {
