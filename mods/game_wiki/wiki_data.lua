@@ -242,25 +242,63 @@ function getEnglishData()
             }
           },
           runes = {
-            name = 'Runes',
-            type = 'list',
+            name = 'Crafting Runes',
+            type = 'rich_text',
             order = 3,
-            items = {
-              {
-                name = 'Ultimate Healing Rune',
-                description = 'Restores a large amount of HP',
-                icon = 2273
-              },
-              {
-                name = 'Great Fireball Rune',
-                description = 'Creates a massive fireball',
-                icon = 2304
-              },
-              {
-                name = 'Paralyze Rune',
-                description = 'Paralyzes the target',
-                icon = 2278
-              }
+            sections = {
+              { type = 'title', text = 'CRAFTING RUNES', color = '#ffd75e' },
+              { type = 'text', content = 'Crafting runes are made by the **Enchanting** profession from Empty Enchanting Runes. They equip in the three **CRAFTING** slots of your inventory and grant passive bonuses. Each rune rolls a unique stat package - the higher your Enchanting level, the stronger the rune you craft.' },
+              { type = 'divider' },
+              { type = 'warning', content = 'You cannot equip the same rune in two rune slots - your three slots must hold different runes.' },
+              { type = 'divider' },
+
+              { type = 'title', text = 'BLUE RUNES - MAGE', color = '#66aaff' },
+              { type = 'cards', items = {
+                { icon = 35381, name = 'Rune of the Magician', color = '#66aaff', description = 'Grants Arcana.' },
+                { icon = 35380, name = 'Rune of Knowledge', color = '#66aaff', description = 'Grants Magic Level.' },
+                { icon = 35384, name = 'Rune of Chaos', color = '#66aaff', description = 'Grants Critical Hit Chance.' },
+                { icon = 35386, name = 'Rune of Magic Echoes', color = '#c080ff', description = 'Triple stat rune: Magic Level, Cooldown Reduction and Arcana.' },
+              }},
+              { type = 'text', content = 'Blue runes also cover Max Mana (Arcanists, Mana Insight), Max HP (Lost Sage) and Magic Level + Attack Speed (Distortion).' },
+              { type = 'divider' },
+
+              { type = 'title', text = 'GREEN RUNES - HUNTER', color = '#9fe89f' },
+              { type = 'cards', items = {
+                { icon = 35388, name = 'Rune of the Assassin', color = '#9fe89f', description = 'Grants Attack Speed.' },
+                { icon = 35389, name = 'Rune of the Betrayer', color = '#9fe89f', description = 'Grants Melee.' },
+                { icon = 35393, name = 'Rune of Eros', color = '#9fe89f', description = 'Grants Earth Damage.' },
+              }},
+              { type = 'text', content = 'Green runes also cover Block (Hunter), Melee (Despair), Bonus Healing (the Humble), Max Mana (the Thief) and Death Damage + Distance (Glory).' },
+              { type = 'divider' },
+
+              { type = 'title', text = 'YELLOW RUNES - HOLY', color = '#ffd75e' },
+              { type = 'cards', items = {
+                { icon = 35397, name = 'Rune of Dawn of Justice', color = '#ffd75e', description = 'Grants Holy Damage.' },
+                { icon = 35396, name = 'Rune of Righteousness', color = '#ffd75e', description = 'Grants Shield Power.' },
+                { icon = 35401, name = 'Rune of Sin Eater', color = '#ffd75e', description = 'Dual stat rune: Max HP and Shield Power.' },
+              }},
+              { type = 'text', content = 'Yellow runes also cover Magic Level (Glory), Melee (Faith), Bonus Healing (Devotion) and Max Mana (the Sinless).' },
+              { type = 'divider' },
+
+              { type = 'title', text = 'PURPLE RUNES - DARK', color = '#c080ff' },
+              { type = 'cards', items = {
+                { icon = 35404, name = 'Rune of Agony', color = '#c080ff', description = 'Grants Physical Damage.' },
+                { icon = 35407, name = 'Rune of Doomed Prophet', color = '#c080ff', description = 'Grants Fire Damage.' },
+                { icon = 35409, name = 'Rune of the Eclipse', color = '#c080ff', description = 'Dual stat rune: Melee and Life Steal.' },
+              }},
+              { type = 'text', content = 'Purple runes also cover Max HP (Flesh Eater), Magic Level (Drowned Sorrows), Max Mana (the Monarch) and Bonus Healing (the Void).' },
+              { type = 'divider' },
+
+              { type = 'title', text = 'RED RUNES - WARRIOR', color = '#ff8888' },
+              { type = 'cards', items = {
+                { icon = 35413, name = 'Rune of the Berserker', color = '#ff8888', description = 'Grants Melee.' },
+                { icon = 35414, name = 'Rune of the Juggernaut', color = '#ff8888', description = 'Grants Max HP.' },
+                { icon = 35417, name = 'Rune of Aegis', color = '#ff8888', description = 'Grants Shield Power.' },
+                { icon = 35412, name = 'Rune of Ashes', color = '#ff8888', description = 'Grants Critical Hit Chance.' },
+              }},
+              { type = 'text', content = 'Red runes also cover Defence (Wrath), Max HP (Warden) and Physical Damage (the Hammer).' },
+              { type = 'divider' },
+              { type = 'tip', content = 'Empty Enchanting Runes come from disenchanting Prismatic Cubes with the Enchanters Rod - see Crafting > Materials.' },
             }
           },
           inventory = {
