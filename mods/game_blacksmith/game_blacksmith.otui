@@ -737,6 +737,26 @@ MainWindow
           color: #c0c0c0
           text-auto-resize: true
 
+        Label
+          id: resultLabel
+          !text: tr('')
+          anchors.top: targetSub.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 12
+          font: verdana-11px-rounded
+          color: #dfdfdf
+          text-auto-resize: true
+
+        Label
+          id: statGainLabel
+          !text: tr('')
+          anchors.top: resultLabel.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 2
+          font: small-9px
+          color: #00BC00
+          text-auto-resize: true
+
       // --- Materials ---
       Label
         id: materialsTitle
@@ -799,25 +819,6 @@ MainWindow
           margin-top: 2
           font: small-9px
           color: #c0c0c0
-          text-auto-resize: true
-
-        Label
-          id: resultLabel
-          !text: tr('')
-          anchors.top: parent.top
-          anchors.right: parent.right
-          font: verdana-11px-rounded
-          color: #dfdfdf
-          text-auto-resize: true
-
-        Label
-          id: statGainLabel
-          !text: tr('')
-          anchors.top: resultLabel.bottom
-          anchors.right: parent.right
-          margin-top: 2
-          font: small-9px
-          color: #00BC00
           text-auto-resize: true
 
       Button
