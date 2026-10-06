@@ -550,6 +550,8 @@ MainWindow
 
         Panel
           id: invGrid
+          anchors.top: parent.top
+          anchors.left: parent.left
           width: 262
           layout:
             type: grid
