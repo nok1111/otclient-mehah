@@ -73,7 +73,7 @@ MaterialRow < Panel
     color: #00BC00
     text-auto-resize: true
 
--- Materials tab: inventory material row (icon + name + owned count)
+// Materials tab: inventory material row (icon + name + owned count)
 BSMatRow < Panel
   height: 26
   phantom: true
@@ -105,7 +105,7 @@ BSMatRow < Panel
     color: #c0c0c0
     text-auto-resize: true
 
--- Materials tab: smelting recipe row
+// Materials tab: smelting recipe row
 BSSmeltRow < Panel
   height: 42
   phantom: true
@@ -198,7 +198,7 @@ BSSmeltRow < Panel
     color: #00BC00
     text-auto-resize: true
 
--- Specialization tab: one card per spec
+// Specialization tab: one card per spec
 BSSpecCard < Panel
   size: 210 190
   phantom: false
