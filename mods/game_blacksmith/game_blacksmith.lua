@@ -457,8 +457,9 @@ function Blacksmith.renderSpecialization()
         cat:setText(tr('%s items', SPEC_LABELS[spec.cat] or spec.cat))
       end
       if perks then
-        perks:setText(tr('-%d%% materials and +%d%% XP when refining %s',
-          spec.materialBonus or 0, spec.xpBonus or 0, SPEC_LABELS[spec.cat] or spec.cat))
+        perks:setText(tr('-%d%% materials and +%d%% XP when refining %s\nRequired to ascend %s to the final tier',
+          spec.materialBonus or 0, spec.xpBonus or 0, SPEC_LABELS[spec.cat] or spec.cat,
+          SPEC_LABELS[spec.cat] or spec.cat))
       end
       if btn then
         local isCurrent = spec.id == current
