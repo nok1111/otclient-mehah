@@ -518,79 +518,53 @@ function getEnglishData()
             type = 'rich_text',
             order = 1,
             sections = {
-              { type = 'text', content = [[**What are Daily Quests?**
-Daily Quests are 8 tasks that reset every day, giving you consistent objectives and rewards. Open the Daily Quests window using the special item (Daily Task Scroll) to see your active tasks, track progress, and claim rewards.
-Tasks are rolled automatically each day with weighted difficulty: Easy (34%), Medium (33%), and Hard (33%).]] },
+              { type = 'title', text = 'DAILY QUESTS', color = '#ffd75e' },
+              { type = 'text', content = 'Every day you get **8 tasks** rolled automatically with weighted difficulty: Easy (34%), Medium (33%) and Hard (33%). They reset at server local midnight - unfinished tasks are lost when the day rolls over.' },
               { type = 'image', path = '/images/wiki/daily_tasks_overview.png', width = 400, height = 126 },
-              { type = 'spacer', height = 8 },
+              { type = 'cards', items = {
+                { icon = 33904, name = 'Daily Task Board', color = '#ffd75e', description = 'The board in the city center opens your Daily Tasks window - click it to check tasks, track progress and claim rewards.' },
+                { image = '/images/icons/clock.png', name = 'Daily Reset', color = '#66aaff', description = 'Tasks re-roll every local server day. Claim rewards before reset or they are gone.' },
+              }},
+              { type = 'divider' },
 
-              { type = 'text', content = [[**Task Categories**
+              { type = 'title', text = 'TASK CATEGORIES', color = '#d4a843' },
+              { type = 'text', content = [[- **Kill Zone** - kill monsters in non-PvP, PvP or PvP-enforced zones
+- **Boss** - defeat bosses (any or a specific one)
+- **Dungeon** - complete dungeon runs
+- **Zone Event** - complete zone events
+- **Tower Floor** - clear Tower of God floors
+- **Pet Level** - level up your pet
+- **Item Proficiency** - hit item proficiency milestones
+- **Kill Task** - complete task board kill tasks
+- **Crafting** - deliver crafted items (Alchemy, Enchanting, Blacksmith)
+- **Gathering** - deliver gathered essences
+- **Mixed** - combine multiple actions at once (kills + tower, bosses + dungeons + events)
 
-| Category | Description | Type |
-|----------|-------------|------|
-| Kill Zone | Kill monsters in non-PvP, PvP, or PvP-enforced zones | Auto |
-| Boss | Defeat bosses (any or specific) | Auto |
-| Dungeon | Complete dungeon runs | Auto |
-| Zone Event | Complete zone events | Auto |
-| Tower Floor | Clear Tower of God floors | Auto |
-| Kill Task | Complete task board kill tasks | Auto |
-| Crafting | Deliver crafted items (Alchemy, Enchanting, Blacksmith) | Turn In |
-| Gathering | Deliver gathered essences from mining | Turn In |
-| Mixed | Combine multiple actions (kills + tower, bosses + dungeons + events) | Auto |
+**Auto-progress** tasks update as you play. **Turn In** tasks need the items in your inventory - then click Turn In.]] },
+              { type = 'divider' },
 
-**Auto-progress** tasks update automatically as you play.
-**Turn In** tasks require you to have the items in your inventory and click the "Turn In" button.]] },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
+              { type = 'title', text = 'REWARDS', color = '#d4a843' },
+              { type = 'text', content = 'Rewards scale with task difficulty:' },
+              { type = 'cards', items = {
+                { image = '/images/icons/star.png', name = 'Easy Task', color = '#9fe89f', description = '3 Achievement Points + 25 Codex Essences' },
+                { image = '/images/icons/star.png', name = 'Medium Task', color = '#ffd75e', description = '6 Achievement Points + 40 Codex Essences' },
+                { image = '/images/icons/star.png', name = 'Hard Task', color = '#ff8888', description = '10 Achievement Points + 60 Codex Essences' },
+                { image = '/images/icons/crown.png', name = 'Daily Big Reward', color = '#ffd75e', description = 'Complete 4 tasks to claim 1 Golden Codex Crate - once per day, claim it before reset.' },
+              }},
+              { type = 'divider' },
 
-              { type = 'text', content = [[**Rewards**
+              { type = 'title', text = 'CRAFTING TASK TIERS', color = '#d4a843' },
+              { type = 'text', content = [[Crafting tasks scale with your profession tier:
 
-**Per Task Completion:**
-- **3 Achievement Points**
-- **25 Codex Essences**
+**Alchemy:** Apprentice (refined essences, basic potions) - Novice (health/mana/spirit potions, small vials) - Journeyman (strong potions, mid-tier vials and elixirs) - Master (great potions) - Grandmaster (enchanted great potions)
 
-**Daily Big Reward (4 completions):**
-- **1 Golden Codex Crate**
+**Enchanting:** Apprentice (tier 1 runes) - Journeyman (tier 3) - Adept (tier 4) - Master (tier 5) - Grand (tier 6 top-tier) - Blueprint Specialist (rare blueprint crafts)
 
-The Golden Crate is claimable once per day after completing at least 4 tasks. Make sure to claim it before the daily reset!]] },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
-
-              { type = 'text', content = [[**Crafting Task Tiers**
-
-Crafting tasks scale with profession tiers:
-
-**Alchemy:**
-- Apprentice: Refined essences, basic potions
-- Novice: Health/mana/spirit potions, small vials
-- Journeyman: Strong potions, mid-tier vials and elixirs
-- Master: Great potions
-- Grandmaster: Enchanted great potions
-
-**Enchanting (Runesmith):**
-- Apprentice: Tier 1 runes
-- Journeyman: Tier 3 runes
-- Adept: Tier 4 runes
-- Master: Tier 5 runes (two sub-lines)
-- Grand: Tier 6 runes (top-tier)
-- Blueprint Specialist: Rare blueprint crafts
-
-**Blacksmith:**
-- Apprentice: Starter weapons and shields
-- Journeyman: Basic combat gear (1H swords, 2H weapons, ranged, shields)]] },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
-
-              { type = 'text', content = [[**Tips**
-
-- Prioritize easy tasks first for quick completions
-- Save harder tasks for when you are already running dungeons or events
-- Keep crafted items in storage so you can quickly turn in crafting tasks
-- Mixed tasks count multiple activities at once - very efficient
-- The daily reset happens based on server local time - plan accordingly
-- Always claim your Golden Crate before the day ends]] }
+**Blacksmith:** Apprentice (starter weapons and shields) - Journeyman (basic combat gear: 1H swords, 2H weapons, ranged, shields)]] },
+              { type = 'divider' },
+              { type = 'tip', content = 'Prioritize easy tasks first for quick completions, keep spare crafted items in storage for instant turn-ins, and always claim your Golden Crate before the day ends.' },
             }
-          }
+          },
         }
       },
       pets = {
