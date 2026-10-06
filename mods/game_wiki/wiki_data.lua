@@ -1469,23 +1469,55 @@ Crafting tasks scale with profession tiers:
             type = 'rich_text',
             order = 2,
             sections = {
-              { type = 'image', path = '/images/wiki/talents_overview.png', width = 400, height = 80 },        
-              { type = 'text', content = '**What are Class Talents?**\n\nEvery character class has its own unique talent tree with multiple branches specializing in damage, defense, or utility. Each tree contains nodes that grant passive bonuses when leveled up. Talents are applied automatically on login, so plan your build carefully!' },
-              { type = 'spacer', height = 8 },
+              { type = 'image', path = '/images/wiki/talents_overview.png', width = 400, height = 110 },
+              { type = 'title', text = 'WHAT ARE CLASS TALENTS', color = '#ffd75e' },
+              { type = 'text', content = 'Every vocation has its own **Constellation** - a talent tree built from three themed **axes** plus specialization **branches**. Investing points into an axis unlocks milestone bonuses, and nodes inside each branch grant passive stats, triggered effects or even **new spells**. Talents apply automatically on login.' },
+              { type = 'divider' },
 
-              { type = 'text', content = '**Talent Points**\n\n- You earn **1 talent point every 8 character levels**\n- Each node level costs **1 talent point**\n- Most nodes have a **max level of 10**\n- Unused points can be spent at any time by opening the Class Talents window' },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
+              { type = 'title', text = 'HOW THE TREE WORKS', color = '#d4a843' },
+              { type = 'cards', items = {
+                { image = '/images/icons/star.png', name = 'Core Node', color = '#ffd75e', description = 'Every tree starts from a core node (like Elemental Attunement) that connects to all branches.' },
+                { image = '/images/icons/icon_sword.png', name = 'Three Axes', color = '#ff8888', description = 'Offense, defense and utility axes with themed names per vocation. Spending points on an axis unlocks milestone effects at its thresholds.' },
+                { image = '/images/icons/icon_axe.png', name = 'Branches', color = '#9fe89f', description = 'Each tree has 3 specialization branches - e.g. the Magician splits into Pyromancy, Cryomancy and Arcana.' },
+                { image = '/images/icons/icon_health.png', name = 'Node Types', color = '#66aaff', description = 'Nodes grant stats (conditions), passive procs and masteries, or unlock real spells like Hand of God or Arcane Missiles.' },
+                { image = '/images/icons/crown.png', name = 'Keystones', color = '#c080ff', description = 'Each branch ends in a keystone node (Pyromancer, Cryomancer, Arcanist...) - the capstone bonus of that path.' },
+              }},
+              { type = 'divider' },
 
-              { type = 'text', content = '**Resetting Talents**\n\nMade a mistake? You can reset your entire tree and get all spent points back.\n\n- Base cost: **50 gold per spent point**\n- **Premium discount:** 25 gold per point (-50%)\n- All spent points are **refunded**\n- You **keep** your total earned points\n\nOpen the talent window and click the Reset button to see the exact cost.' },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
+              { type = 'title', text = 'TALENT POINTS', color = '#d4a843' },
+              { type = 'cards', items = {
+                { image = '/images/icons/star.png', name = 'Earning', color = '#ffd75e', description = 'You earn 1 talent point every 5 character levels.' },
+                { image = '/images/icons/icon_axe.png', name = 'Spending', color = '#9fe89f', description = 'Each node level costs 1 point. Nodes have varying max levels, and deeper nodes require the previous node to be leveled first.' },
+                { image = '/images/icons/star.png', name = 'Preview', color = '#66aaff', description = 'You can inspect every node and its effect in the Class Talents window before committing points.' },
+              }},
+              { type = 'divider' },
 
-              { type = 'text', content = '**Available Classes**\n\n| Class | Branches |\n|-------|----------|\n| Magician | Fire / Arcane / Frost |\n| Templar | Holy / Retribution / Protection / Justice |\n| Nightblade | Shadow / Blood / Assassination |\n| Dragonknight | Earth / Dragon / Fire / Elemental |\n| Warlock | Demonology / Curses / Summoning / Blood Pact |\n| Stellar | Cosmic / Celestial / Wand |\n| Monk | Elements / Earth / Life / Wind |\n| Druid | Nature / Spirit / Ice / Shapeshift |\n| Light Dancer | Light / Speed / Support |' },
-              { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
-              { type = 'spacer', height = 8 },
+              { type = 'title', text = 'RESETTING YOUR TREE', color = '#d4a843' },
+              { type = 'cards', items = {
+                { image = '/images/icons/icon_health.png', name = 'Cost', color = '#ff8888', description = '10 gold per spent point to reset your whole tree.' },
+                { image = '/images/icons/crown.png', name = 'Premium', color = '#ffd75e', description = 'Premium players pay half: 5 gold per spent point.' },
+                { image = '/images/icons/star.png', name = 'Refund', color = '#9fe89f', description = 'Resetting refunds every spent point - your total earned points are never lost.' },
+              }},
+              { type = 'divider' },
 
-              { type = 'text', content = '**Tips**\n\n- Synergize your talent choices with your gear and playstyle\n- DPS builds should focus on damage branches first\n- Tanks should prioritize health and resistances\n- Healers should boost mana pool and healing effectiveness\n- Some nodes unlock spells or special abilities at certain levels\n- You can preview all nodes before spending any points' }
+              { type = 'title', text = 'THE 15 CONSTELLATIONS', color = '#d4a843' },
+              { type = 'text', content = [[**Magician** - Wrath / Aegis / Harmony - Pyromancy, Cryomancy, Arcana
+**Templar** - Wrath / Aegis - Reprisal, Guardian, Sacred Healer
+**Nightblade** - Cruelty / Evasion / Shadow - Hemorrhage, Shadow Dance, Void Blades
+**Dragonknight** - Fury / Scales / Embers - Bloodlust, Draconic Ward, Phoenix Forge
+**Warlock** - Blight / Vitality / Summoning - Curses & Plague, Demonic Legion, Blood Pact
+**Stellar** - Radiance / Lunarity / Astral - Lunar Fury, Holy Wrath, Celestial Grace
+**Monk** - Fury / Stone / Chi - Stormfist, Mountain Path, Vital Chi
+**Druid** - Wildgrowth / Verdancy / Frost - Savage Growth, Verdant Healing, Frost Ward
+**Light Dancer** - Storm / Ward / Blade - Tempest Gambit, Lightning Guard, Elusive Blade
+**Archer** - Ballistics / Frost / Survival - Explosive Arsenal, Frost Hunter, Phantom Marksman
+**Bard** - Dissonance / Harmony / Resonance - Dissonant Strike, Melodic Harmony, Reverberating Echo
+**Tinker** - Robotics / Demolition / Engineering - Robotics, Demolition, Engineering
+**Samurai** - Steel / Iron / Wind - Way of the Sword, Way of the Shield, Way of the Wind
+**Blood Mage** - Crimson / Sanguine / Battlemage - Crimson Path, Sanguine Path, Battlemage Path
+**Warden** - Earth / Frost / Wilderness - Earthshaker, Frostwarden, Guardian]] },
+              { type = 'divider' },
+              { type = 'tip', content = 'Plan a branch first - keystone nodes are powerful but sit at the end of each path, so rushing three branches at once leaves you weak in all of them.' },
             }
           },
           paragon_ascension = {
