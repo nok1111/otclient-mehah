@@ -211,68 +211,124 @@ end
 
 -- ==================== PROFESSION PANEL ====================
 
-local function addProfLabel(parent, text, color, icon)
-  local lbl = g_ui.createWidget('UILabel', parent)
-  if lbl then
-    lbl:setText(text)
-    lbl:setColor(color or '#dfdfdf')
-    lbl:setFont('verdana-11px-rounded')
-    lbl:setTextAutoResize(true)
-    lbl:setTextWrap(true)
-    lbl:setWidth(200)
+local function profRow(parent, label, unlocked, reqLevel)
+  local row = g_ui.createWidget('BSTierRow', parent)
+  if not row then return end
+  local mark = row:recursiveGetChildById('rowMark')
+  local name = row:recursiveGetChildById('rowName')
+  local req = row:recursiveGetChildById('rowReq')
+  if mark then
+    mark:setText(unlocked and 'v' or 'x')
+    mark:setColor(unlocked and '#00BC00' or '#de6f6f')
   end
-  return lbl
+  if name then
+    name:setText(label or '')
+    name:setColor(unlocked and '#dfdfdf' or '#dfdfdf88')
+  end
+  if req then
+    req:setText(unlocked and tr('UNLOCKED') or tr('Lv.%d', reqLevel or 0))
+    req:setColor(unlocked and '#00BC00' or '#c0c0c0')
+  end
+end
+
+local function setStat(cardId, value, name)
+  local card = blacksmithWindow and blacksmithWindow:recursiveGetChildById(cardId)
+  if not card then return end
+  local v = card:recursiveGetChildById('statValue')
+  local n = card:recursiveGetChildById('statName')
+  if v then v:setText(tostring(value)) end
+  if n then n:setText(name) end
 end
 
 function Blacksmith.renderProfession(data)
   if not blacksmithWindow then return end
-  local list = blacksmithWindow:recursiveGetChildById('profScroll')
-  if not list then return end
-  list:destroyChildren()
-
   local prog = data.progression or {}
+  local mastery = prog.mastery or {}
+  local spec = prog.specialization or {}
 
-  addProfLabel(list, tr('Level %d - %s', data.level or 0, prog.rank or data.rank or ''), '#80c7f8')
+  -- Header card: rank, level, XP bar
+  setLabel('profRankName', prog.rank or data.rank or '', '#80c7f8')
+  setLabel('profLevelText', tr('Level %d', data.level or 0), '#dfdfdf')
+  local xpBar = blacksmithWindow:recursiveGetChildById('profXpBar')
+  if xpBar then xpBar:setPercent(data.pct or 0) end
+  if (data.nextLevel or 0) > 0 then
+    setLabel('profXpLabel', tr('%d / %d XP', data.points or 0, data.nextLevel), '#dfdfdf')
+  else
+    setLabel('profXpLabel', tr('MAX'), '#dfdfdf')
+  end
+
+  -- Stat cards
+  setStat('statCardLevel', data.level or 0, tr('LEVEL'))
+  setStat('statCardRank', prog.rank or data.rank or '-', tr('RANK'))
+  setStat('statCardRefines', mastery.total or 0, tr('REFINEMENTS'))
+  setStat('statCardBest', mastery.maxIlvl or 0, tr('BEST iLV'))
 
   -- Refinement tiers
-  addProfLabel(list, tr('REFINEMENT TIERS'), '#c0c0c0')
-  for _, t in ipairs(prog.tiers or {}) do
-    local mark = t.unlocked and 'v ' or 'x '
-    local color = t.unlocked and '#00BC00' or '#dfdfdf88'
-    addProfLabel(list, mark .. t.label .. (t.unlocked and '' or ('  (Lv.' .. t.reqLevel .. ')')), color)
+  local tiersList = blacksmithWindow:recursiveGetChildById('tiersList')
+  if tiersList then
+    tiersList:destroyChildren()
+    for _, t in ipairs(prog.tiers or {}) do
+      profRow(tiersList, t.label, t.unlocked, t.reqLevel)
+    end
   end
 
-  -- Perks
-  addProfLabel(list, '', '#dfdfdf')
-  addProfLabel(list, tr('PROFESSION BENEFITS'), '#c0c0c0')
-  for _, p in ipairs(prog.perks or {}) do
-    local mark = p.unlocked and 'v ' or 'x '
-    local color = p.unlocked and '#00BC00' or '#dfdfdf88'
-    addProfLabel(list, mark .. p.label .. (p.unlocked and '' or ('  (Lv.' .. p.reqLevel .. ')')), color)
+  -- Profession perks
+  local perksList = blacksmithWindow:recursiveGetChildById('perksList')
+  if perksList then
+    perksList:destroyChildren()
+    for _, p in ipairs(prog.perks or {}) do
+      profRow(perksList, p.label, p.unlocked, p.reqLevel)
+    end
   end
 
-  -- Mastery
-  local mastery = prog.mastery or {}
-  addProfLabel(list, '', '#dfdfdf')
-  addProfLabel(list, tr('REFINEMENT MASTERY'), '#c0c0c0')
-  addProfLabel(list, tr('Highest Item Level refined: %d', mastery.maxIlvl or 0), '#dfdfdf')
-  addProfLabel(list, tr('Total refinements: %d', mastery.total or 0), '#dfdfdf')
-  for _, m in ipairs(mastery.milestones or {}) do
-    local mark = m.done and 'v ' or 'x '
-    addProfLabel(list, mark .. 'Item Level ' .. m.value, m.done and '#00BC00' or '#dfdfdf88')
-  end
-  if mastery.next then
-    addProfLabel(list, tr('Next: refine an Item Level %d item', mastery.next), '#80c7f8')
+  -- Mastery: progress toward the next milestone (between previous and next)
+  local maxIlvl = mastery.maxIlvl or 0
+  setLabel('masteryText', tr('Highest Item Level refined: %d', maxIlvl), '#dfdfdf')
+  local masteryBar = blacksmithWindow:recursiveGetChildById('masteryBar')
+  local nextM = mastery.next
+  if masteryBar then
+    if nextM then
+      local prev = 0
+      for _, m in ipairs(mastery.milestones or {}) do
+        if m.done and m.value > prev then prev = m.value end
+      end
+      local pct = math.floor((maxIlvl - prev) / math.max(1, nextM - prev) * 100)
+      masteryBar:setPercent(math.max(0, math.min(100, pct)))
+      setLabel('masteryBarText', tr('Next milestone: iLv %d  (%d/%d)', nextM, maxIlvl, nextM), '#dfdfdf')
+    else
+      masteryBar:setPercent(100)
+      setLabel('masteryBarText', tr('All milestones reached'), '#dfdfdf')
+    end
   end
 
-  -- Specialization
-  addProfLabel(list, '', '#dfdfdf')
-  addProfLabel(list, tr('SPECIALIZATION'), '#c0c0c0')
-  local spec = prog.specialization or {}
-  if spec.unlocked then
-    addProfLabel(list, tr('Available'), '#00BC00')
+  -- Milestone chips
+  local chips = blacksmithWindow:recursiveGetChildById('milestonesRow')
+  if chips then
+    chips:destroyChildren()
+    for _, m in ipairs(mastery.milestones or {}) do
+      local chip = g_ui.createWidget('BSMilestoneChip', chips)
+      if chip then
+        chip:setBorderColor(m.done and '#00BC00' or '#ffffff33')
+        local lbl = chip:recursiveGetChildById('chipLabel')
+        if lbl then
+          lbl:setText('iLv ' .. m.value)
+          lbl:setColor(m.done and '#00BC00' or '#dfdfdf88')
+        end
+        chip:setTooltip(m.done and tr('Completed') or tr('Not completed'))
+      end
+    end
+  end
+
+  -- Specialization status
+  if spec.current then
+    local key = tostring(spec.current)
+    setLabel('specStatus',
+      tr('Active: %s', key:sub(1,1):upper() .. key:sub(2)),
+      '#00BC00')
+  elseif spec.unlocked then
+    setLabel('specStatus', tr('Available - pick one in the Specialization tab'), '#80c7f8')
   else
-    addProfLabel(list, tr('Locked - unlocks at Blacksmith Level %d', spec.reqLevel or 15), '#dfdfdf88')
+    setLabel('specStatus', tr('Locked - unlocks at Blacksmith Level %d', spec.reqLevel or 15), '#dfdfdf88')
   end
 end
 
