@@ -24,6 +24,14 @@ local rarityColors = {
   [4] = "#ff7605", -- Ascended
 }
 
+-- Item sprite shaders (modules/game_shaders) per rarity, same names the
+-- server sets via item:setShader.
+local rarityShaders = {
+  [2] = 'Orbital',
+  [3] = 'Forged',
+  [4] = 'Ascended',
+}
+
 local FILTERS = {
   { id = 'filterAll',       cat = 'all' },
   { id = 'filterWeapons',   cat = 'weapon' },
@@ -187,6 +195,9 @@ function Blacksmith.renderInventory()
       local w = g_ui.createWidget('BSGridItem', grid)
       if w then
         w:setItemId(it.clientId or 0)
+        if w.setShader then
+          pcall(function() w:setShader(rarityShaders[it.rarityId] or '') end)
+        end
         local lbl = w:recursiveGetChildById('ilvlLabel')
         if lbl then
           lbl:setText(it.ilvl > 0 and ('iLv.' .. it.ilvl) or '-')
@@ -553,7 +564,12 @@ function Blacksmith.updateWindow(data)
   local item = data.item
   if item then
     placedUid = item.uid
-    if itemSlot then itemSlot:setItemId(item.clientId or 0) end
+    if itemSlot then
+      itemSlot:setItemId(item.clientId or 0)
+      if itemSlot.setShader then
+        pcall(function() itemSlot:setShader(rarityShaders[item.rarityId] or '') end)
+      end
+    end
     local color = rarityColors[item.rarityId] or '#dfdfdf'
     setLabel('itemNameLabel', item.name or '', color)
     setLabel('itemInfoLabel', tr('Item Level %d', item.ilvl or 0), '#c0c0c0')

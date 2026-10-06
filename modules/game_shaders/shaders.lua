@@ -160,6 +160,7 @@ OUTFIT_SHADERS = { {
 
 
     {name = 'Forged', frag = 'shaders/fragment/forged.frag', drawColor = false},
+    {name = 'Ascended', frag = 'shaders/fragment/ascended.frag', drawColor = false},
     {name = 'Orbital', frag = 'shaders/fragment/orbital.frag', drawColor = false},
     {name = 'Corrupted', frag = 'shaders/fragment/corrupted.frag', drawColor = false},
 
