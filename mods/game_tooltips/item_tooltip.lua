@@ -43,7 +43,7 @@ local rarityColor = {
   {name = "Common", color = "#ffffff"},
   {name = "Orbital", color = "#02e2fc"},
   {name = "Forged", color = "#d300ff"},
-  {name = "[Corrupted]", color = "#ff7605"} 
+  {name = "Ascended", color = "#ff7605"}
 }
 
 local rarityBackground = {
