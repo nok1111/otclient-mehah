@@ -810,12 +810,22 @@ MainWindow
           color: #dfdfdf
           text-auto-resize: true
 
+        Label
+          id: statGainLabel
+          !text: tr('')
+          anchors.top: resultLabel.bottom
+          anchors.right: parent.right
+          margin-top: 2
+          font: small-9px
+          color: #00BC00
+          text-auto-resize: true
+
       Button
         id: refineButton
         !text: tr('REFINE')
         anchors.top: infoPanel.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        margin-top: -8
+        margin-top: -35
         width: 160
         height: 30
         enabled: false

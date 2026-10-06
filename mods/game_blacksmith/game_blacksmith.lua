@@ -580,6 +580,16 @@ function Blacksmith.updateWindow(data)
     setLabel('resultLabel', '')
   end
 
+  local statParts = {}
+  for _, s in ipairs(data.statGains or {}) do
+    if s.max and s.max > (s.min or 0) then
+      statParts[#statParts + 1] = string.format('+%s %d-%d', s.name, s.min, s.max)
+    else
+      statParts[#statParts + 1] = string.format('+%s %d', s.name, s.max or s.min or 0)
+    end
+  end
+  setLabel('statGainLabel', table.concat(statParts, '  '), '#00BC00')
+
   for _, mat in ipairs(data.materials or {}) do
     local row = g_ui.createWidget('MaterialRow', list)
     if row then
