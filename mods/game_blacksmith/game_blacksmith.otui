@@ -753,7 +753,7 @@ MainWindow
           anchors.top: resultLabel.bottom
           anchors.horizontalCenter: parent.horizontalCenter
           margin-top: 2
-          font: small-9px
+          font: verdana-11px-rounded
           color: #00BC00
           text-auto-resize: true
 
