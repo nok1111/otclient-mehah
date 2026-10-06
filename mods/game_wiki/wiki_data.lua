@@ -1,4 +1,4 @@
-﻿-- Wiki Data
+-- Wiki Data
 -- Multilanguage content for the wiki system
 -- Add more content here as needed
 
@@ -23,221 +23,228 @@ function getEnglishData()
             order = 1,
             items = {
               {
-                name = 'boots of teleportation',
-                description = '[onUse] Teleport to your targeted position.',
-                icon = 29188
-              },
-              {
-                name = 'boots of the wild',
-                description = '[onUse] Charge to your current targeted enemy.',
-                icon = 29269
-              },
-              {
-                name = 'boots of timewalking',
-                description = '[onUse] Mark your current self and rewind to it after 4 seconds.',
-                icon = 29299
-              },
-              {
-                name = 'boots of winter',
-                description = '[onUse] Place ice traps on the ground while moving that will slow down the enemies.',
-                icon = 3551
-              },
-              {
-                name = 'boots of levitation',
-                description = '[onUse] Levitate into the air removing all paralysed effects and dashing towards the direction you are facing.',
-                icon = 29249
-              },
-              {
-                name = 'boots of the void',
-                description = '[onUse] Instantly trap all nearby enemies in a void field.',
-                icon = 27379
-              },
-              {
-                name = 'boots of the salamander',
-                description = '[onUse] Place fire pillars in your targeted position wich can block line of sight.',
-                icon = 9019
-              },
-              {
-                name = 'boots of the dreamer',
-                description = '[onUse] Restore 15% maximum mana of all nearby friendly players.',
-                icon = 6529
-              },
-              {
                 name = 'magnetic orb',
                 description = 'place a magnetic orb to create a magnetic field that damages nearby enemies',
-                icon = 34086
+                icon = 38167
               },
               {
                 name = 'celestial sigil',
-                description = 'Shoots a celestial mark into the targeted position wich deals damage and increases your magic level percent by 20% for 4 seconds',
-                icon = 34068
+                description = 'Shoots a celestial mark into the targeted position which deals damage and increases your magic level percent by 20% for 4 seconds',
+                icon = 38149
               },
               {
                 name = 'absolute defense',
                 description = 'increase your block chance by 50% and max health by 30% for the next 8 seconds. (requires a shield equiped)',
-                icon = 34096
+                icon = 38177
               },
               {
                 name = 'bouncing sphere',
                 description = 'create a bouncing sphere that bounces between you and your target dealing damage and healing yourself, the sphere speed is based on the distance between you and your target',
-                icon = 34088
+                icon = 38169
               },
               {
                 name = 'earthquake',
                 description = 'break the ground dealing physical damage to all enemies and stun them for a short period of time',
-                icon = 34087
+                icon = 38168
               },
               {
                 name = 'blessed tree',
-                description = 'create a blessed tree in the targeted position, wich restores health and mana to all nearby players if destroyed.',
-                icon = 34076
+                description = 'create a blessed tree in the targeted position, which restores health and mana to all nearby players if destroyed.',
+                icon = 38157
               },
               {
                 name = 'spider web',
-                description = 'throw a spider web on your target wich stuns it for 2 seconds.',
-                icon = 34084
+                description = 'throw a spider web on your target which stuns it for 2 seconds.',
+                icon = 38165
               },
               {
                 name = 'meteor',
                 description = 'throw a meteor on your targeted position dealing fire damage to nearby enemies.',
-                icon = 34071
+                icon = 38152
               },
               {
                 name = 'water wave',
-                description = 'create 3 water tides wich deal ice damage and stun the enemies for 1 second.',
-                icon = 34113
+                description = 'create 3 water tides which deal ice damage and stun the enemies for 1 second.',
+                icon = 38194
               },
               {
                 name = 'thunder chain',
                 description = 'create a energy chain reaction will travel through all nearby enemies.',
-                icon = 34072
+                icon = 38153
               },
               {
                 name = 'water torrent',
-                description = 'create a water torrent wich repell enemies around yourself.',
-                icon = 34097
+                description = 'create a water torrent which repels enemies around yourself.',
+                icon = 38178
               },
               {
                 name = 'shark teeth',
-                description = 'create a dangerous area wich later will be devoured by a giant shark.',
-                icon = 29924
+                description = 'create a dangerous area which later will be devoured by a giant shark.',
+                icon = 34003
               },
               {
                 name = 'wild vines',
                 description = 'create wild vines around yourself that pulls nearby monsters into you.',
-                icon = 34107
+                icon = 38188
               },
               {
                 name = 'quick chains',
                 description = 'send quick chains in the direction aimed and pull in the first enemy reached into you.',
-                icon = 34075
+                icon = 38156
               },
               {
                 name = 'boomerang',
                 description = 'Throw a magical boomerang that deals damage in a straight line and returns to you.',
-                icon = 34121
+                icon = 38202
               },
               {
                 name = 'wild spikes',
                 description = 'Unleash two wild spikes in front of you, healing yourself and dealing damage to the target.',
-                icon = 29916
+                icon = 33995
               },
               {
                 name = 'sniper shot',
                 description = 'A precise, long-range attack that deals damage based on the distance traveled.',
-                icon = 29936
+                icon = 34015
               },
               {
                 name = 'thunder leap',
-                description = 'leap into your targeted position dealing damage and stuning nearby enemies for 1 second.',
-                icon = 34109
+                description = 'leap into your targeted position dealing damage and stunning nearby enemies for 1 second.',
+                icon = 38190
               },
               {
                 name = 'chain of flames',
-                description = 'create a fire chain reaction will travel through all nearby enemies.',
-                icon = 34077
+                description = 'create a fire chain reaction that will travel through all nearby enemies.',
+                icon = 38158
               },
               {
                 name = 'toxic spores',
                 description = 'emanate toxic spores poisoning all nearby enemies for 8 seconds.',
-                icon = 29998
+                icon = 34077
               },
               {
                 name = 'final sentence',
-                description = 'Setence your target dealing massive holy damage in a small area increasing its damage based on the target\'s missing health.',
-                icon = 29917
+                description = "Sentence your target dealing massive holy damage in a small area increasing its damage based on the target's missing health.",
+                icon = 33996
               },
               {
                 name = 'healing prisma',
                 description = 'Heals you and nearby allies in a wider area',
-                icon = 34110
+                icon = 38191
               },
               {
                 name = 'fire tornado',
                 description = 'Summon a raging fire tornado that repeatedly burns enemies in an area and slows their movement.',
-                icon = 34098
+                icon = 38179
               },
               {
                 name = 'opelus',
                 description = 'Unleash repeated bursts of energy damage at a target location, striking all enemies in the area multiple times.',
-                icon = 34081
+                icon = 38162
               },
               {
                 name = 'voltstorm',
                 description = 'Unleash a storm of constant energy damage at your targeted location, striking all enemies in the area multiple times.',
-                icon = 34101
+                icon = 38182
               },
               {
                 name = 'blood aura',
                 description = 'wield a blood aura draining life force from all nearby enemies.',
-                icon = 29918
+                icon = 33997
               },
               {
                 name = 'arcane missiles',
                 description = 'Fire 5 arcane missiles that seek random enemies in a 7x7 area, dealing energy damage.',
-                icon = 34073
+                icon = 38154
               },
               {
                 name = 'lightning rod',
                 description = 'Place a lightning rod that strikes nearby enemies with chain lightning every second for 6 seconds.',
-                icon = 34074
+                icon = 38155
               },
               {
                 name = 'phase shift',
                 description = 'Become intangible for 2 seconds. You cannot attack or be attacked during this time.',
-                icon = 19369
+                icon = 21703
               },
               {
                 name = 'rejuvenation',
                 description = 'Regenerate 5% of your maximum health per second for 10 seconds, healing 50% total.',
-                icon = 34094
+                icon = 38175
               },
               {
                 name = 'last stand',
                 description = 'When your health drops below 15%, automatically heal 30% of your maximum health. 120 second cooldown.',
-                icon = 34125
+                icon = 38206
               },
               {
                 name = 'mana battery',
                 description = 'Convert 20% of your current health into 30% of your maximum mana.',
-                icon = 34124
+                icon = 38205
               },
               {
                 name = 'soul reaper',
                 description = 'Every time you kill an enemy within the next 10 seconds, you deal death damage in a small area and restore 8% of your health and mana.',
-                icon = 34106
+                icon = 38187
               },
               {
                 name = 'frost nova',
                 description = 'Freeze the ground in a 5x5 area for 8 seconds. Enemies entering are slowed by 70% for 2 seconds.',
-                icon = 34111
+                icon = 38192
+              }
+            }
+          },
+          spell_boots = {
+            name = 'Spell Boots',
+            type = 'list',
+            order = 2,
+            items = {
+              {
+                name = 'boots of teleportation',
+                description = '[onUse] Teleport to your targeted position.',
+                icon = 33267
+              },
+              {
+                name = 'boots of the wild',
+                description = '[onUse] Charge to your current targeted enemy.',
+                icon = 33348
+              },
+              {
+                name = 'boots of timewalking',
+                description = '[onUse] Mark your current self and rewind to it after 4 seconds.',
+                icon = 33378
+              },
+              {
+                name = 'boots of winter',
+                description = '[onUse] Place ice traps on the ground while moving that will slow down the enemies.',
+                icon = 2642
+              },
+              {
+                name = 'boots of levitation',
+                description = '[onUse] Levitate into the air removing all paralysed effects and dashing towards the direction you are facing.',
+                icon = 33328
+              },
+              {
+                name = 'boots of the void',
+                description = '[onUse] Instantly trap all nearby enemies in a void field.',
+                icon = 32497
+              },
+              {
+                name = 'boots of the salamander',
+                description = '[onUse] Place fire pillars in your targeted position which can block line of sight.',
+                icon = 9933
+              },
+              {
+                name = 'boots of the dreamer',
+                description = '[onUse] Restore 15% maximum mana of all nearby friendly players.',
+                icon = 6132
               }
             }
           },
           runes = {
             name = 'Runes',
             type = 'list',
-            order = 2,
+            order = 3,
             items = {
               {
                 name = 'Ultimate Healing Rune',
@@ -259,7 +266,7 @@ function getEnglishData()
           inventory = {
             name = 'Inventory Slots',
             type = 'rich_text',
-            order = 3,
+            order = 4,
             sections = {
               { type = 'title', text = 'THE INVENTORY WINDOW', color = '#ffd75e' },
               { type = 'text', content = 'Your equipment window is split into three groups: **ACTIVE** for utility gear, **COMBAT** for weapon and armor, and **CRAFTING** for your three rune slots. Backpack, ring and necklace sit in between.' },
