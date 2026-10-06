@@ -373,10 +373,46 @@ function getEnglishData()
               { type = 'tip', content = 'Dungeon pools cut the required kills in half but pay **double** rewards (triple for boss kills) - always check if a dungeon task is offered.' },
             }
           },
+          npc_quests = {
+            name = 'Kill Tasks vs NPC Quests',
+            type = 'rich_text',
+            order = 2,
+            sections = {
+              { type = 'title', text = 'TWO DIFFERENT SYSTEMS', color = '#ffd75e' },
+              { type = 'text', content = 'The server has **two separate task systems** that run side by side - knowing which is which saves confusion.' },
+              { type = 'divider' },
+
+              { type = 'title', text = 'KILL TASKS - THE TASK BOARD', color = '#d4a843' },
+              { type = 'text', content = 'The **Task Board** (this whole category) is the repeatable hunting engine: 3 daily offers + rerolls, kill-count objectives from level-scaled pools, tiered rewards and modifiers.' },
+              { type = 'cards', items = {
+                { image = '/images/icons/quest_marker.png', name = 'Source', color = '#ffd75e', description = 'The Task Board window - pick one of 3 rolled offers.' },
+                { image = '/images/icons/prey_damage.png', name = 'Objectives', color = '#ff8888', description = 'Pure kill counts (or a single boss kill) - no item deliveries.' },
+                { image = '/images/icons/treasure.png', name = 'Rewards', color = '#9fe89f', description = 'Gold / Fame / EXP rolled per task, plus Codex Essences and crates by tier. Repeatable every day.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'title', text = 'NPC QUESTS - THE TASK LIST', color = '#d4a843' },
+              { type = 'text', content = '**NPC Quests** are story-driven quests given by specific NPCs around the world (Sheriff Gordon, Seer Valeria, Dream-Seeker Alran, Farmer Mabel and ~30 more). Each NPC offers its own questline - talk to them, complete the objectives, then **return to the same NPC to claim your reward**.' },
+              { type = 'cards', items = {
+                { image = '/images/icons/quest_marker.png', name = 'Source', color = '#ffd75e', description = 'NPC dialogues - each NPC hands out its own fixed quests (about 100 quests across the world).' },
+                { image = '/images/icons/icon_axe.png', name = 'Objectives', color = '#ff8888', description = 'Varied: kill named monsters or bosses, collect and deliver specific items, or complete story steps.' },
+                { image = '/images/icons/crown.png', name = 'Rewards', color = '#9fe89f', description = 'Fixed loot per quest: unique items, gold, potions, titles (like the Quest 90 verdict rewards) - not rerollable.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'title', text = 'KEY DIFFERENCES', color = '#d4a843' },
+              { type = 'text', content = [[- **Kill tasks** come from the board, are random each day, and you can only hold **1 at a time**
+- **NPC quests** are fixed questlines - you can run several from different NPCs in parallel
+- Kill task rewards are **rolled** (tiers, modifiers, essence/crate chances)
+- NPC quest rewards are **fixed** per quest - check the NPC dialogue for what you get
+- Abandoning a kill task loses its progress; NPC quest progress is stored until you finish]] },
+              { type = 'tip', content = 'Both systems run independently - a daily "Kill Task" objective can complete while an NPC quest line is also active.' },
+            }
+          },
           tiers = {
             name = 'Task Tiers & Rarity',
             type = 'rich_text',
-            order = 2,
+            order = 3,
             sections = {
               { type = 'title', text = 'Task Tiers' },
               { type = 'divider' },
@@ -393,7 +429,7 @@ function getEnglishData()
           rewards = {
             name = 'Rewards & Bonuses',
             type = 'rich_text',
-            order = 3,
+            order = 4,
             sections = {
               { type = 'title', text = 'How Rewards Are Calculated' },
               { type = 'divider' },
@@ -421,7 +457,7 @@ function getEnglishData()
           modifiers = {
             name = 'Task Modifiers',
             type = 'rich_text',
-            order = 4,
+            order = 5,
             sections = {
               { type = 'title', text = 'Task Modifiers' },
               { type = 'divider' },
@@ -457,7 +493,7 @@ function getEnglishData()
           rerolls = {
             name = 'Rerolls System',
             type = 'rich_text',
-            order = 5,
+            order = 6,
             sections = {
               { type = 'title', text = 'Rerolls' },
               { type = 'divider' },
@@ -473,7 +509,7 @@ function getEnglishData()
           locks = {
             name = 'Lock System',
             type = 'rich_text',
-            order = 6,
+            order = 7,
             sections = {
               { type = 'title', text = 'Locks' },
               { type = 'divider' },
@@ -489,7 +525,7 @@ function getEnglishData()
           fame_premium = {
             name = 'Fame & Premium Benefits',
             type = 'rich_text',
-            order = 7,
+            order = 8,
             sections = {
               { type = 'title', text = 'Fame Hunter Ranks' },
               { type = 'divider' },
