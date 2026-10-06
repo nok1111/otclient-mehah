@@ -272,7 +272,7 @@ function Blacksmith.renderProfession(data)
   if spec.unlocked then
     addProfLabel(list, tr('Available'), '#00BC00')
   else
-    addProfLabel(list, tr('Locked - unlocks at Blacksmith Level %d', spec.reqLevel or 30), '#dfdfdf88')
+    addProfLabel(list, tr('Locked - unlocks at Blacksmith Level %d', spec.reqLevel or 15), '#dfdfdf88')
   end
 end
 
@@ -375,7 +375,7 @@ function Blacksmith.renderSpecialization()
 
   local current = specData and specData.current or 0
   local unlocked = specData and specData.unlocked or false
-  local reqLevel = specData and specData.reqLevel or 30
+  local reqLevel = specData and specData.reqLevel or 15
 
   for _, spec in ipairs(specData and specData.list or {}) do
     local card = g_ui.createWidget('BSSpecCard', list)

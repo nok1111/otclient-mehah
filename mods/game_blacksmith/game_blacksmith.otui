@@ -946,7 +946,7 @@ MainWindow
 
       Label
         id: specSub
-        !text: tr('Unlocks at Blacksmith Level 30. Only one specialization can be active.')
+        !text: tr('Unlocks at Blacksmith Level 15. Only one specialization can be active.')
         anchors.top: specTitle.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         margin-top: 4
