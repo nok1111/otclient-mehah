@@ -563,7 +563,13 @@ function Blacksmith.updateWindow(data)
   if data.target then
     setLabel('targetRarity', data.target.rarity or '', rarityColors[data.target.rarityId] or '#dfdfdf')
     setLabel('targetSub', tr('TARGET'), '#c0c0c0')
-    setLabel('resultLabel', tr('Result: %s (Item Level %d)', data.target.rarity or '', data.target.ilvl or 0),
+    local ilvlText
+    if data.target.ilvlMax and data.target.ilvlMax > (data.target.ilvlMin or 0) then
+      ilvlText = tr('Item Level %d-%d', data.target.ilvlMin, data.target.ilvlMax)
+    else
+      ilvlText = tr('Item Level %d', data.target.ilvl or 0)
+    end
+    setLabel('resultLabel', string.format('%s: %s (%s)', tr('Result'), data.target.rarity or '', ilvlText),
       rarityColors[data.target.rarityId] or '#dfdfdf')
   elseif data.maxRarity then
     setLabel('targetRarity', tr('MAX RARITY'), '#ff7605')
@@ -656,8 +662,9 @@ function Blacksmith.onResult(data)
     for _, mat in ipairs(data.materials or {}) do
       matText = matText .. (#matText > 0 and ', ' or '') .. string.format('-%d %s', mat.need or 0, mat.name or '')
     end
+    local bonus = (data.ilvlBonusPct or 0) > 0 and tr(' iLv +%d%%', data.ilvlBonusPct) or ''
     setLabel('statusLabel',
-      tr('Refined to %s! (+%d XP)  Consumed: %s', data.rarity or '', data.xp or 0, matText),
+      tr('Refined to %s!%s (+%d XP)  Consumed: %s', data.rarity or '', bonus, data.xp or 0, matText),
       '#00BC00')
   end
 end
