@@ -589,8 +589,15 @@ function buildItemTooltip(item)
     secondText = formatStatWithBonus("Defense", second, item.baseDefense)
   end
 
+  -- Armor pieces can also carry defense (items.xml) alongside armor
+  if (type == "Armor" or type == "Spell" or type == "Legs" or type == "Boots") and second ~= 0 then
+    secondText = formatStatWithBonus("Defense", second, item.baseDefense)
+  end
+
   -- Extra-Defense text for melee weapons (one-handed and two-handed)
-  if (type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Axe") and third ~= 0 then
+  -- and for armor pieces (rarity tiers grant extra defense to armor)
+  if (type == "Two-Handed Sword" or type == "Two-Handed Club" or type == "Two-Handed Axe" or type == "Sword" or type == "Club" or type == "Axe" or
+      type == "Armor" or type == "Spell" or type == "Legs" or type == "Boots" or type == "Ring" or type == "Necklace") and third ~= 0 then
     thirdText = formatStatWithBonus("Extra-Defense", third, item.baseExtraDefense)
   elseif type == "Distance" or type == "Axe" then
     secondText = "Shoot Range: " .. third
@@ -600,9 +607,9 @@ function buildItemTooltip(item)
   if first ~= 0 and second ~= 0 and third ~= 0 then
     addSeparator()
     addEmpty(5)
-    addString(firstText, Colors.Default)
-    addString(secondText, Colors.Default)
-    addString(thirdText, Colors.Default)
+    if firstText then addString(firstText, Colors.Default) end
+    if secondText then addString(secondText, Colors.Default) end
+    if thirdText then addString(thirdText, Colors.Default) end
   elseif first ~= 0 and second == 0 and third ~= 0 then
     -- E.g. one-handed melee with Extra-Defense only
     addSeparator()
