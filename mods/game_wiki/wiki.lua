@@ -208,7 +208,6 @@ function show()
   -- Populate content on first show
   if not wikiWindow.initialized then
     populateCategories()
-    updateLanguageLabel()
     wikiWindow.initialized = true
   end
   
@@ -232,8 +231,7 @@ function hide()
 end
 
 function loadWikiData()
-  -- Load wiki content based on current language
-  WikiData = getWikiData(currentLanguage)
+  WikiData = getEnglishData()
 end
 
 function populateCategories()
@@ -611,38 +609,6 @@ function displaySearchResults(results)
           break
         end
       end
-    end
-  end
-end
-
-function changeLanguage()
-  -- Toggle between languages
-  if currentLanguage == 'en' then
-    currentLanguage = 'es'
-  else
-    currentLanguage = 'en'
-  end
-  
-  loadWikiData()
-  updateLanguageLabel()
-  
-  -- Refresh current view
-  if wikiWindow and wikiWindow:isVisible() then
-    populateCategories()
-    if currentCategory then
-      selectCategory(currentCategory)
-      if currentSubCategory then
-        selectSubCategory(currentCategory, currentSubCategory)
-      end
-    end
-  end
-end
-
-function updateLanguageLabel()
-  if wikiWindow then
-    local langButton = wikiWindow:recursiveGetChildById('languageButton')
-    if langButton then
-      langButton:setText(currentLanguage:upper())
     end
   end
 end
