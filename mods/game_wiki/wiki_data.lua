@@ -2154,9 +2154,11 @@ function getEnglishData()
               { type = 'cards', items = {
                 { icon = 35768, name = 'Alchemy', color = '#77ff77', description = 'Brew custom potions. Level it by crafting.' },
                 { icon = 29034, name = 'Enchanting', color = '#cc99ff', description = 'Disenchant gear and craft stat runes (blue/green/yellow/purple/red tiers with unique rolls).' },
+                { icon = 3630, name = 'Blacksmith', color = '#ff8888', description = 'Crafts combat gear and refines item rarity at the anvil - pair it with Mining for ore and bars.' },
+                { icon = 39962, name = 'Refinery', color = '#ffd75e', description = 'Turns Woodcutting logs into planks and crafts utility gadgets, tools and furniture.' },
                 { icon = 6500, name = 'Herbalism', color = '#88cc66', description = 'Gather herbs from random herb nodes in the world.' },
-                { icon = 6500, name = 'Mining', color = '#ccaa77', description = 'Mine ore from random vein nodes.' },
-                { icon = 6500, name = 'Woodcutting', color = '#aa7744', description = 'Chop wood from random tree nodes.' },
+                { icon = 6500, name = 'Mining', color = '#ccaa77', description = 'Mine ore veins - the raw material of Blacksmith bars. Grants HP per level.' },
+                { icon = 6500, name = 'Woodcutting', color = '#aa7744', description = 'Chop trees for logs that feed the Refinery. Grants +1% attack speed per level.' },
               }},
               { type = 'divider' },
 
@@ -2164,10 +2166,85 @@ function getEnglishData()
               { type = 'text', content = '**Pre-upgraded:** blueprint items come out already upgraded, saving crystals and risk.\n**Custom stats:** they roll attributes from the item balance table (crit, leech, %HP, cooldown reduction, etc.) - real end-game stats, not flat armor.\n**Blueprints:** learn recipes like Fire Sword, Dragonbreath Crossbow, Grievous Axe, Fire Essence Wand and Fragment of Pure Life.' },
             }
           },
+          blacksmith = {
+            name = 'Blacksmith',
+            type = 'rich_text',
+            order = 2,
+            sections = {
+              { type = 'title', text = 'THE BLACKSMITH', color = '#ffd75e' },
+              { type = 'text', content = 'The Blacksmith turns raw ore into power: **smelt** mined ores into bars at the forge, then **refine the rarity** of the gear you already own at the anvil. Pair it with **Mining** - ores become the bars that feed the anvil.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'The Anvil - Rarity Refinement', color = '#ff9e5e' },
+              { type = 'text', content = 'Use the **anvil** to raise an item\'s rarity. Loot decides [color=#ffd700]what[/color] item you have; the anvil decides [color=#ffd700]how strong[/color] it is - the item\'s identity never changes:\n\n**Common -> Orbital -> Forged -> Ascended**\n\nEach rarity step scales the item\'s effective item level (+15% of base per step). Costs scale linearly with item level: **Monster Essence**, **Guardian Essence** for higher tiers, and a **metal bar** matching the item\'s level band.' },
+              { type = 'cards', items = {
+                { icon = 32702, name = 'Orbital', color = '#58a6ff', description = 'Requires Blacksmith level 0 - Monster Essence + a bar.' },
+                { icon = 32704, name = 'Forged', color = '#c678dd', description = 'Requires Blacksmith level 10 - more essence + Guardian Essence.' },
+                { icon = 40441, name = 'Ascended', color = '#ffa940', description = 'Requires Blacksmith level 20 AND the matching specialization.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Bars by Item Level', color = '#ccaa77' },
+              { type = 'text', content = 'The anvil asks for the bar that matches your item\'s level: **Copper** (iLvl up to 60) - **Silver** (up to 130) - **Gold** (up to 200) - **Crystaline** (up to 260) - **Veridium** (up to 320) - **Saladium** (320+).' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'The Forge - Smelting', color = '#ff8844' },
+              { type = 'text', content = 'Smelt **5 ore + 2 coal** into 1 bar at the forge. Better ores need a higher Blacksmith level: Copper (0) - Silver (5) - Gold (7) - Crystaline (10) - Veridium (15) - Saladium (15). Coal drops while mining. Every smelt grants Blacksmith XP.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Specializations (level 15)', color = '#cc99ff' },
+              { type = 'cards', items = {
+                { icon = 2376, name = 'Weaponsmith', color = '#ff8888', description = 'Specialize in weapons - required to refine weapons to Ascended. +10% material discount, +15% XP on weapons.' },
+                { icon = 2466, name = 'Armorsmith', color = '#66aaff', description = 'Specialize in armor and shields - required for Ascended armor. +10% materials, +15% XP.' },
+                { icon = 2130, name = 'Trinketsmith', color = '#ffd75e', description = 'Specialize in rings, necklaces and accessories - required for Ascended trinkets. +10% materials, +15% XP.' },
+              }},
+              { type = 'divider' },
+              { type = 'text', content = 'Only one specialization can be active at a time. Higher Blacksmith levels also cut material costs and boost XP (+5% at level 15, +10% at level 25), and each refine adds up to +10% bonus item level with a small random roll. Rank titles: Novice, Apprentice (5), Journeyman (10), Expert (25), Master (30).' },
+              { type = 'tip', content = 'Equip before you refine: refining works on unequipped inventory items, and the preview shows the exact stat range you will gain.' },
+            }
+          },
+          refinery = {
+            name = 'Refinery',
+            type = 'rich_text',
+            order = 3,
+            sections = {
+              { type = 'title', text = 'THE REFINERY', color = '#ffd75e' },
+              { type = 'text', content = 'The Refinery turns raw **Woodcutting** materials into useful gear: logs become planks, and planks become **gadgets** - consumables, utility tools and buff items. Gadget damage and healing scale with your Refinery level.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Logs into Planks', color = '#ccaa77' },
+              { type = 'text', content = 'Chop trees for logs (5 logs -> 15 planks), then refine them into the five plank types: **Oak, Greenheart, Bloodwood, Pine and Maple Planks**. Rarer wood needs a higher Woodcutting level - it is the perfect profession to pair with Refinery.' },
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Gadgets', color = '#66ff99' },
+              { type = 'cards', items = {
+                { icon = 37357, name = 'Bandage', color = '#9fe89f', description = 'Heals over 10 seconds - heals more per Refinery level.' },
+                { icon = 32415, name = "Lumberjack's Charm", color = '#ccaa77', description = '+20% gathering yield for 30 minutes.' },
+                { icon = 5786, name = 'Pet Whistle', color = '#77ddaa', description = 'Revives all fainted pet eggs.' },
+                { icon = 40447, name = 'Wooden Training Weapons', color = '#aaaaaa', description = 'Training wand, sword, shield and bow with charges for skill practice.' },
+                { icon = 37426, name = 'Decoy Dummy I-IV', color = '#ffaa55', description = 'Deployable dummies that draw monster attention - four tiers.' },
+                { icon = 31821, name = 'Whetstone', color = '#dddddd', description = '+10% melee skill for 20 minutes.' },
+                { icon = 23559, name = 'Glue Bomb', color = '#66ffee', description = 'Area slow + energy damage that scales with Refinery level.' },
+                { icon = 12421, name = 'Elven Sight', color = '#88ffcc', description = '+10% distance skill for 20 minutes.' },
+                { icon = 39917, name = 'Camp Tent Kit', color = '#ffcc66', description = 'Deploy a tent that grants +10% EXP to nearby players.' },
+                { icon = 12419, name = 'Livingwood Staff', color = '#88cc66', description = '+10% arcana skill for 20 minutes.' },
+                { icon = 5800, name = 'Grappling Hook', color = '#ffaa77', description = 'Pull yourself up to 12 tiles to a target tile - even across floors.' },
+                { icon = 13829, name = 'Boomerang Sword', color = '#ff8888', description = 'Thrown weapon that damages on the way out and back - scales with Refinery level.' },
+                { icon = 32414, name = 'The Yoinker', color = '#cc99ff', description = 'Fires a 9-tile wave that yanks the first creature hit toward you.' },
+                { icon = 22648, name = 'Pocket Depot Box', color = '#ffd75e', description = 'Deploys a personal depot locker for 2 minutes - bank loot anywhere.' },
+              }},
+              { type = 'divider' },
+
+              { type = 'subtitle', text = 'Decoration', color = '#c9a0ff' },
+              { type = 'text', content = 'The Refinery also crafts furniture kits for your house: wooden chair, small table, birdcage, dresser, bookcase and rocking chair.' },
+              { type = 'divider' },
+              { type = 'tip', content = 'Gadgets are consumable or charge-based - craft extras for long hunts, and keep a Pocket Depot for deep dungeon runs.' },
+            }
+          },
           bonuses = {
             name = 'Crafting Bonuses',
             type = 'rich_text',
-            order = 2,
+            order = 4,
             sections = {
               { type = 'title', text = 'CRAFTING BONUSES', color = '#ffd75e' },
               { type = 'text', content = 'Crafted items do not inherit a monster\'s level - their **item level is built from the recipe**, your profession level and a bit of luck. That is why a good crafter outclasses monster drops.' },
@@ -2196,7 +2273,7 @@ function getEnglishData()
           materials = {
             name = 'Materials',
             type = 'rich_text',
-            order = 3,
+            order = 5,
             sections = {
               { type = 'title', text = 'CRAFTING MATERIALS', color = '#ffd75e' },
               { type = 'text', content = 'Every recipe asks for a mix of **essences**, **gathered goods** and **powders**. Most come from hunting - blue loot orbs carry the bulk of the raw materials.' },
@@ -2230,11 +2307,10 @@ function getEnglishData()
               { type = 'divider' },
 
               { type = 'subtitle', text = 'Gathering Professions', color = '#ccaa77' },
-              { type = 'warning', content = 'Gathering nodes are temporarily disabled while the system is being reworked - profession levels and their passive bonuses still apply.' },
               { type = 'cards', items = {
-                { icon = 40035, name = 'Mining', color = '#aaaaaa', description = 'Ore veins spawn in the world - copper first, then silver, gold, platinum and mythril as your skill rises. Each level grants HP passives.' },
+                { icon = 40035, name = 'Mining', color = '#aaaaaa', description = 'Ore veins spawn in the world - copper first, then silver, gold, crystaline, veridium and saladium as your skill rises. Ores smelt into Blacksmith bars at the forge. Each level grants HP passives.' },
                 { icon = 39096, name = 'Herbalism', color = '#88cc66', description = 'Herb nodes yield plants for alchemy. Grants mana passives per level.' },
-                { icon = 37763, name = 'Woodcutting', color = '#cc8844', description = 'Chop tree nodes for wood materials. Grants attack speed per level.' },
+                { icon = 37763, name = 'Woodcutting', color = '#cc8844', description = 'Chop trees for logs - Oak, Greenheart, Bloodwood, Pine and Maple by rarity tier. Logs refine into planks at the Refinery. Grants +1% attack speed per level.' },
               }},
               { type = 'divider' },
 
