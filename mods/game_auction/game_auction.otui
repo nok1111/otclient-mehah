@@ -96,7 +96,7 @@ AuctionWindow < MainWindow
       color: #ff6b6b
       background-color: #1a1a24
       border: 1 #3a3a4a
-      @onClick: Auction.window:hide()
+      @onClick: self:getParent():getParent():hide()
 
   Panel
     id: toolbarPanel
