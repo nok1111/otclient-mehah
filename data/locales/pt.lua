@@ -9,6 +9,7 @@ locale = {
 
  -- As tradues devem vir sempre em ordem alfabtica.
  translation = {
+	["%d%% COMPLETE"] = "%d%% COMPLETO",
  ["(ERROR %d)"] = "(ERRO %d)",
  ["%d of experience per hour"] = "%d de experiência por hora",
  ["%s has finished the request"] = "%s finalizou o pedido",
@@ -145,6 +146,7 @@ locale = {
 	["Gold"] = "Ouro",
 	["Item"] = "Item",
 	["Item must be dragged from your inventory (not the ground)."] = "O item deve ser arrastado do seu inventario (nao do chao).",
+	["Last updated: %s"] = "Última atualização: %s",
 	["List"] = "Anunciar",
 	["Listed: %s x%d for %s%s"] = "Anunciado: %s x%d por %s%s",
 	["Listing canceled."] = "Anuncio cancelado.",
@@ -169,6 +171,7 @@ locale = {
 	["Refinement"] = "Refinamento",
 	["Reward:"] = "Recompensa:",
 	["Runes"] = "Runas",
+	["Search the wiki..."] = "Buscar na wiki...",
 	["Search..."] = "Buscar...",
 	["Select a listing to buy."] = "Selecione um anuncio para comprar.",
 	["Select one of your listings to cancel."] = "Selecione um dos seus anuncios para cancelar.",
