@@ -619,6 +619,8 @@ function changeLanguage()
   -- Toggle between languages
   if currentLanguage == 'en' then
     currentLanguage = 'es'
+  elseif currentLanguage == 'es' then
+    currentLanguage = 'pt'
   else
     currentLanguage = 'en'
   end
