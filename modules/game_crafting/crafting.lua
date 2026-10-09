@@ -33,7 +33,6 @@ local messageWindow = nil
 local selectedCategory = 'All'
 local searchText = ''
 local pendingDetailsChild = nil  -- recipe widget whose details are scheduled
-local profPreviewClientId = 0    -- clientId of the recipe awaiting a route reply
 
 local function formatNumber(n)
     n = math.floor(tonumber(n) or 0)
@@ -41,78 +40,6 @@ local function formatNumber(n)
     local out = s:reverse():gsub("(%d%d%d)", "%1,"):reverse()
     return (out:gsub("^,", ""))
 end
-
--- ── Proficiency route preview ───────────────────────────────────────────────
-local function clearProficiencyPreview()
-	if not craftingWindow or craftingWindow:isDestroyed() then return end
-	local panel = craftingWindow:recursiveGetChildById('profPreview')
-	if not panel then return end
-	local cols = panel:recursiveGetChildById('profColumns')
-	if cols then cols:destroyChildren() end
-	panel:setVisible(false)
-end
-
-local function renderProficiencyPreview(route)
-	if not craftingWindow or craftingWindow:isDestroyed() then return end
-	local panel = craftingWindow:recursiveGetChildById('profPreview')
-	if not panel then return end
-	local cols = panel:recursiveGetChildById('profColumns')
-	if not cols then return end
-	cols:destroyChildren()
-
-	for _, colData in ipairs(route.columns or {}) do
-		local col = g_ui.createWidget('CraftProfColumn', cols)
-
-		local hdr = g_ui.createWidget('CraftProfHeader', col)
-		hdr:setText('M' .. tostring(colData.column))
-		if (colData.reqXp or 0) > 0 then
-			hdr:setTooltip(string.format('Milestone %d\n%s proficiency XP', colData.column, formatNumber(colData.reqXp)))
-		end
-
-		for i, trait in ipairs(colData.traits or {}) do
-			if i > 3 then break end -- profColumns height fits 3 nodes
-			local node = g_ui.createWidget('CraftProfNode', col)
-			local icon = node:getChildById('icon')
-			if icon and trait.icon and trait.icon ~= '' then
-				icon:setImageSource(trait.icon)
-			end
-			node:setTooltip(string.format('%s\n%s', trait.name or '', trait.desc or ''))
-		end
-	end
-
-	local descLabel = craftingWindow:recursiveGetChildById('descLabel')
-	if descLabel then
-		descLabel:setText('Proficiency (' .. (route.categoryName or 'Gear') .. ')')
-	end
-end
-
-local function updateProficiencyPreview(recipe)
-	clearProficiencyPreview()
-	profPreviewClientId = 0
-	if not recipe then return end
-
-	local panel = craftingWindow:recursiveGetChildById('profPreview')
-	if panel then
-		panel:setVisible(true) -- show the panel while the route loads
-	end
-
-	local ip = modules.game_itemproficiency
-	if not ip or not ip.requestRoute then return end
-
-	local clientId = tonumber(recipe.spriteId) or 0
-	profPreviewClientId = clientId
-	-- The reply arrives inside extended-opcode packet parsing; defer the widget
-	-- building out of that context.
-	ip.requestRoute(clientId, function(route)
-		if profPreviewClientId ~= clientId then return end
-		if not route then return end
-		addEvent(function()
-			if profPreviewClientId ~= clientId then return end
-			renderProficiencyPreview(route)
-		end)
-	end)
-end
--- ────────────────────────────────────────────────────────────────────────────
 
 function init()
 --craftingButton = modules.client_topmenu.addRightGameToggleButton('craftingButton', tr('Crafting'), '/game_crafting/img/hammer', toggle)
@@ -154,8 +81,6 @@ end
 
 function hide()
 	pendingDetailsChild = nil
-	profPreviewClientId = 0
-	clearProficiencyPreview()
 	craftingWindow:hide()
 	craftingWindow:ungrabKeyboard()
     modules.game_interface.getRootPanel():focus()
@@ -280,22 +205,12 @@ function applyRecipeDetails(child)
 	--craftingWindow:getChildById("cost"):setText("0")
 	--craftingWindow:getChildById("balance"):setText("0")
 
-	-- proficiency items replace the description box with a route preview
 	local descLabel = craftingWindow:recursiveGetChildById('descLabel')
 	local descBox = craftingWindow:recursiveGetChildById('recipeDesc')
-	local descScroll = craftingWindow:recursiveGetChildById('recipeDescScrollBar')
-	if recipe.hasProf then
-		if descLabel then descLabel:setText(tr('Proficiency')) end
-		if descBox then descBox:setVisible(false) end
-		if descScroll then descScroll:setVisible(false) end
-		updateProficiencyPreview(recipe)
-	else
-		clearProficiencyPreview()
-		if descLabel then descLabel:setText(tr('Description')) end
-		if descBox then
-			descBox:setVisible(true)
-			descBox:setText(recipe.desc)
-		end
+	if descLabel then descLabel:setText(tr('Description')) end
+	if descBox then
+		descBox:setVisible(true)
+		descBox:setText(recipe.desc)
 	end
 
 	local label = craftingWindow:recursiveGetChildById("recipeLabel")
