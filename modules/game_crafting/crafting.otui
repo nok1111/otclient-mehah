@@ -116,7 +116,7 @@ MainWindow
 
   Label
     id: costlabel
-    !text: tr('	Crafting fee:')
+    !text: tr('Crafting fee:')
     anchors.top: craftAllButton.bottom
     anchors.right: parent.right
     margin-right: 10
@@ -195,7 +195,7 @@ MainWindow
       width: 180
       height: 22
       margin-top: 4
-      placeholder: Search...
+      !placeholder: tr('Search...')
       editable: true
       focusable: true
       selectable: true

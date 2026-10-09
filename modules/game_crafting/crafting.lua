@@ -100,8 +100,8 @@ function onLeftAmount()
 	end
 
 	amount:setText(tostring(value - 1))
-	craftingWindow:getChildById("cost"):setText(recipe.cost * (value - 1) .. " Gold")
-	craftingWindow:getChildById("balance"):setText(tostring(balance .. " Gold"))
+	craftingWindow:getChildById("cost"):setText(recipe.cost * (value - 1) .. " " .. tr("Gold"))
+	craftingWindow:getChildById("balance"):setText(tostring(balance) .. " " .. tr("Gold"))
 end
 
 function onRightAmount()
@@ -117,8 +117,8 @@ function onRightAmount()
 	end
 
 	amount:setText(tostring(math.min(100, value + 1)))
-	craftingWindow:getChildById("cost"):setText(recipe.cost * (value + 1) .. " Gold")
-	craftingWindow:getChildById("balance"):setText(tostring(balance .. " Gold"))
+	craftingWindow:getChildById("cost"):setText(recipe.cost * (value + 1) .. " " .. tr("Gold"))
+	craftingWindow:getChildById("balance"):setText(tostring(balance) .. " " .. tr("Gold"))
 end
 
 function onRecipeSelected(w, child)
@@ -154,7 +154,7 @@ function applyRecipeDetails(child)
 	
 	
 	
-	craftingWindow:getChildById("cost"):setText(recipe.cost .. " Gold")
+	craftingWindow:getChildById("cost"):setText(recipe.cost .. " " .. tr("Gold"))
 
 	local item = craftingWindow:recursiveGetChildById("recipeItem")
 	item:setItemId(recipe.spriteId)
@@ -179,7 +179,7 @@ function applyRecipeDetails(child)
 		widget:setItemId(ingredient.spriteId)
 		widget:setVirtual(true)
 		widget:setItemCount(ingredient.count)
-		widget:setTooltip("You got " .. ingredient.playerCount .. "/" .. ingredient.count .. " required " .. ingredient.name)
+		widget:setTooltip(tr("You got %d/%d required %s", ingredient.playerCount, ingredient.count, ingredient.name))
 	end
 
 	-- compute max craft amount directly (the old while-loop froze the client
@@ -252,7 +252,7 @@ function updateCraftingWindow(skill, recipes)
 	craftingWindow:getChildById("skillLabel"):setText(tostring(skill.level))
 	craftingWindow:getChildById("skillBar"):setPercent(tostring(skill.percentage))
 	craftingWindow:getChildById("professionIcon"):setImageSource(skillIdToImage[skill.profId])
-	craftingWindow:setText(skillIdToUI[skill.profId])
+	craftingWindow:setText(tr(skillIdToUI[skill.profId]))
 	craftingWindow.profId = skill.profId
 	
 	craftingWindow:getChildById("balance"):setText(tostring(balance))
@@ -287,7 +287,7 @@ function updateCraftingWindow(skill, recipes)
         categoryBar:destroyChildren()
         for _, cat in ipairs(categories) do
             local btn = g_ui.createWidget('Button', categoryBar)
-            btn:setText(cat)
+            btn:setText(tr(cat))
             btn.onClick = function()
                 selectedCategory = cat
                 -- re-render recipe list with filter
@@ -362,8 +362,8 @@ function renderRecipeList(skill, recipes)
 
             local MIN_LEVEL = recipe.requiredSkill
             local MAX_STORAGE_VALUE = 700
-            local NOT_LEARNED_YET = " ??? - Not Learned Yet"
-            local LEVEL_TOO_LOW = "??? - Level too low"
+            local NOT_LEARNED_YET = ' ' .. tr('??? - Not Learned Yet')
+            local LEVEL_TOO_LOW = tr('??? - Level too low')
 
             if skill.level < MIN_LEVEL or (recipe.recipestorage >= MAX_STORAGE_VALUE and recipe.storagevalue ~= 1) then
                 widget:setEnabled(false)
