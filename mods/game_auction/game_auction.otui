@@ -37,7 +37,7 @@ AuctionWindow < MainWindow
       anchors.verticalCenter: parent.verticalCenter
       margin-left: 10
       size: 110 30
-!text: tr("Browse")
+      !text: tr("Browse")
       color: #cccccc
       background-color: #1a1a24
       border: 1 #2a2a3a
@@ -48,7 +48,7 @@ AuctionWindow < MainWindow
       anchors.verticalCenter: parent.verticalCenter
       margin-left: 4
       size: 110 30
-!text: tr("My Offers")
+      !text: tr("My Offers")
       color: #cccccc
       background-color: #1a1a24
       border: 1 #2a2a3a
@@ -59,7 +59,7 @@ AuctionWindow < MainWindow
       anchors.verticalCenter: parent.verticalCenter
       margin-left: 4
       size: 110 30
-!text: tr("History")
+      !text: tr("History")
       color: #cccccc
       background-color: #1a1a24
       border: 1 #2a2a3a
@@ -70,7 +70,7 @@ AuctionWindow < MainWindow
       anchors.verticalCenter: parent.verticalCenter
       margin-left: 4
       size: 110 30
-!text: tr("Mail")
+      !text: tr("Mail")
       color: #cccccc
       background-color: #1a1a24
       border: 1 #2a2a3a
@@ -81,7 +81,7 @@ AuctionWindow < MainWindow
       anchors.verticalCenter: parent.verticalCenter
       margin-right: 40
       size: 76 24
-!text: tr("Refresh")
+      !text: tr("Refresh")
       color: #cccccc
       background-color: #1a1a24
       border: 1 #3a3a4a
@@ -125,13 +125,13 @@ AuctionWindow < MainWindow
       anchors.verticalCenter: parent.verticalCenter
       margin-left: 6
       size: 70 22
-!text: tr("Search")
+      !text: tr("Search")
       color: #cccccc
       background-color: #1a1a24
       border: 1 #3a3a4a
 
     Label
-!text: tr("Sort")
+      !text: tr("Sort")
       anchors.left: searchButton.right
       anchors.verticalCenter: parent.verticalCenter
       margin-left: 12
@@ -151,7 +151,7 @@ AuctionWindow < MainWindow
       anchors.verticalCenter: parent.verticalCenter
       margin-right: 10
       size: 70 22
-!text: tr("Filter")
+      !text: tr("Filter")
       color: #cccccc
       background-color: #1a1a24
       border: 1 #3a3a4a
@@ -203,7 +203,7 @@ AuctionWindow < MainWindow
 
         Button
           id: catAll
-!text: tr("All")
+          !text: tr("All")
           height: 22
           margin-top: 2
           margin-left: 4
@@ -214,7 +214,7 @@ AuctionWindow < MainWindow
 
         Button
           id: catWeapons
-!text: tr("Weapons")
+          !text: tr("Weapons")
           height: 22
           margin-top: 2
           margin-left: 4
@@ -238,7 +238,7 @@ AuctionWindow < MainWindow
 
           Button
             id: subOneHand
-!text: tr("One-Hand")
+            !text: tr("One-Hand")
             height: 18
             margin-top: 2
             margin-left: 4
@@ -249,7 +249,7 @@ AuctionWindow < MainWindow
 
           Button
             id: subTwoHand
-!text: tr("Two-Hand")
+            !text: tr("Two-Hand")
             height: 18
             margin-top: 2
             margin-left: 4
@@ -260,7 +260,7 @@ AuctionWindow < MainWindow
 
           Button
             id: subDistance
-!text: tr("Distance")
+            !text: tr("Distance")
             height: 18
             margin-top: 2
             margin-left: 4
@@ -271,7 +271,7 @@ AuctionWindow < MainWindow
 
           Button
             id: subWands
-!text: tr("Wands")
+            !text: tr("Wands")
             height: 18
             margin-top: 2
             margin-left: 4
@@ -282,7 +282,7 @@ AuctionWindow < MainWindow
 
           Button
             id: subShields
-!text: tr("Shields")
+            !text: tr("Shields")
             height: 18
             margin-top: 2
             margin-left: 4
@@ -293,7 +293,7 @@ AuctionWindow < MainWindow
 
         Button
           id: catArmor
-!text: tr("Armor")
+          !text: tr("Armor")
           height: 22
           margin-top: 2
           margin-left: 4
@@ -304,7 +304,7 @@ AuctionWindow < MainWindow
 
         Button
           id: catShields
-!text: tr("Shields")
+          !text: tr("Shields")
           height: 22
           margin-top: 2
           margin-left: 4
@@ -315,7 +315,7 @@ AuctionWindow < MainWindow
 
         Button
           id: catBoots
-!text: tr("Boots")
+          !text: tr("Boots")
           height: 22
           margin-top: 2
           margin-left: 4
@@ -326,7 +326,7 @@ AuctionWindow < MainWindow
 
         Button
           id: catHelmet
-!text: tr("Spells")
+          !text: tr("Spells")
           height: 22
           margin-top: 2
           margin-left: 4
@@ -337,7 +337,7 @@ AuctionWindow < MainWindow
 
         Button
           id: catAccessories
-!text: tr("Accessories")
+          !text: tr("Accessories")
           height: 22
           margin-top: 2
           margin-left: 4
@@ -348,7 +348,7 @@ AuctionWindow < MainWindow
 
         Button
           id: catRunes
-!text: tr("Runes")
+          !text: tr("Runes")
           height: 22
           margin-top: 2
           margin-left: 4
@@ -359,7 +359,7 @@ AuctionWindow < MainWindow
 
         Button
           id: catPets
-!text: tr("Pets")
+          !text: tr("Pets")
           height: 22
           margin-top: 2
           margin-left: 4
@@ -370,7 +370,7 @@ AuctionWindow < MainWindow
 
         Button
           id: catConsumables
-!text: tr("Consumables")
+          !text: tr("Consumables")
           height: 22
           margin-top: 2
           margin-left: 4
@@ -394,7 +394,7 @@ AuctionWindow < MainWindow
 
           Button
             id: subPotions
-!text: tr("Potions")
+            !text: tr("Potions")
             height: 18
             margin-top: 2
             margin-left: 4
@@ -405,7 +405,7 @@ AuctionWindow < MainWindow
 
           Button
             id: subFlasks
-!text: tr("Flasks")
+            !text: tr("Flasks")
             height: 18
             margin-top: 2
             margin-left: 4
@@ -416,7 +416,7 @@ AuctionWindow < MainWindow
 
           Button
             id: subElixirs
-!text: tr("Elixirs")
+            !text: tr("Elixirs")
             height: 18
             margin-top: 2
             margin-left: 4
@@ -427,7 +427,7 @@ AuctionWindow < MainWindow
 
         Button
           id: catMaterials
-!text: tr("Materials")
+          !text: tr("Materials")
           height: 22
           margin-top: 2
           margin-left: 4
@@ -438,7 +438,7 @@ AuctionWindow < MainWindow
 
         Button
           id: catOthers
-!text: tr("Others")
+          !text: tr("Others")
           height: 22
           margin-top: 2
           margin-left: 4
@@ -472,7 +472,7 @@ AuctionWindow < MainWindow
           type: anchor
 
         Label
-!text: tr("Item")
+          !text: tr("Item")
           anchors.left: parent.left
           anchors.verticalCenter: parent.verticalCenter
           margin-left: 48
@@ -482,7 +482,7 @@ AuctionWindow < MainWindow
 
         Label
           id: sellerHeader
-!text: tr("Seller")
+          !text: tr("Seller")
           anchors.left: parent.left
           anchors.verticalCenter: parent.verticalCenter
           margin-left: 260
@@ -494,7 +494,7 @@ AuctionWindow < MainWindow
 
         Label
           id: timeHeader
-!text: tr("Time Left")
+          !text: tr("Time Left")
           anchors.left: parent.left
           anchors.verticalCenter: parent.verticalCenter
           margin-left: 354
@@ -505,7 +505,7 @@ AuctionWindow < MainWindow
           phantom: true
 
         Label
-!text: tr("Price")
+          !text: tr("Price")
           anchors.right: parent.right
           anchors.verticalCenter: parent.verticalCenter
           margin-right: 8
@@ -621,7 +621,7 @@ AuctionWindow < MainWindow
           anchors.verticalCenter: parent.verticalCenter
           margin-left: 12
           width: 40
-!text: tr("Cost:")
+          !text: tr("Cost:")
           color: #aaaaaa
 
         Label
@@ -649,7 +649,7 @@ AuctionWindow < MainWindow
           anchors.verticalCenter: parent.verticalCenter
           margin-right: 8
           size: 110 26
-!text: tr("Buy Selected")
+          !text: tr("Buy Selected")
           color: #f5c542
           background-color: #1a1a24
           border: 1 #f5c542
@@ -660,7 +660,7 @@ AuctionWindow < MainWindow
           anchors.verticalCenter: parent.verticalCenter
           margin-right: 8
           size: 110 26
-!text: tr("Cancel Listing")
+          !text: tr("Cancel Listing")
           color: #cccccc
           background-color: #1a1a24
           border: 1 #3a3a4a
@@ -679,7 +679,7 @@ AuctionWindow < MainWindow
           anchors.left: parent.left
           anchors.top: parent.top
           margin-left: 4
-!text: tr("My Active Offers")
+          !text: tr("My Active Offers")
           color: #f5c542
           font: verdana-11px-rounded
 
@@ -731,7 +731,7 @@ AuctionWindow < MainWindow
             anchors.top: parent.top
             margin-left: 8
             margin-top: 6
-!text: tr("Create Listing")
+            !text: tr("Create Listing")
             color: #f5c542
             font: verdana-11px-rounded
 
@@ -768,7 +768,7 @@ AuctionWindow < MainWindow
               item-id: 0
               item-count: 0
               draggable: false
-!tooltip: tr("Drag item here from inventory")
+              !tooltip: tr("Drag item here from inventory")
               UIWidget
                 id: tier
                 size: 10 9
@@ -784,7 +784,7 @@ AuctionWindow < MainWindow
 
             Label
               id: priceLabel
-!text: tr("Price:")
+              !text: tr("Price:")
               anchors.left: listItemSlot.right
               anchors.verticalCenter: parent.verticalCenter
               margin-left: 14
@@ -801,7 +801,7 @@ AuctionWindow < MainWindow
 
             Label
               id: countLabel
-!text: tr("Count:")
+              !text: tr("Count:")
               anchors.left: priceEdit.right
               anchors.verticalCenter: parent.verticalCenter
               margin-left: 12
@@ -823,7 +823,7 @@ AuctionWindow < MainWindow
 
             Label
               id: totalLabel
-!text: tr("Total:")
+              !text: tr("Total:")
               anchors.left: countSpin.right
               anchors.verticalCenter: parent.verticalCenter
               margin-left: 12
@@ -855,7 +855,7 @@ AuctionWindow < MainWindow
               anchors.verticalCenter: parent.verticalCenter
               margin-right: 10
               size: 65 26
-!text: tr("List")
+              !text: tr("List")
               color: #f5c542
               background-color: #1a1a24
               border: 1 #f5c542
@@ -872,7 +872,7 @@ AuctionWindow < MainWindow
 
             Label
               id: rewardLabel
-!text: tr("Reward:")
+              !text: tr("Reward:")
               anchors.left: parent.left
               anchors.verticalCenter: parent.verticalCenter
               margin-left: 10
@@ -881,7 +881,7 @@ AuctionWindow < MainWindow
 
             AuctionToggleButton
               id: rewardGold
-!text: tr("Gold")
+              !text: tr("Gold")
               anchors.left: rewardLabel.right
               anchors.verticalCenter: parent.verticalCenter
               margin-left: 6
@@ -893,7 +893,7 @@ AuctionWindow < MainWindow
 
             AuctionToggleButton
               id: rewardFame
-!text: tr("Fame")
+              !text: tr("Fame")
               anchors.left: rewardGold.right
               anchors.verticalCenter: parent.verticalCenter
               margin-left: 4
@@ -905,7 +905,7 @@ AuctionWindow < MainWindow
 
             Label
               id: durationLabel
-!text: tr("Duration:")
+              !text: tr("Duration:")
               anchors.left: rewardFame.right
               anchors.verticalCenter: parent.verticalCenter
               margin-left: 16
@@ -1051,7 +1051,7 @@ AuctionRow < Panel
     anchors.verticalCenter: parent.verticalCenter
     margin-right: 4
     size: 80 24
-!text: tr("Remove")
+    !text: tr("Remove")
     color: #ff6b6b
     background-color: #1a1a24
     border: 1 #3a3a4a
