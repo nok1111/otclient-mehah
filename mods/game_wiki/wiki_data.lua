@@ -590,7 +590,7 @@ function getEnglishData()
 
 **Blacksmith:** Copper Smelter (copper bars) - Silver Smelter (silver bars) - Gold Smelter (gold bars) - smelt ore + coal at the forge
 
-**Blank Runes:** Blank Collector (Pelagos) - Blank Runesmith (Magellan) - Blank Master (Elysium) - empty enchanting runes]] },
+**Refinery:** Plank Apprentice (oak) - Plank Journeyman (greenheart) - Plank Master (bloodwood) - woodcutting logs refined into planks]] },
               { type = 'divider' },
               { type = 'tip', content = 'Prioritize easy tasks first for quick completions, keep spare crafted items in storage for instant turn-ins, and always claim your Golden Crate before the day ends.' },
             }
