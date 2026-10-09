@@ -588,7 +588,9 @@ function getEnglishData()
 
 **Enchanting:** Apprentice (tier 1 runes) - Journeyman (tier 3) - Adept (tier 4) - Master (tier 5) - Grand (tier 6 top-tier) - Blueprint Specialist (rare blueprint crafts)
 
-**Blacksmith:** Apprentice (starter weapons and shields) - Journeyman (basic combat gear: 1H swords, 2H weapons, ranged, shields)]] },
+**Blacksmith:** Copper Smelter (copper bars) - Silver Smelter (silver bars) - Gold Smelter (gold bars) - smelt ore + coal at the forge
+
+**Blank Runes:** Blank Collector (Pelagos) - Blank Runesmith (Magellan) - Blank Master (Elysium) - empty enchanting runes]] },
               { type = 'divider' },
               { type = 'tip', content = 'Prioritize easy tasks first for quick completions, keep spare crafted items in storage for instant turn-ins, and always claim your Golden Crate before the day ends.' },
             }
