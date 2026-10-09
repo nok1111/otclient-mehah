@@ -596,7 +596,11 @@ function getEnglishData()
 
 **Enchanting:** Apprentice (tier 1 runes) - Journeyman (tier 3) - Adept (tier 4) - Master (tier 5) - Grand (tier 6 top-tier) - Blueprint Specialist (rare blueprint crafts)
 
-**Blacksmith:** Apprentice (starter weapons and shields) - Journeyman (basic combat gear: 1H swords, 2H weapons, ranged, shields)]] },
+**Blacksmith:** Apprentice (starter weapons and shields) - Journeyman (basic combat gear: 1H swords, 2H weapons, ranged, shields)
+
+**Refinery (Gadgets):** utility items crafted from wood and bars - bandages and training weapons at low levels, decoys, whetstones, glue bombs and camp tents mid-tier, then the livingwood staff, grappling hook, boomerang sword and pocket depot at the top. Refinery level directly boosts gadget damage and healing.
+
+**Woodcutting:** gathering profession that feeds Refinery - chop tree nodes into logs, refine them into planks, and gain +1% attack speed per level.]] },
               { type = 'divider' },
               { type = 'tip', content = 'Prioritize easy tasks first for quick completions, keep spare crafted items in storage for instant turn-ins, and always claim your Golden Crate before the day ends.' },
             }
@@ -2162,9 +2166,11 @@ function getEnglishData()
               { type = 'cards', items = {
                 { icon = 35768, name = 'Alchemy', color = '#77ff77', description = 'Brew custom potions. Level it by crafting.' },
                 { icon = 29034, name = 'Enchanting', color = '#cc99ff', description = 'Disenchant gear and craft stat runes (blue/green/yellow/purple/red tiers with unique rolls).' },
+                { icon = 3630, name = 'Blacksmith', color = '#ff8888', description = 'Forge weapons and armor from metal bars - typically paired with Mining for its ore.' },
+                { icon = 39962, name = 'Refinery', color = '#ffd75e', description = 'The gadgets profession - turns Woodcutting planks and materials into utility items: grappling hook, boomerang sword, glue bombs, bandages, decoys, camp tents and training weapons. Gadget damage and healing scale with your Refinery level.' },
                 { icon = 6500, name = 'Herbalism', color = '#88cc66', description = 'Gather herbs from random herb nodes in the world.' },
                 { icon = 6500, name = 'Mining', color = '#ccaa77', description = 'Mine ore from random vein nodes.' },
-                { icon = 6500, name = 'Woodcutting', color = '#aa7744', description = 'Chop wood from random tree nodes.' },
+                { icon = 6500, name = 'Woodcutting', color = '#aa7744', description = 'Chop tree nodes for logs and refine them into planks - the raw material of Refinery gadgets. Grants attack speed per level.' },
               }},
               { type = 'divider' },
 
@@ -2833,7 +2839,14 @@ Las tareas de crafting escalan con los niveles de profesion:
 
 **Herreria:**
 - Aprendiz: Armas iniciales y escudos
-- Oficial: Equipo de combate basico (espadas 1M, armas 2M, a distancia, escudos)]] },
+- Oficial: Equipo de combate basico (espadas 1M, armas 2M, a distancia, escudos)
+
+**Refineria (Gadgets):**
+- Items de utilidad hechos de madera y metales: vendas y armas de entrenamiento en niveles bajos; senuelos, piedras de afilar, bombas de pegamento y carpas en niveles medios; baston de madera viva, gancho de agarre, espada boomerang y deposito portatil en niveles altos
+- El nivel de Refineria aumenta directamente el dano y curacion de los gadgets
+
+**Leñador (Woodcutting):**
+- Profesion de recoleccion que alimenta a Refineria: corta arboles para obtener troncos, refinalos en tablones y gana +1% de velocidad de ataque por nivel]] },
               { type = 'image', path = '/images/wiki/horizontal_bridge.png', width = 365, height = 28 },
               { type = 'spacer', height = 8 },
 
