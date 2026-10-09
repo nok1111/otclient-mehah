@@ -95,11 +95,11 @@ function Auction.setTab(tab)
     end
   end
   if sellerHeader and sellerHeader.setText then
-    if tab == 'history' or tab == 'mail' then sellerHeader:setText('') else sellerHeader:setText('Seller') end
+    if tab == 'history' or tab == 'mail' then sellerHeader:setText('') else sellerHeader:setText(tr('Seller')) end
   end
   local timeHeader = Auction.window and Auction.window:recursiveGetChildById('timeHeader') or nil
   if timeHeader and timeHeader.setText then
-    if tab == 'history' or tab == 'mail' then timeHeader:setText('Date') else timeHeader:setText('Time Left') end
+    if tab == 'history' or tab == 'mail' then timeHeader:setText(tr('Date')) else timeHeader:setText(tr('Time Left')) end
   end
   -- clear current list
   if Auction.browseList then Auction.browseList:destroyChildren() end
@@ -113,7 +113,7 @@ function Auction.setTab(tab)
     if Auction.browseList then
       Auction.browseList:destroyChildren()
       local loading = g_ui.createWidget('UILabel', Auction.browseList)
-      loading:setText('Loading...')
+      loading:setText(tr('Loading...'))
       loading:setPhantom(true)
       loading:setColor('#bbbbbb')
       loading:setMarginTop(8)
@@ -126,7 +126,7 @@ function Auction.setTab(tab)
     if Auction.browseList then
       Auction.browseList:destroyChildren()
       local loading = g_ui.createWidget('UILabel', Auction.browseList)
-      loading:setText('Loading...')
+      loading:setText(tr('Loading...'))
       loading:setPhantom(true)
       loading:setColor('#bbbbbb')
       loading:setMarginTop(8)
@@ -363,15 +363,15 @@ function Auction.ensureWindow()
 
   -- Initialize sort options
   if Auction.sortBox then
-    local sortOpts = { 'Newest', 'Price: Low to High', 'Price: High to Low', 'Time Left' }
+    local sortOpts = { tr('Newest'), tr('Price: Low to High'), tr('Price: High to Low'), tr('Time Left') }
     if Auction.sortBox.clearOptions then pcall(function() Auction.sortBox:clearOptions() end) end
     for i = 1, #sortOpts do
       pcall(function() Auction.sortBox:addOption(sortOpts[i]) end)
     end
     if Auction.sortBox.setCurrentOption then
-      pcall(function() Auction.sortBox:setCurrentOption('Newest') end)
+      pcall(function() Auction.sortBox:setCurrentOption(tr('Newest')) end)
     elseif Auction.sortBox.setText then
-      pcall(function() Auction.sortBox:setText('Newest') end)
+      pcall(function() Auction.sortBox:setText(tr('Newest')) end)
     end
     Auction.sortBox.onOptionChange = function(widget, text, index)
       Auction.onSortChange(text)
@@ -671,7 +671,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     Auction.browseList:destroyChildren()
     if #d == 0 then
       local empty = g_ui.createWidget('UILabel', Auction.browseList)
-      empty:setText('No results.')
+      empty:setText(tr('No results.'))
       empty:setPhantom(true)
       empty:setColor('#bbbbbb')
       empty:setMarginTop(8)
@@ -773,7 +773,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     Auction.myOffersList:destroyChildren()
     if #d == 0 then
       local empty = g_ui.createWidget('UILabel', Auction.myOffersList)
-      empty:setText('You have no active listings.')
+      empty:setText(tr('You have no active listings.'))
       empty:setPhantom(true)
       empty:setColor('#bbbbbb')
       empty:setMarginTop(8)
@@ -845,10 +845,10 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
   elseif e == 'AH_LIST_ACK' then
     print('[Auction][Client] AH_LIST_ACK received')
     if d and d.error then
-      displayInfoBox('Auction', d.error)
+      displayInfoBox(tr('Auction'), d.error)
     else
-      local suffix = (d.reward == 'fame' and ' fame') or ' gp'
-      displayInfoBox('Auction', 'Listed: '..d.name..' x'..d.count..' for '..d.price..suffix)
+      local suffix = (d.reward == 'fame' and ' ' .. tr('fame')) or ' gp'
+      displayInfoBox(tr('Auction'), tr('Listed: %s x%d for %s%s', d.name, d.count, d.price, suffix))
       Auction.send('AH_MY', {})
       Auction.send('AH_SEARCH', Auction.buildSearchParams())
       if Auction.listItemSlot then Auction.listItemSlot:setItem(nil) end
@@ -861,20 +861,20 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
   elseif e == 'AH_BUY_ACK' then
     print('[Auction][Client] AH_BUY_ACK received')
     if d and d.error then
-      displayInfoBox('Auction', d.error)
+      displayInfoBox(tr('Auction'), d.error)
     else
-      local suffix = (d.reward == 'fame') and ' fame' or ' gp'
-      displayInfoBox('Auction', 'Purchased for '..d.price..suffix)
+      local suffix = (d.reward == 'fame') and ' ' .. tr('fame') or ' gp'
+      displayInfoBox(tr('Auction'), tr('Purchased for %s%s', d.price, suffix))
       Auction.send('AH_MY', {})
       Auction.send('AH_SEARCH', Auction.buildSearchParams())
     end
   elseif e == 'AH_BUY_PART_ACK' then
     print('[Auction][Client] AH_BUY_PART_ACK received')
     if d and d.error then
-      displayInfoBox('Auction', d.error)
+      displayInfoBox(tr('Auction'), d.error)
     else
-      local suffix = (d.reward == 'fame') and ' fame' or ' gp'
-      displayInfoBox('Auction', 'Purchased '..tostring(d.count)..' for '..tostring(d.price)..suffix)
+      local suffix = (d.reward == 'fame') and ' ' .. tr('fame') or ' gp'
+      displayInfoBox(tr('Auction'), tr('Purchased %d for %s%s', d.count, d.price, suffix))
       Auction.send('AH_MY', {})
       local params = Auction.buildSearchParams()
       print(string.format('[Auction][Client] refresh after BUY_PART with category=%s name=%s', tostring(params.category), tostring(params.name)))
@@ -883,9 +883,9 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
   elseif e == 'AH_CANCEL_ACK' then
     print('[Auction][Client] AH_CANCEL_ACK received')
     if d and d.error then
-      displayInfoBox('Auction', d.error)
+      displayInfoBox(tr('Auction'), d.error)
     else
-      displayInfoBox('Auction', 'Listing canceled.')
+      displayInfoBox(tr('Auction'), tr('Listing canceled.'))
       Auction.send('AH_MY', {})
       local params = Auction.buildSearchParams()
       print(string.format('[Auction][Client] refresh after CANCEL with category=%s name=%s', tostring(params.category), tostring(params.name)))
@@ -898,7 +898,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     Auction.browseList:destroyChildren()
     if #d == 0 then
       local empty = g_ui.createWidget('UILabel', Auction.browseList)
-      empty:setText('No sales yet.')
+      empty:setText(tr('No sales yet.'))
       empty:setPhantom(true)
       empty:setColor('#bbbbbb')
       empty:setMarginTop(8)
@@ -912,7 +912,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       local cnt = tonumber(d[i].count) or 1
       local baseName = tostring(d[i].name or ''):gsub('^%s*[xX]%s*%d+%s+', '')
       w:getChildById('name'):setText(baseName)
-      w:getChildById('price'):setText(tostring(d[i].price) .. ' gold')
+      w:getChildById('price'):setText(tostring(d[i].price) .. ' ' .. tr('gold'))
       local item = w:getChildById('icon')
       item:setItemId(d[i].cid)
       applyIconShader(item, d[i].name)
@@ -936,7 +936,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     Auction.browseList:destroyChildren()
     if #d == 0 then
       local empty = g_ui.createWidget('UILabel', Auction.browseList)
-      empty:setText('No pending payouts.')
+      empty:setText(tr('No pending payouts.'))
       empty:setPhantom(true)
       empty:setColor('#bbbbbb')
       empty:setMarginTop(8)
@@ -977,7 +977,7 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
       local rowCancel = w:recursiveGetChildById('rowCancel')
       if rowCancel then
         rowCancel:setVisible(true)
-        if rowCancel.setText then rowCancel:setText(amount > 0 and 'Claim' or 'Claim Item') end
+        if rowCancel.setText then rowCancel:setText(amount > 0 and tr('Claim') or tr('Claim Item')) end
         local pid = d[i].id
         rowCancel.onClick = function()
           Auction.send('AH_CLAIM', { id = pid })
@@ -986,9 +986,9 @@ function Auction.onExtendedOpcode(protocol, code, buffer)
     end
   elseif e == 'AH_CLAIM_ACK' then
     if d and d.error then
-      displayInfoBox('Auction', d.error)
+      displayInfoBox(tr('Auction'), d.error)
     else
-      displayInfoBox('Auction', 'You successfully claimed this offer.')
+      displayInfoBox(tr('Auction'), tr('You successfully claimed this offer.'))
       Auction.send('AH_MAIL', {})
     end
   end
@@ -1121,7 +1121,7 @@ end
 function Auction.updatePageLabel()
   if Auction.pageLabel and Auction.pageLabel.setText then
     local page = math.floor((tonumber(Auction.searchOffset) or 0) / 25) + 1
-    Auction.pageLabel:setText('Page ' .. page)
+    Auction.pageLabel:setText(tr('Page') .. ' ' .. page)
   end
   if Auction.prevPageButton and Auction.prevPageButton.setEnabled then
     Auction.prevPageButton:setEnabled((tonumber(Auction.searchOffset) or 0) > 0)
@@ -1131,10 +1131,10 @@ end
 function Auction.onSortChange(text)
   if not text then return end
   local map = {
-    ['Newest'] = 'newest',
-    ['Price: Low to High'] = 'timethenprice',
-    ['Price: High to Low'] = 'price_desc',
-    ['Time Left'] = 'timeleft'
+    [tr('Newest')] = 'newest',
+    [tr('Price: Low to High')] = 'timethenprice',
+    [tr('Price: High to Low')] = 'price_desc',
+    [tr('Time Left')] = 'timeleft'
   }
   local newSort = map[tostring(text)] or 'newest'
   if newSort ~= Auction.searchSortBy then
@@ -1274,7 +1274,7 @@ function Auction.clearBrowseWithLoading()
   if not Auction.browseList then return end
   Auction.browseList:destroyChildren()
   local loading = g_ui.createWidget('UILabel', Auction.browseList)
-  loading:setText('Loading...')
+  loading:setText(tr('Loading...'))
   loading:setPhantom(true)
   loading:setColor('#bbbbbb')
   loading:setMarginTop(8)
@@ -1313,7 +1313,7 @@ end
 function Auction.onBuy()
   print(string.format('[Auction][Client] onBuy: selectedId=%s', tostring(Auction.selectedId)))
   if not Auction.selectedId then
-    displayInfoBox('Auction', 'Select a listing to buy.')
+    displayInfoBox(tr('Auction'), tr('Select a listing to buy.'))
     return
   end
   local desired = 1
@@ -1331,7 +1331,7 @@ end
 function Auction.onCancel()
   print(string.format('[Auction][Client] onCancel: selectedId=%s', tostring(Auction.selectedId)))
   if not Auction.selectedId then
-    displayInfoBox('Auction', 'Select one of your listings to cancel.')
+    displayInfoBox(tr('Auction'), tr('Select one of your listings to cancel.'))
     return
   end
   Auction.send('AH_CANCEL', { id = Auction.selectedId })
@@ -1341,7 +1341,7 @@ function Auction.onList()
   print('[Auction][Client] onList called')
   local item = Auction.listItemSlot:getItem()
   if not item then
-    displayInfoBox('Auction', 'Drag an item into the slot.')
+    displayInfoBox(tr('Auction'), tr('Drag an item into the slot.'))
     return
   end
   local unitPrice = tonumber(Auction.priceEdit:getText()) or 0
@@ -1351,12 +1351,12 @@ function Auction.onList()
   local totalPrice = math.floor((unitPrice or 0) * count)
   print(string.format('[Auction][Client] onList unitPrice=%s count=%s totalPrice=%s', tostring(unitPrice), tostring(count), tostring(totalPrice)))
   if unitPrice < 1 then
-    displayInfoBox('Auction', 'Enter a valid price.')
+    displayInfoBox(tr('Auction'), tr('Enter a valid price.'))
     return
   end
   local pos = Auction.listFromPos or (item.getPosition and item:getPosition() or nil)
   if not pos or pos.x ~= 0xFFFF then
-    displayInfoBox('Auction', 'Item must be dragged from your inventory (not the ground).')
+    displayInfoBox(tr('Auction'), tr('Item must be dragged from your inventory (not the ground).'))
     return
   end
   local cid = item:getId()
