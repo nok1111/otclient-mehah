@@ -3,13 +3,21 @@
 -- Add more content here as needed
 
 function getWikiData(language)
+  -- English is the most complete/updated dataset; localized categories
+  -- override it where translations exist, the rest stays in English
+  local data = getEnglishData()
+  local localized
   if language == 'es' then
-    return getSpanishData()
+    localized = getSpanishData()
   elseif language == 'pt' then
-    return getPortugueseData()
-  else
-    return getEnglishData()
+    localized = getPortugueseData()
   end
+  if localized then
+    for key, category in pairs(localized.categories) do
+      data.categories[key] = category
+    end
+  end
+  return data
 end
 
 function getEnglishData()
