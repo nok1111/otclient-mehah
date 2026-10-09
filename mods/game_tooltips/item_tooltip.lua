@@ -304,6 +304,7 @@ function newTooltip(data)
   local _qualityBonuses = data.qualityBonuses or nil
   local _isCraftPreview = data.crafting == true
   local _craftLevel = data.craftLevel or nil
+  local _charges = tonumber(data.charges) or 0
 
 
   -- Cache by real item UID only if available (server 'new' path). Virtual items ('newByClientId') have no uid.
@@ -336,7 +337,8 @@ function newTooltip(data)
       baseDefense = _baseDefense,
       baseArmor = _baseArmor,
       baseExtraDefense = _baseExtraDefense,
-      craftLevel = _craftLevel
+      craftLevel = _craftLevel,
+      charges = _charges
     }
   else
   end
@@ -379,7 +381,8 @@ function newTooltip(data)
       baseDefense = _baseDefense,
       baseArmor = _baseArmor,
       baseExtraDefense = _baseExtraDefense,
-      craftLevel = _craftLevel
+      craftLevel = _craftLevel,
+      charges = _charges
     }
   else
   end
@@ -632,8 +635,16 @@ function buildItemTooltip(item)
     addString(secondText, Colors.Default)
   end
 
+  if item.charges and item.charges > 0 then
+    if first == 0 and second == 0 and third == 0 then
+      addSeparator()
+      addEmpty(5)
+    end
+    addString("Charges: " .. item.charges, Colors.Default)
+  end
+
   if item.imp then
-    if first ~= 0 or second ~= 0 or third ~= 0 or item.rarity ~= 0 then
+    if first ~= 0 or second ~= 0 or third ~= 0 or item.rarity ~= 0 or (item.charges and item.charges > 0) then
       addSeparator()
       addEmpty(5)
     end
