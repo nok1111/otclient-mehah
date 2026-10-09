@@ -566,17 +566,26 @@ MainWindow
       TextEdit
         id: searchEdit
         anchors.left: searchIcon.right
-        anchors.right: parent.right
+        anchors.right: languageButton.left
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 8
         margin-right: 5
         height: 25
         border-width: 1
         border-color: #d4a84344
-        !placeholder: tr('Search the wiki...')
+        placeholder: 'Search the wiki...'
         @onTextChange: modules.game_wiki.onSearchTextChange()
 
-
+      WikiButton
+        id: languageButton
+        !text: EN
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        width: 50
+        height: 25
+        margin-right: 10
+        @onClick: modules.game_wiki.changeLanguage()
+    
     ScrollablePanel
       id: contentPanel
       anchors.top: searchPanel.bottom
