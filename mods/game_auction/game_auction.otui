@@ -22,19 +22,6 @@ AuctionWindow < MainWindow
   color: #e8d0a0
   @onEscape: self:hide()
 
-  Button
-    id: closeButton
-    anchors.top: parent.top
-    anchors.right: parent.right
-    margin-top: 8
-    margin-right: 8
-    size: 24 24
-    text: X
-    color: #ff6b6b
-    background-color: #1a1a24
-    border: 1 #3a3a4a
-    @onClick: self:getParent():hide()
-
   Panel
     id: headerPanel
     anchors.top: parent.top
@@ -98,6 +85,18 @@ AuctionWindow < MainWindow
       color: #cccccc
       background-color: #1a1a24
       border: 1 #3a3a4a
+
+    Button
+      id: closeButton
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 8
+      size: 24 24
+      text: X
+      color: #ff6b6b
+      background-color: #1a1a24
+      border: 1 #3a3a4a
+      @onClick: Auction.window:hide()
 
   Panel
     id: toolbarPanel
