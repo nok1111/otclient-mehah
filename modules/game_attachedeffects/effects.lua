@@ -5492,6 +5492,21 @@ AttachedEffectManager.register(824, 'knockback jump', 755, ThingCategoryEffect, 
     end
 })
 
+AttachedEffectManager.register(900, 'grapple floor jump', 755, ThingCategoryEffect, {
+    duration = 550,
+    disableWalkAnimation = true,
+    speed = 2,
+    offset = { -21, -21, false },
+    jump = { 55, 550, 1 },
+
+    onAttach = function(effect, owner)
+        owner:setJump(55, 550, 1)
+    end,
+    onDetach = function(effect, oldOwner)
+        safeAddTileEffect(oldOwner, 17)
+    end
+})
+
 AttachedEffectManager.register(825, 'tesla laser', 0, 0, {
     duration = 500,
     lineMode = true,
