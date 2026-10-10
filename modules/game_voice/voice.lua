@@ -229,8 +229,6 @@ function init()
     Voice.init()
     g_logger.info("Voice system initialized")
 
-    g_keyboard.bindKeyDown('F6', function() showVoiceWindow() end)
-
     -- Push-to-talk key: hold V to talk
     g_keyboard.bindKeyDown('V', function()
         if voiceState.pushToTalk and voiceState.connected then
@@ -332,7 +330,6 @@ function terminate()
     Voice.cleanup()
 
     -- Unbind keys and disconnect events
-    g_keyboard.unbindKeyDown('F6')
     g_keyboard.unbindKeyDown('V')
     g_keyboard.unbindKeyUp('V')
 

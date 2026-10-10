@@ -39,17 +39,16 @@ modules/game_voice/
 ## Usage
 
 ### **Opening Voice Window**
-- Press **F6** to open the voice chat window
-- Or call `voice_window.show()` in Lua
+- Call `modules.game_voice.showVoiceWindow()` in Lua
 
 ### **Creating a Room**
-1. Open voice window (F6)
+1. Open voice window
 2. Enter room name in text field
 3. Click "Create Room"
 4. Share room name with other players
 
 ### **Joining a Room**
-1. Open voice window (F6)
+1. Open voice window
 2. Enter room name in text field
 3. Click "Join Room"
 
@@ -97,7 +96,6 @@ voice_window.showError(msg) -- Show error message
 
 ### **Client Settings**
 - Voice window size: 300x400
-- Keyboard shortcut: F6
 - Auto-update status
 
 ### **Server Settings**
@@ -131,7 +129,7 @@ voice_window.showError(msg) -- Show error message
 ## Troubleshooting
 
 ### **Common Issues**
-- **Window not opening**: Check F6 key binding
+- **Window not opening**: Call `modules.game_voice.showVoiceWindow()` directly to test
 - **Voice not working**: Verify audio permissions
 - **Room join failed**: Check server permissions
 - **Audio quality**: Adjust Opus settings
