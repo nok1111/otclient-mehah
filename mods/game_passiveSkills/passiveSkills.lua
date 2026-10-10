@@ -180,6 +180,10 @@ function PassiveSkills.show()
 	PassiveSkills.UI:focus()
 	PassiveSkills.Button:setOn(true)
 	PassiveSkills.updateDevModeVisibility()
+	-- Request fresh data so node states match the current available points.
+	-- Without this, reopening the window after gaining a point shows stale
+	-- node states (e.g. core locked when it should be available).
+	PassiveSkills.sendOpcode({ topic = "base-data-request" })
 end
 
 function PassiveSkills.updateDevModeVisibility()
@@ -2272,6 +2276,12 @@ function PassiveSkills.onExtendedOpcode(protocol, opcode, buffer)
 		PassiveSkills.cachedAvailablePoints = data.availablePoints
 		PassiveSkills.cachedTotalPoints = data.totalPoints
 		PassiveSkills.setupPoints()
+		-- Redraw the tree so node states reflect the new point count.
+		-- Without this, nodes keep their old "locked"/"unlocked" state and
+		-- can't be clicked even though points are now available.
+		if PassiveSkills.cachedTreeData and PassiveSkills.cachedTreeData ~= 0 then
+			PassiveSkills.setupTreeUI()
+		end
 	elseif data.topic == "message-reply" then
 		PassiveSkills.setupMessage(tr(data.title), tr(data.message))
 	elseif data.topic == "reset-requirements-reply" then
