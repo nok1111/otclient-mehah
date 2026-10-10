@@ -181,7 +181,7 @@ void MapView::drawFloor()
     }
 
     if (m_posInfo.rect.contains(g_window.getMousePosition() * g_window.getDisplayDensity())) {
-        auto crosshairPos = getPosition(g_window.getMousePosition() * g_window.getDisplayDensity());
+        auto crosshairPos = getPosition(g_window.getMousePosition());
         if (m_crosshairTexture && crosshairPos.isValid()) {
             const auto& origin = g_map.getCentralPosition();
             if (m_crosshairRange > 0) {

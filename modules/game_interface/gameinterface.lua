@@ -548,7 +548,11 @@ function onSpellCrosshair(clickedWidget, mousePosition)
     if clickedWidget:getClassName() ~= 'UIGameMap' then
         return
     end
-    local pos = clickedWidget:getSpellCrosshairTarget()
+    local ok, pos = pcall(function() return clickedWidget:getSpellCrosshairTarget() end)
+    if not ok then
+        print('[Crosshair] getSpellCrosshairTarget not available (needs recompile): ' .. tostring(pos))
+        return
+    end
     if not pos or pos.x == 0 and pos.y == 0 then
         print('[Crosshair] no valid target')
         return
