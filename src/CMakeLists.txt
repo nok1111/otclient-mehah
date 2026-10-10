@@ -22,7 +22,6 @@ option(BUILD_STATIC_LIBRARY "Build using static libraries" OFF)
 option(TOGGLE_PRE_COMPILED_HEADER "Use precompiled header (speed up compile)" ON)
 option(SPEED_UP_BUILD_UNITY "Compile using build unity for speed up build" ON)
 option(ENABLE_ENCRYPTION "Encrypt client data files (distribution builds only; requires running the exe once with --encrypt)" OFF)
-option(ENABLE_DEBUG_LOGS "Keep console/file logging enabled in encrypted builds" OFF)
 
 # *****************************************************************************
 # Cmake Features
@@ -466,9 +465,6 @@ if(MSVC)
 
 	if(ENABLE_ENCRYPTION)
 		target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_ENCRYPTION=1 ENABLE_ENCRYPTION_BUILDER=1)
-		if(ENABLE_DEBUG_LOGS)
-			target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_DEBUG_LOGS=1)
-		endif()
 	endif()
 
 	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
