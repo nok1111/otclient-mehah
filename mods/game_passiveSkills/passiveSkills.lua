@@ -2269,6 +2269,10 @@ function PassiveSkills.onExtendedOpcode(protocol, opcode, buffer)
 		PassiveSkills.cachedProgress[branchId][nodeId] = level
 		PassiveSkills.cachedAvailablePoints = data.availablePoints
 		PassiveSkills.cachedTotalPoints = data.totalPoints
+		-- Remove the pending allocation that was just applied, otherwise
+		-- buildProposedProgress double-counts it (cached level + pending = +2)
+		-- and getPendingCost() keeps availablePoints artificially low.
+		PassiveSkills.removePendingAllocation(branchId, nodeId)
 		PassiveSkills.setupTreeUI()
 		PassiveSkills.setupPoints()
 		--PassiveSkills.setupMessage("Success", string.format("%s in branch %d has been leveled up.", data.nodeName or "Node", branchId))
