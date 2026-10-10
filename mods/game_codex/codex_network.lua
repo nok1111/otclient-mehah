@@ -132,6 +132,17 @@ function Codex.onExtendedOpcode(protocol, opcode, buffer)
 				Codex.cachedActiveCards[slot] = cardId
 			end
 		end
+		if data.slotUnlockStatus then
+			for slotStr, slotInfo in pairs(data.slotUnlockStatus) do
+				local slotIndex = tonumber(slotStr)
+				if slotIndex then
+					Codex.cachedSlotUnlockStatus[slotIndex] = {
+						unlocked = slotInfo.unlocked,
+						requirement = slotInfo.requirement
+					}
+				end
+			end
+		end
 		if Codex.currentTab == Codex.TAB_DECK then
 			Codex.updateActiveSlots()
 		end
