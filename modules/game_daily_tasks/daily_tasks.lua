@@ -144,7 +144,7 @@ local function buildTaskRow(list, task)
   -- NOTE: uses tonumber guards so "0" strings or nil values are handled.
   local function pickNum(...)
     for i = 1, select('#', ...) do
-      local v = tonumber(select(i, ...))
+      local v = tonumber((select(i, ...)))
       if v and v > 0 then return v end
     end
     return 0
