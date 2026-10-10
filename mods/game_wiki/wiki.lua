@@ -81,7 +81,7 @@ end
 
 local function wikiColoredLabel(style, parent, text, defaultColor)
   local widget = g_ui.createWidget(style, parent)
-  widget:parseColoredText(wikiMarkupToColored(text), defaultColor or '#dfdfdf')
+  widget:parseColoredText(wikiMarkupToColored(tr(text)), defaultColor or '#dfdfdf')
   return widget
 end
 
@@ -110,9 +110,9 @@ local function wikiAddCard(parent, card)
     img:show()
   end
   local nameWidget = widget:getChildById('name')
-  nameWidget:parseColoredText(wikiMarkupToColored(card.name or ''), card.color or '#ffcc00')
+  nameWidget:parseColoredText(wikiMarkupToColored(tr(card.name or '')), card.color or '#ffcc00')
   local descWidget = widget:getChildById('description')
-  descWidget:parseColoredText(wikiMarkupToColored(card.description or ''), card.descColor or '#cccccc')
+  descWidget:parseColoredText(wikiMarkupToColored(tr(card.description or '')), card.descColor or '#cccccc')
   wikiAutoHeight(widget, descWidget, 58, 8 + 14 + 2 + 10)
   return widget
 end
@@ -120,7 +120,7 @@ end
 local function wikiAddNoteBox(parent, section, style)
   local widget = g_ui.createWidget(style, parent)
   local label = widget:getChildById('text')
-  label:parseColoredText(wikiMarkupToColored(section.content or ''), section.color or '#dfdfdf')
+  label:parseColoredText(wikiMarkupToColored(tr(section.content or '')), section.color or '#dfdfdf')
   wikiAutoHeight(widget, label, 40, 24)
   return widget
 end
@@ -254,7 +254,7 @@ function populateCategories()
     end
 
     local label = categoryWidget:getChildById('label')
-    if label then label:setText(categoryData.name) end
+    if label then label:setText(tr(categoryData.name)) end
 
     categoryWidget.onClick = function()
       selectCategory(categoryName)
@@ -300,7 +300,7 @@ function selectCategory(categoryName)
   for _, subCatName in ipairs(subKeys) do
     local subCatData = categoryData.subcategories[subCatName]
     local subCatWidget = g_ui.createWidget('WikiSubCategoryItem', subCategoryList)
-    subCatWidget:setText(subCatData.name)
+    subCatWidget:setText(tr(subCatData.name))
     subCatWidget:setId(subCatName)
 
     subCatWidget.onClick = function()
@@ -384,9 +384,9 @@ function displayListContent(items)
 
   for _, item in ipairs(items) do
     local itemWidget = g_ui.createWidget('WikiListItem', contentPanel)
-    itemWidget:getChildById('name'):setText(item.name)
+    itemWidget:getChildById('name'):setText(tr(item.name))
     local descWidget = itemWidget:getChildById('description')
-    descWidget:setText(item.description or '')
+    descWidget:setText(tr(item.description or ''))
 
     if item.icon then
       itemWidget:getChildById('icon'):setItemId(wikiClientItemId(item.icon))
@@ -424,11 +424,11 @@ function displayPetsContent(pets)
       end
     end
     
-    petWidget:getChildById('petName'):setText(pet.name)
-    
-    -- Color code rarity
+    petWidget:getChildById('petName'):setText(tr(pet.name))
+
+    -- Color code rarity (compare raw value, display translated)
     local rarityLabel = petWidget:getChildById('petRarity')
-    rarityLabel:setText('Rarity: ' .. pet.rarity)
+    rarityLabel:setText(tr('Rarity: ') .. tr(pet.rarity))
     if pet.rarity == 'Epic' then
       rarityLabel:setColor('#ff00ff')
     elseif pet.rarity == 'Rare' then
@@ -442,7 +442,7 @@ function displayPetsContent(pets)
     -- Show element with color
     if pet.element then
       local elementLabel = petWidget:getChildById('petElement')
-      elementLabel:setText('Element: ' .. pet.element)
+      elementLabel:setText(tr('Element: ') .. tr(pet.element))
       -- Color based on element type
       if pet.element:find('Fire') then
         elementLabel:setColor('#ff6600')
@@ -463,12 +463,12 @@ function displayPetsContent(pets)
       end
     end
     
-    petWidget:getChildById('petCollector'):setText('Collector: ' .. pet.collector)
-    
+    petWidget:getChildById('petCollector'):setText(tr('Collector: ') .. tr(pet.collector))
+
     -- Abilities
     local abilitiesText = ''
     for i, ability in ipairs(pet.abilities) do
-      abilitiesText = abilitiesText .. '· ' .. ability.name .. ': ' .. ability.description
+      abilitiesText = abilitiesText .. '· ' .. tr(ability.name) .. ': ' .. tr(ability.description)
       if i < #pet.abilities then
         abilitiesText = abilitiesText .. '\n'
       end
@@ -578,21 +578,21 @@ function displaySearchResults(results)
   
   if #results == 0 then
     local noResults = g_ui.createWidget('Label', contentPanel)
-    noResults:setText('No results found')
+    noResults:setText(tr('No results found'))
     noResults:setTextAlign(AlignCenter)
     return
   end
   
   for _, result in ipairs(results) do
     local resultWidget = g_ui.createWidget('WikiSearchResult', contentPanel)
-    resultWidget:getChildById('resultCategory'):setText(result.category .. ' > ' .. result.subcategory)
-    
+    resultWidget:getChildById('resultCategory'):setText(tr(result.category) .. ' > ' .. tr(result.subcategory))
+
     if result.item then
-      resultWidget:getChildById('resultName'):setText(result.item.name)
-      resultWidget:getChildById('resultDesc'):setText(result.item.description or '')
+      resultWidget:getChildById('resultName'):setText(tr(result.item.name))
+      resultWidget:getChildById('resultDesc'):setText(tr(result.item.description or ''))
     else
-      resultWidget:getChildById('resultName'):setText(result.subcategory)
-      resultWidget:getChildById('resultDesc'):setText('Click to view')
+      resultWidget:getChildById('resultName'):setText(tr(result.subcategory))
+      resultWidget:getChildById('resultDesc'):setText(tr('Click to view'))
     end
     
     resultWidget.onClick = function()
