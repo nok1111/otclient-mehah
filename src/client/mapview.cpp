@@ -224,9 +224,13 @@ void MapView::drawFloor()
                     vertices.push_back(cx + std::cos(angle) * radius);
                     vertices.push_back(cy + std::sin(angle) * radius);
                 }
-                g_painter->setColor(Color(255, 0, 0, 128));
-                g_painter->drawLine(vertices, static_cast<int>(vertices.size() / 2), 2);
-                g_painter->resetColor();
+                // g_painter calls must run at paint time on the render thread;
+                // drawFloor() executes on the map thread during pool composition.
+                g_drawPool.addAction([vertices = std::move(vertices)] {
+                    g_painter->setColor(Color(255, 0, 0, 128));
+                    g_painter->drawLine(vertices, static_cast<int>(vertices.size() / 2), 2);
+                    g_painter->resetColor();
+                });
             }
 
             for (const auto& offset : m_crosshairArea) {

@@ -543,7 +543,9 @@ function startSpellCrosshair(words, range, area, areaSprite, areaName)
     selectedSpell = { words = words, range = range or 0 }
     print('[XH] startSpellCrosshair ' .. tostring(words))
     if gameMapPanel then
-        local ok0, err0 = pcall(function() gameMapPanel:setCrosshairTexture('/images/game/crosshair/default') end)
+        local chOption = modules.client_options.getOption('crosshair')
+        local chTexture = '/images/game/crosshair/' .. (chOption == 'full' and 'full' or 'default')
+        local ok0, err0 = pcall(function() gameMapPanel:setCrosshairTexture(chTexture) end)
         if not ok0 then
             print('[XH] setCrosshairTexture error: ' .. tostring(err0))
         end
@@ -581,7 +583,9 @@ end
 
 function clearSpellCrosshair()
     if gameMapPanel then
-        gameMapPanel:setCrosshairTexture('')
+        local chOption = modules.client_options.getOption('crosshair')
+        local chTexture = (chOption == 'default' or chOption == 'full') and ('/images/game/crosshair/' .. chOption) or ''
+        gameMapPanel:setCrosshairTexture(chTexture)
         gameMapPanel:clearSpellCrosshair()
     end
 end
