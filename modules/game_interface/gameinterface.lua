@@ -70,6 +70,8 @@ function init()
     mouseGrabberWidget = gameRootPanel:getChildById('mouseGrabber')
     mouseGrabberWidget.onMouseRelease = onMouseGrabberRelease
 
+    print('[XH] interface loaded, displayDensity=' .. tostring(g_window.getDisplayDensity()))
+
     bottomSplitter = gameRootPanel:getChildById('bottomSplitter')
     gameMapPanel = gameRootPanel:getChildById('gameMapPanel')
     gameMainRightPanel = gameRootPanel:getChildById('gameMainRightPanel')
@@ -441,6 +443,7 @@ function updateStretchShrink()
 end
 
 function onMouseGrabberRelease(self, mousePosition, mouseButton)
+    print('[XH] grabber release btn=' .. tostring(mouseButton) .. ' type=' .. tostring(selectedType))
     if selectedThing == nil and selectedSpell == nil then
         return false
     end
@@ -457,16 +460,20 @@ function onMouseGrabberRelease(self, mousePosition, mouseButton)
                 end
             end)
             if not ok then
-                print('[MouseGrabber] handler error: ' .. tostring(err))
+                print('[XH] handler error: ' .. tostring(err))
             end
         end
     end
 
     selectedThing = nil
     selectedSpell = nil
-    clearSpellCrosshair()
+    local okc, errc = pcall(clearSpellCrosshair)
+    if not okc then
+        print('[XH] clearSpellCrosshair error: ' .. tostring(errc))
+    end
     g_mouse.popCursor('target')
     self:ungrabMouse()
+    print('[XH] grabber cleanup done')
     return true
 end
 
@@ -534,19 +541,24 @@ function startSpellCrosshair(words, range, area, areaSprite, areaName)
     end
     selectedType = 'spell'
     selectedSpell = { words = words, range = range or 0 }
+    print('[XH] startSpellCrosshair ' .. tostring(words))
     if gameMapPanel then
-        gameMapPanel:setCrosshairTexture('/images/game/crosshair/default')
+        local ok0, err0 = pcall(function() gameMapPanel:setCrosshairTexture('/images/game/crosshair/default') end)
+        if not ok0 then
+            print('[XH] setCrosshairTexture error: ' .. tostring(err0))
+        end
         local ok, err = pcall(function() gameMapPanel:setSpellCrosshair(range or 0, area or '', areaName or '') end)
         if not ok then
-            print('[Crosshair] setSpellCrosshair not available (needs recompile): ' .. tostring(err))
+            print('[XH] setSpellCrosshair not available (needs recompile): ' .. tostring(err))
         end
         local ok2, err2 = pcall(function() gameMapPanel:setCrosshairAreaTexture(areaSprite or 1178) end)
         if not ok2 then
-            print('[Crosshair] setCrosshairAreaTexture not available (needs recompile): ' .. tostring(err2))
+            print('[XH] setCrosshairAreaTexture not available (needs recompile): ' .. tostring(err2))
         end
     end
     mouseGrabberWidget:grabMouse()
     g_mouse.pushCursor('target')
+    print('[XH] crosshair active')
 end
 
 function onSpellCrosshair(clickedWidget, mousePosition)
@@ -555,15 +567,15 @@ function onSpellCrosshair(clickedWidget, mousePosition)
     end
     local ok, pos = pcall(function() return clickedWidget:getSpellCrosshairTarget() end)
     if not ok then
-        print('[Crosshair] getSpellCrosshairTarget not available (needs recompile): ' .. tostring(pos))
+        print('[XH] getSpellCrosshairTarget not available (needs recompile): ' .. tostring(pos))
         return
     end
     if not pos or pos.x == 0 and pos.y == 0 then
-        print('[Crosshair] no valid target')
+        print('[XH] no valid target')
         return
     end
     local msg = selectedSpell.words .. ' "' .. pos.x .. ' ' .. pos.y .. ' ' .. pos.z .. '"'
-    print('[Crosshair] sending: ' .. msg)
+    print('[XH] sending: ' .. msg)
     g_game.talk(msg)
 end
 
