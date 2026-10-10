@@ -21,6 +21,7 @@ option(ASAN_ENABLED "Build this target with AddressSanitizer" OFF)
 option(BUILD_STATIC_LIBRARY "Build using static libraries" OFF)
 option(TOGGLE_PRE_COMPILED_HEADER "Use precompiled header (speed up compile)" ON)
 option(SPEED_UP_BUILD_UNITY "Compile using build unity for speed up build" ON)
+option(ENABLE_ENCRYPTION "Encrypt client data files (distribution builds only; requires running the exe once with --encrypt)" OFF)
 
 # *****************************************************************************
 # Cmake Features
@@ -461,6 +462,10 @@ if(MSVC)
 	)
 
   target_compile_options(${PROJECT_NAME} PUBLIC /MP /FS /Zf /EHsc /bigobj)
+
+	if(ENABLE_ENCRYPTION)
+		target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_ENCRYPTION=1 ENABLE_ENCRYPTION_BUILDER=1)
+	endif()
 
 	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 		string(REPLACE "/Zi" "/Z7" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
