@@ -387,6 +387,18 @@ TileWidgetsConfig = {
     },
 
     {
+      pos = {x = 2232, y = 3281, z = 3},
+      text = "Refining Station",
+      opts = {
+        width = 130, height = 22,
+        font = "terminus-10px",
+        bg = "#111111cc", color = "#ffffff",
+        marginBottom = 40,
+        marginRight = 30
+      }
+    },
+
+    {
       pos = {x = 2228, y = 3281, z = 3},
       text = "Alchemy Station",
       opts = {
