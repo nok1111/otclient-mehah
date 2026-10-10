@@ -447,12 +447,17 @@ function onMouseGrabberRelease(self, mousePosition, mouseButton)
     if mouseButton == MouseLeftButton then
         local clickedWidget = gameRootPanel:recursiveGetChildByPos(mousePosition, false)
         if clickedWidget then
-            if selectedType == 'use' then
-                onUseWith(clickedWidget, mousePosition)
-            elseif selectedType == 'trade' then
-                onTradeWith(clickedWidget, mousePosition)
-            elseif selectedType == 'spell' then
-                onSpellCrosshair(clickedWidget, mousePosition)
+            local ok, err = pcall(function()
+                if selectedType == 'use' then
+                    onUseWith(clickedWidget, mousePosition)
+                elseif selectedType == 'trade' then
+                    onTradeWith(clickedWidget, mousePosition)
+                elseif selectedType == 'spell' then
+                    onSpellCrosshair(clickedWidget, mousePosition)
+                end
+            end)
+            if not ok then
+                print('[MouseGrabber] handler error: ' .. tostring(err))
             end
         end
     end
