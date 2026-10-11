@@ -183,36 +183,58 @@ void GraphicalApplication::run()
     // THREAD - POOL & MAP
     const auto& mapThread = g_asyncDispatcher.submit_task([this] {
         BS::multi_future<void> tasks;
+        int consecutiveErrors = 0;
 
         g_luaThreadId = g_eventThreadId = stdext::getThreadId();
         while (!m_stopping) {
-            poll();
+            try {
+                poll();
 
-            if (!g_window.isVisible()) {
-                stdext::millisleep(10);
-                continue;
-            }
+#ifdef CRASH_HANDLER
+                updateMapHeartbeat();
+#endif
 
-            if (m_drawEvents->canDraw(DrawPoolType::MAP)) {
-                m_drawEvents->preLoad();
-
-                for (const auto type : { DrawPoolType::LIGHT , DrawPoolType::FOREGROUND, DrawPoolType::FOREGROUND_MAP }) {
-                    if (m_drawEvents->canDraw(type)) {
-                        tasks.emplace_back(g_asyncDispatcher.submit_task([this, type] {
-                            m_drawEvents->draw(type);
-                        }));
-                    }
+                if (!g_window.isVisible()) {
+                    stdext::millisleep(10);
+                    continue;
                 }
 
-                m_drawEvents->draw(DrawPoolType::MAP);
+                if (m_drawEvents->canDraw(DrawPoolType::MAP)) {
+                    m_drawEvents->preLoad();
 
-                tasks.wait();
-                tasks.clear();
-            } else if (m_drawEvents->canDraw(DrawPoolType::FOREGROUND)) {
-                g_ui.render(DrawPoolType::FOREGROUND);
+                    for (const auto type : { DrawPoolType::LIGHT , DrawPoolType::FOREGROUND, DrawPoolType::FOREGROUND_MAP }) {
+                        if (m_drawEvents->canDraw(type)) {
+                            tasks.emplace_back(g_asyncDispatcher.submit_task([this, type] {
+                                m_drawEvents->draw(type);
+                            }));
+                        }
+                    }
+
+                    m_drawEvents->draw(DrawPoolType::MAP);
+
+                    tasks.wait();
+                    tasks.clear();
+                } else if (m_drawEvents->canDraw(DrawPoolType::FOREGROUND)) {
+                    g_ui.render(DrawPoolType::FOREGROUND);
+                }
+
+                m_mapProcessFrameCounter.update();
+                consecutiveErrors = 0;
+            } catch (const std::exception& e) {
+                // without this catch the whole event/map thread dies silently
+                // (the future swallows the exception) -> frozen game
+                g_logger.error("Exception in event/map loop: {}", e.what());
+                if (++consecutiveErrors > 50) {
+                    g_logger.error("Event/map loop stopped after {} consecutive errors", consecutiveErrors);
+                    break;
+                }
+            } catch (...) {
+                g_logger.error("Unknown exception in event/map loop");
+                if (++consecutiveErrors > 50) {
+                    g_logger.error("Event/map loop stopped after {} consecutive errors", consecutiveErrors);
+                    break;
+                }
             }
-
-            m_mapProcessFrameCounter.update();
         }
     });
 

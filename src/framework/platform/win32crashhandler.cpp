@@ -408,12 +408,16 @@ void InvalidParameterHandler(const wchar_t* expression, const wchar_t* function,
 }
 
 // ---------------------------------------------------------------------------
-// Hang watchdog: the main loop calls updateMainHeartbeat() every frame. If it
-// stops for more than HANG_MS while the app is running, the watchdog writes a
-// hang report + full-thread minidump so freezes can be diagnosed offline.
+// Hang watchdog: the main loop calls updateMainHeartbeat() every frame and the
+// map/event loop calls updateMapHeartbeat() every iteration. If either stops
+// for more than HANG_MS while the app is running, the watchdog writes a hang
+// report + minidump so freezes can be diagnosed offline. Watching both matters:
+// a frozen main loop leaves the screen dead, while a dead event loop leaves a
+// "live-looking" but frozen game (the symptom that motivated this watchdog).
 // ---------------------------------------------------------------------------
 namespace {
     std::atomic<uint64_t> g_mainHeartbeat{ 0 };
+    std::atomic<uint64_t> g_mapHeartbeat{ 0 };
     constexpr uint64_t HANG_MS = 10000;
     constexpr uint64_t WATCHDOG_PERIOD_MS = 2000;
 }
@@ -423,14 +427,21 @@ void updateMainHeartbeat()
     g_mainHeartbeat.store(GetTickCount64(), std::memory_order_relaxed);
 }
 
-void writeHangReport(uint64_t lastBeat, uint64_t now)
+void updateMapHeartbeat()
+{
+    g_mapHeartbeat.store(GetTickCount64(), std::memory_order_relaxed);
+}
+
+void writeHangReport(const char* loopName, uint64_t lastBeat, uint64_t now)
 {
     const std::string exeDir = getExecutableDir();
     const std::string baseDir = !exeDir.empty() ? exeDir : ".";
 
     std::string report = buildReportHeader();
-    report += fmt::format("exception: main loop unresponsive for {} ms (hang detected by watchdog)\n", now - lastBeat);
+    report += fmt::format("exception: {} loop unresponsive for {} ms (hang detected by watchdog)\n", loopName, now - lastBeat);
 
+    // write the text report first so detection is recorded even if the dump
+    // write below stalls or takes a long time
     const std::string txtName = fmt::format("{}\\hangreport.txt", baseDir);
     std::ofstream fout(txtName, std::ios::out | std::ios::app);
     if (fout.is_open()) {
@@ -441,13 +452,15 @@ void writeHangReport(uint64_t lastBeat, uint64_t now)
     const std::string dmpName = fmt::format("{}\\hangdump-{}.dmp", baseDir, GetCurrentProcessId());
     HANDLE hFile = CreateFileA(dmpName.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (hFile != INVALID_HANDLE_VALUE) {
+        // small dump: thread list + stacks is enough to symbolicate the stall,
+        // avoids the multi-GB full-memory dumps that took minutes to write
         MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile,
-            static_cast<MINIDUMP_TYPE>(MiniDumpNormal | MiniDumpWithThreadInfo | MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory),
+            static_cast<MINIDUMP_TYPE>(MiniDumpNormal | MiniDumpWithThreadInfo),
             nullptr, nullptr, nullptr);
         CloseHandle(hFile);
     }
 
-    g_logger.error("Main loop hang detected ({} ms) - wrote {} and {}", now - lastBeat, txtName, dmpName);
+    g_logger.error("{} loop hang detected ({} ms) - wrote {} and {}", loopName, now - lastBeat, txtName, dmpName);
 }
 
 void HangWatchdogThread()
@@ -457,18 +470,23 @@ void HangWatchdogThread()
 
         if (!g_app.isRunning() || g_app.isStopping()) {
             g_mainHeartbeat.store(0, std::memory_order_relaxed);
+            g_mapHeartbeat.store(0, std::memory_order_relaxed);
             continue;
         }
 
-        const uint64_t last = g_mainHeartbeat.load(std::memory_order_relaxed);
-        if (last == 0)
-            continue;
-
         const uint64_t now = GetTickCount64();
-        if (now - last > HANG_MS) {
-            writeHangReport(last, now);
+
+        const uint64_t lastMain = g_mainHeartbeat.load(std::memory_order_relaxed);
+        if (lastMain != 0 && now - lastMain > HANG_MS) {
+            writeHangReport("main", lastMain, now);
             // re-arm: only report again if the loop recovered and stalled again
             g_mainHeartbeat.store(now, std::memory_order_relaxed);
+        }
+
+        const uint64_t lastMap = g_mapHeartbeat.load(std::memory_order_relaxed);
+        if (lastMap != 0 && now - lastMap > HANG_MS) {
+            writeHangReport("event/map", lastMap, now);
+            g_mapHeartbeat.store(now, std::memory_order_relaxed);
         }
     }
 }

@@ -21,6 +21,7 @@
  */
 
 #include "scheduledevent.h"
+#include <framework/core/logger.h>
 
 ScheduledEvent::ScheduledEvent(const std::function<void()>& callback, const int delay, const int maxCycles) : Event(callback),
 m_ticks(g_clock.millis() + delay), m_delay(delay), m_maxCycles(maxCycles) {}
@@ -28,7 +29,15 @@ m_ticks(g_clock.millis() + delay), m_delay(delay), m_maxCycles(maxCycles) {}
 void ScheduledEvent::execute()
 {
     if (!m_canceled && m_callback && (m_maxCycles == 0 || m_cyclesExecuted < m_maxCycles)) {
-        m_callback();
+        // same isolation as Event::execute - a throwing callback must not
+        // kill the event/map thread silently
+        try {
+            m_callback();
+        } catch (const std::exception& e) {
+            g_logger.error("Exception in scheduled event callback: {}", e.what());
+        } catch (...) {
+            g_logger.error("Unknown exception in scheduled event callback");
+        }
         m_executed = true;
         // callback may be used in the next cycle
     } else {

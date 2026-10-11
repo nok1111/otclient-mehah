@@ -21,6 +21,7 @@
  */
 
 #include "event.h"
+#include <framework/core/logger.h>
 
 Event::Event(std::function<void()> callback) : m_callback(std::move(callback)) {}
 
@@ -33,7 +34,15 @@ Event::~Event()
 void Event::execute()
 {
     if (!m_canceled && !m_executed && m_callback) {
-        m_callback();
+        // an exception escaping a callback would silently kill the whole
+        // event/map thread (std::future swallows it) - isolate per event
+        try {
+            m_callback();
+        } catch (const std::exception& e) {
+            g_logger.error("Exception in event callback: {}", e.what());
+        } catch (...) {
+            g_logger.error("Unknown exception in event callback");
+        }
         m_executed = true;
     }
 

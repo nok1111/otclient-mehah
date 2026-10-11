@@ -25,4 +25,5 @@
 #ifdef CRASH_HANDLER
 void installCrashHandler();
 void updateMainHeartbeat();
+void updateMapHeartbeat();
 #endif
