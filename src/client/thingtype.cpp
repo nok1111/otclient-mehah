@@ -526,6 +526,14 @@ void ThingType::unserialize(const uint16_t clientId, const ThingCategory categor
         if (totalSpritesCount + totalSprites > 4096)
             throw Exception("a thing type has more than 4096 sprites");
 
+        FrameGroupInfo fg;
+        fg.spriteOffset = totalSpritesCount;
+        fg.spriteCount = totalSprites;
+        fg.phases = groupAnimationsPhases;
+        fg.layers = m_layers; fg.px = m_numPatternX; fg.py = m_numPatternY; fg.pz = m_numPatternZ;
+        fg.w = width; fg.h = height;
+        m_frameGroups.push_back(fg);
+
         m_spritesIndex.resize(totalSpritesCount + totalSprites);
         for (int j = totalSpritesCount; j < (totalSpritesCount + totalSprites); ++j)
             m_spritesIndex[j] = g_game.getFeature(Otc::GameSpritesU32) ? fin->getU32() : fin->getU16();
@@ -799,6 +807,44 @@ uint32_t ThingType::getSpriteIndex(const int w, const int h, const int l, const 
     // m_animationPhases can be 0 for empty/invalid thing types -
     // a % 0 would crash with SIGFPE
     const int phases = m_animationPhases > 0 ? m_animationPhases : 1;
+
+    // frame-group aware indexing: with multiple frame groups (e.g. idle +
+    // moving) the sprite list is [group0 sprites][group1 sprites]..., each
+    // with its own dims/phases - a flat index overflows the list (used to
+    // kill the client via assert)
+    if (m_frameGroups.size() > 1) {
+        int phase = a % phases;
+        for (const auto& g : m_frameGroups) {
+            if (phase < g.phases) {
+                // callers pass dims/patterns of the LAST group (m_size etc);
+                // clamp into this group's range so out-of-range requests
+                // still draw the nearest valid sprite instead of crashing
+                const bool whole = (w == -1 && h == -1);
+                const int cw = whole ? -1 : std::clamp(w, 0, std::max(0, g.w - 1));
+                const int ch = whole ? -1 : std::clamp(h, 0, std::max(0, g.h - 1));
+                const int cl = std::clamp(l, 0, std::max(0, g.layers - 1));
+                const int cx = std::clamp(x, 0, std::max(0, g.px - 1));
+                const int cy = std::clamp(y, 0, std::max(0, g.py - 1));
+                const int cz = std::clamp(z, 0, std::max(0, g.pz - 1));
+                uint32_t index = ((((phase * g.pz + cz)
+                                 * g.py + cy)
+                                 * g.px + cx)
+                                 * g.layers + cl);
+                if (!whole)
+                    index = (index * g.h + ch) * g.w + cw;
+
+                if (index < g.spriteCount)
+                    return g.spriteOffset + index;
+                break;
+            }
+            phase -= g.phases;
+        }
+
+        g_logger.error("ThingType::getSpriteIndex out of bounds: id={} category={} sprites={} w={} h={} l={} x={} y={} z={} a={} groups={}",
+            m_id, static_cast<int>(m_category), m_spritesIndex.size(), w, h, l, x, y, z, a, m_frameGroups.size());
+        return 0;
+    }
+
     uint32_t index = ((((((a % phases)
                       * m_numPatternZ + z)
                       * m_numPatternY + y)

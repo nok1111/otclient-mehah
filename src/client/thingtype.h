@@ -537,6 +537,17 @@ private:
 
     std::string m_customImage;
 
+    // frame-group layout of the sprite list (only populated when the thing
+    // has more than one frame group, e.g. idle + moving): getSpriteIndex
+    // maps a global animation phase to the right group's sprite block
+    struct FrameGroupInfo {
+        uint32_t spriteOffset{ 0 };
+        uint32_t spriteCount{ 0 };
+        int phases{ 0 };
+        int layers{ 0 }, px{ 0 }, py{ 0 }, pz{ 0 }, w{ 0 }, h{ 0 };
+    };
+    std::vector<FrameGroupInfo> m_frameGroups;
+
     std::vector<uint32_t> m_spritesIndex;
     std::vector<TextureData> m_textureData;
 
