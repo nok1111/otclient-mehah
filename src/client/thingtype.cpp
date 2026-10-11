@@ -30,6 +30,7 @@
 
 #include <framework/core/asyncdispatcher.h>
 #include <framework/core/eventdispatcher.h>
+#include <framework/core/logger.h>
 #include <framework/core/filestream.h>
 #include <framework/core/graphicalapplication.h>
 #include <framework/graphics/drawpoolmanager.h>
@@ -795,7 +796,10 @@ Size ThingType::getBestTextureDimension(int w, int h, const int count)
 
 uint32_t ThingType::getSpriteIndex(const int w, const int h, const int l, const int x, const int y, const int z, const int a) const
 {
-    uint32_t index = ((((((a % m_animationPhases)
+    // m_animationPhases can be 0 for empty/invalid thing types -
+    // a % 0 would crash with SIGFPE
+    const int phases = m_animationPhases > 0 ? m_animationPhases : 1;
+    uint32_t index = ((((((a % phases)
                       * m_numPatternZ + z)
                       * m_numPatternY + y)
                       * m_numPatternX + x)
@@ -804,14 +808,23 @@ uint32_t ThingType::getSpriteIndex(const int w, const int h, const int l, const 
         * m_size.width() + w;
 
     if (w == -1 && h == -1) { // protobuf does not use width and height, because sprite image is the exact sprite size, not split by 32x32, so -1 is passed instead
-        index = ((((a % m_animationPhases)
+        index = ((((a % phases)
                  * m_numPatternZ + z)
                  * m_numPatternY + y)
             * m_numPatternX + x)
             * m_layers + l;
     }
 
-    assert(index < m_spritesIndex.size());
+    if (index >= m_spritesIndex.size()) {
+        // bad pattern/layer/phase for this thing type - must not crash the
+        // client (assert used to fire here, killing the process via abort).
+        // log all params so the offending thing can be identified
+        g_logger.error("ThingType::getSpriteIndex out of bounds: id={} category={} index={} sprites={} w={} h={} l={} x={} y={} z={} a={} phases={} pz={} py={} px={} layers={} size={}x{}",
+            m_id, static_cast<int>(m_category), index, m_spritesIndex.size(), w, h, l, x, y, z, a,
+            m_animationPhases, m_numPatternZ, m_numPatternY, m_numPatternX, m_layers,
+            m_size.width(), m_size.height());
+        return 0;
+    }
     return index;
 }
 
