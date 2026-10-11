@@ -1,4 +1,4 @@
-﻿-- Simplified Bot Module
+-- Simplified Bot Module
 -- Version 2.0 by nok1111
 -- All-in-one: Bot logic + UI in single file
 
@@ -27,6 +27,22 @@ SimplifiedBot = {}
 local botEnabled = false
 local storage = {}
 local storageFile = nil
+
+-- Dynamic Server Cooldown Tracking (includes dynamic CDR from items and stats)
+local spellCooldownUntil = {}      -- [spellId] = timestamp_ms (when individual spell cooldown expires)
+local groupCooldownUntil = {}      -- [groupId] = timestamp_ms (when group cooldown expires, e.g. group 1 = attack)
+local lastCastTimeByWords = {}     -- [wordsLower] = timestamp_ms (last cast timestamp)
+local lastGlobalAttackCast = 0     -- timestamp_ms of last attack spell
+
+local function onSpellCooldown(spellId, duration)
+  if not spellId or not duration then return end
+  spellCooldownUntil[spellId] = g_clock.millis() + duration
+end
+
+local function onSpellGroupCooldown(groupId, duration)
+  if not groupId or not duration then return end
+  groupCooldownUntil[groupId] = g_clock.millis() + duration
+end
 
 -- Combat state
 local lastAttackSpell = 1
@@ -214,6 +230,8 @@ function init()
   connect(g_game, {
     onGameStart = onlineSimple,
     onGameEnd = offlineSimple,
+    onSpellCooldown = onSpellCooldown,
+    onSpellGroupCooldown = onSpellGroupCooldown,
   })
   
   if g_game.isOnline() then
@@ -234,6 +252,8 @@ function terminate()
   disconnect(g_game, {
     onGameStart = onlineSimple,
     onGameEnd = offlineSimple,
+    onSpellCooldown = onSpellCooldown,
+    onSpellGroupCooldown = onSpellGroupCooldown,
   })
   
   -- Clean up panels
@@ -499,6 +519,13 @@ function offlineSimple()
   -- Clear storage and storageFile to prevent transfer between characters
   storage = {}
   storageFile = nil
+  
+  -- Clear cooldown tracking
+  spellCooldownUntil = {}
+  groupCooldownUntil = {}
+  lastCastTimeByWords = {}
+  lastGlobalAttackCast = 0
+  lastAntiIdle = 0
   
   -- Reset setup flags to force UI refresh on next login
   combatSetup = false
@@ -840,8 +867,9 @@ function SimplifiedBot.processCombat()
     currentTarget = bestTarget
     if g_game.getAttackingCreature() ~= bestTarget then
       g_game.attack(bestTarget)
+    else
+      SimplifiedBot.castAttackSpell(bestTarget)
     end
-    SimplifiedBot.castAttackSpell()
   else
     currentTarget = nil
     if g_game.getAttackingCreature() then
@@ -850,79 +878,144 @@ function SimplifiedBot.processCombat()
   end
 end
 
-local lastSpellTime = 0
-local globalCastDelay = 0
+local knownRanges = {
+  ['blood siphon'] = 4,
+  ['sanguine bolt'] = 4,
+  ['blood curse'] = 4,
+  ['blood plague'] = 4,
+  ['exsanguinate'] = 4,
+  ['rend'] = 1,
+  ['brutal swing'] = 1,
+  ['dragons call'] = 2,
+  ['holy strike'] = 2,
+  ['divine punishment'] = 3,
+  ['blade dash'] = 3,
+  ['blade flurry'] = 1,
+  ['smite'] = 5,
+  ['frost blast'] = 5,
+  ['energy blast'] = 5,
+  ['fire blast'] = 5,
+  ['arcane missiles'] = 5,
+  ['hand of god'] = 5,
+  ['judgement'] = 4,
+  ['penitence'] = 4,
+}
 
-function SimplifiedBot.canCastSpell(spellText)
+function SimplifiedBot.isSpellReady(spellText)
   if not spellText or spellText:len() == 0 then return false end
-  
-  -- Prevent sending multiple spells in less than 250ms (global anti-exhaust)
   local now = g_clock.millis()
-  if now - globalCastDelay < 250 then return false end
+  local wordsTrimmed = spellText:trim()
+  local wordsLower = wordsTrimmed:lower()
 
-  if not modules.game_cooldown then return true end
-  
-  -- Extract spell data from Game's internal spellbook
-  local spell, profile, spellName = Spells.getSpellByWords(spellText)
+  -- Anti-spam: prevent firing duplicate spells under 200ms
+  local lastCast = lastCastTimeByWords[wordsLower] or 0
+  if now - lastCast < 200 then return false end
+
+  local spell = Spells and Spells.getSpellByWords and Spells.getSpellByWords(wordsLower)
+
   if spell then
-    -- Check individual spell cooldown
-    if modules.game_cooldown.isCooldownIconActive(spell.id) then
-      return false
-    end
-    -- Check group cooldown (e.g. Healing group vs Attack group)
-    for groupId, _ in pairs(spell.group) do
-      if modules.game_cooldown.isGroupCooldownIconActive(groupId) then
+    -- 1. Check individual spell cooldown from server (dynamic CDR!)
+    if spell.id and spellCooldownUntil[spell.id] then
+      if now < spellCooldownUntil[spell.id] then
+        return false
+      end
+    else
+      -- If server hasn't sent cooldown packet yet, use baseline exhaustion as fallback
+      local baseCd = tonumber(spell.exhaustion) or 2000
+      if now - lastCast < baseCd then
         return false
       end
     end
+
+    -- 2. Check group cooldown (e.g. Group 1 = Attack, Group 2 = Healing, Group 3 = Support)
+    if spell.group then
+      for groupId, _ in pairs(spell.group) do
+        if groupCooldownUntil[groupId] and now < groupCooldownUntil[groupId] then
+          return false
+        end
+      end
+    end
+
+    -- 3. Mana check
+    local player = g_game.getLocalPlayer()
+    if player and spell.mana and spell.mana > 0 then
+      if player:getMana() < spell.mana then
+        return false
+      end
+    end
+  else
+    -- Unknown or custom words: enforce 1500ms safety cooldown
+    if now - lastCast < 1500 then
+      return false
+    end
   end
+
   return true
 end
 
-function SimplifiedBot.castAttackSpell()
+function SimplifiedBot.canCastSpell(spellText)
+  return SimplifiedBot.isSpellReady(spellText)
+end
+
+function SimplifiedBot.castAttackSpell(target)
   if not storage.combat or not storage.combat.spells then
     return
   end
-  
+  if not g_game.isOnline() then return end
+
+  local targetCreature = target or g_game.getAttackingCreature()
+  if not targetCreature then return end
+
+  local player = g_game.getLocalPlayer()
+  if not player then return end
+
+  local pPos = player:getPosition()
+  local tPos = targetCreature:getPosition()
+  if not pPos or not tPos or pPos.z ~= tPos.z then return end
+
+  local distanceToTarget = math.max(math.abs(pPos.x - tPos.x), math.abs(pPos.y - tPos.y))
   local now = g_clock.millis()
-  if now - lastSpellTime < 2000 then return end -- Basic exhaust protection
-  
-  local spells = storage.combat.spells
-  local validSpells = {}
-  
-  for _, spell in ipairs(spells) do
-    if spell and spell:len() > 0 then
-      table.insert(validSpells, spell)
-    end
-  end
-  
-  if #validSpells == 0 then
+
+  -- Group 1 cooldown (Attack Group exhaust from server)
+  if groupCooldownUntil[1] and now < groupCooldownUntil[1] then
     return
   end
-  
-  -- Iterate through available spells to find the first one that is truly off-cooldown
-  local startingSpell = lastAttackSpell
-  repeat
-    local spell = validSpells[lastAttackSpell]
-    if spell and SimplifiedBot.canCastSpell(spell) then
-      g_game.talk(spell)
-      lastSpellTime = now
-      globalCastDelay = now
-      
-      -- Advance to next spell for next cycle
-      lastAttackSpell = lastAttackSpell + 1
-      if lastAttackSpell > #validSpells then
-        lastAttackSpell = 1
+
+  -- Anti-burst: at least 250ms between attack spell requests
+  if now - lastGlobalAttackCast < 250 then
+    return
+  end
+
+  -- PRIORITY ROTATION:
+  -- Evaluates Slot 1 (Primary / Strongest) -> Slot 2 (Secondary / Filler) -> Slot 3 (Optional)
+  for slot = 1, 3 do
+    local spellWords = storage.combat.spells[slot]
+    if spellWords and spellWords:len() > 0 then
+      local wordsTrimmed = spellWords:trim()
+      local wordsLower = wordsTrimmed:lower()
+      local spell = Spells and Spells.getSpellByWords and Spells.getSpellByWords(wordsLower)
+
+      -- Range check
+      local spellRange = (spell and spell.range) or knownRanges[wordsLower] or 4
+      if distanceToTarget <= spellRange then
+        -- Cooldown & Mana check
+        if SimplifiedBot.isSpellReady(wordsLower) then
+          g_game.talk(wordsTrimmed)
+          lastGlobalAttackCast = now
+          lastCastTimeByWords[wordsLower] = now
+
+          -- Set optimistic local cooldown until server packet arrives
+          if spell and spell.id then
+            local fallbackCd = tonumber(spell.exhaustion) or 2000
+            spellCooldownUntil[spell.id] = now + fallbackCd
+          end
+          groupCooldownUntil[1] = now + 1900
+
+          return -- Highest priority spell successfully cast!
+        end
       end
-      return
     end
-    
-    -- If current was exhausted, check the next one immediately
-    lastAttackSpell = lastAttackSpell + 1
-    if lastAttackSpell > #validSpells then
-      lastAttackSpell = 1
-    end
-  until lastAttackSpell == startingSpell
+  end
 end
 
 function SimplifiedBot.processHealing()
@@ -969,9 +1062,16 @@ function SimplifiedBot.processSupport()
   local player = g_game.getLocalPlayer()
   
   if storage.support.antiIdle and storage.support.antiIdle.enabled and player then
-    -- Turn every 14 minutes (840,000 ms)
-    if now - lastAntiIdle >= 840000 then
-      g_game.turn(player:getDirection())
+    -- Turn every 60 seconds to prevent idle kick (turns 90 deg and restores original direction)
+    if now - lastAntiIdle >= 60000 then
+      local currentDir = player:getDirection()
+      local nextDir = (currentDir + 1) % 4
+      g_game.turn(nextDir)
+      scheduleEvent(function()
+        if g_game.isOnline() and g_game.getLocalPlayer() then
+          g_game.turn(currentDir)
+        end
+      end, 300)
       lastAntiIdle = now
     end
   end
@@ -1369,14 +1469,12 @@ function setupCombatPanel()
   
   if spell1Button then
     local currentSpell = storage.combat.spells[1] or ""
-    if currentSpell ~= "" then
-      spell1Button:setText(currentSpell)
-    end
+    spell1Button:setText(currentSpell ~= "" and currentSpell or tr('Click to add spell 1 (Primary)'))
     
     spell1Button.onClick = function()
-      showTextInputModal(tr('Spell 1'), storage.combat.spells[1] or "", function(text)
+      showTextInputModal(tr('Spell 1 (Primary / Strongest)'), storage.combat.spells[1] or "", function(text)
         storage.combat.spells[1] = text
-        spell1Button:setText(text ~= "" and text or tr('Click to add spell 1'))
+        spell1Button:setText(text ~= "" and text or tr('Click to add spell 1 (Primary)'))
         SimplifiedBot.saveStorage()
       end)
     end
@@ -1384,14 +1482,12 @@ function setupCombatPanel()
   
   if spell2Button then
     local currentSpell = storage.combat.spells[2] or ""
-    if currentSpell ~= "" then
-      spell2Button:setText(currentSpell)
-    end
+    spell2Button:setText(currentSpell ~= "" and currentSpell or tr('Click to add spell 2 (Secondary)'))
     
     spell2Button.onClick = function()
-      showTextInputModal(tr('Spell 2'), storage.combat.spells[2] or "", function(text)
+      showTextInputModal(tr('Spell 2 (Secondary / Filler)'), storage.combat.spells[2] or "", function(text)
         storage.combat.spells[2] = text
-        spell2Button:setText(text ~= "" and text or tr('Click to add spell 2'))
+        spell2Button:setText(text ~= "" and text or tr('Click to add spell 2 (Secondary)'))
         SimplifiedBot.saveStorage()
       end)
     end
@@ -1399,14 +1495,12 @@ function setupCombatPanel()
   
   if spell3Button then
     local currentSpell = storage.combat.spells[3] or ""
-    if currentSpell ~= "" then
-      spell3Button:setText(currentSpell)
-    end
+    spell3Button:setText(currentSpell ~= "" and currentSpell or tr('Click to add spell 3 (Optional)'))
     
     spell3Button.onClick = function()
-      showTextInputModal(tr('Spell 3'), storage.combat.spells[3] or "", function(text)
+      showTextInputModal(tr('Spell 3 (Optional)'), storage.combat.spells[3] or "", function(text)
         storage.combat.spells[3] = text
-        spell3Button:setText(text ~= "" and text or tr('Click to add spell 3'))
+        spell3Button:setText(text ~= "" and text or tr('Click to add spell 3 (Optional)'))
         SimplifiedBot.saveStorage()
       end)
     end
