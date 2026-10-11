@@ -548,6 +548,20 @@ private:
     };
     std::vector<FrameGroupInfo> m_frameGroups;
 
+    // returns the frame group that owns global animation phase a, or nullptr
+    // when the thing has a single frame group (normal path)
+    const FrameGroupInfo* frameGroupForPhase(int a) const
+    {
+        if (m_frameGroups.size() <= 1)
+            return nullptr;
+        for (const auto& g : m_frameGroups) {
+            if (a < g.phases)
+                return &g;
+            a -= g.phases;
+        }
+        return nullptr;
+    }
+
     std::vector<uint32_t> m_spritesIndex;
     std::vector<TextureData> m_textureData;
 

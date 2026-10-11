@@ -710,8 +710,15 @@ void ThingType::loadTexture(const int animationPhase)
                                 fullImage->blit(framePos + spritePos, spriteImage);
                             }
                         } else {
-                            for (int h = 0; h < m_size.height(); ++h) {
-                                for (int w = 0; w < m_size.width(); ++w) {
+                            // frame-group aware: a phase can come from a group
+                            // with smaller dims than m_size (e.g. 1x1 idle in a
+                            // 2x2 thing) - only blit its own cells so the same
+                            // sprite is not duplicated all over the frame
+                            const auto* fg = frameGroupForPhase(animationPhase);
+                            const int groupW = fg ? std::min(fg->w, m_size.width()) : m_size.width();
+                            const int groupH = fg ? std::min(fg->h, m_size.height()) : m_size.height();
+                            for (int h = 0; h < groupH; ++h) {
+                                for (int w = 0; w < groupW; ++w) {
                                     const uint32_t spriteIndex = getSpriteIndex(w, h, spriteMask ? 1 : l, x, y, z, animationPhase);
                                     auto spriteId = m_spritesIndex[spriteIndex];
                                     bool isLoading = false;
