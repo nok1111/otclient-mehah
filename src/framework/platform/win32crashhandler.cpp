@@ -468,25 +468,30 @@ void HangWatchdogThread()
     while (true) {
         Sleep(WATCHDOG_PERIOD_MS);
 
-        if (!g_app.isRunning() || g_app.isStopping()) {
-            g_mainHeartbeat.store(0, std::memory_order_relaxed);
-            g_mapHeartbeat.store(0, std::memory_order_relaxed);
-            continue;
-        }
+        // a watchdog must never die - an uncaught exception in this detached
+        // thread would terminate the whole process
+        try {
+            if (!g_app.isRunning() || g_app.isStopping()) {
+                g_mainHeartbeat.store(0, std::memory_order_relaxed);
+                g_mapHeartbeat.store(0, std::memory_order_relaxed);
+                continue;
+            }
 
-        const uint64_t now = GetTickCount64();
+            const uint64_t now = GetTickCount64();
 
-        const uint64_t lastMain = g_mainHeartbeat.load(std::memory_order_relaxed);
-        if (lastMain != 0 && now - lastMain > HANG_MS) {
-            writeHangReport("main", lastMain, now);
-            // re-arm: only report again if the loop recovered and stalled again
-            g_mainHeartbeat.store(now, std::memory_order_relaxed);
-        }
+            const uint64_t lastMain = g_mainHeartbeat.load(std::memory_order_relaxed);
+            if (lastMain != 0 && now - lastMain > HANG_MS) {
+                writeHangReport("main", lastMain, now);
+                // re-arm: only report again if the loop recovered and stalled again
+                g_mainHeartbeat.store(now, std::memory_order_relaxed);
+            }
 
-        const uint64_t lastMap = g_mapHeartbeat.load(std::memory_order_relaxed);
-        if (lastMap != 0 && now - lastMap > HANG_MS) {
-            writeHangReport("event/map", lastMap, now);
-            g_mapHeartbeat.store(now, std::memory_order_relaxed);
+            const uint64_t lastMap = g_mapHeartbeat.load(std::memory_order_relaxed);
+            if (lastMap != 0 && now - lastMap > HANG_MS) {
+                writeHangReport("event/map", lastMap, now);
+                g_mapHeartbeat.store(now, std::memory_order_relaxed);
+            }
+        } catch (...) {
         }
     }
 }

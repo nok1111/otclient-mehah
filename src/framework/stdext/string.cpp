@@ -56,9 +56,12 @@ namespace stdext
         localtime_r(&tnow, &ts);
 #endif
 
-        char date[20];  // Reduce buffer size based on expected format
+        // 20 chars was too small for "%b %d %Y %H:%M:%S" (needs 21 with NUL) -
+        // strftime failed and this threw inside every crash-report path,
+        // killing the handler/thread before it could write anything
+        char date[64];
         if (std::strftime(date, sizeof(date), format, &ts) == 0)
-            throw std::runtime_error("Failed to format date-time string");
+            return "unknown";
 
         return std::string(date);
     }
