@@ -35,6 +35,7 @@
 #include <framework/graphics/texturemanager.h>
 #include <framework/input/mouse.h>
 #include <framework/platform/platformwindow.h>
+#include <framework/platform/crashhandler.h>
 #include <framework/ui/uimanager.h>
 #include <framework/ui/uiwidget.h>
 
@@ -222,6 +223,10 @@ void GraphicalApplication::run()
     m_running = true;
     while (!m_stopping) {
         mainPoll();
+
+#ifdef CRASH_HANDLER
+        updateMainHeartbeat();
+#endif
 
         if (!g_window.isVisible()) {
             stdext::millisleep(10);

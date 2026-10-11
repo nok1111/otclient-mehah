@@ -30,6 +30,8 @@
 #include <winsock2.h>
 #include <csignal>
 #include <exception>
+#include <atomic>
+#include <thread>
 #include <new.h>
 #include <stdlib.h>
 
@@ -405,6 +407,72 @@ void InvalidParameterHandler(const wchar_t* expression, const wchar_t* function,
     writeCrashReport(oss.str(), &ep);
 }
 
+// ---------------------------------------------------------------------------
+// Hang watchdog: the main loop calls updateMainHeartbeat() every frame. If it
+// stops for more than HANG_MS while the app is running, the watchdog writes a
+// hang report + full-thread minidump so freezes can be diagnosed offline.
+// ---------------------------------------------------------------------------
+namespace {
+    std::atomic<uint64_t> g_mainHeartbeat{ 0 };
+    constexpr uint64_t HANG_MS = 10000;
+    constexpr uint64_t WATCHDOG_PERIOD_MS = 2000;
+}
+
+void updateMainHeartbeat()
+{
+    g_mainHeartbeat.store(GetTickCount64(), std::memory_order_relaxed);
+}
+
+void writeHangReport(uint64_t lastBeat, uint64_t now)
+{
+    const std::string exeDir = getExecutableDir();
+    const std::string baseDir = !exeDir.empty() ? exeDir : ".";
+
+    std::string report = buildReportHeader();
+    report += fmt::format("exception: main loop unresponsive for {} ms (hang detected by watchdog)\n", now - lastBeat);
+
+    const std::string txtName = fmt::format("{}\\hangreport.txt", baseDir);
+    std::ofstream fout(txtName, std::ios::out | std::ios::app);
+    if (fout.is_open()) {
+        fout << report << "\n";
+        fout.close();
+    }
+
+    const std::string dmpName = fmt::format("{}\\hangdump-{}.dmp", baseDir, GetCurrentProcessId());
+    HANDLE hFile = CreateFileA(dmpName.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (hFile != INVALID_HANDLE_VALUE) {
+        MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile,
+            static_cast<MINIDUMP_TYPE>(MiniDumpNormal | MiniDumpWithThreadInfo | MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory),
+            nullptr, nullptr, nullptr);
+        CloseHandle(hFile);
+    }
+
+    g_logger.error("Main loop hang detected ({} ms) - wrote {} and {}", now - lastBeat, txtName, dmpName);
+}
+
+void HangWatchdogThread()
+{
+    while (true) {
+        Sleep(WATCHDOG_PERIOD_MS);
+
+        if (!g_app.isRunning() || g_app.isStopping()) {
+            g_mainHeartbeat.store(0, std::memory_order_relaxed);
+            continue;
+        }
+
+        const uint64_t last = g_mainHeartbeat.load(std::memory_order_relaxed);
+        if (last == 0)
+            continue;
+
+        const uint64_t now = GetTickCount64();
+        if (now - last > HANG_MS) {
+            writeHangReport(last, now);
+            // re-arm: only report again if the loop recovered and stalled again
+            g_mainHeartbeat.store(now, std::memory_order_relaxed);
+        }
+    }
+}
+
 void installCrashHandler()
 {
     SetUnhandledExceptionFilter(ExceptionHandler);
@@ -414,6 +482,8 @@ void installCrashHandler()
     signal(SIGILL, SignalHandler);
     _set_purecall_handler(PurecallHandler);
     _set_invalid_parameter_handler(InvalidParameterHandler);
+
+    std::thread(HangWatchdogThread).detach();
 }
 
 #endif

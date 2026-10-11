@@ -445,6 +445,9 @@ endif()
 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_FILES})
 target_link_options(${PROJECT_NAME} PUBLIC -flto=auto)
+if(MSVC)
+	target_link_options(${PROJECT_NAME} PRIVATE "/MAP:${CMAKE_BINARY_DIR}/otclient.map")
+endif()
 
 # *****************************************************************************
 # Includes and librarys
