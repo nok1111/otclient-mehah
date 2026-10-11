@@ -28,6 +28,10 @@
 
 #include <windows.h>
 #include <winsock2.h>
+#include <csignal>
+#include <exception>
+#include <new.h>
+#include <stdlib.h>
 
 #ifdef _MSC_VER
 
@@ -41,6 +45,10 @@
 #include <imagehlp.h>
 
 #endif
+
+// minidumpapiset.h declares MiniDumpWriteDump and its types; it can coexist
+// with imagehlp.h (unlike dbghelp.h which redefines the same structs)
+#include <minidumpapiset.h>
 
 #include <framework/core/graphicalapplication.h>
 
@@ -73,7 +81,7 @@ const char* getExceptionName(const DWORD exceptionCode)
     return "Unknown exception";
 }
 
-void Stacktrace(LPEXCEPTION_POINTERS e, std::stringstream& ss)
+void Stacktrace(const CONTEXT* context, std::stringstream& ss)
 {
     STACKFRAME sf;
     HANDLE process, thread;
@@ -88,14 +96,14 @@ void Stacktrace(LPEXCEPTION_POINTERS e, std::stringstream& ss)
 
     ZeroMemory(&sf, sizeof(sf));
 #ifdef _WIN64
-    sf.AddrPC.Offset = e->ContextRecord->Rip;
-    sf.AddrStack.Offset = e->ContextRecord->Rsp;
-    sf.AddrFrame.Offset = e->ContextRecord->Rbp;
+    sf.AddrPC.Offset = context->Rip;
+    sf.AddrStack.Offset = context->Rsp;
+    sf.AddrFrame.Offset = context->Rbp;
     machineType = IMAGE_FILE_MACHINE_AMD64;
 #else
-    sf.AddrPC.Offset = e->ContextRecord->Eip;
-    sf.AddrStack.Offset = e->ContextRecord->Esp;
-    sf.AddrFrame.Offset = e->ContextRecord->Ebp;
+    sf.AddrPC.Offset = context->Eip;
+    sf.AddrStack.Offset = context->Esp;
+    sf.AddrFrame.Offset = context->Ebp;
     machineType = IMAGE_FILE_MACHINE_I386;
 #endif
 
@@ -107,7 +115,7 @@ void Stacktrace(LPEXCEPTION_POINTERS e, std::stringstream& ss)
     thread = GetCurrentThread();
 
     while (true) {
-        more = StackWalk(machineType, process, thread, &sf, e->ContextRecord, nullptr, SymFunctionTableAccess, SymGetModuleBase, nullptr);
+        more = StackWalk(machineType, process, thread, &sf, const_cast<CONTEXT*>(context), nullptr, SymFunctionTableAccess, SymGetModuleBase, nullptr);
         if (!more || sf.AddrFrame.Offset == 0)
             break;
 
@@ -127,14 +135,24 @@ void Stacktrace(LPEXCEPTION_POINTERS e, std::stringstream& ss)
             ss << fmt::format("    {}: {} [0x%016lX]\n", count, modname, sf.AddrPC.Offset);
         ++count;
     }
-    GlobalFree(pSym);
 }
 
-LONG CALLBACK ExceptionHandler(const LPEXCEPTION_POINTERS e)
+std::string getExecutableDir()
 {
-    SymInitialize(GetCurrentProcess(), nullptr, TRUE);
+    char path[MAX_PATH];
+    DWORD len = GetModuleFileNameA(nullptr, path, MAX_PATH);
+    if (len == 0 || len >= MAX_PATH)
+        return {};
+    std::string dir(path, len);
+    const auto pos = dir.find_last_of("\\/");
+    if (pos == std::string::npos)
+        return {};
+    return dir.substr(0, pos);
+}
 
-    std::string crashReport = fmt::format(
+std::string buildReportHeader()
+{
+    return fmt::format(
         "== application crashed\n"
         "app name: {}\n"
         "app version: {}\n"
@@ -143,9 +161,7 @@ LONG CALLBACK ExceptionHandler(const LPEXCEPTION_POINTERS e)
         "build type: {}\n"
         "build revision: {} ({})\n"
         "crash date: {}\n"
-        "exception: {} (0x{:08X})\n"
-        "exception address: 0x{:08X}\n"
-        "  backtrace:\n",
+        "module base: 0x{:016X}\n",
         g_app.getName(),
         g_app.getVersion(),
         g_app.getBuildCompiler(), g_app.getBuildArch(),
@@ -153,50 +169,251 @@ LONG CALLBACK ExceptionHandler(const LPEXCEPTION_POINTERS e)
         g_app.getBuildType(),
         g_app.getBuildRevision(), g_app.getBuildCommit(),
         stdext::date_time_string(),
+        reinterpret_cast<std::uintptr_t>(GetModuleHandle(nullptr))
+    );
+}
+
+void writeMinidump(EXCEPTION_POINTERS* exceptionPointers)
+{
+    const std::string exeDir = getExecutableDir();
+    const std::string baseDir = !exeDir.empty() ? exeDir : ".";
+
+    const std::string fileName = fmt::format("{}\\crashdump-{}.dmp", baseDir, GetCurrentProcessId());
+    HANDLE hFile = CreateFileA(fileName.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (hFile == INVALID_HANDLE_VALUE)
+        return;
+
+    MINIDUMP_EXCEPTION_INFORMATION mei{};
+    mei.ThreadId = GetCurrentThreadId();
+    mei.ExceptionPointers = exceptionPointers;
+    mei.ClientPointers = FALSE;
+
+    MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile,
+        static_cast<MINIDUMP_TYPE>(MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory),
+        exceptionPointers ? &mei : nullptr, nullptr, nullptr);
+
+    CloseHandle(hFile);
+}
+
+void writeCrashReport(const std::string& report, EXCEPTION_POINTERS* exceptionPointers)
+{
+    g_logger.info(report);
+
+    writeMinidump(exceptionPointers);
+
+    // write next to the executable so it is found regardless of working directory
+    const std::string exeDir = getExecutableDir();
+
+    std::vector<std::string> dirs;
+    if (!exeDir.empty())
+        dirs.push_back(exeDir);
+
+    char cwd[MAX_PATH];
+    DWORD len = GetCurrentDirectory(sizeof(cwd), cwd);
+    if (len > 0 && len < sizeof(cwd)) {
+        std::string cwdStr(cwd, len);
+        if (cwdStr != exeDir)
+            dirs.push_back(cwdStr);
+    }
+    if (dirs.empty())
+        dirs.push_back(".");
+
+    std::string savedTo;
+    for (const auto& dir : dirs) {
+        const std::string fileName = fmt::format("{}\\crashreport.log", dir);
+        std::ofstream fout(fileName, std::ios::out | std::ios::app);
+        if (fout.is_open()) {
+            fout << report;
+            fout.close();
+            if (savedTo.empty())
+                savedTo = fileName;
+            g_logger.info("Crash report saved to file {}", fileName);
+        }
+    }
+
+    std::string msg = "The application has crashed.\n\n";
+    if (!savedTo.empty())
+        msg += fmt::format("A crash report has been written to:\n{}", savedTo);
+    else
+        msg += "Failed to write a crash report file.";
+    MessageBoxA(nullptr, msg.c_str(), "Application crashed", MB_OK | MB_ICONERROR);
+}
+
+LONG CALLBACK ExceptionHandler(const LPEXCEPTION_POINTERS e)
+{
+    SymInitialize(GetCurrentProcess(), nullptr, TRUE);
+
+    std::string crashReport = buildReportHeader();
+    crashReport += fmt::format(
+        "exception: {} (0x{:08X})\n"
+        "exception address: 0x{:08X}\n"
+        "  backtrace:\n",
         getExceptionName(e->ExceptionRecord->ExceptionCode), e->ExceptionRecord->ExceptionCode,
         reinterpret_cast<std::uintptr_t>(e->ExceptionRecord->ExceptionAddress)
     );
 
     std::stringstream oss;
     oss << crashReport;
-    Stacktrace(e, oss);
+    Stacktrace(e->ContextRecord, oss);
     oss << "\n";
 
     SymCleanup(GetCurrentProcess());
 
-    g_logger.info(oss.str());
-
-    char dir[MAX_PATH];
-    DWORD len = GetCurrentDirectory(sizeof(dir), dir);
-    if (len == 0 || len >= sizeof(dir)) {
-        g_logger.error("Failed to get current directory for crash report");
-        return EXCEPTION_CONTINUE_SEARCH;
-    }
-
-    std::string fileName = fmt::format("{}\\crashreport.log", dir);
-
-    std::ofstream fout(fileName, std::ios::out | std::ios::app);
-    if (fout.is_open()) {
-        fout << oss.str();
-        fout.close();
-        g_logger.info("Crash report saved to file {}", fileName);
-    } else {
-        g_logger.error("Failed to save crash report to {}", fileName);
-    }
-
-    std::string msg = fmt::format(
-        "The application has crashed.\n\n"
-        "A crash report has been written to:\n{}",
-        fileName
-    );
-    MessageBoxA(nullptr, msg.c_str(), "Application crashed", MB_OK | MB_ICONERROR);
+    writeCrashReport(oss.str(), e);
 
     return EXCEPTION_CONTINUE_SEARCH;
+}
+
+// std::terminate() / abort() end in __fastfail which bypasses the unhandled
+// exception filter entirely - only these handlers see the crash before death.
+void TerminateHandler()
+{
+    std::string reason;
+    if (auto eptr = std::current_exception()) {
+        try {
+            std::rethrow_exception(eptr);
+        } catch (const std::exception& e) {
+            reason = fmt::format("std::terminate called, uncaught std::exception: {}", e.what());
+        } catch (...) {
+            reason = "std::terminate called, uncaught non-std::exception";
+        }
+    } else {
+        reason = "std::terminate called with no active exception (e.g. joinable std::thread destroyed)";
+    }
+
+    SymInitialize(GetCurrentProcess(), nullptr, TRUE);
+
+    CONTEXT context;
+    RtlCaptureContext(&context);
+
+    std::stringstream oss;
+    oss << buildReportHeader();
+    oss << "exception: " << reason << "\n";
+    oss << "  backtrace:\n";
+    Stacktrace(&context, oss);
+    oss << "\n";
+
+    SymCleanup(GetCurrentProcess());
+
+    EXCEPTION_RECORD record{};
+    record.ExceptionCode = 0xC0000409;
+    record.ExceptionAddress = reinterpret_cast<PVOID>(context.Rip);
+    EXCEPTION_POINTERS ep{};
+    ep.ExceptionRecord = &record;
+    ep.ContextRecord = &context;
+
+    writeCrashReport(oss.str(), &ep);
+
+    // skip our own SIGABRT handler, then continue the default terminate path
+    signal(SIGABRT, SIG_DFL);
+    std::abort();
+}
+
+void SignalHandler(int sig)
+{
+    signal(sig, SIG_DFL); // avoid recursion if we re-fault inside this handler
+    SymInitialize(GetCurrentProcess(), nullptr, TRUE);
+
+    CONTEXT context;
+    RtlCaptureContext(&context);
+
+    const char* sigName = "unknown signal";
+    switch (sig) {
+        case SIGABRT: sigName = "SIGABRT (abort)"; break;
+        case SIGFPE:  sigName = "SIGFPE (floating point error)"; break;
+        case SIGILL:  sigName = "SIGILL (illegal instruction)"; break;
+        case SIGTERM: sigName = "SIGTERM"; break;
+        case SIGINT:  sigName = "SIGINT"; break;
+    }
+
+    std::stringstream oss;
+    oss << buildReportHeader();
+    oss << "exception: fatal signal " << sigName << "\n";
+    oss << "  backtrace:\n";
+    Stacktrace(&context, oss);
+    oss << "\n";
+
+    SymCleanup(GetCurrentProcess());
+
+    EXCEPTION_RECORD record{};
+    record.ExceptionCode = 0xC0000409;
+    record.ExceptionAddress = reinterpret_cast<PVOID>(context.Rip);
+    EXCEPTION_POINTERS ep{};
+    ep.ExceptionRecord = &record;
+    ep.ContextRecord = &context;
+
+    writeCrashReport(oss.str(), &ep);
+
+    std::abort();
+}
+
+void PurecallHandler()
+{
+    SymInitialize(GetCurrentProcess(), nullptr, TRUE);
+
+    CONTEXT context;
+    RtlCaptureContext(&context);
+
+    std::stringstream oss;
+    oss << buildReportHeader();
+    oss << "exception: pure virtual function call\n";
+    oss << "  backtrace:\n";
+    Stacktrace(&context, oss);
+    oss << "\n";
+
+    SymCleanup(GetCurrentProcess());
+
+    EXCEPTION_RECORD record{};
+    record.ExceptionCode = 0xC0000409;
+    record.ExceptionAddress = reinterpret_cast<PVOID>(context.Rip);
+    EXCEPTION_POINTERS ep{};
+    ep.ExceptionRecord = &record;
+    ep.ContextRecord = &context;
+
+    writeCrashReport(oss.str(), &ep);
+}
+
+void InvalidParameterHandler(const wchar_t* expression, const wchar_t* function, const wchar_t* file, unsigned int line, uintptr_t)
+{
+    SymInitialize(GetCurrentProcess(), nullptr, TRUE);
+
+    CONTEXT context;
+    RtlCaptureContext(&context);
+
+    std::stringstream oss;
+    oss << buildReportHeader();
+    oss << "exception: invalid CRT parameter\n";
+    if (expression)
+        oss << "  expression: " << stdext::utf16_to_utf8(expression) << "\n";
+    if (function)
+        oss << "  function: " << stdext::utf16_to_utf8(function) << "\n";
+    if (file)
+        oss << "  file: " << stdext::utf16_to_utf8(file) << ":" << line << "\n";
+    oss << "  backtrace:\n";
+    Stacktrace(&context, oss);
+    oss << "\n";
+
+    SymCleanup(GetCurrentProcess());
+
+    EXCEPTION_RECORD record{};
+    record.ExceptionCode = 0xC0000409;
+    record.ExceptionAddress = reinterpret_cast<PVOID>(context.Rip);
+    EXCEPTION_POINTERS ep{};
+    ep.ExceptionRecord = &record;
+    ep.ContextRecord = &context;
+
+    writeCrashReport(oss.str(), &ep);
 }
 
 void installCrashHandler()
 {
     SetUnhandledExceptionFilter(ExceptionHandler);
+    std::set_terminate(TerminateHandler);
+    signal(SIGABRT, SignalHandler);
+    signal(SIGFPE, SignalHandler);
+    signal(SIGILL, SignalHandler);
+    _set_purecall_handler(PurecallHandler);
+    _set_invalid_parameter_handler(InvalidParameterHandler);
 }
 
 #endif
