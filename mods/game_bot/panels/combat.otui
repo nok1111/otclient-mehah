@@ -181,7 +181,7 @@ Panel
       margin-right: 2
     
     Label
-      !text: tr('Attack Spells (max 3):')
+      !text: tr('Attack Spells (Priority 1 > 2 > 3):')
       text-auto-resize: true
       anchors.top: prev.bottom
       anchors.left: parent.left
@@ -193,7 +193,7 @@ Panel
     
     Button
       id: spell1Button
-      !text: tr('Click to add spell 1')
+      !text: tr('Click to add spell 1 (Primary)')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -204,7 +204,7 @@ Panel
     
     Button
       id: spell2Button
-      !text: tr('Click to add spell 2')
+      !text: tr('Click to add spell 2 (Secondary)')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -215,7 +215,7 @@ Panel
     
     Button
       id: spell3Button
-      !text: tr('Click to add spell 3')
+      !text: tr('Click to add spell 3 (Optional)')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right

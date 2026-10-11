@@ -233,7 +233,7 @@ Panel
     
     CheckBox
       id: antiIdleEnabled
-      !text: tr('Auto Anti-Idle (Turns every 14 mins)')
+      !text: tr('Auto Anti-Idle (Turns every 60s)')
       anchors.top: prev.bottom
       anchors.left: parent.left
       anchors.right: parent.right
