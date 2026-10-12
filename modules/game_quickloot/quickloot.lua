@@ -22,6 +22,38 @@ local function ensureLootFilterList(filter)
     return QuickLoot.data.loots[normalizedFilter]
 end
 
+function QuickLoot.lootNearbyCorpses()
+    if not g_game.isOnline() then
+        return
+    end
+
+    if not g_game.getFeature(GameThingQuickLoot) then
+        return
+    end
+
+    local player = g_game.getLocalPlayer()
+    if not player then
+        return
+    end
+
+    local playerPos = player:getPosition()
+    for dx = -1, 1 do
+        for dy = -1, 1 do
+            local tile = g_map.getTile({ x = playerPos.x + dx, y = playerPos.y + dy, z = playerPos.z })
+            if tile then
+                local items = tile:getItems()
+                if items then
+                    for _, item in ipairs(items) do
+                        if item and item:isLyingCorpse() and item:getPosition().x ~= 0xffff then
+                            g_game.sendQuickLoot(1, item)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
 quickLootController = Controller:new()
 quickLootController:setUI('quickloot')
 function quickLootController:onInit()
@@ -48,11 +80,11 @@ function quickLootController:onInit()
     quickLootController:registerEvents(g_game, {
         onQuickLootContainers = QuickLoot.start
     })
-    Keybind.new("Loot", "Quick Loot Nearby Corpses", "Ctrl+Q", "")
+    Keybind.new("Loot", "Quick Loot Nearby Corpses", "Shift+Q", "")
     Keybind.bind("Loot", "Quick Loot Nearby Corpses", {
       {
         type = KEY_DOWN,
-        callback = function() g_game.sendQuickLoot(2) end,
+        callback = function() QuickLoot.lootNearbyCorpses() end,
       }
     })
 
