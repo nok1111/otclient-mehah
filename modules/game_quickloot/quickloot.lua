@@ -22,6 +22,16 @@ local function ensureLootFilterList(filter)
     return QuickLoot.data.loots[normalizedFilter]
 end
 
+local function isCorpseItem(item)
+    if not item or not item:isItem() then
+        return false
+    end
+    if item:isGround() or item:isGroundBorder() then
+        return false
+    end
+    return item:isLyingCorpse() or item:isContainer()
+end
+
 function QuickLoot.lootNearbyCorpses()
     if not g_game.isOnline() then
         return
@@ -37,18 +47,59 @@ function QuickLoot.lootNearbyCorpses()
     end
 
     local playerPos = player:getPosition()
+    local corpsesFound = 0
+    -- Search reachable 3x3 tiles around the player
     for dx = -1, 1 do
         for dy = -1, 1 do
             local tile = g_map.getTile({ x = playerPos.x + dx, y = playerPos.y + dy, z = playerPos.z })
             if tile then
-                local items = tile:getItems()
-                if items then
-                    for _, item in ipairs(items) do
-                        if item and item:isLyingCorpse() and item:getPosition().x ~= 0xffff then
+                local things = tile:getItems()
+                if not things or #things == 0 then
+                    things = tile:getThings()
+                end
+                if things then
+                    for _, item in ipairs(things) do
+                        if isCorpseItem(item) and item:getPosition().x ~= 0xffff then
+                            corpsesFound = corpsesFound + 1
                             g_game.sendQuickLoot(1, item)
                         end
                     end
                 end
+            end
+        end
+    end
+
+    if modules.game_textmessage then
+        if corpsesFound > 0 then
+            modules.game_textmessage.displayStatusMessage(string.format("Looting %d nearby corpse%s...", corpsesFound, corpsesFound > 1 and "s" or ""))
+        else
+            -- Check if there are corpses slightly further away (distance 2-3) to inform the player
+            local distantCorpses = 0
+            for dx = -3, 3 do
+                for dy = -3, 3 do
+                    if math.abs(dx) > 1 or math.abs(dy) > 1 then
+                        local tile = g_map.getTile({ x = playerPos.x + dx, y = playerPos.y + dy, z = playerPos.z })
+                        if tile then
+                            local things = tile:getItems()
+                            if not things or #things == 0 then
+                                things = tile:getThings()
+                            end
+                            if things then
+                                for _, item in ipairs(things) do
+                                    if isCorpseItem(item) and item:getPosition().x ~= 0xffff then
+                                        distantCorpses = distantCorpses + 1
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+
+            if distantCorpses > 0 then
+                modules.game_textmessage.displayFailureMessage("You are too far away. Step closer to the corpse to loot it!")
+            else
+                modules.game_textmessage.displayFailureMessage("No corpses nearby to loot.")
             end
         end
     end
@@ -126,7 +177,10 @@ function quickLootController:onGameStart()
     QuickLoot.serverCategoryItemNames = {}
     QuickLoot.serverCategoryItemsPayload = nil
 
-    quickLootController.ui.information.vipPanel.premium:setOn(not g_game.getLocalPlayer():isPremium())
+    local localPlayer = g_game.getLocalPlayer()
+    if localPlayer and quickLootController.ui and quickLootController.ui.information and quickLootController.ui.information.vipPanel and quickLootController.ui.information.vipPanel.premium then
+        quickLootController.ui.information.vipPanel.premium:setOn(not localPlayer:isPremium())
+    end
     QuickLoot.load()
     for itemId, itemName in pairs(QuickLoot.data.itemNames or {}) do
         QuickLoot.cacheItemName(itemId, itemName)
