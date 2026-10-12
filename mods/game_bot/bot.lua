@@ -47,6 +47,7 @@ end
 -- Combat state
 local lastAttackSpell = 1
 local currentTarget = nil
+local lastAttackRequest = 0
 
 -- Healing state
 local lastHealTime = 0
@@ -525,6 +526,7 @@ function offlineSimple()
   groupCooldownUntil = {}
   lastCastTimeByWords = {}
   lastGlobalAttackCast = 0
+  lastAttackRequest = 0
   lastAntiIdle = 0
   
   -- Reset setup flags to force UI refresh on next login
@@ -549,7 +551,7 @@ function SimplifiedBot.init()
       attackAll = false,
       attackSummons = false,
       attackPlayers = false,
-      holdTargetPvE = false,
+      holdTargetPvE = true,
       maxDistance = 10,
       priority = "Closest",
       monsterList = {},
@@ -565,7 +567,7 @@ function SimplifiedBot.init()
       storage.combat.attackPlayers = false
     end
     if storage.combat.holdTargetPvE == nil then
-      storage.combat.holdTargetPvE = false
+      storage.combat.holdTargetPvE = true
     end
     if storage.combat.maxDistance == nil then
       storage.combat.maxDistance = 10
@@ -746,10 +748,10 @@ function SimplifiedBot.processCombat()
   -- PvP / PvE Hold Target logic
   local currentAttack = g_game.getAttackingCreature()
   
-  if currentAttack then
+  if currentAttack and not currentAttack:isDead() and not currentAttack:isRemoved() then
     if currentAttack:isPlayer() and currentAttack:getName() ~= player:getName() and storage.combat.attackPlayers then
       currentTarget = currentAttack
-      SimplifiedBot.castAttackSpell()
+      SimplifiedBot.castAttackSpell(currentAttack)
       return
     elseif currentAttack:isMonster() and storage.combat.holdTargetPvE then
       -- Verify if current monster is still a valid target
@@ -760,7 +762,7 @@ function SimplifiedBot.processCombat()
         if distance <= maxDist then
           -- Target is still valid, hold it
           currentTarget = currentAttack
-          SimplifiedBot.castAttackSpell()
+          SimplifiedBot.castAttackSpell(currentAttack)
           return
         end
       end
@@ -782,7 +784,7 @@ function SimplifiedBot.processCombat()
   for _, creature in ipairs(creatures) do
     local isMonster = creature:isMonster()
     
-    if isMonster then
+    if isMonster and not creature:isDead() and not creature:isRemoved() then
       monstersFound = monstersFound + 1
       
       -- Check if should skip summons
@@ -844,15 +846,19 @@ function SimplifiedBot.processCombat()
         end
         
         if shouldAttack then
+          local isCurrent = currentAttack and (currentAttack:getId() == creature:getId())
+
           if storage.combat.priority == "Lowest Health" then
             local hp = creature:getHealthPercent()
-            if hp < bestValue then
-              bestValue = hp
+            local score = isCurrent and (hp - 0.1) or hp
+            if score < bestValue then
+              bestValue = score
               bestTarget = creature
             end
           else -- Default to Closest
-            if distance < bestValue then
-              bestValue = distance
+            local score = isCurrent and (distance - 0.1) or distance
+            if score < bestValue then
+              bestValue = score
               bestTarget = creature
             end
           end
@@ -863,17 +869,30 @@ function SimplifiedBot.processCombat()
     end
   end
   
+  local now = g_clock.millis()
   if bestTarget then
     currentTarget = bestTarget
-    if g_game.getAttackingCreature() ~= bestTarget then
-      g_game.attack(bestTarget)
-    else
-      SimplifiedBot.castAttackSpell(bestTarget)
+    local isAlreadyAttacking = false
+    local attackingCreature = g_game.getAttackingCreature()
+    if attackingCreature and attackingCreature:getId() == bestTarget:getId() then
+      isAlreadyAttacking = true
     end
+
+    if not isAlreadyAttacking then
+      if now - lastAttackRequest >= 300 then
+        g_game.attack(bestTarget)
+        lastAttackRequest = now
+      end
+    end
+
+    SimplifiedBot.castAttackSpell(bestTarget)
   else
     currentTarget = nil
     if g_game.getAttackingCreature() then
-      g_game.cancelAttack()
+      if now - lastAttackRequest >= 300 then
+        g_game.cancelAttack()
+        lastAttackRequest = now
+      end
     end
   end
 end
@@ -965,6 +984,7 @@ function SimplifiedBot.castAttackSpell(target)
 
   local targetCreature = target or g_game.getAttackingCreature()
   if not targetCreature then return end
+  if targetCreature:isDead() or targetCreature:isRemoved() then return end
 
   local player = g_game.getLocalPlayer()
   if not player then return end
