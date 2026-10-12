@@ -1463,6 +1463,14 @@ function sendMessage(message, tab)
         return true
     end
 
+    local lowerTrimmed = trimmed:lower()
+    if lowerTrimmed == "/loot" or lowerTrimmed == "!loot" or lowerTrimmed == "/quickloot" then
+        if modules.game_quickloot and modules.game_quickloot.QuickLoot then
+            modules.game_quickloot.QuickLoot.lootNearbyCorpses()
+            return true
+        end
+    end
+
     -- Convert any Unicode emojis the player types to Discord shortcodes
     message = discordEmojiToShortcode(message)
 

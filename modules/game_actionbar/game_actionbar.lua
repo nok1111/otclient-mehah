@@ -456,6 +456,17 @@ function createMenu(slotId)
     menu:addOption('Assign Text', function()
         openTextAssignWindow()
     end)
+    menu:addOption('Assign Quick Loot', function()
+        clearSlot()
+        local slot = actionBarPanel:getChildById(slotToEdit)
+        if slot then
+            slot.text = '/loot'
+            slot.autoSend = true
+            loadText(slot)
+            slot:setTooltip('Quick Loot Nearby Corpses')
+            saveActionBar()
+        end
+    end)
     menu:addOption('Edit Hotkey', function()
         openEditHotkeyWindow()
         
@@ -1014,7 +1025,11 @@ function setupHotkeys()
                     g_game.talk(slot.words)
                 end
             elseif slot.text then
-                if slot.autoSend then
+                if slot.text == '/loot' or slot.text == '!loot' or slot.text == '/quickloot' then
+                    if modules.game_quickloot and modules.game_quickloot.QuickLoot then
+                        modules.game_quickloot.QuickLoot.lootNearbyCorpses()
+                    end
+                elseif slot.autoSend then
                     if not modules.game_console.isChatEnabled() then
                         g_game.talk(slot.text)
                     else
@@ -1067,7 +1082,11 @@ function setupHotkeys()
                         g_game.talk(slot.words)
                     end
                 elseif slot.text then
-                    if slot.autoSend then
+                    if slot.text == '/loot' or slot.text == '!loot' or slot.text == '/quickloot' then
+                        if modules.game_quickloot and modules.game_quickloot.QuickLoot then
+                            modules.game_quickloot.QuickLoot.lootNearbyCorpses()
+                        end
+                    elseif slot.autoSend then
                         modules.game_console.sendMessage(slot.text)
                     else
                         scheduleEvent(function()
