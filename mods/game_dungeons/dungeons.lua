@@ -323,6 +323,9 @@ function Dungeons.showList()
 	if not Dungeons.listUI then
 		return
 	end
+	-- Always refresh: the list is otherwise only fetched once at login and a
+	-- single lost/failed response would leave the window empty for the session.
+	Dungeons.sendOpcode({topic = "requestDungeonList"})
 	Dungeons.listUI:show()
 	Dungeons.listUI:raise()
 	Dungeons.listUI:focus()
