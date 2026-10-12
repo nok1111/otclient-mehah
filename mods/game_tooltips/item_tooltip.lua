@@ -305,6 +305,7 @@ function newTooltip(data)
   local _isCraftPreview = data.crafting == true
   local _craftLevel = data.craftLevel or nil
   local _charges = tonumber(data.charges) or 0
+  local _reqLvl = tonumber(data.reqLvl) or 0
 
 
   -- Cache by real item UID only if available (server 'new' path). Virtual items ('newByClientId') have no uid.
@@ -338,7 +339,8 @@ function newTooltip(data)
       baseArmor = _baseArmor,
       baseExtraDefense = _baseExtraDefense,
       craftLevel = _craftLevel,
-      charges = _charges
+      charges = _charges,
+      reqLvl = _reqLvl
     }
   else
   end
@@ -382,7 +384,8 @@ function newTooltip(data)
       baseArmor = _baseArmor,
       baseExtraDefense = _baseExtraDefense,
       craftLevel = _craftLevel,
-      charges = _charges
+      charges = _charges,
+      reqLvl = _reqLvl
     }
   else
   end
@@ -564,6 +567,17 @@ function buildItemTooltip(item)
 
   if iLvl > 0 then
     addString("Item Level " .. iLvl, Colors.ItemLevel)
+  end
+
+  -- Equip requirement (items.xml level or generated source_level, whichever
+  -- is higher). Red when the local player can't equip it.
+  if item.reqLvl and item.reqLvl > 0 then
+    local lp = player or g_game.getLocalPlayer()
+    local reqColor = "#c0c0c0"
+    if lp and lp:getLevel() < item.reqLvl then
+      reqColor = "#de6f6f"
+    end
+    addString("Requires Level " .. item.reqLvl, reqColor)
   end
 
   -- Crafting preview: stats are "??" (rolled at craft time); show the
