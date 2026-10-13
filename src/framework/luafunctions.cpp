@@ -144,6 +144,7 @@ void Application::registerLuaFunctions()
     g_lua.bindSingletonFunction("g_app", "getBuildType", &Application::getBuildType, static_cast<Application*>(&g_app));
     g_lua.bindSingletonFunction("g_app", "getBuildArch", &Application::getBuildArch, static_cast<Application*>(&g_app));
     g_lua.bindSingletonFunction("g_app", "getOs", &Application::getOs, static_cast<Application*>(&g_app));
+    g_lua.bindSingletonFunction("g_app", "getMemoryUsage", &Application::getMemoryUsage, static_cast<Application*>(&g_app));
     g_lua.bindSingletonFunction("g_app", "getStartupOptions", &Application::getStartupOptions, static_cast<Application*>(&g_app));
     g_lua.bindSingletonFunction("g_app", "exit", &Application::exit, static_cast<Application*>(&g_app));
     g_lua.bindSingletonFunction("g_app", "restart", &Application::restart, static_cast<Application*>(&g_app));

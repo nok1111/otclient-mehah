@@ -50,7 +50,13 @@ void SpriteManager::load() {
     if (g_app.isLoadingAsyncTexture()) {
         for (auto& file : m_spritesFiles)
             file = std::make_unique<FileStream_m>(g_resources.openFile(m_lastFileName));
-    } else (m_spritesFiles[0] = std::make_unique<FileStream_m>(g_resources.openFile(m_lastFileName)))->file->cache(true);
+    } else {
+        const auto& file = (m_spritesFiles[0] = std::make_unique<FileStream_m>(g_resources.openFile(m_lastFileName)))->file;
+        // Caching is only needed to decrypt the whole file in memory; an unencrypted
+        // .spr is read on demand from disk, avoiding a full copy in RAM.
+        if (file->isEncrypted())
+            file->cache(true);
+    }
 }
 
 bool SpriteManager::loadSpr(std::string file)

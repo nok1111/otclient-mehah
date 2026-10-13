@@ -399,6 +399,20 @@ TileList Map::getTiles(const int8_t floor/* = -1*/)
     return tiles;
 }
 
+uint32_t Map::getTileCount()
+{
+    uint32_t count = 0;
+    for (const auto& floor : m_floors) {
+        for (const auto& [key, block] : floor.tileBlocks) {
+            for (const auto& tile : block.getTiles()) {
+                if (tile != nullptr)
+                    ++count;
+            }
+        }
+    }
+    return count;
+}
+
 void Map::cleanTile(const Position& pos)
 {
     if (!pos.isMapPosition())

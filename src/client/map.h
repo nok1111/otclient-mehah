@@ -320,6 +320,11 @@ public:
 
     const auto& getCreatures() const { return m_knownCreatures; }
 
+    uint32_t getTileCount();
+    uint32_t getCreatureCount() { return m_knownCreatures.size(); }
+    uint32_t getStaticTextCount() { return m_staticTexts.size(); }
+    uint32_t getAnimatedTextCount() { return m_animatedTexts.size(); }
+
 private:
     struct FloorData
     {

@@ -46,6 +46,13 @@ MainWindow
       id: proxies
       text: -
 
+    DebugLabel
+      !text: tr('Memory')
+
+    DebugText
+      id: memory
+      text: -
+
   VerticalScrollBar
     id: debugScroll
     anchors.top: parent.top

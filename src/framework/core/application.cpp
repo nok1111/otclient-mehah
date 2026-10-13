@@ -36,6 +36,14 @@
 #include <csignal>
 #include <gitinfo.h>
 
+#if defined(WIN32)
+#include <windows.h>
+#include <psapi.h>
+#if defined(_MSC_VER)
+#pragma comment(lib, "psapi.lib")
+#endif
+#endif
+
 #define ADD_QUOTES_HELPER(s) #s
 #define ADD_QUOTES(s) ADD_QUOTES_HELPER(s)
 
@@ -219,6 +227,16 @@ std::string Application::getOs()
 #else
     return "unknown";
 #endif
+}
+
+uint64_t Application::getMemoryUsage()
+{
+#if defined(WIN32)
+    PROCESS_MEMORY_COUNTERS_EX pmc{};
+    if (GetProcessMemoryInfo(GetCurrentProcess(), reinterpret_cast<PPROCESS_MEMORY_COUNTERS>(&pmc), sizeof(pmc)))
+        return static_cast<uint64_t>(pmc.PrivateUsage);
+#endif
+    return 0;
 }
 
 // https://stackoverflow.com/a/46448040

@@ -196,6 +196,10 @@ void Client::registerLuaFunctions()
 
     g_lua.bindSingletonFunction("g_map", "findEveryPath", &Map::findEveryPath, &g_map);
     g_lua.bindSingletonFunction("g_map", "getSpectatorsByPattern", &Map::getSpectatorsByPattern, &g_map);
+    g_lua.bindSingletonFunction("g_map", "getTileCount", &Map::getTileCount, &g_map);
+    g_lua.bindSingletonFunction("g_map", "getCreatureCount", &Map::getCreatureCount, &g_map);
+    g_lua.bindSingletonFunction("g_map", "getStaticTextCount", &Map::getStaticTextCount, &g_map);
+    g_lua.bindSingletonFunction("g_map", "getAnimatedTextCount", &Map::getAnimatedTextCount, &g_map);
 
     g_lua.registerSingletonClass("g_minimap");
     g_lua.bindSingletonFunction("g_minimap", "clean", &Minimap::clean, &g_minimap);
@@ -204,6 +208,7 @@ void Client::registerLuaFunctions()
     g_lua.bindSingletonFunction("g_minimap", "loadOtmm", &Minimap::loadOtmm, &g_minimap);
     g_lua.bindSingletonFunction("g_minimap", "saveOtmm", &Minimap::saveOtmm, &g_minimap);
     g_lua.bindSingletonFunction("g_minimap", "loadPreRenderedBlocks", &Minimap::loadPreRenderedBlocks, &g_minimap);
+    g_lua.bindSingletonFunction("g_minimap", "getBlockCount", &Minimap::getBlockCount, &g_minimap);
 
 #ifdef FRAMEWORK_EDITOR
     g_lua.registerSingletonClass("g_creatures");

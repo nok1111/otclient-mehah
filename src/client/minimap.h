@@ -100,6 +100,13 @@ public:
 
     void updateTile(const Position& pos, const TilePtr& tile);
     const MinimapTile& getTile(const Position& pos);
+    uint32_t getBlockCount()
+    {
+        uint32_t count = 0;
+        for (const auto& blocks : m_tileBlocks)
+            count += blocks.size();
+        return count;
+    }
     std::pair<MinimapBlock_ptr, MinimapTile> threadGetTile(const Position& pos);
 
     bool loadImage(const std::string& fileName, const Position& topLeft, float colorFactor);

@@ -71,6 +71,7 @@ public:
     std::string getBuildCommit();
     std::string getOs();
     std::string getStartupOptions() { return m_startupOptions; }
+    uint64_t getMemoryUsage();
 
 protected:
     void registerLuaFunctions();

@@ -99,6 +99,26 @@ void FileStream::cache(bool
     }
 }
 
+bool FileStream::isEncrypted()
+{
+#if ENABLE_ENCRYPTION == 1
+    const auto headerSize = std::string(ENCRYPTION_HEADER).size();
+    if (m_caching)
+        return m_data.size() >= headerSize && std::memcmp(m_data.data(), ENCRYPTION_HEADER, headerSize) == 0;
+    if (m_writeable || !m_fileHandle)
+        return false;
+    const auto pos = PHYSFS_tell(m_fileHandle);
+    if (!PHYSFS_seek(m_fileHandle, 0))
+        return false;
+    std::vector<uint8_t> header(headerSize);
+    const auto len = PHYSFS_readBytes(m_fileHandle, header.data(), headerSize);
+    PHYSFS_seek(m_fileHandle, pos);
+    return len == static_cast<PHYSFS_sint64>(headerSize) && std::memcmp(header.data(), ENCRYPTION_HEADER, headerSize) == 0;
+#else
+    return false;
+#endif
+}
+
 void FileStream::close()
 {
     if (m_fileHandle && PHYSFS_isInit()) {

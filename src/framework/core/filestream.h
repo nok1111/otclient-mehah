@@ -38,6 +38,7 @@ public:
     ~FileStream();
 
     void cache(bool useEnc = false);
+    bool isEncrypted();
     void close();
     void flush();
     void write(const void* buffer, uint32_t count);
