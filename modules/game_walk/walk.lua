@@ -4,7 +4,8 @@ local walkEvent = nil
 local lastTurn = 0
 local nextWalkDir = nil
 local lastWalkDir = nil
-local lastCancelWalkTime = 0
+local retryWalkEvent = nil
+local scheduleWalkRetry
 
 
 local keys = {
@@ -32,9 +33,17 @@ local turnKeys = {
 WalkController = Controller:new()
 
 --- Stops the smart walking process.
-local function stopSmartWalk()
+--- clearPending also drops any queued step (used on focus loss / game end).
+local function stopSmartWalk(clearPending)
     smartWalkDirs = {}
     smartWalkDir = nil
+    if clearPending then
+        nextWalkDir = nil
+        if retryWalkEvent then
+            removeEvent(retryWalkEvent)
+            retryWalkEvent = nil
+        end
+    end
 end
 
 --- Cancels the current walk event if active.
@@ -66,7 +75,8 @@ local function walk(dir)
     end
 
     if player:isWalkLocked() then
-        nextWalkDir = nil
+        nextWalkDir = dir
+        scheduleWalkRetry()
         return
     end
 
@@ -80,14 +90,16 @@ local function walk(dir)
         if isAutoWalking then
             player:stopAutoWalk()
         end
-        player:lockWalk(player:getStepDuration() + 50)
+        local remaining = player:getStepDuration() - player:getWalkTicksElapsed()
+        player:lockWalk(math.max(remaining + 50, 100))
+        nextWalkDir = dir
+        scheduleWalkRetry()
         return
     end
 
     if not player:canWalk() then
-        if lastWalkDir ~= dir then
-            nextWalkDir = dir
-        end
+        nextWalkDir = dir
+        scheduleWalkRetry()
         return
     end
 
@@ -110,12 +122,33 @@ local function walk(dir)
     return true
 end
 
+--- Schedules a single retry for a queued step, timed to when canWalk() should
+--- open again (step end / diagonal cooldown / server confirmation). The retry
+--- re-queues itself through walk() while the intent is still pending.
+scheduleWalkRetry = function()
+    if retryWalkEvent then
+        return
+    end
+
+    local delay = 30
+    local player = g_game.getLocalPlayer()
+    if player then
+        local remaining = player:getStepDuration() - player:getWalkTicksElapsed()
+        delay = math.max(math.min(remaining, 250), 10)
+    end
+
+    retryWalkEvent = scheduleEvent(function()
+        retryWalkEvent = nil
+        local dir = smartWalkDir or nextWalkDir
+        if dir and g_keyboard.getModifiers() == KeyboardNoModifier then
+            walk(dir)
+        end
+    end, delay)
+end
+
 --- Adds a walk event with an optional delay.
 local function addWalkEvent(dir, delay)
-    if g_clock.millis() - lastCancelWalkTime > 20 then
-        cancelWalkEvent()
-        lastCancelWalkTime = g_clock.millis()
-    end
+    cancelWalkEvent()
 
     local action = function()
         if g_keyboard.getModifiers() == KeyboardNoModifier then
@@ -188,7 +221,7 @@ end
 
 --- Binds movement keys to their respective directions.
 local function bindKeys()
-    modules.game_interface.getRootPanel():setAutoRepeatDelay(200)
+    modules.game_interface.getRootPanel():setAutoRepeatDelay(100)
 
     for _, keyDir in ipairs(keys) do bindWalkKey(keyDir[1], keyDir[2]) end
     for _, keyDir in ipairs(turnKeys) do bindTurnKey(keyDir[1], keyDir[2]) end
@@ -221,7 +254,7 @@ local function onWalkFinish(player)
         if not g_game.getFeature(GameAllowPreWalk) then
             walk(nextWalkDir)
         else
-            addWalkEvent(nextWalkDir, 50)
+            addWalkEvent(nextWalkDir)
         end
     end
 end
@@ -231,6 +264,8 @@ end
 
 --- Handles cancellation of a walking event.
 local function onCancelWalk(player)
+    -- cancelWalk() in C++ already locked for 250ms; shorten it to 50ms
+    player:unlockWalk()
     player:lockWalk(50)
 end
 
@@ -257,7 +292,7 @@ function WalkController:onGameStart()
         onAutoWalk = onAutoWalk
     })
 
-    modules.game_interface.getRootPanel().onFocusChange = stopSmartWalk
+    modules.game_interface.getRootPanel().onFocusChange = function() stopSmartWalk(true) end
     modules.game_joystick.addOnJoystickMoveListener(function(dir) g_game.walk(dir) end)
 
     if not g_game.isOfficialTibia() then
@@ -269,7 +304,7 @@ end
 
 --- Cleans up resources when the game ends.
 function WalkController:onGameEnd()
-    stopSmartWalk()
+    stopSmartWalk(true)
 end
 
 --- Utility functions for binding and unbinding keys.
@@ -295,6 +330,7 @@ function bindTurnKey(key, dir)
     g_keyboard.bindKeyDown(key, function() turn(dir, false) end, gameRootPanel)
     g_keyboard.bindKeyPress(key, function() turn(dir, true) end, gameRootPanel)
     g_keyboard.bindKeyUp(key, function()
+        changeWalkDir(dir, true)
         local player = g_game.getLocalPlayer()
         if player then player:lockWalk(200) end
     end, gameRootPanel)

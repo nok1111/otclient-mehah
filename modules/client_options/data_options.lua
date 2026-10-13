@@ -24,7 +24,7 @@ return {
         end
     },
     classicControl                    = true,
-    smartWalk                         = false,
+    smartWalk                         = true,
     autoChaseOverride                 = true,
     talkOnRightClick                  = true,
     moveStack                         = false,
