@@ -234,6 +234,11 @@ void LocalPlayer::onPositionChange(const Position& newPos, const Position& oldPo
 {
     Creature::onPositionChange(newPos, oldPos);
 
+    // a teleport or floor change leaves the prediction chain stale; drop it so
+    // getPosition() and new steps use the real server position right away
+    if (isPreWalking() && m_preWalks.front() != newPos)
+        m_preWalks.clear();
+
     if (newPos == m_autoWalkDestination)
         stopAutoWalk();
     else if (m_autoWalkDestination.isValid() && newPos == m_lastAutoWalkPosition)

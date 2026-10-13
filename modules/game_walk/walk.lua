@@ -109,13 +109,12 @@ local function walk(dir)
     if g_game.getFeature(GameAllowPreWalk) then
         local toPos = Position.translatedToDirection(player:getPosition(), dir)
         local toTile = g_map.getTile(toPos)
-        if not toTile or not toTile:isWalkable() then
-            if not canChangeFloor(toPos, 1) and not canChangeFloor(toPos, -1) then
-                return false
-            end
-        else
+        if toTile and toTile:isWalkable() then
             player:preWalk(dir)
+        elseif toTile and not canChangeFloor(toPos, 1) and not canChangeFloor(toPos, -1) then
+            return false
         end
+        -- no cached tile (or a floor change): let the server decide
     end
 
     g_game.walk(dir)
@@ -293,7 +292,10 @@ function WalkController:onGameStart()
     })
 
     modules.game_interface.getRootPanel().onFocusChange = function() stopSmartWalk(true) end
-    modules.game_joystick.addOnJoystickMoveListener(function(dir) g_game.walk(dir) end)
+    modules.game_joystick.addOnJoystickMoveListener(function(dir) smartWalk(dir) end)
+
+    -- allow up to 3 unconfirmed predicted steps so high latency doesn't stall the stride
+    g_game.setWalkMaxSteps(3)
 
     if not g_game.isOfficialTibia() then
         g_game.enableFeature(GameForceFirstAutoWalkStep)
@@ -332,7 +334,7 @@ function bindTurnKey(key, dir)
     g_keyboard.bindKeyUp(key, function()
         changeWalkDir(dir, true)
         local player = g_game.getLocalPlayer()
-        if player then player:lockWalk(200) end
+        if player then player:lockWalk(g_settings.getNumber("walkTurnDelay")) end
     end, gameRootPanel)
 end
 
