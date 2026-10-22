@@ -4,6 +4,6 @@ Module
   author: Fifth
   sandboxed: true
   autoload: true
-  scripts: [ MapTravelConfig, MapTravel ]
+  scripts: [ MapTravelConfig, MapTravelMonsters, MapTravel ]
   @onLoad: MapTravel.init()
   @onUnload: MapTravel.terminate()

@@ -164,6 +164,14 @@ OUTFIT_SHADERS = { {
     {name = 'Orbital', frag = 'shaders/fragment/orbital.frag', drawColor = false},
     {name = 'Corrupted', frag = 'shaders/fragment/corrupted.frag', drawColor = false},
 
+    -- quest item outline shaders (useFramebuffer required: items draw from a
+    -- packed ThingType atlas, the FBO gives the shader a clean per-item texture)
+    {name = 'Outline White', useFramebuffer = true, frag = 'shaders/fragment/outline_white.frag', drawColor = false},
+    {name = 'Outline Golden', useFramebuffer = true, frag = 'shaders/fragment/quest_golden.frag', drawColor = false},
+    {name = 'Outline Blue', useFramebuffer = true, frag = 'shaders/fragment/outline_blue.frag', drawColor = false},
+    {name = 'Outline Red', useFramebuffer = true, frag = 'shaders/fragment/outline_red.frag', drawColor = false},
+    {name = 'Outline Green', useFramebuffer = true, frag = 'shaders/fragment/outline_green.frag', drawColor = false},
+
     {name = 'Damaged', useFramebuffer = true, frag = 'shaders/fragment/damaged.frag', drawColor = true},
 
     {name = 'Zaphire', frag = 'shaders/fragment/creature_texture_zoom.frag', tex1 = '/images/shaders/zaphire.png', drawColor = false},

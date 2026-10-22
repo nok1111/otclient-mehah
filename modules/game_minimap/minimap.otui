@@ -104,6 +104,15 @@ InventoryWindow
         image-clip: 20 40 20 20
 
     Button
+      id: waypointsButton
+      text: Map
+      size: 38 20
+      anchors.right: mapButton.left
+      anchors.top: parent.top
+      margin-right: 2
+      @onClick: openWaypointsView()
+
+    Button
       id: mapButton
       text: Zones
       size: 48 20

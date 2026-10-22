@@ -29,6 +29,7 @@ local flushEvent
 local cachedLines = {}
 local disabled = false
 local allLines = {}
+local fullText = ''
 
 -- private functions
 local function navigateCommand(step)
@@ -312,15 +313,13 @@ function disable()
 end
 
 function flushLines()
-    local fulltext = terminalSelectText:getText()
-
     local start = #cachedLines + 1 - MaxLogLines
     if start < 0 then
         start = 1
     end
 
     for i = start, #cachedLines do
-        line = cachedLines[i]
+        local line = cachedLines[i]
         -- delete old lines if needed
         if terminalBuffer:getChildCount() >= MaxLogLines then
             local firstChild = terminalBuffer:getChildByIndex(1)
@@ -328,7 +327,7 @@ function flushLines()
                 local len = #firstChild:getText()
                 firstChild:destroy()
                 table.remove(allLines, 1)
-                fulltext = string.sub(fulltext, len)
+                fullText = string.sub(fullText, len)
             end
         end
 
@@ -342,10 +341,10 @@ function flushLines()
             color = line.color
         })
 
-        fulltext = fulltext .. '\n' .. line.text
+        fullText = fullText .. '\n' .. line.text
     end
 
-    terminalSelectText:setText(fulltext)
+    terminalSelectText:setText(fullText)
 
     cachedLines = {}
     removeEvent(flushEvent)
@@ -359,8 +358,12 @@ function addLine(text, color)
         color = color
     })
 
-    if terminalWindow:isVisible() and not flushEvent then
-        flushEvent = scheduleEvent(flushLines, 10)
+    if terminalWindow:isVisible() then
+        if not flushEvent then
+            flushEvent = scheduleEvent(flushLines, 100)
+        end
+    elseif #cachedLines > MaxLogLines then
+        table.remove(cachedLines, 1)
     end
 end
 
@@ -435,4 +438,5 @@ function clear()
     terminalSelectText:setText('')
     cachedLines = {}
     allLines = {}
+    fullText = ''
 end

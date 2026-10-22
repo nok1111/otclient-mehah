@@ -479,15 +479,27 @@ void HangWatchdogThread()
 
             const uint64_t now = GetTickCount64();
 
+            // if the watchdog itself was frozen far longer than its period, the
+            // whole process was suspended (OS sleep/hibernate), not a loop hang
+            static uint64_t lastWatchdogTick = 0;
+            const bool systemSuspended = lastWatchdogTick != 0 && now > lastWatchdogTick &&
+                                         now - lastWatchdogTick > 60000;
+            lastWatchdogTick = now;
+            if (systemSuspended) {
+                g_mainHeartbeat.store(now, std::memory_order_relaxed);
+                g_mapHeartbeat.store(now, std::memory_order_relaxed);
+                continue;
+            }
+
             const uint64_t lastMain = g_mainHeartbeat.load(std::memory_order_relaxed);
-            if (lastMain != 0 && now - lastMain > HANG_MS) {
+            if (lastMain != 0 && now > lastMain && now - lastMain > HANG_MS) {
                 writeHangReport("main", lastMain, now);
                 // re-arm: only report again if the loop recovered and stalled again
                 g_mainHeartbeat.store(now, std::memory_order_relaxed);
             }
 
             const uint64_t lastMap = g_mapHeartbeat.load(std::memory_order_relaxed);
-            if (lastMap != 0 && now - lastMap > HANG_MS) {
+            if (lastMap != 0 && now > lastMap && now - lastMap > HANG_MS) {
                 writeHangReport("event/map", lastMap, now);
                 g_mapHeartbeat.store(now, std::memory_order_relaxed);
             }

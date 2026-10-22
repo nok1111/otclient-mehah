@@ -1,6 +1,12 @@
 return {
     ["Achievement Master"] = "fame",
     ["Adventurer Pablo"] = "default",
+    ["Agris the Gravedigger"] = "quest",
+    ["Inspector Marlow Ashford"] = "quest",
+    ["Granny Odelia"] = "quest",
+    ["Shepherd Bram"] = "quest",
+    ["Milkmaid Tilly"] = "quest",
+    ["Stableboy Pell"] = "quest",
     ["Alchemist Hanna"] = "quest",
     ["Alice"] = "vendor",
     ["Anoni"] = "fame",

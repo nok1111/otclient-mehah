@@ -11,7 +11,7 @@ Services = {
 
 
 Servers_init = {
-   ["ascensionproject.online"] = {
+   ["127.0.0.1"] = {
         ["port"] = 7171,
         ["protocol"] = 1098,
         ["httpLogin"] = false

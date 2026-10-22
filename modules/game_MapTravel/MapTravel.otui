@@ -48,27 +48,37 @@ UIWidget
       anchors.top: parent.top
       anchors.left: parent.left
       anchors.right: parent.right
-      height: 28
+      height: 44
       background-color: #1c1c1ce6
       border-width: 1
       border-color: #333333
-      padding: 3 6
+      padding: 6 8
       z-index: 100
 
-    # Topbar controls
-      Label
-        id: filtersLabel
+    # Title
+      UIWidget
+        id: titleIcon
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        text: Filters:
-        color: #cfcfcf
+        size: 26 26
+        image-source: /images/icons/minimap.png
+        image-smooth: true
+
+      Label
+        id: titleLabel
+        anchors.left: titleIcon.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 6
+        text: World Map
+        color: #dfdfdf
+        font: terminus-14px-bold
 
       Button
         id: resetFilters
-        anchors.left: filtersLabel.right
+        anchors.left: titleLabel.right
         anchors.verticalCenter: parent.verticalCenter
-        margin-left: 4
-        width: 22
+        margin-left: 12
+        size: 30 30
         text: R
         tooltip: Reset filters
 
@@ -77,50 +87,63 @@ UIWidget
         anchors.left: resetFilters.right
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 6
-        width: 24
-        text: C
-        tooltip: Center map
+        size: 30 30
+        icon: /images/icons/dot-circle_10469560.png
+        tooltip: Center on player
 
       Button
         id: zoomOut
         anchors.left: centerMap.right
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 6
-        width: 24
-        text: -
+        size: 30 30
+        icon: /images/game/minimap/zoom_out.png
         tooltip: Zoom out
+
+      Label
+        id: zoomLabel
+        anchors.left: zoomOut.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 6
+        width: 46
+        text: 100%
+        color: #dfdfdf
+        text-align: center
 
       Button
         id: zoomIn
-        anchors.left: zoomOut.right
+        anchors.left: zoomLabel.right
         anchors.verticalCenter: parent.verticalCenter
-        margin-left: 4
-        width: 24
-        text: +
+        margin-left: 6
+        size: 30 30
+        icon: /images/game/minimap/zoom_in.png
         tooltip: Zoom in
 
       ComboBox
         id: levelFilter
-        width: 120
+        width: 130
+        height: 30
         anchors.left: zoomIn.right
         anchors.verticalCenter: parent.verticalCenter
-        margin-left: 6
+        margin-left: 10
 
-      ComboBox
-        id: scrollSpeed
-        width: 90
+      UIWidget
+        id: searchIcon
         anchors.left: levelFilter.right
         anchors.verticalCenter: parent.verticalCenter
-        margin-left: 6
-        tooltip: Scroll speed
+        margin-left: 10
+        size: 18 18
+        image-source: /images/icons/search.png
+        image-smooth: true
 
       TextEdit
         id: searchBox
-        anchors.left: levelFilter.right
+        anchors.left: searchIcon.right
         anchors.right: closeBtn.left
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 6
         margin-right: 8
+        height: 30
         text: ""
         placeholder: Search...
 
@@ -128,7 +151,7 @@ UIWidget
         id: closeBtn
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        width: 24
+        size: 30 30
         text: X
         tooltip: Close
 
@@ -141,10 +164,91 @@ UIWidget
       image-smooth: true
       z-index: 10
 
+    # Left control rail: vertical zoom slider + layer toggles
+    FlatPanel
+      id: leftRail
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 10
+      phantom: false
+      focusable: true
+      width: 112
+      height: 285
+      background-color: #161616d8
+      border-width: 1
+      border-color: #333333
+      z-index: 90
+      padding: 8
+
+      Button
+        id: railZoomIn
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        size: 30 30
+        icon: /images/game/minimap/zoom_in.png
+        tooltip: Zoom in
+
+      UIWidget
+        id: railZoomTrack
+        anchors.top: railZoomIn.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        size: 6 100
+        background-color: #2a2a2a
+        border-width: 1
+        border-color: #444444
+
+        UIWidget
+          id: railZoomThumb
+          anchors.horizontalCenter: parent.horizontalCenter
+          anchors.top: parent.top
+          size: 18 12
+          background-color: #80c7f8
+          border-width: 1
+          border-color: #dfdfdf
+
+      Button
+        id: railZoomOut
+        anchors.top: railZoomTrack.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        size: 30 30
+        icon: /images/game/minimap/zoom_out.png
+        tooltip: Zoom out
+
+      CheckBox
+        id: railToggleMonsters
+        anchors.top: railZoomOut.bottom
+        anchors.left: parent.left
+        margin-top: 12
+        width: 96
+        text: Show Monsters
+        tooltip: Show monster icons
+
+      CheckBox
+        id: railToggleZones
+        anchors.top: railToggleMonsters.bottom
+        anchors.left: parent.left
+        margin-top: 6
+        width: 96
+        text: Show Zones
+        tooltip: Show zone images
+
+      CheckBox
+        id: railToggleUG
+        anchors.top: railToggleZones.bottom
+        anchors.left: parent.left
+        margin-top: 6
+        width: 96
+        text: UG Zones
+        tooltip: Show underground zones
+
     # Horizontal Scrollbar
     FlatPanel
       id: hScroll
       height: 12
+      phantom: false
+      focusable: true
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.bottom: parent.bottom
@@ -169,6 +273,8 @@ UIWidget
     FlatPanel
       id: vScroll
       width: 12
+      phantom: false
+      focusable: true
       anchors.top: topBar.bottom
       anchors.right: parent.right
       anchors.bottom: parent.bottom

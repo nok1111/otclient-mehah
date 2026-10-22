@@ -1,8 +1,183 @@
--- Global scale applier used by buttons and wheel
-function MapTravel.applyScale(newScale)
+-- Global scale applier used by buttons and wheel.
+-- Keeps an image-space anchor point stable instead of re-centering on the
+-- player. `focusScreen` (optional, absolute mouse pos) anchors zoom under
+-- the cursor; without it the view center is used.
+function MapTravel.applyScale(newScale, focusScreen)
+    local mapPanel = MapTravel.UI and MapTravel.UI.mapPanel
+    local canvas = mapPanel and (mapPanel.mapCanvas or (mapPanel.recursiveGetChildById and mapPanel:recursiveGetChildById('mapCanvas')))
+    local oldScale = MapTravel.mapScale or 1.0
+
+    -- Capture the image-space point under the anchor (cursor or view center)
+    local fx, fy, ax, ay
+    if canvas and not canvas:isDestroyed() then
+        local pSize = mapPanel:getSize()
+        local pPos = mapPanel:getPosition()
+        local cPos = canvas:getPosition()
+        local topBarH = (mapPanel.topBar and mapPanel.topBar:getHeight()) or 0
+        if focusScreen then
+            ax = focusScreen.x - pPos.x
+            ay = focusScreen.y - pPos.y
+        else
+            ax = pSize.width / 2
+            ay = topBarH + (pSize.height - topBarH) / 2
+        end
+        fx = (ax - cPos.x) / oldScale
+        fy = (ay - cPos.y) / oldScale
+    end
+
     MapTravel.mapScale = newScale
-    MapTravel._canvasPositioned = false
     MapTravel.applyFiltersAndRedraw()
+
+    -- Re-anchor the same image point under the anchor
+    if fx and fy and canvas and not canvas:isDestroyed() then
+        local pSize = mapPanel:getSize()
+        local cSize = canvas:getSize()
+        local topBarH = (mapPanel.topBar and mapPanel.topBar:getHeight()) or 0
+        local cx, cy
+        if cSize.width > pSize.width then
+            cx = math.floor(ax - fx * newScale)
+            cx = math.min(0, math.max(cx, pSize.width - cSize.width))
+        else
+            cx = math.max(0, math.floor((pSize.width - cSize.width) / 2))
+        end
+        if cSize.height > (pSize.height - topBarH) then
+            cy = math.floor(ay - fy * newScale)
+            cy = math.min(topBarH, math.max(cy, pSize.height - cSize.height))
+        else
+            cy = math.floor(topBarH + (pSize.height - topBarH - cSize.height) / 2)
+        end
+        canvas:breakAnchors()
+        canvas:setPosition({x = cx, y = cy})
+        MapTravel._canvasPositioned = true
+        MapTravel.syncScrollbars(canvas, mapPanel)
+    end
+
+    MapTravel.updateZoomLabel()
+    if MapTravel._debugLabel then
+        MapTravel._debugLabel:setText(string.format("zoom %.2f", newScale))
+    end
+end
+
+function MapTravel.updateZoomLabel()
+    local topBar = MapTravel.UI and MapTravel.UI.mapPanel and MapTravel.UI.mapPanel.topBar
+    local zl = topBar and (topBar.zoomLabel or (topBar.recursiveGetChildById and topBar:recursiveGetChildById('zoomLabel')))
+    if zl then
+        zl:setText(string.format("%d%%", math.floor((MapTravel.mapScale or 1.0) * 100 + 0.5)))
+    end
+    MapTravel.syncRailThumb()
+end
+
+-- Left rail helpers
+function MapTravel.getRailWidgets()
+    local mapPanel = MapTravel.UI and MapTravel.UI.mapPanel
+    local rail = mapPanel and (mapPanel.leftRail or (mapPanel.recursiveGetChildById and mapPanel:recursiveGetChildById('leftRail')))
+    if not rail then return {} end
+    local function child(id)
+        return rail[id] or (rail.recursiveGetChildById and rail:recursiveGetChildById(id))
+    end
+    local track = child('railZoomTrack')
+    return {
+        rail   = rail,
+        zoomIn = child('railZoomIn'),
+        zoomOut = child('railZoomOut'),
+        track  = track,
+        thumb  = track and (track.railZoomThumb or (track.recursiveGetChildById and track:recursiveGetChildById('railZoomThumb'))),
+        tMon   = child('railToggleMonsters'),
+        tZone  = child('railToggleZones'),
+        tUG    = child('railToggleUG'),
+    }
+end
+
+function MapTravel.syncRailThumb()
+    local R = MapTravel.getRailWidgets()
+    if not (R.track and R.thumb) then return end
+    local minS = MapTravel.getFitScale() or 0.4
+    local maxS = 4.0
+    local frac = (maxS - (MapTravel.mapScale or 1.0)) / math.max(0.0001, (maxS - minS))
+    frac = math.max(0, math.min(1, frac))
+    local travel = math.max(0, R.track:getHeight() - R.thumb:getHeight())
+    R.thumb:setMarginTop(math.floor(frac * travel))
+end
+
+function MapTravel.installLeftRail()
+    local R = MapTravel.getRailWidgets()
+    if not R.rail then return end
+
+    -- Swallow clicks on the rail background so they don't drag the canvas below
+    R.rail.onMousePress = function() return true end
+    R.rail.onMouseRelease = function() return true end
+
+    if R.zoomIn then
+        R.zoomIn.onClick = function()
+            local s = (MapTravel.mapScale or 1.0) * 1.2
+            if s > 4.0 then s = 4.0 end
+            MapTravel.applyScale(s)
+        end
+    end
+    if R.zoomOut then
+        R.zoomOut.onClick = function()
+            local s = (MapTravel.mapScale or 1.0) / 1.2
+            local minS = MapTravel.getFitScale() or 0.4
+            if s < minS then s = minS end
+            MapTravel.applyScale(s)
+        end
+    end
+
+    -- Draggable thumb / clickable track: top = max zoom (4.0), bottom = fit
+    if R.track and R.thumb then
+        local function zoomFromY(y)
+            local tPos = R.track:getPosition()
+            local tH = R.track:getHeight()
+            local thH = R.thumb:getHeight()
+            local frac = (y - tPos.y - thH / 2) / math.max(1, tH - thH)
+            frac = math.max(0, math.min(1, frac))
+            local minS = MapTravel.getFitScale() or 0.4
+            return 4.0 - frac * (4.0 - minS)
+        end
+        local function attachDrag(w)
+            w.onMousePress = function(_, pos, btn)
+                if btn ~= MouseLeftButton then return false end
+                w._railDrag = true
+                MapTravel.applyScale(zoomFromY(pos.y))
+                return true
+            end
+            w.onMouseMove = function(_, pos)
+                if not w._railDrag then return false end
+                MapTravel.applyScale(zoomFromY(pos.y))
+                return true
+            end
+            w.onMouseRelease = function()
+                if w._railDrag then w._railDrag = false return true end
+                return false
+            end
+        end
+        attachDrag(R.track)
+        attachDrag(R.thumb)
+    end
+
+    -- Layer toggles
+    MapTravel.filters = MapTravel.filters or {}
+    if R.tMon then
+        R.tMon:setChecked(MapTravel.filters.showMonsters ~= false)
+        R.tMon.onCheckChange = function(_, checked)
+            MapTravel.filters.showMonsters = checked
+            MapTravel.applyFiltersAndRedraw()
+        end
+    end
+    if R.tZone then
+        R.tZone:setChecked(MapTravel.filters.showZones ~= false)
+        R.tZone.onCheckChange = function(_, checked)
+            MapTravel.filters.showZones = checked
+            MapTravel.applyFiltersAndRedraw()
+        end
+    end
+    if R.tUG then
+        R.tUG:setChecked(MapTravel.filters.showUGZones == true)
+        R.tUG.onCheckChange = function(_, checked)
+            MapTravel.filters.showUGZones = checked
+            MapTravel.applyFiltersAndRedraw()
+        end
+    end
 end
 
 function focusRootPanel()
@@ -31,24 +206,34 @@ end
 MapTravel.worldImageConfig = MapTravel.worldImageConfig or {
     tilesW = 2048,
     tilesH = 2048,
-    imgW   = 1347,
-    imgH   = 1371,
-    x0     = 120,     -- top-left world tile X of the image
-    y0     = 70,     -- top-left world tile Y of the image
+    imgW   = 10240,
+    imgH   = 10240,
+    x0     = -257,     -- top-left world tile X of the image
+    y0     = -252,     -- top-left world tile Y of the image
     -- Optional extra scale multipliers to fine-tune pixels-per-tile mapping
     -- Increase scaleX/scaleY to move points further right/down respectively.
     -- Example: scaleY = 1.6 if the marker appears ~1.6x higher than expected.
-    scaleX = 1.485,
-    scaleY = 1.478
+    scaleX = 0.80,
+    scaleY = 0.80
     ,
 }
 
 local function worldToPixelXY(pos)
     if not pos then return nil end
     local cfg = MapTravel.worldImageConfig
-    -- Prefer the actual base image size if we have already cached it
+    -- Prefer the live texture size (handles image swaps and async texture load);
+    -- fall back to last cached size, then to config
     local imgW = (MapTravel._baseMapSize and MapTravel._baseMapSize.width) or cfg.imgW
     local imgH = (MapTravel._baseMapSize and MapTravel._baseMapSize.height) or cfg.imgH
+    local canvas = MapTravel.UI and MapTravel.UI.mapPanel and (MapTravel.UI.mapPanel.mapCanvas or MapTravel.UI.mapPanel) or nil
+    if canvas then
+        local w = (canvas.getImageWidth and canvas:getImageWidth()) or canvas:getWidth()
+        local h = (canvas.getImageHeight and canvas:getImageHeight()) or canvas:getHeight()
+        if w and w > 0 and h and h > 0 then
+            imgW, imgH = w, h
+            MapTravel._baseMapSize = { width = w, height = h }
+        end
+    end
     local sx = (imgW / cfg.tilesW) * (cfg.scaleX or 1)
     local sy = (imgH / cfg.tilesH) * (cfg.scaleY or 1)
     local px = (pos.x - cfg.x0) * sx
@@ -64,14 +249,27 @@ local function worldToPixelXY(pos)
     return { x = px, y = py }
 end
 
+-- Scale that fits the whole map image inside the panel (never above 1.0)
+function MapTravel.getFitScale()
+    local mapPanel = MapTravel.UI and MapTravel.UI.mapPanel
+    if not mapPanel or not mapPanel.getSize then return nil end
+    local imgW = (MapTravel._baseMapSize and MapTravel._baseMapSize.width) or MapTravel.worldImageConfig.imgW
+    local imgH = (MapTravel._baseMapSize and MapTravel._baseMapSize.height) or MapTravel.worldImageConfig.imgH
+    if not imgW or imgW <= 0 or not imgH or imgH <= 0 then return nil end
+    local pSize = mapPanel:getSize()
+    local topBarH = (mapPanel.topBar and mapPanel.topBar:getHeight()) or 0
+    return math.min(pSize.width / imgW, math.max(1, pSize.height - topBarH) / imgH)
+end
+
 -- Shared mouse wheel zoom handler
-function MapTravel.wheelZoom(direction)
+function MapTravel.wheelZoom(direction, mousePos)
     -- Match buttons: scrolling forward (direction > 0) zooms IN, backward zooms OUT
     local factor = (direction > 0) and 1.2 or (1/1.2)
     local s = (MapTravel.mapScale or 1.0) * factor
     if s > 4.0 then s = 4.0 end
-    if s < 0.4 then s = 0.4 end
-    MapTravel.applyScale(s)
+    local minS = MapTravel.getFitScale() or 0.4
+    if s < minS then s = minS end
+    MapTravel.applyScale(s, mousePos)
 end
 
 -- Resolve UI controls inside the topBar safely
@@ -201,14 +399,16 @@ function MapTravel.setupScrollbars(canvas, bounds)
             m:setImageSource("images/icons/imhere")
             m:setImageAutoResize(true)
             -- Scale marker with map zoom
-            local baseSize = 48
-            local scaledSize = math.max(16, math.floor(baseSize * (MapTravel.mapScale or 1)))
+            local baseSize = 80
+            local scaledSize = math.max(24, math.floor(baseSize * (MapTravel.mapScale or 1)))
             m:setSize({width = scaledSize, height = scaledSize})
             m:setId("youAreHereMarker")
             if m.setZIndex then m:setZIndex(180) end
-            -- Position considering current scale and center the icon
-            local mx = (MapTravel._playerPosPx.x * MapTravel.mapScale) - (scaledSize / 2)
-            local my = (MapTravel._playerPosPx.y * MapTravel.mapScale) - (scaledSize / 2)
+            -- Position considering current scale; the imhere arrow tip is at the
+            -- icon's bottom-right corner (~89% x, ~96% y of the 28x23 image),
+            -- so offset the icon to place the tip exactly on the position
+            local mx = (MapTravel._playerPosPx.x * MapTravel.mapScale) - (scaledSize * 0.89)
+            local my = (MapTravel._playerPosPx.y * MapTravel.mapScale) - (scaledSize * 0.86)
             m:addAnchor(AnchorTop, "parent", AnchorTop)
             m:addAnchor(AnchorLeft, "parent", AnchorLeft)
             m:setMarginLeft(math.floor(mx))
@@ -344,7 +544,7 @@ function MapTravel.ensureFilterUI()
         end
         -- Always reflect current state in the dropdown
         withSuppressed(function()
-            local desired = (MapTravel.filters and MapTravel.filters.showZones == false) and 'Hide monsters'
+            local desired = (MapTravel.filters and MapTravel.filters.showMonsters == false) and 'Hide monsters'
                             or (MapTravel.filters and MapTravel.filters.levelRange or 'All')
             if C.levelFilter.setCurrentOptionByText then
                 C.levelFilter:setCurrentOptionByText(desired)
@@ -357,10 +557,10 @@ function MapTravel.ensureFilterUI()
             if MapTravel._suppressFilterCallbacks then return end
             local txt = C.levelFilter.getText and C.levelFilter:getText() or 'All'
             if txt == 'Hide monsters' then
-                MapTravel.filters.showZones = false
+                MapTravel.filters.showMonsters = false
                 -- do not change the remembered levelRange when hiding
             else
-                MapTravel.filters.showZones = true
+                MapTravel.filters.showMonsters = true
                 MapTravel.filters.levelRange = txt
                 if txt == 'All' then
                     -- behave like reset for monsters: clear search so everything returns
@@ -373,7 +573,7 @@ function MapTravel.ensureFilterUI()
             end
             -- Immediately reflect the chosen option so the current selection shows
             withSuppressed(function()
-                local desired = (MapTravel.filters.showZones == false) and 'Hide monsters' or MapTravel.filters.levelRange
+                local desired = (MapTravel.filters.showMonsters == false) and 'Hide monsters' or MapTravel.filters.levelRange
                 if C.levelFilter.setCurrentOptionByText then
                     C.levelFilter:setCurrentOptionByText(desired)
                 elseif C.levelFilter.setText then
@@ -409,11 +609,11 @@ function MapTravel.ensureFilterUI()
     end
     if C.toggleZones then
         withSuppressed(function()
-            if C.toggleZones.setChecked then C.toggleZones:setChecked(MapTravel.filters and MapTravel.filters.showZones) end
+            if C.toggleZones.setChecked then C.toggleZones:setChecked(MapTravel.filters and MapTravel.filters.showMonsters) end
         end)
         C.toggleZones.onCheckChange = function(_, checked)
             if MapTravel._suppressFilterCallbacks then return end
-            MapTravel.filters.showZones = checked and true or false
+            MapTravel.filters.showMonsters = checked and true or false
             MapTravel.applyFiltersAndRedraw()
         end
     end
@@ -425,7 +625,7 @@ function MapTravel.ensureFilterUI()
             if C.toggleZones.setChecked and C.toggleZones.isChecked then
                 C.toggleZones:setChecked(not C.toggleZones:isChecked())
             end
-            MapTravel.filters.showZones = (C.toggleZones.isChecked and C.toggleZones:isChecked()) or false
+            MapTravel.filters.showMonsters = (C.toggleZones.isChecked and C.toggleZones:isChecked()) or false
             MapTravel.applyFiltersAndRedraw()
         end
     end
@@ -448,6 +648,7 @@ function MapTravel.ensureFilterUI()
                 MapTravel.filters.levelRange = 'All'
                 MapTravel.filters.search = ''
                 MapTravel.filters.showLocked = true
+                MapTravel.filters.showMonsters = true
                 MapTravel.filters.showZones = true
                 if C.levelFilter and C.levelFilter.setCurrentOptionByText then C.levelFilter:setCurrentOptionByText('All') end
                 if C.searchBox and C.searchBox.setText then C.searchBox:setText('') end
@@ -469,28 +670,25 @@ function MapTravel.ensureFilterUI()
             if bounds and bounds.getPosition and bounds.getSize and canvas.getSize then
                 local bPos = bounds:getPosition(); local bSize = bounds:getSize(); local cSize = canvas:getSize()
                 local topBarH = (MapTravel.UI.mapPanel.topBar and MapTravel.UI.mapPanel.topBar:getHeight()) or 0
-                local cx = bPos.x + math.max(0, math.floor((bSize.width - cSize.width) / 2))
-                local cy = bPos.y + topBarH + math.max(0, math.floor((bSize.height - topBarH - cSize.height) / 2))
+                local cx, cy
+                if MapTravel._playerPosPx then
+                    -- center the view on the player marker
+                    cx = math.floor(bPos.x + bSize.width / 2 - MapTravel._playerPosPx.x * MapTravel.mapScale)
+                    cy = math.floor(bPos.y + topBarH + (bSize.height - topBarH) / 2 - MapTravel._playerPosPx.y * MapTravel.mapScale)
+                    cx = math.min(bPos.x, math.max(cx, bPos.x + bSize.width - cSize.width))
+                    cy = math.min(bPos.y + topBarH, math.max(cy, bPos.y + bSize.height - cSize.height))
+                else
+                    cx = bPos.x + math.max(0, math.floor((bSize.width - cSize.width) / 2))
+                    cy = bPos.y + topBarH + math.max(0, math.floor((bSize.height - topBarH - cSize.height) / 2))
+                end
                 canvas:breakAnchors(); canvas:setPosition({x = cx, y = cy})
                 MapTravel.syncScrollbars(canvas, bounds)
             end
         end
     end
 
-    -- Scroll speed control
-    if C.scrollSpeed and C.scrollSpeed.clear and C.scrollSpeed.addOption then
-        withSuppressed(function()
-            C.scrollSpeed:clear()
-            for _, opt in ipairs({'Slow','Normal','Fast'}) do C.scrollSpeed:addOption(opt) end
-            local current = (MapTravel.scrollStep == 40 and 'Slow') or (MapTravel.scrollStep == 60 and 'Normal') or (MapTravel.scrollStep == 90 and 'Fast') or 'Normal'
-            if C.scrollSpeed.setCurrentOptionByText then C.scrollSpeed:setCurrentOptionByText(current) end
-        end)
-        C.scrollSpeed.onOptionChange = function()
-            if MapTravel._suppressFilterCallbacks then return end
-            local txt = C.scrollSpeed.getText and C.scrollSpeed:getText() or 'Normal'
-            MapTravel.scrollStep = (txt == 'Slow' and 40) or (txt == 'Fast' and 90) or 60
-        end
-    end
+    -- Scroll speed fixed at Normal (control removed from UI)
+    MapTravel.scrollStep = 60
 
     -- Zoom buttons
     if C.zoomIn then
@@ -505,7 +703,8 @@ function MapTravel.ensureFilterUI()
         C.zoomOut.onClick = function()
             local s = MapTravel.mapScale or 1.0
             s = s / 1.2
-            if s < 0.4 then s = 0.4 end
+            local minS = MapTravel.getFitScale() or 0.4
+            if s < minS then s = minS end
             MapTravel.applyScale(s)
         end
     end
@@ -566,21 +765,21 @@ function MapTravel.init()
 
 	-- Bind hotkey to open in view-only mode (no teleport interactions)
 	if g_keyboard and g_keyboard.bindKeyDown then
-		MapTravel.hotkeyBinding = g_keyboard.bindKeyDown('Ctrl+M', function()
-            if MapTravel.UI and MapTravel.UI:isVisible() then
-                MapTravel.hide()
-                return
-            end
-            MapTravel.viewOnly = true
-            -- ensure UI exists and map is up to date
-            if g_game.isOnline() then
-                MapTravel.updateMap()
-                if MapTravel.UI and MapTravel.UI.viewOnlyBadge then
-                    MapTravel.UI.viewOnlyBadge:setVisible(true)
-                end
-                MapTravel.show()
-            end
-        end)
+		MapTravel._ctrlMCallback = function()
+			if not g_game.isOnline() or not MapTravel.UI then return end
+			if MapTravel.UI:isVisible() and MapTravel.viewOnly then
+				MapTravel.hide()
+				return
+			end
+			MapTravel.viewOnly = true
+			-- ensure UI exists and map is up to date
+			MapTravel.updateMap()
+			if MapTravel.UI.viewOnlyBadge then
+				MapTravel.UI.viewOnlyBadge:setVisible(true)
+			end
+			MapTravel.show()
+		end
+		g_keyboard.bindKeyDown('Ctrl+M', MapTravel._ctrlMCallback)
 	end
 
 	if g_game.isOnline() then
@@ -603,9 +802,9 @@ function MapTravel.terminate()
 	)
 	ProtocolGame.unregisterExtendedOpcode(MapTravel_OPCODE)
 	-- Unbind hotkey
-	if MapTravel.hotkeyBinding and g_keyboard and g_keyboard.unbindKeyDown then
-		g_keyboard.unbindKeyDown(MapTravel.hotkeyBinding)
-		MapTravel.hotkeyBinding = nil
+	if MapTravel._ctrlMCallback and g_keyboard and g_keyboard.unbindKeyDown then
+		g_keyboard.unbindKeyDown('Ctrl+M', MapTravel._ctrlMCallback)
+		MapTravel._ctrlMCallback = nil
 	end
 	MapTravel.onGameEnd()
 end
@@ -633,8 +832,14 @@ function MapTravel.onGameStart()
             levelRange = "All",
             search = "",
             showLocked = true,
+            showMonsters = true,
             showZones = true,
+            showUGZones = false,
         }
+
+        -- zoneId -> { name, description, progress, amount } from server (opcode 214)
+        MapTravel.activeZoneEvents = MapTravel.activeZoneEvents or {}
+        MapTravel.activeZoneBuffs = MapTravel.activeZoneBuffs or {}
 
         local panel = MapTravel.UI.mapPanel
         if panel then
@@ -677,6 +882,10 @@ function MapTravel.show()
     end
     if not MapTravel.UI:isVisible() then
         MapTravel.UI:show()
+        -- Ask the server for currently active zone events (opcode 214 snapshot)
+        if MapTravel.sendOpcode then
+            MapTravel.sendOpcode({ topic = "get-zone-events" })
+        end
         MapTravel.UI:raise()
         -- MapTravel.UI:focus() -- Allow walking while map is open
         if MapTravel.UI.mapPanel then
@@ -695,8 +904,18 @@ function MapTravel.show()
                 if bounds and bounds.getPosition and bounds.getSize and canvas.getSize then
                     local bPos = bounds:getPosition(); local bSize = bounds:getSize(); local cSize = canvas:getSize()
                     local topBarH = (MapTravel.UI.mapPanel.topBar and MapTravel.UI.mapPanel.topBar:getHeight()) or 0
-                    local cx = bPos.x + math.max(0, math.floor((bSize.width - cSize.width) / 2))
-                    local cy = bPos.y + topBarH + math.max(0, math.floor((bSize.height - topBarH - cSize.height) / 2))
+                    local cx, cy
+                    if MapTravel._playerPosPx then
+                        -- center the view on the player marker
+                        cx = math.floor(bPos.x + bSize.width / 2 - MapTravel._playerPosPx.x * MapTravel.mapScale)
+                        cy = math.floor(bPos.y + topBarH + (bSize.height - topBarH) / 2 - MapTravel._playerPosPx.y * MapTravel.mapScale)
+                        -- keep canvas edges covering the panel
+                        cx = math.min(bPos.x, math.max(cx, bPos.x + bSize.width - cSize.width))
+                        cy = math.min(bPos.y + topBarH, math.max(cy, bPos.y + bSize.height - cSize.height))
+                    else
+                        cx = bPos.x + math.max(0, math.floor((bSize.width - cSize.width) / 2))
+                        cy = bPos.y + topBarH + math.max(0, math.floor((bSize.height - topBarH - cSize.height) / 2))
+                    end
                     canvas:breakAnchors(); canvas:setPosition({x = cx, y = cy})
                     MapTravel.syncScrollbars(canvas, bounds)
                 end
@@ -766,17 +985,6 @@ function MapTravel.updateMap()
     -- Always ensure filter controls are wired before redrawing
     MapTravel.ensureFilterUI()
 
-    -- Refresh player pixel position each redraw (ensures up-to-date 'You are here' marker)
-    do
-        local lp = g_game and g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
-        local lppos = lp and lp.getPosition and lp:getPosition() or nil
-        if lppos then
-            MapTravel._playerPosPx = worldToPixelXY(lppos)
-        else
-            MapTravel._playerPosPx = nil
-        end
-    end
-
     -- Select canvas: dedicated map content holder to pan, fallback to mapPanel
     local canvas = (mapPanel.mapCanvas) or mapPanel
 
@@ -789,15 +997,34 @@ function MapTravel.updateMap()
 
     -- Set world map image on canvas and scale (always from base size)
     if canvas.setImageSource then canvas:setImageSource(MapTravel.mapDirectory) end
-    MapTravel.mapScale = MapTravel.mapScale or 1.0
-    -- Cache base size once from the image natural size
-    if not MapTravel._baseMapSize then
-        local w = canvas:getWidth()
-        local h = canvas:getHeight()
-        MapTravel._baseMapSize = { width = w, height = h }
+    -- Initial scale: fit the whole map in view if the image is larger than the panel
+    if not MapTravel.mapScale then
+        MapTravel.mapScale = MapTravel.getFitScale() or 1.0
     end
+    MapTravel.updateZoomLabel()
+    -- Refresh base size from the image natural size every redraw
+    do
+        local w = (canvas.getImageWidth and canvas:getImageWidth()) or canvas:getWidth()
+        local h = (canvas.getImageHeight and canvas:getImageHeight()) or canvas:getHeight()
+        if w and w > 0 and h and h > 0 then
+            MapTravel._baseMapSize = { width = w, height = h }
+        end
+    end
+    MapTravel._baseMapSize = MapTravel._baseMapSize
+        or { width = MapTravel.worldImageConfig.imgW, height = MapTravel.worldImageConfig.imgH }
     if canvas.setWidth then canvas:setWidth(MapTravel._baseMapSize.width * MapTravel.mapScale) end
     if canvas.setHeight then canvas:setHeight(MapTravel._baseMapSize.height * MapTravel.mapScale) end
+
+    -- Refresh player pixel position each redraw (ensures up-to-date 'You are here' marker)
+    do
+        local lp = g_game and g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
+        local lppos = lp and lp.getPosition and lp:getPosition() or nil
+        if lppos then
+            MapTravel._playerPosPx = worldToPixelXY(lppos)
+        else
+            MapTravel._playerPosPx = nil
+        end
+    end
 
     -- Dev preview removed: no preview square or dev border indicators
 
@@ -967,8 +1194,11 @@ function MapTravel.updateMap()
             local visible = true
             local q = ""
             if MapTravel.filters then
-                -- Hide monsters toggle first: hide only outfit (monster) nodes when OFF
-                if (MapTravel.filters.showZones == false) and (not isImageNode) and zone.outfit then
+                -- Layer toggles: Monsters hides outfit (creature) nodes, Zones hides image nodes
+                if (MapTravel.filters.showMonsters == false) and (not isImageNode) and zone.outfit then
+                    visible = false
+                end
+                if (MapTravel.filters.showZones == false) and isImageNode then
                     visible = false
                 end
                 -- Search across display/name
@@ -1049,6 +1279,13 @@ function MapTravel.updateMap()
             zoneWidget.onMouseWheel = nil
         end
     end
+
+    -- Painted zone rectangles (zones.dat, same data as minimap overlay)
+    MapTravel.renderZoneRects(canvas)
+
+    -- Attached-effect markers over zones with an active server-side event
+    MapTravel.renderZoneEventMarkers(canvas)
+
     -- Drag and pan the canvas within mapPanel area (below top bar)
     local boundsWidget = mapPanel
     MapTravel.makeWidgetDraggable(canvas, boundsWidget)
@@ -1059,8 +1296,18 @@ function MapTravel.updateMap()
             local pSize = mapPanel:getSize()
             local cSize = canvas:getSize()
             local topBarH = (mapPanel.topBar and mapPanel.topBar:getHeight()) or 0
-            local cx = math.max(0, math.floor((pSize.width - cSize.width) / 2))
-            local cy = topBarH + math.max(0, math.floor((pSize.height - topBarH - cSize.height) / 2))
+            local cx, cy
+            if MapTravel._playerPosPx then
+                -- center the view on the player marker
+                cx = math.floor(pSize.width / 2 - MapTravel._playerPosPx.x * MapTravel.mapScale)
+                cy = math.floor(topBarH + (pSize.height - topBarH) / 2 - MapTravel._playerPosPx.y * MapTravel.mapScale)
+                -- keep canvas edges covering the panel
+                cx = math.min(0, math.max(cx, pSize.width - cSize.width))
+                cy = math.min(topBarH, math.max(cy, pSize.height - cSize.height))
+            else
+                cx = math.max(0, math.floor((pSize.width - cSize.width) / 2))
+                cy = topBarH + math.max(0, math.floor((pSize.height - topBarH - cSize.height) / 2))
+            end
             canvas:breakAnchors()
             canvas:setPosition({x = cx, y = cy})
         end
@@ -1070,9 +1317,17 @@ function MapTravel.updateMap()
     -- Scrollbars wiring and sync
     MapTravel.setupScrollbars(canvas, boundsWidget)
 
-    -- Disable mouse wheel zoom on canvas and container
-    canvas.onMouseWheel = nil
-    if mapPanel then mapPanel.onMouseWheel = nil end
+    -- Mouse wheel zoom, anchored under the cursor
+    canvas.onMouseWheel = function(_, mousePos, wheelDirection)
+        MapTravel.wheelZoom(wheelDirection == MouseWheelUp and 1 or -1, mousePos)
+        return true
+    end
+    if mapPanel then
+        mapPanel.onMouseWheel = function(_, mousePos, wheelDirection)
+            MapTravel.wheelZoom(wheelDirection == MouseWheelUp and 1 or -1, mousePos)
+            return true
+        end
+    end
 
     -- Keep the top bar visually above the canvas regardless of drag position
     if mapPanel and mapPanel.topBar and mapPanel.topBar.raise then
@@ -1081,6 +1336,452 @@ function MapTravel.updateMap()
 
     -- Ensure native top menu remains above this module (best-effort)
     if MapTravel.raiseNativeTopMenu then MapTravel.raiseNativeTopMenu() end
+
+    -- Admin/debug readout (mouse -> img/world, player -> img)
+    MapTravel.installAdminTools(canvas, mapPanel)
+
+    -- Left rail: zoom slider + layer toggles
+    MapTravel.installLeftRail()
+    MapTravel.syncRailThumb()
+end
+
+-- Admin/debug tools: live readout of mouse -> image px -> estimated world pos,
+-- plus player world pos -> image px. Right-click on the map copies the line.
+------------------------------------------------------------
+-- Painted-zones overlay (from RME-ZONES "Export Zones Overlay" -> zones.dat)
+-- Same data source as the minimap zones overlay module.
+------------------------------------------------------------
+local MT_ZONES_FILE_CANDIDATES = {
+    '/things/1098/zones.dat',
+    '/things/zones.dat',
+    '/data/things/1098/zones.dat',
+    '/data/things/zones.dat',
+    '/zones.dat',
+}
+local MT_ZONES_NAMES_CANDIDATES = {
+    '/things/1098/zones.lua',
+    '/things/zones.lua',
+    '/data/things/1098/zones.lua',
+    '/data/things/zones.lua',
+    '/zones.lua',
+}
+
+local function mtMakeReader(data)
+    local pos = 1
+    local len = #data
+    local r = {}
+    function r:u8()
+        if pos > len then return nil end
+        local b = string.byte(data, pos); pos = pos + 1; return b
+    end
+    function r:u16()
+        if pos + 1 > len then return nil end
+        local b1, b2 = string.byte(data, pos, pos + 1); pos = pos + 2
+        return b1 + b2 * 256
+    end
+    function r:u32()
+        if pos + 3 > len then return nil end
+        local b1, b2, b3, b4 = string.byte(data, pos, pos + 3); pos = pos + 4
+        return b1 + b2 * 256 + b3 * 65536 + b4 * 16777216
+    end
+    function r:bytes(n)
+        if pos + n - 1 > len then return nil end
+        local s = string.sub(data, pos, pos + n - 1); pos = pos + n; return s
+    end
+    return r
+end
+
+function MapTravel.loadZoneRects()
+    MapTravel.zoneRects = {}
+    local foundPath
+    for _, p in ipairs(MT_ZONES_FILE_CANDIDATES) do
+        if g_resources.fileExists(p) then foundPath = p; break end
+    end
+    if not foundPath then
+        print('[MapTravel] zones.dat not found; zone overlay disabled.')
+        return false
+    end
+    local ok, data = pcall(g_resources.readFileContents, foundPath)
+    if not ok or not data or #data < 8 then
+        print('[MapTravel] failed to read zones.dat at ' .. foundPath)
+        return false
+    end
+
+    local r = mtMakeReader(data)
+    if r:bytes(4) ~= 'ZONO' then
+        print('[MapTravel] invalid zones.dat magic')
+        return false
+    end
+    if r:u16() ~= 1 then
+        print('[MapTravel] unsupported zones.dat version')
+        return false
+    end
+    local zoneCount = r:u16()
+    local totalRects = 0
+    for i = 1, zoneCount do
+        local id = r:u16()
+        local cr, cg, cb = r:u8(), r:u8(), r:u8()
+        local rectCount = r:u32()
+        local rects = {}
+        for j = 1, rectCount do
+            rects[#rects + 1] = { x = r:u16(), y = r:u16(), z = r:u8(), w = r:u16(), h = r:u16() }
+        end
+        totalRects = totalRects + rectCount
+        MapTravel.zoneRects[id] = { id = id, color = { cr, cg, cb }, rects = rects }
+    end
+    print(string.format('[MapTravel] loaded %d zones, %d rectangles from %s', zoneCount, totalRects, foundPath))
+    return true
+end
+
+function MapTravel.loadZoneNames()
+    MapTravel.zoneNames = {}
+    MapTravel.zoneInfo = {}
+    local foundPath
+    for _, p in ipairs(MT_ZONES_NAMES_CANDIDATES) do
+        if g_resources.fileExists(p) then foundPath = p; break end
+    end
+    if not foundPath then return false end
+    local ok, data = pcall(g_resources.readFileContents, foundPath)
+    if not ok or not data then return false end
+    local currentId, captured = nil, true
+    for line in data:gmatch('([^\r\n]+)') do
+        local idMatch = line:match('^%s*%[(%d+)%]%s*=%s*{')
+        if idMatch then
+            currentId = tonumber(idMatch)
+            captured = false
+            MapTravel.zoneInfo[currentId] = { monsters = {} }
+        elseif currentId and not captured then
+            local nm = line:match('^%s*name%s*=%s*"([^"]+)"')
+            if nm then
+                MapTravel.zoneNames[currentId] = nm
+                MapTravel.zoneInfo[currentId].name = nm
+                captured = true
+            end
+        end
+        if currentId then
+            local info = MapTravel.zoneInfo[currentId]
+            if info and not info.monstersParsed then
+                local inner = line:match('monsters%s*=%s*{([^}]*)}')
+                if inner then
+                    for m in inner:gmatch('"([^"]+)"') do
+                        table.insert(info.monsters, m)
+                    end
+                    info.monstersParsed = true
+                end
+            end
+            if info and not info.boss then
+                local boss = line:match('^%s*boss%s*=%s*"([^"]+)"')
+                if boss then info.boss = boss end
+            end
+        end
+    end
+    return true
+end
+
+local function mtZoneColor(r, g, b, alpha)
+    return string.format('#%02x%02x%02x%02x', r, g, b, math.floor((alpha or 1.0) * 255 + 0.5))
+end
+
+-- Boost zone colors: scale the dominant channel to 255 so every zone reads
+-- as a vivid hue instead of the muted RME palette colors.
+local function mtVivid(r, g, b)
+    local m = math.max(r, g, b, 1)
+    local k = 255 / m
+    return math.min(255, math.floor(r * k + 0.5)),
+           math.min(255, math.floor(g * k + 0.5)),
+           math.min(255, math.floor(b * k + 0.5))
+end
+
+-- Renders painted zones as a pre-baked PNG layer aligned to the world map
+-- via the same affine transform used by worldToPixelXY.
+-- zones_overlay_all.png merges every floor (higher z wins on overlap).
+function MapTravel.buildZoneTileSetMerged(pz)
+    if MapTravel._zoneTileSetMerged and MapTravel._zoneTileSetMergedFloor == pz then
+        return MapTravel._zoneTileSetMerged
+    end
+    local fmap = {}
+    for id, zone in pairs(MapTravel.zoneRects or {}) do
+        for _, rc in ipairs(zone.rects) do
+            local x2 = rc.x + rc.w - 1
+            local y2 = rc.y + rc.h - 1
+            for ty = rc.y, y2 do
+                for tx = rc.x, x2 do
+                    fmap[tx * 65536 + ty] = id
+                end
+            end
+        end
+    end
+    -- player floor wins on overlapping tiles
+    for id, zone in pairs(MapTravel.zoneRects or {}) do
+        for _, rc in ipairs(zone.rects) do
+            if rc.z == pz then
+                local x2 = rc.x + rc.w - 1
+                local y2 = rc.y + rc.h - 1
+                for ty = rc.y, y2 do
+                    for tx = rc.x, x2 do
+                        fmap[tx * 65536 + ty] = id
+                    end
+                end
+            end
+        end
+    end
+    MapTravel._zoneTileSetMerged = fmap
+    MapTravel._zoneTileSetMergedFloor = pz
+    local tileCount = 0
+    for _ in pairs(fmap) do tileCount = tileCount + 1 end
+    print(string.format('[MapTravel] zone tileset: %d tiles (player floor=%d)', tileCount, pz))
+    return fmap
+end
+
+local function mtPlaceZoneLayer(canvas, imgPath, widgetId, cfg, baseW, baseH, s)
+    if not g_resources.fileExists('/modules/game_MapTravel/' .. imgPath) then return nil end
+    local sx = (baseW / cfg.tilesW) * (cfg.scaleX or 1)
+    local sy = (baseH / cfg.tilesH) * (cfg.scaleY or 1)
+    local offX = -(cfg.x0 or 0) * sx
+    local offY = -(cfg.y0 or 0) * sy
+    local overlay = g_ui.createWidget('UIWidget', canvas)
+    overlay:setId(widgetId)
+    overlay:breakAnchors()
+    overlay:addAnchor(AnchorTop, 'parent', AnchorTop)
+    overlay:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+    overlay:setMarginTop(math.floor(offY * s))
+    overlay:setMarginLeft(math.floor(offX * s))
+    overlay:setSize({
+        width = math.max(1, math.floor(cfg.tilesW * sx * s)),
+        height = math.max(1, math.floor(cfg.tilesH * sy * s)),
+    })
+    overlay:setImageSource(imgPath)
+    overlay:setImageSmooth(true)
+    overlay:setPhantom(true)   -- never intercepts clicks/hovers of nodes or canvas
+    overlay:setFocusable(false)
+    overlay:setBackgroundColor('alpha')
+    return overlay
+end
+
+function MapTravel.renderZoneRects(canvas)
+    if not canvas or canvas:isDestroyed() then return end
+    local showSurf = not (MapTravel.filters and MapTravel.filters.showZones == false)
+    local showUG = (MapTravel.filters and MapTravel.filters.showUGZones == true)
+    if not showSurf and not showUG then return end
+
+    if not MapTravel._zoneDataLoaded then
+        MapTravel._zoneDataLoaded = true
+        MapTravel.loadZoneRects()
+        MapTravel.loadZoneNames()
+    end
+    if not MapTravel.zoneRects then return end
+
+    local player = g_game.getLocalPlayer()
+    local ppos = player and player:getPosition() or nil
+    local pz = ppos and ppos.z or 7
+    local s = MapTravel.mapScale or 1.0
+    MapTravel._zoneHoverSet = MapTravel.buildZoneTileSetMerged(pz)
+
+    local cfg = MapTravel.worldImageConfig
+    local baseW = (MapTravel._baseMapSize and MapTravel._baseMapSize.width) or cfg.imgW
+    local baseH = (MapTravel._baseMapSize and MapTravel._baseMapSize.height) or cfg.imgH
+    local canvas2 = MapTravel.UI.mapPanel and MapTravel.UI.mapPanel.mapCanvas
+    if canvas2 and canvas2.getImageWidth then
+        local w2 = canvas2:getImageWidth()
+        local h2 = canvas2:getImageHeight()
+        if w2 and w2 > 0 and h2 and h2 > 0 then baseW, baseH = w2, h2 end
+    end
+
+    if showSurf then
+        local ov = mtPlaceZoneLayer(canvas, 'images/zones_overlay_surface.png', 'zoneRectsOverlay', cfg, baseW, baseH, s)
+        if not ov then print('[MapTravel] surface overlay PNG missing') end
+    end
+    if showUG then
+        local ov = mtPlaceZoneLayer(canvas, 'images/zones_overlay_ug.png', 'zoneRectsOverlayUG', cfg, baseW, baseH, s)
+        if not ov then print('[MapTravel] underground overlay PNG missing') end
+    end
+end
+
+-- Attached-effect markers over zones with an active server-side zone event
+-- (effect 901) or zone buff (effect 902). One phantom UICreature host per
+-- marker; updates come from opcode 214 pushes + a snapshot on map open.
+MapTravel.EVENT_MARKER_EFFECT_ID = 901
+MapTravel.BUFF_MARKER_EFFECT_ID = 902
+function MapTravel.renderZoneEventMarkers(canvas)
+    if not canvas then return end
+    if not (g_attachedEffects and g_attachedEffects.getById) then return end
+    if not MapTravel._zoneDataLoaded then
+        MapTravel._zoneDataLoaded = true
+        MapTravel.loadZoneRects()
+        MapTravel.loadZoneNames()
+    end
+    if not MapTravel.zoneRects then return end
+
+    local s = MapTravel.mapScale or 1.0
+    -- creatureSize = render scale of the effect; widget = creatureSize * factor
+    -- so multi-tile effects have room (tune via eventMarkerCreatureSize/WidgetFactor)
+    -- UIEffect draws the .dat effect into a framebuffer sized exactly to the
+    -- effect itself -> never clipped. Widget scales it into its rect.
+    local size = math.max(48, math.floor((MapTravel.eventMarkerWidgetSize or 128) * s))
+    local drawn = 0
+
+    local function centroid(zoneId)
+        local zone = MapTravel.zoneRects[tonumber(zoneId)]
+        if zone and zone.rects then
+            local sumX, sumY, sumA = 0, 0, 0
+            for _, rc in ipairs(zone.rects) do
+                local a = rc.w * rc.h
+                sumX = sumX + (rc.x + rc.w * 0.5) * a
+                sumY = sumY + (rc.y + rc.h * 0.5) * a
+                sumA = sumA + a
+            end
+            if sumA > 0 then
+                return worldToPixelXY({ x = sumX / sumA, y = sumY / sumA, z = 7 })
+            end
+        end
+        -- Fallback: zonesConfig node position (matched by zone name)
+        local zname = MapTravel.zoneNames and MapTravel.zoneNames[tonumber(zoneId)]
+        if zname then
+            local lname = zname:lower()
+            for _, zc in ipairs(MapTravel.zonesConfig or {}) do
+                local zn = (zc.name or zc.displayName or ''):lower()
+                if zn == lname and zc.modulePos then
+                    return {
+                        x = (zc.modulePos.marginLeft or 0) + ((MapTravel.zoneNodeSize or {}).width or 36) / 2,
+                        y = (zc.modulePos.marginTop or 0) + ((MapTravel.zoneNodeSize or {}).height or 36) / 2,
+                    }
+                end
+            end
+        end
+        return nil
+    end
+
+    local function marker(zoneId, suffix, datEffectId, dxPx)
+        local p = centroid(zoneId)
+        if not p then return nil end
+        local m = g_ui.createWidget("UIEffect", canvas)
+        m:setPhantom(true)
+        m:setId("zoneEventMarker" .. suffix .. tostring(zoneId))
+        m:addAnchor(AnchorTop, "parent", AnchorTop)
+        m:addAnchor(AnchorLeft, "parent", AnchorLeft)
+        m:setSize({ width = size, height = size })
+        m:setMarginLeft(math.floor(p.x * s - size * 0.5 + (dxPx or 0) * s))
+        m:setMarginTop(math.floor(p.y * s - size * 0.5))
+        if m.setZIndex then m:setZIndex(182) end
+        if m.setEffectId then m:setEffectId(datEffectId) end
+        drawn = drawn + 1
+        return p
+    end
+
+    for zoneId, _ in pairs(MapTravel.activeZoneEvents or {}) do
+        marker(zoneId, "_ev_", MapTravel.eventMarkerDatEffect or 876, -12)
+    end
+    for zoneId, _ in pairs(MapTravel.activeZoneBuffs or {}) do
+        marker(zoneId, "_bf_", MapTravel.buffMarkerDatEffect or 1540, 0)
+    end
+    if drawn > 0 then
+        print(string.format('[MapTravel] drew %d zone event/buff marker(s)', drawn))
+    end
+end
+
+function MapTravel.pixelToWorld(px, py)
+    local cfg = MapTravel.worldImageConfig
+    local imgW = (MapTravel._baseMapSize and MapTravel._baseMapSize.width) or cfg.imgW
+    local imgH = (MapTravel._baseMapSize and MapTravel._baseMapSize.height) or cfg.imgH
+    local sx = (imgW / cfg.tilesW) * (cfg.scaleX or 1)
+    local sy = (imgH / cfg.tilesH) * (cfg.scaleY or 1)
+    if sx == 0 or sy == 0 then return nil end
+    return { x = px / sx + cfg.x0, y = py / sy + cfg.y0 }
+end
+
+function MapTravel.debugUpdateReadout(mousePos)
+    local mapPanel = MapTravel.UI and MapTravel.UI.mapPanel
+    local canvas = mapPanel and (mapPanel.mapCanvas or mapPanel)
+    local lb = MapTravel._debugLabel
+    if not canvas or not lb then return end
+    local cPos = canvas:getPosition()
+    local s = MapTravel.mapScale or 1.0
+    local px = (mousePos.x - cPos.x) / s
+    local py = (mousePos.y - cPos.y) / s
+    local w = MapTravel.pixelToWorld(px, py)
+
+    -- Zone name tooltip under cursor (tile lookup, all floors merged)
+    if MapTravel._zoneHoverSet and w then
+        local tipsOn = (not MapTravel.filters)
+            or MapTravel.filters.showZones ~= false
+            or MapTravel.filters.showUGZones == true
+        local id = tipsOn
+            and MapTravel._zoneHoverSet[math.floor(w.x) * 65536 + math.floor(w.y)]
+        local tip = MapTravel.UI and MapTravel.UI.NodesTooltip
+        if tip and tip.isDestroyed and tip:isDestroyed() then tip = nil end
+        -- throttle: log what the hover resolves every ~1.5s
+        local now = os.clock and os.clock() or 0
+        if not MapTravel._tipDbgT or (now - MapTravel._tipDbgT) > 1.5 then
+            MapTravel._tipDbgT = now
+            print(string.format('[MapTravel] hover world(%.0f,%.0f) zone=%s hoverSet=%s tip=%s',
+                w.x, w.y, tostring(id), tostring(MapTravel._zoneHoverSet ~= nil), tostring(tip ~= nil)))
+        end
+        if id and tip then
+            if MapTravel._zoneTipId ~= id then
+                MapTravel._zoneTipId = id
+                local ok, err = pcall(MapTravel.applyPaintedZoneTooltip, id)
+                if not ok then print('[MapTravel] zone tooltip error: ' .. tostring(err)) end
+            end
+            tip:show()
+            MapTravel.moveNodeToolTip()
+            MapTravel._zoneTipShowing = true
+        elseif MapTravel._zoneTipShowing and tip then
+            tip:hide()
+            MapTravel._zoneTipShowing = false
+            MapTravel._zoneTipId = nil
+        end
+    end
+
+    local line = string.format("img(%d,%d) -> world(%d,%d)",
+        math.floor(px), math.floor(py),
+        w and math.floor(w.x) or -1, w and math.floor(w.y) or -1)
+    local lp = g_game and g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
+    local pp = lp and lp.getPosition and lp:getPosition() or nil
+    if pp then
+        local ppx = MapTravel._playerPosPx
+        line = line .. string.format(" | player(%d,%d,%d) -> img(%d,%d)",
+            pp.x, pp.y, pp.z,
+            ppx and math.floor(ppx.x) or -1, ppx and math.floor(ppx.y) or -1)
+    end
+    line = line .. string.format(" | zoom %.2f", MapTravel.mapScale or 1.0)
+    MapTravel._debugInfo = line
+    lb:setText(line)
+end
+
+function MapTravel.installAdminTools(canvas, mapPanel)
+    if not MapTravel._debugLabel and mapPanel then
+        local lb = g_ui.createWidget('UILabel', mapPanel)
+        lb:setId('mapTravelDebugPos')
+        lb:addAnchor(AnchorBottom, 'parent', AnchorBottom)
+        lb:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+        lb:setMarginLeft(6)
+        lb:setMarginBottom(18)
+        lb:setColor('#ffff00')
+        lb:setFont('verdana-11px-antialised')
+        if lb.setZIndex then lb:setZIndex(210) end
+        if lb.setBackgroundColor then lb:setBackgroundColor('#000000aa') end
+        MapTravel._debugLabel = lb
+    end
+    if not canvas then return end
+    local prevMove = canvas.onMouseMove
+    canvas.onMouseMove = function(w, pos, mv)
+        MapTravel.debugUpdateReadout(pos)
+        if prevMove then return prevMove(w, pos, mv) end
+        return false
+    end
+    local prevPress = canvas.onMousePress
+    canvas.onMousePress = function(w, pos, btn)
+        if btn == MouseRightButton then
+            local info = MapTravel._debugInfo or ''
+            if g_window and g_window.setClipboardText then
+                g_window.setClipboardText(info)
+            end
+            print('[MapTravel] ' .. info)
+            return true
+        end
+        if prevPress then return prevPress(w, pos, btn) end
+        return false
+    end
 end
 
 function MapTravel.makeWidgetDraggable(widget, bounds)
@@ -1174,6 +1875,42 @@ function MapTravel.onExtendedOpcode(protocol, opcode, buffer)
 	elseif data.topic == "close-MapTravel" then
 		MapTravel.hide()
 		focusRootPanel()
+	elseif data.topic == "zone-event" then
+		-- single-zone update: data.event == nil clears the marker
+		MapTravel.activeZoneEvents = MapTravel.activeZoneEvents or {}
+		MapTravel.activeZoneEvents[tonumber(data.zoneId) or data.zoneId] = data.event or nil
+		print(string.format('[MapTravel] zone-event zone=%s event=%s',
+			tostring(data.zoneId), data.event and tostring(data.event.name) or 'nil'))
+		if MapTravel.UI and MapTravel.UI:isVisible() then
+			MapTravel.updateMap()
+		end
+	elseif data.topic == "zone-buff" then
+		-- single-zone buff update: data.buff == nil clears the buff marker
+		MapTravel.activeZoneBuffs = MapTravel.activeZoneBuffs or {}
+		MapTravel.activeZoneBuffs[tonumber(data.zoneId) or data.zoneId] = data.buff or nil
+		print(string.format('[MapTravel] zone-buff zone=%s buff=%s',
+			tostring(data.zoneId), data.buff and tostring(data.buff.name) or 'nil'))
+		if MapTravel.UI and MapTravel.UI:isVisible() then
+			MapTravel.updateMap()
+		end
+	elseif data.topic == "zone-events" then
+		-- full snapshot (requested when the map opens)
+		MapTravel.activeZoneEvents = {}
+		MapTravel.activeZoneBuffs = {}
+		for zid, ev in pairs(data.events or {}) do
+			local id = tonumber(zid) or zid
+			MapTravel.activeZoneEvents[id] = (ev.name and ev) or nil
+			if ev.buff then
+				MapTravel.activeZoneBuffs[id] = ev.buff
+			end
+		end
+		local ec, bc = 0, 0
+		for _ in pairs(MapTravel.activeZoneEvents) do ec = ec + 1 end
+		for _ in pairs(MapTravel.activeZoneBuffs) do bc = bc + 1 end
+		print(string.format('[MapTravel] zone-events snapshot: %d events, %d buffs', ec, bc))
+		if MapTravel.UI and MapTravel.UI:isVisible() then
+			MapTravel.updateMap()
+		end
 	end
 end
 
@@ -1241,16 +1978,76 @@ function MapTravel.onNodeHoverChange(widget, hovered)
 	widget:setHeight(originalHeight * MapTravel.mapScale)
 end
 
+-- Auto-fit the tooltip width to its content (measures real text widths)
+function MapTravel.fitTooltipSize()
+    local tip = MapTravel.UI and MapTravel.UI.NodesTooltip
+    if not tip or (tip.isDestroyed and tip:isDestroyed()) then return end
+    local maxW = 60
+    for _, child in ipairs(tip:getChildren()) do
+        -- MapTravelZoneHeader rows: measure name/level labels + icon
+        if child.info then
+            local innerW = 46 -- creature/image icon 38 + margin 8
+            for _, lbl in ipairs({ child.info.name, child.info.level }) do
+                if lbl and lbl.getTextSize then
+                    local ts = lbl:getTextSize()
+                    if ts then innerW = math.max(innerW, 46 + ts.width) end
+                end
+            end
+            maxW = math.max(maxW, innerW)
+        elseif child.text and child.text.getTextSize then
+            local ts = child.text:getTextSize()
+            if ts then maxW = math.max(maxW, ts.width + 40) end -- icon ~30 + margin
+        end
+    end
+    -- include the panel title text
+    if tip.getTextSize then
+        local ts = tip:getTextSize()
+        if ts then maxW = math.max(maxW, ts.width + 10) end
+    end
+    local w = math.max(140, math.min(340, maxW + 30)) -- padding 15x2
+    tip:setWidth(w)
+    -- children must stretch to the panel width: header has no own width in OTUI,
+    -- so its right-anchored 'info' collapses unless we set it here
+    local innerW = w - 30 -- padding 15x2
+    for _, child in ipairs(tip:getChildren()) do
+        child:setWidth(innerW)
+    end
+end
+
 function MapTravel.addTooltipLine(text, iconKey)
 	local entry = g_ui.createWidget("MapTravelCostEntry", MapTravel.UI.NodesTooltip)
 	entry.text:setText(text)
 
 	local iconPath = MapTravel.icons[iconKey or ""]
+	-- allow passing a direct image path (e.g. buff icons) or a buffIcons key
+	if not iconPath and iconKey then
+		iconPath = (MapTravel.buffIcons and MapTravel.buffIcons[iconKey])
+			or (iconKey:sub(1, 1) == '/' and iconKey)
+	end
 	if iconPath then
 		entry.icon:setImageSource(iconPath)
 	else
 		entry.icon:setImageSource("")
 	end
+end
+
+-- Row with the real monster/boss sprite (UICreature) resolved by name
+-- from MapTravelMonsterLook (generated from the server monster XMLs).
+function MapTravel.addMonsterLine(name, isBoss)
+	local entry = g_ui.createWidget("MapTravelMonsterEntry", MapTravel.UI.NodesTooltip)
+	local lt = MapTravelMonsterLook and MapTravelMonsterLook[name:lower()]
+	if lt and entry.creatureIcon and entry.creatureIcon.setOutfit then
+		entry.creatureIcon:setOutfit({ type = lt })
+		entry.creatureIcon:setVisible(true)
+	else
+		-- unknown monster: keep the slot but hide the creature (no broken sprite)
+		entry.creatureIcon:setVisible(false)
+	end
+	entry.text:setText((isBoss and "Boss: " or "") .. name)
+	if isBoss and entry.text.setColor then
+		entry.text:setColor('#de6f6f')
+	end
+	return entry
 end
 
 function MapTravel.applyNodeTooltip(nodeConfig)
@@ -1288,6 +2085,7 @@ function MapTravel.applyNodeTooltip(nodeConfig)
 		end
 	end
 
+	MapTravel.fitTooltipSize()
 	MapTravel.UI.NodesTooltip:show()
 	MapTravel.moveNodeToolTip()
 end
@@ -1335,13 +2133,8 @@ function MapTravel.onZoneHoverChange(widget, hovered, zone)
     end
 end
 
-function MapTravel.applyZoneTooltip(zone)
-    MapTravel.UI.NodesTooltip:destroyChildren()
-    -- Ensure no leftover title from travel nodes
-    if MapTravel.UI.NodesTooltip.setText then
-        MapTravel.UI.NodesTooltip:setText("")
-    end
-
+-- Creates the creature/image header row inside the tooltip (reusable)
+function MapTravel.addZoneTooltipHeader(zone)
     -- Create header with creature and texts
     local header = g_ui.createWidget("MapTravelZoneHeader", MapTravel.UI.NodesTooltip)
     -- Choose icon type: outfit (creature) or static image
@@ -1357,14 +2150,6 @@ function MapTravel.applyZoneTooltip(zone)
                 header.creatureIcon:setCenter(true)
             end
         end
-        -- Ensure info is anchored to creature icon
-        if header.info and header.info.breakAnchors and header.info.addAnchor then
-            header.info:breakAnchors()
-            header.info:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
-            header.info:addAnchor(AnchorLeft, "creatureIcon", AnchorRight)
-            header.info:addAnchor(AnchorRight, "parent", AnchorRight)
-            header.info:setMarginLeft(8)
-        end
     elseif zone.image then
         -- Show image icon, hide creature icon
         if header.creatureIcon and header.creatureIcon.setVisible then
@@ -1375,14 +2160,6 @@ function MapTravel.applyZoneTooltip(zone)
             if header.imageIcon.setImageSource then
                 header.imageIcon:setImageSource(zone.image)
             end
-        end
-        -- Anchor info to the image icon's right
-        if header.info and header.info.breakAnchors and header.info.addAnchor then
-            header.info:breakAnchors()
-            header.info:addAnchor(AnchorVerticalCenter, "parent", AnchorVerticalCenter)
-            header.info:addAnchor(AnchorLeft, "imageIcon", AnchorRight)
-            header.info:addAnchor(AnchorRight, "parent", AnchorRight)
-            header.info:setMarginLeft(8)
         end
     end
     local zoneName = zone.name or "Unknown Zone"
@@ -1406,8 +2183,90 @@ function MapTravel.applyZoneTooltip(zone)
     if header.info.level.setTextAlign then
         header.info.level:setTextAlign(AlignLeft)
     end
+    return header
+end
 
+function MapTravel.applyZoneTooltip(zone)
+    MapTravel.UI.NodesTooltip:destroyChildren()
+    -- Ensure no leftover title from travel nodes
+    if MapTravel.UI.NodesTooltip.setText then
+        MapTravel.UI.NodesTooltip:setText("")
+    end
+    MapTravel.addZoneTooltipHeader(zone)
+    MapTravel.fitTooltipSize()
     MapTravel.UI.NodesTooltip:show()
+    MapTravel.moveNodeToolTip()
+end
+
+-- Tooltip for painted zones (zones.dat rects): creature icon(s) + level from
+-- zonesConfig entries whose name matches the zone name, plus monster list.
+function MapTravel.applyPaintedZoneTooltip(zoneId)
+    local tip = MapTravel.UI and MapTravel.UI.NodesTooltip
+    if not tip or (tip.isDestroyed and tip:isDestroyed()) then return end
+    tip:destroyChildren()
+    if tip.setText then tip:setText("") end
+
+    local name = MapTravel.zoneNames and MapTravel.zoneNames[zoneId]
+    local matched = false
+    local lname = name and name:lower() or nil
+    local hdrCount = 0
+    for _, zc in ipairs(MapTravel.zonesConfig or {}) do
+        local zn = (zc.name or zc.displayName or ''):lower()
+        if lname and zn == lname then
+            local ok, err = pcall(MapTravel.addZoneTooltipHeader, zc)
+            if ok then
+                hdrCount = hdrCount + 1
+                matched = true
+            else
+                print('[MapTravel] header error: ' .. tostring(err))
+            end
+        end
+    end
+    if matched then
+        print(string.format('[MapTravel] zone tooltip: "%s" -> %d header(s)', tostring(name), hdrCount))
+    end
+    if not matched and tip.setText then
+        tip:setText(name or string.format('Zone %d', zoneId))
+    end
+
+    local info = MapTravel.zoneInfo and MapTravel.zoneInfo[zoneId]
+    if info then
+        if info.monsters and #info.monsters > 0 then
+            local maxShow = 8
+            for i, mname in ipairs(info.monsters) do
+                if i > maxShow then
+                    MapTravel.addTooltipLine(string.format('... +%d more', #info.monsters - maxShow), nil)
+                    break
+                end
+                MapTravel.addMonsterLine(mname, false)
+            end
+        end
+        if info.boss then
+            MapTravel.addMonsterLine(info.boss, true)
+        end
+    end
+
+    -- Active zone event (pushed by the server on opcode 214)
+    local ev = MapTravel.activeZoneEvents
+        and (MapTravel.activeZoneEvents[zoneId] or MapTravel.activeZoneEvents[tostring(zoneId)])
+    if ev then
+        local prog = (tonumber(ev.amount) or 0) > 0
+            and string.format(' [%d/%d]', ev.progress or 0, ev.amount)
+            or ''
+        MapTravel.addTooltipLine('Event: ' .. tostring(ev.name or 'Active') .. prog, '/images/icons/star')
+    end
+
+    -- Active zone buff (ZoneBuffs -> opcode 214)
+    local bf = MapTravel.activeZoneBuffs
+        and (MapTravel.activeZoneBuffs[zoneId] or MapTravel.activeZoneBuffs[tostring(zoneId)])
+    if bf then
+        local rem = tonumber(bf.remaining) or 0
+        local remStr = rem > 0 and string.format(' (%dm %ds)', math.floor(rem / 60), rem % 60) or ''
+        MapTravel.addTooltipLine('Buff: ' .. tostring(bf.name or 'Active') .. remStr, bf.icon or bf.type)
+    end
+
+    MapTravel.fitTooltipSize()
+    tip:show()
     MapTravel.moveNodeToolTip()
 end
 

@@ -45,12 +45,12 @@ return {
     },
     openMaximized                     = false,
     backgroundFrameRate               = {
-        value = 501,
+        value = 60,
         action = function(value, options, controller, panels, extraWidgets)
             local text, v = value, value
-            if value <= 0 or value >= 501 then
+            if value <= 0 or value >= 144 then
                 text = 'max'
-                v = 0
+                v = 144
             end
 
             panels.graphicsPanel:recursiveGetChildById('backgroundFrameRate'):setText(tr('Game framerate limit: %s', text))

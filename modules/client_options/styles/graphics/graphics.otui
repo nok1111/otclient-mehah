@@ -54,12 +54,12 @@ UIWidget
       anchors.top: prev.bottom
       margin-top: 5
       &minimumScrollValue: 10
-      &maximumScrollValue: 501
+      &maximumScrollValue: 144
       &scrollSize: 21
       @onSetup: |
         local value = modules.client_options.getOption('backgroundFrameRate')
         local text = value
-        if value <= 0 or value >= 501 then
+        if value <= 0 or value >= 144 then
           text = 'max'
         end
 

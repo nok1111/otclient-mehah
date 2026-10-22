@@ -159,6 +159,7 @@ function buildUnifiedNpcUI(parsed)
           elseif lc == 'daily' then badge:setColor('#66ccff')
           elseif lc == 'quest' then badge:setColor('#ffffff')
           elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+          elseif lc == 'secondary' then badge:setColor('#c58cff')
           else badge:setColor('#D4AF37') end
         end
         local p = row:getChildById('taskProgress') or row:getChildById('progressBg'); if p then p:setVisible(false) end
@@ -182,6 +183,7 @@ function buildUnifiedNpcUI(parsed)
           elseif lc == 'repeat' then badge:setColor('#66cc66')
           elseif lc == 'daily' then badge:setColor('#66ccff')
           elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+          elseif lc == 'secondary' then badge:setColor('#c58cff')
           else badge:setColor('#D4AF37') end
         end
         local p = row:getChildById('taskProgress') or row:getChildById('progressBg')
@@ -210,6 +212,7 @@ function buildUnifiedNpcUI(parsed)
           elseif lc == 'repeat' then badge:setColor('#66cc66')
           elseif lc == 'daily' then badge:setColor('#66ccff')
           elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+          elseif lc == 'secondary' then badge:setColor('#c58cff')
           else badge:setColor('#D4AF37') end
         end
         local p = row:getChildById('taskProgress'); if p then p:setVisible(false) end
@@ -260,6 +263,7 @@ function buildUnifiedNpcUI(parsed)
             elseif lc == 'daily' then badge:setColor('#66ccff')
             elseif lc == 'quest' then badge:setColor('#ffffff')
             elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+            elseif lc == 'secondary' then badge:setColor('#c58cff')
             else badge:setColor('#D4AF37') end
           end
           -- hide progress bar
@@ -879,6 +883,7 @@ function buildGroupedTaskList()
         elseif lc == 'daily' then badge:setColor('#66ccff')
         elseif lc == 'quest' then badge:setColor('#ffffff')
         elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+        elseif lc == 'secondary' then badge:setColor('#c58cff')
         else badge:setColor('#D4AF37') end
       end
       -- selection highlight (subtle)
@@ -1288,6 +1293,7 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
             elseif lc == 'daily' then badge:setColor('#66ccff')
             elseif lc == 'quest' then badge:setColor('#ffffff')
             elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+            elseif lc == 'secondary' then badge:setColor('#c58cff')
             else badge:setColor('#D4AF37') end
           end
           -- Show full progress bar for completed
@@ -1315,6 +1321,7 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
             elseif lc == 'daily' then badge:setColor('#66ccff')
             elseif lc == 'quest' then badge:setColor('#ffffff')
             elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+            elseif lc == 'secondary' then badge:setColor('#c58cff')
             else badge:setColor('#D4AF37') end
           end
           -- Support both NPC row progress ids and main TaskRecord ids
@@ -1380,6 +1387,7 @@ function onExtendedNpcTaskList(protocol, opcode, buffer)
             elseif lc == 'daily' then badge:setColor('#66ccff')
             elseif lc == 'quest' then badge:setColor('#ffffff')
             elseif lc == 'boss' or lc == 'dungeon' then badge:setColor('#ff4d4d')
+            elseif lc == 'secondary' then badge:setColor('#c58cff')
             else badge:setColor('#D4AF37') end
           end
           -- hide progress bar

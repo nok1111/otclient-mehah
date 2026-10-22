@@ -299,6 +299,7 @@ void UIManager::onWidgetDestroy(const UIWidgetPtr& widget)
     if (widget == m_rootWidget || !m_rootWidget)
         return;
 
+#ifndef NDEBUG
     m_destroyedWidgets.emplace_back(widget);
 
     if (m_checkEvent && !m_checkEvent->isExecuted())
@@ -316,6 +317,7 @@ void UIManager::onWidgetDestroy(const UIWidgetPtr& widget)
             }
         }, 1);
     }, 1000);
+#endif
 }
 
 void UIManager::clearStyles()

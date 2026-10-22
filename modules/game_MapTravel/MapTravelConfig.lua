@@ -21,6 +21,35 @@ MapTravel.icons = {
 	progressReq = "/images/topbuttons/greater_dungeon"
 }
 
+-- .dat magic-effect ids for the world-map markers (rendered via UIEffect widget)
+MapTravel.eventMarkerDatEffect = 876   -- zone events
+MapTravel.buffMarkerDatEffect = 1540   -- zone buffs
+
+-- Zone-buff icons: keyed by server buff type AND by the 'icon' template key
+-- (zone_buffs.lua sends both). Swap paths when real buff art exists.
+MapTravel.buffIcons = {
+	doubleExp = "/images/icons/icon_experience",
+	buff_exp = "/images/icons/icon_experience",
+	monsterRush = "/images/icons/skull",
+	buff_spawn = "/images/icons/skull",
+	orbShower = "/images/icons/crystal-ball_8034727",
+	buff_orbs = "/images/icons/crystal-ball_8034727",
+	bloodPact = "/images/icons/skull",
+	buff_pact = "/images/icons/skull",
+	bountyHunt = "/images/icons/gold-bars",
+	buff_bounty = "/images/icons/gold-bars",
+	rapidRegen = "/images/icons/icon_health",
+	buff_heal = "/images/icons/icon_health",
+	speedDemon = "/images/icons/speed",
+	buff_speed = "/images/icons/speed",
+	survivalInstinct = "/images/icons/icon_shielding",
+	buff_defense = "/images/icons/icon_shielding",
+	bloodMoon = "/images/icons/fire",
+	buff_moon = "/images/icons/fire",
+	codexKnowledge = "/images/icons/star",
+	buff_codex = "/images/icons/star",
+}
+
 
 MapTravel.mapNodesConfig = {
 	[1] = {

@@ -21,6 +21,12 @@ local npcTitles = {
     ["Auctioneer"] = {title = "[Market]", color = "#f5ec67ff"},
     --quests
     ["Sheriff Gordon"] = {quest = true},
+    ["Agris the Gravedigger"] = {quest = true},
+    ["Inspector Marlow Ashford"] = {quest = true},
+    ["Granny Odelia"] = {quest = true},
+    ["Shepherd Bram"] = {quest = true},
+    ["Milkmaid Tilly"] = {quest = true},
+    ["Stableboy Pell"] = {quest = true},
 }
 
 local npcCategories = {}
@@ -306,18 +312,25 @@ end
 local function setCreatureTitle(creature)
     local name = creature:getName()
     local creatureId = creature:getId()
-    
-    local outfit = creature:getOutfit()
-    
+
     -- Clean up old widget if exists
     if creatureWidgets[creatureId] then
         creatureWidgets[creatureId]:destroy()
         creatureWidgets[creatureId] = nil
     end
-    
+
     -- Apply outfit offsets
     applyOutfitOffsets(creature)
-    
+
+    -- Fast path: skip widget creation for creatures with no title/quest effect.
+    -- (creating + destroying a UILabel per creature appearing was a stutter source)
+    local needsWidget = (creature:isPlayer() and playerTitles[name] ~= nil)
+        or (creature:isNpc() and (npcTitles[name] ~= nil or npcCategories[name] == 'quest'))
+        or creatureTitles[name] ~= nil
+    if not needsWidget then
+        return
+    end
+
     -- Create the title widget directly (no dependency on getWidgetInformation)
     local titleWidget = g_ui.createWidget('UILabel')
     titleWidget:setFont(titleFont)
@@ -413,8 +426,9 @@ end
 
 -- Event handlers
 local function onAppear(creature)
-    local outfit = creature:getOutfit()
-    print(string.format('[OutfitFX] %-30s outfit: %d', creature:getName(), (outfit and outfit.type) or 0))
+    -- Debug: uncomment to log outfit ids when centering/adjusting outfit offsets
+    -- local outfit = creature:getOutfit()
+    -- print(string.format('[OutfitFX] %-30s outfit: %d', creature:getName(), (outfit and outfit.type) or 0))
     setCreatureTitle(creature)
 end
 

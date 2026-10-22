@@ -5901,3 +5901,42 @@ AttachedEffectManager.register(871, 'warlock Curse', 1537, ThingCategoryEffect, 
     duration = 15000,
     offset = { -22, -22, true },
 })
+
+
+AttachedEffectManager.register(872, 'monster fear', 33, ThingCategoryEffect, {
+    opacity = 1,
+    duration = 2000,
+    speed = 1.5,
+    offset = { 10, 15, true},
+    
+})
+
+-- Active zone-event marker shown on the world map (MapTravel).
+-- Uses .dat magic effect 1540; loops while the event is active.
+AttachedEffectManager.register(901, 'zone event marker', 1540, ThingCategoryEffect, {
+    speed = 1,
+    opacity = 0.95,
+    offset = { 0, 0, true },
+    hideOwner = true,
+})
+
+
+-- Active zone-BUFF marker (world map). Same .dat effect, slightly offset so
+-- it can coexist with the event marker on the same zone.
+AttachedEffectManager.register(902, 'zone buff marker', 1540, ThingCategoryEffect, {
+    speed = 0.7,
+    opacity = 0.8,
+    offset = { 10, 10, true },
+    hideOwner = true,
+})
+
+-- Active zone-BUFF marker (world map). Same .dat effect, slightly offset so
+-- it can coexist with the event marker on the same zone.
+AttachedEffectManager.register(903, 'burning quest', 590, ThingCategoryEffect, {
+    speed = 0.7,
+    opacity = 0.8,
+    size = { 96, 96 },
+    offset = { 10, 10, true },
+    duration = 180000,
+    
+})

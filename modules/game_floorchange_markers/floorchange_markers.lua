@@ -1,7 +1,9 @@
 local floorMarkers = {}
 local updateEvent = nil
-local scanRadius = 30
-local scanInterval = 500
+local scanRadius = 20
+local scanInterval = 1000
+local rescanDistance = 4   -- only rescan when player moved this far from last scan pos
+local lastScanPos = nil
 
 local arrowIcon = '/images/icons/stair'
 
@@ -77,6 +79,8 @@ local function scanFloorChanges()
         return
     end
 
+    lastScanPos = { x = camPos.x, y = camPos.y, z = camPos.z }
+
     local seen = {}
     local half = scanRadius
     for x = -half, half do
@@ -100,7 +104,26 @@ local function scanFloorChanges()
     end
 end
 
-local function onPositionChange()
+local function onPositionChange(creature, newPos, oldPos)
+    if not newPos then
+        return
+    end
+
+    -- always rescan on floor change
+    if oldPos and newPos.z ~= oldPos.z then
+        scanFloorChanges()
+        return
+    end
+
+    -- skip scan while walking short distances; the timer keeps it fresh
+    if lastScanPos then
+        local dx = math.abs(newPos.x - lastScanPos.x)
+        local dy = math.abs(newPos.y - lastScanPos.y)
+        if dx < rescanDistance and dy < rescanDistance and newPos.z == lastScanPos.z then
+            return
+        end
+    end
+
     scanFloorChanges()
 end
 

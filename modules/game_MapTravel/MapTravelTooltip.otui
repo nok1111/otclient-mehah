@@ -38,29 +38,48 @@ MapTravelZoneHeader < UIWidget
 
   UIWidget
     id: info
-    anchors.verticalCenter: parent.verticalCenter
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
     anchors.left: creatureIcon.right
     anchors.right: parent.right
     margin-left: 8
-    layout:
-      type: verticalBox
-      fit-children: true
 
     Label
       id: name
       color: #dfdfdf
+      anchors.left: parent.left
+      anchors.top: parent.top
       text-auto-resize: true
+      margin-top: 10
 
     Label
       id: level
+      anchors.left: parent.left
+      anchors.top: name.bottom
       text-auto-resize: true
+
+MapTravelMonsterEntry < UIWidget
+  height: 32
+
+  UICreature
+    id: creatureIcon
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent.left
+    size: 30 30
+
+  Label
+    id: text
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: creatureIcon.right
+    margin-left: 6
+    text-auto-resize: true
 
 Panel
   text-offset: 5 2
   text-align: top
   image-source: /images/ui/list1
   image-border: 7
-  size: 220 100
+  size: 120 40
   phantom: true
   padding: 15
   layout:
