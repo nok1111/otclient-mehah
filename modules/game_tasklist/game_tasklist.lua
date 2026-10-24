@@ -644,6 +644,7 @@ function parseIncomingTaskList(buffer)
         local rewardsChoiceCnt = tonumber(basicRewardSplit[5]) or 0
         local rewardsCodexEssences = tonumber(basicRewardSplit[6]) or 0
         local rewardsCodexCrateCnt = tonumber(basicRewardSplit[7]) or 0
+        local rewardsRepCnt = tonumber(basicRewardSplit[8]) or 0
         for j = 1, rewardsItemCnt do
             table.insert(rewardItems, {name = itemRewardSplit[(4*(j-1)) + 1], itemCid = tonumber(itemRewardSplit[(4*(j-1)) + 2]), itemSid = tonumber(itemRewardSplit[(4*(j-1)) + 3]), itemCnt = tonumber(itemRewardSplit[(4*(j-1)) + 4])})
         end
@@ -676,7 +677,17 @@ function parseIncomingTaskList(buffer)
               table.insert(codexCrates, {crateType = crateType, amount = crateAmt, name = crateName or ('Crate ' .. crateType)})
             end
         end
-        rewardList = {exp = tonumber(basicRewardSplit[1]), money = rewardsMoney, items = rewardItems, outfits = rewardOutfits, choice = choiceItems, codex_essences = rewardsCodexEssences, codex_crates = codexCrates}
+        -- reputation rewards slice (triplets: repId:amount:name)
+        local repRewards = {}
+        for j = 1, rewardsRepCnt do
+            local repId   = tailSplit[tailIdx];            tailIdx = tailIdx + 1
+            local repAmt  = tonumber(tailSplit[tailIdx]);  tailIdx = tailIdx + 1
+            local repName = tailSplit[tailIdx];            tailIdx = tailIdx + 1
+            if repId and repAmt then
+              table.insert(repRewards, {id = repId, amount = repAmt, name = repName or repId})
+            end
+        end
+        rewardList = {exp = tonumber(basicRewardSplit[1]), money = rewardsMoney, items = rewardItems, outfits = rewardOutfits, choice = choiceItems, codex_essences = rewardsCodexEssences, codex_crates = codexCrates, reps = repRewards}
         -----------------------------------------------------------------------------------------------------------------------------------------------
         table.insert(parseTaskList, {taskNumber = taskSplit[11], taskName = taskSplit[1], taskDesc = taskSplit[2], taskGoals = targetList,
                                      taskGoalCnt = tonumber(taskSplit[4]), taskMinLvl = tonumber(taskSplit[5]), taskMaxLvl = tonumber(taskSplit[6]),
@@ -1891,6 +1902,10 @@ function UpdateNpcTaskDescription()
     for _, cr in ipairs(cc) do
       table.insert(codexParts, tr('%dx %s', cr.amount, tr(cr.name)))
     end
+    local rr = (rec.taskRewards and rec.taskRewards.reps) or {}
+    for _, rp in ipairs(rr) do
+      table.insert(codexParts, tr('+%d %s Reputation', rp.amount, tr(rp.name)))
+    end
     if #codexParts > 0 then
       npcCodexLbl:setText(table.concat(codexParts, '  +  '))
       npcCodexLbl:setHeight(15)
@@ -2381,6 +2396,10 @@ function updateTaskDescription(taskNumber)
     local cc = (localTaskList[taskNumber].taskRewards and localTaskList[taskNumber].taskRewards.codex_crates) or {}
     for _, cr in ipairs(cc) do
       table.insert(codexParts, tr('%dx %s', cr.amount, tr(cr.name)))
+    end
+    local rr = (localTaskList[taskNumber].taskRewards and localTaskList[taskNumber].taskRewards.reps) or {}
+    for _, rp in ipairs(rr) do
+      table.insert(codexParts, tr('+%d %s Reputation', rp.amount, tr(rp.name)))
     end
     if #codexParts > 0 then
       codexLbl:setText(table.concat(codexParts, '  +  '))
