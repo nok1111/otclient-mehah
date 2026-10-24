@@ -1917,10 +1917,13 @@ function UpdateNpcTaskDescription()
       local lbl = row:recursiveGetChildById('objectiveText')
       if lbl then
         local full = text
-        if current ~= nil and goal ~= nil and goal > 1 then
-          full = string.format('%s (%d/%d)', text, current, goal)
-        elseif current ~= nil and goal ~= nil and goal == 1 then
-          full = string.format('%s [%s]', text, current >= goal and 'Done' or 'Pending')
+        if current ~= nil and goal ~= nil then
+          if goal > 1 then
+            full = string.format('%s (%d/%d)', text, current, goal)
+          else
+            full = string.format('%s [%s]', text, current >= goal and 'Done' or 'Pending')
+          end
+          lbl:setColor(current >= goal and '#00BC00' or '#FFFF00')
         end
         lbl:setText(tr(full))
         lbl:setTextAutoResize(true)
@@ -2528,10 +2531,13 @@ function updateTaskDescription(taskNumber)
     local lbl = row:recursiveGetChildById('objectiveText')
     if lbl then
       local full = text
-      if current ~= nil and goal ~= nil and goal > 1 then
-        full = string.format('%s (%d/%d)', text, current, goal)
-      elseif current ~= nil and goal ~= nil and goal == 1 then
-        full = string.format('%s [%s]', text, current >= goal and 'Done' or 'Pending')
+      if current ~= nil and goal ~= nil then
+        if goal > 1 then
+          full = string.format('%s (%d/%d)', text, current, goal)
+        else
+          full = string.format('%s [%s]', text, current >= goal and 'Done' or 'Pending')
+        end
+        lbl:setColor(current >= goal and '#00BC00' or '#FFFF00')
       end
       lbl:setText(tr(full))
       lbl:setTextAutoResize(true)

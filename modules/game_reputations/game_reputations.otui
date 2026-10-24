@@ -1,0 +1,82 @@
+ReputationRow < Panel
+  height: 22
+
+  Label
+    id: name
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    width: 140
+    color: #dfdfdf
+    text-align: left
+
+  Label
+    id: status
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    width: 90
+    color: #c0c0c0
+    text-align: right
+
+  ProgressBar
+    id: bar
+    anchors.left: name.right
+    anchors.right: status.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 8
+    margin-right: 8
+    height: 14
+    background-color: #355d89
+    color: #dfdfdf
+
+ReputationsWindow < MainWindow
+  id: reputationsWindow
+  !text: tr('Reputations')
+  size: 460 300
+  @onEscape: modules.game_reputations.hide()
+
+  Panel
+    id: listContainer
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: closeButton.top
+    margin-bottom: 8
+    padding: 4
+    border-width: 1
+    border-color: #000000
+
+    VerticalScrollBar
+      id: reputationScroll
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      step: 24
+      pixels-scroll: true
+
+    ScrollablePanel
+      id: reputationList
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      anchors.right: prev.left
+      margin-right: 4
+      vertical-scrollbar: reputationScroll
+      layout:
+        type: verticalBox
+        spacing: 3
+
+    Label
+      id: emptyLabel
+      anchors.centerIn: parent
+      !text: tr('You have no reputations yet.')
+      color: #dfdfdf88
+      text-auto-resize: true
+      visible: false
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    width: 64
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_reputations.hide()

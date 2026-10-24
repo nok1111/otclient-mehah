@@ -562,7 +562,10 @@ local serverMsgPatterns = {
     { pat = "^Task completed: %+(%d+) AP, %+(%d+) Codex Essence%.$", tpl = "Task completed: +%d AP, +%d Codex Essence." },
     { pat = "^You need (%d+)x (.-) %((%d+)/(%d+)%)%.$", tpl = "You need %dx %s (%d/%d)." },
     { pat = "^You need (%d+) tasks completed %((%d+)/(%d+)%)%.$", tpl = "You need %d tasks completed (%d/%d)." },
+    -- Quest NPC composed dialog (pen pal route)
+    { pat = "^Today it goes to (.-), in (.-)%. Say {penpal} when you hand it over %- Tobin's letters are%.%.%. an acquired taste%.$", tpl = "Today it goes to %s, in %s. Say {penpal} when you hand it over - Tobin's letters are... an acquired taste." },
     { pat = "^Daily reward claimed: (%d+) Golden Crate!$", tpl = "Daily reward claimed: %d Golden Crate!" },
+    { pat = "^Ye still owe me (%d+) bits o' trash, swab%.$", tpl = "Ye still owe me %d bits o' trash, swab." },
 }
 
 -- Translates server-composed messages: exact tr() first, then template match
