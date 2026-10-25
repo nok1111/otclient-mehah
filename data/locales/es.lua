@@ -8827,6 +8827,38 @@ locale = {
 		["Helga's bone broth is famous from here to Garona - and it takes a mountain of mammoth tusk shavings. Bring her 25 tusks and she will pay you in gold and goodwill."] = "El caldo de hueso de Helga es famoso desde aquí hasta Garona - y requiere una montaña de virutas de colmillo de mammoth. Tráele 25 colmillos y te pagará en oro y buena voluntad.",
 		["Mammoths roam the frozen wilds around the port - their tusks are heavy, pack light."] = "Los mammoths rondan las tierras heladas alrededor del puerto - sus colmillos pesan, viaja ligero.",
 
+		-- Frozen Port rep perks + smuggler + mount vendor
+		["Sell All"] = "Vender Todo",
+		["Catch of the Day"] = "Pesca del Día",
+		["My best supplier! Today I'll pay you a merchant's rate - twenty percent over dock price on everything."] = "¡Mi mejor proveedor! Hoy te pago tarifa de comerciante - veinte por ciento sobre el precio del muelle en todo.",
+		["Back again? The port likes you - ten percent over dock price on your catch today."] = "¿De vuelta? Al puerto le gustas - diez por ciento sobre el precio del muelle en tu pesca hoy.",
+		["Nothing to sell, eh? Come back with a full string."] = "¿Nada que vender? Vuelve con la ristra llena.",
+		["Ah, one of ours! Helga saves the best cuts for the port's friends - and a little discount besides."] = "¡Ah, de los nuestros! Helga guarda los mejores cortes para los amigos del puerto - y un pequeño descuento además.",
+		["For you? 270 gold, friend price."] = "¿Para ti? 270 de oro, precio de amigo.",
+		["The Quartermaster nods at you like a regular. New contracts on the {quests} board - the port trusts you with the good ones."] = "El Quartermaster te saluda como a un habitual. Nuevos contratos en el tablón de {quests} - el puerto te confía los buenos.",
+		["Port Provisions"] = "Provisiones del Puerto",
+		["fp_port_provisions"] = "Provisiones del Puerto",
+		["The harbor mess feeds three crews a day and the pots never stop. Bring 10 fresh fish to the Quartermaster - Nix sells them if your string is empty."] = "El rancho del puerto alimenta tres tripulaciones al día y las ollas nunca paran. Trae 10 peces frescos al Quartermaster - Nix los vende si tu ristra está vacía.",
+		["Any fresh fish counts - catch them or buy them, the pot doesn't care."] = "Cualquier pez fresco cuenta - pésquelo o cómprelo, la olla no pregunta.",
+		["harbormaster's own"] = "propio del Harbormaster",
+		["A friend of the port! Your ledger glows - and the {harbormaster's own} colors could be yours. Or check your {reputation}."] = "¡Un amigo del puerto! Tu registro brilla - y los colores del {harbormaster's own} podrían ser tuyos. O revisa tu {reputation}.",
+		["The title of Harbormaster's Own is for friends of the port. Earn it first."] = "El título de Harbormaster's Own es para amigos del puerto. Gánalo primero.",
+		["Done - the port's colors are yours. Wear them well."] = "Hecho - los colores del puerto son tuyos. Llévalos bien.",
+		["Shh. The good crates don't appear for strangers. A {glaciar fishing rod}, maybe some {cursed bait}? Friends only."] = "Shh. Las cajas buenas no aparecen para extraños. ¿Una {glaciar fishing rod}, quizás algo de {cursed bait}? Solo amigos.",
+		["Nothing for you here. Move along."] = "Nada para ti aquí. Sigue tu camino.",
+		["One deep-water rod. Bites where the light ones give up."] = "Una caña de aguas profundas. Muerden donde las ligeras se rinden.",
+		["2500 gold. Come back when your purse is heavier."] = "2500 de oro. Vuelve cuando tu bolso pese más.",
+		["Three cursed baits. Don't tell the Quartermaster where you got them."] = "Tres cebos malditos. No le digas al Quartermaster dónde los conseguiste.",
+		["15 gold for three. Cheap, considering what they attract."] = "15 de oro por tres. Barato, considerando lo que atraen.",
+		["Fine mounts for hard country - {crystal wolf}, {manta ray}, {ursagrodon}, {snow pelt}. Gold only, no credit."] = "Buenas monturas para tierra dura - {crystal wolf}, {manta ray}, {ursagrodon}, {snow pelt}. Solo oro, sin fiado.",
+		["crystal wolf"] = "lobo de cristal",
+		["manta ray"] = "mantarraya",
+		["ursagrodon"] = "ursagrodon",
+		["snow pelt"] = "piel de nieve",
+		["You already ride that one."] = "Ya montas ese.",
+		["Yours. Treat it well - the north breaks cheap gear and bad riders."] = "Tuya. Trátala bien - el norte rompe equipo barato y malos jinetes.",
+		["%d gold, no haggling."] = "%d de oro, sin regatear.",
+
 }
 	}
 
