@@ -8814,6 +8814,13 @@ locale = {
 		["Knots, floats, weights - I tie them all. Take a {net}, drop it in the water, come back tomorrow. Fishing for people who hate fishing."] = "Nudos, flotadores, pesas - los hago todos. Lleva una {net}, échala al agua, vuelve mañana. Pesca para gente que odia pescar.",
 		["net"] = "red",
 		["Throw it on open water, pull it up tomorrow. Whatever's inside is yours. 200 gold."] = "Échala en aguas abiertas, sácala mañana. Lo que traiga es tuyo. 200 de oro.",
+		-- Cook Helga
+		["Cold enough to crack an oar? Helga's pot is always hot. Stew, roast meat, bread fresh from the oven - say {trade} or pick something."] = "¿Frío como para partir un remo? La olla de Helga siempre está caliente. Estofado, carne asada, pan recién horneado - di {trade} o elige algo.",
+		["stew"] = "estofado",
+		["special"] = "especial",
+		["Root soup with smoked fish - melts the frost from your bones. The whole menu is on the trade list."] = "Sopa de raíces con pescado ahumado - derrite la escarcha de tus huesos. El menú completo está en la lista de comercio.",
+		["Today's special: roasted meat with brown bread. Keeps you walking when the wind tries to stop you."] = "Especial de hoy: carne asada con pan moreno. Te mantiene en marcha cuando el viento intenta detenerte.",
+
 }
 	}
 
