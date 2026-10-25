@@ -9972,6 +9972,12 @@ locale = {
 		["Root soup with smoked fish - melts the frost from your bones. The whole menu is on the trade list."] = "Sopa de raízes com peixe defumado - derrete o gelo dos seus ossos. O menu completo está na lista de comércio.",
 		["Today's special: roasted meat with brown bread. Keeps you walking when the wind tries to stop you."] = "Especial de hoje: carne assada com pão escuro. Te mantém andando quando o vento tenta te parar.",
 
+		-- Bone Broth quest
+		["Bone Broth"] = "Caldo de Osso",
+		["helga_bone_broth"] = "Caldo de Osso",
+		["Helga's bone broth is famous from here to Garona - and it takes a mountain of mammoth tusk shavings. Bring her 25 tusks and she will pay you in gold and goodwill."] = "O caldo de osso de Helga é famoso daqui até Garona - e requer uma montanha de raspas de presa de mammoth. Traga 25 presas e ela te paga em ouro e boa vontade.",
+		["Mammoths roam the frozen wilds around the port - their tusks are heavy, pack light."] = "Os mammoths vagam pelas terras geladas ao redor do porto - suas presas pesam, viaje leve.",
+
 }
 	}
 
