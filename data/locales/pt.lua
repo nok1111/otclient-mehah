@@ -9960,12 +9960,11 @@ locale = {
 		["Rods need bait. Worms for the usual, a {shiny lure} for picky fish, and cursed bait if you're feeling reckless."] = "As varas precisam de isca. Minhocas para o normal, um {shiny lure} para peixes exigentes, e cursed bait se você for ousado.",
 		["shiny lure"] = "isca brilhante",
 		["cursed bait"] = "isca amaldiçoada",
-		["Glitter in the water - rare fish can't resist it. Burns up after a few casts."] = "Brilho na água - peixes raros não resistem. Gasta após alguns lançamentos.",
-		["It writhes on its own. Down there, the wrong kind of hungry things notice. Don't say I didn't warn you."] = "Ele se contorce sozinho. Lá embaixo, o tipo errado de famintos percebe. Não diga que não avisei.",
+		["Glitter in the water - rare fish can't resist it. Burns up after a few casts. Want one?"] = "Brilho na água - peixes raros não resistem. Gasta após alguns lançamentos. Quer um?",
+		["It writhes on its own. Down there, the wrong kind of hungry things notice. Don't say I didn't warn you. Still want it?"] = "Ele se contorce sozinho. Lá embaixo, o tipo errado de famintos percebe. Não diga que não avisei. Ainda quer?",
 		["Knots, floats, weights - I tie them all. Take a {net}, drop it in the water, come back tomorrow. Fishing for people who hate fishing."] = "Nós, boias, pesos - eu faço todos. Leve uma {net}, jogue na água, volte amanhã. Pesca para quem odeia pescar.",
 		["net"] = "rede",
-		["Throw it on open water, pull it up tomorrow. Whatever's inside is yours."] = "Jogue em águas abertas, puxe amanhã. O que estiver dentro é seu.",
-
+		["Throw it on open water, pull it up tomorrow. Whatever's inside is yours. 200 gold."] = "Jogue em águas abertas, puxe amanhã. O que estiver dentro é seu. 200 de ouro.",
 }
 	}
 
