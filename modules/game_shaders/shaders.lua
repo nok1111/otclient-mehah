@@ -141,7 +141,7 @@ OUTFIT_SHADERS = { {
     {name = 'iaijutsu cut', frag = 'shaders/fragment/iaijutsu_cut.frag', drawColor = false},
     {name = 'frost armor', frag = 'shaders/fragment/frost_armor.frag', drawColor = false},
     {name = 'Red Glow', frag = 'shaders/fragment/red_glow.frag'},
-    {name = 'Soul',  frag = 'shaders/fragment/soul.frag'},
+    {name = 'Soul', frag = 'shaders/fragment/soul.frag'},
     
     {name = 'Fragmented', frag = 'shaders/fragment/fragmented.frag'},
     {name = 'Test', useFramebuffer = true, frag = 'shaders/fragment/outline.frag', drawColor = false},
@@ -171,6 +171,11 @@ OUTFIT_SHADERS = { {
     {name = 'Outline Blue', useFramebuffer = true, frag = 'shaders/fragment/outline_blue.frag', drawColor = false},
     {name = 'Outline Red', useFramebuffer = true, frag = 'shaders/fragment/outline_red.frag', drawColor = false},
     {name = 'Outline Green', useFramebuffer = true, frag = 'shaders/fragment/outline_green.frag', drawColor = false},
+
+    -- elemental herb node shaders (dedicated; tint + glow tuned for item sprites)
+    {name = 'Herb Ember',   useFramebuffer = true, frag = 'shaders/fragment/herb_ember.frag',   drawColor = false},
+    {name = 'Herb Soul',    useFramebuffer = true, frag = 'shaders/fragment/herb_soul.frag',    drawColor = false},
+    {name = 'Herb Crystal', useFramebuffer = true, frag = 'shaders/fragment/herb_crystal.frag', drawColor = false},
 
     {name = 'Damaged', useFramebuffer = true, frag = 'shaders/fragment/damaged.frag', drawColor = true},
 

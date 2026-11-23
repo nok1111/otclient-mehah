@@ -1,0 +1,1159 @@
+EnchTabButton < TabButton
+  text-offset: 0 0
+  height: 22
+
+EnchSlot < Item
+  size: 64 64
+  margin: 2
+  phantom: false
+  virtual: true
+  focusable: true
+  item-id: 0
+  item-count: 0
+  draggable: false
+  border-width: 1
+  border-color: #ffffff55
+  background-color: #00000088
+
+EnchGridItem < Item
+  size: 40 40
+  margin: 1
+  phantom: false
+  virtual: true
+  focusable: false
+  draggable: false
+  border-width: 1
+  border-color: #ffffff33
+  background-color: #00000055
+
+  Label
+    id: ilvlLabel
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-right: 1
+    margin-bottom: 0
+    font: small-9px
+    color: #dfdfdf
+    text-auto-resize: true
+    phantom: true
+
+EnchInfSlotRow2 < Panel
+  height: 40
+  phantom: false
+  border-width: 1
+  border-color: #ffffff22
+  background-color: #00000066
+
+  UIItem
+    id: slotIcon
+    size: 30 30
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 6
+    virtual: true
+
+  Label
+    id: slotTitle
+    anchors.left: slotIcon.right
+    anchors.top: parent.top
+    margin-left: 8
+    margin-top: 4
+    font: verdana-11px-rounded
+    color: #dfdfdf
+    text-auto-resize: true
+
+  Label
+    id: slotDesc
+    anchors.left: slotIcon.right
+    anchors.top: slotTitle.bottom
+    anchors.right: parent.right
+    margin-left: 8
+    margin-right: 156
+    font: verdana-11px-rounded
+    color: #c0c0c0
+    text-auto-resize: true
+
+  Button
+    id: slotBtn
+    width: 70
+    height: 20
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 6
+
+  Button
+    id: slotBtn2
+    width: 70
+    height: 20
+    anchors.right: slotBtn.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 6
+
+EnchRecipeRow < Panel
+  height: 44
+  phantom: false
+  border-width: 1
+  border-color: #ffffff22
+  background-color: #00000066
+  $hover:
+    border-color: #80c7f8
+
+  UIItem
+    id: icon
+    size: 30 30
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 6
+    virtual: true
+
+  Label
+    id: name
+    anchors.left: icon.right
+    anchors.top: parent.top
+    margin-left: 8
+    margin-top: 4
+    font: verdana-11px-rounded
+    color: #dfdfdf
+    text-auto-resize: true
+
+  Label
+    id: tier
+    anchors.left: icon.right
+    anchors.top: name.bottom
+    anchors.right: parent.right
+    margin-left: 8
+    margin-right: 6
+    font: small-9px
+    color: #c0c0c0
+    text-auto-resize: true
+
+EnchSpecCard < Panel
+  size: 270 300
+  phantom: false
+  background-color: #00000066
+  border-width: 1
+  border-color: #ffffff33
+
+  Item
+    id: specIcon
+    size: 48 48
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 14
+    phantom: false
+    virtual: true
+    item-id: 0
+    draggable: false
+
+  Label
+    id: specName
+    anchors.top: specIcon.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 10
+    font: verdana-11px-rounded
+    color: #80c7f8
+    text-auto-resize: true
+
+  Label
+    id: specPerks
+    anchors.top: specName.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 14
+    margin-right: 14
+    height: 160
+    font: small-9px
+    color: #dfdfdf
+    text-align: center
+    text-wrap: true
+
+  Button
+    id: specButton
+    !text: tr('SELECT')
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 10
+    width: 130
+    height: 26
+
+EnchIngRow < Panel
+  height: 34
+  margin-bottom: 1
+  UIItem
+    id: icon
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 2
+    size: 30 30
+  Label
+    id: txt
+    anchors.left: icon.right
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 6
+    text-wrap: true
+    color: #dfdfdf
+
+MainWindow
+  id: enchantingWindow
+  !text: tr('Enchanting Station')
+  size: 940 560
+  @onEscape: Enchanting.hide()
+
+  Panel
+    id: header
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 26
+    Label
+      id: headerLevel
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 6
+      color: #80c7f8
+    Label
+      id: headerGold
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 6
+      color: #f0c040
+
+  Panel
+    id: tabRow
+    anchors.top: header.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 26
+    layout:
+      type: horizontalBox
+      spacing: 4
+    EnchTabButton
+      id: tabEnch
+      text: Craft
+      width: 100
+    EnchTabButton
+      id: tabInfuse
+      text: Enchant
+      width: 100
+    EnchTabButton
+      id: tabRitual
+      text: Ritual
+      width: 100
+    EnchTabButton
+      id: tabSpec
+      text: Spec
+      width: 100
+    EnchTabButton
+      id: tabProg
+      text: Progress
+      width: 100
+
+  // ---------------- CRAFT (recipe library + work order) ----------------
+  Panel
+    id: enchPage
+    anchors.top: tabRow.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 8
+    phantom: true
+
+    // LEFT: RECIPE LIBRARY
+    Panel
+      id: recipeLibPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      width: 300
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: recipeLibTitle
+        !text: tr('RECIPE LIBRARY')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Label
+        id: recipeLibHint
+        !text: tr('Rituals reveal new inscriptions')
+        anchors.top: recipeLibTitle.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 4
+        font: verdana-11px-rounded
+        color: #c0c0c0
+        text-wrap: true
+        text-auto-resize: true
+        text-align: center
+
+      ScrollablePanel
+        id: recipeListScroll
+        anchors.top: recipeLibHint.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        margin-left: 8
+        margin-right: 8
+        margin-bottom: 8
+        vertical-scrollbar: recipeScroll
+        Panel
+          id: recipeList
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          padding-right: 14
+          layout:
+            type: verticalBox
+            spacing: 4
+            fit-children: true
+      VerticalScrollBar
+        id: recipeScroll
+        anchors.top: recipeLibHint.bottom
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        margin-top: 6
+        margin-bottom: 8
+        width: 12
+
+    // RIGHT: STATION
+    Panel
+      id: craftStation
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: recipeLibPanel.right
+      anchors.right: parent.right
+      margin-left: 8
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: craftTitle
+        !text: tr('CRAFT')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Label
+        id: craftSub
+        !text: tr('Inscribe runes, tools and augments.')
+        anchors.top: craftTitle.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 2
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
+      Item
+        id: craftRod
+        size: 64 64
+        anchors.centerIn: parent
+        margin-top: -30
+        phantom: false
+        virtual: true
+        focusable: false
+        draggable: false
+        opacity: 0.55
+        border-width: 1
+        border-color: #ffffff22
+
+      Label
+        id: craftHint
+        !text: tr('Select a recipe\nfrom the library')
+        anchors.centerIn: parent
+        margin-top: 60
+        font: verdana-11px-rounded
+        color: #c0c0c0
+        text-wrap: true
+        text-auto-resize: true
+        text-align: center
+
+      Panel
+        id: craftOrderPanel
+        anchors.top: craftSub.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        phantom: false
+        visible: false
+
+        Button
+          id: woBackBtn
+          !text: tr('<< Back')
+          anchors.top: parent.top
+          anchors.left: parent.left
+          margin-top: 8
+          margin-left: 8
+          width: 60
+          height: 18
+          @onClick: Enchanting.closeCraftOrder()
+
+        // --- item card ---
+        Panel
+          id: woItemCard
+          anchors.top: woBackBtn.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 6
+          margin-left: 10
+          margin-right: 10
+          height: 108
+          phantom: false
+          background-color: #00000066
+          border-width: 1
+          border-color: #ffffff33
+
+          Label
+            id: woOrderTitle
+            !text: tr('WORK ORDER')
+            anchors.top: parent.top
+            anchors.left: parent.left
+            margin-top: 4
+            margin-left: 8
+            font: small-9px
+            color: #80c7f8
+            text-auto-resize: true
+
+          Label
+            id: woCategory
+            anchors.top: parent.top
+            anchors.right: parent.right
+            margin-top: 4
+            margin-right: 8
+            font: small-9px
+            color: #c0c0c0
+            text-auto-resize: true
+
+          Panel
+            id: woIconFrame
+            size: 50 50
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            margin-top: 10
+            phantom: false
+            background-color: #00000088
+            border-width: 1
+            border-color: #ffffff55
+
+            UIItem
+              id: woIcon
+              size: 36 36
+              anchors.centerIn: parent
+              virtual: true
+
+          Label
+            id: woName
+            anchors.top: woIconFrame.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            margin-top: 4
+            font: verdana-11px-rounded
+            color: #dfdfdf
+            text-auto-resize: true
+
+        // --- info card ---
+        Panel
+          id: woInfoCard
+          anchors.top: woItemCard.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 8
+          margin-left: 10
+          margin-right: 10
+          height: 74
+          phantom: false
+          background-color: #00000066
+          border-width: 1
+          border-color: #ffffff33
+
+          Label
+            id: woReq
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            margin-top: 6
+            font: verdana-11px-rounded
+            color: #80c7f8
+            text-auto-resize: true
+
+          Label
+            id: woDesc
+            anchors.top: woReq.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            margin-top: 4
+            margin-left: 8
+            margin-right: 8
+            font: small-9px
+            color: #c0c0c0
+            text-wrap: true
+
+        // --- materials card ---
+        Panel
+          id: woMatsCard
+          anchors.top: woInfoCard.bottom
+          anchors.bottom: parent.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 8
+          margin-bottom: 46
+          margin-left: 10
+          margin-right: 10
+          phantom: false
+          background-color: #00000066
+          border-width: 1
+          border-color: #ffffff33
+
+          Label
+            id: woMatsTitle
+            !text: tr('REQUIRED MATERIALS')
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            margin-top: 6
+            font: small-9px
+            color: #c0c0c0
+            text-auto-resize: true
+
+          ScrollablePanel
+            id: detIngsScroll
+            anchors.top: woMatsTitle.bottom
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            margin-top: 6
+            margin-left: 10
+            margin-right: 10
+            margin-bottom: 8
+            vertical-scrollbar: detScroll
+            Panel
+              id: detIngs
+              anchors.top: parent.top
+              anchors.left: parent.left
+              anchors.right: parent.right
+              padding-right: 14
+              layout:
+                type: verticalBox
+                spacing: 3
+                fit-children: true
+
+          VerticalScrollBar
+            id: detScroll
+            anchors.top: woMatsTitle.bottom
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            margin-top: 6
+            margin-bottom: 8
+            width: 12
+
+        Button
+          id: craftBtn
+          !text: tr('Craft')
+          anchors.bottom: parent.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-bottom: 10
+          width: 140
+          height: 28
+          @onClick: Enchanting.craftSelected()
+
+  // ---------------- INFUSE (essence slots, migrated from blacksmith) ----------------
+  Panel
+    id: infusePage
+    anchors.top: tabRow.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 4
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 8
+    visible: false
+    phantom: true
+
+    // LEFT: INVENTORY
+    Panel
+      id: infInvPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      width: 296
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        !text: tr('INVENTORY')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Label
+        id: infInvHint
+        !text: tr('Click an item with free slots to place it.')
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 24
+        margin-left: 8
+        margin-right: 8
+        font: small-9px
+        color: #c0c0c0
+        text-wrap: true
+        text-auto-resize: true
+        text-align: center
+
+      Panel
+        id: infGrid
+        anchors.top: infInvHint.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        margin-left: 8
+        margin-right: 8
+        phantom: true
+        layout:
+          type: grid
+          cell-size: 44 44
+          cell-spacing: 4
+          flow: true
+
+      Label
+        id: infEmpty
+        !text: tr('No items')
+        anchors.centerIn: parent
+        font: verdana-11px-rounded
+        color: #c0c0c0
+        visible: false
+        text-auto-resize: true
+
+    // RIGHT: STATION
+    Panel
+      id: infStation
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: infInvPanel.right
+      anchors.right: parent.right
+      margin-left: 8
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        !text: tr('ENCHANT')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 8
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Label
+        !text: tr('Slot essences for bonus effects - matching elements resonate.')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 24
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
+      EnchSlot
+        id: infItemSlot
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 46
+
+      Label
+        id: infItemName
+        !text: tr('Select an item from your inventory')
+        anchors.top: infItemSlot.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 4
+        font: verdana-11px-rounded
+        color: #c0c0c0
+        text-auto-resize: true
+
+      Label
+        id: infBlock
+        anchors.top: infItemName.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 2
+        color: #de6f6f
+        font: small-9px
+        text-wrap: true
+        text-align: center
+        text-auto-resize: true
+
+      Panel
+        id: infSlots
+        anchors.top: infBlock.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 8
+        margin-left: 14
+        margin-right: 14
+        height: 136
+        phantom: true
+        layout:
+          type: verticalBox
+          spacing: 4
+
+      Label
+        id: infEssenceTitle
+        !text: tr('ESSENCES')
+        anchors.top: infSlots.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 8
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Panel
+        id: infEssences
+        anchors.top: infEssenceTitle.bottom
+        anchors.bottom: infPreview.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        margin-bottom: 4
+        margin-left: 14
+        margin-right: 14
+        phantom: true
+        layout:
+          type: grid
+          cell-size: 48 48
+          cell-spacing: 6
+          flow: true
+
+      Label
+        id: infPreview
+        anchors.bottom: infApplyBtn.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-bottom: 4
+        margin-left: 14
+        margin-right: 14
+        font: small-9px
+        color: #c0c0c0
+        text-wrap: true
+        text-align: center
+        text-auto-resize: true
+
+      Button
+        id: infApplyBtn
+        !text: tr('Enchant')
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-bottom: 8
+        width: 130
+        height: 26
+        enabled: false
+
+  // ---------------- RITUAL (push-your-luck discovery) ----------------
+  Panel
+    id: ritualPage
+    anchors.top: tabRow.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 8
+    visible: false
+    phantom: true
+
+    // LEFT: INSCRIPTION LIST
+    Panel
+      id: ritListPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      width: 300
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: ritListTitle
+        !text: tr('INSCRIPTIONS')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Label
+        id: ritListHint
+        !text: tr('Unknown runes recovered\nthrough ritual channeling')
+        anchors.top: ritListTitle.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 4
+        font: verdana-11px-rounded
+        color: #c0c0c0
+        text-wrap: true
+        text-auto-resize: true
+        text-align: center
+
+      ScrollablePanel
+        id: ritListScroll
+        anchors.top: ritListHint.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        margin-left: 8
+        margin-right: 8
+        margin-bottom: 8
+        vertical-scrollbar: ritScroll
+        Panel
+          id: ritList
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          padding-right: 14
+          layout:
+            type: verticalBox
+            spacing: 4
+            fit-children: true
+      VerticalScrollBar
+        id: ritScroll
+        anchors.top: ritListHint.bottom
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        margin-top: 6
+        margin-bottom: 8
+        width: 12
+
+    // RIGHT: RITUAL STATION
+    Panel
+      id: ritStation
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: ritListPanel.right
+      anchors.right: parent.right
+      margin-left: 8
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: ritTitle
+        !text: tr('RITUAL OF INSCRIPTION')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Label
+        id: ritSub
+        !text: tr('Channel materials into a rune. If it shatters,\nresonance grows (+10% chance next attempt).')
+        anchors.top: ritTitle.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 2
+        font: small-9px
+        color: #c0c0c0
+        text-wrap: true
+        text-auto-resize: true
+        text-align: center
+
+      Panel
+        id: ritIconFrame
+        size: 64 64
+        anchors.top: ritSub.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 12
+        phantom: false
+        background-color: #00000088
+        border-width: 1
+        border-color: #ffffff55
+
+        UIItem
+          id: ritIcon
+          size: 48 48
+          anchors.centerIn: parent
+          virtual: true
+
+      Label
+        id: ritTargetName
+        !text: tr('Select an inscription')
+        anchors.top: ritIconFrame.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      // --- chance card ---
+      Panel
+        id: ritChanceCard
+        anchors.top: ritTargetName.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 8
+        margin-left: 14
+        margin-right: 14
+        height: 64
+        phantom: false
+        background-color: #00000066
+        border-width: 1
+        border-color: #ffffff33
+
+        Label
+          id: ritChance
+          !text: tr('Channel chance: --')
+          anchors.top: parent.top
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 8
+          font: verdana-11px-rounded
+          color: #80c7f8
+          text-auto-resize: true
+
+        ProgressBar
+          id: ritBar
+          anchors.top: ritChance.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 6
+          margin-left: 12
+          margin-right: 12
+          height: 14
+
+        Label
+          id: ritResonance
+          !text: tr('resonance 0')
+          anchors.top: ritBar.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 3
+          font: small-9px
+          color: #c0c0c0
+          text-auto-resize: true
+
+      // --- materials card ---
+      Panel
+        id: ritMatsCard
+        anchors.top: ritChanceCard.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 8
+        margin-bottom: 52
+        margin-left: 14
+        margin-right: 14
+        phantom: false
+        background-color: #00000066
+        border-width: 1
+        border-color: #ffffff33
+
+        Label
+          id: ritMatsTitle
+          !text: tr('CHANNEL COST')
+          anchors.top: parent.top
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 6
+          font: small-9px
+          color: #c0c0c0
+          text-auto-resize: true
+
+        ScrollablePanel
+          id: ritMatsScroll
+          anchors.top: ritMatsTitle.bottom
+          anchors.bottom: parent.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 6
+          margin-left: 10
+          margin-right: 10
+          margin-bottom: 8
+          vertical-scrollbar: ritMatScroll
+          Panel
+            id: ritMats
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            padding-right: 14
+            layout:
+              type: verticalBox
+              spacing: 3
+              fit-children: true
+
+        VerticalScrollBar
+          id: ritMatScroll
+          anchors.top: ritMatsTitle.bottom
+          anchors.bottom: parent.bottom
+          anchors.right: parent.right
+          margin-top: 6
+          margin-bottom: 8
+          width: 12
+
+      Button
+        id: ritChannelBtn
+        !text: tr('CHANNEL')
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-bottom: 10
+        width: 160
+        height: 28
+        enabled: false
+        @onClick: Enchanting.channelRitual()
+
+
+  // ---------------- PROGRESS ----------------
+  Panel
+    id: progressPage
+    anchors.top: tabRow.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 8
+    visible: false
+    padding: 10
+    Label
+      id: progLevel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      color: #dfdfdf
+      font: verdana-11px-rounded
+    ProgressBar
+      id: progBar
+      anchors.top: progLevel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 6
+      height: 16
+    Label
+      id: progXp
+      anchors.top: progBar.bottom
+      anchors.left: parent.left
+      margin-top: 4
+      font: small-9px
+      color: #c0c0c0
+    Label
+      id: progDisc
+      anchors.top: progXp.bottom
+      anchors.left: parent.left
+      margin-top: 8
+      font: verdana-11px-rounded
+      color: #80c7f8
+
+  // ---------------- SPECIALIZATION ----------------
+  Panel
+    id: specPage
+    anchors.top: tabRow.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 8
+    visible: false
+    phantom: true
+
+    Label
+      id: specTitle
+      !text: tr('SPECIALIZATION')
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 12
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      text-auto-resize: true
+
+    Label
+      id: specStatus
+      !text: tr('')
+      anchors.top: specTitle.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 6
+      font: verdana-11px-rounded
+      color: #c0c0c0
+      text-auto-resize: true
+
+    Panel
+      id: specList
+      anchors.top: specStatus.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 20
+      width: 850
+      height: 310
+      phantom: true
+      layout:
+        type: horizontalBox
+        spacing: 16
+
+    Label
+      id: specFooter
+      !text: tr('The choice is permanent - your specialization shapes how you enchant.\nYou can also choose from chat: /enchantingspec runesmith, salvager or invoker')
+      anchors.top: specList.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 14
+      font: small-9px
+      color: #c0c0c0
+      text-wrap: true
+      text-align: center
+      text-auto-resize: true
+
+  // ==================== BOTTOM: STATUS ====================
+  Panel
+    id: statusPanel
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 30
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 8
+    phantom: false
+    background-color: #00000044
+    border-width: 1
+    border-color: #ffffff22
+
+    Label
+      id: statusLabel
+      !text: tr('')
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.left: parent.left
+      anchors.right: closeButton.left
+      margin-left: 8
+      margin-right: 8
+      font: verdana-11px-rounded
+      color: #de6f6f
+      text-align: center
+      text-wrap: true
+
+    Button
+      id: closeButton
+      !text: tr('Close')
+      width: 70
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.right: parent.right
+      margin-right: 6
+      @onClick: Enchanting.hide()

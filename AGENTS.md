@@ -78,3 +78,47 @@ Follow this palette convention when adding or modifying styles:
 - TFS 1.4.2 fork: `C:\Users\nokturno\Desktop\1.4 konakon\TFS-1.4.2-Compatible-Aura-Effect-Wings-Shader-MEHAH`
 - Discord bridge: HTTP server on TFS (port 8081) + Node.js bridge (port 3000)
 - Channels: 3 (World), 4 (English), 5 (Advertising), 6 (Advertising-Rook), 7 (Help)
+
+## Mods
+
+### game_alchemy (`mods/game_alchemy/`)
+
+Dedicated alchemy-station window (opened by station actionid 33111; the generic
+`game_crafting` window still handles other professions). Same structure/patterns
+as `mods/game_blacksmith/`: `MainWindow` + horizontal `AlTabButton` row, dynamic
+rows via `g_ui.createWidget`, extended-opcode JSON `{e, d}` packets.
+
+- Opcode: `239` (`ALCHEMY_OPCODE`), registered in `Alchemy.init()` via
+  (`237`/`238` are already taken by `game_dominion`/`game_guildmanagement`)
+  `ProtocolGame.registerExtendedOpcode`.
+- Server events handled: `AL_OPEN_WINDOW`, `AL_UPDATE` (meta only:
+  level/xp/gold/buffs/oil/spec/progression), `AL_RECIPES`, `AL_REAGENTS`
+  (chunked `{part,total,list}` — reassembled in `accumulate()`; the TFS
+  `NetworkMessage::addString` silently drops strings > 8192 bytes so big
+  lists must be chunked), `AL_CAULDRON` (mix state), `AL_BUFFS`,
+  `AL_RESULT`, `AL_REJECTED`.
+- Client sends: `AL_CRAFT`, `AL_PLACE`, `AL_REMOVE`, `AL_MIX_INFO`, `AL_BREW`,
+  `AL_BUFFS`, `AL_CHOOSE_SPEC`, `AL_CLOSE`.
+- Tabs (4, simplified rework): Boticario (recipe grid — `clientId` icon +
+  name, locked recipes render as `Blackout`-shader silhouette + `?????`,
+  click selects into a side detail panel with batch slider), Cauldron
+  (fixed reagent grid, click toggles a reagent into the mix with numbered
+  overlay, Brew tries an exact set match — order does NOT matter),
+  Specializacion (3 spec cards, lvl 15, permanent), Progress (level/xp bar,
+  discovered count, tiers, perks).
+- Cauldron semantics: the mix is a SET of distinct ids server-side;
+  `AL_PLACE` toggles an id on/off. `AL_BREW` sends no payload — the server
+  matches the placed set against the recipe's cauldronable ingredient set
+  exactly (order does not matter; all cauldronable recipes have unique sets).
+  Outcomes: new gated recipe →
+  discover + brew once + 24h `AlchemyBrewCd`; known recipe → mats consumed,
+  no craft, no cd; no match → 1 of each clicked reagent consumed. Server sends
+  `cdEnd`/`brewCd` as REMAINING SECONDS (client-side countdown, immune to
+  clock skew).
+- Potency odds from the server are already percentages (0-100) — do NOT
+  multiply by 100 again.
+- `UIItem`/`Item` widgets show sprites via `setItemId(clientId)` (server sends
+  client ids, not server ids).
+- Local helpers (`setLabel`, `fmtTime`, `fmtGold`, `herbFilter`, `buffTick`)
+  must be declared before `Alchemy.wireUp()` — the chip/slider closures
+  capture them lexically.

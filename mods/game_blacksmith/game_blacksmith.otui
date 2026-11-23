@@ -33,6 +33,104 @@ BSGridItem < Item
     text-auto-resize: true
     phantom: true
 
+// Infusion tab: slot row (icon + title + desc + action button)
+InfSlotRow < Panel
+  height: 40
+  phantom: false
+  border-width: 1
+  border-color: #ffffff22
+  background-color: #00000066
+
+  UIItem
+    id: slotIcon
+    size: 30 30
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 6
+    virtual: true
+
+  Label
+    id: slotTitle
+    anchors.left: slotIcon.right
+    anchors.top: parent.top
+    margin-left: 8
+    margin-top: 4
+    font: verdana-11px-rounded
+    color: #dfdfdf
+    text-auto-resize: true
+
+  Label
+    id: slotDesc
+    anchors.left: slotIcon.right
+    anchors.top: slotTitle.bottom
+    anchors.right: parent.right
+    margin-left: 8
+    margin-right: 156
+    font: verdana-11px-rounded
+    color: #c0c0c0
+    text-auto-resize: true
+
+  Button
+    id: slotBtn
+    width: 70
+    height: 20
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 6
+
+  Button
+    id: slotBtn2
+    width: 70
+    height: 20
+    anchors.right: slotBtn.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 6
+
+// Forge tab: one learned-item row in the library (icon + name + tier + craft)
+ForgeLibRow < Panel
+  height: 40
+  phantom: false
+  border-width: 1
+  border-color: #ffffff22
+  background-color: #00000066
+
+  UIItem
+    id: libIcon
+    size: 30 30
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 6
+    virtual: true
+
+  Label
+    id: libTitle
+    anchors.left: libIcon.right
+    anchors.top: parent.top
+    margin-left: 8
+    margin-top: 4
+    font: verdana-11px-rounded
+    color: #dfdfdf
+    text-auto-resize: true
+
+  Label
+    id: libDesc
+    anchors.left: libIcon.right
+    anchors.top: libTitle.bottom
+    anchors.right: parent.right
+    margin-left: 8
+    margin-right: 84
+    font: verdana-11px-rounded
+    color: #c0c0c0
+    text-auto-resize: true
+
+  Button
+    id: libBtn
+    width: 70
+    height: 20
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 6
+
 MaterialRow < Panel
   height: 28
   phantom: true
@@ -71,6 +169,44 @@ MaterialRow < Panel
     margin-right: 60
     font: verdana-11px-rounded
     color: #00BC00
+    text-auto-resize: true
+
+// Forge commission: slider with a visible framed track (progressbar image as trough)
+ForgeSlider < HorizontalScrollBar
+  height: 16
+  background-color: #00000066
+  image-source: /images/ui/progressbar
+  image-border: 1
+
+// Forge commission: gold fee row (coin image + fee label + owned count)
+FeeRow < Panel
+  height: 28
+  phantom: true
+
+  UIWidget
+    id: feeIcon
+    size: 22 22
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 2
+    image-source: /images/icons/gold_coin
+    image-smooth: true
+
+  Label
+    id: feeName
+    anchors.left: feeIcon.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 6
+    font: verdana-11px-rounded
+    color: #dfdfdf
+    text-auto-resize: true
+
+  Label
+    id: feeCount
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    font: verdana-11px-rounded
+    color: #dfdfdf
     text-auto-resize: true
 
 // Materials tab: inventory material row (icon + name + owned count)
@@ -407,12 +543,32 @@ MainWindow
     border-color: #ffffff33
 
     BSTabButton
-      id: tabRefinement
-      !text: tr('Refinement')
+      id: tabCraft
+      !text: tr('Craft')
       anchors.top: parent.top
       anchors.left: parent.left
       anchors.right: parent.right
       margin-top: 8
+      margin-left: 6
+      margin-right: 6
+
+    BSTabButton
+      id: tabStudy
+      !text: tr('Study')
+      anchors.top: tabCraft.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 4
+      margin-left: 6
+      margin-right: 6
+
+    BSTabButton
+      id: tabRefinement
+      !text: tr('Refinement')
+      anchors.top: tabStudy.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 4
       margin-left: 6
       margin-right: 6
 
@@ -430,6 +586,17 @@ MainWindow
       id: tabProgression
       !text: tr('Progression')
       anchors.top: tabMaterials.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 4
+      margin-left: 6
+      margin-right: 6
+
+    BSTabButton
+      id: tabInfusion
+      !text: tr('Infusion')
+      visible: false
+      anchors.top: tabRefinement.bottom
       anchors.left: parent.left
       anchors.right: parent.right
       margin-top: 4
@@ -600,10 +767,20 @@ MainWindow
         color: #dfdfdf
         text-auto-resize: true
 
+      Label
+        id: refSub
+        !text: tr('Spend bars to raise item level.')
+        anchors.top: centerTitle.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 2
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
       // --- Empty state ---
       Panel
         id: emptyState
-        anchors.top: centerTitle.bottom
+        anchors.top: refSub.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         height: 190
@@ -652,7 +829,7 @@ MainWindow
       // --- Filled state ---
       Panel
         id: filledState
-        anchors.top: centerTitle.bottom
+        anchors.top: refSub.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         height: 190
@@ -869,9 +1046,19 @@ MainWindow
         color: #dfdfdf
         text-auto-resize: true
 
+      Label
+        id: matSub
+        !text: tr('Bars refine gear - essences infuse it.')
+        anchors.top: matTitle.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 2
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
       ScrollablePanel
         id: matScroll
-        anchors.top: matTitle.bottom
+        anchors.top: matSub.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -980,6 +1167,16 @@ MainWindow
         spacing: 6
 
       // --- Level / rank header card ---
+      Label
+        id: progIntro
+        !text: tr('Earn Blacksmith XP by smelting, refining, studying and forging.')
+        font: small-9px
+        color: #c0c0c0
+        text-wrap: true
+        text-auto-resize: true
+        margin-left: 6
+        margin-bottom: 2
+
       Panel
         id: profHeaderCard
         height: 80
@@ -1197,7 +1394,7 @@ MainWindow
 
       Label
         id: specSub
-        !text: tr('Unlocks at Blacksmith Level 15. Only one specialization can be active.')
+        !text: tr('Unlocks at Blacksmith Level 15. Only one specialization can be active.\nMatching your spec gives bonus knowledge and materials when studying.')
         anchors.top: specTitle.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         margin-top: 4
@@ -1225,6 +1422,691 @@ MainWindow
         font: verdana-11px-rounded
         color: #80c7f8
         text-auto-resize: true
+
+  // ==================== PAGE: INFUSION ====================
+  Panel
+    id: infusionPage
+    visible: false
+    anchors.top: xpLabel.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: sideBar.right
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 8
+    phantom: true
+
+    // LEFT: INVENTORY
+    Panel
+      id: infInvPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      width: 296
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: infInvTitle
+        !text: tr('INVENTORY')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Label
+        id: infInvHint
+        !text: tr('Click an item with free slots to place it.')
+        anchors.top: infInvTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 4
+        margin-left: 8
+        margin-right: 8
+        font: small-9px
+        color: #c0c0c0
+        text-wrap: true
+        text-auto-resize: true
+        text-align: center
+
+      Panel
+        id: infGrid
+        anchors.top: infInvHint.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        margin-left: 8
+        margin-right: 8
+        phantom: true
+        layout:
+          type: grid
+          cell-size: 44 44
+          cell-spacing: 4
+          flow: true
+
+      Label
+        id: infEmpty
+        !text: tr('No items')
+        anchors.centerIn: parent
+        font: verdana-11px-rounded
+        color: #c0c0c0
+        visible: false
+        text-auto-resize: true
+
+    // RIGHT: STATION
+    Panel
+      id: infStation
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: infInvPanel.right
+      anchors.right: parent.right
+      margin-left: 8
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: infTitle
+        !text: tr('INFUSION')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 8
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Label
+        id: infSub
+        !text: tr('Slot essences for bonus effects - matching elements resonate.')
+        anchors.top: infTitle.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 2
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
+      BlacksmithSlot
+        id: infItemSlot
+        anchors.top: infSub.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 8
+
+      Label
+        id: infItemName
+        !text: tr('Select an item from your inventory')
+        anchors.top: infItemSlot.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 4
+        font: verdana-11px-rounded
+        color: #c0c0c0
+        text-auto-resize: true
+
+      Panel
+        id: infSlots
+        anchors.top: infItemName.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 10
+        margin-left: 14
+        margin-right: 14
+        height: 136
+        phantom: true
+        layout:
+          type: verticalBox
+          spacing: 4
+
+      Label
+        id: infEssenceTitle
+        !text: tr('ESSENCES')
+        anchors.top: infSlots.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 10
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Panel
+        id: infEssences
+        anchors.top: infEssenceTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 108
+        margin-top: 6
+        margin-left: 14
+        margin-right: 14
+        phantom: true
+        layout:
+          type: grid
+          cell-size: 48 48
+          cell-spacing: 6
+          flow: true
+
+      Button
+        id: infApplyBtn
+        !text: tr('Infuse')
+        anchors.top: infEssences.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 10
+        width: 130
+        height: 26
+        enabled: false
+
+      Label
+        id: infPreview
+        !text: tr('')
+        anchors.top: infApplyBtn.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        margin-left: 14
+        margin-right: 14
+        font: verdana-11px-rounded
+        color: #80c7f8
+        text-wrap: true
+        text-auto-resize: true
+        text-align: center
+
+  // ==================== PAGE: STUDY ====================
+  Panel
+    id: studyPage
+    anchors.top: xpLabel.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: sideBar.right
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 8
+    phantom: true
+
+    // LEFT: INVENTORY
+    Panel
+      id: forgeInvPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      width: 296
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: forgeInvTitle
+        !text: tr('INVENTORY')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Label
+        id: forgeInvHint
+        !text: tr('Click an item to study it - deconstructing raises knowledge.')
+        anchors.top: forgeInvTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 4
+        margin-left: 8
+        margin-right: 8
+        font: small-9px
+        color: #c0c0c0
+        text-wrap: true
+        text-auto-resize: true
+        text-align: center
+
+      Panel
+        id: forgeGrid
+        anchors.top: forgeInvHint.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        margin-left: 8
+        margin-right: 8
+        phantom: true
+        layout:
+          type: grid
+          cell-size: 44 44
+          cell-spacing: 4
+          flow: true
+
+      Label
+        id: forgeEmpty
+        !text: tr('No items')
+        anchors.centerIn: parent
+        font: verdana-11px-rounded
+        color: #c0c0c0
+        visible: false
+        text-auto-resize: true
+
+    // RIGHT: STATION
+    Panel
+      id: forgeStation
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: forgeInvPanel.right
+      anchors.right: parent.right
+      margin-left: 8
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      // station top swaps between deconstruct view and commission view
+      Panel
+        id: forgeDeconPanel
+        anchors.fill: parent
+        phantom: true
+
+        Label
+          id: forgeTabTitle
+          !text: tr('STUDY')
+          anchors.top: parent.top
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 8
+          font: verdana-11px-rounded
+          color: #dfdfdf
+          text-auto-resize: true
+
+        Label
+          id: studySub
+          !text: tr('Deconstruct copies to master a piece - then forge it in Craft.')
+          anchors.top: forgeTabTitle.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 2
+          font: small-9px
+          color: #c0c0c0
+          text-auto-resize: true
+
+        BlacksmithSlot
+          id: forgeItemSlot
+          anchors.top: studySub.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 8
+
+        Label
+          id: forgeItemName
+          !text: tr('Select an item to deconstruct')
+          anchors.top: forgeItemSlot.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 4
+          font: verdana-11px-rounded
+          color: #c0c0c0
+          text-auto-resize: true
+
+        Label
+          id: forgeKnow
+          !text: tr('')
+          anchors.top: forgeItemName.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 6
+          font: verdana-11px-rounded
+          color: #80c7f8
+          text-auto-resize: true
+
+        ProgressBar
+          id: forgeProg
+          anchors.top: forgeKnow.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 4
+          width: 220
+          height: 12
+          background-color: #355d89
+
+        Label
+          id: forgeYield
+          !text: tr('')
+          anchors.top: forgeProg.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 6
+          margin-left: 14
+          margin-right: 14
+          font: verdana-11px-rounded
+          color: #c0c0c0
+          text-wrap: true
+          text-auto-resize: true
+          text-align: center
+
+        Button
+          id: forgeDeconBtn
+          !text: tr('Deconstruct')
+          anchors.top: forgeYield.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 8
+          width: 130
+          height: 26
+          enabled: false
+
+
+  // ==================== PAGE: CRAFT ====================
+  Panel
+    id: craftPage
+    anchors.top: xpLabel.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: sideBar.right
+    anchors.right: parent.right
+    margin-top: 10
+    margin-left: 8
+    margin-right: 8
+    margin-bottom: 8
+    phantom: true
+
+    // LEFT: FORGE LIBRARY
+    Panel
+      id: craftLibPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      width: 296
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: forgeLibTitle
+        !text: tr('FORGE LIBRARY')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Label
+        id: forgeLibHint
+        !text: tr('Study pieces to\nmaster new crafts')
+        anchors.top: forgeLibTitle.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 4
+        font: verdana-11px-rounded
+        color: #c0c0c0
+        text-wrap: true
+        text-auto-resize: true
+        text-align: center
+
+      ScrollablePanel
+        id: forgeLibrary
+        anchors.top: forgeLibHint.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        margin-left: 8
+        margin-right: 8
+        margin-bottom: 8
+        layout:
+          type: verticalBox
+          spacing: 4
+
+    // RIGHT: STATION
+    Panel
+      id: craftStation
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: craftLibPanel.right
+      anchors.right: parent.right
+      margin-left: 8
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: craftTitle
+        !text: tr('CRAFT')
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 6
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Label
+        id: craftSub
+        !text: tr('Forge mastered pieces at the level you choose.')
+        anchors.top: craftTitle.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 2
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
+      Item
+        id: craftAnvil
+        size: 64 64
+        anchors.centerIn: parent
+        margin-top: -30
+        phantom: false
+        virtual: true
+        focusable: false
+        draggable: false
+        opacity: 0.55
+        border-width: 1
+        border-color: #ffffff22
+
+      Label
+        id: craftHint
+        !text: tr('Select a mastered piece\nfrom the library')
+        anchors.centerIn: parent
+        margin-top: 60
+        font: verdana-11px-rounded
+        color: #c0c0c0
+        text-wrap: true
+        text-auto-resize: true
+        text-align: center
+
+      Panel
+        id: forgeCraftPanel
+        anchors.top: craftSub.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        phantom: false
+        visible: false
+
+        Button
+          id: cpBackBtn
+          !text: tr('<< Back')
+          anchors.top: parent.top
+          anchors.left: parent.left
+          margin-top: 8
+          margin-left: 8
+          width: 60
+          height: 18
+
+        // --- item card ---
+        Panel
+          id: cpItemCard
+          anchors.top: cpBackBtn.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 6
+          margin-left: 10
+          margin-right: 10
+          height: 108
+          phantom: false
+          background-color: #00000066
+          border-width: 1
+          border-color: #ffffff33
+
+          Label
+            id: cpWorkOrder
+            !text: tr('WORK ORDER')
+            anchors.top: parent.top
+            anchors.left: parent.left
+            margin-top: 4
+            margin-left: 8
+            font: small-9px
+            color: #80c7f8
+            text-auto-resize: true
+
+          Panel
+            id: cpIconFrame
+            size: 50 50
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            margin-top: 10
+            phantom: false
+            background-color: #00000088
+            border-width: 1
+            border-color: #ffffff55
+
+            UIItem
+              id: cpIcon
+              size: 36 36
+              anchors.centerIn: parent
+              virtual: true
+
+          Label
+            id: cpName
+            anchors.top: cpIconFrame.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            margin-top: 4
+            font: verdana-11px-rounded
+            color: #dfdfdf
+            text-auto-resize: true
+
+        // --- level card ---
+        Panel
+          id: cpLevelCard
+          anchors.top: cpItemCard.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 8
+          margin-left: 10
+          margin-right: 10
+          height: 104
+          phantom: false
+          background-color: #00000066
+          border-width: 1
+          border-color: #ffffff33
+
+          Label
+            id: cpSliderTitle
+            !text: tr('Forge for a hero of level')
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            margin-top: 6
+            font: small-9px
+            color: #c0c0c0
+            text-auto-resize: true
+
+          Panel
+            id: cpSliderRow
+            anchors.top: cpSliderTitle.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            margin-top: 4
+            margin-left: 10
+            margin-right: 10
+            height: 16
+            phantom: true
+
+            Label
+              id: cpMin
+              !text: tr('15')
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              font: verdana-11px-rounded
+              color: #c0c0c0
+              text-auto-resize: true
+
+            Label
+              id: cpMax
+              anchors.right: parent.right
+              anchors.verticalCenter: parent.verticalCenter
+              font: verdana-11px-rounded
+              color: #c0c0c0
+              text-auto-resize: true
+
+            ForgeSlider
+              id: cpSlider
+              anchors.left: cpMin.right
+              anchors.right: cpMax.left
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 8
+              margin-right: 8
+              height: 16
+              step: 1
+
+          Label
+            id: cpLevel
+            anchors.top: cpSliderRow.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            margin-top: 4
+            font: verdana-11px-rounded
+            color: #80c7f8
+            text-auto-resize: true
+
+          Label
+            id: cpInfo
+            anchors.top: cpLevel.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            margin-top: 4
+            font: small-9px
+            color: #c0c0c0
+            text-auto-resize: true
+
+        // --- materials card ---
+        Panel
+          id: cpMatsCard
+          anchors.top: cpLevelCard.bottom
+          anchors.bottom: parent.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 8
+          margin-bottom: 46
+          margin-left: 10
+          margin-right: 10
+          phantom: false
+          background-color: #00000066
+          border-width: 1
+          border-color: #ffffff33
+
+          Label
+            id: cpMatsTitle
+            !text: tr('REQUIRED MATERIALS')
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            margin-top: 6
+            font: small-9px
+            color: #c0c0c0
+            text-auto-resize: true
+
+          Panel
+            id: cpCosts
+            anchors.top: cpMatsTitle.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            margin-top: 6
+            margin-left: 10
+            margin-right: 10
+            height: 0
+            phantom: true
+            layout:
+              type: verticalBox
+              spacing: 3
+              fit-children: true
+
+        Button
+          id: cpCraftBtn
+          !text: tr('Forge')
+          anchors.bottom: parent.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-bottom: 10
+          width: 140
+          height: 28
 
   // ==================== BOTTOM: STATUS ====================
   Panel

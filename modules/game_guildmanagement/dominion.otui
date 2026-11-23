@@ -1,0 +1,169 @@
+Panel
+  focusable: false
+
+  // ── filter row ───────────────────────────────────────────────
+  Panel
+    id: filterRow
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 24
+    layout: horizontalBox
+
+    Button
+      id: fAll
+      !text: tr('All')
+      width: 70
+    Button
+      id: fNeutral
+      !text: tr('Neutral')
+      width: 70
+      margin-left: 4
+    Button
+      id: fOwned
+      !text: tr('Owned')
+      width: 70
+      margin-left: 4
+    Button
+      id: fConflict
+      !text: tr('Conflict')
+      width: 70
+      margin-left: 4
+    Button
+      id: fMine
+      !text: tr('My guild')
+      width: 70
+      margin-left: 4
+
+  // ── territory list (left column) ─────────────────────────────
+  MiniPanel
+    id: listCol
+    anchors.top: filterRow.bottom
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    margin-top: 6
+    width: 265
+    text: Territories
+
+    UIScrollArea
+      id: territoryScrollBox
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: territoryScroll.left
+      anchors.bottom: parent.bottom
+      margin-right: 4
+      vertical-scrollbar: territoryScroll
+      layout: verticalBox
+
+    VerticalScrollBar
+      id: territoryScroll
+      anchors.top: parent.top
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      step: 14
+      pixels-scroll: true
+
+  // ── detail (right column) ────────────────────────────────────
+  Panel
+    id: detailCol
+    anchors.top: filterRow.bottom
+    anchors.left: listCol.right
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 6
+    margin-left: 8
+    focusable: false
+
+    Label
+      id: detailTitle
+      anchors.top: parent.top
+      anchors.left: parent.left
+      font: verdana-14px-rounded
+      color: #dfdfdf
+      !text: tr('Select a territory')
+
+    Label
+      id: stateBadge
+      anchors.top: parent.top
+      anchors.right: parent.right
+      font: verdana-11px-rounded
+      color: #c0c0c0
+
+    Label
+      id: detailInfo
+      anchors.top: detailTitle.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 6
+      font: verdana-11px-antialised
+      color: #c0c0c0
+      text-wrap: true
+      height: 150
+
+    Panel
+      id: actionRow
+      anchors.top: detailInfo.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 26
+      layout: horizontalBox
+
+      Button
+        id: mapButton
+        !text: tr('View on Map')
+        width: 110
+
+    Panel
+      id: lordRow
+      anchors.top: actionRow.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 26
+      margin-top: 6
+      layout: horizontalBox
+
+      TextEdit
+        id: lordInput
+        width: 200
+        text: ''
+      Button
+        id: lordButton
+        !text: tr('Appoint Lord')
+        width: 110
+        margin-left: 6
+
+    Label
+      id: contribTitle
+      anchors.top: lordRow.bottom
+      anchors.left: parent.left
+      margin-top: 8
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      !text: tr('Top contributors')
+
+    Panel
+      id: contribBox
+      anchors.top: contribTitle.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 2
+      height: 60
+      layout: verticalBox
+
+    Label
+      id: historyTitle
+      anchors.top: contribBox.bottom
+      anchors.left: parent.left
+      margin-top: 6
+      font: verdana-11px-rounded
+      color: #dfdfdf
+      !text: tr('Recent history')
+
+    Panel
+      id: historyBox
+      anchors.top: historyTitle.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 2
+      height: 60
+      layout: verticalBox

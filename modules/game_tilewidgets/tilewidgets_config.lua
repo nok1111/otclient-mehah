@@ -489,7 +489,32 @@ TileWidgetsConfig = {
       }
     },
 
+    -- Waypoint labels (MapTravel waypoints)
+    { pos = {x = 199, y = 702, z = 6}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 302, y = 746, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 504, y = 737, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 442, y = 858, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 813, y = 795, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 692, y = 924, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 732, y = 1082, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 558, y = 1202, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 762, y = 1162, z = 6}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 959, y = 1198, z = 6}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 1128, y = 1140, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 1010, y = 930, z = 3}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 992, y = 670, z = 6}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 1142, y = 700, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 1132, y = 507, z = 6}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 1106, y = 419, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 417, y = 317, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 430, y = 198, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 1289, y = 876, z = 5}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 515, y = 533, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 489, y = 1101, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 556, y = 1393, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 1188, y = 1433, z = 7}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 1176, y = 1187, z = 6}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
+    { pos = {x = 850, y = 647, z = 6}, text = "Waypoint", opts = { width = 100, height = 22, font = "terminus-10px", bg = "#111111cc", color = "#ffffff", marginBottom = 40 } },
 
-
-  }, 
+  },
 }

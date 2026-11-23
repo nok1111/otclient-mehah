@@ -1,0 +1,1040 @@
+// Alchemy station window - 4 tabs: Boticario / Cauldron / Especializacion / Progreso.
+// Palette + patterns shared with game_blacksmith.
+
+// ============ reusable styles ============
+
+// Boticario grid cell: recipe icon + name (+ Lv tag). Locked recipes get a
+// Blackout silhouette set from Lua.
+AlRecCell < Panel
+  size: 100 92
+  phantom: false
+  border-width: 1
+  border-color: #ffffff22
+  background-color: #00000066
+
+  UIItem
+    id: gIcon
+    size: 34 34
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 8
+    virtual: true
+
+  Label
+    id: gName
+    anchors.top: gIcon.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 4
+    margin-left: 3
+    margin-right: 3
+    height: 30
+    font: small-9px
+    color: #dfdfdf
+    text-align: center
+    text-wrap: true
+
+  Label
+    id: gTier
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 3
+    font: small-9px
+    color: #80c7f8
+    text-auto-resize: true
+    phantom: true
+
+// Cauldron reagent cell: fixed slot per reagent. Shows owned count, name and
+// a click-order badge (mOrder) when placed in the mix.
+AlMatCell < Panel
+  size: 110 78
+  phantom: false
+  border-width: 1
+  border-color: #ffffff22
+  background-color: #00000066
+
+  UIItem
+    id: mIcon
+    size: 30 30
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 6
+    virtual: true
+
+  Label
+    id: mOrder
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 2
+    margin-left: 4
+    font: verdana-11px-rounded
+    color: #80c7f8
+    text-auto-resize: true
+    phantom: true
+
+  Label
+    id: mHave
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 2
+    margin-right: 4
+    font: small-9px
+    color: #c0c0c0
+    text-auto-resize: true
+    phantom: true
+
+  Label
+    id: mName
+    anchors.top: mIcon.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 3
+    margin-left: 3
+    margin-right: 3
+    height: 26
+    font: small-9px
+    color: #dfdfdf
+    text-align: center
+    text-wrap: true
+
+// Detail panel: one potency-odds cell
+AlOddCell < Panel
+  size: 72 36
+  phantom: true
+  border-width: 1
+  border-color: #ffffff22
+  background-color: #00000033
+
+  Label
+    id: oddName
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 3
+    font: small-9px
+    color: #dfdfdf
+    text-auto-resize: true
+
+  Label
+    id: oddPct
+    anchors.top: oddName.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 1
+    font: verdana-11px-rounded
+    color: #dfdfdf
+    text-auto-resize: true
+
+// Detail panel: one ingredient (icon + have/need + name)
+AlIngCell < Panel
+  size: 64 66
+  phantom: true
+
+  UIItem
+    id: iIcon
+    size: 30 30
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    virtual: true
+
+  Label
+    id: iCnt
+    anchors.top: iIcon.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 2
+    font: small-9px
+    color: #00BC00
+    text-auto-resize: true
+
+  Label
+    id: iName
+    anchors.top: iCnt.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 1
+    height: 20
+    font: small-9px
+    color: #c0c0c0
+    text-align: center
+    text-wrap: true
+
+// Spec tab: specialization card
+AlSpecCard < Panel
+  size: 158 200
+  phantom: false
+  background-color: #00000055
+  border-width: 1
+  border-color: #ffffff33
+
+  Item
+    id: specIcon
+    size: 40 40
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 10
+    phantom: false
+    virtual: true
+    item-id: 0
+    draggable: false
+
+  Label
+    id: specName
+    anchors.top: specIcon.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 6
+    font: verdana-11px-rounded
+    color: #80c7f8
+    text-auto-resize: true
+
+  Label
+    id: specPerks
+    anchors.top: specName.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 8
+    margin-right: 8
+    height: 86
+    font: small-9px
+    color: #dfdfdf
+    text-align: center
+    text-wrap: true
+
+  Button
+    id: specButton
+    !text: tr('SELECT')
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 8
+    width: 110
+    height: 24
+
+AlTabButton < Button
+  height: 30
+  font: verdana-11px-rounded
+
+AlSectionTitle < Label
+  font: verdana-11px-rounded
+  color: #80c7f8
+  text-auto-resize: true
+
+// Progress tab: perk row (mark + label + status)
+AlTierRow < Panel
+  height: 26
+  phantom: true
+  background-color: #00000033
+  border-width: 1
+  border-color: #ffffff22
+
+  Label
+    id: rowMark
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 8
+    width: 14
+    font: verdana-11px-rounded
+    color: #00BC00
+
+  Label
+    id: rowName
+    anchors.left: rowMark.right
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.right: rowReq.left
+    margin-left: 4
+    font: verdana-11px-rounded
+    color: #dfdfdf
+    text-auto-resize: true
+
+  Label
+    id: rowReq
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 8
+    font: small-9px
+    color: #c0c0c0
+    text-auto-resize: true
+
+// Batch slider
+AlchSlider < HorizontalScrollBar
+  height: 16
+  background-color: #00000066
+  image-source: /images/ui/progressbar
+  image-border: 1
+
+// ============ window ============
+
+MainWindow
+  id: alchemyWindow
+  !text: tr('Alchemy Station')
+  size: 860 560
+  @onEscape: Alchemy.hide()
+
+  // ==================== HEADER ====================
+  Label
+    id: headerLevel
+    !text: tr('Alchemy Lv. 0')
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 7
+    margin-left: 12
+    font: verdana-11px-rounded
+    color: #80c7f8
+    text-auto-resize: true
+
+  Label
+    id: headerRank
+    !text: tr('Novice')
+    anchors.top: parent.top
+    anchors.left: headerLevel.right
+    margin-top: 7
+    margin-left: 10
+    font: verdana-11px-rounded
+    color: #dfdfdf
+    text-auto-resize: true
+
+  Label
+    id: headerGold
+    !text: tr('0 gold')
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 7
+    margin-right: 12
+    font: verdana-11px-rounded
+    color: #c0c0c0
+    text-auto-resize: true
+
+  ProgressBar
+    id: xpBar
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 8
+    width: 300
+    height: 12
+
+  Label
+    id: xpLabel
+    !text: tr('0 / 0 XP')
+    anchors.top: xpBar.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 2
+    font: small-9px
+    color: #c0c0c0
+    text-auto-resize: true
+
+  // ==================== TAB BAR ====================
+  Panel
+    id: tabBar
+    anchors.top: xpLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 10
+    margin-right: 10
+    height: 32
+    phantom: true
+
+    AlTabButton
+      id: tabBot
+      !text: tr('Boticario')
+      anchors.top: parent.top
+      anchors.left: parent.left
+      width: 200
+
+    AlTabButton
+      id: tabCauldron
+      !text: tr('Cauldron')
+      anchors.top: parent.top
+      anchors.left: tabBot.right
+      margin-left: 4
+      width: 200
+
+    AlTabButton
+      id: tabSpec
+      !text: tr('Especializacion')
+      anchors.top: parent.top
+      anchors.left: tabCauldron.right
+      margin-left: 4
+      width: 200
+
+    AlTabButton
+      id: tabProg
+      !text: tr('Progreso')
+      anchors.top: parent.top
+      anchors.left: tabSpec.right
+      margin-left: 4
+      width: 200
+
+  // ==================== PAGE: BOTICARIO ====================
+  Panel
+    id: botPage
+    anchors.top: tabBar.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 6
+    phantom: true
+
+    // LEFT: recipe grid
+    Panel
+      id: botGridPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      width: 452
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      TextEdit
+        id: botSearch
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        margin-left: 6
+        margin-right: 6
+        height: 22
+        !placeholder: tr('Search...')
+
+      ScrollablePanel
+        id: botScroll
+        anchors.top: botSearch.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin-top: 6
+        margin-left: 6
+        margin-right: 6
+        margin-bottom: 6
+        padding-right: 14
+        vertical-scrollbar: botScrollBar
+        border-width: 1
+        border-color: #ffffff22
+        background-color: #00000033
+
+        Panel
+          id: botGrid
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          layout:
+            type: grid
+            cell-size: 104 96
+            cell-spacing: 4
+            num-columns: 4
+            fit-children: true
+
+      VerticalScrollBar
+        id: botScrollBar
+        anchors.top: botScroll.top
+        anchors.right: botScroll.right
+        anchors.bottom: botScroll.bottom
+        step: 40
+        pixels-scroll: true
+
+    // RIGHT: recipe detail
+    Panel
+      id: botDetailPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: botGridPanel.right
+      anchors.right: parent.right
+      margin-left: 8
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      UIItem
+        id: detIcon
+        size: 36 36
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 8
+        virtual: true
+
+      Label
+        id: detName
+        !text: tr('Select a recipe')
+        anchors.top: detIcon.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 4
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-auto-resize: true
+
+      Label
+        id: detTier
+        anchors.top: detName.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 2
+        font: small-9px
+        color: #80c7f8
+        text-auto-resize: true
+
+      Label
+        id: detDesc
+        anchors.top: detTier.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 5
+        margin-left: 8
+        margin-right: 8
+        height: 34
+        font: small-9px
+        color: #c0c0c0
+        text-align: center
+        text-wrap: true
+
+      Label
+        id: detMeta
+        anchors.top: detDesc.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 3
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
+      Panel
+        id: detOdds
+        anchors.top: detMeta.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        height: 62
+        phantom: false
+        background-color: #00000055
+        border-width: 1
+        border-color: #ffffff33
+
+        Label
+          id: detOddsTitle
+          !text: tr('POTENCY ODDS')
+          anchors.top: parent.top
+          anchors.left: parent.left
+          margin-top: 4
+          margin-left: 8
+          font: small-9px
+          color: #c0c0c0
+          text-auto-resize: true
+
+        Label
+          id: detOddsNote
+          anchors.top: parent.top
+          anchors.right: parent.right
+          margin-top: 4
+          margin-right: 8
+          font: small-9px
+          color: #80c7f8
+          text-auto-resize: true
+
+        Panel
+          id: detOddsRow
+          anchors.top: detOddsTitle.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 4
+          margin-left: 8
+          margin-right: 8
+          height: 36
+          layout:
+            type: grid
+            cell-size: 72 36
+            cell-spacing: 4
+            num-columns: 4
+
+      Panel
+        id: detIngs
+        anchors.top: detOdds.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        height: 100
+        phantom: false
+        background-color: #00000055
+        border-width: 1
+        border-color: #ffffff33
+
+        Label
+          id: detIngsTitle
+          !text: tr('INGREDIENTS')
+          anchors.top: parent.top
+          anchors.left: parent.left
+          margin-top: 4
+          margin-left: 8
+          font: small-9px
+          color: #c0c0c0
+          text-auto-resize: true
+
+        Panel
+          id: detIngRow
+          anchors.top: detIngsTitle.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 2
+          height: 74
+          layout:
+            type: horizontalBox
+            spacing: 8
+            fit-children: true
+
+      Panel
+        id: detBatch
+        anchors.top: detIngs.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        height: 66
+        phantom: false
+        background-color: #00000055
+        border-width: 1
+        border-color: #ffffff33
+
+        Label
+          id: detBatchTitle
+          !text: tr('BATCH x1')
+          anchors.top: parent.top
+          anchors.left: parent.left
+          margin-top: 4
+          margin-left: 8
+          font: small-9px
+          color: #c0c0c0
+          text-auto-resize: true
+
+        Label
+          id: detCost
+          anchors.top: parent.top
+          anchors.right: parent.right
+          margin-top: 4
+          margin-right: 8
+          font: small-9px
+          color: #c0c0c0
+          text-auto-resize: true
+
+        AlchSlider
+          id: detSlider
+          anchors.top: detBatchTitle.bottom
+          anchors.left: parent.left
+          anchors.right: detSliderMax.left
+          margin-top: 8
+          margin-left: 8
+          margin-right: 6
+          minimum: 1
+          maximum: 1
+          step: 1
+
+        Label
+          id: detSliderMax
+          anchors.top: detBatchTitle.bottom
+          anchors.right: parent.right
+          margin-top: 10
+          margin-right: 8
+          font: small-9px
+          color: #dfdfdf
+          text-auto-resize: true
+
+      Button
+        id: brewButton
+        !text: tr('BREW')
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: brewMaxButton.left
+        margin-left: 8
+        margin-right: 4
+        margin-bottom: 8
+        height: 30
+        font: verdana-11px-rounded
+
+      Button
+        id: brewMaxButton
+        !text: tr('MAX')
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        margin-right: 8
+        margin-bottom: 8
+        width: 60
+        height: 30
+        font: verdana-11px-rounded
+
+  // ==================== PAGE: CAULDRON ====================
+  Panel
+    id: cauldronPage
+    anchors.top: tabBar.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 6
+    phantom: true
+    visible: false
+
+    // LEFT: reagent grid (fixed slots, click toggles them into the mix)
+    Panel
+      id: matPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      width: 500
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: matTitle
+        !text: tr('REAGENTS - click to add them to the mix (order does not matter)')
+        anchors.top: parent.top
+        anchors.left: parent.left
+        margin-top: 6
+        margin-left: 8
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
+      ScrollablePanel
+        id: matScroll
+        anchors.top: matTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin-top: 6
+        margin-left: 6
+        margin-right: 6
+        margin-bottom: 6
+        padding-right: 14
+        vertical-scrollbar: matScrollBar
+        border-width: 1
+        border-color: #ffffff22
+        background-color: #00000033
+
+        Panel
+          id: matGrid
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          layout:
+            type: grid
+            cell-size: 114 82
+            cell-spacing: 4
+            num-columns: 4
+            fit-children: true
+
+      VerticalScrollBar
+        id: matScrollBar
+        anchors.top: matScroll.top
+        anchors.right: matScroll.right
+        anchors.bottom: matScroll.bottom
+        step: 40
+        pixels-scroll: true
+
+    // RIGHT: order strip + brew
+    Panel
+      id: caulPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: matPanel.right
+      anchors.right: parent.right
+      margin-left: 8
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: seqTitle
+        !text: tr('MIX (set - order ignored)')
+        anchors.top: parent.top
+        anchors.left: parent.left
+        margin-top: 6
+        margin-left: 8
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
+      Panel
+        id: seqGrid
+        anchors.top: seqTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 6
+        margin-left: 8
+        margin-right: 8
+        height: 84
+        phantom: false
+        border-width: 1
+        border-color: #ffffff22
+        background-color: #00000033
+
+        Panel
+          id: seqRow
+          anchors.horizontalCenter: parent.horizontalCenter
+          anchors.verticalCenter: parent.verticalCenter
+          size: 212 66
+          layout:
+            type: horizontalBox
+            spacing: 10
+
+      Label
+        id: caulHint
+        anchors.top: seqGrid.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 8
+        margin-left: 8
+        margin-right: 8
+        height: 44
+        font: small-9px
+        color: #c0c0c0
+        text-align: center
+        text-wrap: true
+
+      Label
+        id: mixMsg
+        anchors.top: caulHint.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 4
+        margin-left: 8
+        margin-right: 8
+        height: 30
+        font: verdana-11px-rounded
+        color: #dfdfdf
+        text-align: center
+        text-wrap: true
+
+      Label
+        id: brewCdLabel
+        anchors.bottom: mixBrewButton.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-bottom: 6
+        margin-left: 8
+        margin-right: 8
+        height: 24
+        font: small-9px
+        color: #de6f6f
+        text-align: center
+        text-wrap: true
+
+      Button
+        id: mixBrewButton
+        !text: tr('BREW')
+        anchors.bottom: caulClearButton.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-left: 8
+        margin-right: 8
+        margin-bottom: 6
+        height: 34
+        font: verdana-11px-rounded
+
+      Button
+        id: caulClearButton
+        !text: tr('Clear mix')
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-bottom: 8
+        width: 120
+        height: 22
+        font: small-9px
+
+  // ==================== PAGE: ESPECIALIZACION ====================
+  Panel
+    id: specPage
+    anchors.top: tabBar.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 6
+    phantom: true
+    visible: false
+
+    Panel
+      id: specPanel
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: specStatus
+        !text: tr('SPECIALIZATION')
+        anchors.top: parent.top
+        anchors.left: parent.left
+        margin-top: 6
+        margin-left: 8
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
+      Panel
+        id: specList
+        anchors.top: specStatus.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin-top: 10
+        margin-left: 12
+        margin-right: 12
+        margin-bottom: 12
+        layout:
+          type: horizontalBox
+          spacing: 10
+
+  // ==================== PAGE: PROGRESO ====================
+  Panel
+    id: progressPage
+    anchors.top: tabBar.bottom
+    anchors.bottom: statusPanel.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 6
+    phantom: true
+    visible: false
+
+    Panel
+      id: perksPanel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: discPanel.top
+      margin-bottom: 6
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: perksTitle
+        !text: tr('PERKS')
+        anchors.top: parent.top
+        anchors.left: parent.left
+        margin-top: 6
+        margin-left: 8
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
+      ScrollablePanel
+        id: perksScroll
+        anchors.top: perksTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin: 6
+        padding-right: 14
+        vertical-scrollbar: perksScrollBar
+        border-width: 1
+        border-color: #ffffff22
+        background-color: #00000033
+
+        Panel
+          id: perksList
+          anchors.top: parent.top
+          anchors.left: parent.left
+          width: 358
+          layout:
+            type: verticalBox
+            spacing: 3
+            fit-children: true
+
+      VerticalScrollBar
+        id: perksScrollBar
+        anchors.top: perksScroll.top
+        anchors.right: perksScroll.right
+        anchors.bottom: perksScroll.bottom
+        step: 30
+        pixels-scroll: true
+
+    Panel
+      id: discPanel
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 90
+      phantom: false
+      background-color: #00000055
+      border-width: 1
+      border-color: #ffffff33
+
+      Label
+        id: discTitle
+        !text: tr('DISCOVERY')
+        anchors.top: parent.top
+        anchors.left: parent.left
+        margin-top: 6
+        margin-left: 8
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
+      ProgressBar
+        id: discBar
+        anchors.top: discTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 8
+        margin-left: 8
+        margin-right: 8
+        height: 12
+
+      Label
+        id: discLabel
+        anchors.top: discBar.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin-top: 5
+        margin-left: 8
+        margin-right: 8
+        font: small-9px
+        color: #c0c0c0
+        text-auto-resize: true
+
+  // ==================== BOTTOM: STATUS ====================
+  Panel
+    id: statusPanel
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 30
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 8
+    phantom: false
+    background-color: #00000044
+    border-width: 1
+    border-color: #ffffff22
+
+    Label
+      id: statusLabel
+      !text: tr('')
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.left: parent.left
+      anchors.right: closeButton.left
+      margin-left: 8
+      margin-right: 8
+      font: verdana-11px-rounded
+      color: #de6f6f
+      text-align: center
+      text-wrap: true
+
+    Button
+      id: closeButton
+      !text: tr('Close')
+      width: 70
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.right: parent.right
+      margin-right: 6

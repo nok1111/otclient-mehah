@@ -28,6 +28,7 @@ local Colors = {
   Description = "#8080ff",
   Implicit = "#ffbb22",
   Attribute = "#2266ff",
+  Infusion = "#c78bff",
   Mirrored = "#22ffbb",
   -- Quality tier colors
   QualityDamaged = "#ff4444",
@@ -277,6 +278,7 @@ function newTooltip(data)
   local _itemRarity = data.rarityId or 0
   local _itemMaxAttributes = data.maxAttr or 0
   local _itemAttributes = data.attr or {}
+  local _itemInfusions = data.infusions or nil
   if _itemRarity ~= 0 then
     for i = _itemMaxAttributes, 1, -1 do
       _itemAttributes[i] = _itemAttributes[i]:gsub("%%%%", "%%")
@@ -323,6 +325,7 @@ function newTooltip(data)
       rarity = _itemRarity,
       maxAttributes = _itemMaxAttributes,
       attributes = _itemAttributes,
+      infusions = _itemInfusions,
       stackable = _isStackable,
       type = _itemType,
       equipType = _equipType,
@@ -368,6 +371,7 @@ function newTooltip(data)
       rarity = _itemRarity,
       maxAttributes = _itemMaxAttributes,
       attributes = _itemAttributes,
+      infusions = _itemInfusions,
       stackable = _isStackable,
       type = _itemType,
       equipType = _equipType,
@@ -676,16 +680,36 @@ function buildItemTooltip(item)
         addString(impText, Colors.Implicit)
       end
     end
+  end
 
-    if item.rarity ~= 0 then
-      addSeparator()
+  -- enchant slots: occupied slots listed, empty ones collapsed to one line
+  if item.rarity ~= 0 then
+    addSeparator()
+    addEmpty(3)
+    local emptyCount = 0
+    for i = 1, maxAttributes do
+      local line = attributes[i]
+      if line == "Empty Slot" then
+        emptyCount = emptyCount + 1
+      else
+        addString(line, Colors.Attribute)
+      end
+    end
+    if emptyCount > 0 then
+      addString(("o "):rep(emptyCount) .. tr("%d free slot%s", emptyCount, emptyCount > 1 and "s" or ""), "#808080")
     end
   end
 
-  if item.rarity ~= 0 then
-    addEmpty(5)
-    for i = 1, maxAttributes do
-      addString(attributes[i], Colors.Attribute)
+  -- infusion slots (blacksmith infusion tab): lines carry their essence color
+  if item.infusions then
+    addSeparator()
+    addEmpty(3)
+    for _, inf in ipairs(item.infusions) do
+      if inf.text then
+        addString(inf.text, inf.color or Colors.Infusion)
+      else
+        addString(inf, Colors.Infusion)
+      end
     end
   end
 

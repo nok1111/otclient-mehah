@@ -1,0 +1,10 @@
+Module
+  name: game_enchanting
+  description: Enchanting station window (enchanter, enchant, ritual, progress)
+  author: Nokturno
+  website:
+  sandboxed: true
+  autoload: true
+  scripts: [ game_enchanting ]
+  @onLoad: Enchanting.init()
+  @onUnload: Enchanting.terminate()

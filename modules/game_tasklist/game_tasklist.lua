@@ -645,6 +645,7 @@ function parseIncomingTaskList(buffer)
         local rewardsCodexEssences = tonumber(basicRewardSplit[6]) or 0
         local rewardsCodexCrateCnt = tonumber(basicRewardSplit[7]) or 0
         local rewardsRepCnt = tonumber(basicRewardSplit[8]) or 0
+        local rewardsFame = tonumber(basicRewardSplit[9]) or 0
         for j = 1, rewardsItemCnt do
             table.insert(rewardItems, {name = itemRewardSplit[(4*(j-1)) + 1], itemCid = tonumber(itemRewardSplit[(4*(j-1)) + 2]), itemSid = tonumber(itemRewardSplit[(4*(j-1)) + 3]), itemCnt = tonumber(itemRewardSplit[(4*(j-1)) + 4])})
         end
@@ -687,7 +688,7 @@ function parseIncomingTaskList(buffer)
               table.insert(repRewards, {id = repId, amount = repAmt, name = repName or repId})
             end
         end
-        rewardList = {exp = tonumber(basicRewardSplit[1]), money = rewardsMoney, items = rewardItems, outfits = rewardOutfits, choice = choiceItems, codex_essences = rewardsCodexEssences, codex_crates = codexCrates, reps = repRewards}
+        rewardList = {exp = tonumber(basicRewardSplit[1]), money = rewardsMoney, items = rewardItems, outfits = rewardOutfits, choice = choiceItems, codex_essences = rewardsCodexEssences, codex_crates = codexCrates, reps = repRewards, fame = rewardsFame}
         -----------------------------------------------------------------------------------------------------------------------------------------------
         table.insert(parseTaskList, {taskNumber = taskSplit[11], taskName = taskSplit[1], taskDesc = taskSplit[2], taskGoals = targetList,
                                      taskGoalCnt = tonumber(taskSplit[4]), taskMinLvl = tonumber(taskSplit[5]), taskMaxLvl = tonumber(taskSplit[6]),
@@ -1880,7 +1881,13 @@ function UpdateNpcTaskDescription()
 
   -- Rewards basic (match main TaskDescription style)
   local expLbl = npcTaskDescription:recursiveGetChildById('rewardExp')
-  if expLbl then expLbl:setText(tr('EXP %d', rec.taskRewards.exp or 0)) end
+  local expIcon = npcTaskDescription:recursiveGetChildById('rewardExpIcon')
+  if expLbl then
+    local expAmt = (rec.taskRewards and rec.taskRewards.exp) or 0
+    expLbl:setText(tr('EXP %d', expAmt))
+    expLbl:setVisible(expAmt > 0)
+    if expIcon then expIcon:setVisible(expAmt > 0) end
+  end
   local moneyLbl = npcTaskDescription:recursiveGetChildById('rewardMoney')
   local moneyIcon = npcTaskDescription:recursiveGetChildById('rewardMoneyIcon')
   local money = (rec.taskRewards and rec.taskRewards.money) or 0
@@ -1906,6 +1913,8 @@ function UpdateNpcTaskDescription()
     for _, rp in ipairs(rr) do
       table.insert(codexParts, tr('+%d %s Reputation', rp.amount, tr(rp.name)))
     end
+    local fm = (rec.taskRewards and rec.taskRewards.fame) or 0
+    if fm > 0 then table.insert(codexParts, tr('+%d Fame', fm)) end
     if #codexParts > 0 then
       npcCodexLbl:setText(table.concat(codexParts, '  +  '))
       npcCodexLbl:setHeight(15)
@@ -2375,7 +2384,12 @@ function updateTaskDescription(taskNumber)
   taskDescriptionWindow:recursiveGetChildById('taskSource'):setTextAutoResize(true)
   taskDescriptionWindow:recursiveGetChildById('taskHint'):setText(tr(localTaskList[taskNumber].taskHintNpc))
   taskDescriptionWindow:recursiveGetChildById('taskHint'):setTextAutoResize(true)
-  taskDescriptionWindow:recursiveGetChildById('rewardExp'):setText(tr("EXP %d", localTaskList[taskNumber].taskRewards.exp or 0))
+  local rewardExpLbl = taskDescriptionWindow:recursiveGetChildById('rewardExp')
+  local rewardExpIcon = taskDescriptionWindow:recursiveGetChildById('rewardExpIcon')
+  local rewardExpAmt = localTaskList[taskNumber].taskRewards.exp or 0
+  rewardExpLbl:setText(tr("EXP %d", rewardExpAmt))
+  rewardExpLbl:setVisible(rewardExpAmt > 0)
+  if rewardExpIcon then rewardExpIcon:setVisible(rewardExpAmt > 0) end
   local moneyLbl = taskDescriptionWindow:recursiveGetChildById('rewardMoney')
   local moneyIcon = taskDescriptionWindow:recursiveGetChildById('rewardMoneyIcon')
   if localTaskList[taskNumber].taskRewards.money and localTaskList[taskNumber].taskRewards.money > 0 then
@@ -2401,6 +2415,8 @@ function updateTaskDescription(taskNumber)
     for _, rp in ipairs(rr) do
       table.insert(codexParts, tr('+%d %s Reputation', rp.amount, tr(rp.name)))
     end
+    local fm = (localTaskList[taskNumber].taskRewards and localTaskList[taskNumber].taskRewards.fame) or 0
+    if fm > 0 then table.insert(codexParts, tr('+%d Fame', fm)) end
     if #codexParts > 0 then
       codexLbl:setText(table.concat(codexParts, '  +  '))
       codexLbl:setHeight(15)

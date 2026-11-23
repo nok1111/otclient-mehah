@@ -14,11 +14,21 @@ MapTravel_OPCODE = 214
 
 
 MapTravel.icons = {
-	premium = "/images/topbuttons/commands",
+	premium = "/images/topbuttons/prey",
 	gold = "/images/topbuttons/gold_t",
-	item = "/images/topbuttons/ancestral",
-	storage = "/images/topbuttons/character_stats2",
-	progressReq = "/images/topbuttons/greater_dungeon"
+	item = "/images/topbuttons/shop",
+	storage = "/images/topbuttons/inventory",
+	progressReq = "/images/topbuttons/questlog"
+}
+
+-- icons used only by the Dominion node tooltip (separate so MapTravel.icons
+-- can be repurposed later without touching these)
+MapTravel.dominionIcons = {
+	owner = "/images/icons/row-1-column-5",
+	state = "/images/icons/row-1-column-6",
+	type  = "/images/icons/row-7-column-4",
+	lord  = "/images/icons/fame_big",
+	benefit = "/images/icons/icon_achievement",
 }
 
 -- .dat magic-effect ids for the world-map markers (rendered via UIEffect widget)
@@ -51,220 +61,261 @@ MapTravel.buffIcons = {
 }
 
 
+-- shared waypoint icon scale (1 = png native size)
+MapTravel.nodeIconScale = 2
+
 MapTravel.mapNodesConfig = {
 	[1] = {
-		displayName = "Islanda",
-		nameId = "islanda",
+		displayName = "Valoria City",
+		nameId = "valoria_city",
+		actionId = 61205,
 		discoverable = false,
-		modulePos = {marginTop = 20, marginLeft = 202.5},
-		serverPos = {432, 335, 7},
-		premium = true,
-		cost = {
-			gold = 20,
-		},
+		modulePos = {marginTop = 3816, marginLeft = 1824}, -- world 199,702,6
+		serverPos = {199, 702, 6},
+		premium = false,
+		cost = { gold = 5 },
 	},
 	[2] = {
-		displayName = "Swantears",
-		nameId = "swantears",
+		displayName = "Milltown",
+		nameId = "milltown",
+		actionId = 61200,
 		discoverable = false,
-		modulePos = {marginTop = 92, marginLeft = 760},
-		serverPos = {908, 456, 5},
-		premium = false,
-		cost = {
-			gold = 20,
-		},
-	},
-	[3] = {
-		displayName = "Heleda",
-		nameId = "heleda",
-		discoverable = false,
-		modulePos = {marginTop = 250, marginLeft = 1020},
-		serverPos = {1106, 419, 7},
-		premium = true,
-		cost = {
-			gold = 20,
-		},
-	},
-	[4] = {
-		displayName = "Galestra City",
-		nameId = "galestra",
-		discoverable = false,
-		modulePos = {marginTop = 610, marginLeft = 90},
-		serverPos = {227, 703, 6},
-		premium = false,
-		cost = {
-			gold = 0,
-		},
-	},
-	[5] = {
-		displayName = "Garona",
-		nameId = "garona",
-		discoverable = false,
-		modulePos = {marginTop = 655, marginLeft = 165},
+		modulePos = {marginTop = 3992, marginLeft = 2236}, -- world 302,746,7
 		serverPos = {302, 746, 7},
 		premium = false,
-		cost = {
-			gold = 20,
-		},
+		cost = { gold = 5 },
 	},
-	[6] = {
-		displayName = "Vendel Pass",
-		nameId = "vendel",
+	[3] = {
+		displayName = "The Crossroads",
+		nameId = "the_crossroads",
+		actionId = 61206,
 		discoverable = false,
-		modulePos = {marginTop = 760, marginLeft = 295},
+		modulePos = {marginTop = 3956, marginLeft = 3044}, -- world 504,737,7
+		serverPos = {504, 737, 7},
+		premium = false,
+		cost = { gold = 5 },
+	},
+	[4] = {
+		displayName = "Rivermill",
+		nameId = "rivermill",
+		actionId = 61201,
+		discoverable = false,
+		modulePos = {marginTop = 4440, marginLeft = 2796}, -- world 442,858,7
 		serverPos = {442, 858, 7},
 		premium = false,
-		cost = {
-			gold = 20,
-		},
+		cost = { gold = 5 },
 	},
-	[7] = {
-		displayName = "Greith Keep",
-		nameId = "greith",
+	[5] = {
+		displayName = "Goldhaven",
+		nameId = "goldhaven",
+		actionId = 61202,
 		discoverable = false,
-		modulePos = {marginTop = 705, marginLeft = 662.5},
+		modulePos = {marginTop = 4188, marginLeft = 4280}, -- world 813,795,7
 		serverPos = {813, 795, 7},
 		premium = false,
-		cost = {
-			gold = 20,
-		},
+		cost = { gold = 5 },
 	},
-	[8] = {
-		displayName = "Ziill Keep",
-		nameId = "ziill",
+	[6] = {
+		displayName = "Zilkeep",
+		nameId = "zilkeep",
+		actionId = 61203,
 		discoverable = false,
-		modulePos = {marginTop = 830.5, marginLeft = 542.5},
+		modulePos = {marginTop = 4704, marginLeft = 3796}, -- world 692,924,7
 		serverPos = {692, 924, 7},
 		premium = false,
-		cost = {
-			gold = 20,
-		},
+		cost = { gold = 5 },
 	},
-	[9] = {
-		displayName = "WildThorns",
-		nameId = "wildthorns",
-		discoverable = false,
-		modulePos = {marginTop = 850.5, marginLeft = 850.5},
-		serverPos = {1010, 930, 3},
-		premium = false,
-		cost = {
-			gold = 20,
-		},
-	},
-	[10] = {
-		displayName = "Thar'Neskar",
+	[7] = {
+		displayName = "Thar'neskar",
 		nameId = "tharneskar",
+		actionId = 61204,
 		discoverable = false,
-		modulePos = {marginTop = 990, marginLeft = 583},
-		serverPos = {732, 1088, 5},
+		modulePos = {marginTop = 5336, marginLeft = 3956}, -- world 732,1082,7
+		serverPos = {732, 1082, 7},
 		premium = false,
-		--storagesReqs = {{id = 50002, value = 1, name = "Path to Garona"}},
-		cost = {
-			gold = 20,
-		},
+		cost = { gold = 5 },
 	},
-	[11] = {
-		displayName = "Vhassim",
-		nameId = "vhassim",
-		discoverable = false,
-		modulePos = {marginTop = 1068, marginLeft = 613},
-		serverPos = {762, 1162, 6},
-		premium = false,
-		cost = {
-			gold = 20,
-		},
-	},
-	[12] = {
-		displayName = "Havenhold",
-		nameId = "havenhold",
-		discoverable = false,
-		modulePos = {marginTop = 1497.5, marginLeft = 100},
-		serverPos = {32008, 32443, 6},
-		premium = false,
-		cost = {
-			gold = 20,
-		},
-	},
-	[13] = {
-		displayName = "Crossroads",
-		nameId = "crossroads",
-		discoverable = false,
-		modulePos = {marginTop = 655, marginLeft = 360},
-		serverPos = {32008, 32443, 6},
-		premium = false,
-		cost = {
-			gold = 20,
-		},
-	},
-	[14] = {
-		displayName = "Funny Farm",
-		nameId = "funnyfarm",
-		discoverable = false,
-		modulePos = {marginTop = 922, marginLeft = 638},
-		serverPos = {32008, 32443, 6},
-		premium = false,
-		cost = {
-			gold = 20,
-		},
-	},
-	[15] = {
+	[8] = {
 		displayName = "Juldem",
 		nameId = "juldem",
+		actionId = 61208,
 		discoverable = false,
-		modulePos = {marginTop = 1100, marginLeft = 415.5},
+		modulePos = {marginTop = 5816, marginLeft = 3260}, -- world 558,1202,7
 		serverPos = {558, 1202, 7},
 		premium = false,
-		cost = {
-			gold = 35,
-		},
+		cost = { gold = 5 },
 	},
-	[16] = {
-		displayName = "Kaleda",
-		nameId = "kaleda",
+	[9] = {
+		displayName = "Southern Watchpost",
+		nameId = "southern_watchpost",
+		actionId = 61210,
 		discoverable = false,
-		modulePos = {marginTop = 1105, marginLeft = 804},
+		modulePos = {marginTop = 5656, marginLeft = 4076}, -- world 762,1162,6
+		serverPos = {762, 1162, 6},
+		premium = false,
+		cost = { gold = 5 },
+	},
+	[10] = {
+		displayName = "Vhassim",
+		nameId = "vhassim",
+		actionId = 61209,
+		discoverable = false,
+		modulePos = {marginTop = 5800, marginLeft = 4864}, -- world 959,1198,6
 		serverPos = {959, 1198, 6},
 		premium = false,
-		cost = {
-			gold = 35,
-		},
+		cost = { gold = 5 },
 	},
-	[17] = {
-		displayName = "colliseum",
-		nameId = "colliseum",
+	[11] = {
+		displayName = "Gladiators Stance",
+		nameId = "gladiators_stance",
+		actionId = 61212,
 		discoverable = false,
-		modulePos = {marginTop = 1040, marginLeft = 975.5},
+		modulePos = {marginTop = 5568, marginLeft = 5540}, -- world 1128,1140,7
 		serverPos = {1128, 1140, 7},
 		premium = false,
-		cost = {
-			gold = 35,
-		},
+		cost = { gold = 5 },
+	},
+	[12] = {
+		displayName = "Garona",
+		nameId = "garona",
+		actionId = 61211,
+		discoverable = false,
+		modulePos = {marginTop = 4728, marginLeft = 5068}, -- world 1010,930,3
+		serverPos = {1010, 930, 3},
+		premium = false,
+		cost = { gold = 5 },
+	},
+	[13] = {
+		displayName = "Wildthorns Camp",
+		nameId = "wildthorns_camp",
+		actionId = 61207,
+		discoverable = false,
+		modulePos = {marginTop = 3688, marginLeft = 4996}, -- world 992,670,6
+		serverPos = {992, 670, 6},
+		premium = false,
+		cost = { gold = 5 },
+	},
+	[14] = {
+		displayName = "Jungle Path",
+		nameId = "jungle_path",
+		actionId = 61213,
+		discoverable = false,
+		modulePos = {marginTop = 3808, marginLeft = 5596}, -- world 1142,700,7
+		serverPos = {1142, 700, 7},
+		premium = false,
+		cost = { gold = 5 },
+	},
+	[15] = {
+		displayName = "Stoneport City",
+		nameId = "stoneport_city",
+		actionId = 61214,
+		discoverable = false,
+		modulePos = {marginTop = 3036, marginLeft = 5556}, -- world 1132,507,6
+		serverPos = {1132, 507, 6},
+		premium = false,
+		cost = { gold = 5 },
+	},
+	[16] = {
+		displayName = "Frostveil Island",
+		nameId = "frostveil_island",
+		actionId = 61215,
+		discoverable = false,
+		modulePos = {marginTop = 2684, marginLeft = 5452}, -- world 1106,419,7
+		serverPos = {1106, 419, 7},
+		premium = false,
+		cost = { gold = 5 },
+	},
+	[17] = {
+		displayName = "Frozen Port",
+		nameId = "frozen_port",
+		actionId = 61216,
+		discoverable = false,
+		modulePos = {marginTop = 2276, marginLeft = 2696}, -- world 417,317,7
+		serverPos = {417, 317, 7},
+		premium = false,
+		cost = { gold = 5 },
 	},
 	[18] = {
-		displayName = "powderia",
-		nameId = "powderia",
+		displayName = "Coldreach Island",
+		nameId = "coldreach_island",
+		actionId = 61217,
 		discoverable = false,
-		modulePos = {marginTop = 1005, marginLeft = 340.5},
-		serverPos = {489, 1101, 7},
+		modulePos = {marginTop = 1800, marginLeft = 2748}, -- world 430,198,7
+		serverPos = {430, 198, 7},
 		premium = false,
-		cost = {
-			gold = 35,
-		},
+		cost = { gold = 5 },
 	},
 	[19] = {
-		displayName = "dragonia",
-		nameId = "dragonia",
+		displayName = "Dark Passage",
+		nameId = "dark_passage",
+		actionId = 61218,
 		discoverable = false,
-		modulePos = { marginTop = 455, marginLeft = 375 },
-		serverPos = {526, 540, 7},
+		modulePos = {marginTop = 4512, marginLeft = 6184}, -- world 1289,876,5
+		serverPos = {1289, 876, 5},
 		premium = false,
-		cost = {
-			gold = 35,
-		},
+		cost = { gold = 5 },
 	},
-
-
-
+	[20] = {
+		displayName = "Inferna's Island",
+		nameId = "infernas_island",
+		actionId = 61219,
+		discoverable = false,
+		modulePos = {marginTop = 3140, marginLeft = 3088}, -- world 515,533,7
+		serverPos = {515, 533, 7},
+		premium = false,
+		cost = { gold = 5 },
+	},
+	[21] = {
+		displayName = "Powderia",
+		nameId = "powderia",
+		actionId = 61220,
+		discoverable = false,
+		modulePos = {marginTop = 5412, marginLeft = 2984}, -- world 489,1101,7
+		serverPos = {489, 1101, 7},
+		premium = false,
+		cost = { gold = 5 },
+	},
+	[22] = {
+		displayName = "Death's Gate",
+		nameId = "deaths_gate",
+		actionId = 61221,
+		discoverable = false,
+		modulePos = {marginTop = 6580, marginLeft = 3252}, -- world 556,1393,7
+		serverPos = {556, 1393, 7},
+		premium = false,
+		cost = { gold = 5 },
+	},
+	[23] = {
+		displayName = "Forgotten Isle",
+		nameId = "forgotten_isle",
+		actionId = 61222,
+		discoverable = false,
+		modulePos = {marginTop = 6740, marginLeft = 5780}, -- world 1188,1433,7
+		serverPos = {1188, 1433, 7},
+		premium = false,
+		cost = { gold = 5 },
+	},
+	[24] = {
+		displayName = "Bloody Coast",
+		nameId = "bloody_coast",
+		actionId = 61223,
+		discoverable = false,
+		modulePos = {marginTop = 5756, marginLeft = 5732}, -- world 1176,1187,6
+		serverPos = {1176, 1187, 6},
+		premium = false,
+		cost = { gold = 5 },
+	},
+	[25] = {
+		displayName = "Cursed Island",
+		nameId = "cursed_island",
+		actionId = 61224,
+		discoverable = false,
+		modulePos = {marginTop = 3596, marginLeft = 4428}, -- world 850,647,6
+		serverPos = {850, 647, 6},
+		premium = false,
+		cost = { gold = 5 },
+		storagesReqs = {{id = 999999, value = 1, name = "TODO: storage req"}}, -- placeholder, fix storage id
+	},
 }
 
 -- Zone nodes (no teleport/discover). Each entry renders a creature looktype as the node icon
@@ -664,4 +715,50 @@ MapTravel.zonesConfig = {
     imageScale = 0.85,
   },
   -- Add more zone entries as needed
+}
+
+------------------------------------------------------------
+-- Territorial Dominion node positions (optional overrides)
+------------------------------------------------------------
+-- Keyed by territory id (1-15, same ids the server sends on opcode 237).
+-- Values use base-image pixel space, same as modulePos above (scaled by
+-- MapTravel.mapScale at render). If a node is missing or has nil margins,
+-- the marker falls back to worldToPixelXY(corePos) — useful only while the
+-- map image actually covers the node's world area.
+-- Fill these by hand to place each dominion node on the map art.
+MapTravel.dominionNodePositions = {
+  [1]  = { marginTop = 3716, marginLeft = 3492 }, -- Skyport Exchange (world 616,677,5)
+  [2]  = { marginTop = 3932, marginLeft = 2908 }, -- Emberdeep Excavation (world 470,731,5)
+  [3]  = { marginTop = 4532, marginLeft = 4296 }, -- Gilded Hollow (world 817,881,6)
+  [4]  = { marginTop = 5668, marginLeft = 3492 }, -- Sunfall Fields (world 616,1165,7)
+  [5]  = { marginTop = 6068, marginLeft = 4924 }, -- Veil of Isis (world 974,1265,7)
+  [6]  = { marginTop = 5736, marginLeft = 5356 }, -- Cutthroat Arena (world 1082,1182,7)
+  [7]  = { marginTop = 4880, marginLeft = 5532 }, -- Overgrown Ruins (world 1126,968,7)
+  [8]  = { marginTop = 3680, marginLeft = 5492 }, -- Verdant Depths (world 1116,668,7)
+  [9]  = { marginTop = 2884, marginLeft = 4996 }, -- Emerald Oasis (world 992,469,7)
+  [10] = { marginTop = 2472, marginLeft = 5688 }, -- Frozen Hollow (world 1165,366,7)
+  [11] = { marginTop = 2136, marginLeft = 3632 }, -- The Emerald Gloom (world 651,282,7)
+  [12] = { marginTop = 2192, marginLeft = 5092 }, -- Netherwatch Spire (world 1016,296,7)
+  [13] = { marginTop = 5596, marginLeft = 7120 }, -- Hellforge Ruins (world 1523,1147,2)
+  [14] = { marginTop = 5596, marginLeft = 7120 }, -- The Infinite Inferno (world 1523,1147,2)
+  [15] = { marginTop = 5504, marginLeft = 6484 }, -- Throne of Ascension (world 1364,1124,1)
+}
+
+-- Per-node marker item ids (clientId). Any node not listed falls back to 33327.
+MapTravel.dominionNodeIcons = {
+  -- [1]  = 33327, -- Skyport Exchange
+  -- [2]  = 33327, -- Emberdeep Excavation
+  -- [3]  = 33327, -- Gilded Hollow
+  -- [4]  = 33327, -- Sunfall Fields
+  -- [5]  = 33327, -- Veil of Isis
+  -- [6]  = 33327, -- Cutthroat Arena
+  -- [7]  = 33327, -- Overgrown Ruins
+  -- [8]  = 33327, -- Verdant Depths
+  -- [9]  = 33327, -- Emerald Oasis
+  -- [10] = 33327, -- Frozen Hollow
+  -- [11] = 33327, -- The Emerald Gloom
+  -- [12] = 33327, -- Netherwatch Spire
+  -- [13] = 33327, -- Hellforge Ruins
+  -- [14] = 33327, -- The Infinite Inferno
+  -- [15] = 33327, -- Throne of Ascension
 }

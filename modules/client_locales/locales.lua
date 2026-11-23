@@ -566,6 +566,31 @@ local serverMsgPatterns = {
     { pat = "^Today it goes to (.-), in (.-)%. Say {penpal} when you hand it over %- Tobin's letters are%.%.%. an acquired taste%.$", tpl = "Today it goes to %s, in %s. Say {penpal} when you hand it over - Tobin's letters are... an acquired taste." },
     { pat = "^Daily reward claimed: (%d+) Golden Crate!$", tpl = "Daily reward claimed: %d Golden Crate!" },
     { pat = "^Ye still owe me (%d+) bits o' trash, swab%.$", tpl = "Ye still owe me %d bits o' trash, swab." },
+    -- Professions: enchanting station
+    { pat = "^Missing (%d+)x (.+)$", tpl = "Missing %dx %s" },
+    { pat = "^Requires Enchanting level (%d+)$", tpl = "Requires Enchanting level %d" },
+    -- Professions: specialization talkactions (/enchantingspec, /alchemyspec)
+    { pat = "^Your specialization: (.+)$", tpl = "Your specialization: %s", trArgs = {1} },
+    { pat = "^You already chose your specialization: (.+)$", tpl = "You already chose your specialization: %s", trArgs = {1} },
+    { pat = "^Specialization learned: (.+)$", tpl = "Specialization learned: %s", trArgs = {1} },
+    { pat = "^Specialization chosen: (.-) %- (.+)$", tpl = "Specialization chosen: %s - %s", trArgs = {1, 2} },
+    { pat = "^Enchanting specializations %(requires enchanting level (%d+), permanent choice%):$", tpl = "Enchanting specializations (requires enchanting level %d, permanent choice):" },
+    { pat = "^Alchemy specializations %(requires alchemy level (%d+), permanent choice%):$", tpl = "Alchemy specializations (requires alchemy level %d, permanent choice):" },
+    { pat = "^You need enchanting level (%d+) to specialize %(yours: (%d+)%)%.$", tpl = "You need enchanting level %d to specialize (yours: %d)." },
+    { pat = "^You need alchemy level (%d+) to specialize %(yours: (%d+)%)%.$", tpl = "You need alchemy level %d to specialize (yours: %d)." },
+    { pat = "^You learned the recipe for (.+)!$", tpl = "You learned the recipe for %s!" },
+    -- Professions: disenchant loot
+    { pat = "^You received: (.+)$", tpl = "You received: %s" },
+    -- Reputation tier-up messages
+    { pat = "^You are now a friend of (.+)!$", tpl = "You are now a friend of %s!", trArgs = {1} },
+    -- Frozen Port fish vendor (catch of the day)
+    { pat = "^A fine (.-)! (%d+) gold %- triple rate, as promised%.$", tpl = "A fine %s! %d gold - triple rate, as promised." },
+    { pat = "^Today's fish is a (.-) %- triple price if you bring me one%.$", tpl = "Today's fish is a %s - triple price if you bring me one." },
+    { pat = "^(%d+) fish, (%d+) gold%. Pleasure doing business%.$", tpl = "%d fish, %d gold. Pleasure doing business." },
+    -- Garona City tailor (outfit sale)
+    { pat = "^(%d+) gold for that one%. Fine tailoring costs%.$", tpl = "%d gold for that one. Fine tailoring costs." },
+    -- Book club errands (pending deliveries list)
+    { pat = "^Still out: (.-)%. Deliver them %- the club's discretion is its only rule%.$", tpl = "Still out: %s. Deliver them - the club's discretion is its only rule." },
 }
 
 -- Translates server-composed messages: exact tr() first, then template match

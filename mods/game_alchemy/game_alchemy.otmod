@@ -1,0 +1,10 @@
+Module
+  name: game_alchemy
+  description: Alchemy station window (brewing, cauldron, buffs, herbarium, transmute, oils, progress)
+  author: Nokturno
+  website:
+  sandboxed: true
+  autoload: true
+  scripts: [ game_alchemy ]
+  @onLoad: Alchemy.init()
+  @onUnload: Alchemy.terminate()

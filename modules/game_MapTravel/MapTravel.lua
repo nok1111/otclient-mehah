@@ -886,6 +886,11 @@ function MapTravel.show()
         if MapTravel.sendOpcode then
             MapTravel.sendOpcode({ topic = "get-zone-events" })
         end
+        -- Ask for a Territorial Dominion snapshot (opcode 237; handled by game_dominion)
+        local pg = g_game.getProtocolGame and g_game:getProtocolGame() or nil
+        if pg then
+            pcall(function() pg:sendExtendedJSONOpcode(237, { topic = "dominion-request-snapshot" }) end)
+        end
         MapTravel.UI:raise()
         -- MapTravel.UI:focus() -- Allow walking while map is open
         if MapTravel.UI.mapPanel then
@@ -1032,6 +1037,7 @@ function MapTravel.updateMap()
         local nodeWidget = g_ui.createWidget("MapTravelNode", canvas)
         nodeWidget:addAnchor(AnchorTop, "parent", AnchorTop)
         nodeWidget:addAnchor(AnchorLeft, "parent", AnchorLeft)
+        if nodeWidget.setZIndex then nodeWidget:setZIndex(185) end -- above zone overlays, below dominion markers
 
         nodeWidget:setMarginTop((nodeConfig.modulePos.marginTop * MapTravel.mapScale))
         nodeWidget:setMarginLeft(nodeConfig.modulePos.marginLeft * MapTravel.mapScale)
@@ -1059,11 +1065,11 @@ function MapTravel.updateMap()
 			nodeVisible = MapTravel.filters and MapTravel.filters.showLocked == true
 		else
 			if nodeConfig.nameId == MapTravel.currentNodeNameId then
-				nodeImage = "images/nodes/current/" .. tostring(nodeConfig.nameId):lower()
+				nodeImage = "images/nodes/current/waypoint"
 				nodeEnabled = true
 				nodeVisible = true
 			else
-				nodeImage = "images/nodes/normal/" .. tostring(nodeConfig.nameId):lower()
+				nodeImage = "images/nodes/normal/waypoint"
 				nodeEnabled = true
 				nodeVisible = true
 			end
@@ -1094,8 +1100,14 @@ function MapTravel.updateMap()
 
 		MapTravel.originalNodeWidgetWidth = nodeWidget:getWidth()
 		MapTravel.originalNodeWidgetHeight = nodeWidget:getHeight()
-		nodeWidget:setWidth(MapTravel.originalNodeWidgetWidth * MapTravel.mapScale)
-		nodeWidget:setHeight(MapTravel.originalNodeWidgetHeight * MapTravel.mapScale)
+		local nodeIconScale = MapTravel.nodeIconScale or 1
+		local iconW = MapTravel.originalNodeWidgetWidth * MapTravel.mapScale * nodeIconScale
+		local iconH = MapTravel.originalNodeWidgetHeight * MapTravel.mapScale * nodeIconScale
+		nodeWidget:setWidth(iconW)
+		nodeWidget:setHeight(iconH)
+		-- center the icon on the mapped point (margins anchored the top-left corner)
+		nodeWidget:setMarginTop(nodeConfig.modulePos.marginTop * MapTravel.mapScale - iconH / 2)
+		nodeWidget:setMarginLeft(nodeConfig.modulePos.marginLeft * MapTravel.mapScale - iconW / 2)
 
 		if nodeEnabled and not MapTravel.viewOnly then
 			nodeWidget.onClick = function()
@@ -1286,6 +1298,9 @@ function MapTravel.updateMap()
     -- Attached-effect markers over zones with an active server-side event
     MapTravel.renderZoneEventMarkers(canvas)
 
+    -- Territorial Dominion markers (data comes via game_dominion, opcode 237)
+    MapTravel.renderDominionMarkers(canvas)
+
     -- Drag and pan the canvas within mapPanel area (below top bar)
     local boundsWidget = mapPanel
     MapTravel.makeWidgetDraggable(canvas, boundsWidget)
@@ -1391,6 +1406,9 @@ local function mtMakeReader(data)
     return r
 end
 
+-- zone ids to hide from the map overlay entirely (fill + hover tooltip)
+MapTravel.hiddenZoneIds = MapTravel.hiddenZoneIds or { [95] = true }
+
 function MapTravel.loadZoneRects()
     MapTravel.zoneRects = {}
     local foundPath
@@ -1427,7 +1445,9 @@ function MapTravel.loadZoneRects()
             rects[#rects + 1] = { x = r:u16(), y = r:u16(), z = r:u8(), w = r:u16(), h = r:u16() }
         end
         totalRects = totalRects + rectCount
-        MapTravel.zoneRects[id] = { id = id, color = { cr, cg, cb }, rects = rects }
+        if not (MapTravel.hiddenZoneIds and MapTravel.hiddenZoneIds[id]) then
+            MapTravel.zoneRects[id] = { id = id, color = { cr, cg, cb }, rects = rects }
+        end
     end
     print(string.format('[MapTravel] loaded %d zones, %d rectangles from %s', zoneCount, totalRects, foundPath))
     return true
@@ -1679,6 +1699,153 @@ function MapTravel.renderZoneEventMarkers(canvas)
     end
 end
 
+-- Territorial Dominion markers: one interactive node per territory at its corePos.
+-- Data source: modules.game_dominion.territories (opcode 237, server-side truth).
+MapTravel.DOMINION_STATE_COLORS = {
+    available  = '#c0c0c088',
+    protected  = '#80c7f8cc',
+    owned      = '#00BC00cc',
+    contested  = '#de6f6fcc',
+}
+
+local function dominionModule()
+    return modules and modules.game_dominion or nil
+end
+
+function MapTravel.renderDominionMarkers(canvas)
+    if not canvas or canvas:isDestroyed() then return end
+    local dom = dominionModule()
+    local list = dom and dom.territories or nil
+    if not list then return end
+    local s = MapTravel.mapScale or 1.0
+    local size = math.max(28, math.floor(56 * s))
+
+    for id, t in pairs(list) do
+        -- position: client-side per-node override wins (base-image pixels,
+        -- same space as MapTravelConfig modulePos); fallback = worldToPixelXY(corePos)
+        local px, py
+        local ov = MapTravel.dominionNodePositions and MapTravel.dominionNodePositions[id]
+        if ov and ov.marginLeft and ov.marginTop then
+            px, py = ov.marginLeft, ov.marginTop
+        elseif t.corePos then
+            local p = worldToPixelXY({ x = t.corePos.x, y = t.corePos.y, z = t.corePos.z or 7 })
+            if p then px, py = p.x, p.y end
+        end
+        if px and py then
+            local color = MapTravel.DOMINION_STATE_COLORS[t.state] or '#c0c0c088'
+            local mx = math.floor(px * s - size * 0.5)
+            local my = math.floor(py * s - size * 0.5)
+
+            -- state plate behind the item (UIItem sprites can't be tinted)
+            local plate = g_ui.createWidget('UIWidget', canvas)
+            plate:setId('dominionPlate' .. tostring(id))
+            plate:addAnchor(AnchorTop, 'parent', AnchorTop)
+            plate:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+            plate:setSize({ width = size, height = size })
+            plate:setMarginLeft(mx)
+            plate:setMarginTop(my)
+            plate:setBackgroundColor(color)
+            if plate.setZIndex then plate:setZIndex(189) end
+            plate.territoryId = id
+            plate.onHoverChange = function(widget, hovered)
+                MapTravel.onDominionHoverChange(widget, hovered)
+            end
+            plate.onClick = function(widget)
+                local d = dominionModule()
+                if d then
+                    if d.selectTerritory then d.selectTerritory(widget.territoryId) end
+                    if d.show then d.show() end
+                end
+                return true
+            end
+
+            -- node icon: per-node item clientid (dominionNodeIcons), fallback 33327
+            local iconItemId = MapTravel.dominionNodeIcons and MapTravel.dominionNodeIcons[id] or 33327
+            local w = g_ui.createWidget('UIItem', canvas)
+            w:setId('dominionNode' .. tostring(id))
+            w:addAnchor(AnchorTop, 'parent', AnchorTop)
+            w:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+            w:setSize({ width = size, height = size })
+            w:setMarginLeft(mx)
+            w:setMarginTop(my)
+            if w.setZIndex then w:setZIndex(190) end
+            w:setItemId(iconItemId)
+            if w.setVirtual then w:setVirtual(true) end
+            if w.setDraggable then w:setDraggable(false) end
+            w.territoryId = id
+            w.onHoverChange = function(widget, hovered)
+                MapTravel.onDominionHoverChange(widget, hovered)
+            end
+            w.onClick = function(widget)
+                local d = dominionModule()
+                if d then
+                    if d.selectTerritory then d.selectTerritory(widget.territoryId) end
+                    if d.show then d.show() end
+                end
+                return true
+            end
+        end
+    end
+end
+
+function MapTravel.onDominionHoverChange(widget, hovered)
+    if not MapTravel.UI then return end
+    if hovered then
+        MapTravel.applyDominionTooltip(widget.territoryId)
+        connect(rootWidget, { onMouseMove = MapTravel.moveNodeToolTip })
+    else
+        MapTravel.UI.NodesTooltip:hide()
+        disconnect(rootWidget, { onMouseMove = MapTravel.moveNodeToolTip })
+    end
+end
+
+local function wrapTooltipText(text, maxChars)
+    local lines = {}
+    local cur = text
+    while #cur > maxChars do
+        local cut = cur:sub(1, maxChars)
+        local idx = cut:match('.*()[%s,]') or maxChars
+        lines[#lines + 1] = cur:sub(1, idx)
+        cur = cur:sub(idx + 1):gsub('^%s+', '')
+    end
+    if #cur > 0 then lines[#lines + 1] = cur end
+    return lines
+end
+
+function MapTravel.applyDominionTooltip(tid)
+    local tip = MapTravel.UI and MapTravel.UI.NodesTooltip
+    if not tip then return end
+    local dom = dominionModule()
+    local t = dom and dom.territories and dom.territories[tid]
+    tip:destroyChildren()
+    if not t then
+        tip:setText('Territory')
+        return
+    end
+    tip:setText(t.name or ('Territory ' .. tostring(tid)))
+    local di = MapTravel.dominionIcons or {}
+    MapTravel.addTooltipLine('Owner: ' .. (t.guildName or 'Unclaimed'), di.owner)
+    if t.lordName then
+        MapTravel.addTooltipLine('Lord: ' .. t.lordName, di.lord)
+    end
+    MapTravel.addTooltipLine('State: ' .. (t.state or '?'), di.state)
+    if t.specialization then
+        MapTravel.addTooltipLine('Type: ' .. t.specialization, di.type)
+    end
+    if t.benefitText and t.benefitText ~= '' then
+        for line in string.gmatch(t.benefitText, '[^\n]+') do
+            local first = true
+            for _, l in ipairs(wrapTooltipText(line, 42)) do
+                MapTravel.addTooltipLine(l, first and di.benefit or nil)
+                first = false
+            end
+        end
+    end
+    MapTravel.fitTooltipSize()
+    tip:show()
+    MapTravel.moveNodeToolTip()
+end
+
 function MapTravel.pixelToWorld(px, py)
     local cfg = MapTravel.worldImageConfig
     local imgW = (MapTravel._baseMapSize and MapTravel._baseMapSize.width) or cfg.imgW
@@ -1732,9 +1899,10 @@ function MapTravel.debugUpdateReadout(mousePos)
         end
     end
 
-    local line = string.format("img(%d,%d) -> world(%d,%d)",
+    local line = string.format("img(%d,%d) -> world(%d,%d) | marginTop=%d marginLeft=%d",
         math.floor(px), math.floor(py),
-        w and math.floor(w.x) or -1, w and math.floor(w.y) or -1)
+        w and math.floor(w.x) or -1, w and math.floor(w.y) or -1,
+        math.floor(py), math.floor(px))
     local lp = g_game and g_game.getLocalPlayer and g_game:getLocalPlayer() or nil
     local pp = lp and lp.getPosition and lp:getPosition() or nil
     if pp then
@@ -1773,10 +1941,16 @@ function MapTravel.installAdminTools(canvas, mapPanel)
     canvas.onMousePress = function(w, pos, btn)
         if btn == MouseRightButton then
             local info = MapTravel._debugInfo or ''
+            -- copy a ready-to-paste modulePos entry (marginTop/marginLeft)
+            local cPos = canvas:getPosition()
+            local s = MapTravel.mapScale or 1.0
+            local px = math.floor((pos.x - cPos.x) / s)
+            local py = math.floor((pos.y - cPos.y) / s)
+            local snippet = string.format("{ marginTop = %d, marginLeft = %d }", py, px)
             if g_window and g_window.setClipboardText then
-                g_window.setClipboardText(info)
+                g_window.setClipboardText(snippet)
             end
-            print('[MapTravel] ' .. info)
+            print('[MapTravel] ' .. snippet .. '  |  ' .. info)
             return true
         end
         if prevPress then return prevPress(w, pos, btn) end
@@ -1965,17 +2139,16 @@ function MapTravel.onNodeHoverChange(widget, hovered)
 	if hovered then
 		MapTravel.applyNodeTooltip(widget.nodeConfig)
 		connect(rootWidget, {onMouseMove = MapTravel.moveNodeToolTip})
-		widget:setImageSource("images/nodes/hover/" .. tostring(widget.nameId):lower())
+		widget:setImageSource("images/nodes/hover/waypoint")
 	else
 		MapTravel.UI.NodesTooltip:hide()
 		disconnect(rootWidget, {onMouseMove = MapTravel.moveNodeToolTip})
-		widget:setImageSource("images/nodes/normal/" .. tostring(widget.nameId):lower())
+		widget:setImageSource("images/nodes/normal/waypoint")
 	end
 
-	local originalWidth = widget:getWidth()
-	local originalHeight = widget:getHeight()
-	widget:setWidth(originalWidth * MapTravel.mapScale)
-	widget:setHeight(originalHeight * MapTravel.mapScale)
+	local nodeIconScale = MapTravel.nodeIconScale or 1
+	widget:setWidth((MapTravel.originalNodeWidgetWidth or 32) * MapTravel.mapScale * nodeIconScale)
+	widget:setHeight((MapTravel.originalNodeWidgetHeight or 32) * MapTravel.mapScale * nodeIconScale)
 end
 
 -- Auto-fit the tooltip width to its content (measures real text widths)
@@ -2029,6 +2202,7 @@ function MapTravel.addTooltipLine(text, iconKey)
 	else
 		entry.icon:setImageSource("")
 	end
+	return entry
 end
 
 -- Row with the real monster/boss sprite (UICreature) resolved by name
@@ -2083,6 +2257,11 @@ function MapTravel.applyNodeTooltip(nodeConfig)
 				MapTravel.addTooltipLine(lineText, "storage")
 			end
 		end
+	end
+
+	local hint = MapTravel.addTooltipLine("Click here to travel", nil)
+	if hint and hint.text and hint.text.setColor then
+		hint.text:setColor('#c0c0c088')
 	end
 
 	MapTravel.fitTooltipSize()
@@ -2200,6 +2379,22 @@ end
 
 -- Tooltip for painted zones (zones.dat rects): creature icon(s) + level from
 -- zonesConfig entries whose name matches the zone name, plus monster list.
+-- resolves a creature looktype for a painted zone from its monster list
+local function zoneOutfit(zoneId)
+    if not MapTravelMonsterLook then return nil end
+    local info = MapTravel.zoneInfo and MapTravel.zoneInfo[zoneId]
+    if not info then return nil end
+    for _, m in ipairs(info.monsters or {}) do
+        local lt = MapTravelMonsterLook[m:lower()]
+        if lt then return { type = lt } end
+    end
+    if info.boss then
+        local lt = MapTravelMonsterLook[info.boss:lower()]
+        if lt then return { type = lt } end
+    end
+    return nil
+end
+
 function MapTravel.applyPaintedZoneTooltip(zoneId)
     local tip = MapTravel.UI and MapTravel.UI.NodesTooltip
     if not tip or (tip.isDestroyed and tip:isDestroyed()) then return end
@@ -2213,7 +2408,14 @@ function MapTravel.applyPaintedZoneTooltip(zoneId)
     for _, zc in ipairs(MapTravel.zonesConfig or {}) do
         local zn = (zc.name or zc.displayName or ''):lower()
         if lname and zn == lname then
-            local ok, err = pcall(MapTravel.addZoneTooltipHeader, zc)
+            -- fill missing icon from the zone's own monsters
+            local hc = zc
+            if not zc.outfit and not zc.image then
+                hc = { name = zc.name, displayName = zc.displayName,
+                       recommendedLevel = zc.recommendedLevel,
+                       outfit = zoneOutfit(zoneId) }
+            end
+            local ok, err = pcall(MapTravel.addZoneTooltipHeader, hc)
             if ok then
                 hdrCount = hdrCount + 1
                 matched = true
@@ -2225,8 +2427,30 @@ function MapTravel.applyPaintedZoneTooltip(zoneId)
     if matched then
         print(string.format('[MapTravel] zone tooltip: "%s" -> %d header(s)', tostring(name), hdrCount))
     end
-    if not matched and tip.setText then
-        tip:setText(name or string.format('Zone %d', zoneId))
+    if not matched then
+        -- no zonesConfig entry: styled header + recommended level derived
+        -- from the zone's creature levels (same rule as curated entries)
+        local recLevel
+        local lvlInfo = MapTravel.zoneInfo and MapTravel.zoneInfo[zoneId]
+        if lvlInfo and MapTravelMonsterLevels then
+            local mx = 0
+            for _, m in ipairs(lvlInfo.monsters or {}) do
+                mx = math.max(mx, MapTravelMonsterLevels[m:lower()] or 0)
+            end
+            if lvlInfo.boss then
+                mx = math.max(mx, MapTravelMonsterLevels[lvlInfo.boss:lower()] or 0)
+            end
+            if mx > 0 then recLevel = math.ceil(mx * 1.2 / 5) * 5 .. '+' end
+        end
+        local ok = pcall(MapTravel.addZoneTooltipHeader, {
+            name = name or string.format('Zone %d', zoneId),
+            displayName = name or string.format('Zone %d', zoneId),
+            recommendedLevel = recLevel,
+            outfit = zoneOutfit(zoneId),
+        })
+        if not ok and tip.setText then
+            tip:setText(name or string.format('Zone %d', zoneId))
+        end
     end
 
     local info = MapTravel.zoneInfo and MapTravel.zoneInfo[zoneId]
