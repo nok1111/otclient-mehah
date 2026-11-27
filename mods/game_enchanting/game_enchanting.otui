@@ -199,7 +199,6 @@ MainWindow
   id: enchantingWindow
   !text: tr('Enchanting Station')
   size: 940 560
-  @onEscape: Enchanting.hide()
 
   Panel
     id: header
@@ -402,7 +401,6 @@ MainWindow
           margin-left: 8
           width: 60
           height: 18
-          @onClick: Enchanting.closeCraftOrder()
 
         // --- item card ---
         Panel
@@ -567,7 +565,6 @@ MainWindow
           margin-bottom: 10
           width: 140
           height: 28
-          @onClick: Enchanting.craftSelected()
 
   // ---------------- INFUSE (essence slots, migrated from blacksmith) ----------------
   Panel
@@ -1019,7 +1016,6 @@ MainWindow
         width: 160
         height: 28
         enabled: false
-        @onClick: Enchanting.channelRitual()
 
 
   // ---------------- PROGRESS ----------------
@@ -1156,4 +1152,3 @@ MainWindow
       anchors.verticalCenter: parent.verticalCenter
       anchors.right: parent.right
       margin-right: 6
-      @onClick: Enchanting.hide()

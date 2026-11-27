@@ -86,7 +86,7 @@ local function renderList()
       local info = g_ui.createWidget('UILabel', row)
       local owner = t.guildName or 'Unclaimed'
       info:setText(owner)
-      info:setFont('verdana-9px-antialised')
+      info:setFont('verdana-11px-antialised')
       info:setColor(t.guildName and '#80c7f8' or '#c0c0c088')
       info:addAnchor(AnchorLeft, 'parent', AnchorLeft)
       info:addAnchor(AnchorBottom, 'parent', AnchorBottom)

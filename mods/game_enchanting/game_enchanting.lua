@@ -135,6 +135,13 @@ local function buildWindow()
   end
   local closeBtn = enchantingWindow:recursiveGetChildById('closeButton')
   if closeBtn then closeBtn.onClick = Enchanting.hide end
+  enchantingWindow.onEscape = Enchanting.hide
+  local woBackBtn = enchantingWindow:recursiveGetChildById('woBackBtn')
+  if woBackBtn then woBackBtn.onClick = Enchanting.closeCraftOrder end
+  local craftBtn = enchantingWindow:recursiveGetChildById('craftBtn')
+  if craftBtn then craftBtn.onClick = Enchanting.craftSelected end
+  local ritChannelBtn = enchantingWindow:recursiveGetChildById('ritChannelBtn')
+  if ritChannelBtn then ritChannelBtn.onClick = Enchanting.channelRitual end
   Enchanting.showTab(currentTab)
 end
 
@@ -358,7 +365,7 @@ local function renderInfusion()
   onClick(slotWidget, function()
     if d and not d.empty then sendEvent('EN_REMOVE_INFUSION') end
   end)
-  setLabel('infBlock', d and trServerMsg(d.blockReason) or '')
+  setLabel('infBlock', d and d.blockReason and trServerMsg(d.blockReason) or '')
 
   -- infusion slot rows
   local slotsPanel = enchantingWindow:recursiveGetChildById('infSlots')
